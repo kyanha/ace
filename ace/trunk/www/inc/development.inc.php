@@ -10,3 +10,6 @@ svn co http://ace.iserver.ch:81/repos/ace/ace/trunk ace
 
 <p>Further we use <a href="http://trac.edgewall.com/">trac</a>, a wiki and issue tracker specifically designed for subversion (see <a href="http://ace.iserver.ch:81/cgi-bin/trac.cgi">trac wiki</a>).</p>
 
+<p>An online calendar of all the important events can be found 
+<a href="http://ace.iserver.ch/phpicalendar/">here</a>.</p>
+
