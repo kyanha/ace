@@ -42,10 +42,10 @@ Dieses Dokument ist soweit wie möglich als statisches Dokument zu führen. Es ist
 Im Projekt \ace soll ein kollaborativer, plattformunabhängiger Editor entwickelt werden. Diese Applikation ermöglicht mehreren Personen, ein Textdokument gemeinsam zu bearbeiten. Dabei arbeitet jede Person mit dem Editor an einem eigenen Computer. Alle Teilnehmer sind über ein Netzwerk verbunden und sehen jederzeit den gleichen Dokumentinhalt. Wenn jemand der Gruppe eine Änderung im Dokument vornimmt, wird dies in Echtzeit und synchron allen anderen Benutzern angezeigt. Jeder Benutzer hat dadurch den Überblick über alle Änderungen im Dokument. Dieser Editor ermöglicht zum Beispiel ein gemeinsames Brainstorming von mehreren Personen, welche sich an verschiedenen Orten befinden. 
 
 \subsection{Ausgangssituation}
-Heutzutage besitzt praktisch jeder Mensch in den Industrieländern einen Computer oder hat einen Zugang dazu. Verfassen von Texten, E-Mails und das Verwenden des World Wide Web gehören für die meisten Menschen zum Alltag. Doch gerade im Bereich Zusammenarbeit erleichtern uns Computer die Arbeit oft nicht. Im Gegenteil, oft verhindern Computer ein intuitives Zusammenarbeiten. Allgemein sind Experten der Überzeugung, dass Anwendungen, welche die computerunterstützte Zusammenarbeit ermöglichen, ein grosses Potential haben. Das insbesondere in einer Zeit wo SMS, Instant Messaging, Mobil- und Internet-Telefonie zum Alltag gehören.
+Heutzutage besitzt praktisch jeder Mensch in den Industrieländern einen Computer oder hat einen Zugang dazu. Verfassen von Texten, E-Mails und das Verwenden des World Wide Web gehören für die meisten Menschen zum Alltag. Doch gerade im Bereich Zusammenarbeit erleichtern uns Computer die Arbeit oft nicht. Im Gegenteil, oft verhindern Computer ein intuitives Zusammenarbeiten. Allgemein sind Experten der Überzeugung, dass Anwendungen, welche die computerunterstützte Zusammenarbeit ermöglichen, ein grosses Potential haben.
 
 \subsection{Ziele}
-In der Semesterarbeit soll die Basis gelegt werden für die Implementation eines kollaborativen Texteditors im Rahmen der Diplomarbeit.
+In der Semesterarbeit soll die Basis für die Implementation eines kollaborativen Texteditors im Rahmen der Diplomarbeit gelegt werden.
 
 \begin{table}[!ht]
  \begin{tabular}{|l|l|l|}
@@ -55,7 +55,7 @@ In der Semesterarbeit soll die Basis gelegt werden für die Implementation eines 
  \headercol{4.1in}{Beschreibung} \\
  
  \hline
- 1     & 1 & Aufbau von Knowhow im Bereich CSCW \\
+ 1     & 1 & Aufbau von Know-How im Bereich CSCW \\
  \hline
  2     & 1 & Evaluation bestehender Algorithmen \\
  \hline
@@ -77,10 +77,10 @@ In der Semesterarbeit soll die Basis gelegt werden für die Implementation eines 
  \begin{table}[!ht]
   \begin{tabular}{|l|c|}
    \hline
-   \headercol{5.8in}{Beschreibung}                              \\
+   \headercol{5.8in}{Beschreibung}         \\
    \hline
-    Ausarbeiten von Sicherheitsaspekten                         \\
-    Prototyp kollaborativer Texteditor                         \\
+    Ausarbeiten von Sicherheitsaspekten    \\
+    Prototyp kollaborativer Texteditor     \\
    \hline
   \end{tabular}
   \caption{Nicht-Ziele}
@@ -90,13 +90,13 @@ In der Semesterarbeit soll die Basis gelegt werden für die Implementation eines 
 
 \subsection{Vorgehensstrategie}
 
-In dem Semesterprojekt geht es vorallem darum, Wissen aufzubauen und dazu einen funktionierenden Synchronisationsalgorithmus zu entwickeln. Das Vorgehensmodell ist im Abschnitt \ref{sect: Projektspezifisches Vorgehensmodell} im Detail erklärt.
+In dem Semesterprojekt geht es vor allem darum, Wissen aufzubauen und dazu einen funktionierenden Synchronisationsalgorithmus zu entwickeln. Das Vorgehensmodell ist im Abschnitt \ref{sect: Projektspezifisches Vorgehensmodell} im Detail erklärt.
 
 
 \section{Projektspezifisches Vorgehensmodell}
 \label{sect: Projektspezifisches Vorgehensmodell}
 
-Das Vorgehen wird durch drei Hauptphasen bestimmt (siehe Abbildung \ref{Projektspezifisches Vorgehensmodell}). Die erste Phase initialisiert das Projekt. Die zweite Phase ist in drei Komponenenten unterteilt, welche parallel bearbeitet werden können. Die einzelnen Komponenten stellen ein Subprojekt mit eigenen Phasen dar. Die dritte und letzte Phase beinhaltet den Abschluss des Projektes. Die Abbildung stellt eine logische Unterteilung des Vorgehens dar.
+Das Vorgehen wird durch drei Hauptphasen bestimmt (siehe Abbildung \ref{Projektspezifisches Vorgehensmodell}). Die erste Phase initialisiert das Projekt. Die zweite Phase ist in drei Komponenten unterteilt, welche parallel bearbeitet werden können. Die einzelnen Komponenten stellen ein Subprojekt mit eigenen Phasen dar. Die dritte und letzte Phase beinhaltet den Abschluss des Projektes. Die Abbildung \ref{Projektspezifisches Vorgehensmodell} stellt eine logische Unterteilung der Vorgehensweise dar.
 
 \begin{figure}[h]
   \begin{center}
@@ -111,22 +111,19 @@ Nachfolgend werden die drei Hauptphasen detaillierter erklärt.
 
 
 \subsection{Phase Initialisierung}
-In der Phase Initialisierung geht es vorallem darum, einen klar definierten organisatorischen und technischen Rahmen als Voraussetzung für eine erfolgreiche Projektabwicklung zu schaffen.
+In der Phase Initialisierung geht es vor allem darum, einen klar definierten organisatorischen und technischen Rahmen als Voraussetzung für eine erfolgreiche Projektabwicklung zu schaffen.
 
 \subsection{Phase Analyse und Entwicklung}
 Die zweite Hauptphase wird in drei unabhängige Komponenten Algorithmus, Netzwerk und GUI unterteilt. Es bestehen keine Schnittstellen zwischen diesen Komponenten.
 
 \subsubsection{Komponente Algorithmus}
-Das ist die Hauptkomponente und der zeitintensivste Teil der Projektarbeit. Es beinhaltet die Entwicklung des Sychnronisationsalgorithmus sowie das Erstellen eines Testframeworks. Die beiden Teile werden parallel bearbeitet. 
-
-\noindent
-Die Komponente Algorithmus ist in drei Phasen aufgeteilt:
+Das ist die Hauptkomponente und der zeitintensivste Teil der Projektarbeit. Es beinhaltet die Entwicklung des Sychnronisationsalgorithmus sowie das Erstellen eines Testframeworks. Die beiden Teile werden parallel bearbeitet. Die Komponente Algorithmus ist in drei Phasen aufgeteilt:
 
 \paragraph{Phase Voranalyse: }
-In der Phase Voranalyse wird ein fundiertes Basiswissen im Bereich des CSCW (\emph{Computer Supported Cooperative Work}) aufgebaut. Mit diesem Know-how soll anschliessend eine Analyse der aktuellen Synchronisationsalgorithmen gemacht werden. Diese Studie ermöglicht die Auswahl eines Synchronisationsalgorithmus für die Implementation.
+In der Phase Voranalyse wird ein fundiertes Basiswissen im Bereich des CSCW (\emph{Computer Supported Cooperative Work}) aufgebaut. Mit diesem Know-How soll anschliessend eine Analyse der aktuellen Synchronisationsalgorithmen gemacht werden. Diese Studie ermöglicht die Auswahl eines geeigneten Synchronisationsalgorithmus für die Implementation.
 
 \paragraph{Phase Design: }
-In der Phase Design soll zuerst das Wissen über den gewählten Synchronisationsalgorithmus vertieft werden. Anschliessend erfolgt das Systemdesign für den Algorithmus, welches die Grundlage für eine erfolgreiche Phase Realisation ist. Das Design für das Testframework wird ebenfalls erstellt.
+In der Phase Design soll zuerst das Wissen über den gewählten Synchronisationsalgorithmus vertieft werden. Anschliessend erfolgt das Systemdesign für den Algorithmus, welches die Grundlage für eine erfolgreiche Realisationphase bildet. Das Design für das Testframework wird ebenfalls erstellt.
 
 \paragraph{Phase Realisation: }
 In der Phase Realisation werden der Synchronisationsalgorithmus und das Testframework implementiert. Sobald die beiden Teile entwickelt sind, wird der Algorithmus mit dem Testframework geprüft.
@@ -137,7 +134,7 @@ Es sollen mögliche Lösungsvorschläge für die Komponente Netzwerk erarbeitet werd
 
 \subsubsection{Komponente GUI}
 \paragraph{Voranalyse: }
-Es sollen Lösungsvarianten für die Komponente GUI evaluiert werden. Ein Lösungsvorschlag wird ausgewählt für die spätere Implementation.
+Es sollen Lösungsvarianten für die Komponente GUI evaluiert werden. Ein Lösungsvorschlag wird für die spätere Implementation ausgewählt.
 
 \subsection{Phase Abschluss}
 In der Phase Abschluss wird das Projekt geordnet zu Ende gebracht. Alle Projektaktivitäten werden abgeschlossen. Das Team verfasst einen Erfahrungsbericht. 
@@ -163,7 +160,7 @@ In der Phase Abschluss wird das Projekt geordnet zu Ende gebracht. Alle Projekta
  \item Bericht Evaluation und Auswahl Synchronisationsalgorithmen
  \item Implementation Synchronisationsalgorithmus
  \item Bericht Implementation Synchronisationsalgorithmus
- \item Katalog Testfälle
+ \item Sammlung von Testfällen
  \item Testframework Synchronisationsalgorithmen
  \item Bericht Testframework
 \end{itemize}
@@ -212,13 +209,13 @@ In der Phase Abschluss wird das Projekt geordnet zu Ende gebracht. Alle Projekta
 Zum Erstellen aller Dokumente soll grundsäztlich \LaTeX{} verwendet werden. Selbstverständlich werden für Grafiken und Diagramme andere Anwendungen verwendet. Da es sich bei \LaTeX{} Dateien um Textdateien handelt, kann SubEthaEdit (ein kollaborativer Editor für Mac OS X) verwenden werden, um zur gleichen Zeit am gleichen Dokument zu arbeiten.
 
 \subsection{Source Repository}
-Subversion wird als Source Repository verwendet. Die URL für den Subversion Zugriff ist \href{http://ace.iserver.ch:81/repos/ace/ace}{http://ace.iserver.ch:81/repos/ace/ace}.
+Subversion wird als Source Repository verwendet. Die URL für den Subversion-Zugriff ist \href{http://ace.iserver.ch:81/repos/ace/ace}{http://ace.iserver.ch:81/repos/ace/ace}.
 
 \subsection{Projektwebsite}
-Von der Projektwebsite aus erreicht man alle wichtigen Werkzeuge. Die Projektwebsite ist erreichbar unter \href{http://ace.iserver.ch}{http://ace.iserver.ch}. Die Projektwebsite dient auch dazu, das Produkt \ace zu vermarkten. 
+Von der Projektwebsite (\href{http://ace.iserver.ch}{http://ace.iserver.ch}) aus erreicht man alle wichtigen Werkzeuge. Sie dient auch dazu, das Produkt \ace zu vermarkten. 
 
 \subsection{Zeiterfassung}
-Zur Erfassung der Arbeitszeit wird eine PHP Applikation, entwickelt von Herrn Bigler, verwendet. Dies wird es ermöglichen, am Ende des Projektes Angaben zu den geleisteten Arbeitsstunden zu machen.
+Zur Erfassung der Arbeitszeit wird eine PHP Applikation, entwickelt von Mark Bigler, verwendet. Dies wird es ermöglichen, am Ende des Projektes Angaben zu den geleisteten Arbeitsstunden zu machen.
 
 \subsection{Trac}
 Trac ist ein sogenannter \emph{issue tracker} mit einem integrierten Wiki. Das Wiki wird für den projektinternen Informationsaustausch verwendet (\href{http://ace.iserver.ch:81/cgi-bin/trac.cgi}{http://ace.iserver.ch:81/cgi-bin/trac.cgi}). Der \emph{issue tracker} wird für die gezielte Erfassung von Bug Reports verwendet.
@@ -231,13 +228,14 @@ Ein online verfügbarer Projektkalender gibt Auskunft über alle anstehenden Sitzu
  \item Eclipse (\href{http://www.eclipse.org/}{http://www.eclipse.org/})
  \item SubEthaEdit (\href{http://www.codingmonkeys.de/subethaedit/}{http://www.codingmonkeys.de/subethaedit/})
  \item ant (\href{http://ant.apache.org/}{http://ant.apache.org/})
+ \item CruiseControl (\href{http://cruisecontrol.sourceforge.net/}{http://cruisecontrol.sourceforge.net/})
 \end{itemize}
 
 
 \section{Standards und Richtlinien}
 
 \subsection{Dokumentation}
-Alle \LaTeX{} Dokumente sollen die Package \texttt{ace.tex} verwenden. Diese Datei findet man im Subversion Repository unter \texttt{/ace/trunk/doc/latex/ace.tex}. Eine Vorlage für alle \LaTeX{} Dokumente findet man im selben Verzeichnis (\texttt{template.tex}). Genaue Angaben zum Erstellen von Dokumenten findet man online im Wiki unter \href{http://ace.iserver.ch:81/cgi-bin/trac.cgi/wiki/LatexDocuments}{LatexDocuments}.
+Alle \LaTeX{} Dokumente sollen die Datei \texttt{ace.tex} einbinden. Diese Datei findet man im Subversion Repository unter \texttt{/ace/trunk/doc/latex/ace.tex}. Eine Vorlage für alle \LaTeX{} Dokumente findet man im selben Verzeichnis (\texttt{template.tex}). Genaue Angaben zum Erstellen von Dokumenten findet man online im Wiki unter \href{http://ace.iserver.ch:81/cgi-bin/trac.cgi/wiki/LatexDocuments}{LatexDocuments}.
 
 \subsection{Quellcode}
 Die Dokumentation des Quellcodes erfolgt mit JavaDoc. Die Kommentare werden einheitlich in Englisch verfasst. Quellcodedateien werden mit folgendem Header, welcher unter \texttt{/ace/trunk/doc/templates/source.header} im Subversion Repository zu finden ist, versehen.
@@ -270,7 +268,7 @@ Die Dokumentation des Quellcodes erfolgt mit JavaDoc. Die Kommentare werden einh
 \subsubsection*{Konventionen}
 Die Quellcodedateien sollen gemäss den Sun Coding Conventions (\href{http://java.sun.com/docs/codeconv/}{http://java.sun.com/docs/codeconv/}) erstellt werden. Die Einrückung erfolgt mit Tabulator Zeichen (nicht mit Spaces).
 
-
+\newpage
 \input{appendix}
 
 \end{document}
