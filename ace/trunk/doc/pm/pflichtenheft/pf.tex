@@ -25,28 +25,28 @@ pdfcreator={pdftex},
 \newpage
 
 \section{Einleitung}
-Das Projekt ACE entwickelt einen kollaborativen, plattformunabhŠngigen Editor. Diese Applikation soll mehreren Personen ermšglichen, ein Textdokument gemeinsam zu bearbeiten. Dabei arbeitet jede Person mit dem Editor an einem eigenen Computer. Alle Teilnehmer sind Ÿber ein Netzwerk verbunden und sehen jederzeit den gleichen Dokumentinhalt. Wenn jemand der Gruppe eine €nderung im Dokument vornimmt, wird dies in Echtzeit und synchron allen anderen Benutzern angezeigt. Jeder Benutzer hat dadurch den †berblick Ÿber alle €nderungen im Dokument. Dieser Editor ermšglicht zum Beispiel ein gemeinsames Brainstorming von mehreren Personen, welche sich an verschiedenen Orten befinden. 
+Das Projekt ACE entwickelt einen kollaborativen, plattformunabhängigen Editor. Diese Applikation soll mehreren Personen ermöglichen, ein Textdokument gemeinsam zu bearbeiten. Dabei arbeitet jede Person mit dem Editor an einem eigenen Computer. Alle Teilnehmer sind über ein Netzwerk verbunden und sehen jederzeit den gleichen Dokumentinhalt. Wenn jemand der Gruppe eine Änderung im Dokument vornimmt, wird dies in Echtzeit und synchron allen anderen Benutzern angezeigt. Jeder Benutzer hat dadurch den Überblick über alle Änderungen im Dokument. Dieser Editor ermöglicht zum Beispiel ein gemeinsames Brainstorming von mehreren Personen, welche sich an verschiedenen Orten befinden. 
 
 \subsection{Zweck des Dokumentes}
-Das vorliegende Dokument beschreibt die Ziele, welche mit der angestrebten Lšsung zu erreichen sind sowie die Anforderungen und WŸnsche an das zukŸnftige System.
+Das vorliegende Dokument beschreibt die Ziele, welche mit der angestrebten Lösung zu erreichen sind sowie die Anforderungen und Wünsche an das zukünftige System.
 
 \section{Ausgangslage}
-Das gemeinsame Entwerfen eines elektronischen Dokumentes (z.B. Textdatei), wobei jeder Beteiligte mit seinem eigenen Computer arbeitet, ist noch praktisch unbekannt. Diese Technologie birgt ein grosses Anwendungspotenzial. Der zu entwickelnde Editor ACE soll komplett neuartige und effiziente Editier-Mšglichkeiten bieten und dadurch neue Wege der Zusammenarbeit eršffnen. Bis heute existiert keine marktreife, plattformunabhŠngige Applikation dieser Art.
+Das gemeinsame Entwerfen eines elektronischen Dokumentes (z.B. Textdatei), wobei jeder Beteiligte mit seinem eigenen Computer arbeitet, ist noch praktisch unbekannt. Diese Technologie birgt ein grosses Anwendungspotenzial. Der zu entwickelnde Editor ACE soll komplett neuartige und effiziente Editier-Möglichkeiten bieten und dadurch neue Wege der Zusammenarbeit eröffnen. Bis heute existiert keine marktreife, plattformunabhängige Applikation dieser Art.
 
 \section{Ist-Zustand}
-Die dem kollaborativen Editor zugrunde liegende Theorie entstammt aus dem Forschungsgebiet der "Computer Supported Cooperative Work - CSCW". Applikationen aus diesem Bereich werden auch mit Groupware bezeichnet. Seit Mitte der 90er Jahren sind zahlreiche Forschungsarbeiten geschrieben worden. Die meisten davon beinhalten theoretische †berlegungen, so zum Beispiel mathematische Beschreibungen oder Beweise zu Synchronisationsalgorithmen. Viel Theoriewissen wurde erarbeitet. Dieses Know-How soll nun in die konkrete Implementation eines kollaborativen Editors einfliessen um daraus eine hochentwickelte, konkurrenzfŠhige Applikation auf den Markt zu bringen. 
+Die dem kollaborativen Editor zugrunde liegende Theorie entstammt aus dem Forschungsgebiet der "Computer Supported Cooperative Work - CSCW". Applikationen aus diesem Bereich werden auch mit Groupware bezeichnet. Seit Mitte der 90er Jahren sind zahlreiche Forschungsarbeiten geschrieben worden. Die meisten davon beinhalten theoretische Überlegungen, so zum Beispiel mathematische Beschreibungen oder Beweise zu Synchronisationsalgorithmen. Viel Theoriewissen wurde erarbeitet. Dieses Know-How soll nun in die konkrete Implementation eines kollaborativen Editors einfliessen um daraus eine hochentwickelte, konkurrenzfähige Applikation auf den Markt zu bringen. 
 
 \section{Ziele}
-Die nachfolgenden Zielsetzungen gelten fŸr die Semesterarbeit.
+Die nachfolgenden Zielsetzungen gelten für die Semesterarbeit.
  \begin{center}
   \begin{tabular}{|l|c|}
    \hline
-   Beschreibung     &     PrioritŠt    \\
+   Beschreibung     &     Priorität    \\
    \hline
-    Implementation eines funktionierenden Synchronisationsalgorithmus', dies beinhaltet:                    &        1        \\
-    Definiertes, konsistentes Verhalten des Algorithmus bei allen mšglichen Use Cases                       &        1        \\
+    Implementation eines funktionierenden Synchronisationsalgorithmus, dies beinhaltet:                    &        1        \\
+    Definiertes, konsistentes Verhalten des Algorithmus bei allen möglichen Use Cases                       &        1        \\
     Identischer Dokumentinhalt bei allen Editorinstanzen einer Gruppe                                       &        1         \\
-    Cursor-Positionen der verschiedenen Teilnehmer voneinander unabhŠngig                                   &        1         \\
+    Cursor-Positionen der verschiedenen Teilnehmer voneinander unabhängig                                   &        1         \\
     Dynamisches Erkennen aller freigegebenen Dokumenten innerhalb eines Netzwerkes                          &        2         \\
     Freigeben von Dokumenten in Read-Only oder Read-Write Modus                                             &        2         \\
     Sich als Reader oder Editor einem Dokument anschliessen                                                 &        2         \\
@@ -57,11 +57,11 @@ Die nachfolgenden Zielsetzungen gelten fŸr die Semesterarbeit.
 
 \subsection{Implementation eines funktionierenden Synchronisationsalgorithmus}
 
-\subsection{Definiertes, konsistentes Verhalten des Algorithmus bei allen mšglichen Use Cases}
+\subsection{Definiertes, konsistentes Verhalten des Algorithmus bei allen möglichen Use Cases}
 
 \subsection{Identischer Dokumentinhalt bei allen Editorinstanzen einer Gruppe}
 
-\subsection{Cursor-Positionen der verschiedenen Teilnehmer voneinander unabhŠngig}
+\subsection{Cursor-Positionen der verschiedenen Teilnehmer voneinander unabhängig}
 
 \subsection{Dynamisches Erkennen aller freigegebenen Dokumenten innerhalb eines Netzwerkes}
 
@@ -72,6 +72,6 @@ Die nachfolgenden Zielsetzungen gelten fŸr die Semesterarbeit.
 Die Architektur wird mit dem Peer-to-Peer Modell erarbeitet. Die Applikation soll ohne einen zentralen Server funktionieren.
 
 \subsection{Schnittstellen}
-Durch die Offenlegung des internen Kommunikations-Protokolls von ACE haben andere Applikationsanbieter die Mšglichkeit, direkt mit dem Editor zu kommunizieren. Dadurch ergeben sich beliebige Anwendungsmšglichkeiten.
+Durch die Offenlegung des internen Kommunikations-Protokolls von ACE haben andere Applikationsanbieter die Möglichkeit, direkt mit dem Editor zu kommunizieren. Dadurch ergeben sich beliebige Anwendungsmöglichkeiten.
 
 \end{document}
