@@ -18,34 +18,11 @@ pdfcreator={pdftex},
 \begin{document}
 
 \tableofcontents
+\listoftables
+\listoffigures
 
-\section*{Versionskontrolle}
+\input{versionskontrolle}
 
-\begin{table}[!h]
- \begin{tabular}{|l|l|l|l|}
-  \hline
-  Version     & Datum       & Verantwortlich  &  Bemerkungen \\
-  \hline
-  0.1         & 15.03.2005  & rasss           &  Erste Version \\
-  \hline
- \end{tabular}
- \caption{Versionskontrolle}
- \label{Versionskontrolle}
-\end{table}
-
-\begin{table}[!h]
- \begin{tabular}{|l|l|l|l|l|}
-  \hline
-                         & Stelle      & Datum & Visum & Bemerkungen \\
-  \hline
-  \textbf{Freigegeben}   & Projektteam &       &       &             \\
-  \hline
-  \textbf{Genehmigt}     &             &       &       &             \\
-  \hline
- \end{tabular}
- \caption{Prüfung/Genehmigung}
- \label{Prüfung/Genehmigung}
-\end{table}
 
 \section{Einleitung}
 
@@ -67,7 +44,7 @@ Heutzutage besitzt praktisch jeder Mensch in den Industrieländern einen Computer
 In der Semesterarbeit soll die Basis gelegt werden für die Implementation eines kollaborativen Texteditors im Rahmen der Diplomarbeit.
 
 \begin{table}[!h]
- \begin{tabular}{|l|l|}
+ \begin{tabular}{|l|l|l|}
  \hline
  Ziel  & Prioritäten & Beschreibung \\
  \hline
@@ -90,8 +67,12 @@ In der Semesterarbeit soll die Basis gelegt werden für die Implementation eines 
  \label{Ziele}
 \end{table}
 
+
 \subsection{Vorgehensstrategie}
 
+In dem Semesterprojekt geht es vorallem darum, Wissen aufzubauen und dazu eine funktionierende Synchronisationsengine zu entwickeln. Die Ziele sind dabei zum Teil unabhängig voneinander.
+
+Grundsätzlich werden pro unabhängigem Teil die Phasen Voranalyse und Konzept durchlaufen. Beim Teilziel Synchronisationsengine werden dabei zusätzlich noch eine Implementierung/Tests erstellt.
 
 
 \section{Projektspezifisches Vorgehensmodell}
@@ -99,10 +80,56 @@ In der Semesterarbeit soll die Basis gelegt werden für die Implementation eines 
 
 
 
+
 \section{Entscheidungspunkte und auszuliefernde Ergebnisse}
 
+\subsection{Initialisierung}
+\begin{table}[!h]
+ \begin{tabular}{|l|l|}
+ \hline
+ Entscheidungspunkt  &  Ergebnisse       \\
+ \hline
+ Projektauftrag      &  -                \\
+ \hline
+ Abschluss Phase
+ Initialisierung     &  Projekthandbuch, Projektplan, Pflichtenheft   \\
+ \hline
+ \end{tabular}
+ \caption{Entscheidungspunkte Phase Initialisierung}
+ \label{Entscheidungspunkte Phase Initialisierung}
+\end{table}
 
+\subsection{Synchronisationsengine}
+Für die Synchronisationsengine werden folgende Ergebnisse bereitgestellt:
+\begin{itemize}
+ \item Bericht Synchronisationsalgorithmen
+ \item Testframework Synchronsiationsalgorithmen
+ \item Erfassen und Erstellen von Testfällen
+ \item Implementation Synchronisationsengine
+\end{itemize}
+Folgende Entscheidungspunkte treten dabei auf:
+\begin{itemize}
+ \item Auswahl Synchronisationsalgorithmus basierend auf Bericht
+ \item Abschluss Implementation
+\end{itemize}
 
+\subsection{Konzept GUI/Netzwerk}
+Für die beiden Konzepte GUI und Netzwerk werden folgende Ergebnisse erstellt:
+\begin{itemize}
+ \item ein Bericht (mögliche Lösungen, gewählte Lösung, Erfahrungen)
+ \item Prototyp
+\end{itemize}
+Folgende Entscheidungspunkte treten dabei auf:
+\begin{itemize}
+ \item Auswahl Lösung
+\end{itemize}
+
+\subsection{User Stories}
+Für die Erfassung des Anwendungsumfangs sollen User Stories erfasst werden. Daraus resultiert folgendes Ergebnis:
+\begin{itemize}
+ \item User Stories Katalog
+\end{itemize}
+Dazu gibt es keine spezifischen Entscheidungspunkte.
 
 \section{Methoden und Werkzeuge}
 
@@ -169,9 +196,5 @@ Die Quellcodedateien sollen gemäss den Sun Coding Conventions (http://java.sun.c
 
 
 \input{appendix}
-
-
-\listoftables
-\listoffigures
 
 \end{document}
