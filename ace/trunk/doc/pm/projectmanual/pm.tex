@@ -5,7 +5,6 @@
 \usepackage{ngerman}
 \usepackage{a4wide}
 \usepackage[dvips]{graphicx}
-\usepackage{listings}
 
 \usepackage{ace}
 
@@ -15,7 +14,13 @@ pdftitle={ Projekthandbuch },
 pdfcreator={pdftex},
 ]{hyperref}
 
+\title{Projekthandbuch}
+\author{Mark Bigler \and Simon Räss \and Lukas Zbinden}
+
 \begin{document}
+
+\maketitle
+\newpage
 
 \tableofcontents
 \newpage
@@ -23,13 +28,14 @@ pdfcreator={pdftex},
 \listoffigures
 \newpage
 
+
 \input{versionskontrolle}
+\newpage
 
 
 \section{Einleitung}
 
 \subsection{Zweck des Dokuments}
-
 Das Projekthandbuch dient als einheitliche Handlungsgrundlage für alle Projektbeteiligten und legt damit den allgemeingültigen technischen und organisatorischen Rahmen fest. 
 
 Dieses Dokument ist soweit wie möglich als statisches Dokument zu führen. Es ist jedoch zu Beginn und am Schluss jeder Phase zu überprüfen und an die neuen Erkentnisse anzupassen.
@@ -37,7 +43,7 @@ Dieses Dokument ist soweit wie möglich als statisches Dokument zu führen. Es ist
 
 \section{Projektbeschreibung}
 
-Das gemeinsame Editieren von Dokumenten kann eine grosse Herausforderung sein. Versionierungs Systeme wie Subversion und CVS können einer Gruppe helfen, ein Dokument gemeinsam zu bearbeiten. Diese Systeme ermöglichen aber nicht ein gemeinsames Bearbeiten in Echtzeit. Genau an dieser Stelle setzt das Projekt \emph{ACE} an. Es soll ein Texteditor implementiert werden, der das gleichzeitige Bearbeiten des gleichen Dokumentes in Echtzeit ermöglicht.
+Das gemeinsame Editieren von Dokumenten kann eine grosse Herausforderung sein. Versionierungs Systeme wie Subversion und CVS können einer Gruppe helfen, ein Dokument gemeinsam zu bearbeiten. Diese Systeme ermöglichen aber nicht ein gemeinsames Bearbeiten in Echtzeit. Genau an dieser Stelle setzt das Projekt \ace an. Es soll ein Texteditor implementiert werden, der das gleichzeitige Bearbeiten des gleichen Dokumentes in Echtzeit ermöglicht.
 
 \subsection{Ausgangssituation}
 Heutzutage besitzt praktisch jeder Mensch in den Industrieländern einen Computer oder hat einen Zugang dazu. Verfassen von Texten, e-Mails und das Verwenden des World Wide Web gehören für die meisten Menschen zum Alltag. Doch gerade im Bereich Zusammenarbeit erleichtern uns Computer die Arbeit oft nicht. Im Gegenteil, oft verhindern sie ein intuitives Zusammenarbeiten. Allgemein ist man der Überzeugung, dass Anwendungen, welche die Zusammenarbeit fördern und erleichtern, ein grosses Potential haben. Insbesondere in einer Zeit wo SMS, Instant Messaging, Mobil- und Internet-Telefonie zum Alltag gehören.
@@ -45,8 +51,7 @@ Heutzutage besitzt praktisch jeder Mensch in den Industrieländern einen Computer
 \subsection{Ziele}
 In der Semesterarbeit soll die Basis gelegt werden für die Implementation eines kollaborativen Texteditors im Rahmen der Diplomarbeit.
 
-\begin{table}[!h]
- \begin{center}
+\begin{table}[!ht]
  \begin{tabular}{|l|l|l|}
  \hline
  \headercol{0.5in}{Ziele}  & 
@@ -69,7 +74,6 @@ In der Semesterarbeit soll die Basis gelegt werden für die Implementation eines 
  7     & 3 & User Stories für kollaborativen Texteditor \\
  \hline
  \end{tabular}
- \end{center}
  \caption{Ziele}
  \label{Ziele}
 \end{table}
@@ -108,50 +112,50 @@ In der Phase Konzept werden jeweils die folgenden Ergebnisse erstellt:
 \section{Entscheidungspunkte und auszuliefernde Ergebnisse}
 
 \subsection{Initialisierung}
-\subsubsection{Ergebnisse}
+\subsubsection*{Ergebnisse}
 \begin{itemize}
  \item Projektantrag 
  \item Projekthandbuch
  \item Pflichtenheft
  \item Projektplan
 \end{itemize}
-\subsubsection{Entscheidungspunkte}
+\subsubsection*{Entscheidungspunkte}
 \begin{itemize}
  \item keine
 \end{itemize}
 
 \subsection{Synchronisationsalgorithmus}
-\subsubsection{Ergebnisse}
+\subsubsection*{Ergebnisse}
 \begin{itemize}
  \item Bericht Synchronisationsalgorithmen
  \item Testframework Synchronsiationsalgorithmen
  \item Erfassen und Erstellen von Testfällen
  \item Implementation Synchronisationsalgorithmus
 \end{itemize}
-\subsubsection{Entscheidungspunkte}
+\subsubsection*{Entscheidungspunkte}
 \begin{itemize}
  \item Auswahl Synchronisationsalgorithmus basierend auf Bericht
  \item Abschluss Implementation
 \end{itemize}
 
 \subsection{Konzept GUI/Netzwerk}
-\subsubsection{Ergebnisse}
+\subsubsection*{Ergebnisse}
 \begin{itemize}
  \item ein Bericht (mögliche Lösungen, gewählte Lösung, Erfahrungen)
  \item Prototyp
 \end{itemize}
-\subsubsection{Entscheidungspunkte}
+\subsubsection*{Entscheidungspunkte}
 \begin{itemize}
  \item Auswahl Lösung
 \end{itemize}
 
 \subsection{User Stories}
 Für die Erfassung des Anwendungsumfangs sollen User Stories erfasst werden. 
-\subsubsection{Ergebnisse}
+\subsubsection*{Ergebnisse}
 \begin{itemize}
  \item User Stories Katalog
 \end{itemize}
-\subsubsection{Entscheidungspunkte}
+\subsubsection*{Entscheidungspunkte}
 \begin{itemize}
  \item keine
 \end{itemize}
@@ -164,10 +168,10 @@ Für die Erfassung des Anwendungsumfangs sollen User Stories erfasst werden.
 Zum Erstellen aller Dokumente soll grundsäztlich \LaTeX{} verwendet werden. Selbstverständlich werden für Grafiken und Diagramme andere Anwendungen verwendet. Da es sich bei \LaTeX{} Dateien um Textdateien handelt, können wir SubEthaEdit (ein kollaborativer Editor für Mac) verwenden, um zur gleichen Zeit am gleichen Dokument zu arbeiten.
 
 \subsection{Source Repository}
-Subversion wird als Source Repository verwendet. Die URL für den Subversion Zugriff ist http://ace.iserver.ch:81/repos/ace/ace.
+Subversion wird als Source Repository verwendet. Die URL für den Subversion Zugriff ist \href{http://ace.iserver.ch:81/repos/ace/ace}{http://ace.iserver.ch:81/repos/ace/ace}.
 
 \subsection{Projektwebsite}
-Von der Projektwebsite aus erreicht man alle wichtigen Werkzeuge. Die Projektwebsite ist erreichbar unter http://ace.iserver.ch. Die Projektwebsite dient auch dazu, das Produkt \emph{ACE} zu vermarkten. 
+Von der Projektwebsite aus erreicht man alle wichtigen Werkzeuge. Die Projektwebsite ist erreichbar unter \href{http://ace.iserver.ch}{http://ace.iserver.ch}. Die Projektwebsite dient auch dazu, das Produkt \ace zu vermarkten. 
 
 \subsection{Zeiterfassung}
 Zur Erfassung der Arbeitszeit wird eine PHP Applikation, entwickelt von Herrn Bigler, verwendet. Dies wird es ermöglichen, am Ende des Projektes einige Angaben zu den geleisteten Arbeitsstunden zu machen.
@@ -176,25 +180,24 @@ Zur Erfassung der Arbeitszeit wird eine PHP Applikation, entwickelt von Herrn Bi
 Trac ist ein sogenannter \emph{issue tracker} mit einem integrierten Wiki. Das Wiki wird für den projektinternen Informationsaustausch verwendet. Der \emph{issue tracker} wird für die gezielte Erfassung von Bug Reports verwendet.
 
 \subsection{Kalender}
-Ein online verfügbarer Projektkalender gibt Auskunft über alle anstehenden Sitzungen und andere Termine (http://ace.iserver.ch/phpicalendar/week.php).
+Ein online verfügbarer Projektkalender gibt Auskunft über alle anstehenden Sitzungen und andere Termine (\href{http://ace.iserver.ch/phpicalendar/week.php}{http://ace.iserver.ch/phpicalendar/week.php}).
 
 \subsection{Entwicklung}
 \begin{itemize}
- \item Eclipse (http://www.eclipse.org/)
- \item SubEthaEdit (http://www.codingmonkeys.de/subethaedit/)
- \item ant (http://ant.apache.org/)
+ \item Eclipse (\href{http://www.eclipse.org/}{http://www.eclipse.org/})
+ \item SubEthaEdit (\href{http://www.codingmonkeys.de/subethaedit/}{http://www.codingmonkeys.de/subethaedit/})
+ \item ant (\href{http://ant.apache.org/}{http://ant.apache.org/})
 \end{itemize}
 
 
 \section{Standards und Richtlinien}
 
 \subsection{Dokumentation}
-Alle \LaTeX{} Dokumente sollen die Package ace.tex verwenden. Diese Datei findet man im Subversion Repository unter \texttt{/ace/trunk/doc/latex/ace.tex}. Eine Vorlage für alle \LaTeX{} Dokumente findet man im selben Verzeichnis (template.tex).
+Alle \LaTeX{} Dokumente sollen die Package \texttt{ace.tex} verwenden. Diese Datei findet man im Subversion Repository unter \texttt{/ace/trunk/doc/latex/ace.tex}. Eine Vorlage für alle \LaTeX{} Dokumente findet man im selben Verzeichnis (\texttt{template.tex}). Genaue Angaben zum Erstellen von Dokumenten findet man online im Wiki unter \href{http://ace.iserver.ch:81/cgi-bin/trac.cgi/wiki/LatexDocuments}{LatexDocuments}.
 
 \subsection{Quellcode}
-Die Dokumentation des Quellcodes erfolgt mit JavaDoc. Die Kommentare werden einheitlich in Englisch verfasst. Quellcodedateien werden mit folgendem Header, welcher unter \texttt{/ace/trunk/doc/templates/source.header} zu finden ist, versehen.
+Die Dokumentation des Quellcodes erfolgt mit JavaDoc. Die Kommentare werden einheitlich in Englisch verfasst. Quellcodedateien werden mit folgendem Header, welcher unter \texttt{/ace/trunk/doc/templates/source.header} im Subversion Repository zu finden ist, versehen.
 
-\lstset{language=Java}
 \small{
 \begin{verbatim}
 /*
@@ -220,8 +223,8 @@ Die Dokumentation des Quellcodes erfolgt mit JavaDoc. Die Kommentare werden einh
 \end{verbatim}
 }
 
-\subsubsection{Konventionen}
-Die Quellcodedateien sollen gemäss den Sun Coding Conventions (http://java.sun.com/docs/codeconv/) erstellt werden. Die Einrückung erfolgt mit Tabulator Zeichen (nicht mit Spaces).
+\subsubsection*{Konventionen}
+Die Quellcodedateien sollen gemäss den Sun Coding Conventions (\href{http://java.sun.com/docs/codeconv/}{http://java.sun.com/docs/codeconv/}) erstellt werden. Die Einrückung erfolgt mit Tabulator Zeichen (nicht mit Spaces).
 
 
 \input{appendix}

@@ -28,34 +28,37 @@ pdfcreator={pdftex},
 \newpage
 
 \section{Einleitung}
-Im Projekt ACE soll ein kollaborativer, plattformunabhängiger Editor entwickelt werden. Diese Applikation ermöglicht mehreren Personen, ein Textdokument gemeinsam zu bearbeiten. Dabei arbeitet jede Person mit dem Editor an einem eigenen Computer. Alle Teilnehmer sind über ein Netzwerk verbunden und sehen jederzeit den gleichen Dokumentinhalt. Wenn jemand der Gruppe eine Änderung im Dokument vornimmt, wird dies in Echtzeit und synchron allen anderen Benutzern angezeigt. Jeder Benutzer hat dadurch den Überblick über alle Änderungen im Dokument. Dieser Editor ermöglicht zum Beispiel ein gemeinsames Brainstorming von mehreren Personen, welche sich an verschiedenen Orten befinden. 
+Im Projekt \ace soll ein kollaborativer, plattformunabhängiger Editor entwickelt werden. Diese Applikation ermöglicht mehreren Personen, ein Textdokument gemeinsam zu bearbeiten. Dabei arbeitet jede Person mit dem Editor an einem eigenen Computer. Alle Teilnehmer sind über ein Netzwerk verbunden und sehen jederzeit den gleichen Dokumentinhalt. Wenn jemand der Gruppe eine Änderung im Dokument vornimmt, wird dies in Echtzeit und synchron allen anderen Benutzern angezeigt. Jeder Benutzer hat dadurch den Überblick über alle Änderungen im Dokument. Dieser Editor ermöglicht zum Beispiel ein gemeinsames Brainstorming von mehreren Personen, welche sich an verschiedenen Orten befinden. 
 
 \subsection{Zweck des Dokumentes}
 Das vorliegende Dokument beschreibt die Ziele, welche mit der angestrebten Lösung zu erreichen sind sowie die Anforderungen und Wünsche an das zukünftige System.
 
 \section{Ausgangslage}
-Das gemeinsame Entwerfen eines elektronischen Dokumentes (z.B. Textdatei), wobei jeder Beteiligte mit seinem eigenen Computer arbeitet, ist noch praktisch unbekannt. Diese Technologie birgt ein grosses Anwendungspotenzial. Der zu entwickelnde Editor ACE soll komplett neuartige und effiziente Editier-Möglichkeiten bieten und dadurch neue Wege der Zusammenarbeit eröffnen. Bis heute existiert keine marktreife, plattformunabhängige Applikation dieser Art.
+Das gemeinsame Entwerfen eines elektronischen Dokumentes (z.B. Textdatei), wobei jeder Beteiligte mit seinem eigenen Computer arbeitet, ist noch praktisch unbekannt. Diese Technologie birgt ein grosses Anwendungspotenzial. Der zu entwickelnde Editor \ace soll komplett neuartige und effiziente Editier-Möglichkeiten bieten und dadurch neue Wege der Zusammenarbeit eröffnen. Bis heute existiert keine marktreife, plattformunabhängige Applikation dieser Art.
 
 \section{Ist-Zustand}
 Die dem kollaborativen Editor zugrunde liegende Theorie entstammt aus dem Forschungsgebiet der "'Computer Supported Cooperative Work - CSCW"'. Applikationen aus diesem Bereich werden auch als "'Groupware"' bezeichnet. Seit Mitte der 90er Jahren sind zahlreiche Forschungsarbeiten geschrieben worden. Die meisten davon beinhalten theoretische Überlegungen, so zum Beispiel mathematische Beschreibungen oder Beweise zu Synchronisationsalgorithmen. Viel Theoriewissen wurde erarbeitet. Dieses Know-How soll nun in die konkrete Implementation eines kollaborativen Editors einfliessen um daraus eine hochentwickelte, konkurrenzfähige Applikation auf den Markt zu bringen. 
 
 \section{Ziele}
 In der Semesterarbeit soll die Basis gelegt werden für die Implementation eines kollaborativen und plattformunabhängigen Texteditors im Rahmen der Diplomarbeit.
- \begin{center}
+
+ \begin{table}[!ht]
   \begin{tabular}{|l|c|}
    \hline
-   Beschreibung     &     Priorität    \\
+   \headcol{4.5in}{Beschreibung}                                & \headcol{1in}{Priorität}    \\
    \hline
-    Aufbau von Knowhow                                          &        1         \\
-    Evaluation bestehender Algorithmen                          &        1         \\
-    Implementation Algorithmus                                  &        1         \\
-    Testframework für Algorithmus                               &        1         \\
-    Konzept GUI                                                 &        2         \\
-    Konzept Netzwerk/Kommunikation                              &        2         \\
-    User Stories für kollaborativen Texteditor                  &        3         \\
+    Aufbau von Knowhow                                          &        1                    \\
+    Evaluation bestehender Algorithmen                          &        1                    \\
+    Implementation Algorithmus                                  &        1                    \\
+    Testframework für Algorithmus                               &        1                    \\
+    Konzept GUI                                                 &        2                    \\
+    Konzept Netzwerk/Kommunikation                              &        2                    \\
+    User Stories für kollaborativen Texteditor                  &        3                    \\
    \hline
   \end{tabular}
- \end{center}
+  \caption{Projektziele}
+  \label{Projektziele}
+ \end{table}
 
 \subsection{Aufbau von Knowhow}
 Es geht darum, ein fundiertes Basiswissen im Bereich des CSCW aufzubauen. Das Ziel ist, eine Übersicht über den aktuellen Forschungsstand und über die wichtigsten Errungenschaften in diesem Gebiet zu gewinnen. Das angeeignete Know-How soll beim Evaluieren der bestehenden Synchronisationsalgorithmen zum tieferen Verständnis beitragen und ein sachgerechtes Beurteilen ermöglichen.
@@ -83,6 +86,6 @@ Das Ziel ist, eine Sammlung von User Stories (Anwendungsmöglichkeiten aus Sicht 
 Die Architektur wird basierend auf dem Peer-to-Peer Modell entwickelt. Die Applikation soll dadurch ohne einen zentralen Server funktionieren und eine einfache Installation ermöglichen.
 
 \subsection{Schnittstellen}
-Durch die Offenlegung des internen Kommunikations-Protokolls von ACE haben andere Applikationsentwickler die Möglichkeit, direkt mit dem Editor zu kommunizieren. Dadurch entstehen beliebige Erweiterungsmöglichkeiten mit dem kollaborativen Texteditor.
+Durch die Offenlegung des internen Kommunikations-Protokolls von \ace haben andere Applikationsentwickler die Möglichkeit, direkt mit dem Editor zu kommunizieren. Dadurch entstehen beliebige Erweiterungsmöglichkeiten mit dem kollaborativen Texteditor.
 
 \end{document}
