@@ -64,9 +64,9 @@ In der Semesterarbeit soll die Basis gelegt werden für die Implementation eines 
  \hline
  4     & 1 & Testframework für Algorithmus \\
  \hline
- 5     & 2 & Konzept GUI \\
+ 5     & 2 & Analyse GUI \\
  \hline
- 6     & 2 & Konzept Netzwerk/Kommunikation \\
+ 6     & 2 & Analyse Netzwerk/Kommunikation \\
  \hline
  7     & 3 & User Stories für kollaborativen Texteditor \\
  \hline
@@ -99,41 +99,22 @@ Nachfolgend werden die drei Hauptphasen detaillierter erklärt.
 
 
 \subsection{Phase Initialisierung}
-Die Phase Initialisierung beinhaltet folgende Arbeiten:
-\begin{itemize}
- \item Einrichten der Projektumgebung (Arbeitsplatz, Rechner,...)
- \item Installation von Projektmanagement-Tools
- \item Installation von Entwicklungs-Tools
- \item Aufbau der Projektwebsite
- \item Fertigstellen der Zeiterfassungs-Software
-\end{itemize}
+In der Phase Initialisierung geht es vorallem darum, einen klar definierten organisatorischen und technischen Rahmen als Voraussetzung für eine erfolgreiche Projektabwicklung zu schaffen.
 
-\noindent
-Zusätzlich werden Projektmanagement spezifische Dokumente erstellt:
-\begin{itemize} 
- \item Projektantrag
- \item Pflichtenheft
- \item Projekthandbuch
- \item Projektplan
-\end{itemize}
-
-% change section title
-\subsection{Phase Entwicklung kollaborativer Editor}
+\subsection{Phase Analyse und Entwicklung}
 Die Phase wird in vier Komponenten unterteilt. Die Komponenten sind in der Bearbeitung unabhängig voneinander und können parallel bearbeitet werden.
 
 \subsubsection{Komponente Algorithmus}
-Dies ist die Hauptkomponente und der zeitintensivste Teil der Projektarbeit. Es beinhaltet die Entwicklung des Sychnronisationsalgorithmus sowie das Erstellen eines Testframeworks. Die beiden Teile werden parallel bearbeitet. 
+Dies ist die Hauptkomponente und der zeitintensivste Teil der Projektarbeit. Sie beinhaltet die Entwicklung des Sychnronisationsalgorithmus sowie das Erstellen eines Testframeworks. Die beiden Teile werden parallel bearbeitet. 
 
 \noindent
 Die Komponente Algorithmus ist in drei Phasen aufgeteilt:
 
-% made some changes...
 \paragraph{Phase Voranalyse: }
-In der Phase Voranalyse wird ein fundiertes Basiswissen im Bereich des CSCW (computer supported cooperative work) aufgebaut. Mit diesem Know-how soll anschliessend eine Analyse der aktuellen Synchronisationsalgorithmen gemacht werden. Diese Studie ermöglicht die Auswahl einer oder eventuell mehrerer Synchronisationsalgorithmen für die Implementation. Dies führt zur Freigabe der Phase Konzept.
+In der Phase Voranalyse wird ein fundiertes Basiswissen im Bereich des CSCW (computer supported cooperative work) aufgebaut. Mit diesem Know-how soll anschliessend eine Analyse der aktuellen Synchronisationsalgorithmen gemacht werden. Diese Studie ermöglicht die Auswahl eines Synchronisationsalgorithmus für die Implementation.
 
-% gewisse teile da drin gehören in die voranalyse (?)
 \paragraph{Phase Konzept: }
-In der Phase Konzept soll eine fundierte Beurteilung der in der Phase Voranalyse gemachten Auswahl von Synchronisationstechniken erfolgen. Sobald eine bestimmte Synchronisationstechnik bestimmt worden ist, beginnt die Entwicklung des Testframeworks parallel zum Algorithmus. Das zu erarbeitende Konzept über die Implementation des Synchronisationsalgorithmus legt den Rahmen für die nachfolgende Realisierung fest.
+In der Phase Konzept soll eine fundiertes Verständnis des gewählten Synchronisationsalgorithmus erarbeitet werden. Das Verständnis ist die Grundlage für eine erfolgreiche Phase Realisation.
 
 \paragraph{Phase Realisation: }
 In der Phase Realisation werden der Synchronisationsalgorithmus und das Testframework implementiert. Sobald die beiden Teile entwickelt sind, wird der Algorithmus mit dem Testframework geprüft.
@@ -144,13 +125,13 @@ Es sollen mögliche Lösungsvorschläge für die Komponente Netzwerk erarbeitet werd
 
 \subsubsection{Komponente GUI}
 \paragraph{Voranalyse}
-Es soll eine Evaluation der GUI Möglichkeiten erfolgen, welche die gewählte Programmiersprache anbietet.
+Es sollen Lösungsvarianten für die Komponente GUI evaluiert werden. Ein Lösungsvorschlag wird ausgewählt für die spätere Implementation.
 
 \subsubsection{Komponente User Stories}
-Ein soll ein Katalog mit User Stories erstellt werden. Dieser Katalog dient bei der späteren Implementation als Grundlage für die zu implementierende Funktionalität.
+Es soll ein Katalog mit User Stories erstellt werden. Dieser Katalog dient bei der späteren Implementation als Grundlage für die zu implementierende Funktionalität.
 
 \subsection{Phase Abschluss}
-In der Phase Abschluss wird das Projekt geordnet zu Ende gebracht. Alle Projektaktivitäten werden abgeschlossen. Dazu wird ein Abschlussbericht über das Projekt erstellt. Jedes Teammitglied verfasst zusätzlich einen Erfahrungsbericht. 
+In der Phase Abschluss wird das Projekt geordnet zu Ende gebracht. Alle Projektaktivitäten werden abgeschlossen. Das Team verfasst einen Erfahrungsbericht. 
 
 \section{Entscheidungspunkte und auszuliefernde Ergebnisse}
 
@@ -164,27 +145,36 @@ In der Phase Abschluss wird das Projekt geordnet zu Ende gebracht. Alle Projekta
 \end{itemize}
 \subsubsection*{Entscheidungspunkte}
 \begin{itemize}
- \item Freigabe der nächsten Phasen
+ \item Freigabe der nächste Phase
 \end{itemize}
 
 \subsection{Synchronisationsalgorithmus}
 \subsubsection*{Ergebnisse}
 \begin{itemize}
  \item Bericht Synchronisationsalgorithmen
- \item Testframework Synchronsiationsalgorithmen
- \item Erfassen und Erstellen von Testfällen
  \item Implementation Synchronisationsalgorithmus
+ \item Erfassen und Erstellen von Testfällen
+ \item Testframework Synchronsiationsalgorithmen
 \end{itemize}
 \subsubsection*{Entscheidungspunkte}
 \begin{itemize}
  \item Auswahl Synchronisationsalgorithmus basierend auf Bericht
 \end{itemize}
 
-\subsection{Konzept GUI/Netzwerk}
+\subsection{Analyse Netzwerk}
 \subsubsection*{Ergebnisse}
 \begin{itemize}
- \item ein Bericht (mögliche Lösungen, gewählte Lösung, Erfahrungen)
- \item Prototyp (nach Bedarf)
+ \item Bericht (mögliche Lösungen, gewählte Lösung, Erfahrungen)
+\end{itemize}
+\subsubsection*{Entscheidungspunkte}
+\begin{itemize}
+ \item Auswahl Lösung
+\end{itemize}
+
+\subsection{Analyse GUI}
+\subsubsection*{Ergebnisse}
+\begin{itemize}
+ \item Bericht (mögliche Lösungen, gewählte Lösung, Erfahrungen)
 \end{itemize}
 \subsubsection*{Entscheidungspunkte}
 \begin{itemize}
@@ -205,6 +195,7 @@ In der Phase Abschluss wird das Projekt geordnet zu Ende gebracht. Alle Projekta
 \subsubsection*{Ergebnisse}
 \begin{itemize}
  \item Erfahrungsbericht
+ \item CD mit allen Ergebnissen
 \end{itemize}
 \subsubsection*{Entscheidungspunkte}
 \begin{itemize}
