@@ -11,6 +11,7 @@
      if ($page < 0 || $page > 5) {
        $page = 0;
      }
+     $contact = "feedback@ace.iserver.ch";
    ?>
    
    <div id="wrapper">
