@@ -29,17 +29,21 @@ pdfcreator={pdftex},
 \input{versionskontrolle}
 \newpage
 
+
 \section{Einleitung}
 Im Projekt \ace soll ein kollaborativer, plattformunabhängiger Editor entwickelt werden. Diese Applikation ermöglicht mehreren Personen, ein Textdokument gemeinsam zu bearbeiten. Dabei arbeitet jede Person mit dem Editor an einem eigenen Computer. Alle Teilnehmer sind über ein Netzwerk verbunden und sehen jederzeit den gleichen Dokumentinhalt. Wenn jemand der Gruppe eine Änderung im Dokument vornimmt, wird dies in Echtzeit und synchron allen anderen Benutzern angezeigt. Jeder Benutzer hat dadurch den Überblick über alle Änderungen im Dokument. Dieser Editor ermöglicht zum Beispiel ein gemeinsames Brainstorming von mehreren Personen, welche sich an verschiedenen Orten befinden. 
 
 \subsection{Zweck des Dokumentes}
-Das vorliegende Dokument beschreibt die Ziele, welche mit der angestrebten Lösung zu erreichen sind sowie die Anforderungen und Wünsche an das zukünftige System.
+Das vorliegende Dokument beschreibt die Ziele, welche mit der angestrebten Lösung zu erreichen sind sowie die Anforderungen an das in der Semesterarbeit zu erstellende System.
+
 
 \section{Ausgangslage}
 Das gemeinsame Entwerfen eines elektronischen Dokumentes (z.B. Textdatei), wobei jeder Beteiligte mit seinem eigenen Computer arbeitet, ist noch praktisch unbekannt. Diese Technologie birgt ein grosses Anwendungspotenzial. Der zu entwickelnde Editor \ace soll komplett neuartige und effiziente Editier-Möglichkeiten bieten und dadurch neue Wege der Zusammenarbeit eröffnen. Bis heute existiert keine marktreife, plattformunabhängige Applikation dieser Art.
 
+
 \section{Ist-Zustand}
 Die dem kollaborativen Editor zugrunde liegende Theorie entstammt aus dem Forschungsgebiet der "'Computer Supported Cooperative Work - CSCW"'. Applikationen aus diesem Bereich werden auch als "'Groupware"' bezeichnet. Seit Mitte der 90er Jahren sind zahlreiche Forschungsarbeiten geschrieben worden. Die meisten davon beinhalten theoretische Überlegungen, so zum Beispiel mathematische Beschreibungen oder Beweise zu Synchronisationsalgorithmen. Viel Theoriewissen wurde erarbeitet. Dieses Know-How soll nun in die konkrete Implementation eines kollaborativen Editors einfliessen um daraus eine hochentwickelte, konkurrenzfähige Applikation auf den Markt zu bringen. 
+
 
 \section{Ziele}
 In der Semesterarbeit soll die Basis gelegt werden für die Implementation eines kollaborativen und plattformunabhängigen Texteditors im Rahmen der Diplomarbeit.
@@ -47,7 +51,7 @@ In der Semesterarbeit soll die Basis gelegt werden für die Implementation eines 
  \begin{table}[!ht]
   \begin{tabular}{|l|c|}
    \hline
-   \headercol{4.5in}{Beschreibung}                                & \headercol{1in}{Priorität}    \\
+   \headercol{4.5in}{Beschreibung}                              & \headercol{1in}{Priorität}  \\
    \hline
     Aufbau von Knowhow                                          &        1                    \\
     Evaluation bestehender Algorithmen                          &        1                    \\
@@ -66,10 +70,10 @@ In der Semesterarbeit soll die Basis gelegt werden für die Implementation eines 
 Es geht darum, ein fundiertes Basiswissen im Bereich des CSCW aufzubauen. Das Ziel ist, eine Übersicht über den aktuellen Forschungsstand und über die wichtigsten Errungenschaften in diesem Gebiet zu gewinnen. Das angeeignete Know-How soll beim Evaluieren der bestehenden Synchronisationsalgorithmen zum tieferen Verständnis beitragen und ein sachgerechtes Beurteilen ermöglichen.
 
 \subsection{Evaluation bestehender Algorithmen}
-Die Forschung hat seit anfangs der 90er Jahre zahlreiche Synchronisations-Algorithmen entwickelt. Das Ziel ist eine Übersicht zu erabeiten über die besten bestehenden Algorithmen. Jeder evaluierte Algorithmus soll prinzipiell verstanden werden. Die Übersicht soll Vor- und Nachteile aufzeigen und es ermöglichen, den am besten geeigneten Algorithmus für einen kollaborativen Texteditor zu bestimmen.
+Die Forschung hat seit anfangs der 90er Jahre zahlreiche Synchronisations-Algorithmen hervorgebracht. Das Ziel ist eine Übersicht über die bestehenden Algorithmen zu erabeiten. Jeder evaluierte Algorithmus soll prinzipiell verstanden werden. Die Übersicht soll Vor- und Nachteile aufzeigen und es ermöglichen, den am besten geeigneten Algorithmus für einen kollaborativen Texteditor zu bestimmen.
 
 \subsection{Implementation Algorithmus}
-Nach Evaluation der Algorithmen soll einer oder eventuell mehrere implementiert werden. Die Implementation des Algorithmus wird mit dem parallel erstellten Testframework geprüft.
+Nach Evaluation der Algorithmen soll einer oder eventuell mehrere implementiert werden. Die Implementation des Algorithmus wird mit dem Testframework geprüft.
 
 \subsection{Testframework für Algorithmus}
 Parallel zur Entwicklung des Synchronisationsalgorithmus soll ein Testframework erstellt werden. Dieses ermöglicht das sorgfälltige Austesten des Algorithmus mit verschiedenen, klar definierbaren Abläufen.
@@ -83,9 +87,32 @@ Zwei Themen müssen erarbeitet werden: Das dynamische Auffinden aller vorhandenen
 \subsection{User Stories für kollaborativen Texteditor}
 Das Ziel ist, eine Sammlung von User Stories (Anwendungsmöglichkeiten aus Sicht des Benutzers) für einen kollaborativen Texteditor zu erstellen. Diese Sammlung bildet dann eine Ideen-Grundlage für die Implementation von Funktionen des in der Diplomarbeit zu entwickelnden Texteditors.
 
+
+\section{Nicht-Ziele}
+
+ \begin{table}[!ht]
+  \begin{tabular}{|l|c|}
+   \hline
+   \headercol{4.5in}{Beschreibung}                              \\
+   \hline
+    Ausarbeiten von Sicherheitsaspekten                         \\
+    Prototyp kollaborativer Text-Editor                         \\
+   \hline
+  \end{tabular}
+  \caption{Nicht-Ziele}
+  \label{Nicht-Projektziele}
+ \end{table}
+
+\subsection{Ausarbeiten von Sicherheitsaspekten}
+Es ist nicht das Ziel Sicherheitsaspekte wie Authentifikation, Authorisierung und Verschlüsselung zu berücksichtigen. Es wird auch kein Konzept erstellt. 
+
+\subsection{Prototyp kollaborativer Text-Editor}
+Im Rahmen der Semesterarbeit soll kein Prototyp eines kollaborativen Editors entstehen.
+
+
 \section{Anforderungen}
 \subsection{Architektur}
-Die Architektur wird basierend auf dem Peer-to-Peer Modell entwickelt. Die Applikation soll dadurch ohne einen zentralen Server funktionieren und eine einfache Installation ermöglichen.
+Die Architektur wird basierend auf dem Peer-to-Peer Modell entwickelt. Die Applikation soll dadurch ohne einen zentralen Server funktionieren.
 
 \subsection{Schnittstellen}
 Durch die Offenlegung des internen Kommunikations-Protokolls von \ace haben andere Applikationsentwickler die Möglichkeit, direkt mit dem Editor zu kommunizieren. Dadurch entstehen beliebige Erweiterungsmöglichkeiten mit dem kollaborativen Texteditor.
