@@ -18,8 +18,10 @@ pdfcreator={pdftex},
 \begin{document}
 
 \tableofcontents
+\newpage
 \listoftables
 \listoffigures
+\newpage
 
 \input{versionskontrolle}
 
@@ -44,6 +46,7 @@ Heutzutage besitzt praktisch jeder Mensch in den Industrieländern einen Computer
 In der Semesterarbeit soll die Basis gelegt werden für die Implementation eines kollaborativen Texteditors im Rahmen der Diplomarbeit.
 
 \begin{table}[!h]
+ \begin{center}
  \begin{tabular}{|l|l|l|}
  \hline
  Ziel  & Prioritäten & Beschreibung \\
@@ -63,6 +66,7 @@ In der Semesterarbeit soll die Basis gelegt werden für die Implementation eines 
  7     & 3 & User Stories für kollaborativen Texteditor \\
  \hline
  \end{tabular}
+ \end{center}
  \caption{Ziele}
  \label{Ziele}
 \end{table}
@@ -70,34 +74,44 @@ In der Semesterarbeit soll die Basis gelegt werden für die Implementation eines 
 
 \subsection{Vorgehensstrategie}
 
-In dem Semesterprojekt geht es vorallem darum, Wissen aufzubauen und dazu eine funktionierende Synchronisationsengine zu entwickeln. Die Ziele sind dabei zum Teil unabhängig voneinander.
-
-Grundsätzlich werden pro unabhängigem Teil die Phasen Voranalyse und Konzept durchlaufen. Beim Teilziel Synchronisationsengine werden dabei zusätzlich noch eine Implementierung/Tests erstellt.
+In dem Semesterprojekt geht es vorallem darum, Wissen aufzubauen und dazu eine funktionierende Synchronisationsengine zu entwickeln. Die Ziele sind dabei zum Teil unabhängig voneinander. Grundsätzlich werden pro unabhängigem Teil die Phasen Voranalyse und Konzept durchlaufen. Beim Teilziel Synchronisationsengine werden dabei zusätzlich noch eine Implementierung und damit verbunden Tests erstellt. 
 
 
 \section{Projektspezifisches Vorgehensmodell}
 
+\subsection{Phase Initialisierung}
+In der Phase Initialisierung werden folgende Ergebnisse erstellt:
+\begin{itemize}
+ \item Projektantrag
+ \item Projekthandbuch
+ \item Pflichtenheft
+ \item Projektplan
+\end{itemize}
 
+\subsection{Phase Voranalyse}
+In der Phase Voranalyse werden jeweils die folgenden Ergebnisse erstellt:
+\begin{itemize}
+ \item Bericht (mögliche Lösungen)
+\end{itemize}
 
+\subsection{Phase Konzept}
+In der Phase Konzept werden jeweils die folgenden Ergebnisse erstellt:
+\begin{itemize}
+ \item detaillierter Bericht Konzept
+ \item Prototyp (kritische Teilsysteme untersuchen)
+\end{itemize}
 
 
 \section{Entscheidungspunkte und auszuliefernde Ergebnisse}
 
 \subsection{Initialisierung}
-\begin{table}[!h]
- \begin{tabular}{|l|l|}
- \hline
- Entscheidungspunkt  &  Ergebnisse       \\
- \hline
- Projektauftrag      &  -                \\
- \hline
- Abschluss Phase
- Initialisierung     &  Projekthandbuch, Projektplan, Pflichtenheft   \\
- \hline
- \end{tabular}
- \caption{Entscheidungspunkte Phase Initialisierung}
- \label{Entscheidungspunkte Phase Initialisierung}
-\end{table}
+In der Phase Initialisierung werden folgende Ergebnisse erstellt:
+\begin{itemize}
+ \item Projektantrag 
+ \item Projekthandbuch
+ \item Pflichtenheft
+ \item Projektplan
+\end{itemize}
 
 \subsection{Synchronisationsengine}
 Für die Synchronisationsengine werden folgende Ergebnisse bereitgestellt:
@@ -130,6 +144,8 @@ Für die Erfassung des Anwendungsumfangs sollen User Stories erfasst werden. Dara
  \item User Stories Katalog
 \end{itemize}
 Dazu gibt es keine spezifischen Entscheidungspunkte.
+
+
 
 \section{Methoden und Werkzeuge}
 
