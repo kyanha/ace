@@ -5,6 +5,7 @@
 \usepackage{ngerman}
 \usepackage{a4wide}
 \usepackage[dvips]{graphicx}
+\usepackage{listings}
 
 \usepackage{ace}
 
@@ -26,15 +27,74 @@ pdfcreator={pdftex},
 
 \subsection{Vorgehensstrategie}
 
+
 \section{Projektspezifisches Vorgehensmodell}
+
 
 \section{Entscheidungspunkte und auszuliefernde Ergebnisse}
 
+
 \section{Methoden und Werkzeuge}
+
+\subsection{Dokumente}
+Zum Erstellen aller Dokumente soll grundsäztlich \latex verwendet werden. Selbstverständlich werden für Grafiken und Diagramme andere Anwendungen verwendet. Da es sich bei \latex Dateien um Textdateien handelt, können wir SubEthaEdit (ein kollaborativer Editor für Mac) verwenden, um zur gleichen Zeit am gleichen Dokument zu arbeiten.
+
+\subsection{Source Repository}
+Subversion wird als Source Repository verwendet. Die URL für den Subversion Zugriff ist http://ace.iserver.ch:81/repos/ace/ace.
+
+\subsection{Projektwebsite}
+Von der Projektwebsite aus erreicht man alle wichtigen Werkzeuge. Die Projektwebsite ist erreichbar unter http://ace.iserver.ch. Die Projektwebsite dient auch dazu, das Produkt \emph{ACE} zu vermarkten. 
+
+\subsection{Zeiterfassung}
+Zur Erfassung der Arbeitszeit wird eine PHP Applikation, entwickelt von Herrn Bigler, verwendet. Dies wird es ermöglichen, am Ende des Projektes einige Angaben zu den geleisteten Arbeitsstunden zu machen.
+
+\subsection{Trac}
+Trac ist ein sogenannter issue tracker mit einem integrierten Wiki. Das Wiki wird für den projektinternen Informationsaustausch verwendet. Der issue tracker wird für die gezielte Erfassung von Bug Reports verwendet.
+
+\subsection{Kalender}
+Ein online verfügbarer Projektkalender gibt Auskunft über alle anstehenden Sitzungen und andere Termine.
+
+\subsection{Entwicklung}
+\begin{itemize}
+ \item Eclipse (http://www.eclipse.org/)
+ \item SubEthaEdit (http://www.codingmonkeys.de/subethaedit/)
+ \item ant (http://ant.apache.org/)
+\end{itemize}
+
 
 \section{Standards und Richtlinien}
 
 \subsection{Dokumentation}
+Alle \latex Dokumente sollen die Package ace.tex verwenden. Diese Datei findet man im Subversion Repository unter \texttt{/ace/trunk/doc/latex/ace.tex}. Eine Vorlage für alle \latex Dokumente findet man im selben Verzeichnis (template.tex).
+
+\subsection{Quellcode}
+Die Dokumentation des Quellcodes erfolgt mit JavaDoc. Die Kommentare werden einheitlich in Englisch verfasst. Quellcodedateien werden mit folgendem Header, welcher unter \texttt{/ace/trunk/doc/templates/source.header} zu finden ist, versehen.
+
+\lstset{language=Java}
+\begin{lstlisting}
+/*
+ * ace - a collaborative editor
+ * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
+\end{lstlisting}
+
+\subsubsection{Konventionen}
+Die Quellcodedateien sollen gemäss den Sun Coding Conventions (http://java.sun.com/docs/codeconv/) erstellt werden. Die Einrückung erfolgt mit Tabulator Zeichen (nicht mit Spaces).
+
 
 \appendix
 
