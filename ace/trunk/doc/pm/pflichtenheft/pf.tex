@@ -34,38 +34,49 @@ Das vorliegende Dokument beschreibt die Ziele, welche mit der angestrebten Lösun
 Das gemeinsame Entwerfen eines elektronischen Dokumentes (z.B. Textdatei), wobei jeder Beteiligte mit seinem eigenen Computer arbeitet, ist noch praktisch unbekannt. Diese Technologie birgt ein grosses Anwendungspotenzial. Der zu entwickelnde Editor ACE soll komplett neuartige und effiziente Editier-Möglichkeiten bieten und dadurch neue Wege der Zusammenarbeit eröffnen. Bis heute existiert keine marktreife, plattformunabhängige Applikation dieser Art.
 
 \section{Ist-Zustand}
-Die dem kollaborativen Editor zugrunde liegende Theorie entstammt aus dem Forschungsgebiet der "Computer Supported Cooperative Work - CSCW". Applikationen aus diesem Bereich werden auch mit Groupware bezeichnet. Seit Mitte der 90er Jahren sind zahlreiche Forschungsarbeiten geschrieben worden. Die meisten davon beinhalten theoretische Überlegungen, so zum Beispiel mathematische Beschreibungen oder Beweise zu Synchronisationsalgorithmen. Viel Theoriewissen wurde erarbeitet. Dieses Know-How soll nun in die konkrete Implementation eines kollaborativen Editors einfliessen um daraus eine hochentwickelte, konkurrenzfähige Applikation auf den Markt zu bringen. 
+Die dem kollaborativen Editor zugrunde liegende Theorie entstammt aus dem Forschungsgebiet der "'Computer Supported Cooperative Work - CSCW"'. Applikationen aus diesem Bereich werden auch mit Groupware bezeichnet. Seit Mitte der 90er Jahren sind zahlreiche Forschungsarbeiten geschrieben worden. Die meisten davon beinhalten theoretische Überlegungen, so zum Beispiel mathematische Beschreibungen oder Beweise zu Synchronisationsalgorithmen. Viel Theoriewissen wurde erarbeitet. Dieses Know-How soll nun in die konkrete Implementation eines kollaborativen Editors einfliessen um daraus eine hochentwickelte, konkurrenzfähige Applikation auf den Markt zu bringen. 
 
 \section{Ziele}
-Die nachfolgenden Zielsetzungen gelten für die Semesterarbeit.
+In der Semesterarbeit soll die Basis gelegt werden für die Implementation eines kollaborativen Texteditors im Rahmen der Diplomarbeit.
  \begin{center}
   \begin{tabular}{|l|c|}
    \hline
    Beschreibung     &     Priorität    \\
    \hline
-    Implementation eines funktionierenden Synchronisationsalgorithmus, dies beinhaltet:                    &        1        \\
-    Definiertes, konsistentes Verhalten des Algorithmus bei allen möglichen Use Cases                       &        1        \\
-    Identischer Dokumentinhalt bei allen Editorinstanzen einer Gruppe                                       &        1         \\
-    Cursor-Positionen der verschiedenen Teilnehmer voneinander unabhängig                                   &        1         \\
-    Dynamisches Erkennen aller freigegebenen Dokumenten innerhalb eines Netzwerkes                          &        2         \\
-    Freigeben von Dokumenten in Read-Only oder Read-Write Modus                                             &        2         \\
-    Sich als Reader oder Editor einem Dokument anschliessen                                                 &        2         \\
-    Einfache GUI Funktionen
+    Aufbau von Knowhow im Bereich CSCW                          &        1         \\
+    Bestehende Algorithmen evaluieren                           &        1         \\
+    Algorithmus implementieren                                  &        1         \\
+    Testframework für Algorithmus (Testfälle)                   &        1         \\
+    Konzept GUI                                                 &        2         \\
+    Konzept Netzwerk/Kommunikation                              &        2         \\
+    User Stories für kollaborativen Texteditor                  &        3         \\
    \hline
   \end{tabular}
  \end{center}
 
-\subsection{Implementation eines funktionierenden Synchronisationsalgorithmus}
+\subsection{Aufbau von Knowhow im Bereich CSCW}
+Es geht darum, ein fundiertes Basiswissen im Bereich des CSCW aufzubauen. Das Ziel ist, eine Übersicht über den aktuellen Forschungsstand und über die wichtigsten Errungenschaften in diesem Gebiet zu gewinnen. Das angeeignete Know-How soll beim Evaluieren der bestehenden Synchronisationsalgorithmen zum tieferen Verständnis beitragen und ein sachgerechtes Beurteilen ermöglichen.
 
-\subsection{Definiertes, konsistentes Verhalten des Algorithmus bei allen möglichen Use Cases}
+\subsection{Bestehende Algorithmen evaluieren}
+Die Forschung hat seit anfangs der 90er Jahre zahlreiche Synchronisations-Algorithmen in formaler Form entwickelt. Das Ziel ist eine Übersicht zu erabeiten über die besten bis heute bekannten Algorithmen. Jeder evaluierte Algorithmus soll prinzipiell verstanden werden. Die Übersicht soll Vor- und Nachteile aufzeigen und es ermöglichen, den am besten geeigneten Algorithmus für einen kollaborativen Texteditor zu bestimmen.
 
-\subsection{Identischer Dokumentinhalt bei allen Editorinstanzen einer Gruppe}
+\subsection{Algorithmus implementieren}
+Nach Evaluation eines bestimmten Algorithmus soll dieser implementiert werden (als Synchronisationsengine). Die Implementation beinhaltet ebenfalls, mögliche Nachteile respektive Schwachstellen des gewählten Algorithmus zu beheben durch eigens entwickelten Lösungen oder Kombination mit anderen Algorithmen. Die Implementation des Algorithmus wird mit dem parallel erstellten Testframework getestet.
 
-\subsection{Cursor-Positionen der verschiedenen Teilnehmer voneinander unabhängig}
+\subsection{Testframework für Algorithmus}
+Parallel zur Entwicklung des Synchronisationsalgorithmus soll ein Framework zum Austesten erstellt werden. Diese soll das sorgfälltige Austesten des Algorithmus mit verschiedenen, klar definierbaren (z.B. mit Hilfe von XML-Dateien) Abläufen ermöglichen.
 
-\subsection{Dynamisches Erkennen aller freigegebenen Dokumenten innerhalb eines Netzwerkes}
 
-\subsection{Freigeben von Dokumenten in Read-Only oder Read-Write Modus}
+\subsection{Konzept GUI}
+In erster Linie geht es darum, zu sehen was mit den verschiedenen Textkomponenten von Java alles machbar ist. Es muss möglich sein mehrere Cursor, auswählbare und anders eingefärbte Textstellen in einer solchen Textkomponente darzustellen. Weiter müssen spezielle Auflistungskomponenten analysiert werden, mit welchen alle aktiven Benutzer, deren freigegebene Dokumente und Zugriffsrechte angezeigt werden können. Diese Komponenten sollten alle einfach und intuitiv zu bedienen sein.
+
+\subsection{Konzept Netzwerk/Kommunikation}
+Die verschiedenen Kommunikationsmechanismen, speziell das gegenseitige Auffinden anderer Netzwerkteilnehmer nach dem Rendez-Vous-Prinzip, sollen unter die Lupe genommen werden.
+
+
+\subsection{User Stories für kollaborativen Texteditor}
+Es soll eine Sammlung von User Stories (Anwendungsmöglichkeiten aus Sicht des Benutzers) für einen kollaborativen Texteditor erstellt werden. Diese Sammlung bildet dann eine Ideen-Grundlage für die Implementation von Funktionen des in der Diplomarbeit zu entwickelnden Texteditors.
+
 
 \section{Anforderungen}
 \subsection{Architektur}
