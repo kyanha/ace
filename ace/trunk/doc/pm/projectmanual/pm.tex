@@ -85,29 +85,67 @@ In dem Semesterprojekt geht es vorallem darum, Wissen aufzubauen und dazu einen 
 
 
 \section{Projektspezifisches Vorgehensmodell}
+Das Vorgehen wird durch drei Hauptphasen bestimmt (siehe Abbildung 1). Die erste Phase initialisiert das Projekt. Die zweite Phase definiert das tatsächlich projektspezifische Vorgehensmodell und wird in vier parallel zu bearbeitende Komponenenten unterteilt. Die einzelnen Komponenten stellen wiederum ein Subprojekt mit eigenen Phasen dar. Die dritte und letzte Phase beinhaltet den Abschluss des Projektes. 
+
+\begin{figure}[h]
+  \begin{center}
+    \includegraphics[width=10cm,height=9.2cm]{../../images/vorgehensmodell.eps}
+  \end{center}
+  \caption{Projektspezifisches Vorgehensmodell}
+  \label{Projektspezifisches Vorgehensmodell}
+\end{figure}
+
+Nachfolgend werden die drei Hauptphasen detaillierter erklärt.
+
 
 \subsection{Phase Initialisierung}
-In der Phase Initialisierung werden folgende Ergebnisse erstellt:
+Die Phase Initialisierung beinhaltet folgende Arbeiten:
 \begin{itemize}
+ \item Einrichten der Projektumgebung (Arbeitsplatz, Rechner,...)
+ \item Installation von Projektmanagement-Tools
+ \item Installation von Entwicklungs-Tools
+ \item Aufbau der Projektwebsite
+ \item Fertigstellen der Zeiterfassungs-Software
+\end{itemize}
+
+Zusätzlich werden Projektmanagement spezifische Dokumente erstellt:
+\begin{itemize} 
  \item Projektantrag
- \item Projekthandbuch
  \item Pflichtenheft
+ \item Projekthandbuch
  \item Projektplan
 \end{itemize}
 
-\subsection{Phase Voranalyse}
-In der Phase Voranalyse werden jeweils die folgenden Ergebnisse erstellt:
-\begin{itemize}
- \item Bericht (mögliche Lösungen)
-\end{itemize}
+\subsection{Phase Entwicklung kollaborativer Editor}
+Die Phase wird in 4 Komponenten unterteilt. Die Komponenten sind in der Bearbeitung unabhängig voneinander und können parallel bearbeitet werden.
 
-\subsection{Phase Konzept}
-In der Phase Konzept werden jeweils die folgenden Ergebnisse erstellt:
-\begin{itemize}
- \item detaillierter Bericht Konzept
- \item Prototyp (kritische Teilsysteme untersuchen)
-\end{itemize}
+\subsubsection{Komponente Algorithmus}
+Dies ist die Hauptkomponente und der zeitintensivste Teil der Projektarbeit. Es beinhaltet die Entwicklung des Sychnronisationsalgorithmus sowie das Erstellen eines Testframeworks. Die beiden Teile werden parallel bearbeitet. 
 
+Die Komponente Algorithmus ist in drei Phasen aufgeteilt:
+
+\paragraph{Phase Voranalyse}
+In der Phase Voranalyse wird ein fundiertes Basiswissen im Bereich des CSCW aufgebaut. Mit diesem Know-how soll anschliessend eine Marktstudie über die aktuellen Synchronisationstechniken erarbeitet werden. Diese Studie ermöglicht die Auswahl einer oder eventuell mehrerer Synchronisationstechniken für eine Testimplementation. Dies führt zur Freigabe der Phase Konzept.
+
+\paragraph{Phase Konzept}
+In der Phase Konzept soll eine fundierte Beurteilung der engeren Auswahl von Synchronisationstechniken erfolgen. Sobald eine bestimmte Synchronisationstechnik bestimmt worden ist, beginnt die Entwicklung des Testframeworks parallel zum Algorithmus. Das zu erarbeitende Konzept über die Implementation des Synchronisationsalgorithmus legt den Rahmen für die nachfolgende Realisierung fest.
+
+\paragraph{Phase Realisation}
+In der Phase Realisation werden der Synchronisationsalgorithmus und das Testframework implementiert. Sobald die beiden Teile entwickelt sind, wird der Algorithmus mit dem Testframework geprüft.
+
+\subsubsection{Komponente Netzwerk}
+\paragraph{Voranalyse}
+Es soll eine Marktstudie über die in diesem Gebiet vorhandenen Technologien erstellt werden. Diese Studie soll die Auswahl einer bestimmten Technologie für das Projekt ermöglichen.
+
+\subsubsection{Komponente GUI}
+\paragraph{Voranalyse}
+Es soll eine Evaluation der GUI Möglichkeiten erfolgen, welche die gewählte Programmiersprache anbietet.
+
+\subsubsection{Komponente User Stories}
+Ein Bericht mit sogenannten User Stories wird erstellt.
+
+\subsection{Phase Abschluss}
+In der Phase Abschluss wird das Projekt geordnet zu Ende gebracht. Alle Projektaktivitäten werden abgeschlossen. Dazu wird ein Abschlussbericht über das Projekt erstellt. Jedes Teammitglied verfasst zusätzlich einen Erfahrungsbericht. 
 
 \section{Entscheidungspunkte und auszuliefernde Ergebnisse}
 
