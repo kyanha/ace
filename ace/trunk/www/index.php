@@ -5,6 +5,14 @@
   <style type="text/css"></style>
  </head>
  <body>
+ 
+   <?php
+     $page = $_GET['page'];
+     if ($page < 0 || $page > 5) {
+       $page = 0;
+     }
+   ?>
+   
    <div id="wrapper">
      <?php require('inc/topbar.inc.php'); ?>
      <?php require('inc/header.inc.php'); ?>
@@ -17,7 +25,7 @@
 
        <?php
        
-       switch ($_GET['page']) {
+       switch ($page) {
        case 1:
          require('inc/vision.inc.php');
          break;
