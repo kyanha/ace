@@ -10,7 +10,7 @@
       </ul>
     </div>
     <div align="center">
-      <img src="images/css.png" alt="Valid CSS" class="noborder" />
       <img src="images/opensource.png" alt="Opensource" class="noborder" />
+      <img src="images/css.png" alt="Valid CSS" class="noborder" />
     </div>
   </div>
