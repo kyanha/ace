@@ -14,12 +14,9 @@ pdftitle={ Projekthandbuch },
 pdfcreator={pdftex},
 ]{hyperref}
 
-\title{Projekthandbuch}
-\author{Mark Bigler \and Simon Räss \and Lukas Zbinden}
-
 \begin{document}
 
-\maketitle
+\input{titlepage}
 \newpage
 
 \tableofcontents
@@ -81,11 +78,13 @@ In der Semesterarbeit soll die Basis gelegt werden für die Implementation eines 
 
 \subsection{Vorgehensstrategie}
 
-In dem Semesterprojekt geht es vorallem darum, Wissen aufzubauen und dazu einen funktionierenden Synchronisationsalgorithmus zu entwickeln. Die Ziele sind teilweise unabhängig voneinander. Grundsätzlich werden pro unabhängigem Teil die Phasen Voranalyse und Konzept durchlaufen. Beim Teilziel Synchronisationsalgorithmus werden zusätzlich noch eine Implementierung und damit verbundene Tests erstellt. 
+In dem Semesterprojekt geht es vorallem darum, Wissen aufzubauen und dazu einen funktionierenden Synchronisationsalgorithmus zu entwickeln. Die Ziele sind teilweise unabhängig voneinander. Das Vorgehensmodell ist im Abschnitt \ref{sect: Projektspezifisches Vorgehensmodell} im Detail erklärt.
 
 
 \section{Projektspezifisches Vorgehensmodell}
-Das Vorgehen wird durch drei Hauptphasen bestimmt (siehe Abbildung 1). Die erste Phase initialisiert das Projekt. Die zweite Phase definiert das tatsächlich projektspezifische Vorgehensmodell und wird in vier parallel zu bearbeitende Komponenenten unterteilt. Die einzelnen Komponenten stellen wiederum ein Subprojekt mit eigenen Phasen dar. Die dritte und letzte Phase beinhaltet den Abschluss des Projektes. 
+\label{sect: Projektspezifisches Vorgehensmodell}
+
+Das Vorgehen wird durch drei Hauptphasen bestimmt (siehe Abbildung \ref{Projektspezifisches Vorgehensmodell}). Die erste Phase initialisiert das Projekt. Die zweite Phase ist in vier parallel zu bearbeitende Komponenenten unterteilt. Die einzelnen Komponenten stellen wiederum ein Subprojekt mit eigenen Phasen dar. Die dritte und letzte Phase beinhaltet den Abschluss des Projektes. 
 
 \begin{figure}[h]
   \begin{center}
@@ -95,6 +94,7 @@ Das Vorgehen wird durch drei Hauptphasen bestimmt (siehe Abbildung 1). Die erste
   \label{Projektspezifisches Vorgehensmodell}
 \end{figure}
 
+\noindent
 Nachfolgend werden die drei Hauptphasen detaillierter erklärt.
 
 
@@ -108,6 +108,7 @@ Die Phase Initialisierung beinhaltet folgende Arbeiten:
  \item Fertigstellen der Zeiterfassungs-Software
 \end{itemize}
 
+\noindent
 Zusätzlich werden Projektmanagement spezifische Dokumente erstellt:
 \begin{itemize} 
  \item Projektantrag
@@ -116,33 +117,37 @@ Zusätzlich werden Projektmanagement spezifische Dokumente erstellt:
  \item Projektplan
 \end{itemize}
 
+% change section title
 \subsection{Phase Entwicklung kollaborativer Editor}
-Die Phase wird in 4 Komponenten unterteilt. Die Komponenten sind in der Bearbeitung unabhängig voneinander und können parallel bearbeitet werden.
+Die Phase wird in vier Komponenten unterteilt. Die Komponenten sind in der Bearbeitung unabhängig voneinander und können parallel bearbeitet werden.
 
 \subsubsection{Komponente Algorithmus}
 Dies ist die Hauptkomponente und der zeitintensivste Teil der Projektarbeit. Es beinhaltet die Entwicklung des Sychnronisationsalgorithmus sowie das Erstellen eines Testframeworks. Die beiden Teile werden parallel bearbeitet. 
 
+\noindent
 Die Komponente Algorithmus ist in drei Phasen aufgeteilt:
 
-\paragraph{Phase Voranalyse}
-In der Phase Voranalyse wird ein fundiertes Basiswissen im Bereich des CSCW aufgebaut. Mit diesem Know-how soll anschliessend eine Marktstudie über die aktuellen Synchronisationstechniken erarbeitet werden. Diese Studie ermöglicht die Auswahl einer oder eventuell mehrerer Synchronisationstechniken für die Implementation. Dies führt zur Freigabe der Phase Konzept.
+% made some changes...
+\paragraph{Phase Voranalyse: }
+In der Phase Voranalyse wird ein fundiertes Basiswissen im Bereich des CSCW (computer supported cooperative work) aufgebaut. Mit diesem Know-how soll anschliessend eine Analyse der aktuellen Synchronisationsalgorithmen gemacht werden. Diese Studie ermöglicht die Auswahl einer oder eventuell mehrerer Synchronisationsalgorithmen für die Implementation. Dies führt zur Freigabe der Phase Konzept.
 
-\paragraph{Phase Konzept}
+% gewisse teile da drin gehören in die voranalyse (?)
+\paragraph{Phase Konzept: }
 In der Phase Konzept soll eine fundierte Beurteilung der in der Phase Voranalyse gemachten Auswahl von Synchronisationstechniken erfolgen. Sobald eine bestimmte Synchronisationstechnik bestimmt worden ist, beginnt die Entwicklung des Testframeworks parallel zum Algorithmus. Das zu erarbeitende Konzept über die Implementation des Synchronisationsalgorithmus legt den Rahmen für die nachfolgende Realisierung fest.
 
-\paragraph{Phase Realisation}
+\paragraph{Phase Realisation: }
 In der Phase Realisation werden der Synchronisationsalgorithmus und das Testframework implementiert. Sobald die beiden Teile entwickelt sind, wird der Algorithmus mit dem Testframework geprüft.
 
 \subsubsection{Komponente Netzwerk}
-\paragraph{Voranalyse}
-Es soll eine Marktstudie über die in diesem Gebiet vorhandenen Technologien erstellt werden. Diese Studie soll die Auswahl einer bestimmten Technologie für das Projekt ermöglichen.
+\paragraph{Voranalyse: }
+Es sollen mögliche Lösungsvorschläge für die Komponente Netzwerk erarbeitet werden. Die Lösungsvorschläge müssen untersucht und auf ihre Tauglichkeit bewertet werden. Es soll ein Lösungsvorschlag ausgewählt werden für die spätere Implementation.
 
 \subsubsection{Komponente GUI}
 \paragraph{Voranalyse}
 Es soll eine Evaluation der GUI Möglichkeiten erfolgen, welche die gewählte Programmiersprache anbietet.
 
 \subsubsection{Komponente User Stories}
-Ein Bericht mit sogenannten User Stories wird erstellt.
+Ein soll ein Katalog mit User Stories erstellt werden. Dieser Katalog dient bei der späteren Implementation als Grundlage für die zu implementierende Funktionalität.
 
 \subsection{Phase Abschluss}
 In der Phase Abschluss wird das Projekt geordnet zu Ende gebracht. Alle Projektaktivitäten werden abgeschlossen. Dazu wird ein Abschlussbericht über das Projekt erstellt. Jedes Teammitglied verfasst zusätzlich einen Erfahrungsbericht. 
@@ -159,7 +164,7 @@ In der Phase Abschluss wird das Projekt geordnet zu Ende gebracht. Alle Projekta
 \end{itemize}
 \subsubsection*{Entscheidungspunkte}
 \begin{itemize}
- \item keine
+ \item Freigabe der nächsten Phasen
 \end{itemize}
 
 \subsection{Synchronisationsalgorithmus}
@@ -173,14 +178,13 @@ In der Phase Abschluss wird das Projekt geordnet zu Ende gebracht. Alle Projekta
 \subsubsection*{Entscheidungspunkte}
 \begin{itemize}
  \item Auswahl Synchronisationsalgorithmus basierend auf Bericht
- \item Abschluss Implementation
 \end{itemize}
 
 \subsection{Konzept GUI/Netzwerk}
 \subsubsection*{Ergebnisse}
 \begin{itemize}
  \item ein Bericht (mögliche Lösungen, gewählte Lösung, Erfahrungen)
- \item Prototyp
+ \item Prototyp (nach Bedarf)
 \end{itemize}
 \subsubsection*{Entscheidungspunkte}
 \begin{itemize}
@@ -188,7 +192,6 @@ In der Phase Abschluss wird das Projekt geordnet zu Ende gebracht. Alle Projekta
 \end{itemize}
 
 \subsection{User Stories}
-Für die Erfassung des Anwendungsumfangs sollen User Stories erfasst werden. 
 \subsubsection*{Ergebnisse}
 \begin{itemize}
  \item User Stories Katalog
@@ -198,6 +201,15 @@ Für die Erfassung des Anwendungsumfangs sollen User Stories erfasst werden.
  \item keine
 \end{itemize}
 
+\subsection{Abschluss}
+\subsubsection*{Ergebnisse}
+\begin{itemize}
+ \item Erfahrungsbericht
+\end{itemize}
+\subsubsection*{Entscheidungspunkte}
+\begin{itemize}
+ \item Projektabschluss
+\end{itemize}
 
 
 \section{Methoden und Werkzeuge}
