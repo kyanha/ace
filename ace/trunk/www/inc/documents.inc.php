@@ -2,9 +2,9 @@
 
 <ul>
   <li>
-    <a href="http://ace.iserver.ch:81/repos/ace/ace/trunk/doc/pdf/projektantrag.pdf">Project Proposal (German)</a>
+    <a href="http://ace.iserver.ch:81/repos/ace/ace/trunk/doc/pdf/projektantrag.pdf">Projektantrag (German)</a>
   </li>
-  <li>Project Manual (German)</li>
-  <li>Project Plan (German)</li>
-  <li>Requirements Specification (English)</li>
+  <li><a href="http://ace.iserver.ch:81/repos/ace/ace/trunk/doc/pdf/pflichtenheft.pdf">Projekthandbuch (German)</a></li>
+  <li>Projektplan (German)</li>
+  <li>Pflichtenheft (German)</li>
 </ul>
