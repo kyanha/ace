@@ -16,12 +16,14 @@ pdfcreator={pdftex},
 
 \begin{document}
 
-\title{Pflichtenheft}
-\author{Mark Bigler, Lukas Zbinden und Simon Raess}
-
-\maketitle
+\input{titlepage}
 \newpage
+
 \tableofcontents
+\newpage
+
+\listoftables
+\listoffigures
 \newpage
 
 \input{versionskontrolle}
@@ -45,7 +47,7 @@ In der Semesterarbeit soll die Basis gelegt werden für die Implementation eines 
  \begin{table}[!ht]
   \begin{tabular}{|l|c|}
    \hline
-   \headcol{4.5in}{Beschreibung}                                & \headcol{1in}{Priorität}    \\
+   \headercol{4.5in}{Beschreibung}                                & \headercol{1in}{Priorität}    \\
    \hline
     Aufbau von Knowhow                                          &        1                    \\
     Evaluation bestehender Algorithmen                          &        1                    \\
