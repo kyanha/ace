@@ -5,10 +5,14 @@
 \usepackage{ngerman}
 \usepackage{a4wide}
 \usepackage[dvips]{graphicx}
+\usepackage{float}
+\restylefloat{figure}
+\restylefloat{table}
 
 \usepackage{ace}
 
 \usepackage[
+a4paper,
 pdfauthor={ ACE Projekt Team },
 pdftitle={ Projektplan },
 pdfcreator={pdftex},
@@ -19,7 +23,8 @@ pdfcreator={pdftex},
 
 \begin{document}
 
-\maketitle
+\input{titlepage}
+
 \newpage
 
 \tableofcontents
@@ -32,8 +37,32 @@ pdfcreator={pdftex},
 \newpage
 
 
+\section{Einleitung}
+\subsection{Zweck des Dokumentes}
+Der Projektplan enthält die Planung und Organisation des gesamten Projekts und ergänzt das Projekthandbuch als Handlungsgrundlage. Der Projektplan wird fortlaufend nachgeführt und verfeinert.
+
+
 \section{Projektorganisation}
 
+
 \section{Projektablauf}
+Der Projektablauf beschreibt die Ergebnisstruktur des \ace Projektes und darauf aufbauend die ablaufoganisatorischen Gegebenheiten.
+
+
+\subsection{Ergebnisstruktur}
+Alle Ergebnisse, die zum jeweiligen Planungsstand bekannt sind, werden identifiziert und in ihrer Abhängigkeit (Struktur) untereinander festgelegt. Dieser Abschnitt enthält sowohl die als Vertragsbestandteil festgelegten Ergebnisse als auch die projekinternen Ergebnisse.
+
+\begin{figure}[H]
+ \includegraphics[width=5.5in,height=5.5in]{../../images/ergebnisstrukturplan.eps}
+ \caption{Ergebnisstrukturplan}
+ \label{Ergebnisstrukturplan}
+\end{figure}
+
+
+\subsection{Workpackages}
+
+\input{wp/pflichtenheft}
+\input{wp/projekthandbuch}
+\input{wp/projektplan}
 
 \end{document}
