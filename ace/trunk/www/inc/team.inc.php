@@ -7,7 +7,7 @@
 </ul>
 
 
-<h2>Project Couching</h2>
+<h2>Project Coaching</h2>
 
 <ul>
  <li>Jean-Paul Dubois</li>
@@ -15,7 +15,7 @@
 </ul>
 
 
-<h2>PM Couching</h2>
+<h2>PM Coaching</h2>
 
 <ul>
  <li>Frank Helbling</li>
