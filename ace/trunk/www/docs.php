@@ -36,6 +36,7 @@ $docs[33] = "icpads04.pdf";
 $docs[34] = "bouazza.pdf";
 $docs[35] = "vidot.pdf";
 $docs[36] = "MMGroupEditor.pdf";
+$docs[37] = "cscw04sdt.pdf";
 
 
 if (isset($_GET["id"])) {
