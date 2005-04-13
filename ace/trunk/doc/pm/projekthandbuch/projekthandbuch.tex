@@ -12,9 +12,13 @@ pdftitle={ Projekthandbuch },
 pdfcreator={pdftex},
 ]{hyperref}
 
+\usepackage{float}
+
 \input{ace}
 
 \begin{document}
+
+\setlength{\parindent}{0pt}
 
 \input{titlepage}
 \newpage
@@ -88,15 +92,15 @@ In der Semesterarbeit soll die Basis für die Implementation eines kollaborativen
  \end{table}
 
 
-\subsection{Vorgehensstrategie}
+\section{Vorgehensstrategie}
 
-In dem Semesterprojekt geht es vor allem darum, Wissen aufzubauen und dazu einen funktionierenden Synchronisationsalgorithmus zu entwickeln. Das Vorgehensmodell ist im Abschnitt \ref{sect: Projektspezifisches Vorgehensmodell} im Detail erklärt.
+In dem Semesterprojekt geht es vor allem darum, Wissen aufzubauen und dazu einen funktionierenden Synchronisationsalgorithmus zu entwickeln. Das Vorgehensmodell sowie die Zahl und Art der Entscheidungspunkte ist im Abschnitt \ref{sect: Projektspezifisches Vorgehensmodell} im Detail beschrieben.
 
+Das Projekt wird in drei unabhängige Teilprojekte aufgeteilt. Dies sind die Teilprojekte GUI, Netzwerk und Algorithmus. In einer ersten Phase wird das Projekt initialisert. Danach werden diese Teilprojekte teilweise parallel bearbeitet. In der Phase Abschluss wird das Projekt sauber abgeschlossen.
 
-\section{Projektspezifisches Vorgehensmodell}
-\label{sect: Projektspezifisches Vorgehensmodell}
+Die drei Teilprojekte laufen nach dem gleichen Schema ab. Da das Projektteam in den Teilgebieten noch kein fundiertes Wissen hat, geht es in erster Linie darum, Wissen und Erfahrung aufzubauen. Prototypen werden dort eingesetzt, wo es zum besseren Verständnis von Technologien hilfreich und nötig ist. 
 
-Das Vorgehen wird durch drei Hauptphasen bestimmt (siehe Abbildung \ref{Projektspezifisches Vorgehensmodell}). Die erste Phase initialisiert das Projekt. Die zweite Phase ist in drei Komponenten unterteilt, welche parallel bearbeitet werden können. Die einzelnen Komponenten stellen ein Subprojekt mit eigenen Phasen dar. Die dritte und letzte Phase beinhaltet den Abschluss des Projektes. Die Abbildung \ref{Projektspezifisches Vorgehensmodell} stellt eine logische Unterteilung der Vorgehensweise dar.
+Das Vorgehen wird durch drei Hauptphasen bestimmt (siehe Abbildung \ref{sect: Projektspezifisches Vorgehensmodell}). Die erste Phase initialisiert das Projekt. Die zweite Phase ist in drei Komponenten unterteilt, welche parallel bearbeitet werden können. Die einzelnen Komponenten stellen ein Teilprojekt mit eigenen Phasen dar. Die dritte und letzte Phase beinhaltet den Abschluss des Projektes. Die Abbildung \ref{Projektspezifisches Vorgehensmodell} stellt eine logische Unterteilung der Vorgehensweise dar.
 
 \begin{figure}[h]
   \begin{center}
@@ -106,101 +110,275 @@ Das Vorgehen wird durch drei Hauptphasen bestimmt (siehe Abbildung \ref{Projekts
   \label{Projektspezifisches Vorgehensmodell}
 \end{figure}
 
-\noindent
-Nachfolgend werden die drei Hauptphasen detaillierter erklärt.
-
-
 \subsection{Phase Initialisierung}
 In der Phase Initialisierung geht es vor allem darum, einen klar definierten organisatorischen und technischen Rahmen als Voraussetzung für eine erfolgreiche Projektabwicklung zu schaffen.
 
 \subsection{Phase Analyse und Entwicklung}
-Die zweite Hauptphase wird in drei unabhängige Komponenten Algorithmus, Netzwerk und GUI unterteilt. Es bestehen keine Schnittstellen zwischen diesen Komponenten.
+Die zweite Hauptphase wird in drei unabhängige Teilprojekte Algorithmus, Netzwerk und GUI unterteilt. Es bestehen keine Schnittstellen zwischen diesen Teilprojekten.
 
-\subsubsection{Komponente Algorithmus}
-Das ist die Hauptkomponente und der zeitintensivste Teil der Projektarbeit. Es beinhaltet die Entwicklung des Sychnronisationsalgorithmus sowie das Erstellen eines Testframeworks. Die beiden Teile werden parallel bearbeitet. Die Komponente Algorithmus ist in drei Phasen aufgeteilt:
+\subsubsection{Teilprojekt Algorithmus}
+Dieses Teilprojekt ist der zeitintensivste Teil der Projektarbeit. Es beinhaltet die Entwicklung des Sychnronisationsalgorithmus sowie das Erstellen eines Testframeworks. Die beiden Teile werden parallel bearbeitet. Das Teilprojekt Algorithmus ist in drei Phasen aufgeteilt:
 
 \paragraph{Phase Voranalyse: }
-In der Phase Voranalyse wird ein fundiertes Basiswissen im Bereich des CSCW (\emph{Computer Supported Cooperative Work}) aufgebaut. Mit diesem Know-How soll anschliessend eine Analyse der aktuellen Synchronisationsalgorithmen gemacht werden. Diese Studie ermöglicht die Auswahl eines geeigneten Synchronisationsalgorithmus für die Implementation.
+In der Phase Voranalyse wird ein fundiertes Basiswissen im Bereich des CSCW (\emph{Computer Supported Cooperative Work}) aufgebaut. Mit diesem Know-How soll anschliessend eine Analyse der aktuellen Synchronisationsalgorithmen gemacht werden. Diese Studie ermöglicht die Auswahl eines geeigneten Algorithmus für die Implementation.
 
 \paragraph{Phase Design: }
-In der Phase Design soll zuerst das Wissen über den gewählten Synchronisationsalgorithmus vertieft werden. Anschliessend erfolgt das Systemdesign für den Algorithmus, welches die Grundlage für eine erfolgreiche Realisationphase bildet. Das Design für das Testframework wird ebenfalls erstellt.
+In der Phase Design soll zuerst das Wissen über den gewählten Synchronisationsalgorithmus vertieft werden. Anschliessend erfolgt das Systemdesign, welches die Grundlage für eine erfolgreiche Realisationphase bildet. Das Design für das Testframework wird ebenfalls erstellt.
 
 \paragraph{Phase Realisation: }
 In der Phase Realisation werden der Synchronisationsalgorithmus und das Testframework implementiert. Sobald die beiden Teile entwickelt sind, wird der Algorithmus mit dem Testframework geprüft.
 
-\subsubsection{Komponente Netzwerk}
-\paragraph{Voranalyse: }
-Es sollen mögliche Lösungsvorschläge für die Komponente Netzwerk erarbeitet werden. Die Lösungsvorschläge müssen untersucht und auf ihre Tauglichkeit bewertet werden. Es soll ein Lösungsvorschlag für die spätere Implementation ausgewählt werden.
+\subsubsection{Teilprojekt Netzwerk}
+\paragraph{Phase Voranalyse: }
+Es sollen mögliche Lösungsvorschläge für das Teilprojekt Netzwerk erarbeitet werden. Die Lösungsvorschläge müssen untersucht und auf ihre Tauglichkeit bewertet werden.
 
-\subsubsection{Komponente GUI}
-\paragraph{Voranalyse: }
-Es sollen Lösungsvarianten für die Komponente GUI evaluiert werden. Ein Lösungsvorschlag wird für die spätere Implementation ausgewählt.
+\subsubsection{Teilprojekt GUI}
+\paragraph{Phase Voranalyse: }
+Es sollen Lösungsvarianten für das Teilprojekt GUI evaluiert werden. 
 
 \subsection{Phase Abschluss}
-In der Phase Abschluss wird das Projekt geordnet zu Ende gebracht. Alle Projektaktivitäten werden abgeschlossen. Das Team verfasst einen Erfahrungsbericht. 
+In der Phase Abschluss wird das Projekt geordnet zu Ende gebracht. Alle Projektaktivitäten werden abgeschlossen. Das Team verfasst einen Erfahrungsbericht und stellt diesen vor.
+
+
+
+\section{Projektspezifisches Vorgehensmodell}
+\label{sect: Projektspezifisches Vorgehensmodell}
+\subsection{Phase Initialisierung}
+\begin{table}[H]
+ \begin{tabular}{|l|l|l|l|}
+  \hline
+  \headercol{1in}{Aktivität}      & 
+  \headercol{2in}{Ergebnisse}     &
+  \headercol{2.6in}{Bemerkungen}  \\
+  \hline
+  \contentcol{1in}{Projekt initialisieren} & Projektantrag   & \\
+                                           & Projekthandbuch & \\
+                                           & Projektplan     & \\
+                                           & Pflichtenheft   & \\
+  \hline
+ \end{tabular}
+ \caption{Phase Initialisierung}
+\end{table}
+
+\subsection{Phase Teilprojekte}
+
+\subsubsection{Teilprojekt Algorithmus}
+\begin{table}[H]
+ \begin{tabular}{|l|l|l|l|}
+  \hline
+  \headercol{1in}{Aktivität}      & 
+  \headercol{2in}{Ergebnisse}     &
+  \headercol{2.6in}{Bemerkungen}  \\
+  \hline
+  \contentcol{1in}{Algorithmen evaluieren} & 
+  \contentcol{2in}{Bericht Evaluation und Auswahl Algorithmen} & \\
+  \hline
+  \contentcol{1in}{Algorithmus implementieren} & 
+  \contentcol{2in}{Implementation Synchronisationsalgorithmus} & \\
+                             & 
+  \contentcol{2in}{Bericht Implementation Synchronisationsalgorithmus} & \\
+  \hline
+  \contentcol{1in}{Testframework entwickeln}   & 
+  \contentcol{2in}{Sammlung von Testfällen} & \\
+                             & 
+  \contentcol{2in}{Testframework Synchronisationsalgorithmen} & \\
+                             & 
+  \contentcol{2in}{Bericht Testframework} & \\
+  \hline
+ \end{tabular}
+ \caption{Teilprojekt Algorithmus}
+\end{table}
+
+\subsubsection{Teilprojekt GUI}
+\begin{table}[H]
+ \begin{tabular}{|l|l|l|l|}
+  \hline
+  \headercol{1in}{Aktivität}      & 
+  \headercol{2in}{Ergebnisse}     &
+  \headercol{2.6in}{Bemerkungen}  \\
+  \hline
+  \contentcol{1in}{Voranalyse}      & 
+  \contentcol{2in}{Bericht Analyse GUI (Evaluation Lösungen, Auswahl Lösung, Erfahrungen)} & \\
+  \hline
+ \end{tabular}
+ \caption{Teilprojekt GUI}
+\end{table}
+
+\subsubsection{Teilprojekt Netzwerk}
+\begin{table}[H]
+ \begin{tabular}{|l|l|l|l|}
+  \hline
+  \headercol{1in}{Aktivität}      & 
+  \headercol{2in}{Ergebnisse}     &
+  \headercol{2.6in}{Bemerkungen}  \\
+  \hline
+  \contentcol{1in}{Voranalyse}     & 
+  \contentcol{2in}{Bericht Analyse Netzwerk (Evaluation Lösungen, Auswahl Lösung, Erfahrungen)} & \\
+  \hline
+ \end{tabular}
+ \caption{Teilprojekt Netzwerk}
+\end{table}
+
+\subsection{Phase Abschluss}
+\begin{table}[H]
+ \begin{tabular}{|l|l|l|l|}
+  \hline
+  \headercol{1in}{Aktivität}      & 
+  \headercol{2in}{Ergebnisse}     &
+  \headercol{2.6in}{Bemerkungen}  \\
+  \hline
+  \contentcol{1in}{Projekt abschliessen} & 
+  \contentcol{2in}{Erfahrungsbericht} & \\
+                       & 
+  \contentcol{2in}{CD mit allen Ergebnissen} & \\
+  \hline
+ \end{tabular}
+ \caption{Phase Abschluss}
+\end{table}
+
+
+
 
 \section{Entscheidungspunkte und auszuliefernde Ergebnisse}
+\label{sect: Entscheidungspunkte und auszuliefernde Ergebnisse}
 
-\subsection{Initialisierung}
-\subsubsection*{Ergebnisse}
-\begin{itemize}
- \item Projektantrag 
- \item Projekthandbuch
- \item Pflichtenheft
- \item Projektplan
-\end{itemize}
-\subsubsection*{Entscheidungspunkte}
-\begin{itemize}
- \item Freigabe der nächsten Phase
-\end{itemize}
+\subsection{Phase Initialisierung}
 
-\subsection{Synchronisationsalgorithmus}
-\subsubsection*{Ergebnisse}
-\begin{itemize}
- \item Bericht Evaluation und Auswahl Synchronisationsalgorithmen
- \item Implementation Synchronisationsalgorithmus
- \item Bericht Implementation Synchronisationsalgorithmus
- \item Sammlung von Testfällen
- \item Testframework Synchronisationsalgorithmen
- \item Bericht Testframework
-\end{itemize}
-\subsubsection*{Entscheidungspunkte}
-\begin{itemize}
- \item Auswahl Synchronisationsalgorithmus basierend auf Evaluation
- \item Freigabe Komponente Algorithmus
-\end{itemize}
+\begin{table}[H]
+ \begin{tabular}{|l|l|l|l|l|}
+  \hline
+   \headercol{1.4in}{Entscheidungspunkte} &
+   \headercol{0.7in}{Entscheid treffen} &
+   \headercol{1.1in}{Ergebnisse} &
+   \headercol{1.0in}{Prüfung} &
+   \headercol{1.0in}{Entscheidung} \\
+  \hline
+   \contentcol{1.4in}{Projektauftrag} & 
+   \contentcol{0.7in}{nein} & 
+   \contentcol{1.1in}{Projektantrag} &
+   \contentcol{1.0in}{Projektteam} &
+   \contentcol{1.0in}{Projektteam} \\
+  \hline
+   \contentcol{1.4in}{Abschluss Phase Initialiserung} & 
+   \contentcol{0.7in}{nein} & 
+   \contentcol{1.1in}{Projekthandbuch} & 
+   \contentcol{1.0in}{Projektteam} & 
+   \contentcol{1.0in}{Projektteam} \\
+   
+   \contentcol{1.4in}{} & 
+   \contentcol{0.7in}{} & 
+   \contentcol{1.1in}{Projektplan} &
+   \contentcol{1.0in}{} &
+   \contentcol{1.0in}{} \\
 
-\subsection{Analyse Netzwerk}
-\subsubsection*{Ergebnisse}
-\begin{itemize}
- \item Bericht Analyse Netzwerk (Evaluation Lösungen, Auswahl Lösung, Erfahrungen)
-\end{itemize}
-\subsubsection*{Entscheidungspunkte}
-\begin{itemize}
- \item Auswahl Lösung
-\end{itemize}
+   \contentcol{1.4in}{} & 
+   \contentcol{0.7in}{} & 
+   \contentcol{1.1in}{Pflichtenheft} &
+   \contentcol{1.0in}{} &
+   \contentcol{1.0in}{} \\
+   
+  \hline
+ \end{tabular}
+ \caption{Phase Initialisierung}
+\end{table}
 
-\newpage
-\subsection{Analyse GUI}
-\subsubsection*{Ergebnisse}
-\begin{itemize}
- \item Bericht Analyse GUI (Evaluation Lösungen, Auswahl Lösung, Erfahrungen)
-\end{itemize}
-\subsubsection*{Entscheidungspunkte}
-\begin{itemize}
- \item Auswahl Lösung
-\end{itemize}
+\subsection{Phase Teilprojekte}
 
-\subsection{Abschluss}
-\subsubsection*{Ergebnisse}
-\begin{itemize}
- \item Erfahrungsbericht
- \item CD mit allen Ergebnissen
-\end{itemize}
-\subsubsection*{Entscheidungspunkte}
-\begin{itemize}
- \item Projektabschluss
-\end{itemize}
+\subsubsection{Teilprojekt Algorithmus}
+\begin{table}[H]
+ \begin{tabular}{|l|l|l|l|l|}
+  \hline
+   \headercol{1.4in}{Entscheidungspunkte} &
+   \headercol{0.7in}{Entscheid treffen} &
+   \headercol{1.1in}{Ergebnisse} &
+   \headercol{1.0in}{Prüfung} &
+   \headercol{1.0in}{Entscheidung} \\
+  \hline
+   \contentcol{1.4in}{Auswahl Algorithmus} & 
+   \contentcol{0.7in}{ja} &
+   \contentcol{1.1in}{Bericht Evaluation} & 
+   \contentcol{1.0in}{Projektteam} & 
+   \contentcol{1.0in}{Projektteam} \\
+  \hline
+   \contentcol{1.4in}{Freigabe Teilprojekt Algorithmus}  & 
+   \contentcol{0.7in}{ja} &
+   \contentcol{1.1in}{Implementation Algorithmus} &
+   \contentcol{1.0in}{Projektteam} & 
+   \contentcol{1.0in}{Projektteam} \\
+  \hline
+ \end{tabular}
+ \caption{Teilprojekt Algorithmus}
+\end{table}
+
+
+\subsubsection{Teilprojekt GUI}
+\begin{table}[H]
+ \begin{tabular}{|l|l|l|l|l|}
+  \hline
+   \headercol{1.4in}{Entscheidungspunkte} &
+   \headercol{0.7in}{Entscheid treffen} &
+   \headercol{1.1in}{Ergebnisse} &
+   \headercol{1.0in}{Prüfung} &
+   \headercol{1.0in}{Entscheidung} \\
+  \hline
+   \contentcol{1.4in}{Abschluss Teilprojekt GUI}  & 
+   \contentcol{0.7in}{nein} & 
+   \contentcol{1.1in}{Bericht GUI} & 
+   \contentcol{1.0in}{Projektteam} & 
+   \contentcol{1.0in}{Projektteam} \\
+  \hline
+ \end{tabular}
+ \caption{Teilprojekt GUI}
+\end{table}
+
+\subsubsection{Teilprojekt Netzwerk}
+\begin{table}[H]
+ \begin{tabular}{|l|l|l|l|l|}
+  \hline
+   \headercol{1.4in}{Entscheidungspunkte} &
+   \headercol{0.7in}{Entscheid treffen} &
+   \headercol{1.1in}{Ergebnisse} &
+   \headercol{1.0in}{Prüfung} &
+   \headercol{1.0in}{Entscheidung} \\
+  \hline
+   \contentcol{1.4in}{Abschluss Teilprojekt Netzwerk}  & 
+   \contentcol{0.7in}{nein} & 
+   \contentcol{1.1in}{Bericht Netzwerk} & 
+   \contentcol{1.0in}{Projektteam} & 
+   \contentcol{1.0in}{Projektteam} \\
+  \hline
+ \end{tabular}
+ \caption{Teilprojekt Netzwerk}
+\end{table}
+
+\subsection{Phase Abschluss}
+\begin{table}[H]
+ \begin{tabular}{|l|l|l|l|l|}
+  \hline
+   \headercol{1.4in}{Entscheidungspunkte} &
+   \headercol{0.7in}{Entscheid treffen} &
+   \headercol{1.1in}{Ergebnisse} &
+   \headercol{1.0in}{Prüfung} &
+   \headercol{1.0in}{Entscheidung} \\
+  \hline
+   \contentcol{1.4in}{Projektabschluss}  & 
+   \contentcol{0.7in}{ja} & 
+   \contentcol{1.1in}{Projekt CD} & 
+   \contentcol{1.1in}{Projektteam} & 
+   \contentcol{1.0in}{Projektteam} \\
+   
+   \contentcol{1.4in}{} & 
+   \contentcol{0.7in}{} & 
+   \contentcol{1.1in}{Erfahrungsbericht} &
+   \contentcol{1.0in}{} &
+   \contentcol{1.0in}{} \\
+  \hline
+ \end{tabular}
+ \caption{Phase Abschluss}
+\end{table}
+
+
+
 
 
 \section{Methoden und Werkzeuge}
