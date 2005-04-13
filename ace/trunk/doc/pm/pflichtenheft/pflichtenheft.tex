@@ -81,7 +81,7 @@ Parallel zur Entwicklung des Synchronisationsalgorithmus soll ein Testframework 
 In erster Linie soll eine Evaluation von Textkomponenten in Java erfolgen. Das Ziel ist herauszufinden, welche sich am besten für einen kollaborativen Texteditor eignen. Es muss möglich sein, verschiedene Benutzer respektive deren Aktionen in einer Textkomponente darzustellen. 
 
 \subsection{Konzept Netzwerk/Kommunikation}
-Zwei Themen müssen erarbeitet werden: Das dynamische Auffinden aller vorhandenen Instanzen des Editors in einem Netzwerk sowie der Nachrichtenaustausch zwischen den Instanzen. Es sollen die in diesem Themengebiet vorhandenen Technologien studiert werden. Daraus entsteht ein für einen kollaborativen Texteditor angepasstes Konzept. Die Studien über das Netzwerk sind unabhängig von der Implementation des Algorithmus. Eine Schnittstelle wird die beiden Komponenten zusammenführen.
+Zwei Themen müssen erarbeitet werden: Das dynamische Auffinden aller vorhandenen Instanzen des Editors in einem Netzwerk sowie der Nachrichtenaustausch zwischen den Instanzen. Es sollen die in diesem Themengebiet vorhandenen Technologien studiert werden. Daraus entsteht ein für einen kollaborativen Texteditor angepasstes Konzept. Die Studie über das Netzwerk ist unabhängig von der Implementation des Algorithmus und kann aus diesem Grund auch erst danach erstellt werden. 
 
 
 \section{Nicht-Ziele}
@@ -117,13 +117,7 @@ Alle Anforderungen an das Netzwerk respektive die Kommunikation werden im Berich
 \subsection{GUI}
 Alle Anforderungen an das GUI werden im Bericht \emph{Evaluation GUI} definiert.
 
-\subsection{Architektur}
-Die Architektur wird weitgehend bestimmt durch die Wahl des Synchronisationsalgorithmus. Siehe dazu Bericht \emph{Evaluation Algorithmus}.
-
 \subsection{Technologie}
-Der zu entwickelnde kollaborative Texteditor soll plattformunabhängig sein. Darum erfolgt die Implementation mit der Programmiersprache \emph{Java}. 
-
-\subsection{Schnittstellen}
-Durch die Offenlegung des internen Kommunikationsprotokolls von \ace haben andere Applikationsentwickler die Möglichkeit, direkt mit dem Editor zu kommunizieren. Dadurch entstehen beliebige Erweiterungsmöglichkeiten mit dem kollaborativen Texteditor.
+Der zu entwickelnde Lösung soll plattformunabhängig sein. Darum erfolgt die Implementation mit der Programmiersprache \emph{Java}. 
 
 \end{document}
