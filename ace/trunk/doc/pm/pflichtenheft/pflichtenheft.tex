@@ -81,7 +81,7 @@ Parallel zur Entwicklung des Synchronisationsalgorithmus soll ein Testframework 
 In erster Linie soll eine Evaluation von Textkomponenten in Java erfolgen. Das Ziel ist herauszufinden, welche sich am besten für einen kollaborativen Texteditor eignen. Es muss möglich sein, verschiedene Benutzer respektive deren Aktionen in einer Textkomponente darzustellen. 
 
 \subsection{Konzept Netzwerk/Kommunikation}
-Zwei Themen müssen erarbeitet werden: Das dynamische Auffinden aller vorhandenen Instanzen des Editors in einem Netzwerk sowie der Nachrichtenaustausch zwischen den Instanzen. Es sollen die in diesem Themengebiet vorhandenen Technologien studiert werden. Daraus entsteht ein für einen kollaborativen Texteditor angepasstes Konzept. 
+Zwei Themen müssen erarbeitet werden: Das dynamische Auffinden aller vorhandenen Instanzen des Editors in einem Netzwerk sowie der Nachrichtenaustausch zwischen den Instanzen. Es sollen die in diesem Themengebiet vorhandenen Technologien studiert werden. Daraus entsteht ein für einen kollaborativen Texteditor angepasstes Konzept. Die Studien über das Netzwerk sind unabhängig von der Implementation des Algorithmus. Eine Schnittstelle wird die beiden Komponenten zusammenführen.
 
 
 \section{Nicht-Ziele}
@@ -107,8 +107,18 @@ Im Rahmen der Semesterarbeit soll kein Prototyp eines kollaborativen Editors ent
 
 
 \section{Anforderungen}
+
+\subsection{Synchronisationsalgorithmus}
+Alle Anforderungen an den Synchronisationsalgorithmus werden im Bericht \emph{Evaluation Algorithmus} definiert.
+
+\subsection{Netzwerk/Kommunikation}
+Alle Anforderungen an das Netzwerk respektive die Kommunikation werden im Bericht \emph{Evaluation Netzwerk} definiert.
+
+\subsection{GUI}
+Alle Anforderungen an das GUI werden im Bericht \emph{Evaluation GUI} definiert.
+
 \subsection{Architektur}
-Die Architektur wird basierend auf dem Peer-to-Peer Modell entwickelt. Die Applikation soll dadurch ohne einen zentralen Server funktionieren.
+Die Architektur wird weitgehend bestimmt durch die Wahl des Synchronisationsalgorithmus. Siehe dazu Bericht \emph{Evaluation Algorithmus}.
 
 \subsection{Technologie}
 Der zu entwickelnde kollaborative Texteditor soll plattformunabhängig sein. Darum erfolgt die Implementation mit der Programmiersprache \emph{Java}. 
