@@ -45,6 +45,8 @@ $docs[42] = "soct2_1.pdf";
 $docs[43] = "jupiter.pdf";
 $docs[44] = "nice.pdf";
 $docs[45] = "proofResselAlgorithm.pdf";
+$docs[46] = "time-clocks.pdf";
+$docs[47] = "VirtTimeGlobStates.pdf";
 
 if (isset($_GET["id"])) {
   $id = $_GET["id"];
