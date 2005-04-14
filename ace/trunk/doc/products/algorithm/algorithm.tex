@@ -104,16 +104,46 @@ Even if a serialization-based protocol was used to ensure that all sites execute
 
 
 \subsection{Operational Transformations}
-{Ellis and Gibbs}~\cite{ellis} proposed a new kind of algorithms, called \emph{Operational Transformations} (OT).  These kind of algorithms transform operations, or more specifically their index, to incorporate independent operations.
+{Ellis and Gibbs}~\cite{ellis} proposed a new kind of algorithms, called \emph{Operational Transformations} (OT).  These kind of algorithms transform operations, or more specifically their index, to include/exclude other operations.
+
+In general there are two different types of operational transformations, inclusion transformation (IT) and exclusion transformation (ET). All algorithms use inclusion transformation, some use exclusion transformation too.
+
+A transformation function has to be defined for every combination of operations. So for a text editor with the primitive operations insert and delete, there would be a total of four transformations functions for IT and yet another four for ET.
+
+\subsubsection{Definitions}
+Conceptually, an operation $O$ is associated with a \emph{context}, denoted as $CT_{O}$, which is the list of operations that need to be executed to bring the document from its initial state to the state on which $O$ is defined. The significance of context is that the effect of an operation can be correctly interpreted only in its own context. 
+
+\begin{defn}
+Context equivalent relation $\sqcup$
+\end{defn}
+
+Given two operations $O_{1}$ and $O_{2}$, associated with contexts $CT_{O_{1}}$ and $CT_{O_{2}}$ respectively, $O_{1}$ and $O_{2}$ are \emph{context-equivalent} iff $CT_{O_{1}}=CT_{O_{2}}$. Apparently, the context equivalent relation $\sqcup$ is transitive.
+
+\begin{defn}
+Context preceding relation $\mapsto$
+\end{defn}
+Given two operations $O_{1}$ and $O_{2}$ associated with contexts $CT_{O_{1}}$ and $CT_{O_{2}}$ respectively, $O_{1}$ is \emph{context preceding} $O_{2}$ iff $CT_{O_{2}}=CT_{O_{1}} + [O_{1}]$. Note that the contex preceding relation $\mapsto$ is not transitive by definition.
+
+\subsubsection{Inclusion Transformation}
+Inclusion Transformation (IT) transforms an operation $O_{1}$ against another operation $O_{2}$ in such a way that the impact of $O_{2}$ is effectively included. 
+
+Most importantly, it was recognized that the correctness of IT relies on the condition that both $O_{1}$ and $O_{2}$ are defined on the same document state so that their parameters are comparable and can be used to derive a proper adjustment to $O_{2}$, i.e. $O_{1} \sqcup O_{2}$.
+
+\subsubsection{Exclusion Transformation}
+Exlusion Transformation (ET) transforms an operation $O_{1}$ against another operation $O_{2}$ in such a way that the impact of $O_{2}$ is effectively excluded from $O_{1}$.
+
+Precondition for the exclusion transformation is that $O_{2}$ must contextualy preceed $O_{1}$, i.e. $O_{2} \mapsto O_{1}$.
+
 
 \subsection{Transformation Properties}
-It was shown in \cite{ressel:adopted} that transformation functions must satisfy two conditions, called TP1 and TP2.
+It was shown in \cite{ressel:adopted} that transformation functions must satisfy two conditions, called $TP1$ and $TP2$.
 
 \paragraph{Transformation Property 1:}
 The transformation property 1 ensures that the effect of executing $O_{1}$ followed by the transformed request $O_{2}$ is the same as executing request $O_{2}$ followed by the transformed request $O_{1}$. 
 
 \begin{defn}
-Transformation Property 1 $ O_{1} O'_{2} \equiv O_{2} O'_{1} $
+Transformation Property 1:
+$ O_{1} O'_{2} \equiv O_{2} O'_{1} $
 \end{defn}
 
 \paragraph{Transformation Property 2:}
@@ -126,7 +156,7 @@ $IT(IT(O_{1},O_{2}),O'_{3})$=$IT(IT(O_{1},O_{2}),O'_{2})$
 
 
 \section{History}
-{Ellis and Gibbs}~\cite{ellis} were the first to propose an \emph{Operational Transformation} algorithm in 1989. The algorithm is called \emph{dOPT} and is implemented in the \emph{Grove} system. Soon however a flaw was discovered in the original \emph{dOPT} algorithm (by Cormack\cite{cormack95a}). The scenario where \emph{dOPT} failed is called the \emph{dOPT} puzzle. Ressel\cite{ressel:adopted} proposed a new algorithm \emph{adOPTed} in 1996 that solved the original \emph{dOPT} puzzle. {Sun et. al}\cite{sun:achieving} proposed a new algorithm called \emph{GOT} that similarly to \emph{adOPTed} solved the \emph{dOPT} puzzle. {Sun et. al}\cite{sun:reversible} developed some transformation functions for string-wise operations.
+{Ellis and Gibbs}~\cite{ellis} were the first to propose an \emph{Operational Transformation} algorithm in 1989. The algorithm is called \emph{dOPT} and is implemented in the \emph{Grove} system. Soon however a flaw was discovered in the original \emph{dOPT} algorithm (by Cormack\cite{cormack95a}). The scenario where \emph{dOPT} failed is called the \emph{dOPT} puzzle. Ressel\cite{ressel:adopted} proposed a new algorithm \emph{adOPTed} in 1996 that solved the original \emph{dOPT} puzzle. {Sun et. al}\cite{sun:achieving} proposed another algorithm called \emph{GOT} that similarly to \emph{adOPTed} solved the \emph{dOPT} puzzle. {Sun et. al}\cite{sun:reversible} developed some transformation functions for string-wise operations.
 
 Later research groups\cite{imine:development}\cite{imine:achieving} proved the transformation functions of both Ressel\cite{ressel:adopted} and Sun\cite{sun:achieving} to fail to hold TP2 in certain situations. They proposed new transformation functions they developed using a theorem prover. 
 
@@ -137,6 +167,9 @@ Recently, two different ways have been taken to deal with the TP2 problem. One k
 
 \section{Algorithms}
 In this section we give an overview of all the \emph{Operational Transformation} algorithms we have found so far.
+
+\subsection{Introduction}
+It is important to note, that a complete functioning OT algorithm usually consists of two parts. One part, the control algorithm, is application independent. The other part is the set of transformation functions (IT and maybe ET), which is application dependent. As noted earlier, for every pair of operations there must be one (when the algorithm uses ET two) transformation function. For two operations (e.g. insert and delete) this results in four transformation functions. Operations are highly application dependent. A text editor has different operations than a whiteboard application.
 
 \input{algorithms/dopt}
 \input{algorithms/ccu}
