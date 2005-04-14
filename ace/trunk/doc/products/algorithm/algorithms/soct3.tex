@@ -1,1 +1,22 @@
 \subsection{SOCT3}
+\label{algo:soct3}
+
+Verifying that a given set of transformation functions satiesfies transformation property 2 (TP2) is not trivial. There are over a hundred cases to be checked depending on the various parameters. So the inventors of \emph{SOCT3} and \emph{SOCT4} (see \ref{algo:soct4}) decided to go a different way in order that they can abandon TP2 (\cite{suleiman00}).
+
+They propose the implementation of a global serialization order such that the operations can be delivered in this order. The global serialization order is achieved by the use of a sequencer (see \ref{sequencer}). A sequencer is an object which delivers continously growing positive integer values, called timestamps. A timestamp is obtained through a call to a function \emph{Ticket}.
+
+A local operation $O$ is executed immediately to respect the real-time constraint. Next, the call to the function \emph{Ticket} returns a timestamp $N_{O}$ which is assigned to the operation. The quadruplet $<O,S_{O},V_{O},N_{O}>$ is then broadcast where $V_{O}$ is the state vector associated with $O$ and $N_{O}$.
+
+The reception procedure ensures a sequential delivery of all operations with respect to the ascending order of the timestamps. Upon receiving an operation the reception procedure delays its delivery until all operations with lower timestamps have been received and delivered. The state vector is of no use for the reception procudre, but it enables to determine which operations are concurrent to $O$ during the integration step.
+
+\emph{SOCT3} uses both inclusion transformation IT (called forward transposition) and exclusion transformation ET (called backward transposition) in the integration step. For details, see \cite{suleiman00}.
+
+
+\subsubsection{Properties}
+\begin{itemize}
+ \item uses state vectors to determine concurrent operations
+ \item uses linear history buffer (called history)
+ \item architecture: fully replicated
+ \item uses a unique global ordering to abandon TP2 (by using a sequencer)
+ \item no known user undo algorithm
+\end{itemize}
