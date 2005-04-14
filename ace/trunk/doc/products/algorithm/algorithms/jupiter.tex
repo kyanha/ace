@@ -1,0 +1,19 @@
+\subsection{Jupiter}
+\label{algo:jupiter}
+
+\emph{Jupiter} is a multi-user, multimedia virtual world intended to support long-term remote collaboration. In particular, it supports shared documents, shared tools, and, optionally, live audio/video communication. The low-level communication facilities are described in \cite{jupiter95}.
+
+The state of the \emph{Jupiter}, including application code written by users, is stored and (for code) executed in a central server shared by all users. This architecture was chosen to support multiple client platforms and high-latency networks. Clients and servers communicate in terms of high-level widgets and user events.
+
+\emph{Jupiter}'s algorithm is derived from \emph{dOPT}. The centralized architecture and thus the reduction of point-to-point connections allows them to simplify the \emph{dOPT} algorithm. Several point-to-point connections are used to build a tree-structured n site algorithm.
+
+\emph{Jupiter} solves the \emph{dOPT} puzzle. It uses a two dimensional state space instead of a linear history buffer (request log) to save operations. It transforms saved messages when incoming messages. Unfortunately, simply transforming saved messages does not work for the $n$-way case, since the next message can come from a third site that is in an inconvenient message state.
+
+
+\subsubsection{Properties}
+\begin{itemize}
+ \item seems to be correct
+ \item uses state vectors to decide if operations are concurrent
+ \item architecture: semi-replicated (central server)
+ \item uses multiple 2-way synchronization protocols to create a n-way protocol
+\end{itemize}

@@ -1,0 +1,20 @@
+\subsection{NetEdit Consistency Algorithm}
+\label{algo:netedit}
+
+\emph{NetEdit} is a collaborative text editor (\cite{netedit}) that uses a replicated architecture with processing and data distributed across all clients. It uses an $n$-way synchronization protocol derived from the algorithm of the \emph{Jupiter} (see \ref{algo:jupiter}) collaboration system. The algorithm is called \emph{NetEdit Consistency Algorithm}.
+
+The 2-way synchronization protocol developed for \emph{Jupiter} was the starting point. That algorithm was extended to a multi-way protocol using multiple 2-way connections. All the clients maintain a state-space graph. This state-space is used to maintain information where the other is in the editing process. Both client and server pass through this state space as they process messages.
+
+The algorithm labels each message with the state the sender was in just before the message was generated. The recipient uses these labels to detect conflict. Two concurrent messages have to be transformed, but they can only be transformed  when they were generated from the same state of the document. Otherwise, special handling is required.
+
+It is not clear how this algorithm differs from \emph{Jupiter} as \emph{Jupiter} was obviously extended to an n-way synchronization protocol using a similar (the same?) approach.
+
+
+\subsubsection{Properties}
+\begin{itemize}
+ \item seems to be correct
+ \item uses state vectors to decide if operations are concurrent
+ \item architecture: semi-replicated (central server)
+ \item uses multiple 2-way synchronization protocols to create a n-way protocol
+\end{itemize}
+
