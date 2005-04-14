@@ -37,7 +37,14 @@ $docs[34] = "bouazza.pdf";
 $docs[35] = "vidot.pdf";
 $docs[36] = "MMGroupEditor.pdf";
 $docs[37] = "cscw04sdt.pdf";
-
+$docs[38] = "WCWA_17_02_2003.pdf";
+$docs[39] = "LiLi.pdf";
+$docs[40] = "undoAsConcurrentInverseInGroupEditors.pdf";
+$docs[41] = "concurrencyControlInGroupwareSystems.pdf";
+$docs[42] = "soct2_1.pdf";
+$docs[43] = "jupiter.pdf";
+$docs[44] = "nice.pdf";
+$docs[45] = "proofResselAlgorithm.pdf";
 
 if (isset($_GET["id"])) {
   $id = $_GET["id"];
