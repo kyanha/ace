@@ -80,7 +80,7 @@ To illustrate the challenges researchers are facing, consider a scenario in a co
 
 
 \subsection{Three inconsistency problems}
-Three different inconsistency problems have been identified by {Sun et. al}\cite{sun:achieving}.
+Three different inconsistency problems have been identified by {Sun et. al}\cite{sun98a}.
 
 \begin{figure}
  \centering
@@ -136,7 +136,7 @@ Precondition for the exclusion transformation is that $O_{2}$ must contextualy p
 
 
 \subsection{Transformation Properties}
-It was shown in \cite{ressel:adopted} that transformation functions must satisfy two conditions, called $TP1$ and $TP2$.
+It was shown in \cite{ressel96} that transformation functions must satisfy two conditions, called $TP1$ and $TP2$.
 
 \paragraph{Transformation Property 1:}
 The transformation property 1 ensures that the effect of executing $O_{1}$ followed by the transformed request $O_{2}$ is the same as executing request $O_{2}$ followed by the transformed request $O_{1}$. 
@@ -156,13 +156,13 @@ $IT(IT(O_{1},O_{2}),O'_{3})$=$IT(IT(O_{1},O_{2}),O'_{2})$
 
 
 \section{History}
-{Ellis and Gibbs}~\cite{ellis} were the first to propose an \emph{Operational Transformation} algorithm in 1989. The algorithm is called \emph{dOPT} and is implemented in the \emph{Grove} system. Soon however a flaw was discovered in the original \emph{dOPT} algorithm (by Cormack\cite{cormack95a}). The scenario where \emph{dOPT} failed is called the \emph{dOPT} puzzle. Ressel\cite{ressel:adopted} proposed a new algorithm \emph{adOPTed} in 1996 that solved the original \emph{dOPT} puzzle. {Sun et. al}\cite{sun:achieving} proposed another algorithm called \emph{GOT} that similarly to \emph{adOPTed} solved the \emph{dOPT} puzzle. {Sun et. al}\cite{sun:reversible} developed some transformation functions for string-wise operations.
+{Ellis and Gibbs}~\cite{ellis} were the first to propose an \emph{Operational Transformation} algorithm in 1989. The algorithm is called \emph{dOPT} and is implemented in the \emph{Grove} system. Soon however a flaw was discovered in the original \emph{dOPT} algorithm (by Cormack\cite{cormack95a}). The scenario where \emph{dOPT} failed is called the \emph{dOPT} puzzle. Ressel\cite{ressel96} proposed a new algorithm \emph{adOPTed} in 1996 that solved the original \emph{dOPT} puzzle. {Sun et. al}\cite{sun98a} proposed another algorithm called \emph{GOT} that similarly to \emph{adOPTed} solved the \emph{dOPT} puzzle. {Sun et. al}\cite{sun98b} developed some transformation functions for string-wise operations.
 
-Later research groups\cite{imine:development}\cite{imine:achieving} proved the transformation functions of both Ressel\cite{ressel:adopted} and Sun\cite{sun:achieving} to fail to hold TP2 in certain situations. They proposed new transformation functions they developed using a theorem prover. 
+Later research groups\cite{imine03}\cite{imine04} proved the transformation functions of both Ressel\cite{ressel96} and Sun\cite{sun98a} to fail to hold TP2 in certain situations. They proposed new transformation functions they developed using a theorem prover. 
 
-Proving the transformation property 1 (TP1) seems to be rather straightforward. However, proving that a given transformation function holds TP2 appears to be difficult. There are over 100 cases that have to be analyzed (according to {Imine et. al}\cite{imine:achieving}). Imine et. al shows that many proposed transformation functions do not hold TP2. 
+Proving the transformation property 1 (TP1) seems to be rather straightforward. However, proving that a given transformation function holds TP2 appears to be difficult. There are over 100 cases that have to be analyzed (according to {Imine et. al}\cite{imine04}). Imine et. al shows that many proposed transformation functions do not hold TP2. 
 
-Recently, two different ways have been taken to deal with the TP2 problem. One kind of algorithms try to avoid the need to comply with TP2 altogether (SOCT2\cite{},GOT\cite{},SOCT3/4\cite{suleiman00},TIBOT\cite{tibot}). Other research groups try to correct the problems in the original transformation functions of GOTO\cite{} and adOPTed\cite{ressel:adopted}. 
+Recently, two different ways have been taken to deal with the TP2 problem. One kind of algorithms try to avoid the need to comply with TP2 altogether (SOCT2~\cite{suleiman97}, GOT~\cite{sun98a}, SOCT3/4~\cite{suleiman00}, TIBOT\cite{tibot} and NICE~\cite{sun02}). Other research groups try to correct the problems in the original transformation functions of GOTO\cite{sun98b} and adOPTed\cite{ressel96}. 
 
 
 \section{Algorithms}
@@ -185,6 +185,10 @@ It is important to note, that a complete functioning OT algorithm usually consis
 \input{algorithms/tibot}
 \input{algorithms/nice}
 
+
+\newpage
+
+\input{appendix}
 
 \newpage
 \bibliography{ace}

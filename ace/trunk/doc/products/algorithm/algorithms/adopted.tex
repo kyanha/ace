@@ -1,2 +1,31 @@
 \subsection{adOPTed}
 \label{algo:adopted}
+
+\emph{adOPTed} was devised by Ressel and Gunzenhaeuser and described in \cite{ressel96}. It is an improved version of the \emph{dOPT} algorithm. A multi-dimensional model of concurrent interaction is the core of this approach. This model allows direct communication with $n$ sites. The algorithm is conceptually similar to \emph{Jupiter} (see \ref{algo:jupiter}), but extends the two way communication in \emph{Jupiter} to a multi way communication. Both use a state space graph to track operations. The state space graph in \emph{adOPTed} is n-dimensional wherelse in \emph{Jupiter} it is two dimensional.
+
+This algorithm uses a so called \emph{L-Transformation} function. An L-transformation function must satisfy TP1 and must be symmetric (note: L-transformations are essentially inclusion transformations). Requests and L-transformations can be represented as grid-based diagrams. The axes represent users, grid points represent states with a certain state vector, and arrow represent requests, being either original or the result of some transformation.
+
+More formally the \emph{interaction model} for a set of $M$ user requests and for an initial state $s_{0}$ can be defined as a labeled, directed graph $G$ with vertices $V$ and edges $E \subseteq V \times V$. Vertices are labeled with application states, edges with requests (although it is often more convenient to label them just with the operation, since the other components of a request can be determined by the position and direction of an edge). The set of vertices, edges and their labels are defined recursively in \cite{ressel96}.
+
+Each user process manages the following local data structures: the application state $s$, a counter $k$ for locally generated requests, a site's state vector $v$, its request queue $Q$, a request log $L$ and an n-dimensional interaction model $G$. The \emph{state vector v} holds the number of execution for each user. The $request queue Q$ is used to store generated and incoming requests that have to wait for execution. The \emph{request log L} stores a copy of each original request so that a request can be easily accessed by its key consisting of user id $u$ and serial number $k$. The \emph{interaction model G} is mainly used to store transformed requests that might be needed later. It would be possible to store application states like in the formal definition of the interaction model, but this is not necessary for the algorithm to work.
+
+
+\subsubsection{Transformation Functions}
+In \cite{ressel96} they also propose a set of transformation functions for text editing. There are two operations, insert and delete, so there must be four transformation functions. The transformation functions were proved to be wrong by \cite{imine03}. That is, they do not hold transformation property 2 (TP2). 
+
+Note however that it has been proved by \cite{cormack02} that the control algorithm of \emph{adOPTed} is correct as long as the transformation functions hold TP2. Using the proposed transformation functions from \emph{imine04} results in a correct system that achieves the three properties convergence, causality preservation and intention preservation.
+
+
+\subsubsection{Properties}
+\begin{itemize}
+ \item proved to be correct if transformation functions hold TP2
+ \item uses state vectors to decide if operations are concurrent
+ \item uses only inclusion transformation (IT)
+ \item user undo described by \cite{ressel99}
+ \item n-dimensional interaction graph
+ \item architecture: replicated (no central server needed)
+\end{itemize}
+
+
+\subsubsection{Known implementations}
+Ressel implemented a prototypical group editor named \emph{Joint Emacs}. Another group editor that uses \emph{adOPTed} is \emph{Gclipse}, a collaborative editor plug-in for eclipse.

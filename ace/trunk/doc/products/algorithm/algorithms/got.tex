@@ -1,2 +1,58 @@
 \subsection{GOT}
 \label{algo:got}
+
+Sun et. al were the first to define the three consistency properties, convergence, causality preservation and intention preservation in \cite{sun98a}.  The \emph{GOT} (generic operation transformation) algorithm separates the parts that achieve each of these properties.
+
+\subsubsection{Achieving Causality Preservation}
+To achieve causality preservation, a quite standard approach is used. An operation $O$ is only executed if all operations that causally precede $O$ have been executed at the local site. It can be shown that if a remote operation is executed only if a remote operation if it satisfies the above condition, then all operations will be executed in their causal orders, thus achieving causality preservation.
+
+\subsubsection{Achieving Convergence}
+The causality preserving scheme imposes causally ordered execution only for dependent operations and allows an operation to be executed at the local site immediately after its generation. This implies that the execution order of independent operations may be different at different sites. So how is the convergence property ensured in the presence of different execution order of independent operations? \emph{GOT} defines a total ordering relation to solve this problem (note, the causal precedence relation is only a partial ordering as there may be independent operations).
+
+\begin{defn}
+Total ordering relation $\Rightarrow$
+\end{defn}
+
+Given two operations $O_{1}$ and $O_{2}$ generated at sites $i$ and $j$ and timestamped by $SV_{O_{1}}$ and $SV_{O_{2}}$ respectively, then $O_{1} \Rightarrow O_{2}$ iff
+
+\begin{enumerate}
+ \item $sum(SV_{O_{1}}) < sum(SV_{O_{2}})$ or
+ \item $i < j$ when $sum(SV_{O_{1}}) = sum(SV_{O_{2}})$
+\end{enumerate}
+
+$sum$ is simply the sum of all components of the state vectors $SV$. In addition each site maintains a linear \emph{history buffer (HB)} for saving executed operations at each site. Based on this total ordering relation, the following \emph{undo/do/redo} scheme is defined. When a new operation $O_{new}$ is causally ready, the following steps are executed.
+
+\begin{enumerate}
+ \item \textbf{Undo} operations in $HB$ which totally follow $O_{new}$ to 
+       restore the document to the state before their execution
+ \item \textbf{Do} $O_{new}$
+ \item \textbf{Redo} all operations that were undone from HB
+\end{enumerate}
+
+Note that the undo/do/redo scheme is an internal operation only. The user interface should only show the final result.
+
+
+\subsubsection{Achieving Intention Preservation}
+To achieve intention preservation, a causally-ready operation has to be transformed before its execution to compensate the changes made to the document state by other executed operations. \emph{GOT} uses both inclusion transformation (IT) and exclusion transformation (ET). As there is a diverse and irregular dependency among operations, a sophisticated control algorithm is needed to determine when and how to apply IT/ET to which operations against which others. See \cite{sun98a} for a detailed description of this control algorithm.
+
+
+\subsubsection{Integration}
+The achievement of the three properties, convergence, causality preservation and intention preservation must be integrated to get a solution that satisfies all three properties. This results in a new modified \emph{undo/transform-do/transform-redo scheme}. This new scheme is described in detail in \cite{sun98b}.
+
+
+\subsubsection{Properties}
+\begin{itemize}
+ \item uses state vectors to decide if operations are concurrent and 
+       causally ready
+ \item uses inclusion transformation (IT) and exclusion transformation (ET)
+ \item architecture: replicated (no central server needed)
+ \item global ordering using undo/do/redo scheme to achieve convergence
+ \item free of TP1 and TP2, through the use of global ordering
+ \item complex control algorithm (many transformations needed)
+\end{itemize}
+
+
+\subsubsection{Implementations}
+The \emph{GOT} control algorithm was implemented in the \emph{REDUCE} prototype. It was however replaced later by the \emph{GOTO} algorithm.
+
+
