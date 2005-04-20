@@ -1,8 +1,9 @@
-import javax.swing.*;
-import javax.swing.text.*;
+import java.net.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.net.*;
+import javax.swing.*;
+import javax.swing.text.*;
+import javax.swing.event.*;
 
 
 
@@ -11,7 +12,7 @@ public class MultiUserTextPane extends JTextPane {
 	// data structure
 	// - user
 	//   - 
-	private int currentUserID;
+	private static int currentUserID;
 
 
 
@@ -19,10 +20,10 @@ public class MultiUserTextPane extends JTextPane {
 	private Position currentPosition;
 	private static Position pos;
 	
-	
+	private static MultiUserTextPane textPane;
 	
 	private Color[] userHighlightColors, userCursorColors;
-	private Position[] userCursorPositions;
+	private static Position[] userCursorPositions;
 	
 
 
@@ -42,7 +43,7 @@ public class MultiUserTextPane extends JTextPane {
 		userCursorColors = new Color[3];
 		userCursorColors[0] = new Color(0, 0, 255);
 		userCursorColors[1] = new Color(255, 0, 0);
-		userCursorColors[2] = new Color(0, 255, 0);
+		userCursorColors[2] = new Color(0, 128, 0);
 		
 		userCursorPositions = new Position[3];
 		try {
@@ -106,9 +107,30 @@ public class MultiUserTextPane extends JTextPane {
 
 
 
+
+    protected static class MyCaretListener implements CaretListener {
+        public MyCaretListener() {
+        }
+
+        public void caretUpdate(CaretEvent e) {
+            //displaySelectionInfo(e.getDot(), e.getMark());
+            //System.out.println(e.getDot());
+            try {
+    	        userCursorPositions[currentUserID] = textPane.getDocument().createPosition(e.getDot());
+			} catch(BadLocationException ble) { ble.printStackTrace(); }
+        }
+	}
+
+
+
+
+
+
+
 	public static void main(String[] args) throws Exception {
 		JFrame f = new JFrame();
-		final MultiUserTextPane textPane = new MultiUserTextPane();
+		textPane = new MultiUserTextPane();
+		textPane.addCaretListener(new MyCaretListener());
 		final JButton userButton = new JButton("<html><font color=\"#0000FF\">Blue User</font></html>");
 		userButton.addActionListener( new ActionListener() {
 			private int userID = 0;
