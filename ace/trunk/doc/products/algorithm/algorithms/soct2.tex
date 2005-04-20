@@ -40,7 +40,7 @@ The causality is thus respected, and it remains to transpose op forward with its
 \subsubsection{Properties}
 \begin{itemize}
  \item proposed algorithm in centralized environment uses only forward transposition
- \item replicated environment uses forward and backward transposition
+ \item replicated environment uses forward and backward transposition (without undoing and redoing operations)
  \item uses timestamps (centralized env.) and state vectors (replicated env.) respectively to determine concurrent operations
  \item uses linear history buffer (called history) 
  \item the management of the sets \emph{a} and \emph{b} is difficult and transferring the insertion operation is not efficient
