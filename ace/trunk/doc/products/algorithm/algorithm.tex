@@ -3,6 +3,7 @@
 \usepackage{lmodern}
 \usepackage{a4wide}
 \usepackage[dvips]{graphicx}
+\usepackage{float}
 
 \usepackage[
 pdfauthor={ ACE Projekt Team },
@@ -172,7 +173,7 @@ In this section we give an overview of all the \emph{Operational Transformation}
 It is important to note, that a complete functioning OT algorithm usually consists of two parts. One part, the control algorithm, is application independent. The other part is the set of transformation functions (IT and maybe ET), which is application dependent. As noted earlier, for every pair of operations there must be one (when the algorithm uses ET two) transformation function. For two operations (e.g. insert and delete) this results in four transformation functions. Operations are highly application dependent. A text editor has different operations than a whiteboard application.
 
 \input{algorithms/dopt}
-\input{algorithms/ccu}
+%\input{algorithms/ccu}
 \input{algorithms/jupiter}
 \input{algorithms/netedit}
 \input{algorithms/adopted}
@@ -184,7 +185,11 @@ It is important to note, that a complete functioning OT algorithm usually consis
 \input{algorithms/sdt}
 \input{algorithms/tibot}
 \input{algorithms/nice}
+\input{algorithms/lili}
 
+\newpage
+
+\input{comparison}
 
 \newpage
 

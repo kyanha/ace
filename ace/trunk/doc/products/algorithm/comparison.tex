@@ -1,0 +1,202 @@
+\section{Comparision of Algorithms}
+
+\begin{table}[H]
+ \begin{tabular}{|l|c|c|c|c|c|}
+  \hline
+   \headercol{0.7in}{} &
+   \headercol{0.7in}{dOPT} &
+   \headercol{0.7in}{Jupiter} &
+   \headercol{0.7in}{adOPTed} &
+   \headercol{0.7in}{GOT} &
+   \headercol{0.7in}{GOTO} \\
+  \hline
+  \hline
+   \contentcol{0.7in}{\tiny{Correct?}} &
+   \contentcol{0.7in}{\tiny{no}} &
+   \contentcol{0.7in}{\tiny{control algorithm}} &
+   \contentcol{0.7in}{\tiny{control algorithm}} &
+   \contentcol{0.7in}{\tiny{yes}} &
+   \contentcol{0.7in}{\tiny{control algorithm}} \\
+  \hline
+  \hline
+   \contentcol{0.7in}{\tiny{Intention Preservation}} &
+   \contentcol{0.7in}{\tiny{dOP Transformation}} &
+   \contentcol{0.7in}{\tiny{Transformation and two-dimensional graph}} &
+   \contentcol{0.7in}{\tiny{L-Transformation and multidimensional graph}} &
+   \contentcol{0.7in}{\tiny{IT and ET}} &
+   \contentcol{0.7in}{\tiny{IT and ET}} \\
+  \hline 
+   \contentcol{0.7in}{\tiny{Causality Preservation}} &
+   \contentcol{0.7in}{\tiny{state vectors}} &
+   \contentcol{0.7in}{\tiny{state vectors}} &
+   \contentcol{0.7in}{\tiny{state vectors}} &
+   \contentcol{0.7in}{\tiny{state vectors}} &
+   \contentcol{0.7in}{\tiny{state vectors}} \\
+  \hline
+   \contentcol{0.7in}{\tiny{Copies Convergence}} &
+   \contentcol{0.7in}{\tiny{TP1 (but no convergence achieved)}} &
+   \contentcol{0.7in}{\tiny{TP1}} &
+   \contentcol{0.7in}{\tiny{TP1 and TP2}} &
+   \contentcol{0.7in}{\tiny{TP1 and TP2}} &
+   \contentcol{0.7in}{\tiny{TP1 and TP2}} \\
+  \hline
+  \hline
+    \contentcol{0.7in}{\tiny{Broadcast}} &
+    \contentcol{0.7in}{\tiny{immediate}} &
+    \contentcol{0.7in}{\tiny{immediate}} &
+    \contentcol{0.7in}{\tiny{immediate}} &
+    \contentcol{0.7in}{\tiny{immediate}} &
+    \contentcol{0.7in}{\tiny{immediate}} \\
+  \hline
+   \contentcol{0.7in}{\tiny{Delivery}} &
+   \contentcol{0.7in}{\tiny{causal order}} &
+   \contentcol{0.7in}{\tiny{causal order}} &
+   \contentcol{0.7in}{\tiny{causal order}} &
+   \contentcol{0.7in}{\tiny{causal order}} &
+   \contentcol{0.7in}{\tiny{causal order}} \\
+  \hline
+  \hline
+   \contentcol{0.7in}{\tiny{Undo}} &
+   \contentcol{0.7in}{\tiny{no}} &
+   \contentcol{0.7in}{\tiny{no (but could be derived from adOPTed)}} &
+   \contentcol{0.7in}{\tiny{yes}} &
+   \contentcol{0.7in}{\tiny{no}} &
+   \contentcol{0.7in}{\tiny{yes}} \\
+  \hline
+ \end{tabular}
+ \caption{Comparison Matrix}
+\end{table}
+
+\begin{table}[H]
+ \begin{tabular}{|l|c|c|c|c|c|}
+  \hline
+   \headercol{0.7in}{} &
+   \headercol{0.7in}{SOCT2} &
+   \headercol{0.7in}{SOCT3} &
+   \headercol{0.7in}{SOCT4} &
+   \headercol{0.7in}{SDT} &
+   \headercol{0.7in}{TIBOT} \\
+  \hline
+  \hline
+   \contentcol{0.7in}{\tiny{Correct?}} &
+   \contentcol{0.7in}{\tiny{no (transformation functions)}} &
+   \contentcol{0.7in}{\tiny{yes}} &
+   \contentcol{0.7in}{\tiny{yes}} &
+   \contentcol{0.7in}{\tiny{no (transformation functions)}} &
+   \contentcol{0.7in}{\tiny{?}} \\
+  \hline
+  \hline
+   \contentcol{0.7in}{\tiny{Intention Preservation}} &
+   \contentcol{0.7in}{\tiny{IT and ET}} &
+   \contentcol{0.7in}{\tiny{IT and ET}} &
+   \contentcol{0.7in}{\tiny{only IT}} &
+   \contentcol{0.7in}{\tiny{IT and ET}} &
+   \contentcol{0.7in}{\tiny{IT}} \\
+  \hline 
+   \contentcol{0.7in}{\tiny{Causality Preservation}} &
+   \contentcol{0.7in}{\tiny{state vectors}} &
+   \contentcol{0.7in}{\tiny{timestamps}} &
+   \contentcol{0.7in}{\tiny{timestamps}} &
+   \contentcol{0.7in}{\tiny{state vectors}} &
+   \contentcol{0.7in}{\tiny{time intervals}} \\
+  \hline
+   \contentcol{0.7in}{\tiny{Copies Convergence}} &
+   \contentcol{0.7in}{\tiny{TP1 and TP2}} &
+   \contentcol{0.7in}{\tiny{TP1 and continous global order}} &
+   \contentcol{0.7in}{\tiny{TP1 and continous global order}} &
+   \contentcol{0.7in}{\tiny{TP1 and TP2}} &
+   \contentcol{0.7in}{\tiny{}} \\
+  \hline
+  \hline
+    \contentcol{0.7in}{\tiny{Broadcast}} &
+    \contentcol{0.7in}{\tiny{immediate}} &
+    \contentcol{0.7in}{\tiny{immediate (as soon as timestamp is assigned)}} &
+    \contentcol{0.7in}{\tiny{deferred, in timestamp order}} &
+    \contentcol{0.7in}{\tiny{immediate}} &
+    \contentcol{0.7in}{\tiny{}} \\
+  \hline
+   \contentcol{0.7in}{\tiny{Delivery}} &
+   \contentcol{0.7in}{\tiny{causal order}} &
+   \contentcol{0.7in}{\tiny{continous global order}} &
+   \contentcol{0.7in}{\tiny{continous global order}} &
+   \contentcol{0.7in}{\tiny{causal order}} &
+   \contentcol{0.7in}{\tiny{}} \\
+  \hline
+  \hline
+   \contentcol{0.7in}{\tiny{Undo}} &
+   \contentcol{0.7in}{\tiny{no}} &
+   \contentcol{0.7in}{\tiny{no}} &
+   \contentcol{0.7in}{\tiny{no}} &
+   \contentcol{0.7in}{\tiny{no}} &
+   \contentcol{0.7in}{\tiny{no}} \\
+  \hline
+ \end{tabular}
+ \caption{Comparison Matrix}
+\end{table}
+
+\begin{table}[H]
+ \begin{tabular}{|l|c|c|c|c|c|}
+  \hline
+   \headercol{0.7in}{} &
+   \headercol{0.7in}{NICE} &
+   \headercol{0.7in}{LI04} &
+   \headercol{0.7in}{} &
+   \headercol{0.7in}{} &
+   \headercol{0.7in}{} \\
+  \hline
+  \hline
+   \contentcol{0.7in}{\tiny{Correct?}} &
+   \contentcol{0.7in}{\tiny{yes}} &
+   \contentcol{0.7in}{\tiny{yes}} &
+   \contentcol{0.7in}{} &
+   \contentcol{0.7in}{} &
+   \contentcol{0.7in}{} \\
+  \hline
+  \hline
+   \contentcol{0.7in}{\tiny{Intention Preservation}} &
+   \contentcol{0.7in}{\tiny{IT}} &
+   \contentcol{0.7in}{} &
+   \contentcol{0.7in}{} &
+   \contentcol{0.7in}{} &
+   \contentcol{0.7in}{} \\
+  \hline 
+   \contentcol{0.7in}{\tiny{Causality Preservation}} &
+   \contentcol{0.7in}{\tiny{central notification server}} &
+   \contentcol{0.7in}{} &
+   \contentcol{0.7in}{} &
+   \contentcol{0.7in}{} &
+   \contentcol{0.7in}{} \\
+  \hline
+   \contentcol{0.7in}{\tiny{Copies Convergence}} &
+   \contentcol{0.7in}{\tiny{TP1 and unique global order}} &
+   \contentcol{0.7in}{\tiny{}} &
+   \contentcol{0.7in}{} &
+   \contentcol{0.7in}{} &
+   \contentcol{0.7in}{} \\
+  \hline
+  \hline
+    \contentcol{0.7in}{\tiny{Broadcast}} &
+    \contentcol{0.7in}{\tiny{immediate}} &
+    \contentcol{0.7in}{\tiny{}} &
+    \contentcol{0.7in}{} &
+    \contentcol{0.7in}{} &
+    \contentcol{0.7in}{} \\
+  \hline
+   \contentcol{0.7in}{\tiny{Delivery}} &
+   \contentcol{0.7in}{\tiny{causal order}} &
+   \contentcol{0.7in}{\tiny{continous global order}} &
+   \contentcol{0.7in}{} &
+   \contentcol{0.7in}{} &
+   \contentcol{0.7in}{} \\
+  \hline
+  \hline
+   \contentcol{0.7in}{\tiny{Undo}} &
+   \contentcol{0.7in}{\tiny{no}} &
+   \contentcol{0.7in}{\tiny{no}} &
+   \contentcol{0.7in}{} &
+   \contentcol{0.7in}{} &
+   \contentcol{0.7in}{} \\
+  \hline
+ \end{tabular}
+ \caption{Comparison Matrix}
+\end{table}
