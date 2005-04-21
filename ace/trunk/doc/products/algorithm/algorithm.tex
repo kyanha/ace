@@ -112,6 +112,7 @@ In general there are two different types of operational transformations, inclusi
 A transformation function has to be defined for every combination of operations. So for a text editor with the primitive operations insert and delete, there would be a total of four transformations functions for IT and yet another four for ET.
 
 \subsubsection{Definitions}
+\label{definitions}
 Conceptually, an operation $O$ is associated with a \emph{context}, denoted as $CT_{O}$, which is the list of operations that need to be executed to bring the document from its initial state to the state on which $O$ is defined. The significance of context is that the effect of an operation can be correctly interpreted only in its own context. 
 
 \begin{defn}
@@ -137,7 +138,7 @@ Precondition for the exclusion transformation is that $O_{2}$ must contextualy p
 
 
 \subsection{Transformation Properties}
-It was shown in \cite{ressel96} that transformation functions must satisfy two conditions, called $TP1$ and $TP2$.
+It was shown in \cite{ressel96} that transformation functions must satisfy two conditions, called $TP1$ and $TP2$. These transformation properties are sufficient and necessary for OT algorithms to guarantee convergence along arbitrary transformation paths.
 
 \paragraph{Transformation Property 1:}
 The transformation property 1 ensures that the effect of executing $O_{1}$ followed by the transformed request $O_{2}$ is the same as executing request $O_{2}$ followed by the transformed request $O_{1}$. 
@@ -167,6 +168,7 @@ Recently, two different ways have been taken to deal with the TP2 problem. One k
 
 
 \section{Algorithms}
+\label{algos}
 In this section we give an overview of all the \emph{Operational Transformation} algorithms we have found so far.
 
 \subsection{Introduction}
@@ -190,6 +192,15 @@ It is important to note, that a complete functioning OT algorithm usually consis
 \newpage
 
 \input{comparison}
+
+\newpage
+
+\section{Transformation Functions}
+In section \ref{algos}, we described several control algorithms along with their proposed transformation functions. Additionally, there exist research papers which focus only on transformation functions, which are considered to be combined with existing control algorithms. In this section we summarize the research papers we have found on that topic.
+
+
+\input{otfunctions/imor}
+\input{otfunctions/sun}
 
 \newpage
 
