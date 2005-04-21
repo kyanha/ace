@@ -1,7 +1,38 @@
-\section{Comparision of Algorithms}
+\section{Comparison of Algorithms}
 
-The following tables compare different aspects of the examined algorithms.
+The following tables compare different aspects of the examined algorithms. The first table explains what is meant by the different aspects.
 
+\newcommand{\acol}[1]{\multicolumn{1}{|p{1.6in}|}{\tiny{#1}}}
+\newcommand{\dcol}[1]{\multicolumn{1}{|p{3.9in}|}{\tiny{#1}}}
+
+ \begin{table}[!ht]
+  \begin{tabular}{|l|c|}
+   \hline
+   \headercol{1.6in}{Aspect}          & \headercol{3.9in}{Description}  \\
+   \hline
+    \acol{Year}                              & \dcol{The year the research paper was published.}       \\
+   \hline 
+    \acol{Correct?}                          & \dcol{No if another research paper has proved the algorithm (or its OT functions) wrong, otherwise Yes} \\
+   \hline 
+    \acol{Architecture}                      & \dcol{Which architecture is the algorithm designed for?} \\
+   \hline 
+    \acol{Available Information}             & \dcol{Is the information we could gather about the algorithm enough for an implementation?} \\
+   \hline 
+    \acol{Intention Preservation}            & \dcol{Can the user's intention for an operation be preserved? (see \ref{constraints})} \\
+   \hline 
+    \acol{Causality Preservation}            & \dcol{Is the causal ordering relation on operations preserved? (see \ref{constraints})} \\
+   \hline 
+    \acol{Copies Convergence}                & \dcol{Is copy convergence on all replicated objects achieved? (see \ref{constraints})} \\
+   \hline 
+    \acol{Broadcast}                         & \dcol{When is the broadcast i.e. the emission of a generated operation carried out?} \\
+   \hline 
+    \acol{Delivery}                          & \dcol{In what order are the operations at each site executed?} \\
+   \hline 
+    \acol{Undo}                              & \dcol{Is a user undo functionality for the algorithm available?} \\
+   \hline
+  \end{tabular}
+  \caption{Aspect Explanation}
+ \end{table}
 
 \newcommand{\ccol}[1]{\multicolumn{1}{|p{0.8in}|}{\tiny{#1}}}
 
@@ -116,7 +147,7 @@ The following tables compare different aspects of the examined algorithms.
    \ccol{yes} &
    \ccol{yes} &
    \ccol{no (transformation functions)} &
-   \ccol{?} \\
+   \ccol{yes} \\
   \hline
    \ccol{Architecture} &
    \ccol{replicated or semi-replicated} &
@@ -152,7 +183,7 @@ The following tables compare different aspects of the examined algorithms.
    \ccol{TP1 and continous global order} &
    \ccol{TP1 and continous global order} &
    \ccol{TP1 and TP2} &
-   \ccol{} \\
+   \ccol{TP1, propagation and synchronization rules} \\
   \hline
   \hline
     \ccol{Broadcast} &
@@ -160,14 +191,14 @@ The following tables compare different aspects of the examined algorithms.
     \ccol{immediate (as soon as timestamp is assigned)} &
     \ccol{deferred, in timestamp order} &
     \ccol{immediate} &
-    \ccol{} \\
+    \ccol{deferred, after time interval} \\
   \hline
    \ccol{Delivery} &
    \ccol{causal order} &
    \ccol{continous global order} &
    \ccol{continous global order} &
    \ccol{causal order} &
-   \ccol{} \\
+   \ccol{?} \\
   \hline
   \hline
    \ccol{Undo} &
@@ -202,7 +233,7 @@ The following tables compare different aspects of the examined algorithms.
    \ccol{Correct?} &
    \ccol{yes} &
    \ccol{yes} &
-   \ccol{unknown (probably yes)} &
+   \ccol{no} &
    \ccol{} &
    \ccol{} \\
   \hline
@@ -215,7 +246,7 @@ The following tables compare different aspects of the examined algorithms.
   \hline
    \ccol{Available Information} &
    \ccol{enough} &
-   \ccol{enough} &
+   \ccol{not enough} &
    \ccol{not enough} & 
    \ccol{} &
    \ccol{} \\
@@ -223,21 +254,21 @@ The following tables compare different aspects of the examined algorithms.
   \hline
    \ccol{Intention Preservation} &
    \ccol{IT} &
-   \ccol{} &
+   \ccol{IT and ET} &
    \ccol{?} &
    \ccol{} &
    \ccol{} \\
   \hline 
    \ccol{Causality Preservation} &
    \ccol{central notification server} &
-   \ccol{} &
+   \ccol{state vectors} &
    \ccol{?} &
    \ccol{} &
    \ccol{} \\
   \hline
    \ccol{Copies Convergence} &
    \ccol{TP1 and unique global order} &
-   \ccol{} &
+   \ccol{TP1 and TP2} &
    \ccol{TP1 and TP2} &
    \ccol{} &
    \ccol{} \\
@@ -245,14 +276,14 @@ The following tables compare different aspects of the examined algorithms.
   \hline
     \ccol{Broadcast} &
     \ccol{immediate} &
-    \ccol{} &
+    \ccol{immediate} &
     \ccol{immediate} &
     \ccol{} &
     \ccol{} \\
   \hline
    \ccol{Delivery} &
    \ccol{causal order} &
-   \ccol{continous global order} &
+   \ccol{causal order} &
    \ccol{causal order} &
    \ccol{} &
    \ccol{} \\
