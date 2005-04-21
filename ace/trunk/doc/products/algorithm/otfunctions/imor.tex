@@ -4,10 +4,9 @@
 A new approach to achieving convergence is presented by A. Imine et al. in \cite{imine04}. They have formally proved the proposed solution to be correct. Firstly, the key concept of position words is introduced. Secondly, the novel IT function is explained.
 
 \subsubsection{Position Words}
-\emph{Definition p-word} Let $\Sigma = N$ be an alphabet over natural numbers. The set $\cal P \subset N$ of words, called p_words, is defined as follows: (i) $\epsilon \in \cal P$; (ii) if n $\in$ N then n $\in \cal P$; (iii) if $\omega$ is a nonemtpy p-word and n $\in$ N then n$\omega \in \cal P$ iff either n = Current($\omega$) precedes Current($\omega$) $\pm$ 1. Current($\omega$) is denoted the first symbol of $\omega$. Thus, Current(1232) = 1.
+\paragraph{Definition p-word} Let $\Sigma = N$ be an alphabet over natural numbers. The set $\cal P \subset N^*$ of words, called p-words, is defined as follows: (i) $\epsilon \in \cal P$; (ii) if n $\in$ N then n $\in \cal P$; (iii) if $\omega$ is a nonemtpy p-word and n $\in$ N then n$\omega \in \cal P$ iff either n = Current($\omega$) or Current($\omega$) $\pm$ 1. Current($\omega$) is denoted the first symbol of $\omega$. Thus, Current(1232) = 1.
 
-E.g. p-words are $\omega_{1}$ = 00, $\omega_{2}$ = 3454, but $\omega_{3}$ = 3476 is not. 
-The position word (p-word) is a vector of numbers which is denoted by $\omega$ and defined only on insertion operations. This vector keeps track of the insertion positions of an operation.
+The position word (p-word) is a vector of numbers which is denoted by $\omega$ and defined only on insertion operations. This vector keeps track of the insertion positions of an operation. E.g. p-words are $\omega_{1}$ = 00, $\omega_{2}$ = 3454, but $\omega_{3}$ = 3476 is not. 
 
 \subsubsection{IT function}
 The insert operation is extended with a new parameter p-word giving the positions occupied before every transformation step. Thus an insert operation becomes: $Ins(p,c,w)$ where p is the insertion position, c the character to be added and w a p-word.
@@ -17,7 +16,7 @@ When the OT function for two insertion operations is called, the PW values of $I
 \subsubsection{Properties}
 \begin{itemize}
  \item IT function extended with concept of p-words
- \item p-word: a vector of numbers with all positions an insertion operation has undergone since its generation
+ \item p-word: a vector of positions an insertion operation has undergone since its generation
  \item first (inclusive) transformation function which was thoroughly formally proved ever
- \item has been successfully implemented with algorithm adOPTed (\ref{algo:adopted}) in \cite{cicolini} and with SOCT4 in \cite{mosi}
+ \item has been successfully implemented with algorithm adOPTed in \cite{cicolini} and SOCT4 in \cite{mosi}
 \end{itemize}
