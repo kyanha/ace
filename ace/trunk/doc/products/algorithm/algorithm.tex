@@ -165,17 +165,17 @@ $IT(IT(O_{1},O_{2}),O'_{3})$=$IT(IT(O_{1},O_{2}),O'_{2})$
 
 Later research groups\cite{imine03}\cite{imine04} proved the transformation functions of both Ressel\cite{ressel96} and Sun\cite{sun98a} to fail to hold TP2 in certain situations. They proposed new transformation functions they developed using a theorem prover. 
 
-Proving the transformation property 1 (TP1) seems to be rather straightforward. However, proving that a given transformation function holds TP2 appears to be difficult. There are over 100 cases that have to be analyzed (according to {Imine et. al}\cite{imine04}). Imine et. al shows that many proposed transformation functions do not hold TP2. 
+Proving the transformation property 1 (TP1) seems to be rather straightforward. However, proving that a given transformation function holds TP2 appears to be difficult. There are over 100 cases that have to be analyzed (according to {Imine et. al}\cite{imine04}). Imine et. al showed that many proposed transformation functions do not hold TP2. 
 
 Recently, two different ways have been taken to deal with the TP2 problem. One kind of algorithms try to avoid the need to comply with TP2 altogether (SOCT2~\cite{suleiman97}, GOT~\cite{sun98a}, SOCT3/4~\cite{suleiman00}, TIBOT\cite{tibot} and NICE~\cite{sun02}). Other research groups try to correct the problems in the original transformation functions of GOTO\cite{sun98b} and adOPTed\cite{ressel96}. 
 
 
 \section{Algorithms}
 \label{algos}
-In this section we give an overview of all the \emph{Operational Transformation} algorithms we have found so far.
+In this section we give an overview of all the \emph{Operational Transformation} algorithms we could gather.
 
 \subsection{Introduction}
-It is important to note, that a complete functioning OT algorithm usually consists of two parts. One part, the control algorithm, is application independent. The other part is the set of transformation functions (IT and maybe ET), which is application dependent. As noted earlier, for every pair of operations there must be one (when the algorithm uses ET two) transformation function. For two operations (e.g. insert and delete) this results in four transformation functions. Operations are highly application dependent. A text editor has different operations than a whiteboard application.
+It is important to note, that a complete functioning OT algorithm usually consists of two parts. One part, the control algorithm, is application independent. The other part is the set of transformation functions (IT and sometimes ET), which is application dependent. As noted earlier, for every pair of operations there must be one (when the algorithm uses ET two) transformation function. For two operations (e.g. insert and delete) this results in four transformation functions. Operations are highly application dependent. A text editor has different operations than a whiteboard application.
 
 \input{algorithms/dopt}
 \input{algorithms/ccu}
