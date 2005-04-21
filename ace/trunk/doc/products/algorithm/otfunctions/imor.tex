@@ -1,0 +1,23 @@
+\subsection{IT function based on position words}
+\label{otf:imor}
+
+A new approach to achieving convergence is presented by A. Imine et al. in \cite{imine04}. They have formally proved the proposed solution to be correct. Firstly, the key concept of position words is introduced. Secondly, the novel IT function is explained.
+
+\subsubsection{Position Words}
+\emph{Definition p-word} Let $\Sigma = N$ be an alphabet over natural numbers. The set $\cal P \subset N$ of words, called p_words, is defined as follows: (i) $\epsilon \in \cal P$; (ii) if n $\in$ N then n $\in \cal P$; (iii) if $\omega$ is a nonemtpy p-word and n $\in$ N then n$\omega \in \cal P$ iff either n = Current($\omega$) precedes Current($\omega$) $\pm$ 1. Current($\omega$) is denoted the first symbol of $\omega$. Thus, Current(1232) = 1.
+
+E.g. p-words are $\omega_{1}$ = 00, $\omega_{2}$ = 3454, but $\omega_{3}$ = 3476 is not. 
+The position word (p-word) is a vector of numbers which is denoted by $\omega$ and defined only on insertion operations. This vector keeps track of the insertion positions of an operation.
+
+\subsubsection{IT function}
+The insert operation is extended with a new parameter p-word giving the positions occupied before every transformation step. Thus an insert operation becomes: $Ins(p,c,w)$ where p is the insertion position, c the character to be added and w a p-word.
+The OT function is redefined using the p-word concept. A function PW is defined that enables to construct p-words from editing operations. Hence, given an insert operation op, PW(op) gives a p-word which restores all positions occupied by the insert operation op since it was generated. 
+When the OT function for two insertion operations is called, the PW values of $Ins(p_1,c_1,w_1)$ and $Ins(p_2,c_2,w_2)$ are first compared. If their p-words equal, then their character codes are compared. When the two operations have the same character to be inserted in the same position then the OT function gives the null operation nop, i.e. one insert operation must be executed and the other one must be ignored \cite{suleiman98}.
+
+\subsubsection{Properties}
+\begin{itemize}
+ \item IT function extended with concept of p-words
+ \item p-word: a vector of numbers with all positions an insertion operation has undergone since its generation
+ \item first (inclusive) transformation function which was thoroughly formally proved ever
+ \item has been successfully implemented with algorithm adOPTed (\ref{algo:adopted}) in \cite{cicolini} and with SOCT4 in \cite{mosi}
+\end{itemize}
