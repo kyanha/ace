@@ -52,6 +52,8 @@ Given two operations $O_{a}$ and $O_{b}$ generated at sites $i$ and $j$, then $O
 \end{enumerate}
 \end{defn}
 
+Note that the causal ordering relation is a \emph{partial ordering}.
+
 \begin{defn}
 Dependent and independent operations: \\
 Given any two operations $O_{a}$ and $O_{b}$:
@@ -107,13 +109,13 @@ Even if a serialization-based protocol was used to ensure that all sites execute
 \subsection{Operational Transformations}
 {Ellis and Gibbs}~\cite{ellis} proposed a new kind of algorithms, called \emph{Operational Transformations} (OT).  These kind of algorithms transform operations, or more specifically their index, to include/exclude other operations.
 
-In general there are two different types of operational transformations, inclusion transformation (IT) and exclusion transformation (ET). All algorithms use inclusion transformation, some use exclusion transformation too.
+In general there are two different types of operational transformations, inclusion transformation (IT) and exclusion transformation (ET). All OT algorithms use inclusion transformation, some use exclusion transformation too.
 
 A transformation function has to be defined for every combination of operations. So for a text editor with the primitive operations insert and delete, there would be a total of four transformations functions for IT and yet another four for ET.
 
 \subsubsection{Definitions}
 \label{definitions}
-Conceptually, an operation $O$ is associated with a \emph{context}, denoted as $CT_{O}$, which is the list of operations that need to be executed to bring the document from its initial state to the state on which $O$ is defined. The significance of context is that the effect of an operation can be correctly interpreted only in its own context. 
+Conceptually, an operation $O$ is associated with a \emph{context}, denoted as $CT_{O}$, which is the list of operations that need to be executed to bring the document from its initial state to the state on which $O$ is defined (\emph{definition context}). The significance of context is that the effect of an operation can be correctly interpreted only in its own context. If the current context (called \emph{execution context}) is different from the definition context of an operation, the operation has to be transformed so that it can be executed in the current context.
 
 \begin{defn}
 Context equivalent relation $\sqcup$
