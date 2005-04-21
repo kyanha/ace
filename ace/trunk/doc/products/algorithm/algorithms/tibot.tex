@@ -1,10 +1,11 @@
 \subsection{TIBOT}
 \label{algo:tibot}
 
-The TIBOT algorithm presents a novel interaction model that is based on time intervals. It was presented in 2004 by Rui Li, Du Li and Chengzheng Sun in \cite{tibot}. In this summary, firstly some necessary concepts are introduced. Secondly the consistency control algorithm is explained.
+The \emph{TIBOT} algorithm presents a novel interaction model that is based on time intervals. It was presented in 2004 by Rui Li, Du Li and Chengzheng Sun in \cite{tibot}. In this summary, firstly some necessary concepts are introduced. Secondly the consistency control algorithm is explained.
+
 \subsubsection{Concepts}
 \paragraph{Time intervals based on logical clocks}
-Every site in the replicated architecture maintains a linear logical clock. All clocks are initialized to a common value. A time interval is the period between two consecutive clock ticks. Time interval lengths are assumed to be the same. Every operation is timestamped by the current local clock value to indicate which time interval it belongs to. Function TI(O) denotes the time interval of operation O. Two operations, $O_{i}$ and $O_{j}$, are in the same time interval iff TI($O_{i}$) = TI($O_{j}$), no matter whether \emph{i} = \emph{j} or not. A new time interval at a site is announced by broadcasting a control message that carries the clock value of the new time interval to all remote sites.
+Every site in the replicated architecture maintains a linear logical clock. All clocks are initialized to a common value. A time interval is the period between two consecutive clock ticks. Time interval lengths are assumed to be the same. Every operation is timestamped by the current local clock value to indicate which time interval it belongs to. Function $TI(O)$ denotes the time interval of operation $O$. Two operations, $O_{i}$ and $O_{j}$, are in the same time interval iff $TI(O_{i}) = TI(O_{j})$, no matter whether $i = j$ or not. A new time interval at a site is announced by broadcasting a control message that carries the clock value of the new time interval to all remote sites.
 
 \paragraph{Total ordering and operation context}
 The total ordering is defined by means of the time interval function.  In addition, \emph{TIBOT} uses a linear history buffer in which the operations are stored in the total order at each site. The notion of operation context is the same as defined in \ref{definitions}. The operations are allowed to be executed in any order as long as their causality is preserved and the following synchronization rules are observed.
@@ -17,7 +18,7 @@ The total ordering is defined by means of the time interval function.  In additi
  \item Synchronization rule 2: When a remote operation is to be executed, all operations that have been executed but out of the total order must be first undone, then perform this operation, and then redo these undone operations in sequence. These operations to be done or redone need to be transformed before they are executed (undo/do/redo scheme). Local operations are always executed immediately once generated.
  \item Synchronization rule 3: Operations with the same timestamp and site id are always synchronized as an entirety (i.e. are processed as entirety in transformations against local operations (concept of group operation).
 \end{itemize}
-The above rules reduce the complexity of communication and interaction compared with other consistency models for group editors. E.g. exclusive transformation is not necessary in this model.
+The above rules reduce the complexity of communication and interaction compared with other consistency models for group editors. E.g. exclusion transformation is not necessary in this model.
 
 \subsubsection{The TIBOT control algorithm}
 Due to the rules defined above and the properties derived from these rules (see \cite{tibot}), the concurrency problem is simplified in this model. It can be reduced (from the three cases discussed in \cite{sun98b}) to the following two cases. Assume that O is a execution-ready operation. $[O_{1},O_{2},...,O_{n}]$ are a sequence of operations that have been executed locally and stored in the local history buffer (HB). Suppose HB = $[O_{1},O_{2},O_{3}]$.

@@ -37,36 +37,6 @@ pdfcreator={pdftex},
 \section{Introduction}
 Real-time cooperative editing systems allow multiple users to view and edit the same document at the same time from multiple sites connected by communication networks. Consistency maintenance is one of the most significant challenges in designing and implementing real-time cooperative editing systems. 
 
-\subsection{Preliminaries}
-In this section, some basic concepts and terminologies are introduced. Following Lamport\cite{lamport78}, we define a causal (partial) ordering relation on operations in terms of their generation and execution sequences as follows.
-
-\begin{defn}
-Causal ordering relation $\rightarrow$: \\
-Given two operations $O_{a}$ and $O_{b}$ generated at sites $i$ and $j$, then $O_{a}\rightarrow O_{b}$, iff:
-\begin{enumerate}
- \item $i=j$ and the generation of $O_{a}$ $j$, then $O_{a}\rightarrow O_{b}$
- \item or $i \neq $j and the execution of $O_{a}$ at site $j$ happened before the 
-       genration of $O_{b}$
- \item or there exists an operation $O_{x}$ such that $O_{a}\rightarrow O_{x}$
-       and $O_{x}\rightarrow O_{b}$
-\end{enumerate}
-\end{defn}
-
-Note that the causal ordering relation is a \emph{partial ordering}.
-
-\begin{defn}
-Dependent and independent operations: \\
-Given any two operations $O_{a}$ and $O_{b}$:
-\begin{enumerate}
- \item $O_{b}$ is \emph{dependent} on $O_{a}$ iff $O_{a} \rightarrow O_{b}$
- \item $O_{a}$ and $O_{b}$ are \emph{independent} (or \emph{concurrent}), expressed
-       as $O_{a} \Arrowvert O_{b}$ iff neither $O_{a}\rightarrow O_{b}$ nor
-       $O_{b}\rightarrow O_{a}$
-\end{enumerate}
-\end{defn}
-
-Intuitively we can say that two operations are dependant if there is a path from the generation of one message to the generation of another message. So for example in figure \ref{fig:example1} operation $O_{1}$ and $O_{3}$ are dependent, that is $O_{1}\rightarrow O_{3}$. Operation $O_{1}$ and $O_{2}$ are \emph{independent}. 
-
 
 \subsection{Requirements}
 The following requirements have been identified for such systems.
@@ -79,11 +49,45 @@ The following requirements have been identified for such systems.
 
 The requirements for good responsiveness and for supporting unconstrained collaboration have led researchers to adopt a replicated architecture for the storage of shared documents. The shared documents are replicated at the local storage of each participating site. One of the most challenging problem in designing and implementing real-time cooperative editing systems with a replicated architecture is consistency maintenance of replicated documents. 
 
-To illustrate the challenges researchers are facing, consider a scenario in a cooperative editing system with three cooperating sites, as shown in figure \ref{fig:example1}. Suppose that an operation is executed on the local replica of the shared document immediately after its generation, then broadcast to remote sites and executed there in its \emph{original form} upon its arrival.
+
+\subsection{Preliminaries}
+In this section, some basic concepts and terminologies are introduced. Following Lamport\cite{lamport78}, we define a causal (partial) ordering relation on operations in terms of their generation and execution sequences as follows.
+
+\begin{defn}
+Causal ordering relation $\rightarrow$
+\end{defn}
+
+Given two operations $O_{a}$ and $O_{b}$ generated at sites $i$ and $j$, then $O_{a}\rightarrow O_{b}$, iff:
+\begin{enumerate}
+ \item $i=j$ and the generation of $O_{a}$ happened before the generation of 
+       $O_{b}$
+ \item or $i \neq $j and the execution of $O_{a}$ at site $j$ happened before 
+       the generation of $O_{b}$
+ \item or there exists an operation $O_{x}$ such that $O_{a}\rightarrow O_{x}$
+       and $O_{x}\rightarrow O_{b}$
+\end{enumerate}
+
+Note that the causal ordering relation is a \emph{partial ordering}.
+
+\begin{defn}
+Dependent and independent operations
+\end{defn}
+
+Given any two operations $O_{a}$ and $O_{b}$:
+\begin{enumerate}
+ \item $O_{b}$ is \emph{dependent} on $O_{a}$ iff $O_{a} \rightarrow O_{b}$
+ \item $O_{a}$ and $O_{b}$ are \emph{independent} (or \emph{concurrent}), 
+       expressed as $O_{a} \Arrowvert O_{b}$ iff neither 
+       $O_{a}\rightarrow O_{b}$ nor $O_{b}\rightarrow O_{a}$
+\end{enumerate}
+
+Intuitively we can say that two operations are dependant if there exists a path from the generation of one message to the generation of another message. So for example in figure \ref{fig:example1} operation $O_{1}$ and $O_{3}$ are dependent, that is $O_{1}\rightarrow O_{3}$. Operation $O_{1}$ and $O_{2}$ are \emph{independent}. 
 
 
 \subsection{Three inconsistency problems}
 \label{constraints}
+
+To illustrate the challenges researchers are facing, consider a scenario in a cooperative editing system with three cooperating sites, as shown in figure \ref{fig:example1}. Suppose that an operation is executed on the local replica of the shared document immediately after its generation, then broadcast to remote sites and executed there in its \emph{original form} upon its arrival.
 Three different inconsistency problems have been identified by {Sun et. al}\cite{sun98a}.
 
 \begin{figure}
@@ -94,7 +98,7 @@ Three different inconsistency problems have been identified by {Sun et. al}\cite
 \end{figure}
 
 \paragraph{Divergence:}
-Operations may arrive and be executed at different sites in different orders, resulting in different final results. As shown in figure \ref{fig:example1}, the four operations in this scenario are execute in the following orders: $O_{1}$, $O_{2}$, $O_{4}$ and $O_{3}$ at site 0; $O_{2}$, $O_{1}$, $O_{3}$ and $O_{4}$ at site 1; and $O_{2}$, $O_{4}$, $O_{3}$ and $O_{1}$ at site 2. Unless operations are commutative, which is generally not the case, final editing results will diverge. The divergence problem can be solved by any serialization protocol, which ensures the final result is the same as if all operations were executed in the same total order at all sites.
+Operations may arrive and be executed at different sites in different orders, resulting in different final results. As shown in figure \ref{fig:example1}, the four operations in this scenario are executed in the following orders: $O_{1}$, $O_{2}$, $O_{4}$ and $O_{3}$ at site 0; $O_{2}$, $O_{1}$, $O_{3}$ and $O_{4}$ at site 1; and $O_{2}$, $O_{4}$, $O_{3}$ and $O_{1}$ at site 2. Unless operations are commutative, which is generally not the case, final editing results will diverge. The divergence problem can be solved by any serialization protocol, which ensures the final result is the same as if all operations were executed in the same total order at all sites.
 
 \paragraph{Causality violation:}
 Due to the nondeterministic communication latency, operations may arrive and be executed out of their natural cause-effect order. As shown in figure \ref{fig:example1}, operation $O_{3}$ is generated after the arrival of $O_{1}$ at site 1, the editing effect of $O_{1}$ on the shared document has been seen by the user 1 at the time $O_{3}$ is generated. Therefore, $O_{3}$ may be \emph{dependent} on $O_{1}$. However, since $O_{3}$ arrives and is executed before $O_{1}$ at site 2, confusion may occure to the system as well as to the user at site 2. For example, if $O_{1}$ is to insert a string into a shared document, and $O_{3}$ is to delete some characters in the string inserted by $O_{1}$, then the execution of $O_{3}$ before $O_{1}$ at site 2 will result in $O_{3}$ referring to a nonexistent context. 
@@ -167,14 +171,13 @@ Later research groups\cite{imine03}\cite{imine04} proved the transformation func
 
 Proving the transformation property 1 (TP1) seems to be rather straightforward. However, proving that a given transformation function holds TP2 appears to be difficult. There are over 100 cases that have to be analyzed (according to {Imine et. al}\cite{imine04}). Imine et. al showed that many proposed transformation functions do not hold TP2. 
 
-Recently, two different ways have been taken to deal with the TP2 problem. One kind of algorithms try to avoid the need to comply with TP2 altogether (SOCT2~\cite{suleiman97}, GOT~\cite{sun98a}, SOCT3/4~\cite{suleiman00}, TIBOT\cite{tibot} and NICE~\cite{sun02}). Other research groups try to correct the problems in the original transformation functions of GOTO\cite{sun98b} and adOPTed\cite{ressel96}. 
+Recently, two different ways have been taken to deal with the TP2 problem. One kind of algorithms tries to avoid the need to comply with TP2 altogether (GOT~\cite{sun98a}, SOCT3/4~\cite{suleiman00}, TIBOT\cite{tibot} and NICE~\cite{sun02}). Other research groups try to correct the problems in the original transformation functions of GOTO~\cite{sun98b}, adOPTed~\cite{ressel96} and SDT~\cite{sdt}. 
 
 
 \section{Algorithms}
 \label{algos}
 In this section we give an overview of all the \emph{Operational Transformation} algorithms we could gather.
 
-\subsection{Introduction}
 It is important to note, that a complete functioning OT algorithm usually consists of two parts. One part, the control algorithm, is application independent. The other part is the set of transformation functions (IT and sometimes ET), which is application dependent. As noted earlier, for every pair of operations there must be one (when the algorithm uses ET two) transformation function. For two operations (e.g. insert and delete) this results in four transformation functions. Operations are highly application dependent. A text editor has different operations than a whiteboard application.
 
 \input{algorithms/dopt}
@@ -187,9 +190,9 @@ It is important to note, that a complete functioning OT algorithm usually consis
 \input{algorithms/soct2}
 \input{algorithms/soct3}
 \input{algorithms/soct4}
-\input{algorithms/sdt}
 \input{algorithms/tibot}
 \input{algorithms/nice}
+\input{algorithms/sdt}
 \input{algorithms/lili}
 
 \newpage

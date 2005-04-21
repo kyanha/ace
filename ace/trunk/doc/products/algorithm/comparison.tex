@@ -1,5 +1,7 @@
 \section{Comparison of Algorithms}
 
+\subsection{Overview}
+
 The following tables compare different aspects of the examined algorithms. The first table explains what is meant by the different aspects.
 
 \newcommand{\acol}[1]{\multicolumn{1}{|p{1.6in}|}{\tiny{#1}}}
@@ -8,27 +10,38 @@ The following tables compare different aspects of the examined algorithms. The f
  \begin{table}[!ht]
   \begin{tabular}{|l|c|}
    \hline
-   \headercol{1.6in}{Aspect}          & \headercol{3.9in}{Description}  \\
+    \headercol{1.6in}{Aspect} & 
+    \headercol{3.9in}{Description}  \\
    \hline
-    \acol{Year}                              & \dcol{The year the research paper was published.}       \\
+    \acol{Year} & 
+    \dcol{The year the research paper was published.} \\
    \hline 
-    \acol{Correct?}                          & \dcol{No if another research paper has proved the algorithm (or its OT functions) wrong, otherwise Yes} \\
+    \acol{Correct?} & 
+    \dcol{No if another research paper has proved the algorithm (or its OT functions) wrong, otherwise Yes} \\
    \hline 
-    \acol{Architecture}                      & \dcol{Which architecture is the algorithm designed for?} \\
+    \acol{Architecture} & 
+    \dcol{Which architecture is the algorithm designed for?} \\
    \hline 
-    \acol{Available Information}             & \dcol{Is the information we could gather about the algorithm enough for an implementation?} \\
+    \acol{Available Information} & 
+    \dcol{Is the information we could gather about the algorithm enough for an implementation?} \\
    \hline 
-    \acol{Intention Preservation}            & \dcol{Can the user's intention for an operation be preserved? (see \ref{constraints})} \\
+    \acol{Intention Preservation} & 
+    \dcol{Can the user's intention for an operation be preserved? (see \ref{constraints})} \\
    \hline 
-    \acol{Causality Preservation}            & \dcol{Is the causal ordering relation on operations preserved? (see \ref{constraints})} \\
+    \acol{Causality Preservation} & 
+    \dcol{Is the causal ordering relation on operations preserved? (see \ref{constraints})} \\
    \hline 
-    \acol{Copies Convergence}                & \dcol{Is copy convergence on all replicated objects achieved? (see \ref{constraints})} \\
+    \acol{Copies Convergence} & 
+    \dcol{Is copy convergence on all replicated objects achieved? (see \ref{constraints})} \\
    \hline 
-    \acol{Broadcast}                         & \dcol{When is the broadcast i.e. the emission of a generated operation carried out?} \\
+    \acol{Broadcast} & 
+    \dcol{When is the broadcast i.e. the emission of a generated operation carried out?} \\
    \hline 
-    \acol{Delivery}                          & \dcol{In what order are the operations at each site executed?} \\
+    \acol{Delivery} & 
+    \dcol{In what order are the operations at each site executed?} \\
    \hline 
-    \acol{Undo}                              & \dcol{Is a user undo functionality for the algorithm available?} \\
+    \acol{Undo} & 
+    \dcol{Is a user undo functionality for the algorithm available?} \\
    \hline
   \end{tabular}
   \caption{Aspect Explanation}
@@ -158,8 +171,8 @@ The following tables compare different aspects of the examined algorithms. The f
   \hline
    \ccol{Available Information} &
    \ccol{enough} &
-   \ccol{enough} &
-   \ccol{enough} & 
+   \ccol{implementation of sequencers} &
+   \ccol{implementation of sequencers} & 
    \ccol{not enough for implementation} &
    \ccol{not enough} \\
   \hline
@@ -233,7 +246,7 @@ The following tables compare different aspects of the examined algorithms. The f
    \ccol{Correct?} &
    \ccol{yes} &
    \ccol{yes} &
-   \ccol{no} &
+   \ccol{probably yes} &
    \ccol{} &
    \ccol{} \\
   \hline
@@ -299,3 +312,53 @@ The following tables compare different aspects of the examined algorithms. The f
  \end{tabular}
  \caption{Comparison Matrix}
 \end{table}
+
+
+\subsection{Selection Criteria}
+
+From the set of available algorithms we want to make a pre-selection. This pre-selection is based on the criteria set forth in this section.
+
+\paragraph{Correctness:} This is obviously the most important criteria. If an algorithm is not correct, it is not worth being implemented.
+
+\paragraph{Availability of user undo:} Users of collaborative applications expect the same commands as in a single user application. Without user level undo, the user experience will not be satisfactory.
+
+\paragraph{Availability of information:} Some algorithms are not explained enough to be implemented.
+
+\paragraph{Algorithmic complexity:} Some algorithms are strikingly simple, others are very complex (too complex). Simplicity is a selection criteria.
+
+
+\subsection{Selection of Algorithms}
+
+Based on the first selection criteria (correctness) \emph{dOPT} algorithm is deemed unsuitable. The transformation functions used by some algorithms have been proved incorrect \cite{imine04}. These include \emph{adOPTed}, \emph{GOTO}, \emph{SOCT2} and \emph{SDT}. By using the proposed transformation functions of \cite{imine04} these algorithms would be correct again (at least the control algorithm of \emph{adOPTed} and \emph{GOTO} have been proved correct). We are not convinced from the paper \cite{tibot} that the algorithm \emph{TIBOT} (see \ref{algo:tibot}) does in fact work properly. There are many remaining questions to be answered to be convinced of its correctness.
+
+The following algorithms have a user level undo defined. This does not imply that it would be impossible to devise an undo mechanism for other algorithms. Note however that adding an undo mechanism to an existing algorithm is a non-trivial task.
+
+\begin{itemize}
+ \item \emph{Jupiter} (see \ref{algo:jupiter}) 
+ \item \emph{adOPTed} (see \ref{algo:adopted})
+ \item \emph{GOTO} (see \ref{algo:goto})
+\end{itemize}
+
+For the algorithms in the next list we do not have enough information available for an implementation.
+
+\begin{itemize}
+ \item \emph{CCU} (see \ref{algo:ccu})
+ \item \emph{SDT} (see \ref{algo:sdt})
+ \item \emph{TIBOT} (see \ref{algo:tibot})
+ \item \emph{LI04} (see \ref{algo:li04})
+\end{itemize}
+
+For the implementation of \emph{SOCT3} and \emph{SOCT4} we would need some more papers about the implementation of sequencers. These were not found on the Internet.
+
+\emph{SOCT2} is considered to be very complex (reference?). \emph{Jupiter} is a very simple algorithm, because it restricts itself to point-to-point communication. 
+
+Based on these observations, the following algorithms remain as implementation choice:
+
+\begin{itemize}
+ \item \emph{Jupiter} (see \ref{algo:jupiter})
+ \item \emph{adOPTed} (see \ref{algo:adopted})
+ \item \emph{GOTO} (see \ref{algo:goto})
+\end{itemize}
+
+because they pass all the selection criteria.
+

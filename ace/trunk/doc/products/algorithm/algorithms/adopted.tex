@@ -5,7 +5,12 @@
 
 
 \subsubsection{Algorithm}
-This algorithm uses a so called \emph{L-Transformation} function. An L-transformation function must satisfy TP1 and must be symmetric (note: L-transformations are essentially inclusion transformations). Requests and L-transformations can be represented as grid-based diagrams. The axes represent users, grid points represent states with a certain state vector, and arrow represent requests, being either original or the result of some transformation.
+This algorithm uses a so called \emph{L-Transformation} function. This L-Transformation function is the equivalent of the $xform$ function in \emph{Jupiter} (see \ref{algo:jupiter}) in \emph{adOPTed}. It is defined as:
+
+\label{algo:adopted:tf}
+$$ tf(r_1,r_2) = (r'_1,r'_2) $$
+
+An L-transformation function must satisfy TP1 and must be symmetric. Requests and L-transformations can be represented as grid-based diagrams. The axes represent users, grid points represent states with a certain state vector, and arrow represent requests, being either original or the result of some transformation.
 
 Each user process manages the following local data structures: the application state $s$, a counter $k$ for locally generated requests, a site's state vector $v$, its request queue $Q$, a request log $L$ and an n-dimensional interaction model $G$. The \emph{state vector v} holds the number of execution for each user. The $request queue Q$ is used to store generated and incoming requests that have to wait for execution. The \emph{request log L} stores a copy of each original request so that a request can be easily accessed by its key consisting of user id $u$ and serial number $k$. The \emph{interaction model G} is mainly used to store transformed requests that might be needed later. It would be possible to store application states like in the formal definition of the interaction model, but this is not necessary for the algorithm to work.
 
@@ -24,6 +29,8 @@ Note however that it has been proved by \cite{cormack02} that the control algori
  \item user undo described by \cite{ressel99}
  \item n-dimensional interaction graph
  \item architecture: replicated (no central server needed)
+ \item time complexity for integrating a remote operation $O$ is $O(n)$ 
+       where $n$ is the number of messages
 \end{itemize}
 
 
