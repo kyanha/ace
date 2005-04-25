@@ -4,8 +4,8 @@
 
 The following tables compare different aspects of the examined algorithms. The first table explains what is meant by the different aspects.
 
-\newcommand{\acol}[1]{\multicolumn{1}{|p{1.6in}|}{\tiny{#1}}}
-\newcommand{\dcol}[1]{\multicolumn{1}{|p{3.9in}|}{\tiny{#1}}}
+\newcommand{\acol}[1]{\multicolumn{1}{|p{1.6in}|}{\small{#1}}}
+\newcommand{\dcol}[1]{\multicolumn{1}{|p{3.9in}|}{\small{#1}}}
 
  \begin{table}[!ht]
   \begin{tabular}{|l|c|}
@@ -23,16 +23,16 @@ The following tables compare different aspects of the examined algorithms. The f
     \dcol{Which architecture is the algorithm designed for?} \\
    \hline 
     \acol{Available Information} & 
-    \dcol{Is the information we could gather about the algorithm enough for an implementation?} \\
+    \dcol{Is there enough information for an implementation?} \\
    \hline 
     \acol{Intention Preservation} & 
-    \dcol{Can the user's intention for an operation be preserved? (see \ref{constraints})} \\
+    \dcol{How is the user's intention for an operation be preserved? (see \ref{constraints})} \\
    \hline 
     \acol{Causality Preservation} & 
-    \dcol{Is the causal ordering relation on operations preserved? (see \ref{constraints})} \\
+    \dcol{How is causal ordering relation on operations preserved? (see \ref{constraints})} \\
    \hline 
     \acol{Copies Convergence} & 
-    \dcol{Is copy convergence on all replicated objects achieved? (see \ref{constraints})} \\
+    \dcol{How is copy convergence on all replicated objects achieved? (see \ref{constraints})} \\
    \hline 
     \acol{Broadcast} & 
     \dcol{When is the broadcast i.e. the emission of a generated operation carried out?} \\
@@ -134,7 +134,7 @@ The following tables compare different aspects of the examined algorithms. The f
    \ccol{yes} \\
   \hline
  \end{tabular}
- \caption{Comparison Matrix}
+ \caption{Comparison Matrix 1}
 \end{table}
 
 \begin{table}[H]
@@ -222,7 +222,7 @@ The following tables compare different aspects of the examined algorithms. The f
    \ccol{no} \\
   \hline
  \end{tabular}
- \caption{Comparison Matrix}
+ \caption{Comparison Matrix 2}
 \end{table}
 
 \begin{table}[H]
@@ -310,7 +310,7 @@ The following tables compare different aspects of the examined algorithms. The f
    \ccol{} \\
   \hline
  \end{tabular}
- \caption{Comparison Matrix}
+ \caption{Comparison Matrix 3}
 \end{table}
 
 
@@ -329,8 +329,13 @@ From the set of available algorithms we want to make a pre-selection. This pre-s
 
 \subsection{Selection of Algorithms}
 
-Based on the first selection criteria (correctness) \emph{dOPT} algorithm is deemed unsuitable. The transformation functions used by some algorithms have been proved incorrect \cite{imine04}. These include \emph{adOPTed}, \emph{GOTO}, \emph{SOCT2} and \emph{SDT}. By using the proposed transformation functions of \cite{imine04} these algorithms would be correct again (at least the control algorithm of \emph{adOPTed} and \emph{GOTO} have been proved correct). We are not convinced from the paper \cite{tibot} that the algorithm \emph{TIBOT} (see \ref{algo:tibot}) does in fact work properly. There are many remaining questions to be answered to be convinced of its correctness.
+\subsubsection{Correctness}
+Based on the first selection criteria (correctness) \emph{dOPT} algorithm is deemed unsuitable. Further the transformation functions used by some algorithms have been proved incorrect \cite{imine04}. These include \emph{adOPTed}, \emph{GOTO}, \emph{SOCT2} and \emph{SDT}. Note that the transformation functions can be replaced as they are independent of the control algorithm. By using the proposed transformation functions of \cite{imine04} these control algorithms would be correct again (at least the control algorithm of \emph{adOPTed} and \emph{GOTO} have been proved correct). 
 
+We are not convinced from the paper \cite{tibot} that the algorithm \emph{TIBOT} (see \ref{algo:tibot}) does in fact work properly. There are many remaining questions to be answered to be convinced of its correctness.
+
+
+\subsubsection{User Undo}
 The following algorithms have a user level undo defined. This does not imply that it would be impossible to devise an undo mechanism for other algorithms. Note however that adding an undo mechanism to an existing algorithm is a non-trivial task.
 
 \begin{itemize}
@@ -339,6 +344,8 @@ The following algorithms have a user level undo defined. This does not imply tha
  \item \emph{GOTO} (see \ref{algo:goto})
 \end{itemize}
 
+
+\subsubsection{Availability of Information}
 For the algorithms in the next list we do not have enough information available for an implementation.
 
 \begin{itemize}
@@ -350,8 +357,12 @@ For the algorithms in the next list we do not have enough information available 
 
 For the implementation of \emph{SOCT3} and \emph{SOCT4} we would need some more papers about the implementation of sequencers. These were not found on the Internet.
 
-\emph{SOCT2} is considered to be very complex (reference?). \emph{Jupiter} is a very simple algorithm, because it restricts itself to point-to-point communication. 
 
+\subsubsection{Complexity}
+\emph{SOCT2} is considered to be very complex \cite{imine03b} \cite{sdt}. \emph{Jupiter} is a very simple algorithm, because it restricts itself to point-to-point communication. \emph{adOPTed} is a bit more complicated than \emph{Jupiter} because it adds $n$-way communication. However, the implementation remains relatively straightforward. \emph{SOCT3} and \emph{SOCT4} use a sequencer that simplifies the implementation of the algorithm but requires an additional component (the sequencer). \emph{NICE} uses a central notification server that simplifies the algorithm significantly. The theoretical aspects of \emph{GOTO} are relatively complex, but the implementation itself should be easy. 
+
+
+\subsubsection{Selected Algorithms}
 Based on these observations, the following algorithms remain as implementation choice:
 
 \begin{itemize}
@@ -360,5 +371,5 @@ Based on these observations, the following algorithms remain as implementation c
  \item \emph{GOTO} (see \ref{algo:goto})
 \end{itemize}
 
-because they pass all the selection criteria.
+because they all fulfill the selection criteria sufficently well.
 

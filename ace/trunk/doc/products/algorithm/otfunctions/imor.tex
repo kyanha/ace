@@ -9,11 +9,11 @@ A new approach to achieving convergence is presented by A. Imine et al. in \cite
 The position word (p-word) is a vector of numbers which is denoted by $\omega$ and defined only on insertion operations. This vector keeps track of the insertion positions of an operation. E.g. p-words are $\omega_{1}$ = 00, $\omega_{2}$ = 3454, but $\omega_{3}$ = 3476 is not. 
 
 \subsubsection{IT function}
-The insert operation is extended with a new parameter p-word giving the positions occupied before every transformation step. Thus an insert operation becomes: $Ins(p,c,w)$ where $p$ is the insertion position, $c$ the character to be added and $w$ a p-word.
+The insert operation is extended with a new parameter p-word giving the positions occupied before every transformation step. Thus an insert operation becomes: $Insert(p,c,w)$ where $p$ is the insertion position, $c$ the character to be added and $w$ a p-word.
 
 The OT function is redefined using the p-word concept. A function PW is defined that enables to construct p-words from editing operations. Hence, given an insert operation op, PW(op) gives a p-word which restores all positions occupied by the insert operation op since it was generated. 
 
-When the OT function for two insertion operations is called, the PW values of $Ins(p_1,c_1,w_1)$ and $Ins(p_2,c_2,w_2)$ are first compared. If their p-words are equal, then their character codes are compared. When the two operations have the same character to be inserted in the same position then the OT function gives the null operation nop, i.e. one insert operation must be executed and the other one must be ignored \cite{suleiman98}.
+When the OT function for two insertion operations is called, the PW values of $Insert(p_1,c_1,w_1)$ and $Insert(p_2,c_2,w_2)$ are first compared. If their p-words are equal, then their character codes are compared. When the two operations have the same character to be inserted in the same position then the OT function gives the null operation nop, i.e. one insert operation must be executed and the other one must be ignored \cite{suleiman98}.
 
 \subsubsection{Properties}
 \begin{itemize}
