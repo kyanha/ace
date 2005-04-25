@@ -224,12 +224,18 @@ Recently, two different ways have been taken to deal with the TP2 problem. One k
 
 \section{Algorithms}
 \label{algos}
-In this section we give an overview of all the \emph{Operational Transformation} algorithms we could gather.
+In this section we give an overview of the \emph{Operational Transformation} algorithms we could gather. Two important properties on such algorithms are described first.
 
-It is important to note, that a complete functioning OT algorithm usually consists of two parts. One part, the control algorithm, is application independent. The other part is the set of transformation functions (IT and sometimes ET), which is application dependent. For example, a text editor has different operations than a whiteboard application.
-- TODO: describe control algo - OT functions
-- TODO: Architecture...
-The requirements for good responsiveness and for supporting unconstrained collaboration have lead researchers to adopt a replicated architecture for the storage of shared documents. The shared documents are replicated at the local storage of each participating site.
+\paragraph{Two components} The OT algorithm approach consists of two main components:
+
+\begin{enumerate}
+ \item The \emph{integration algorithm} which is responsible of receiving, broadcasting and executing operations. It is independent of the type of replica and application.
+ \item The \emph{transformation function} is responsible for merging two concurrent operations. It is application dependent. For example, a text editor has different operations than a whiteboard application.
+\end{enumerate}
+
+The integration algorithm calls the transformation function when needed. The correctness of the OT approach relies on both the correct integration algorithm as well as on the correct transformation function.
+
+\paragraph{Two architectures} TODO...The requirements for good responsiveness and for supporting unconstrained collaboration have lead researchers to adopt a replicated architecture for the storage of shared documents. The shared documents are replicated at the local storage of each participating site.
 
 \input{algorithms/dopt}
 \input{algorithms/ccu}
