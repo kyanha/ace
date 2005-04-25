@@ -8,15 +8,15 @@ The problem is related to inclusion transformation between two insert operations
 
 \paragraph{Example: } Given the initial document state ''abc''. The three editing sites 1, 2 and 3 generate $O_{1} = insert(''1'',2)$, $O_{2} = insert(''2'',1)$ and $O_{3} = delete(''b'',1)$ respectively. The three operations are independent. Now consider what happens at site 3. After the deletion of character ''b'' at position 1 the document state becomes ''ac''. The next message arriving is then $O_{2}$ which inserts ''2'' at position 1. The resulting document state is ''a2c''. The next operation $O_{1}$ arrives at site 3 and is transformed against $O_{3}$ and then $O_{2}$. The result of the second transformation is non-deterministic. It could be $insert(''1'',1)$ or $insert(''1'',2)$. However, the original intention of $O_{1}$ is to insert ''1'' after ''b'' and the intention of $O_{2}$ is to insert ''2'' before ''b''. Then ''1'' should appear after ''2'' in the resulting document state (''a21c''). So depending on the chosen priority scheme, the result could be violating the intention of the original operations. Another even more severe problem results from the fact, that the document state of site 3 could diverge from site 1 and 2. A similar problem arises with traditional exclusion transformation functions.
 
-The conventional transformation functions use the site id as priority scheme if two inserts happen at the same position. This was identified as the source of the problems as described above by Du Li and Rui Li. 
+The conventional transformation functions use the site id as priority scheme if two inserts happen at the same position. This was identified as the source of the problems as described above by Du Li and Rui Li. This new algorithm tries to delay the use of site ids.
 
 
 \subsubsection{Proposed Solution}
 In the paper \cite{sdt} they propose a solution to the identified consistency problems. The algorithm works conceptually as follows. For each operation the original intention is recovered by computing its $\beta$ value against a well-known document state (the latest synchronization point). Then in performing inclusion transformation, the $\beta$ values are compared. The approach is based on a new concept called state difference, hence the name \emph{SDT} (state difference transformation).
 
-The user intention is always implemented through performing operations that generate certain effects on a given document state. The effect of an operation $O$ on its definition context is trivially itself, either to insert or delete a character. However, the effect of operation $O$ on $S_{i}$ is not as obvious if $S_{i}$ precedes the definition context. To characterize the effect of an operation on a prior document state more accurately, two notations $\beta$ and $\delta$ are introduced.
+The user intention is always achieved through performing operations that generate certain effects on a given document state. The effect of an operation $O$ on its definition context is trivially itself, either to insert or delete a character. However, the effect of operation $O$ on $S_{i}$ is not as obvious if $S_{i}$ precedes the definition context. To characterize the effect of an operation on a prior document state more accurately, two notations $\beta$ and $\delta$ are introduced.
 
-Read \cite{sdt} for a general overview and \cite{li03} for the implementation details. We did not read \cite{li03} because \emph{SDT} was proved incorrect \cite{imine04}. Further, we did not find the document on the Internet.
+Read \cite{sdt} for a general overview and \cite{li03} for the implementation details. The former document does not specify important implementation details (e.g. it is not explained how to obtain the \emph{latest synchronization point}). We did not read \cite{li03} because \emph{SDT} was proved incorrect \cite{imine04} and we did not find the document on the Internet.
 
 %\paragraph{State Difference: } The effects of a sequence of operations is considered. Because these operations may counteract each other, the concept of state difference (SD) is introduced to denote their net effect. Given a state $S$ and a sequence of operations $sq=[O_{1},O_{2},\ldots,O{n}]$ such that $S + sq = S'$. The state difference SD between $S$ and $S'$ is the net effects of all operations in $sq$ relative to $S$, denoted as $S + SD = S'$. 
 
@@ -25,8 +25,8 @@ Read \cite{sdt} for a general overview and \cite{li03} for the implementation de
  \item architecture: replicated
  \item transformation functions must hold TP2
  \item no undo mechanism
- \item proved wrong by Imine et. al \cite{imine04}, i.e. it does not hold
-       TP2 in all cases
+ \item proposed IT/ET functions proved wrong by Imine et. al \cite{imine04}, 
+       i.e. they do not hold TP2 in all cases
 \end{itemize}
 
 
