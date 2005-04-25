@@ -4,10 +4,10 @@
 Sun et. al were the first to define the three consistency properties, convergence, causality preservation and intention preservation in \cite{sun98a}.  The \emph{GOT} (generic operation transformation) algorithm separates the parts that achieve each of these properties.
 
 \subsubsection{Achieving Causality Preservation}
-To achieve causality preservation, a quite standard approach is used. An operation $O$ is only executed if all operations that causally precede $O$ have been executed at the local site. It can be shown that if a remote operation is executed only if a remote operation if it satisfies the above condition, then all operations will be executed in their causal orders, thus achieving causality preservation.
+To achieve causality preservation, a quite standard approach is used. An operation $O$ is only executed if all operations that causally precede $O$ have been executed at the local site. It can be shown that if a remote operation is executed only when a remote operation satisfies the above condition, then all operations will be executed in their causal orders, thus achieving causality preservation.
 
 \subsubsection{Achieving Convergence}
-The causality preserving scheme imposes causally ordered execution only for dependent operations and allows an operation to be executed at the local site immediately after its generation. This implies that the execution order of independent operations may be different at different sites. So how is the convergence property ensured in the presence of different execution order of independent operations? \emph{GOT} defines a total ordering relation to solve this problem (note, the causal precedence relation is only a partial ordering as there may be independent operations).
+The causality preserving scheme imposes causally ordered execution only for dependent operations and allows an operation to be executed at the local site immediately after its generation. This implies that the execution order of independent operations may be different at different sites. So how is the convergence property ensured in the presence of different execution order of independent operations? \emph{GOT} defines a total ordering relation to solve this problem.
 
 \begin{defn}
 Total ordering relation $\Rightarrow$
@@ -42,12 +42,11 @@ The achievement of the three properties, convergence, causality preservation and
 
 \subsubsection{Properties}
 \begin{itemize}
- \item uses state vectors to decide if operations are concurrent and 
-       causally ready
+ \item uses state vectors to determine causality relations
  \item uses inclusion transformation (IT) and exclusion transformation (ET)
  \item architecture: replicated (no central server needed)
  \item global ordering using undo/do/redo scheme to achieve convergence
- \item free of TP1 and TP2, through the use of global ordering
+ \item free of TP1 and TP2, through the use of global total ordering
  \item complex control algorithm (many transformations needed)
 \end{itemize}
 

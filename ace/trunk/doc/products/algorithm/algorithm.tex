@@ -45,9 +45,7 @@ The following requirements have been identified for such systems.
 
 \paragraph{Distributed:} Cooperating users may reside on different machines connected by communication networks with nondeterministic latency.
 
-\paragraph{Unconstrained:} Multiple users are allowed to concurrently and freely edit any part of the document at any time, in order to facilitate free and natural information flow among multiple users.
-
-The requirements for good responsiveness and for supporting unconstrained collaboration have led researchers to adopt a replicated architecture for the storage of shared documents. The shared documents are replicated at the local storage of each participating site. One of the most challenging problem in designing and implementing real-time cooperative editing systems with a replicated architecture is consistency maintenance of replicated documents. 
+\paragraph{Unconstrained:} Multiple users are allowed to concurrently and independently edit any part of the document at any time, in order to facilitate free and natural information flow among multiple users.
 
 
 \subsection{Preliminaries}
@@ -106,17 +104,30 @@ Due to the nondeterministic communication latency, operations may arrive and be 
 \paragraph{Intention violation:}
 Due to concurrent generation of operations, the \emph{actual effect} of an operation at the time of its execution may be different from the \emph{intended effect} of this operation at the time of its generation. As shown in figure \ref{fig:example1}, operation $O_{1}$ is generated at site 0 without any knowledge of $O_{2}$ generated at site 1, so $O_{1}$ is \emph{independent} of $O_{2}$, and vice versa. At site 0, $O_{2}$ is executed on a document state which has been changed by the preceding execution of $O_{1}$. Therefore, the subsequent execution of $O_{2}$ may refer to an incorrect position in the new document state, resulting in an editing effect which is different from the \emph{intention} of $O_{2}$. 
 
-For example, assume the shared document initially contains the following sequence of characters: "'ABCDE"'. Suppose $O_{1}=Insert["'12"',1]$, which intends to insert string "'12"' at position 1, i.e. between "'A"' and "'BCDE"'; and $O_{2}=Delete[2,2]$, which intends to delete the two characters starting from position 2, i.e. "'CD"'. After the execution of these two operations, the \emph{intention-preserved} result (at all sites) should be: "'A12BE"'. However, the actual result at site 0, obtained by executing $O_{1}$ followed by executing $O_{2}$, would be: "'A1CDE"', which apparently violates the intention of $O_{1}$ since the character "'2"', which was intented to be inserted, is missing in the final text, and violates the intention of $O_{2}$ since characters "'CD"', which were intended to be deleted, are still present in the final text.
+For example, assume the shared document initially contains the following sequence of characters: '"ABCDE'". Suppose $O_{1}=Insert['"12'",1]$, which intends to insert string '"12'" at position 1, i.e. between '"A'" and '"BCDE'"; and $O_{2}=Delete[2,2]$, which intends to delete the two characters starting from position 2, i.e. '"CD'". After the execution of these two operations, the \emph{intention-preserved} result (at all sites) should be: '"A12BE'". However, the actual result at site 0, obtained by executing $O_{1}$ followed by executing $O_{2}$, would be: '"A1CDE'", which apparently violates the intention of $O_{1}$ since the character '"2'", which was intented to be inserted, is missing in the final text, and violates the intention of $O_{2}$ since characters '"CD'", which were intended to be deleted, are still present in the final text.
 
-Even if a serialization-based protocol was used to ensure that all sites execute $O_{1}$ and $O_{2}$ in the same order to get an identical result "'A1CDE"', but this identical result is still inconsistent with the intentions of both $O_{1}$ and $O_{2}$.
+Even if a serialization-based protocol was used to ensure that all sites execute $O_{1}$ and $O_{2}$ in the same order to get an identical result '"A1CDE'", but this identical result is still inconsistent with the intentions of both $O_{1}$ and $O_{2}$.
+
+\paragraph{} 
+The three inconsistency problems are independent in the sense that the occurence of one or two of them does not always result in the others. Particularly, intention violation is a an incosistency problem of a different nature from the divergence problem. The essential difference between divergence and intention violation is that the former can always be resolved by a serialization protocol, but the latter cannot be fixed by any serialization protocol if operations were always executed in their originial forms.
+
+
+\subsection{A consistency model}
+A cooperative editing system is said to be consistent if it always maintains the following properties:
+\paragraph{Convergence:} when the same set of operations have been executed at all sites, all copies of the shared document are identical.
+\paragraph{Causality-preservation:} for any pair of operations $O_a$ and $O_b$, if $O_a \rightarrow O_b$, then $O_a$ is executed before $O_b$ at all sites.
+\paragraph{Intention-preservation:} for any operation $O$, the effects of executing $O$ at all sites are the same as the intention of $O$, and the effect of executing $O$ does not change the effects of indepentent operations.
+
+\paragraph{}
+In essence, the \emph{convergence} property ensures the consistency of the final results \emph{at the end} of a cooperative editing session; the \emph{causality-preservation} property ensures the consistency of the execution orders of dependent operations \emph{during} a cooperative editing session; and the \emph{intention-preservation} property ensures that the effect of executing an opertion at remote sites achieve the same effect as executing this operation at the local site at the time of its generation, and the execution effects of independent operations do not interfear with each other. The consistency model imposes an execution order constraint on dependent operations only, but leaves it open for execution order of independent operations as long as the convergence and intention-preservation properties are maintained. The consistency model effectively specifies, on the one hand, what assurance a cooperative editing system promises to its users and, on the other, what properties the underlying consistency maintenance mechanisms must support.
 
 
 \subsection{Operational Transformations}
-{Ellis and Gibbs}~\cite{ellis} proposed a new kind of algorithms, called \emph{Operational Transformations} (OT).  These kind of algorithms transform operations, or more specifically their index, to include/exclude other operations.
+{Ellis and Gibbs}~\cite{ellis} proposed a new kind of algorithms, called \emph{Operational Transformation} (OT).  This kind of algorithms transforms operations, or more specifically their index, to include/exclude the effects of other operations.
 
-In general there are two different types of operational transformations, inclusion transformation (IT) and exclusion transformation (ET). All OT algorithms use inclusion transformation, some use exclusion transformation too.
+In general there are two different types of operational transformation, inclusion transformation (IT) and exclusion transformation (ET). All OT algorithms use inclusion transformation, whereas exclusion transformation is not needed by some algorithms.
 
-A transformation function has to be defined for every combination of operations. So for a text editor with the primitive operations insert and delete, there would be a total of four transformations functions for IT and yet another four for ET.
+A transformation function has to be defined for every combination of operations. So for a text editor with the primitive operations \emph{insert} and \emph{delete}, there would be a total of four transformation functions for IT as well as for ET. That is, given a transformation function \emph{IT}, \emph{IT(insert, insert), IT(insert, delete), IT(delete, insert) and IT(delete, delete)}.
 
 \subsubsection{Definitions}
 \label{definitions}
@@ -141,7 +152,25 @@ Most importantly, it was recognized that the correctness of IT relies on the con
 \subsubsection{Exclusion Transformation}
 Exlusion Transformation (ET) transforms an operation $O_{1}$ against another operation $O_{2}$ in such a way that the impact of $O_{2}$ is effectively excluded from $O_{1}$.
 
-Precondition for the exclusion transformation is that $O_{2}$ must contextualy preceed $O_{1}$, i.e. $O_{2} \mapsto O_{1}$.
+Precondition for the exclusion transformation is that $O_{2}$ must contextualy preceed $O_{1}$, i.e. $O_{2} \mapsto O_{1}$. Postcondition is that $O_{1}$ and $O_{2}$ are context equivalent, i.e. $O_{1} \sqcup O_{2}$. 
+
+\subsubsection{Reversibility}
+The transformation functions must meet the \emph{reversibility} requirement as defined below.
+
+\begin{defn}
+Reversibility Requirement
+\end{defn}
+
+Given two operations $O_{1}$ and $O_{2}$.
+
+\begin{itemize}
+ \item if $O_{1} \sqcup O_{2}$ and $O'_{1} = IT(O_{1},O_{2})$, then it must
+       be that $O_{1} = ET(O'_{1},O_{2})$
+ \item if $O_{2} \mapsto O_{1}$ and $O'_{1} = ET(O_{1},O_{2})$, then it must
+       be that $O_{1} = IT(O'_{1},O_{2})$
+\end{itemize}
+
+Achieving reversibility is not a trivial task. This is because IT/ET functions may loose some information, so reversing the effect of a transformation may not be possible.
 
 
 \subsection{Transformation Properties}
@@ -180,6 +209,9 @@ In this section we give an overview of all the \emph{Operational Transformation}
 
 It is important to note, that a complete functioning OT algorithm usually consists of two parts. One part, the control algorithm, is application independent. The other part is the set of transformation functions (IT and sometimes ET), which is application dependent. As noted earlier, for every pair of operations there must be one (when the algorithm uses ET two) transformation function. For two operations (e.g. insert and delete) this results in four transformation functions. Operations are highly application dependent. A text editor has different operations than a whiteboard application.
 
+Architecture...
+The requirements for good responsiveness and for supporting unconstrained collaboration have lead researchers to adopt a replicated architecture for the storage of shared documents. The shared documents are replicated at the local storage of each participating site.
+
 \input{algorithms/dopt}
 \input{algorithms/ccu}
 \input{algorithms/jupiter}
@@ -216,30 +248,4 @@ In section \ref{algos}, we described several control algorithms along with their
 \bibliography{ace}
 
 \end{document}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
