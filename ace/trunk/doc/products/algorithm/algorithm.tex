@@ -82,10 +82,12 @@ Given any two operations $O_{a}$ and $O_{b}$:
 
 Intuitively we can say that two operations are dependant if there exists a path from the generation of one message to the generation of another message. So for example in figure \ref{fig:example1} operation $O_{1}$ and $O_{3}$ are dependent, that is $O_{1}\rightarrow O_{3}$. Operation $O_{1}$ and $O_{2}$ are \emph{independent}. 
 
+
 \subsection{A shared document model}
-Consider n sites, where each site has a copy of the shared document. The shared document model we take is a \emph{text document} modeled a by sequence of characters, indexed from 0 up to the number of characters in the document. It is assumed that the document state (the text) can only be modified by executing the follwoing two primitive editing operations: (i) \emph{Insert(p,c)} which inserts the character \emph{c} at position \emph{p}; (ii) \emph{Delete(p)} which deletes the character at position \emph{p}.
+Consider $n$ sites, where each site has a copy of the shared document. The shared document model we take is a \emph{text document} modeled a by sequence of characters, indexed from 0 up to the number of characters in the document. It is assumed that the document state (the text) can only be modified by executing the following two primitive editing operations: (i) $Insert(p,c)$ which inserts the character $c$ at position $p$; (ii) $Delete(p)$ which deletes the character at position $p$.
 
 It is important to note that the above text document model is only an abstract view of many document models based on a linear structure. For instance the character parameter may be regarded as a string of charcters, a line, a block of lines, an ordered XML node, etc.
+
 
 \subsection{Three inconsistency problems}
 \label{constraints}
@@ -95,7 +97,7 @@ Three different inconsistency problems have been identified by {Sun et. al}\cite
 
 \begin{figure}
  \centering
- \includegraphics[width=3.06in,height=3.53in]{../../images/example1.eps}
+ \includegraphics[width=2.5in,height=2.88in]{../../images/example1.eps}
  \caption{A scenarion of a real-time cooperative editing session}
  \label{fig:example1}
 \end{figure}
@@ -123,10 +125,12 @@ A cooperative editing system is said to be consistent if it always maintains the
 \paragraph{Causality-preservation:} for any pair of operations $O_a$ and $O_b$, if $O_a \rightarrow O_b$, then $O_a$ is executed before $O_b$ at all sites.
 \paragraph{Intention-preservation:} for any operation $O$, the effects of executing $O$ at all sites are the same as the intention of $O$, and the effect of executing $O$ does not change the effects of indepentent operations.
 
-\paragraph{}
-In essence, the \emph{convergence} property ensures the consistency of the final results \emph{at the end} of a cooperative editing session; the \emph{causality-preservation} property ensures the consistency of the execution orders of dependent operations \emph{during} a cooperative editing session; and the \emph{intention-preservation} property ensures that the effect of executing an opertion at remote sites achieve the same effect as executing this operation at the local site at the time of its generation, and the execution effects of independent operations do not interfear with each other. 
+{\setlength{\parskip}{18pt}
+In essence, the \emph{convergence} property ensures the consistency of the final results \emph{at the end} of a cooperative editing session; the \emph{causality-preservation} property ensures the consistency of the execution orders of dependent operations \emph{during} a cooperative editing session; and the \emph{intention-preservation} property ensures that executing an opertion at remote sites achieves the same effect as executing this operation at the local site at the time of its generation, and the execution effects of independent operations do not interfere with each other.
+}
 
-The consistency model imposes an execution order constraint on dependent operations only, but leaves it open for execution order of independent operations as long as the convergence and intention-preservation properties are maintained. The consistency model effectively specifies, on the one hand, what assurance a cooperative editing system promises to its users and, on the other, what properties the underlying consistency maintenance mechanisms must support.
+The consistency model imposes an execution order constraint on dependent operations only. The execution order of independent operations is left open as long as the convergence and intention-preservation properties are maintained. The consistency model effectively specifies, what assurance a cooperative editing system gives to its users and, what properties the underlying consistency maintenance mechanism must support.
+
 
 
 \subsection{Operational Transformation}
@@ -134,7 +138,7 @@ The consistency model imposes an execution order constraint on dependent operati
 
 In general there are two different types of operational transformation, inclusion transformation (IT) and exclusion transformation (ET). All OT algorithms use inclusion transformation, whereas exclusion transformation is not needed by some algorithms.
 
-A transformation function has to be defined for every combination of operations. So for a text editor with the primitive operations \emph{insert} and \emph{delete}, there would be a total of four transformation functions for IT and another four for ET. That is, given a transformation function T, T(\emph{insert, insert}), T(\emph{insert, delete}), T(\emph{delete, insert}) and T(\emph{delete, delete}).
+A transformation function has to be defined for every combination of operations. So for a text editor with the primitive operations \emph{insert} and \emph{delete}, there would be a total of four transformation functions for IT and another four for ET. That is, given a transformation function T, T(\emph{insert, insert}), T(\emph{insert, delete}), T(\emph{delete, insert}) and T(\emph{delete, delete}) must be defined.
 
 \subsubsection{Definitions}
 \label{definitions}
@@ -215,18 +219,20 @@ $IT(IT(O_{1},O_{2}),O'_{3})$=$IT(IT(O_{1},O_{3}),O'_{2})$
 \subsection{Groupware Architecture Analysis} We consider the architecture of a groupware application from two different point of views. On the one hand, the focus lies on the document replication and on the other, we consider the type of group communication between the participating sites.
 
 \subsubsection{Document replication}
-There are two types of document architectures focused: centralized and replicated.
 
 \paragraph{Centralized architecture} In a centralized architecture all data, i.e. the document, resides on a central machine. Client processes at each site are only responsible for passing requests to the central program and for displaying any output sent to them from the central program. The advantage of a centralized scheme is that synchronization is easy. Document state information is consistent since it is located in one place, and events are handled at clients in the same order because they are serialized by the server. Its main drawback is latency, as the message corresponding to any action must pass from the client to the server and back again before response to the action is shown.
 
-\paragraph{Replicated architecture} In a replicated architecture the document is replicated at all participating sites. Client processes at each site (replicas) must coordinate explicitly both local and remote actions, synchronizing all copies of the document. Replicas need only exchange critical state information to keep their copy of the document current. While remote activities may still be delayed, a person's local activities can be processed immediately. Processing bottlenecks are less likely - each replica is responsible for drawing only the local view, unlike the central cost of replication is increased complexity as issues of distributed systems like conflict management, concurrency control, etc. must be handled. Replicated systems have an enormous growth in terms of the number of communication paths; it grows at the rate of $n(n-1)/2$, where $n$ is the number of clients in the system. As compared to this, centralized systems have linear growth. Thus, centralized systems are more scalable in terms of communication requirements than replicated systems.
+\paragraph{Replicated architecture} In a replicated architecture the document is replicated at all participating sites. Client processes at each site (replicas) must coordinate explicitly both local and remote actions, synchronizing all copies of the document. Replicas need only exchange critical state information to keep their copy of the document current. While remote activities may still be delayed, local activities can be processed immediately. Processing bottlenecks are less likely, because each replica is responsible for drawing only the local view. The most significant cost of replication is increased complexity as issues of distributed systems like conflict management, concurrency control, etc. must be handled. 
+
+The \emph{real-time} requirement has led most researchers to adopt a replicated architecture.
+
 
 \subsubsection{Group Communication}
 We consider two types of group communication architectures: unicast and multicast:
-\begin{itemize}
- \item Unicast communication is a two way communication where client processes at each site communicate bidirectionally with a centralized server.
- \item Mulitcast communication is an $n$ way communication where client processes at each site communicate with all the participating sites directly.
-\end{itemize}
+
+\paragraph{Unicast communication} Unicast communication is a two way communication where client processes at each site communicate bidirectionally with a centralized server. The server forwards information from one client to all other clients.
+
+\paragraph{Multicast communication} Mulitcast communication is an $n$ way communication where client processes at each site communicate with all the participating sites directly. It has an enormous growth in terms of the number of communication paths. They grow at the rate of $n(n-1)/2$, where $n$ is the number of clients in the system. As compared to this, systems that use unicast communication have a linear growth. 
 
 
 \section{History}
