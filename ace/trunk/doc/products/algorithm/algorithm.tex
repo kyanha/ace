@@ -212,6 +212,23 @@ $IT(IT(O_{1},O_{2}),O'_{3})$=$IT(IT(O_{1},O_{3}),O'_{2})$
 \end{defn}
 
 
+\subsection{Groupware Architecture Analysis} We consider the architecture of a groupware application from two different point of views. On the one hand, the focus lies on the document replication and on the other, we consider the type of group communication between the participating sites.
+
+\subsubsection{Document replication}
+There are two types of document architectures focused: centralized and replicated.
+
+\paragraph{Centralized architecture} In a centralized architecture all data, i.e. the document, resides on a central machine. Client processes at each site are only responsible for passing requests to the central program and for displaying any output sent to them from the central program. The advantage of a centralized scheme is that synchronization is easy. Document state information is consistent since it is located in one place, and events are handled at clients in the same order because they are serialized by the server. Its main drawback is latency, as the message corresponding to any action must pass from the client to the server and back again before response to the action is shown.
+
+\paragraph{Replicated architecture} In a replicated architecture the document is replicated at all participating sites. Client processes at each site (replicas) must coordinate explicitly both local and remote actions, synchronizing all copies of the document. Replicas need only exchange critical state information to keep their copy of the document current. While remote activities may still be delayed, a person's local activities can be processed immediately. Processing bottlenecks are less likely - each replica is responsible for drawing only the local view, unlike the central cost of replication is increased complexity as issues of distributed systems like conflict management, concurrency control, etc. must be handled. Replicated systems have an enormous growth in terms of the number of communication paths; it grows at the rate of $n(n-1)/2$, where $n$ is the number of clients in the system. As compared to this, centralized systems have linear growth. Thus, centralized systems are more scalable in terms of communication requirements than replicated systems.
+
+\subsubsection{Group Communication}
+We consider two types of group communication architectures: unicast and multicast:
+\begin{itemize}
+ \item Unicast communication is a two way communication where client processes at each site communicate bidirectionally with a centralized server.
+ \item Mulitcast communication is an $n$ way communication where client processes at each site communicate with all the participating sites directly.
+\end{itemize}
+
+
 \section{History}
 {Ellis and Gibbs}~\cite{ellis} were the first to propose an \emph{Operational Transformation} algorithm in 1989. The algorithm is called \emph{dOPT} and is implemented in the \emph{Grove} system. Soon however a flaw was discovered in the original \emph{dOPT} algorithm (by Cormack\cite{cormack95a}). The scenario where \emph{dOPT} failed is called the \emph{dOPT} puzzle. Ressel\cite{ressel96} proposed a new algorithm \emph{adOPTed} in 1996 that solved the original \emph{dOPT} puzzle. {Sun et. al}\cite{sun98a} proposed another algorithm called \emph{GOT} that similarly to \emph{adOPTed} solved the \emph{dOPT} puzzle. {Sun et. al}\cite{sun98b} developed some transformation functions for string-wise operations.
 
@@ -226,7 +243,7 @@ Recently, two different ways have been taken to deal with the TP2 problem. One k
 \label{algos}
 In this section we give an overview of the \emph{Operational Transformation} algorithms we could gather. Two important properties on such algorithms are described first.
 
-\paragraph{Two components} The OT algorithm approach consists of two main components:
+\paragraph{} The OT algorithm approach consists of two main components:
 
 \begin{enumerate}
  \item The \emph{integration algorithm} which is responsible of receiving, broadcasting and executing operations. It is independent of the type of replica and application.
@@ -234,8 +251,6 @@ In this section we give an overview of the \emph{Operational Transformation} alg
 \end{enumerate}
 
 The integration algorithm calls the transformation function when needed. The correctness of the OT approach relies on both the correct integration algorithm as well as on the correct transformation function.
-
-\paragraph{Two architectures} TODO...The requirements for good responsiveness and for supporting unconstrained collaboration have lead researchers to adopt a replicated architecture for the storage of shared documents. The shared documents are replicated at the local storage of each participating site.
 
 \input{algorithms/dopt}
 \input{algorithms/ccu}
