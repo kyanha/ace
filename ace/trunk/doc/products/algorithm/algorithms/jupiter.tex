@@ -29,7 +29,7 @@ If there is a conflict, the paths will diverge, as shown in figure \ref{jupiter:
 
 The algorithm labels each message with the state the sender was in just before the message was generated (state vector). The recipient uses these labels to detect conflicts. Two concurrent messages have to be transformed, but they can only be transformed directly when they were generated from the same state of the document. 
 
-If client and server diverge more than one step, the transformation function cannot be applied directly. Consider figure \ref{jupiter:statespace2}. The client has executed $c$ and receives the conflicting message $s1$ from the server. It uses the transformation function to compute $s1$ to get to the state $(1,1)$. The server then generates $s2$ from the state $(0,1)$, indicating that it still has not processed $c$. What should the client do now? It cannot use the transformation function directly because $c$ and $s2$ were not generated from the same document state.
+If client and server diverge more than one step, the transformation function cannot be applied directly. Consider figure \ref{jupiter:statespace2}. The client has executed $c$ and receives the conflicting message $s1$ from the server. It uses the transformation function to compute $s1'$ to get to the state $(1,1)$. The server then generates $s2$ from the state $(0,1)$, indicating that it still has not processed $c$. What should the client do now? It cannot use the transformation function directly because $c$ and $s2$ were not generated from the same document state.
 
 \begin{figure}[H]
  \centering
