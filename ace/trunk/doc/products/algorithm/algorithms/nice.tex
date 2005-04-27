@@ -15,7 +15,7 @@ The notifications are contextually serialized. This is achieved by use of a cent
 
 
 \subsubsection{Notification Propagation Protocol}
-Before propagating a notification, the notifying site sends a \emph{Token-Request} message to the \emph{Notifier}, waiting for the \emph{Token-Grant} message from the \emph{Notifier}. After being granted the token, the site propagates the notification piggybacked with the \emph{Token-Release} message to the \emph{Notifier}. When the \emph{Notifier} receives the notification and the \emph{Token-Release} message, it forwards the notification to all interested sites. By using the notifier as a message relaying agent, causal relationships among notifications are automatically guaranteed.
+Before propagating a notification, the notifying site sends a \emph{Token-Request} message to the \emph{Notifier} (a central notification server), waiting for the \emph{Token-Grant} message from the \emph{Notifier}. After being granted the token, the site propagates the notification piggybacked with the \emph{Token-Release} message to the \emph{Notifier}. When the \emph{Notifier} receives the notification and the \emph{Token-Release} message, it forwards the notification to all interested sites. By using the notifier as a message relaying agent, causal relationships among notifications are automatically guaranteed.
 
 This sequential propagation simplifies concurrency control. However it is also inefficient in supporting notification policies for meeting real-time collaboration needs. For propagating one notification that may contain only one operation, three extra messages have to be sent.
 
@@ -28,10 +28,10 @@ The proposed solution consists of a protocol that allows a site to propagate its
 The transformation control algorithm is called \emph{SLOT} (symmetric linear operation transformation). Together with the \emph{SCOP} protocol it has the following properties.
 
 \begin{itemize}
- \item architecture: semi-replicated (uses central notification server)
  \item no state vectors needed
- \item no exclusion transformation (ET)
+ \item no ET
  \item free of TP2
+ \item architecture: replicated, unicast
 \end{itemize}
 
 The reason why \emph{SLOT} is free of TP2 is that under no circumstance an operation could be transformed against the same pair of operations in different orders. The operations are always ordered uniquely.

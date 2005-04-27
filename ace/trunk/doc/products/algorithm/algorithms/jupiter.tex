@@ -45,11 +45,10 @@ The algorithm guarantees that, no matter how far the client and server diverge i
 
 \subsubsection{Properties}
 \begin{itemize}
- \item seems to be correct
- \item uses state vectors to decide causality relations
- \item architecture: semi-replicated (central server)
+ \item uses state vectors to determine causality relations
  \item uses multiple 2-way synchronization protocols to create a n-way protocol
  \item free of TP2
  \item very simple algorithm
  \item two dimensional state space graph
+ \item architecture: replicated, unicast
 \end{itemize}

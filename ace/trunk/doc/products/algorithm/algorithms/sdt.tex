@@ -1,7 +1,7 @@
 \subsection{SDT}
 \label{algo:sdt}
 
-The algorithm \emph{SDT} was presented in 2004 by Du Li and Rui Li \cite{sdt}. They detected defects in existing inclusion transformation and exclusion transformation functions. 
+The algorithm \emph{SDT} was presented in 2004 by Du Li and Rui Li \cite{sdt}. They detected defects in existing inclusion transformation and exclusion transformation functions. The proposed solution (\emph{SDT}) tries to fix these.
 
 \subsubsection{Defects of traditional transformation functions}
 The problem is related to inclusion transformation between two insert operations and one delete operation with close position parameters. In some of these cases, the result of inclusion transformation is not deterministic. 
@@ -12,21 +12,19 @@ The conventional transformation functions use the site id as priority scheme if 
 
 
 \subsubsection{Proposed Solution}
-In the paper \cite{sdt} they propose a solution to the identified consistency problems. The algorithm works conceptually as follows. For each operation the original intention is recovered by computing its $\beta$ value against a well-known document state (the latest synchronization point). Then in performing inclusion transformation, the $\beta$ values are compared. The approach is based on a new concept called state difference, hence the name \emph{SDT} (state difference transformation).
+The algorithm works conceptually as follows. For each operation the original intention is recovered by computing its $\beta$ value against a well-known document state (the latest synchronization point). Then in performing inclusion transformation, the $\beta$ values are compared. The approach is based on a new concept called state difference, hence the name \emph{SDT} (state difference transformation).
 
 The user intention is always achieved through performing operations that generate certain effects on a given document state. The effect of an operation $O$ on its definition context is trivially itself, either to insert or delete a character. However, the effect of operation $O$ on $S_{i}$ is not as obvious if $S_{i}$ precedes the definition context. To characterize the effect of an operation on a prior document state more accurately, two notations $\beta$ and $\delta$ are introduced.
 
 Read \cite{sdt} for a general overview and \cite{li03} for the implementation details. The former document does not specify important implementation details (e.g. it is not explained how to obtain the \emph{latest synchronization point}). We did not read \cite{li03} because \emph{SDT} was proved incorrect \cite{imine04} and we did not find the document on the Internet.
 
-%\paragraph{State Difference: } The effects of a sequence of operations is considered. Because these operations may counteract each other, the concept of state difference (SD) is introduced to denote their net effect. Given a state $S$ and a sequence of operations $sq=[O_{1},O_{2},\ldots,O{n}]$ such that $S + sq = S'$. The state difference SD between $S$ and $S'$ is the net effects of all operations in $sq$ relative to $S$, denoted as $S + SD = S'$. 
-
 \subsubsection{Properties}
 \begin{itemize}
- \item architecture: replicated
  \item transformation functions must hold TP2
  \item no undo mechanism
  \item proposed IT/ET functions proved wrong by Imine et. al \cite{imine04}, 
        i.e. they do not hold TP2 in all cases
+ \item architecture: replicated, multicast
 \end{itemize}
 
 

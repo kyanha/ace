@@ -1,7 +1,7 @@
 \subsection{SOCT4}
 \label{algo:soct4}
 
-In \emph{SOCT4} \cite{suleiman00} as in \emph{SOCT3}, the operations are ordered globally using a timestamp given by a sequencer. They are then delivered on each site in this order thanks to the sequential reception. The originality of \emph{SOCT4} comes from the fact that inclusion transformation (called forward transposition) that takes into account concurrent operations are now made by the generator sites of the operations. According to \cite{suleiman00} this results in three major advantages:
+In \emph{SOCT4} \cite{suleiman00} as in \emph{SOCT3}, the operations are ordered globally using a timestamp given by a sequencer. They are then delivered on each site in this order thanks to the sequential reception. The originality of \emph{SOCT4} comes from the fact that IT (called forward transposition) is now made by the generator sites of the operations. According to \cite{suleiman00} this results in three major advantages:
 
 \begin{itemize}
  \item the receiver site does not have to separate history anymore; 
@@ -17,10 +17,10 @@ To achieve this, the broadcast of an operation must be deferred until it has bee
 \subsubsection{Properties}
 \begin{itemize}
  \item does not need any state vectors
- \item architecture: fully replicated
  \item uses a unique global ordering to abandon TP2 (by using a sequencer)
- \item no exclusion transformation needed
+ \item no ET needed
  \item no known user undo algorithm
+ \item architecture: replicated, multicast
 \end{itemize}
 
 

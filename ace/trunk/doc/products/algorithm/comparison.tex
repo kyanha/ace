@@ -2,7 +2,7 @@
 
 \subsection{Overview}
 
-The following tables compare different aspects of the examined algorithms. The first table explains what is meant by the different aspects.
+The following tables compare different aspects of the examined algorithms. The first table explains what is meant by the aspects.
 
 \newcommand{\acol}[1]{\multicolumn{1}{|p{1.6in}|}{\small{#1}}}
 \newcommand{\dcol}[1]{\multicolumn{1}{|p{3.9in}|}{\small{#1}}}
@@ -75,11 +75,11 @@ The following tables compare different aspects of the examined algorithms. The f
    \ccol{control algorithm} \\
   \hline
    \ccol{Architecture} &
-   \ccol{replicated} &
-   \ccol{semi-replicated (central server)} &
-   \ccol{replicated} & 
-   \ccol{replicated} &
-   \ccol{replicated} \\
+   \ccol{replicated, multicast} &
+   \ccol{replicated, unicast} &
+   \ccol{replicated, multicast} & 
+   \ccol{replicated, multicast} &
+   \ccol{replicated, multicast} \\
   \hline
    \ccol{Available Information} &
    \ccol{enough} &
@@ -107,7 +107,7 @@ The following tables compare different aspects of the examined algorithms. The f
    \ccol{TP1 (but no convergence achieved)} &
    \ccol{TP1} &
    \ccol{TP1 and TP2} &
-   \ccol{TP1 and TP2} &
+   \ccol{non-continuous global order and undo/redo} &
    \ccol{TP1 and TP2} \\
   \hline
   \hline
@@ -163,11 +163,11 @@ The following tables compare different aspects of the examined algorithms. The f
    \ccol{yes} \\
   \hline
    \ccol{Architecture} &
-   \ccol{replicated or semi-replicated} &
-   \ccol{replicated (uses global sequencer)} &
-   \ccol{replicated (uses global sequencer)} & 
-   \ccol{replicated} &
-   \ccol{replicated} \\
+   \ccol{replicated, multicast} &
+   \ccol{replicated, multicast} &
+   \ccol{replicated, multicast} & 
+   \ccol{replicated, multicast} &
+   \ccol{replicated, multicast} \\
   \hline
    \ccol{Available Information} &
    \ccol{enough} &
@@ -211,7 +211,7 @@ The following tables compare different aspects of the examined algorithms. The f
    \ccol{continous global order} &
    \ccol{continous global order} &
    \ccol{causal order} &
-   \ccol{?} \\
+   \ccol{?\footnotemark} \\
   \hline
   \hline
    \ccol{Undo} &
@@ -224,6 +224,7 @@ The following tables compare different aspects of the examined algorithms. The f
  \end{tabular}
  \caption{Comparison Matrix 2}
 \end{table}
+\footnotetext{Due to lack of information we are not capable of determining the answer definitely.}
 
 \begin{table}[H]
  \begin{tabular}{|l|c|c|c|c|c|}
@@ -251,15 +252,15 @@ The following tables compare different aspects of the examined algorithms. The f
    \ccol{} \\
   \hline
    \ccol{Architecture} &
-   \ccol{semi-replicated (central notifier server)} &
-   \ccol{replicated} &
-   \ccol{replicated or semi-replicated} & 
+   \ccol{replicated, unicast} &
+   \ccol{replicated, multicast} &
+   \ccol{replicated, unicast} & 
    \ccol{} &
    \ccol{} \\
   \hline
    \ccol{Available Information} &
    \ccol{enough} &
-   \ccol{not enough} &
+   \ccol{not enough \footnotemark} &
    \ccol{not enough} & 
    \ccol{} &
    \ccol{} \\
@@ -312,7 +313,7 @@ The following tables compare different aspects of the examined algorithms. The f
  \end{tabular}
  \caption{Comparison Matrix 3}
 \end{table}
-
+\footnotetext{The paper \cite{li04a} with the necessary implementation details should be released around May 2005.}
 
 \subsection{Selection Criteria}
 
@@ -320,9 +321,9 @@ From the set of available algorithms we want to make a pre-selection. This pre-s
 
 \paragraph{Correctness:} This is obviously the most important criteria. If an algorithm is not correct, it is not worth being implemented.
 
-\paragraph{Availability of user undo:} Users of collaborative applications expect the same commands as in a single user application. Without user level undo, the user experience will not be satisfactory.
+\paragraph{Availability of information:} Some papers do not provide enough information for an implementation.
 
-\paragraph{Availability of information:} Some algorithms are not explained enough to be implemented.
+\paragraph{Availability of user undo:} Users of collaborative applications expect the same commands as in a single user application. Without user level undo, the user experience will not be satisfactory.
 
 \paragraph{Algorithmic complexity:} Some algorithms are strikingly simple, others are very complex (too complex). Simplicity is a selection criteria.
 
@@ -330,9 +331,46 @@ From the set of available algorithms we want to make a pre-selection. This pre-s
 \subsection{Selection of Algorithms}
 
 \subsubsection{Correctness}
-Based on the first selection criteria (correctness) \emph{dOPT} algorithm is deemed unsuitable. Further the transformation functions used by some algorithms have been proved incorrect \cite{imine04}. These include \emph{adOPTed}, \emph{GOTO}, \emph{SOCT2} and \emph{SDT}. Note that the transformation functions can be replaced as they are independent of the control algorithm. By using the proposed transformation functions of \cite{imine04} these control algorithms would be correct again (at least the control algorithm of \emph{adOPTed} and \emph{GOTO} have been proved correct). 
+Based on the first selection criteria (correctness) \emph{dOPT} algorithm is deemed unsuitable. Further the transformation functions used by some algorithms have been proved incorrect \cite{imine04}. These include \emph{adOPTed}, \emph{GOTO}, \emph{SOCT2} and \emph{SDT}. Note that the transformation functions can be replaced as they are independent of the control algorithm. By using the proposed IT function of \cite{imine04} these control algorithms would be correct again (at least the control algorithm of \emph{adOPTed} and \emph{GOTO} have been proved correct). As \emph{GOTO}, \emph{SOCT2} and \emph{SDT} also use ET functions and \cite{imine04} only proposed and proved IT, we cannot assume them to be correct for an implementation yet. There have to be ET functions developed and proved analogous to the IT functions in \cite{imine04} first.
 
-We are not convinced from the paper \cite{tibot} that the algorithm \emph{TIBOT} (see \ref{algo:tibot}) does in fact work properly. There are many remaining questions to be answered to be convinced of its correctness.
+%We are not convinced from the paper \cite{tibot} that the algorithm \emph{TIBOT} (see \ref{algo:tibot}) does in fact work properly. There are many remaining questions to be answered to be convinced of its correctness.
+
+The following algorithms meet the correctness criteria:
+\begin{itemize}
+ \item \emph{Jupiter}
+ \item \emph{adOPTed}
+ \item \emph{GOT}
+ \item \emph{SOCT 3/4}
+ \item \emph{TIBOT}
+ \item \emph{NICE}
+ \item \emph{LI04}
+ \item \emph{CCU}
+\end{itemize}
+
+It is important to note that \emph{CCU}, \emph{TIBOT} and \emph{LI04} have not been approved or successfully implemented by a third party as far as we know.
+
+
+\subsubsection{Availability of Information}
+For the algorithms in the next list we do not have enough information available for an implementation.
+
+\begin{itemize}
+ \item \emph{CCU} (see \ref{algo:ccu})
+ \item \emph{SDT} (see \ref{algo:sdt})
+ \item \emph{TIBOT} (see \ref{algo:tibot})
+\end{itemize}
+
+For the implementation of \emph{SOCT3} and \emph{SOCT4} some more papers are needed concerning the implementation of sequencers. Though referenced, these could not be found on the Internet. 
+
+For \emph{Li04} we do not yet have enough information. But there will be a paper with implementation details published around May 2005 according to Mr. Du Li.
+
+
+\subsubsection{Complexity}
+\emph{SOCT2} is considered to be very complex \cite{imine03b} \cite{sdt} due to the management of the sets $s_i$ and $b_i$ associated with each $Insert$ operation. \emph{SOCT3} and \emph{SOCT4} use a sequencer that simplifies the implementation of the algorithm but requires this additional component which complicates the implementation. The theoretical aspects of \emph{GOT} as well as \emph{GOTO} are relatively complex, but the implementation itself should be straightforward. \emph{NICE} uses a central notification server that simplifies the algorithm significantly. \emph{Jupiter} is a very simple algorithm, because it restricts itself to point-to-point communication. \emph{adOPTed} is more complicated than \emph{Jupiter} because it adds $n$-way communication. However, we consider the implementation relatively straightforward.  
+
+The following algorithms are considered to be too complex to account for an implementation.
+\begin{itemize}
+ \item \emph{SOCT2}
+\end{itemize}
 
 
 \subsubsection{User Undo}
@@ -345,31 +383,22 @@ The following algorithms have a user level undo defined. This does not imply tha
 \end{itemize}
 
 
-\subsubsection{Availability of Information}
-For the algorithms in the next list we do not have enough information available for an implementation.
-
-\begin{itemize}
- \item \emph{CCU} (see \ref{algo:ccu})
- \item \emph{SDT} (see \ref{algo:sdt})
- \item \emph{TIBOT} (see \ref{algo:tibot})
- \item \emph{LI04} (see \ref{algo:li04})
-\end{itemize}
-
-For the implementation of \emph{SOCT3} and \emph{SOCT4} we would need some more papers about the implementation of sequencers. These were not found on the Internet.
-
-
-\subsubsection{Complexity}
-\emph{SOCT2} is considered to be very complex \cite{imine03b} \cite{sdt}. \emph{Jupiter} is a very simple algorithm, because it restricts itself to point-to-point communication. \emph{adOPTed} is a bit more complicated than \emph{Jupiter} because it adds $n$-way communication. However, the implementation remains relatively straightforward. \emph{SOCT3} and \emph{SOCT4} use a sequencer that simplifies the implementation of the algorithm but requires an additional component (the sequencer). \emph{NICE} uses a central notification server that simplifies the algorithm significantly. The theoretical aspects of \emph{GOTO} are relatively complex, but the implementation itself should be easy. 
-
-
 \subsubsection{Selected Algorithms}
-Based on these observations, the following algorithms remain as implementation choice:
+Based on the above observations but excluding the user undo requirement, the following algorithms remain as implementation choice:
 
 \begin{itemize}
  \item \emph{Jupiter} (see \ref{algo:jupiter})
  \item \emph{adOPTed} (see \ref{algo:adopted})
+ \item \emph{GOT} (see \ref{algo:got})
+ \item \emph{GOTO} (see \ref{algo:goto})
+ \item \emph{NICE} (see \ref{algo:nice})
+\end{itemize}
+
+If we take the user undo functionality into account, the selection shrinks to three algorithms:
+\begin{itemize}
+ \item \emph{Jupiter} (see \ref{algo:jupiter}) 
+ \item \emph{adOPTed} (see \ref{algo:adopted})
  \item \emph{GOTO} (see \ref{algo:goto})
 \end{itemize}
 
-because they all fulfill the selection criteria sufficently well.
-
+All the above algorithms fulfill the selection criteria sufficently well.

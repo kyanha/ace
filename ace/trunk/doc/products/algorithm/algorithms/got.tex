@@ -37,21 +37,21 @@ To achieve intention preservation, a causally-ready operation has to be transfor
 
 
 \subsubsection{Integration}
-The achievement of the three properties, convergence, causality preservation and intention preservation must be integrated to get a solution that satisfies all three properties. This results in a new modified \emph{undo/transform-do/transform-redo scheme}. This new scheme is described in detail in \cite{sun98b}.
+The achievement of the three properties, convergence, causality preservation and intention preservation must be integrated to get a solution that satisfies all three properties. This results in a new modified \emph{undo/transform-do/transform-redo scheme}. This new scheme is described in detail in \cite{sun98a}.
 
 
 \subsubsection{Properties}
 \begin{itemize}
  \item uses state vectors to determine causality relations
- \item uses inclusion transformation (IT) and exclusion transformation (ET)
- \item architecture: replicated, multicast
+ \item uses IT and ET
  \item global ordering using undo/do/redo scheme to achieve convergence
  \item free of TP1 and TP2, through the use of global total ordering
  \item complex control algorithm (many transformations needed)
+ \item architecture: replicated, multicast
 \end{itemize}
 
 
 \subsubsection{Implementations}
-The \emph{GOT} control algorithm was implemented in the \emph{REDUCE} prototype. It was however replaced later by the \emph{GOTO} algorithm.
+The \emph{GOT} control algorithm was implemented in the \emph{REDUCE} \cite{sun00a} prototype. It was however replaced later by the \emph{GOTO} algorithm.
 
 
