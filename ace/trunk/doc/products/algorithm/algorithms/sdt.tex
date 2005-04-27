@@ -12,7 +12,7 @@ The conventional transformation functions use the site id as priority scheme if 
 
 
 \subsubsection{Proposed Solution}
-The algorithm works conceptually as follows. For each operation the original intention is recovered by computing its $\beta$ value against a well-known document state (the latest synchronization point). Then in performing inclusion transformation, the $\beta$ values are compared. The approach is based on a new concept called state difference, hence the name \emph{SDT} (state difference transformation).
+The algorithm works conceptually as follows. For each operation the original intention is recovered by computing its $\beta$ value against a well-known document state (the latest synchronization point). Then in performing inclusion transformation, the $\beta$ values are compared. An algorithm to compute $\beta$ is given in the paper. The approach is based on a new concept called state difference, hence the name \emph{SDT} (state difference transformation).
 
 The user intention is always achieved through performing operations that generate certain effects on a given document state. The effect of an operation $O$ on its definition context is trivially itself, either to insert or delete a character. However, the effect of operation $O$ on $S_{i}$ is not as obvious if $S_{i}$ precedes the definition context. To characterize the effect of an operation on a prior document state more accurately, two notations $\beta$ and $\delta$ are introduced.
 

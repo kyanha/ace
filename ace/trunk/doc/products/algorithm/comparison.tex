@@ -333,8 +333,6 @@ From the set of available algorithms we want to make a pre-selection. This pre-s
 \subsubsection{Correctness}
 Based on the first selection criteria (correctness) \emph{dOPT} algorithm is deemed unsuitable. Further the transformation functions used by some algorithms have been proved incorrect \cite{imine04}. These include \emph{adOPTed}, \emph{GOTO}, \emph{SOCT2} and \emph{SDT}. Note that the transformation functions can be replaced as they are independent of the control algorithm. By using the proposed IT function of \cite{imine04} these control algorithms would be correct again (at least the control algorithm of \emph{adOPTed} and \emph{GOTO} have been proved correct). As \emph{GOTO}, \emph{SOCT2} and \emph{SDT} also use ET functions and \cite{imine04} only proposed and proved IT, we cannot assume them to be correct for an implementation yet. There have to be ET functions developed and proved analogous to the IT functions in \cite{imine04} first.
 
-%We are not convinced from the paper \cite{tibot} that the algorithm \emph{TIBOT} (see \ref{algo:tibot}) does in fact work properly. There are many remaining questions to be answered to be convinced of its correctness.
-
 The following algorithms meet the correctness criteria:
 \begin{itemize}
  \item \emph{Jupiter}
@@ -361,13 +359,13 @@ For the algorithms in the next list we do not have enough information available 
 
 For the implementation of \emph{SOCT3} and \emph{SOCT4} some more papers are needed concerning the implementation of sequencers. Though referenced, these could not be found on the Internet. 
 
-For \emph{Li04} we do not yet have enough information. But there will be a paper with implementation details published around May 2005 according to Mr. Du Li.
+For \emph{Li04} we do not have enough information yet. But there will be a paper with implementation details published around May 2005 according to Mr. Du Li.
 
 
 \subsubsection{Complexity}
-\emph{SOCT2} is considered to be very complex \cite{imine03b} \cite{sdt} due to the management of the sets $s_i$ and $b_i$ associated with each $Insert$ operation. \emph{SOCT3} and \emph{SOCT4} use a sequencer that simplifies the implementation of the algorithm but requires this additional component which complicates the implementation. The theoretical aspects of \emph{GOT} as well as \emph{GOTO} are relatively complex, but the implementation itself should be straightforward. \emph{NICE} uses a central notification server that simplifies the algorithm significantly. \emph{Jupiter} is a very simple algorithm, because it restricts itself to point-to-point communication. \emph{adOPTed} is more complicated than \emph{Jupiter} because it adds $n$-way communication. However, we consider the implementation relatively straightforward.  
+\emph{SOCT2} is considered to be very complex \cite{imine03b} \cite{sdt} due to management of the sets $s_i$ and $b_i$ associated with each $Insert$ operation. \emph{SOCT3} and \emph{SOCT4} use a sequencer that simplifies the implementation of the algorithm but requires this additional component which complicates the implementation. The theoretical aspects of \emph{GOT} as well as \emph{GOTO} are relatively complex, but the implementation itself should be straightforward. \emph{NICE} uses a central notification server that simplifies the algorithm significantly. \emph{Jupiter} is a very simple algorithm, because it restricts itself to point-to-point communication. \emph{adOPTed} is more complicated than \emph{Jupiter} because it adds $n$-way communication. However, we consider the implementation as relatively straightforward.  
 
-The following algorithms are considered to be too complex to account for an implementation.
+The following algorithms are considered to be too complex to be accounted for an implementation.
 \begin{itemize}
  \item \emph{SOCT2}
 \end{itemize}
@@ -390,7 +388,6 @@ Based on the above observations but excluding the user undo requirement, the fol
  \item \emph{Jupiter} (see \ref{algo:jupiter})
  \item \emph{adOPTed} (see \ref{algo:adopted})
  \item \emph{GOT} (see \ref{algo:got})
- \item \emph{GOTO} (see \ref{algo:goto})
  \item \emph{NICE} (see \ref{algo:nice})
 \end{itemize}
 
@@ -398,7 +395,6 @@ If we take the user undo functionality into account, the selection shrinks to th
 \begin{itemize}
  \item \emph{Jupiter} (see \ref{algo:jupiter}) 
  \item \emph{adOPTed} (see \ref{algo:adopted})
- \item \emph{GOTO} (see \ref{algo:goto})
 \end{itemize}
 
 All the above algorithms fulfill the selection criteria sufficently well.
