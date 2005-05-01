@@ -145,7 +145,7 @@ The consistency model imposes an execution order constraint on dependent operati
 \label{sect:ot}
 {Ellis and Gibbs}~\cite{ellis} proposed a new kind of algorithm for consistency control, called \emph{Operational Transformation} (OT).  This kind of algorithm transforms operations to include/exclude the effects of other operations. Intuitively, transformation shifts the position parameter of an operation before execution to incorporate the effects of previously executed operations that it was not \emph{aware} of (or that are concurrent) at the time of generation. Operational transformation helps to solve the problem of intention violation.
 
-In general there are two different types of operational transformation, inclusion transformation (IT) and exclusion transformation (ET). All OT algorithms use inclusion transformation, whereas exclusion transformation is not needed by some algorithms.
+In general there are two different types of operational transformation, inclusion transformation (IT) and exclusion transformation (ET). All OT algorithms use inclusion transformation, whereas exclusion transformation is used only by OT algorithms based on 1-dimensional data structures.
 
 A transformation function has to be defined for every combination of operations. So for a text editor with the primitive operations \emph{insert} and \emph{delete}, there would be a total of four transformation functions for IT and another four for ET. That is, given a transformation function T, T(\emph{insert, insert}), T(\emph{insert, delete}), T(\emph{delete, insert}) and T(\emph{delete, delete}) must be defined.
 
