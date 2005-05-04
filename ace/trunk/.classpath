@@ -12,5 +12,17 @@
 		<attributes>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="var" path="MAVEN2/jdom/jdom/1.0/jdom-1.0.jar">
+		<attributes>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="var" path="MAVEN2/commons-beanutils/commons-beanutils/1.7.0/commons-beanutils-1.7.0.jar">
+		<attributes>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="var" path="MAVEN2/junit/junit/3.8.1/junit-3.8.1.jar">
+		<attributes>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
