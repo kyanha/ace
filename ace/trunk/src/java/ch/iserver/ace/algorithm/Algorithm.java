@@ -12,9 +12,6 @@ public interface Algorithm {
 	public void siteAdded(int siteId);
 	public void siteRemoved(int siteId);
 	
-	public void setDocument(DocumentModel doc);
+	public void init(DocumentModel doc, Timestamp timestamp);
 	public DocumentModel getDocument();
-	
-	public void setInitialTimestamp(Timestamp timestamp);
-	
 }
