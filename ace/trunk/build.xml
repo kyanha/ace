@@ -3,6 +3,7 @@
 	     xmlns:artifact="antlib:org.apache.maven.artifact.ant">
 	<property name="build.dir" value="build"/>
 	<property name="build.classes" value="${build.dir}/classes"/>
+	<property name="build.javadoc" value="${build.dir}/api"/>
 	<property name="build.resources" value="${build.dir}/resources"/>
 	<property name="src.dir" value="src"/>
 	
@@ -60,6 +61,17 @@
 	<target name="run" depends="resources">
 		<echo>running ${class}</echo>
 		<java classname="${class}" fork="true" classpathref="classpath.run"/>
+	</target>
+	
+	<target name="javadoc" depends="compile">
+		<javadoc destdir="${build.javadoc}" windowtitle="ACE API">
+		    <tag name="todo" scope="all" description="To do:" />
+			<packageset dir="${src.dir}/java" defaultexcludes="yes">
+				<include name="**/*"/>
+				<exclude name="ch/iserver/ace/net/**"/>
+			</packageset>
+			<link href="http://java.sun.com/j2se/1.4.2/docs/api/"/>
+		</javadoc>
 	</target>
 
 </project>
