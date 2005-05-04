@@ -22,7 +22,8 @@
 package ch.iserver.ace.algorithm;
 
 /**
- *
+ * Vector time is a concept used in almost all OT algorithms to determine
+ * causality relations of operations.
  */
 public class VectorTime implements Timestamp {
 

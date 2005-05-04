@@ -24,7 +24,9 @@ package ch.iserver.ace;
 import java.io.Serializable;
 
 /**
- *
+ * This interface must be implemented by all operations. An
+ * operation is application dependent and therefore this interface
+ * does not contain any methods at all.
  */
 public interface Operation extends Serializable {
 

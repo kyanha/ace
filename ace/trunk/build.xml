@@ -3,21 +3,43 @@
 	     xmlns:artifact="antlib:org.apache.maven.artifact.ant">
 	<property name="build.dir" value="build"/>
 	<property name="build.classes" value="${build.dir}/classes"/>
+	<property name="build.resources" value="${build.dir}/resources"/>
 	<property name="src.dir" value="src"/>
 	
 	<artifact:dependencies pathId="dependency.classpath">
-		<dependency groupId="jdom" artifactId="jdom" version="1.0"/>
-		<dependency groupId="commons-beanutils" artifactId="commons-beanutils" version="1.7.0"/>
-		<dependency groupId="junit" artifactId="junit" version="3.8.1"/>
+		<dependency groupId="jdom" 
+		            artifactId="jdom" 
+		            version="1.0"/>
+		<dependency groupId="commons-beanutils" 
+		            artifactId="commons-beanutils" 
+		            version="1.7.0"/>
+		<dependency groupId="commons-logging" 
+		            artifactId="commons-logging" 
+		            version="1.0.4"
+		            scope="runtime"/>
+		<dependency groupId="junit" 
+		            artifactId="junit" 
+		            version="3.8.1"/>
+		<dependency groupId="xerces" 
+		            artifactId="xercesImpl" 
+		            version="2.6.2"
+		            scope="runtime"/>
 	</artifact:dependencies>
 	
 	<path id="classpath">
 		<path refid="dependency.classpath"/>
 	</path>
 	
+	<path id="classpath.run">
+		<path refid="dependency.classpath"/>
+		<pathelement path="${build.classes}"/>
+		<pathelement path="${build.resources}"/>
+	</path>
+	
 	<target name="init">
 		<mkdir dir="${build.dir}"/>
 		<mkdir dir="${build.classes}"/>
+		<mkdir dir="${build.resources}"/>
 	</target>
 	
 	<target name="compile" depends="init">
@@ -26,6 +48,18 @@
 			
 		</javac>
 	</target>
+	
+	<target name="resources" depends="compile">
+		<copy todir="${build.resources}">
+			<fileset dir="${src.dir}/resources">
+				<include name="**/*"/>
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="run" depends="resources">
+		<echo>running ${class}</echo>
+		<java classname="${class}" fork="true" classpathref="classpath.run"/>
+	</target>
 
 </project>
-
