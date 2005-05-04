@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scenario initial="abcdefg" final="bcdfg">
+    
+    <operation id="op1" type="ch.iserver.ace.text.Delete">
+        <property name="position" value="0"/>
+    </operation>
+    
+    <operation id="op2" type="ch.iserver.ace.text.Delete">
+        <property name="position" value="0"/>
+    </operation>
+    
+    <operation id="op3" type="ch.iserver.ace.text.Delete">
+        <property name="position" value="3"/>
+    </operation>
+    
+    <site id="1">
+        <generate ref="op1"/>
+        <receive ref="op2"/>
+        <receive ref="op3"/>
+    </site>
+    
+    <site id="2">
+        <generate ref="op2"/>
+        <generate ref="op3"/>
+        <receive ref="op1"/>
+    </site>
+    
+</scenario>

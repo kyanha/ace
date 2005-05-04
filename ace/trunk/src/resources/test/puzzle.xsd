@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:element name="scenario">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="operation" maxOccurs="unbounded"/>
+                <xs:element ref="site" maxOccurs="unbounded"/>
+            </xs:sequence>
+            <xs:attribute name="initial" use="required" type="xs:string"/>
+            <xs:attribute name="final" use="required" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="operation">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="property" maxOccurs="unbounded"/>
+            </xs:sequence>
+            <xs:attribute name="id" type="xs:ID" use="required"/>
+            <xs:attribute name="type" type="xs:string" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="site">
+        <xs:complexType>
+            <xs:choice maxOccurs="unbounded">
+                <xs:element ref="generate"/>
+                <xs:element ref="receive"/>
+            </xs:choice>
+            <xs:attribute name="id" use="required" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="property">
+        <xs:complexType>
+            <xs:attribute name="name" use="required" type="xs:NMTOKEN"/>
+            <xs:attribute name="value" use="required" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="generate">
+        <xs:complexType>
+            <xs:attribute name="ref" use="required" type="xs:IDREF"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="receive">
+        <xs:complexType>
+            <xs:attribute name="ref" use="required" type="xs:IDREF"/>
+        </xs:complexType>
+    </xs:element>
+    
+</xs:schema>
