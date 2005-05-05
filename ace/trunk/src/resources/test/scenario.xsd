@@ -10,6 +10,14 @@
             <xs:attribute name="initial" use="required" type="xs:string"/>
             <xs:attribute name="final" use="required" type="xs:string"/>
         </xs:complexType>
+        <xs:key name="operationId">
+            <xs:selector xpath="operation"/>
+            <xs:field xpath="@id"/>
+        </xs:key>
+        <xs:keyref refer="operationId" name="operationRef">
+            <xs:selector xpath="site/generate | site/receive"/>
+            <xs:field xpath="@ref"/>
+        </xs:keyref>
     </xs:element>
     
     <xs:element name="operation">
@@ -17,7 +25,7 @@
             <xs:sequence>
                 <xs:element ref="property" maxOccurs="unbounded"/>
             </xs:sequence>
-            <xs:attribute name="id" type="xs:ID" use="required"/>
+            <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
             <xs:attribute name="type" type="xs:string" use="required"/>
         </xs:complexType>
     </xs:element>
@@ -41,14 +49,14 @@
     
     <xs:element name="generate">
         <xs:complexType>
-            <xs:attribute name="ref" use="required" type="xs:IDREF"/>
+            <xs:attribute name="ref" use="required" type="xs:positiveInteger"/>
         </xs:complexType>
     </xs:element>
     
     <xs:element name="receive">
         <xs:complexType>
-            <xs:attribute name="ref" use="required" type="xs:IDREF"/>
+            <xs:attribute name="ref" use="required" type="xs:positiveInteger"/>
         </xs:complexType>
     </xs:element>
-    
+        
 </xs:schema>

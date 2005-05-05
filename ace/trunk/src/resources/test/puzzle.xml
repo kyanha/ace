@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scenario initial="ABC" final="AcB">
     
-    <operation id="op1" type="ch.iserver.ace.text.Insert">
+    <operation id="1" type="ch.iserver.ace.text.Insert">
         <property name="position" value="1"/>
         <property name="text" value="c"/>
     </operation>
     
-    <operation id="op2" type="ch.iserver.ace.text.Delete">
+    <operation id="2" type="ch.iserver.ace.text.Delete">
         <property name="position" value="2"/>
     </operation>
     
     <site id="0">
-        <generate ref="op1"/>
-        <receive ref="op2"/>
+        <generate ref="1"/>
+        <receive ref="2"/>
     </site>
     
     <site id="1">
-        <generate ref="op2"/>
-        <receive ref="op1"/>
+        <generate ref="2"/>
+        <receive ref="1"/>
     </site>
     
 </scenario>
