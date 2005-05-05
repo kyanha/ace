@@ -19,12 +19,40 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.testframework;
+package ch.iserver.ace.test;
 
-public interface NodeVisitor {
+/**
+ *
+ */
+public class ScenarioException extends RuntimeException {
 
-	public void visit(StartNode node);
-	public void visit(GenerationNode node);
-	public void visit(ReceptionNode node);
-	
+	/**
+	 * 
+	 */
+	public ScenarioException() {
+		super();
+	}
+
+	/**
+	 * @param message
+	 */
+	public ScenarioException(String message) {
+		super(message);
+	}
+
+	/**
+	 * @param message
+	 * @param cause
+	 */
+	public ScenarioException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
+	/**
+	 * @param cause
+	 */
+	public ScenarioException(Throwable cause) {
+		super(cause);
+	}
+
 }

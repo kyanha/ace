@@ -19,40 +19,47 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.testframework;
+package ch.iserver.ace.test;
+
+import ch.iserver.ace.Operation;
 
 /**
  *
  */
-public class ScenarioException extends RuntimeException {
+public interface ScenarioBuilder {
 
 	/**
 	 * 
+	 * @param initialState
+	 * @param finalState
 	 */
-	public ScenarioException() {
-		super();
-	}
-
+	public void init(String initialState, String finalState);
+	
 	/**
-	 * @param message
+	 * 
+	 * @param id
+	 * @param op
 	 */
-	public ScenarioException(String message) {
-		super(message);
-	}
-
+	public void addOperation(String id, Operation op);
+	
 	/**
-	 * @param message
-	 * @param cause
+	 * 
+	 * @param siteId
 	 */
-	public ScenarioException(String message, Throwable cause) {
-		super(message, cause);
-	}
-
+	public void addSite(String siteId);
+	
 	/**
-	 * @param cause
+	 * 
+	 * @param siteId
+	 * @param opRef
 	 */
-	public ScenarioException(Throwable cause) {
-		super(cause);
-	}
-
+	public void addReception(String siteId, String opRef);
+	
+	/**
+	 * 
+	 * @param siteId
+	 * @param opRef
+	 */
+	public void addGeneration(String siteId, String opRef);
+	
 }

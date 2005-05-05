@@ -19,40 +19,27 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.testframework;
+package ch.iserver.ace.test;
 
-/**
- *
- */
-public class ScenarioLoaderException extends ScenarioException {
 
-	/**
-	 * 
-	 */
-	public ScenarioLoaderException() {
-		super();
+public abstract class AbstractNode implements Node {
+	private String siteId;
+	private Node localSuccessor;
+	
+	protected AbstractNode(String siteId) {
+		this.siteId = siteId;
 	}
-
-	/**
-	 * @param message
-	 */
-	public ScenarioLoaderException(String message) {
-		super(message);
+	
+	public String getSiteId() {
+		return siteId;
 	}
-
-	/**
-	 * @param message
-	 * @param cause
-	 */
-	public ScenarioLoaderException(String message, Throwable cause) {
-		super(message, cause);
+	
+	public void setLocalSuccessor(Node successor) {
+		this.localSuccessor = successor;
 	}
-
-	/**
-	 * @param cause
-	 */
-	public ScenarioLoaderException(Throwable cause) {
-		super(cause);
+	
+	public Node getLocalSuccessor() {
+		return localSuccessor;
 	}
-
+	
 }

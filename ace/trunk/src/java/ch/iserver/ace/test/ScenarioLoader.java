@@ -19,17 +19,24 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.testframework;
+package ch.iserver.ace.test;
 
-import ch.iserver.ace.algorithm.Algorithm;
-import ch.iserver.ace.algorithm.Timestamp;
+import java.io.InputStream;
 
 /**
+ * 
  *
  */
-public interface AlgorithmTestFactory {
+public interface ScenarioLoader {
 
-	public Algorithm createAlgorithm();
-	public Timestamp createTimestamp();
-	
+	/**
+	 * 
+	 * @param builder
+	 * @param source
+	 * @throws ScenarioLoaderException if the input is illegal or contains errors
+	 * @throws Exception
+	 */
+	public void loadScenario(ScenarioBuilder builder, InputStream source) 
+			throws Exception;
+
 }

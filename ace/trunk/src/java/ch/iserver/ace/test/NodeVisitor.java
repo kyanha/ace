@@ -19,27 +19,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.testframework;
+package ch.iserver.ace.test;
 
+public interface NodeVisitor {
 
-public abstract class AbstractNode implements Node {
-	private String siteId;
-	private Node localSuccessor;
-	
-	protected AbstractNode(String siteId) {
-		this.siteId = siteId;
-	}
-	
-	public String getSiteId() {
-		return siteId;
-	}
-	
-	public void setLocalSuccessor(Node successor) {
-		this.localSuccessor = successor;
-	}
-	
-	public Node getLocalSuccessor() {
-		return localSuccessor;
-	}
+	public void visit(StartNode node);
+	public void visit(GenerationNode node);
+	public void visit(ReceptionNode node);
 	
 }

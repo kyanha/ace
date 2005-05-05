@@ -19,24 +19,20 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.testframework;
+package ch.iserver.ace.test;
 
-import java.io.InputStream;
+import java.util.List;
 
-/**
- * 
- *
- */
-public interface ScenarioLoader {
 
-	/**
-	 * 
-	 * @param builder
-	 * @param source
-	 * @throws ScenarioLoaderException if the input is illegal or contains errors
-	 * @throws Exception
-	 */
-	public void loadScenario(ScenarioBuilder builder, InputStream source) 
-			throws Exception;
-
+public interface Node {
+	
+	public String getSiteId();
+	
+	public List getSuccessors();
+	
+	public Node getLocalSuccessor();
+	public void setLocalSuccessor(Node successor);
+	
+	public void accept(NodeVisitor visitor);
+	
 }

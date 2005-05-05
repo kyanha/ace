@@ -19,20 +19,17 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.testframework;
+package ch.iserver.ace.test;
 
-import java.util.List;
+import ch.iserver.ace.algorithm.Algorithm;
+import ch.iserver.ace.algorithm.Timestamp;
 
+/**
+ *
+ */
+public interface AlgorithmTestFactory {
 
-public interface Node {
-	
-	public String getSiteId();
-	
-	public List getSuccessors();
-	
-	public Node getLocalSuccessor();
-	public void setLocalSuccessor(Node successor);
-	
-	public void accept(NodeVisitor visitor);
+	public Algorithm createAlgorithm();
+	public Timestamp createTimestamp();
 	
 }

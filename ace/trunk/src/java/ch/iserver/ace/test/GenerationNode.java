@@ -19,32 +19,66 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.testframework;
+package ch.iserver.ace.test;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import ch.iserver.ace.Operation;
 
-public class StartNode extends AbstractNode {
+/**
+ * A generation node represents the local generation of a 
+ * new operation. Such a node must have the following properties.
+ * 
+ * <ul>
+ *  <li>exactly one predecessor node</li>
+ *  <li>exactly n successor nodes where n is the number of sites</li>
+ *  <li>exactly one successor must be a local successor (i.e. from the same site)</li>
+ * </ul>
+ */
+public class GenerationNode extends AbstractNode {
+	private List remoteSuccessors = new ArrayList();
+	private Operation operation;
+	private String reference;
 	
-	public StartNode(String siteId) {
+	public GenerationNode(String siteId, String ref, Operation op) {
 		super(siteId);
+		this.operation = op;
+		this.reference = ref;
 	}
-			
+
+	public Operation getOperation() {
+		return operation;
+	}
+	
+	public String getReference() {
+		return reference;
+	}
+
+	public void addRemoteSuccessor(Node successor) {
+		remoteSuccessors.add(successor);
+	}
+	
+	public List getRemoteSuccessors() {
+		return remoteSuccessors;
+	}
+	
 	public List getSuccessors() {
 		List result = new ArrayList();
 		if (getLocalSuccessor() != null) {
 			result.add(getLocalSuccessor());
 		}
+		result.addAll(getRemoteSuccessors());
 		return result;
 	}
-		
+
 	public void accept(NodeVisitor visitor) {
 		visitor.visit(this);
 	}
 	
 	public String toString() {
-		return getClass().getName() + "[site=" + getSiteId() + "]";
+		return getClass().getName() + "[site=" + getSiteId() + ",ref=" 
+				+ getReference() + "]";
 	}
 	
 }

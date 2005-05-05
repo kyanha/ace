@@ -19,43 +19,18 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.testframework;
+package ch.iserver.ace.test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.iserver.ace.algorithm.Request;
 
-/**
- * A reception node represents the reception of a remote request.
- * Such a node must have the following properties.
- *
- * <ul>
- *  <li>at most one local successor</li>
- *  <li>exactly two predecessor, one local the other remote</li>
- * </ul>
- */
-public class ReceptionNode extends AbstractNode {
-	private Request request;
-	private String ref;
+public class StartNode extends AbstractNode {
 	
-	public ReceptionNode(String siteId, String ref) {
+	public StartNode(String siteId) {
 		super(siteId);
-		this.ref = ref;
 	}
-	
-	public String getReference() {
-		return ref;
-	}
-	
-	public void setRequest(Request request) {
-		this.request = request;
-	}
-	
-	public Request getRequest() {
-		return request;
-	}
-	
+			
 	public List getSuccessors() {
 		List result = new ArrayList();
 		if (getLocalSuccessor() != null) {
@@ -63,13 +38,13 @@ public class ReceptionNode extends AbstractNode {
 		}
 		return result;
 	}
-	
+		
 	public void accept(NodeVisitor visitor) {
 		visitor.visit(this);
 	}
 	
 	public String toString() {
-		return getClass().getName() + "[site=" + getSiteId() + ",ref=" + ref + "]";
+		return getClass().getName() + "[site=" + getSiteId() + "]";
 	}
 	
 }

@@ -19,37 +19,40 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.testframework;
+package ch.iserver.ace.test;
 
-import java.util.Collection;
-import java.util.Iterator;
+/**
+ *
+ */
+public class ScenarioLoaderException extends ScenarioException {
 
+	/**
+	 * 
+	 */
+	public ScenarioLoaderException() {
+		super();
+	}
 
-public class Scenario {
-	private String initialState;
-	private String finalState;
-	private Collection nodes;
-	
-	public Scenario(String initialState, String finalState, Collection nodes) { 
-		this.initialState = initialState;
-		this.finalState = finalState;
-		this.nodes = nodes;
+	/**
+	 * @param message
+	 */
+	public ScenarioLoaderException(String message) {
+		super(message);
 	}
-		
-	public String getInitialState() {
-		return initialState;
+
+	/**
+	 * @param message
+	 * @param cause
+	 */
+	public ScenarioLoaderException(String message, Throwable cause) {
+		super(message, cause);
 	}
-	
-	public String getFinalState() {
-		return finalState;
+
+	/**
+	 * @param cause
+	 */
+	public ScenarioLoaderException(Throwable cause) {
+		super(cause);
 	}
-			
-	public void accept(NodeVisitor visitor) {
-		Iterator it = nodes.iterator();
-		while (it.hasNext()) {
-			Node node = (Node) it.next();
-			node.accept(visitor);
-		}
-	}
-	
+
 }

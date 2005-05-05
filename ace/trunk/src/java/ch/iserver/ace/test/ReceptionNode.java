@@ -19,48 +19,41 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.testframework;
+package ch.iserver.ace.test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.iserver.ace.Operation;
+import ch.iserver.ace.algorithm.Request;
 
 /**
- * A generation node represents the local generation of a 
- * new operation. Such a node must have the following properties.
- * 
+ * A reception node represents the reception of a remote request.
+ * Such a node must have the following properties.
+ *
  * <ul>
- *  <li>exactly one predecessor node</li>
- *  <li>exactly n successor nodes where n is the number of sites</li>
- *  <li>exactly one successor must be a local successor (i.e. from the same site)</li>
+ *  <li>at most one local successor</li>
+ *  <li>exactly two predecessor, one local the other remote</li>
  * </ul>
  */
-public class GenerationNode extends AbstractNode {
-	private List remoteSuccessors = new ArrayList();
-	private Operation operation;
-	private String reference;
+public class ReceptionNode extends AbstractNode {
+	private Request request;
+	private String ref;
 	
-	public GenerationNode(String siteId, String ref, Operation op) {
+	public ReceptionNode(String siteId, String ref) {
 		super(siteId);
-		this.operation = op;
-		this.reference = ref;
-	}
-
-	public Operation getOperation() {
-		return operation;
+		this.ref = ref;
 	}
 	
 	public String getReference() {
-		return reference;
-	}
-
-	public void addRemoteSuccessor(Node successor) {
-		remoteSuccessors.add(successor);
+		return ref;
 	}
 	
-	public List getRemoteSuccessors() {
-		return remoteSuccessors;
+	public void setRequest(Request request) {
+		this.request = request;
+	}
+	
+	public Request getRequest() {
+		return request;
 	}
 	
 	public List getSuccessors() {
@@ -68,17 +61,15 @@ public class GenerationNode extends AbstractNode {
 		if (getLocalSuccessor() != null) {
 			result.add(getLocalSuccessor());
 		}
-		result.addAll(getRemoteSuccessors());
 		return result;
 	}
-
+	
 	public void accept(NodeVisitor visitor) {
 		visitor.visit(this);
 	}
 	
 	public String toString() {
-		return getClass().getName() + "[site=" + getSiteId() + ",ref=" 
-				+ getReference() + "]";
+		return getClass().getName() + "[site=" + getSiteId() + ",ref=" + ref + "]";
 	}
 	
 }

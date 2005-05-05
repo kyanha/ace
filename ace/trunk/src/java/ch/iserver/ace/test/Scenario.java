@@ -19,47 +19,37 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.testframework;
+package ch.iserver.ace.test;
 
-import ch.iserver.ace.Operation;
+import java.util.Collection;
+import java.util.Iterator;
 
-/**
- *
- */
-public interface ScenarioBuilder {
 
-	/**
-	 * 
-	 * @param initialState
-	 * @param finalState
-	 */
-	public void init(String initialState, String finalState);
+public class Scenario {
+	private String initialState;
+	private String finalState;
+	private Collection nodes;
 	
-	/**
-	 * 
-	 * @param id
-	 * @param op
-	 */
-	public void addOperation(String id, Operation op);
+	public Scenario(String initialState, String finalState, Collection nodes) { 
+		this.initialState = initialState;
+		this.finalState = finalState;
+		this.nodes = nodes;
+	}
+		
+	public String getInitialState() {
+		return initialState;
+	}
 	
-	/**
-	 * 
-	 * @param siteId
-	 */
-	public void addSite(String siteId);
-	
-	/**
-	 * 
-	 * @param siteId
-	 * @param opRef
-	 */
-	public void addReception(String siteId, String opRef);
-	
-	/**
-	 * 
-	 * @param siteId
-	 * @param opRef
-	 */
-	public void addGeneration(String siteId, String opRef);
+	public String getFinalState() {
+		return finalState;
+	}
+			
+	public void accept(NodeVisitor visitor) {
+		Iterator it = nodes.iterator();
+		while (it.hasNext()) {
+			Node node = (Node) it.next();
+			node.accept(visitor);
+		}
+	}
 	
 }
