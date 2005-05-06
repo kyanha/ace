@@ -25,30 +25,65 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * Node implementation that represents the end of a site lifecycle in
+ * a scenario. An end node does not have any successors. That is 
+ * {@link #setLocalSuccessor(Node)} is unsupported and 
+ * {@link ch.iserver.ace.test.Node#getLocalSuccessor()} returns always null.
  */
 public class EndNode extends AbstractNode {
+	/** the expected final state at the site */
 	private String state;
 	
+	/**
+	 * Creates a new end node belonging to the given site and expecting the
+	 * given finalt <var>state</var>.
+	 * 
+	 * @param siteId the site this operation belongs to
+	 * @param state the expected final state
+	 */
 	public EndNode(String siteId, String state) {
 		super(siteId);
 		this.state = state;
 	}
 	
+	/**
+	 * Gets the expected final state at the site.
+	 * 
+	 * @return the expected final state
+	 */
 	public String getState() {
 		return state;
 	}
 
+	/**
+	 * Prohibits setting the local successor by throwing a
+	 * <code>UnsupportedOperationException</code>.
+	 */
 	public void setLocalSuccessor(Node successor) {
 		throw new UnsupportedOperationException("EndNode has no successors");
 	}
 	
+	/**
+	 * Returns an empty list as an end node never has any successor.
+	 */
 	public List getSuccessors() {
 		return new ArrayList();
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public void accept(NodeVisitor visitor) {
 		visitor.visit(this);
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
+	public String toString() {
+		return getClass().getName() + "[siteId=" + getSiteId()
+				+ ",state" + state
+				+ "]";
+	}
+
 }

@@ -25,18 +25,43 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+/**
+ * Node implementation that represents the start of the site lifecycle
+ * in a scenario. A start node should never have any predecessors
+ * although that condition is not ensured by the implementation.
+ */
 public class StartNode extends AbstractNode {
+	/** the initial state of the document at the site */
 	private String state;
 	
+	/**
+	 * Creates a new start node belonging to the given site whose initial
+	 * state is given by <var>initialState</var>.
+	 * 
+	 * @param siteId the id of the site this node belongs to
+	 * @param initialState the initial state at the site
+	 */
 	public StartNode(String siteId, String initialState) {
 		super(siteId);
 		this.state = initialState;
 	}
 	
+	/**
+	 * Gets the initial state at the local site.
+	 * 
+	 * @return the initial state
+	 */
 	public String getState() {
 		return state;
 	}
 	
+	/**
+	 * Gets a list of successors. A start node has zero or one
+	 * successor. If there is a local successor, it is the only
+	 * successor of this node.
+	 * 
+	 * @return the list of successors (at most one)
+	 */
 	public List getSuccessors() {
 		List result = new ArrayList();
 		if (getLocalSuccessor() != null) {
@@ -45,12 +70,20 @@ public class StartNode extends AbstractNode {
 		return result;
 	}
 		
+	/**
+	 * @inheritDoc
+	 */
 	public void accept(NodeVisitor visitor) {
 		visitor.visit(this);
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public String toString() {
-		return getClass().getName() + "[site=" + getSiteId() + "]";
+		return getClass().getName() + "[site=" + getSiteId()
+				+ ",state=" + state 
+				+ "]";
 	}
 	
 }

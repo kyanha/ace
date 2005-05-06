@@ -36,26 +36,54 @@ import ch.iserver.ace.algorithm.Request;
  * </ul>
  */
 public class ReceptionNode extends AbstractNode {
+	/** the request to process */
 	private Request request;
+	/** the reference to the operation */
 	private String ref;
 	
+	/**
+	 * Creates a new reception node belonging to the given site and
+	 * referencing the given operation.
+	 * 
+	 * @param siteId the id of the site this node belongs to
+	 * @param ref the reference to the received operation
+	 */
 	public ReceptionNode(String siteId, String ref) {
 		super(siteId);
 		this.ref = ref;
 	}
 	
+	/**
+	 * Gets the reference to the operation that is to be received
+	 * by this node.
+	 * 
+	 * @return the reference to the operation
+	 */
 	public String getReference() {
 		return ref;
 	}
 	
+	/**
+	 * Sets the request to be received by this node.
+	 * 
+	 * @param request the request to be received
+	 */
 	public void setRequest(Request request) {
 		this.request = request;
 	}
 	
+	/**
+	 * Gets the request to be received by this node.
+	 * 
+	 * @return the request to be received
+	 */
 	public Request getRequest() {
 		return request;
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public List getSuccessors() {
 		List result = new ArrayList();
 		if (getLocalSuccessor() != null) {
@@ -64,10 +92,16 @@ public class ReceptionNode extends AbstractNode {
 		return result;
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public void accept(NodeVisitor visitor) {
 		visitor.visit(this);
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public String toString() {
 		return getClass().getName() + "[site=" + getSiteId() + ",ref=" + ref + "]";
 	}
