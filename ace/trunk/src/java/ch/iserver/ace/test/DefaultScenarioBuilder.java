@@ -33,24 +33,40 @@ import java.util.TreeSet;
 import ch.iserver.ace.Operation;
 
 /**
- * 
- *
+ * The default scenario builder implementation creates a scenario object.
  */
 public class DefaultScenarioBuilder implements ScenarioBuilder {
 
+	/** the initial state of the scenario */
 	private String initialState;
+	
+	/** the final state of the scenario */
 	private String finalState;
 	
+	/** the current site id */
 	private String siteId;
 	
+	/** map of operation (maps operation id to operation) */
 	private Map operations;
+	
+	/** map of local predecessor (maps site ids to the last node at the site) */
 	private Map localPredecessors;
+	
+	/** map of start nodes (maps site ids to StartNode objects) */
 	private Map startNodes;
+	
+	/** map of site helper objects (maps site ids to SiteHelper objects) */
 	private Map siteHelpers;
+	
+	/** map of generation nodes (maps operation ids to generation nodes) */
 	private Map generationNodes;
 	
+	/** list of reception nodes */
 	private List receptionNodes;
 	
+	/**
+	 * @inheritDoc
+	 */
 	public void init(String initialState, String finalState) {
 		this.initialState = initialState;
 		this.finalState = finalState;
@@ -62,10 +78,16 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 		this.receptionNodes = new ArrayList();
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public void addOperation(String id, Operation op) {
 		operations.put(id, op);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public void startSite(String siteId) {
 		if (this.siteId != null) {
 			throw new ScenarioException("sites cannot nest");
@@ -78,6 +100,9 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 		siteHelpers.put(siteId, new SiteHelper());
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public void addGeneration(String ref) {
 		if (siteId == null) {
 			throw new ScenarioException("no previous startSite call");
@@ -95,6 +120,9 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 		addToSiteGeneration(siteId, ref);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public void addReception(String ref) {
 		if (siteId == null) {
 			throw new ScenarioException("no previous startSite call");
@@ -109,6 +137,9 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 		addToSiteReception(siteId, ref);
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public void endSite() {
 		if (siteId == null) {
 			throw new ScenarioException("no previous startSite call");
@@ -121,6 +152,11 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 		siteId = null;
 	}
 	
+	/**
+	 * Finishes the build process and returns the scenario object.
+	 * 
+	 * @return the built scenario object
+	 */
 	public Scenario getScenario() {
 		// 1) create 'cross-site' edges
 		Iterator it = getReceptionNodes().iterator();
@@ -139,6 +175,14 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 		return new Scenario(initialState, finalState, nodes);
 	}
 	
+	/**
+	 * Validates some final conditions on all the nodes. These include that:
+	 *
+	 * <ul>
+	 *  <li>an operation is received (n - 1) times (where n is the number of sites)</li>
+	 *  <li>an operation is generated</li>
+	 * </ul>
+	 */
 	protected void validateOperationUsage() {
 		int sites = getSitesCount();
 		Iterator it = operations.keySet().iterator();
@@ -154,6 +198,13 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 		}
 	}
 	
+	/**
+	 * Validates that all the operations form a directed acyclic graph 
+	 * and returns a topologically ordered list of nodes.
+	 * 
+	 * @return a topologically ordered list of nodes
+	 * @throws ScenarioException if the graph is not a DAG
+	 */
 	protected List validateDAG() {
 		List result = new ArrayList();
 		

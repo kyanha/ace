@@ -22,7 +22,7 @@
 package ch.iserver.ace.test;
 
 /**
- *
+ * Base exception thrown by this package.
  */
 public class ScenarioException extends RuntimeException {
 

@@ -22,7 +22,7 @@
 package ch.iserver.ace.test;
 
 /**
- *
+ * Exception thrown by scenario loader.
  */
 public class ScenarioLoaderException extends ScenarioException {
 

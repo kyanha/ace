@@ -22,13 +22,23 @@
 package ch.iserver.ace.test;
 
 /**
- *
+ * Scenario exception thrown while verifying the final document state.
  */
 public class VerificationException extends ScenarioException {
+	/** the site of failed verification */
 	private String siteId;
+	/** the expected content */
 	private String expected;
+	/** the effective content */
 	private String was;
 	
+	/**
+	 * Creates a new verification exception.
+	 * 
+	 * @param siteId the site of failure
+	 * @param expected the expected content
+	 * @param was the actual content
+	 */
 	public VerificationException(String siteId, String expected, String was) {
 		this.siteId = siteId;
 		this.expected = expected;

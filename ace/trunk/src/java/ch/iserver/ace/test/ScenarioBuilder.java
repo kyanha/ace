@@ -24,47 +24,64 @@ package ch.iserver.ace.test;
 import ch.iserver.ace.Operation;
 
 /**
- *
+ * This interface contains the elementary operations needed to construct a
+ * scenario. It is based on the builder pattern (see GOF). 
  */
 public interface ScenarioBuilder {
 
 	/**
+	 * Initializes the builder and passes in the initial state and the
+	 * expected final state.
 	 * 
-	 * @param initialState
-	 * @param finalState
+	 * @param initialState the initial state at all sites
+	 * @param finalState the expected final state
 	 */
 	public void init(String initialState, String finalState);
 	
 	/**
+	 * Adds an operation with the given id to the builder.
 	 * 
-	 * @param id
-	 * @param op
+	 * @param id the identifier of the operation
+	 * @param op the operation itself
+	 * @throws ScenarioException in case of errors
 	 */
 	public void addOperation(String id, Operation op);
 	
 	/**
+	 * Notifies the builder of the start of a new site to process.
+	 * Calls to startSite and endSite must be executed in proper
+	 * sequence. Most notably, after calling startSite this method
+	 * cannot be executed again until endSite is called.
 	 * 
-	 * @param siteId
+	 * @param siteId the identifier of the site
+	 * @throws ScenarioException in case of errors
 	 */
 	public void startSite(String siteId);
 	
 	/**
+	 * Adds the reception of an operation to the current site. The
+	 * current site is the last site for which startSite was called.
+	 * This method must be called within startSite/endSite.
 	 * 
-	 * @param siteId
-	 * @param opRef
+	 * @param opRef the operation to be received
+	 * @throws ScenarioException in case of errors
 	 */
 	public void addReception(String opRef);
 	
 	/**
+	 * Adds the generation of an operation to the current site. The
+	 * current site is the last site for which startSite was called.
 	 * 
-	 * @param siteId
-	 * @param opRef
+	 * @param opRef the operation to be generated
+	 * @throws ScenarioException in case of errors
 	 */
 	public void addGeneration(String opRef);
 	
 	/**
+	 * Notifies the builder of the end of a site. A call to startSite
+	 * must preceed this call.
 	 * 
-	 *
+	 * @throws ScenarioException in case of errors
 	 */
 	public void endSite();
 	

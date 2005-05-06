@@ -21,11 +21,47 @@
 
 package ch.iserver.ace.test;
 
+/**
+ * NodeVisitor is an interface that allows to visit nodes. The idea behind
+ * this interface is based on the double dispatch principle.
+ * 
+ * <pre>
+ *   Node n = ...;         // got from somewhere else
+ *   NodeVisitor v = ...;  // your node visitor
+ *   n.accept(v);
+ * </pre>
+ * 
+ * The node will call the correct visit method on the visitor. Using
+ * this simple scheme, instanceof checks can be avoided.
+ */
 public interface NodeVisitor {
 
+	/**
+	 * Visit a node of type StartNode.
+	 * 
+	 * @param node the node to visit
+	 */
 	public void visit(StartNode node);
+	
+	/**
+	 * Visit a node of type GenerationNode.
+	 * 
+	 * @param node the node to visit
+	 */
 	public void visit(GenerationNode node);
+	
+	/**
+	 * Visit a node of type ReceptionNode.
+	 * 
+	 * @param node the node to visit
+	 */
 	public void visit(ReceptionNode node);
+	
+	/**
+	 * Visit a node of type EndNode.
+	 * 
+	 * @param node the node to visit
+	 */
 	public void visit(EndNode node);
 	
 }

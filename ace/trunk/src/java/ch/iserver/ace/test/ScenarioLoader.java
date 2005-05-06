@@ -21,22 +21,23 @@
 
 package ch.iserver.ace.test;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * 
- *
+ * Basic interface for classes that want to load scenarios. 
  */
 public interface ScenarioLoader {
 
 	/**
+	 * Load a scenario, passing all the events to the given <var>builder</var>.
 	 * 
-	 * @param builder
-	 * @param source
+	 * @param builder the builder that processes the events
+	 * @param source the source from where to load the scenario
 	 * @throws ScenarioLoaderException if the input is illegal or contains errors
-	 * @throws Exception
+	 * @throws IOException in case of IO related problems
 	 */
 	public void loadScenario(ScenarioBuilder builder, InputStream source) 
-			throws Exception;
+			throws IOException;
 
 }

@@ -21,6 +21,7 @@
 
 package ch.iserver.ace.test;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -31,6 +32,7 @@ import java.util.Map;
 import org.apache.commons.beanutils.BeanUtils;
 import org.jdom.Document;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -38,26 +40,40 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import ch.iserver.ace.Operation;
 
+/**
+ * Default implementation of the ScenarioLoader interface. Reads scenarios from
+ * an xml file that is valid with respect to a schema (/test/scenario.xsd).
+ */
 public class DefaultScenarioLoader implements ScenarioLoader {
 	static final String W3C_XML_SCHEMA = "http://www.w3.org/2001/XMLSchema";
 	static final String JAXP_SCHEMA_LANGUAGE = "http://java.sun.com/xml/jaxp/properties/schemaLanguage";
 	static final String JAXP_SCHEMA_SOURCE = "http://java.sun.com/xml/jaxp/properties/schemaSource";
 
+	/** default implementation of scenario loader interface */
 	public DefaultScenarioLoader() { }
 	
-	public void loadScenario(ScenarioBuilder scenarioBuilder, InputStream source) throws Exception {
+	/**
+	 * @inheritDoc
+	 */
+	public void loadScenario(ScenarioBuilder scenarioBuilder, InputStream source) 
+			throws IOException {
 		InputStream schema = getClass().getResourceAsStream("/test/scenario.xsd");
 		SAXBuilder builder = createSAXBuilder(schema);
-		Document doc = builder.build(source);
-		Element root = doc.getRootElement();
+
+		try {
+			Document doc = builder.build(source);
+			Element root = doc.getRootElement();
 		
-		String initialState = root.getAttributeValue("initial");
-		String finalState = root.getAttributeValue("final");
+			String initialState = root.getAttributeValue("initial");
+			String finalState = root.getAttributeValue("final");
 		
-		scenarioBuilder.init(initialState, finalState);
+			scenarioBuilder.init(initialState, finalState);
 		
-		processOperations(scenarioBuilder, root.getChildren("operation"));
-		processSites(scenarioBuilder, root.getChildren("site"));
+			processOperations(scenarioBuilder, root.getChildren("operation"));
+			processSites(scenarioBuilder, root.getChildren("site"));
+		} catch (JDOMException e) {
+			throw new ScenarioLoaderException(e);
+		}
 	}
 	
 	protected void processOperations(ScenarioBuilder builder, List operations) { 
@@ -121,7 +137,7 @@ public class DefaultScenarioLoader implements ScenarioLoader {
 		}
 	}
 	
-	protected SAXBuilder createSAXBuilder(InputStream schema) throws Exception {
+	protected SAXBuilder createSAXBuilder(InputStream schema) throws IOException {
 		SAXBuilder builder = new SAXBuilder("org.apache.xerces.parsers.SAXParser");
 		builder.setProperty(JAXP_SCHEMA_LANGUAGE, W3C_XML_SCHEMA);
 		builder.setProperty(JAXP_SCHEMA_SOURCE, schema);
@@ -133,12 +149,5 @@ public class DefaultScenarioLoader implements ScenarioLoader {
 		
 		return builder;
 	}
-		
-//	public static void main(String[] args) throws Exception {
-//		ScenarioLoader loader = new DefaultScenarioLoader();
-//		InputStream stream = DefaultScenarioLoader.class.getResourceAsStream("/test/puzzle.xml");
-//		Scenario scenario = loader.loadScenario(stream);
-//		scenario.execute();
-//	}
 	
 }
