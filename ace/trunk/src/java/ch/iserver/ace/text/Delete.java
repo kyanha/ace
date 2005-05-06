@@ -32,6 +32,11 @@ public class Delete implements Operation {
 	
 	public Delete() { }
 
+	public Delete(int position, int length) {
+		this.position = position;
+		this.length = length;
+	}
+	
 	public int getPosition() {
 		return position;
 	}

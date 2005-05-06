@@ -32,6 +32,11 @@ public class Insert implements Operation {
 	
 	public Insert() { }
 
+	public Insert(int position, String text) {
+		this.position = position;
+		this.text = text;
+	}
+	
 	public int getPosition() {
 		return position;
 	}
