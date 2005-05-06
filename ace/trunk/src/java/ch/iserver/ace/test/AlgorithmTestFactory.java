@@ -21,6 +21,7 @@
 
 package ch.iserver.ace.test;
 
+import ch.iserver.ace.DocumentModel;
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.Timestamp;
 
@@ -31,5 +32,6 @@ public interface AlgorithmTestFactory {
 
 	public Algorithm createAlgorithm();
 	public Timestamp createTimestamp();
+	public DocumentModel createDocument(String state);
 	
 }

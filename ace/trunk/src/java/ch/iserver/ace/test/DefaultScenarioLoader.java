@@ -60,7 +60,7 @@ public class DefaultScenarioLoader implements ScenarioLoader {
 		processSites(scenarioBuilder, root.getChildren("site"));
 	}
 	
-	protected void processOperations(ScenarioBuilder scenario, List operations) { 
+	protected void processOperations(ScenarioBuilder builder, List operations) { 
 		Iterator it = operations.iterator();
 		
 		while (it.hasNext()) {
@@ -71,7 +71,7 @@ public class DefaultScenarioLoader implements ScenarioLoader {
 				Operation operation = (Operation) Class.forName(type).newInstance();
 				Map params = getProperties(operationEl);
 				BeanUtils.populate(operation, params);
-				scenario.addOperation(id, operation);
+				builder.addOperation(id, operation);
 			} catch (InstantiationException e) {
 				throw new ScenarioLoaderException(e);
 			} catch (IllegalAccessException e) {
@@ -96,27 +96,27 @@ public class DefaultScenarioLoader implements ScenarioLoader {
 		return result;
 	}
 	
-	protected void processSites(ScenarioBuilder scenario, List sites) {
+	protected void processSites(ScenarioBuilder builder, List sites) {
 		Iterator it = sites.iterator();
 		
 		while (it.hasNext()) {
 			Element siteEl = (Element) it.next();
 			String siteId = siteEl.getAttributeValue("id");
-			scenario.addSite(siteId);
-			processSiteChildren(scenario, siteId, siteEl.getChildren());
-			
+			builder.startSite(siteId);
+			processSiteChildren(builder, siteEl.getChildren());
+			builder.endSite();
 		}
 	}
 	
-	protected void processSiteChildren(ScenarioBuilder scenario, String siteId, List children) {
+	protected void processSiteChildren(ScenarioBuilder builder, List children) {
 		Iterator it = children.iterator();
 		while (it.hasNext()) {
 			Element childEl = (Element) it.next();
 			String ref = childEl.getAttributeValue("ref");
 			if ("generate".equals(childEl.getName())) {
-				scenario.addGeneration(siteId, ref);
+				builder.addGeneration(ref);
 			} else if ("receive".equals(childEl.getName())) {
-				scenario.addReception(siteId, ref);
+				builder.addReception(ref);
 			}
 		}
 	}

@@ -32,6 +32,8 @@ public interface DocumentModel {
 	 * Applies an operation to this document model.
 	 * 
 	 * @param operation the operation to be applied
+	 * 
+	 * TODO: what kind of exceptions can be thrown from this method?
 	 */
 	public void apply(Operation operation);
 	

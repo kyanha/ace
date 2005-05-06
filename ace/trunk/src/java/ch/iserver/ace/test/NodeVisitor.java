@@ -26,5 +26,6 @@ public interface NodeVisitor {
 	public void visit(StartNode node);
 	public void visit(GenerationNode node);
 	public void visit(ReceptionNode node);
+	public void visit(EndNode node);
 	
 }

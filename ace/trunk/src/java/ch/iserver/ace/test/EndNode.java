@@ -24,33 +24,31 @@ package ch.iserver.ace.test;
 import java.util.ArrayList;
 import java.util.List;
 
-
-public class StartNode extends AbstractNode {
+/**
+ *
+ */
+public class EndNode extends AbstractNode {
 	private String state;
 	
-	public StartNode(String siteId, String initialState) {
+	public EndNode(String siteId, String state) {
 		super(siteId);
-		this.state = initialState;
+		this.state = state;
 	}
 	
 	public String getState() {
 		return state;
 	}
+
+	public void setLocalSuccessor(Node successor) {
+		throw new UnsupportedOperationException("EndNode has no successors");
+	}
 	
 	public List getSuccessors() {
-		List result = new ArrayList();
-		if (getLocalSuccessor() != null) {
-			result.add(getLocalSuccessor());
-		}
-		return result;
-	}
-		
-	public void accept(NodeVisitor visitor) {
-		visitor.visit(this);
+		return new ArrayList();
 	}
 	
-	public String toString() {
-		return getClass().getName() + "[site=" + getSiteId() + "]";
+	public void accept(NodeVisitor visitor) {
+		visitor.visit(this);
 	}
 	
 }

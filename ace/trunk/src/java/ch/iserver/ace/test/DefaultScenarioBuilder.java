@@ -41,6 +41,8 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 	private String initialState;
 	private String finalState;
 	
+	private String siteId;
+	
 	private Map operations;
 	private Map localPredecessors;
 	private Map startNodes;
@@ -64,19 +66,27 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 		operations.put(id, op);
 	}
 
-	public void addSite(String siteId) {
-		StartNode node = new StartNode(siteId);
+	public void startSite(String siteId) {
+		if (this.siteId != null) {
+			throw new ScenarioException("sites cannot nest");
+		}
+		
+		this.siteId = siteId;
+		StartNode node = new StartNode(siteId, initialState);
 		startNodes.put(siteId, node);
 		localPredecessors.put(siteId, node);
 		siteHelpers.put(siteId, new SiteHelper());
 	}
 
-	public void addGeneration(String siteId, String ref) {
-		Operation op = getOperation(ref);
-		assert op != null;
+	public void addGeneration(String ref) {
+		if (siteId == null) {
+			throw new ScenarioException("no previous startSite call");
+		}
 		if (isGenerated(ref)) {
 			throw new ScenarioException("operation already generated");
 		}
+
+		Operation op = getOperation(ref);
 		Node node = new GenerationNode(siteId, ref, op);
 		Node pred = getPredecessor(siteId);
 		pred.setLocalSuccessor(node);
@@ -85,13 +95,30 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 		addToSiteGeneration(siteId, ref);
 	}
 
-	public void addReception(String siteId, String ref) {
+	public void addReception(String ref) {
+		if (siteId == null) {
+			throw new ScenarioException("no previous startSite call");
+		}
+
+		Operation op = getOperation(ref);
 		Node node = new ReceptionNode(siteId, ref);
 		Node pred = getPredecessor(siteId);
 		pred.setLocalSuccessor(node);
 		receptionNodes.add(node);
 		localPredecessors.put(siteId, node);
 		addToSiteReception(siteId, ref);
+	}
+	
+	public void endSite() {
+		if (siteId == null) {
+			throw new ScenarioException("no previous startSite call");
+		}
+		
+		Node node = new EndNode(siteId, finalState);
+		Node pred = getPredecessor(siteId);
+		pred.setLocalSuccessor(node);
+		localPredecessors.put(siteId, null);
+		siteId = null;
 	}
 	
 	public Scenario getScenario() {
@@ -183,7 +210,11 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 	}
 	
 	private Operation getOperation(String id) {
-		return (Operation) operations.get(id);
+		Operation op = (Operation) operations.get(id);
+		if (op == null) {
+			throw new ScenarioException("unkown operation '" + id + "'");
+		}
+		return op;
 	}
 	
 	private Node getPredecessor(String siteId) {
@@ -246,7 +277,7 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 	
 	// --> internal helper classes <--
 	
-	private class SiteHelper {
+	private static class SiteHelper {
 		private Set generated = new TreeSet();
 		private Set received = new TreeSet();
 		

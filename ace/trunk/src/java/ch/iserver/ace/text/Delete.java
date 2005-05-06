@@ -28,6 +28,7 @@ import ch.iserver.ace.Operation;
  */
 public class Delete implements Operation {
 	private int position;
+	private int length;
 	
 	public Delete() { }
 
@@ -39,8 +40,16 @@ public class Delete implements Operation {
 		this.position = position;
 	}
 	
+	public int getLength() {
+		return length;
+	}
+	
+	public void setLength(int length) {
+		this.length = length;
+	}
+	
 	public String toString() {
-		return "Delete(" + position + ")";
+		return "Delete(" + position + "," + length + ")";
 	}
 	
 }

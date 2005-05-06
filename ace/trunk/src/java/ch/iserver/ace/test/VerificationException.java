@@ -21,36 +21,37 @@
 
 package ch.iserver.ace.test;
 
-import java.util.ArrayList;
-import java.util.List;
+/**
+ *
+ */
+public class VerificationException extends ScenarioException {
+	private String siteId;
+	private String expected;
+	private String was;
+	
+	public VerificationException(String siteId, String expected, String was) {
+		this.siteId = siteId;
+		this.expected = expected;
+		this.was = was;
+	}
 
+	public String getSiteId() {
+		return siteId;
+	}
+	
+	public String getExpected() {
+		return expected;
+	}
 
-public class StartNode extends AbstractNode {
-	private String state;
-	
-	public StartNode(String siteId, String initialState) {
-		super(siteId);
-		this.state = initialState;
-	}
-	
-	public String getState() {
-		return state;
-	}
-	
-	public List getSuccessors() {
-		List result = new ArrayList();
-		if (getLocalSuccessor() != null) {
-			result.add(getLocalSuccessor());
-		}
-		return result;
-	}
-		
-	public void accept(NodeVisitor visitor) {
-		visitor.visit(this);
+	public String getWas() {
+		return was;
 	}
 	
 	public String toString() {
-		return getClass().getName() + "[site=" + getSiteId() + "]";
+		return getClass().getName() + "[siteId=" + siteId 
+				+ ",expected=" + expected 
+				+ ",was=" + was
+				+ "]";
 	}
 	
 }

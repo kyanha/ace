@@ -46,20 +46,26 @@ public interface ScenarioBuilder {
 	 * 
 	 * @param siteId
 	 */
-	public void addSite(String siteId);
+	public void startSite(String siteId);
 	
 	/**
 	 * 
 	 * @param siteId
 	 * @param opRef
 	 */
-	public void addReception(String siteId, String opRef);
+	public void addReception(String opRef);
 	
 	/**
 	 * 
 	 * @param siteId
 	 * @param opRef
 	 */
-	public void addGeneration(String siteId, String opRef);
+	public void addGeneration(String opRef);
+	
+	/**
+	 * 
+	 *
+	 */
+	public void endSite();
 	
 }

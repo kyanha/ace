@@ -49,13 +49,9 @@ public class ExecuteVisitor implements NodeVisitor {
 	
 	public void visit(StartNode node) {
 		String siteId = node.getSiteId();
-		Algorithm algorithm = getFactory().createAlgorithm();
-		// TODO: get real document model
-		DocumentModel document = new DocumentModel() {	
-			public void apply(Operation operation) {
-				
-			}
-		};
+		String state = node.getState();
+		Algorithm algorithm = getFactory().createAlgorithm();		
+		DocumentModel document = getFactory().createDocument(state);
 		Timestamp timestamp = getFactory().createTimestamp();
 		algorithm.init(document, timestamp);
 		algorithms.put(siteId, algorithm);
@@ -79,7 +75,17 @@ public class ExecuteVisitor implements NodeVisitor {
 		Algorithm algo = getAlgorithm(siteId);
 		algo.receiveRequest(request);
 	}
-
+	
+	public void visit(EndNode node) {
+		Algorithm algo = getAlgorithm(node.getSiteId());
+		DocumentModel expected = getFactory().createDocument(node.getState());
+		if (!expected.equals(algo.getDocument())) {
+			throw new VerificationException(node.getSiteId(), 
+					expected.toString(), 
+					algo.getDocument().toString());
+		}
+	}
+	
 	protected Algorithm getAlgorithm(String siteId) {
 		Algorithm algo = (Algorithm) algorithms.get(siteId);
 		if (algo == null) {

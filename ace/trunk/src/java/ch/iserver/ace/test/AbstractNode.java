@@ -22,22 +22,42 @@
 package ch.iserver.ace.test;
 
 
+/**
+ * Abstract base class for node implementations. Both site id and
+ * local successor properties are handled in this base class.
+ */
 public abstract class AbstractNode implements Node {
+	/** the site this node belongs to */
 	private String siteId;
+	/** the local successor of this node */
 	private Node localSuccessor;
 	
+	/**
+	 * Creates a new abstract node belonging to the given site.
+	 * 
+	 * @param siteId the site this node belongs to
+	 */
 	protected AbstractNode(String siteId) {
 		this.siteId = siteId;
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public String getSiteId() {
 		return siteId;
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public void setLocalSuccessor(Node successor) {
 		this.localSuccessor = successor;
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public Node getLocalSuccessor() {
 		return localSuccessor;
 	}
