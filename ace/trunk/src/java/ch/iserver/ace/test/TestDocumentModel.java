@@ -58,4 +58,34 @@ public class TestDocumentModel extends PlainDocument implements DocumentModel {
 		}
 	}
 	
+	public String getText() {
+		try {
+			return getText(0, getLength());
+		} catch (BadLocationException e) {
+			// TODO: what to do?
+			throw new RuntimeException(e);
+		}
+	}
+	
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		} else if (obj == null) {
+			return false;
+		} else if (obj.getClass().equals(getClass())) {
+			TestDocumentModel doc = (TestDocumentModel) obj;
+			return getText().equals(doc.getText());
+		} else {
+			return false;
+		}
+	}
+	
+	public int hashCode() {
+		return getText().hashCode();
+	}
+	
+	public String toString() {
+		return getText();
+	}
+	
 }
