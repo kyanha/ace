@@ -26,8 +26,8 @@ import javax.swing.text.PlainDocument;
 
 import ch.iserver.ace.DocumentModel;
 import ch.iserver.ace.Operation;
-import ch.iserver.ace.text.Delete;
-import ch.iserver.ace.text.Insert;
+import ch.iserver.ace.text.DeleteOperation;
+import ch.iserver.ace.text.InsertOperation;
 
 /**
  *
@@ -45,11 +45,11 @@ public class TestDocumentModel extends PlainDocument implements DocumentModel {
 	
 	public void apply(Operation operation) {
 		try {
-			if (operation instanceof Insert) {
-				Insert op = (Insert) operation;
+			if (operation instanceof InsertOperation) {
+				InsertOperation op = (InsertOperation) operation;
 				insertString(op.getPosition(), op.getText(), null);
-			} else if (operation instanceof Delete) {
-				Delete op = (Delete) operation;
+			} else if (operation instanceof DeleteOperation) {
+				DeleteOperation op = (DeleteOperation) operation;
 				remove(op.getPosition(), op.getLength());
 			}
 		} catch (BadLocationException e) {

@@ -57,4 +57,23 @@ public class InsertOperation implements Operation {
 		return "Insert(" + position + ",'" + text + "')";
 	}
 	
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		} else if (o == null) {
+			return false;
+		} else if (o.getClass().equals(getClass())) {
+			InsertOperation op = (InsertOperation) o;
+			return op.position == position && op.text.equals(text);
+		} else {
+			return false;
+		}
+	}
+	
+	public int hashCode() {
+		int hashcode = position;
+		hashcode += 13 * text.hashCode();
+		return hashcode;
+	}
+	
 }

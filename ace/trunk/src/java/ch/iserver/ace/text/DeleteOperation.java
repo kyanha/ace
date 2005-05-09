@@ -57,4 +57,23 @@ public class DeleteOperation implements Operation {
 		return "Delete(" + position + "," + length + ")";
 	}
 	
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		} else if (obj == null) {
+			return false;
+		} else if (obj.getClass().equals(getClass())) {
+			DeleteOperation op = (DeleteOperation) obj;
+			return op.position == position && op.length == length;
+		} else {
+			return false;
+		}
+	}
+	
+	public int hashCode() {
+		int hashcode = position * 13;
+		hashcode += length * 29;
+		return hashcode;
+	}
+	
 }
