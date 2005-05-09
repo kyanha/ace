@@ -18,6 +18,13 @@ public interface Algorithm {
 	public Request undo();
 	
 	/**
+	 * Redo the last undone local operation.
+	 * 
+	 * @return the request to be sent to other sites
+	 */
+	public Request redo();
+	
+	/**
 	 * Generates a request for the given operation. The operation is
 	 * a locally generated operation. The returned request must be
 	 * sent to the other sites.

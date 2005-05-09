@@ -105,6 +105,14 @@ public class Jupiter implements Algorithm {
         return null;
     }
     
+    /* (non-Javadoc)
+     * @see ch.iserver.ace.algorithm.Algorithm#redo()
+     */
+    public Request redo() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    
     public void setInclusionTransformation(InclusionTransformation it) {
         this.inclusion = it;
     }
