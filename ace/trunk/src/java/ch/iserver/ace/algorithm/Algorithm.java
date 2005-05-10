@@ -51,7 +51,6 @@ public interface Algorithm {
 	 * sent to the other sites.
 	 * 
 	 * @param op the operation for which a request should be generated
-	 * @return the request for the given operation
 	 */
 	public Request generateRequest(Operation op);
 	
@@ -91,6 +90,11 @@ public interface Algorithm {
 	 */
 	public void init(DocumentModel doc, Timestamp timestamp);
 	
+	/**
+	 * Gets the document model used by the algorithm at the current time.
+	 * 
+	 * @return the document model
+	 */
 	public DocumentModel getDocument();
 	
 }
