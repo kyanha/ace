@@ -37,10 +37,13 @@ import ch.iserver.ace.algorithm.Timestamp;
 import ch.iserver.ace.text.InsertOperation;
 
 /**
- *
+ * Tests the ExecuteVisitor class.
  */
 public class ExecuteVisitorTest extends TestCase {
-		
+
+	/**
+	 * Perform a normal execution flow. Check that no exceptions occur.
+	 */
 	public void testNormalExecution() {
 		ExecuteVisitor visitor = new ExecuteVisitor(new AlgorithmTestFactoryStub());
 		Iterator it = createTestSequence();
@@ -50,6 +53,10 @@ public class ExecuteVisitorTest extends TestCase {
 		}
 	}
 	
+	/**
+	 * The purpose of this test is to check that when visiting a generation node
+	 * the remote reception nodes get the generated request.
+	 */
 	public void testVisitGenerationNode() {
 		ExecuteVisitor visitor = new ExecuteVisitor(new AlgorithmTestFactoryStub());
 		
@@ -146,6 +153,9 @@ public class ExecuteVisitorTest extends TestCase {
 		algoCtrl2.verify();
 	}
 	
+	/**
+	 * Creates a normal sequence of nodes.
+	 */
 	protected Iterator createTestSequence() {
 		List result = new ArrayList();
 		
