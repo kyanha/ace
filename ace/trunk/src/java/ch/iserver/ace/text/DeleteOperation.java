@@ -75,8 +75,8 @@ public class DeleteOperation implements Operation {
 	}
 	
 	public int hashCode() {
-		int hashcode = position * 13;
-		hashcode += 13 text.hashCode();
+		int hashcode = position;
+		hashcode += 13 * text.hashCode();
 		return hashcode;
 	}
 	
