@@ -42,10 +42,44 @@ public class QueueHandler extends Thread {
      */
     private static final int REMOTE_OPERATION_PRIORITY = 2;
     
+    /**
+     * The algorithm to pass the operations.
+     */
     private Algorithm algo;
+    
+    /**
+     * The buffer for local operations.
+     */
     private SynchronizedQueue localOpBuf;
+    
+    /**
+     * The buffer for remote requests.
+     */
     private SynchronizedQueue remoteReqBuf;
+    
+    /**
+     * The buffer for outgoing requests.
+     */
     private SynchronizedQueue outReqBuf;
+
+    /**
+     * This object is used to synchronize with the two
+     * buffers <code>localOpBuf</code> and <code>remoteReqBuf</code>.
+     * When the queue handler realises that there are no more 
+     * operations and requests to process, it waits on that object
+     * as follows: 
+     * <pre>
+     * 	 synchObj.wait();
+     * </pre>
+     * When one of the buffers turns non-empty again, it notifies the synchronization
+     * object by calling:
+     * <pre>
+     * 	synchObj.notify();
+     * </pre>
+     * Hence the queue handler returns from the wait state and can proceed its execution.
+     * 
+     * @see SynchronizationQueue
+     */
     private Object synchObj;
     
     
@@ -72,11 +106,16 @@ public class QueueHandler extends Thread {
         this.synchObj = synchObj;
     }
     
+    /**
+     * The run method of the queue handler. Is responsible for processing
+     * the buffers, i.e. pass the operations and requests respectively to 
+     * the algorithm and forward the generated requests to the outgoing queue.
+     */
     public void run() {
         int localOpPrio, remoteOpPrio;
         try {
             while (true) {
-                localOpPrio = LOCAL_OPERATION_PRIORITY;
+                localOpPrio  = LOCAL_OPERATION_PRIORITY;
                 remoteOpPrio = REMOTE_OPERATION_PRIORITY;
 
                 while (localOpPrio-- > 0 && !localOpBuf.isEmpty()) {

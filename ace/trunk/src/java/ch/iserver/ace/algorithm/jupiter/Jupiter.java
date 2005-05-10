@@ -31,7 +31,7 @@ import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.Timestamp;
 
 /**
- *
+ * This class implements the client-side core of the Jupiter control algorithm. 
  */
 public class Jupiter implements Algorithm {
 
@@ -63,6 +63,7 @@ public class Jupiter implements Algorithm {
         // TODO Auto-generated method stub
         return null;
     }
+    
     /* (non-Javadoc)
      * @see ch.iserver.ace.algorithm.Algorithm#receiveRequest(ch.iserver.ace.algorithm.Request)
      */
@@ -70,19 +71,20 @@ public class Jupiter implements Algorithm {
         // TODO Auto-generated method stub
 
     }
+    
     /* (non-Javadoc)
      * @see ch.iserver.ace.algorithm.Algorithm#init(ch.iserver.ace.DocumentModel, ch.iserver.ace.algorithm.Timestamp)
      */
     public void init(DocumentModel doc, Timestamp timestamp) {
-        // TODO Auto-generated method stub
-
+        this.document = doc;
+        this.stateVector = timestamp;
     }
+    
     /* (non-Javadoc)
      * @see ch.iserver.ace.algorithm.Algorithm#getDocument()
      */
     public DocumentModel getDocument() {
-        // TODO Auto-generated method stub
-        return null;
+        return document;
     }
     
     /* (non-Javadoc)
@@ -91,12 +93,14 @@ public class Jupiter implements Algorithm {
     public void siteAdded(int siteId) {
         throw new UnsupportedOperationException();
     }
+    
     /* (non-Javadoc)
      * @see ch.iserver.ace.algorithm.Algorithm#siteRemoved(int)
      */
     public void siteRemoved(int siteId) {
         throw new UnsupportedOperationException();
     }
+    
     /* (non-Javadoc)
      * @see ch.iserver.ace.algorithm.Algorithm#undo()
      */
@@ -113,10 +117,19 @@ public class Jupiter implements Algorithm {
         return null;
     }
     
+    /**
+     * Set an inclusion transformation function.
+     * 
+     * @param it the inclusion transformation function to set.
+     */
     public void setInclusionTransformation(InclusionTransformation it) {
         this.inclusion = it;
     }
     
+    /**
+     * 
+     * @return	the algorithms inclusion transformation
+     */
     public InclusionTransformation getInclusionTransformation() {
         return inclusion;
     }

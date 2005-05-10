@@ -68,7 +68,7 @@ public class SynchronizedQueue {
 	public synchronized void add(Object obj) {
 		queue.addLast(obj);
 		if (synchObj != null) {
-		    synchObj.notifyAll();
+		    synchObj.notify();
 		}
 		notify();
 	}
