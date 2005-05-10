@@ -49,19 +49,86 @@ public class GOTInclusionTransformation implements InclusionTransformation {
         return transformedOp;
     }
     
-    private Operation transform(InsertOperation ins1, InsertOperation ins2) {
-        return null;
+    private InsertOperation transform(InsertOperation insA, InsertOperation insB) {
+    	InsertOperation transformedOperation = null;
+    	int posA = insA.getPosition();
+    	int lenA = insA.getTextLength();
+    	int posB = insB.getPosition();
+    	int lenB = insB.getTextLength();
+    	
+    	if(posA < posB) {
+    		// Case 1:   operation A is before operation B. [///A///] [\\\B\\\]
+    		transformedOperation = insA;
+    	} else {
+    		// Case 2:   operation A is in or behind operation B. [\\\B\\\] [///A///]   OR   [\\\B\\[XX]//A///]
+    		transformedOperation = new InsertOperation(posA + lenB, insA.getText());
+    	}
+        return transformedOperation;
     }
     
-    private Operation transform(InsertOperation ins, DeleteOperation del) {
-        return null;
+    private InsertOperation transform(InsertOperation insA, DeleteOperation delB) {
+    	InsertOperation transformedOperation = null;
+    	int posA = insA.getPosition();
+    	int lenA = insA.getTextLength();
+    	int posB = delB.getPosition();
+    	int lenB = delB.getTextLength();
+    	
+    	if(posA <= posB) {
+    		// Case 1:   operation A is before or in operation B. [///A///] [\\\B\\\]   OR   [XXXABXXX]
+    		transformedOperation = insA;
+    	} else if(posA > (posB + lenB)) {
+    		// Case 2:   operation A is after operation B. [\\\B\\\] [///A///]
+    		transformedOperation = new InsertOperation(posA - lenB, insA.getText());
+    	} else {
+    		// Case 3:   operation a is in operation B. [\\\B\\[XX]//A///]
+    		transformedOperation = new InsertOperation(posB, insA.getText());
+    	}
+        return transformedOperation;
     }
     
-    private Operation transform(DeleteOperation del, InsertOperation ins) {
-        return null;
+    private DeleteOperation transform(DeleteOperation delA, InsertOperation insB) {
+    	DeleteOperation transformedOperation = null;
+    	int posA = delA.getPosition();
+    	int lenA = delA.getTextLength();
+    	int posB = insB.getPosition();
+    	int lenB = insB.getTextLength();
+    	
+    	if(posB >= (posA + lenA)) {
+    		// Case 1:   start of operation B is after the end of operation A. [///A///] [\\\B\\\]
+    		transformedOperation = delA;
+    	} else if(posA >= posB) {
+    		// Case 2:   start of operation A is in or behind start of operation B. [\\\B\\\] [///A///]   OR   [\\\B\\[XX]//A///]   OR   [XXXABXXX]
+    		transformedOperation = new DeleteOperation(posA + lenB, delA.getText());
+    	} else {
+    		// insert position is in deleting range -> we need 2 delete operations.
+    		// 1st op: new DeleteOperation(posA, delA.subString(posA, posB-posA))
+    		// 2nd op: new DeleteOperation(posB + lenB, delA.subString(lenA - (posB - posA)), -1)
+    	}
+        return transformedOperation;
     }
     
-    private Operation transform(DeleteOperation del, DeleteOperation del2) {
-        return null;
+    private DeleteOperation transform(DeleteOperation delA, DeleteOperation delB) {
+    	DeleteOperation transformedOperation;
+    	int posA = delA.getPosition();
+    	int lenA = delA.getTextLength();
+    	int posB = delB.getPosition();
+    	int lenB = delB.getTextLength();
+    	
+    	if(posB >= (posA + lenA)) {
+    		transformedOperation = delA;
+    	} else if(posA >= (posB + lenB)) {
+    		transformedOperation = new DeleteOperation(posA + lenB, delA.getText());
+    	} else {
+    		if((posB <= posA) && ((posA + lenA) <= (posB - lenB))) {
+    			transformedOperation = new DeleteOperation(0, "");
+    		} else if((posB <= posA) && ((posA + lenA) > (posB + lenB))) {
+    			transformedOperation = new DeleteOperation(0, "");
+    		} else if((posB > posA) && ((posB + lenB) >= (posA + lenA))) {
+    			transformedOperation = new DeleteOperation(0, "");
+    		} else {
+    			transformedOperation = new DeleteOperation(0, "");
+    		}
+    	}
+        return transformedOperation;
     }
 }
