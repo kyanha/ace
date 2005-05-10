@@ -27,14 +27,14 @@ import ch.iserver.ace.Operation;
  *
  */
 public class DeleteOperation implements Operation {
+	private String text;
 	private int position;
-	private int length;
 	
 	public DeleteOperation() { }
 
-	public DeleteOperation(int position, int length) {
+	public DeleteOperation(int position, String text) {
 		this.position = position;
-		this.length = length;
+		this.text = text;
 	}
 	
 	public int getPosition() {
@@ -45,16 +45,20 @@ public class DeleteOperation implements Operation {
 		this.position = position;
 	}
 	
-	public int getLength() {
-		return length;
+	public int getTextLength() {
+		return text.length();
 	}
 	
-	public void setLength(int length) {
-		this.length = length;
+	public String getText() {
+		return text;
+	}
+	
+	public void setText(String text length) {
+		this.text = text;
 	}
 	
 	public String toString() {
-		return "Delete(" + position + "," + length + ")";
+		return "Delete(" + position + "," + text + ")";
 	}
 	
 	public boolean equals(Object obj) {
@@ -64,7 +68,7 @@ public class DeleteOperation implements Operation {
 			return false;
 		} else if (obj.getClass().equals(getClass())) {
 			DeleteOperation op = (DeleteOperation) obj;
-			return op.position == position && op.length == length;
+			return op.position == position && op.text.equals(text);
 		} else {
 			return false;
 		}
@@ -72,7 +76,7 @@ public class DeleteOperation implements Operation {
 	
 	public int hashCode() {
 		int hashcode = position * 13;
-		hashcode += length * 29;
+		hashcode += 13 text.hashCode();
 		return hashcode;
 	}
 	
