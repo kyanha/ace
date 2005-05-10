@@ -53,7 +53,7 @@ public class DeleteOperation implements Operation {
 		return text;
 	}
 	
-	public void setText(String text length) {
+	public void setText(String text) {
 		this.text = text;
 	}
 	
