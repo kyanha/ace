@@ -328,6 +328,9 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 	
 	// --> internal helper classes <--
 	
+	/**
+	 * Basic helper object for site related checks.
+	 */
 	private static class SiteHelper {
 		private Set generated = new TreeSet();
 		private Set received = new TreeSet();
