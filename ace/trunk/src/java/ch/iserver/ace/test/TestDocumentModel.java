@@ -50,7 +50,7 @@ public class TestDocumentModel extends PlainDocument implements DocumentModel {
 				insertString(op.getPosition(), op.getText(), null);
 			} else if (operation instanceof DeleteOperation) {
 				DeleteOperation op = (DeleteOperation) operation;
-				remove(op.getPosition(), op.getLength());
+				remove(op.getPosition(), op.getTextLength());
 			}
 		} catch (BadLocationException e) {
 			// TODO: rethrow as some unchecked exception?

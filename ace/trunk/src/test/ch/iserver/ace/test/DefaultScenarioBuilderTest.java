@@ -10,7 +10,7 @@ public class DefaultScenarioBuilderTest extends TestCase {
 		ScenarioBuilder builder = new DefaultScenarioBuilder();
 		builder.init("abc", "a1c");
 		builder.addOperation("1", new InsertOperation(1, "1"));
-		builder.addOperation("2", new DeleteOperation(1, 1));
+		builder.addOperation("2", new DeleteOperation(1, "b"));
 		
 		builder.startSite("1");
 		builder.addGeneration("1");
@@ -28,7 +28,7 @@ public class DefaultScenarioBuilderTest extends TestCase {
 		builder.init("abc", "a12cd");
 		builder.addOperation("1", new InsertOperation(1, "1"));
 		builder.addOperation("2", new InsertOperation(1, "2"));
-		builder.addOperation("3", new DeleteOperation(0, 1));
+		builder.addOperation("3", new DeleteOperation(1, "b"));
 		
 		builder.startSite("1");
 		builder.addReception("3");
