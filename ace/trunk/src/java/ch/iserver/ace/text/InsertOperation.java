@@ -48,6 +48,10 @@ public class InsertOperation implements Operation {
 	public String getText() {
 		return text;
 	}
+	
+	public int getTextLength() {
+		return text.length();
+	}
 
 	public void setText(String text) {
 		this.text = text;
@@ -57,13 +61,13 @@ public class InsertOperation implements Operation {
 		return "Insert(" + position + ",'" + text + "')";
 	}
 	
-	public boolean equals(Object o) {
-		if (this == o) {
+	public boolean equals(Object obj) {
+		if (this == obj) {
 			return true;
-		} else if (o == null) {
+		} else if (obj == null) {
 			return false;
-		} else if (o.getClass().equals(getClass())) {
-			InsertOperation op = (InsertOperation) o;
+		} else if (obj.getClass().equals(getClass())) {
+			InsertOperation op = (InsertOperation) obj;
 			return op.position == position && op.text.equals(text);
 		} else {
 			return false;
