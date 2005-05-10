@@ -25,6 +25,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 
 import ch.iserver.ace.DocumentModel;
+import ch.iserver.ace.DocumentModelException;
 import ch.iserver.ace.Operation;
 import ch.iserver.ace.text.DeleteOperation;
 import ch.iserver.ace.text.InsertOperation;
@@ -53,8 +54,7 @@ public class TestDocumentModel extends PlainDocument implements DocumentModel {
 				remove(op.getPosition(), op.getTextLength());
 			}
 		} catch (BadLocationException e) {
-			// TODO: rethrow as some unchecked exception?
-			e.printStackTrace();
+			throw new DocumentModelException(e);
 		}
 	}
 	
@@ -62,8 +62,7 @@ public class TestDocumentModel extends PlainDocument implements DocumentModel {
 		try {
 			return getText(0, getLength());
 		} catch (BadLocationException e) {
-			// TODO: what to do?
-			throw new RuntimeException(e);
+			throw new DocumentModelException(e);
 		}
 	}
 	

@@ -22,18 +22,16 @@
 package ch.iserver.ace;
 
 /**
- * This interface represents an abstraction of a document independent 
- * of whether it is a text document, a whiteboard document or any other
- * document. 
+ * An exception thrown by <code>DocumentModel</code>s apply method.
  */
-public interface DocumentModel {
+public class DocumentModelException extends RuntimeException {
 
-	/**
-	 * Applies an operation to this document model.
-	 * 
-	 * @param operation the operation to be applied
-	 * @throws DocumentModelException if an error occurs while applying operation
-	 */
-	public void apply(Operation operation);
+	public DocumentModelException(String msg) {
+		super(msg);
+	}
+	
+	public DocumentModelException(Throwable t) {
+		super(t);
+	}
 	
 }
