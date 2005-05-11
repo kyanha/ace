@@ -33,8 +33,8 @@ public class InsertOperation implements Operation {
 	public InsertOperation() { }
 
 	public InsertOperation(int position, String text) {
-		this.position = position;
-		this.text = text;
+		setPosition(position);
+		setText(text);
 	}
 	
 	public int getPosition() {
@@ -42,6 +42,7 @@ public class InsertOperation implements Operation {
 	}
 
 	public void setPosition(int position) {
+	    assert position >= 0 : "position index must be >= 0";
 		this.position = position;
 	}
 
@@ -54,6 +55,7 @@ public class InsertOperation implements Operation {
 	}
 
 	public void setText(String text) {
+	    assert text != null : "text may not be null";
 		this.text = text;
 	}
 	
