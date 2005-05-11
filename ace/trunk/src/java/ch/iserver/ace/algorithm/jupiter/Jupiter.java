@@ -21,6 +21,8 @@
 package ch.iserver.ace.algorithm.jupiter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import ch.iserver.ace.DocumentModel;
@@ -38,46 +40,98 @@ public class Jupiter implements Algorithm {
     private List operationBuffer;
     private InclusionTransformation inclusion;
     private DocumentModel document;
-    private Timestamp stateVector;
+    private JupiterVectorTime vectorTime;
+    private int siteId;
     
     /**
+     * A list that contains the requests sent to the server which are to be 
+     * acknowledged by the server before they can be removed. 
+     * This list corresponds to the 'outgoing' list in the Jupiter pseudo 
+     * code description.
+     */
+    private HashMap ackRequestList;
+    
+    /**
+     * Class constructor that creates a new Jupiter algorithm. The parameters fully 
+     * initialize the algorithm.
+     * 
      * @param it the inclusion transformation to be used
      * @param document the inital document model
      * @param timestamp the inital time stamp (state vector)
      */
-    public Jupiter(InclusionTransformation it, DocumentModel document, Timestamp timestamp) {
-        this.inclusion = it;
-        this.document = document;
-        this.stateVector = timestamp;
-        this.operationBuffer = new ArrayList();
+    public Jupiter(InclusionTransformation it, DocumentModel document, int siteId) {
+        inclusion = it;
+        this.siteId = siteId;
+        init(document, new JupiterVectorTime(0, 0));
+        operationBuffer = new ArrayList();
+        ackRequestList = new HashMap();
     }
     
-    public Jupiter() {
+    /**
+     * Class constructor that creates a new Jupiter algorithm. Afterwards, the method 
+     * {@link #init(DocumentModel, Timestamp)} needs to be called to initialize 
+     * the algorithm.
+     * 
+     * @param siteId the site Id of this algorithm.
+     */
+    public Jupiter(int siteId) {
+        this.siteId = siteId;
         operationBuffer = new ArrayList();
+        ackRequestList = new HashMap();
     }
     
     /* (non-Javadoc)
      * @see ch.iserver.ace.algorithm.Algorithm#generateRequest(ch.iserver.ace.Operation)
      */
     public Request generateRequest(Operation op) {
-        // TODO Auto-generated method stub
-        return null;
+        //apply op locally;
+        document.apply(op);
+        //send(op, myMsgs, otherMsgs);
+        Request req = new JupiterRequest(siteId, vectorTime, op);
+        //add(op, myMsgs) to outgoing;
+        ackRequestList.put(new Integer(vectorTime.getLocalOperationCount()), op);
+        //myMsgs = myMsgs + 1;
+        vectorTime.incrementLocalOperationCount();
+        return req;
     }
     
     /* (non-Javadoc)
      * @see ch.iserver.ace.algorithm.Algorithm#receiveRequest(ch.iserver.ace.algorithm.Request)
      */
     public void receiveRequest(Request req) {
-        // TODO Auto-generated method stub
-
+        JupiterRequest jupReq = (JupiterRequest)req;
+        //Discard acknowledged messages.
+        Iterator iter = ackRequestList.keySet().iterator();
+        while(iter.hasNext()) {
+        		Integer localOperationCount = (Integer)iter.next();
+        		if (localOperationCount.intValue() < jupReq.getJupiterVectorTime().getRemoteRequestCount()) {
+        		    ackRequestList.remove(localOperationCount);
+        		}
+        }
+        
+        //ASSERT msg.myMsgs == otherMsgs
+        assert jupReq.getJupiterVectorTime().getLocalOperationCount() == vectorTime.getRemoteRequestCount() : "msg.myMsgs != otherMsgs !!";
+        
+        iter = ackRequestList.keySet().iterator();
+        Operation newOp = jupReq.getOperation();
+        while (iter.hasNext()) {
+            //transform new operation and the ones in the queue.
+            Integer key = (Integer)iter.next();
+            Operation existingOp = (Operation)ackRequestList.get(key);
+            Operation transformedOp = inclusion.transform(newOp, existingOp);
+            ackRequestList.put(key, inclusion.transform(existingOp, newOp));
+            newOp = transformedOp;
+        }
+        document.apply(newOp);
+        vectorTime.incrementRemoteRequestCount();
     }
     
     /* (non-Javadoc)
      * @see ch.iserver.ace.algorithm.Algorithm#init(ch.iserver.ace.DocumentModel, ch.iserver.ace.algorithm.Timestamp)
      */
     public void init(DocumentModel doc, Timestamp timestamp) {
-        this.document = doc;
-        this.stateVector = timestamp;
+        document = doc;
+        vectorTime = (JupiterVectorTime)timestamp;
     }
     
     /* (non-Javadoc)
@@ -132,5 +186,19 @@ public class Jupiter implements Algorithm {
      */
     public InclusionTransformation getInclusionTransformation() {
         return inclusion;
+    }
+    
+    /**
+     * @return Returns the siteId.
+     */
+    public int getSiteId() {
+        return siteId;
+    }
+    
+    /**
+     * @param siteId The siteId to set.
+     */
+    public void setSiteId(int siteId) {
+        this.siteId = siteId;
     }
 }
