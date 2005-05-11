@@ -54,11 +54,12 @@ public class DefaultRequestEngine implements RequestEngine {
      * @param algo the algorithm implementation
      */
     public DefaultRequestEngine(Algorithm algo) {
+        assert algo != null : "algo may not be null";
         Object synchObj = new Object();
-        this.localOperationBuffer = new SynchronizedQueue(synchObj);
-        this.remoteRequestBuffer = new SynchronizedQueue(synchObj);
-        this.outgoingRequestBuffer = new SynchronizedQueue();
-        this.queueHandler = new QueueHandler(algo,
+        localOperationBuffer = new SynchronizedQueue(synchObj);
+        remoteRequestBuffer = new SynchronizedQueue(synchObj);
+        outgoingRequestBuffer = new SynchronizedQueue();
+        queueHandler = new QueueHandler(algo,
                 localOperationBuffer,
                 remoteRequestBuffer,
                 outgoingRequestBuffer,
@@ -70,14 +71,18 @@ public class DefaultRequestEngine implements RequestEngine {
      * @see ch.iserver.ace.algorithm.RequestEngine#generateRequest(ch.iserver.ace.Operation)
      */
     public void generateRequest(Operation op) {
-        localOperationBuffer.add(op);
+        if (op != null) {
+            localOperationBuffer.add(op);
+        }
     }
 
     /* (non-Javadoc)
      * @see ch.iserver.ace.algorithm.RequestEngine#receiveRequest(ch.iserver.ace.algorithm.Request)
      */
     public void receiveRequest(Request req) {
-        remoteRequestBuffer.add(req);
+        if (req != null) {
+            remoteRequestBuffer.add(req);
+        }
     }
 
     /**

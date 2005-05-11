@@ -50,21 +50,21 @@ public class QueueHandler extends Thread {
     /**
      * The buffer for local operations.
      */
-    private SynchronizedQueue localOpBuf;
+    private SynchronizedQueue localOperationBuffer;
     
     /**
      * The buffer for remote requests.
      */
-    private SynchronizedQueue remoteReqBuf;
+    private SynchronizedQueue remoteRequestBuffer;
     
     /**
      * The buffer for outgoing requests.
      */
-    private SynchronizedQueue outReqBuf;
+    private SynchronizedQueue outgoingRequestBuffer;
 
     /**
      * This object is used to synchronize with the two
-     * buffers <code>localOpBuf</code> and <code>remoteReqBuf</code>.
+     * buffers <code>localOperationBuffer</code> and <code>remoteRequestBuffer</code>.
      * When the queue handler realises that there are no more 
      * operations and requests to process, it waits on that object
      * as follows: 
@@ -87,9 +87,9 @@ public class QueueHandler extends Thread {
      * Creates a new QueueHandler.
      * 
      * @param algo the algorithm to pass the operations
-     * @param localOpBuf a buffer containing local operations
-     * @param remoteReqBuf a buffer containing remote requests
-     * @param outReqBuf a buffer for outgoing requests
+     * @param localOperationBuffer a buffer containing local operations
+     * @param remoteRequestBuffer a buffer containing remote requests
+     * @param outgoingRequestBuffer a buffer for outgoing requests
      * @param synchObj a synchronization object to be used in conjunction with 
      * 				  the buffers.
      * @see SynchronizedQueue
@@ -100,9 +100,9 @@ public class QueueHandler extends Thread {
             SynchronizedQueue outReqBuf,
             Object synchObj) {
         this.algo = algo;
-        this.localOpBuf = localOpBuf;
-        this.remoteReqBuf = remoteReqBuf;
-        this.outReqBuf = outReqBuf;
+        localOperationBuffer = localOpBuf;
+        remoteRequestBuffer = remoteReqBuf;
+        outgoingRequestBuffer = outReqBuf;
         this.synchObj = synchObj;
     }
     
@@ -118,19 +118,25 @@ public class QueueHandler extends Thread {
                 localOpPrio  = LOCAL_OPERATION_PRIORITY;
                 remoteOpPrio = REMOTE_OPERATION_PRIORITY;
 
-                while (localOpPrio-- > 0 && !localOpBuf.isEmpty()) {
+                while (localOpPrio-- > 0 && !localOperationBuffer.isEmpty()) {
                     // handle local request
-                    Request req = algo.generateRequest((Operation) localOpBuf.get());
-                    outReqBuf.add(req);
+                    Operation nextOp = (Operation) localOperationBuffer.get(0);
+                    if (nextOp != null) {
+                        Request req = algo.generateRequest(nextOp);
+                        outgoingRequestBuffer.add(req);
+                    }
                 }
 
-                while (remoteOpPrio-- > 0 && !remoteReqBuf.isEmpty()) {
+                while (remoteOpPrio-- > 0 && !remoteRequestBuffer.isEmpty()) {
                     // handle remote request
-                    algo.receiveRequest((Request)remoteReqBuf.get());
+                    Request nextReq = (Request)remoteRequestBuffer.get(0);
+                    if (nextReq != null) {
+                        algo.receiveRequest(nextReq);
+                    }
                 }
 
                 // if no more requests -> wait
-                if (localOpBuf.isEmpty() && remoteReqBuf.isEmpty()) {
+                if (localOperationBuffer.isEmpty() && remoteRequestBuffer.isEmpty()) {
                     synchObj.wait();
                 }
             }
