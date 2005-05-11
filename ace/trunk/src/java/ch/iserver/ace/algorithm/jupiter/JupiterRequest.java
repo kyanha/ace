@@ -1,0 +1,94 @@
+/*
+ * $Id$
+ *
+ * ace - a collaborative editor
+ * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
+package ch.iserver.ace.algorithm.jupiter;
+
+import ch.iserver.ace.Operation;
+import ch.iserver.ace.algorithm.Request;
+import ch.iserver.ace.algorithm.Timestamp;
+
+/**
+ * This class models a Jupiter request.
+ */
+public class JupiterRequest implements Request {
+    
+    /**
+     * The id from the originating site.
+     */
+    private int siteId;
+    
+    /**
+     * The vector time of this request.
+     */
+    private JupiterVectorTime vectorTime;
+    
+    /**
+     * The operation to be excecuted by the receiving site.
+     */
+    private Operation operation;
+    
+    
+    /**
+     * Class constructor.
+     * 
+     * @param siteId 	the Id from the originating site.
+     * @param vt		the vector time corresponding to the document state
+     * 				when the request was created.
+     * @param op		the operation to be executed.
+     */
+    public JupiterRequest(int siteId, JupiterVectorTime vt, Operation op) {
+        this.siteId = siteId;
+        vectorTime = vt;
+        operation = op;
+    }
+
+    /* (non-Javadoc)
+     * @see ch.iserver.ace.algorithm.Request#getSiteId()
+     */
+    public int getSiteId() {
+        return siteId;
+    }
+
+    /* (non-Javadoc)
+     * @see ch.iserver.ace.algorithm.Request#getOperation()
+     */
+    public Operation getOperation() {
+        return operation;
+    }
+
+    /* (non-Javadoc)
+     * @see ch.iserver.ace.algorithm.Request#getTimestamp()
+     */
+    public Timestamp getTimestamp() {
+        return vectorTime;
+    }
+   
+    /**
+     * Convenience method that returns the Jupiter vector time
+     * of this request. Therefore, no cast is needed.
+     * 
+     * @return 	the Jupiter vector of this request.
+     * @see JupiterVectorTime
+     */
+    public JupiterVectorTime getJupiterVectorTime() {
+        return vectorTime;
+    }
+
+}
