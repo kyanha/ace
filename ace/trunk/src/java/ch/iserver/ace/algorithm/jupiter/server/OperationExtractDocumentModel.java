@@ -25,7 +25,7 @@ import ch.iserver.ace.Operation;
 
 /**
  * This is a dummy document model whose sole purpose is to extract
- * the operation applied to the document.
+ * the last operation applied to the document.
  */
 public class OperationExtractDocumentModel implements DocumentModel {
 

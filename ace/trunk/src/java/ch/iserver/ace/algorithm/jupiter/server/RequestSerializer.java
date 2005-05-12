@@ -20,6 +20,13 @@
  */
 package ch.iserver.ace.algorithm.jupiter.server;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
+import ch.iserver.ace.Operation;
+import ch.iserver.ace.algorithm.Algorithm;
+import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.util.SynchronizedQueue;
 
 /**
@@ -28,13 +35,52 @@ import ch.iserver.ace.util.SynchronizedQueue;
 public class RequestSerializer extends Thread {
 
     private SynchronizedQueue requestQueue;
+    private Map clientProxies;
+    private Map outgoingQueues;
     
     public RequestSerializer(SynchronizedQueue queue) {
         requestQueue = queue;
+        clientProxies = new HashMap();
+        outgoingQueues = new HashMap();
     }
     
     public void run() {
-        
+        try {
+            Object[] data = (Object[])requestQueue.get();
+            Request req = (Request)data[0];
+            ClientProxy client = (ClientProxy)data[1];
+            int siteId = client.getSiteId();
+            
+            Algorithm algo = client.getAlgo(); 
+            algo.receiveRequest(req);
+            Operation op = ((OperationExtractDocumentModel)
+            						algo.getDocument()).getOperation();
+            
+            Iterator iter = clientProxies.keySet().iterator();
+            while (iter.hasNext()) {
+                ClientProxy cl = (ClientProxy)iter.next();
+                if (siteId != cl.getSiteId()) {
+                    Request r = cl.getAlgo().generateRequest(op);
+                    Integer id = new Integer(cl.getSiteId());
+                    ((SynchronizedQueue)outgoingQueues.get(id)).add(r);
+                }
+            }
+        } catch (InterruptedException ie) {
+            //TODO:
+        }
     }
     
+    public void addClientProxy(int siteId, ClientProxy client, SynchronizedQueue queue) {
+        //TODO: synchronize??
+        clientProxies.put(new Integer(siteId), client);
+        outgoingQueues.put(new Integer(siteId), queue);
+    }
+    
+    public ClientProxy removeClientProxy(int siteId) {
+        //TODO: synchronize??
+        Integer id = new Integer(siteId);
+        ClientProxy client = (ClientProxy)clientProxies.remove(id);
+        outgoingQueues.remove(id);
+        return client;
+    }
 }

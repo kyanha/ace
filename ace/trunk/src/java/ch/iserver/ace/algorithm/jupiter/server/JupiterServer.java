@@ -25,6 +25,11 @@ package ch.iserver.ace.algorithm.jupiter.server;
  */
 public class JupiterServer {
     
+    private int siteIdCounter;
+    
+    public JupiterServer() {
+        siteIdCounter = 1;
+    }
     
     /**
      * 

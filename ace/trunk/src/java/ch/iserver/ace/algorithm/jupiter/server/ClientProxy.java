@@ -21,10 +21,11 @@
 package ch.iserver.ace.algorithm.jupiter.server;
 
 import ch.iserver.ace.algorithm.Request;
+import ch.iserver.ace.algorithm.jupiter.Jupiter;
 
 /**
  * ClientProxy acts as an intermediary between the Jupiter server
- * algorithm and the network component for reception and transmission
+ * component and the network component for reception and transmission
  * of requests.
  */
 public interface ClientProxy {
@@ -42,5 +43,19 @@ public interface ClientProxy {
      * @param req the request to receive
      */
     public void receiveRequest(Request req);
+    
+    /**
+     * Returns the algorithm for this client.
+     * 
+     * @return Returns the algo.
+     */
+    public Jupiter getAlgo();
+    
+    /**
+     * Returns the site id for this client.
+     * 
+     * @return	the siteId.
+     */
+    public int getSiteId();
     
 }

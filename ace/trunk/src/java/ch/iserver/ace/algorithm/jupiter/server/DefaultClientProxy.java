@@ -29,6 +29,7 @@ import ch.iserver.ace.util.SynchronizedQueue;
  */
 public class DefaultClientProxy implements ClientProxy {
 
+    private int siteId;
     private NetService net;
     private Jupiter algo;
     private SynchronizedQueue requestForwardQueue;
@@ -39,7 +40,8 @@ public class DefaultClientProxy implements ClientProxy {
      * @param algo
      * @param queue
      */
-    public DefaultClientProxy(NetService net, Jupiter algo, SynchronizedQueue queue) {
+    public DefaultClientProxy(int siteId, NetService net, Jupiter algo, SynchronizedQueue queue) {
+        this.siteId = siteId;
         this.net = net;
         this.algo = algo;
         requestForwardQueue = queue;
@@ -56,13 +58,19 @@ public class DefaultClientProxy implements ClientProxy {
      * @see ch.iserver.ace.algorithm.jupiter.server.ClientProxy#receiveRequest(ch.iserver.ace.algorithm.Request)
      */
     public void receiveRequest(Request req) {
-        requestForwardQueue.add(req);
+        requestForwardQueue.add( new Object[]{this, req} );
     }
 
-    /**
-     * @return Returns the algo.
+    /* (non-Javadoc)
+     * @see ch.iserver.ace.algorithm.jupiter.server.ClientProxy#getAlgo()
      */
     public Jupiter getAlgo() {
         return algo;
+    }
+    /* (non-Javadoc)
+     * @see ch.iserver.ace.algorithm.jupiter.server.ClientProxy#getSiteId()
+     */
+    public int getSiteId() {
+        return siteId;
     }
 }
