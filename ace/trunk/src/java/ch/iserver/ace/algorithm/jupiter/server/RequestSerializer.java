@@ -102,7 +102,7 @@ public class RequestSerializer extends Thread {
 					}
 				}
 			} else {
-				// pause for 10 ms
+				// pause
 				try {
 					Thread.sleep(10);
 				} catch (InterruptedException ie) {
@@ -155,4 +155,12 @@ public class RequestSerializer extends Thread {
     	pause = false;
     }
     
+	/**
+	* Originaly intended for test use.
+	* Returns the outgoing queues.
+	*/
+	Map getOutgoingQueues() {
+		return outgoingQueues;
+	}
+
 }
