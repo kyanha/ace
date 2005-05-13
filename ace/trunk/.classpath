@@ -1,36 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="**/.svn/**" kind="src" path="src/java">
-		<attributes>
-		</attributes>
-	</classpathentry>
-	<classpathentry excluding="**/.svn/**" kind="src" path="src/resources">
-		<attributes>
-		</attributes>
-	</classpathentry>
-	<classpathentry excluding="**/.svn/**" kind="src" path="src/test">
-		<attributes>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.launching.macosx.MacOSXType/JVM 1.4.2 (MacOS X Default)">
-		<attributes>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="var" path="MAVEN2/jdom/jdom/1.0/jdom-1.0.jar">
-		<attributes>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="var" path="MAVEN2/commons-beanutils/commons-beanutils/1.7.0/commons-beanutils-1.7.0.jar">
-		<attributes>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="var" path="MAVEN2/junit/junit/3.8.1/junit-3.8.1.jar">
-		<attributes>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="var" path="MAVEN2/easymock/easymock/1.1/easymock-1.1.jar">
-		<attributes>
-		</attributes>
-	</classpathentry>
+	<classpathentry excluding="**/.svn/**" kind="src" path="src/java"/>
+	<classpathentry excluding="**/.svn/**" kind="src" path="src/resources"/>
+	<classpathentry excluding="**/.svn/**" kind="src" path="src/test"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.launching.macosx.MacOSXType/JVM 1.4.2 (MacOS X Default)"/>
+	<classpathentry kind="var" path="MAVEN2/jdom/jdom/1.0/jdom-1.0.jar"/>
+	<classpathentry kind="var" path="MAVEN2/commons-beanutils/commons-beanutils/1.7.0/commons-beanutils-1.7.0.jar"/>
+	<classpathentry kind="var" path="MAVEN2/junit/junit/3.8.1/junit-3.8.1.jar"/>
+	<classpathentry kind="var" path="MAVEN2/easymock/easymock/1.1/easymock-1.1.jar"/>
+	<classpathentry kind="var" path="MAVEN2/log4j/log4j/1.2.6/log4j-1.2.6.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
