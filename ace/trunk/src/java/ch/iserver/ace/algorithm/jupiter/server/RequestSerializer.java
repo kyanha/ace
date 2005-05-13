@@ -30,14 +30,38 @@ import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.util.SynchronizedQueue;
 
 /**
+ * RequestSerializer processes requests from a queue in that
+ * it passes them to the originating ClientProxy for transformation 
+ * first and afterwards distributes them to all other registered 
+ * client proxies. 
  *
+ * @see ClientProxy
  */
 public class RequestSerializer extends Thread {
 
+    /**
+     * The queue from which this serializer processes
+     * the request.
+     */
     private SynchronizedQueue requestQueue;
+    
+    /**
+     * A map that contains Integer (site id) to ClientProxy pairs.
+     */
     private Map clientProxies;
+    
+    /**
+     * A map that contains Integer (site id) to SynchronizedQueue 
+     * (outgoing request queue) pairs.
+     */
     private Map outgoingQueues;
     
+    /**
+     * Class Constructor. The requests are fetched from the given
+     * queue.
+     * 
+     * @param queue	the queue from which requests are processed.
+     */
     public RequestSerializer(SynchronizedQueue queue) {
         requestQueue = queue;
         clientProxies = new HashMap();
@@ -70,12 +94,29 @@ public class RequestSerializer extends Thread {
         }
     }
     
-    public void addClientProxy(int siteId, ClientProxy client, SynchronizedQueue queue) {
+    /**
+     * Adds a client proxy to this RequestSerializer.
+     * 
+     * @param client			the client proxy to add.
+     * @param queue			the queue for outgoing requests.
+     * @see 	 ClientProxy
+     * @see	 SynchronizedQueue 
+     */
+    public void addClientProxy(ClientProxy client, SynchronizedQueue queue) {
         //TODO: synchronize??
-        clientProxies.put(new Integer(siteId), client);
-        outgoingQueues.put(new Integer(siteId), queue);
+        Integer id = new Integer(client.getSiteId());
+        clientProxies.put(id, client);
+        outgoingQueues.put(id, queue);
     }
     
+    /**
+     * Removes a ClientProxy from this RequestSerializer. The ClientProxy
+     * which was removed is returned.
+     * 
+     * @param  	siteId
+     * @return 	the removed ClientProxy
+     * @see	  	ClientProxy
+     */
     public ClientProxy removeClientProxy(int siteId) {
         //TODO: synchronize??
         Integer id = new Integer(siteId);
