@@ -28,8 +28,8 @@ import ch.iserver.ace.algorithm.Request;
 public interface NetService {
 
     /**
-     * Transmits a request to the client
-     * it belongs to.
+     * Transmits a request from the client proxy at the server 
+     * to its remote at the client side.
      * 
      * @param req the request to be transmitted.
      */
