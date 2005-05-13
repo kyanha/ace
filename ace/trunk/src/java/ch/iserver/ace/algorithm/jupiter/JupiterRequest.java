@@ -53,10 +53,10 @@ public class JupiterRequest implements Request {
      * 				when the request was created.
      * @param op		the operation to be executed.
      */
-    public JupiterRequest(int siteId, JupiterVectorTime vt, Operation op) {
+    public JupiterRequest(int siteId, JupiterVectorTime vectorTime, Operation operation) {
         this.siteId = siteId;
-        vectorTime = vt;
-        operation = op;
+        this.vectorTime = vectorTime;
+        this.operation = operation;
     }
 
     /* (non-Javadoc)
@@ -89,6 +89,10 @@ public class JupiterRequest implements Request {
      */
     public JupiterVectorTime getJupiterVectorTime() {
         return vectorTime;
+    }
+    
+    public String toString() {
+    	return "Request(" + siteId + ", " + vectorTime + ", " + operation + ")";
     }
 
 }
