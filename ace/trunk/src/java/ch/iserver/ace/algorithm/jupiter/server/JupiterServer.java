@@ -20,24 +20,59 @@
  */
 package ch.iserver.ace.algorithm.jupiter.server;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import ch.iserver.ace.algorithm.jupiter.Jupiter;
+import ch.iserver.ace.text.GOTOInclusionTransformation;
+import ch.iserver.ace.util.SynchronizedQueue;
+
 /**
  *
  */
 public class JupiterServer {
     
     private int siteIdCounter;
-    
-    public JupiterServer() {
-        siteIdCounter = 1;
-    }
+    private RequestSerializer serializer;
+    private SynchronizedQueue requestForwardQueue;
+    private Map requestForwarders;
     
     /**
      * 
-     * @return 	the side id for the client
+     *
      */
-    public int addClient() {
-        //TODO
-        return 0;
+    public JupiterServer() {
+        siteIdCounter = 1;
+        requestForwardQueue = new SynchronizedQueue();
+        requestForwarders = new HashMap();
+        serializer = new RequestSerializer(requestForwardQueue);
+        serializer.start();
+    }
+    
+
+    /**
+     * Adds a new client to this Jupiter server instance.
+     * 
+     * @param net
+     * @return	the client proxy just created.
+     */
+    public synchronized ClientProxy addClient(NetService net) {
+        //create client proxy
+        Jupiter algo = new Jupiter(new GOTOInclusionTransformation(),
+                			new OperationExtractDocumentModel(), 
+                			siteIdCounter++);
+        ClientProxy client = new DefaultClientProxy(siteIdCounter, net, algo, requestForwardQueue);
+        
+        //add client proxy to request serializer
+        SynchronizedQueue outgoingQueue = new SynchronizedQueue();
+        serializer.addClientProxy(client, outgoingQueue);
+
+        //create and start request forwarder
+        RequestForwarder forwarder = new RequestForwarder(outgoingQueue, client);
+        requestForwarders.put(new Integer(siteIdCounter), forwarder);
+        forwarder.start();
+        
+        return client;
     }
     
     /**
@@ -45,7 +80,8 @@ public class JupiterServer {
      * @param siteId
      */
     public void removeClient(int siteId) {
-        //TODO
+        //TODO:
+        
     }
 
 }
