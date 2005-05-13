@@ -70,24 +70,28 @@ public class RequestSerializer extends Thread {
     
     public void run() {
         try {
-            Object[] data = (Object[])requestQueue.get();
-            Request req = (Request)data[0];
-            ClientProxy client = (ClientProxy)data[1];
-            int siteId = client.getSiteId();
-            
-            Algorithm algo = client.getAlgo(); 
-            algo.receiveRequest(req);
-            Operation op = ((OperationExtractDocumentModel)
-            						algo.getDocument()).getOperation();
-            
-            Iterator iter = clientProxies.keySet().iterator();
-            while (iter.hasNext()) {
-                ClientProxy cl = (ClientProxy)iter.next();
-                if (siteId != cl.getSiteId()) {
-                    Request r = cl.getAlgo().generateRequest(op);
-                    Integer id = new Integer(cl.getSiteId());
-                    ((SynchronizedQueue)outgoingQueues.get(id)).add(r);
-                }
+            while (true) {
+	            Object[] data = (Object[])requestQueue.get();
+	            ClientProxy client = (ClientProxy)data[0];
+	            Request req = (Request)data[1];
+	            int siteId = client.getSiteId();
+	            
+	            Algorithm algo = client.getAlgorithm(); 
+	            algo.receiveRequest(req);
+	            Operation op = ((OperationExtractDocumentModel)
+	            						algo.getDocument()).getOperation();
+	            
+	            //distribute the operation to all clients
+	            //TODO: this part could be parallelized at a later time.
+	            Iterator iter = clientProxies.keySet().iterator();
+	            while (iter.hasNext()) {
+	                ClientProxy cl = (ClientProxy)iter.next();
+	                if (siteId != cl.getSiteId()) {
+	                    Request r = cl.getAlgorithm().generateRequest(op);
+	                    Integer id = new Integer(cl.getSiteId());
+	                    ((SynchronizedQueue)outgoingQueues.get(id)).add(r);
+	                }
+	            }
             }
         } catch (InterruptedException ie) {
             //TODO:

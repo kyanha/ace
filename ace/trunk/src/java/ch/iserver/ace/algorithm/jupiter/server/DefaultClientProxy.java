@@ -62,9 +62,9 @@ public class DefaultClientProxy implements ClientProxy {
     }
 
     /* (non-Javadoc)
-     * @see ch.iserver.ace.algorithm.jupiter.server.ClientProxy#getAlgo()
+     * @see ch.iserver.ace.algorithm.jupiter.server.ClientProxy#getAlgorithm()
      */
-    public Jupiter getAlgo() {
+    public Jupiter getAlgorithm() {
         return algo;
     }
     /* (non-Javadoc)

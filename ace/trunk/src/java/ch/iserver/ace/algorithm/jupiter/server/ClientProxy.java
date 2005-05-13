@@ -49,7 +49,7 @@ public interface ClientProxy {
      * 
      * @return Returns the algo.
      */
-    public Jupiter getAlgo();
+    public Jupiter getAlgorithm();
     
     /**
      * Returns the site id for this client.
