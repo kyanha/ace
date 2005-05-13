@@ -56,7 +56,7 @@ public class RequestSerializer extends Thread {
      */
     private Map outgoingQueues;
     
-    private boolean shutdown, pause;
+    private boolean shutdown, pause, isWaiting;
     
     /**
      * Class Constructor. The requests are fetched from the given
@@ -73,11 +73,13 @@ public class RequestSerializer extends Thread {
     }
     
     public void run() {
-    		while (!shutdown) {
+		while (!shutdown) {
             if (!pause) {
                 Object[] data = null;
                 try {
+                	isWaiting = true;
                     data = (Object[]) requestQueue.get();
+                    isWaiting = false;
                 } catch (InterruptedException ie) {
                     //TODO:
                 }
@@ -155,6 +157,10 @@ public class RequestSerializer extends Thread {
     	pause = false;
     }
     
+    public boolean isWaiting() {
+    	return isWaiting;
+    }
+
 	/**
 	* Originaly intended for test use.
 	* Returns the outgoing queues.
