@@ -84,4 +84,20 @@ public class JupiterServer {
         
     }
 
+	/**
+	* Originaly intended for test use.
+	* Returns the client count.
+	*/
+	int getClientCount() {
+		return siteIdCounter;
+	}
+	
+	/**
+	* Originaly intended for test use.
+	* Returns to RequestSerializer.
+	*/
+	RequestSerializer getRequestSerializer() {
+		return serializer;
+	}
+	
 }
