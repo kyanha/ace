@@ -30,6 +30,7 @@ public class RequestForwarder extends Thread {
 
     private ClientProxy proxy;
     private SynchronizedQueue queue;
+    private boolean shutdown;
     
     /**
      * 
@@ -39,16 +40,21 @@ public class RequestForwarder extends Thread {
     public RequestForwarder(SynchronizedQueue queue, ClientProxy proxy) {
         this.queue = queue;
         this.proxy = proxy;
+        shutdown = false;
     }
     
     public void run() {
         try {
-            while (true) {
+            while (!shutdown) {
                 Request req = (Request)queue.get();
                 proxy.sendRequest(req);
             }
         } catch (InterruptedException ie) {
             //TODO:
         }
+    }
+    
+    public void shutdown() {
+        shutdown = true;
     }
 }
