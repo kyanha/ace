@@ -1,4 +1,4 @@
-<?xml version="1.0"?> 
+<?xml version="1.0"?>
 <project name="ace" default="compile" 
 	     xmlns:artifact="antlib:org.apache.maven.artifact.ant">
 	<property name="build.dir" value="build"/>
