@@ -20,7 +20,14 @@
  */
 package ch.iserver.ace.algorithm.jupiter.server;
 
+import java.util.Iterator;
+import java.util.Map;
+
 import junit.framework.TestCase;
+import ch.iserver.ace.algorithm.jupiter.JupiterRequest;
+import ch.iserver.ace.algorithm.jupiter.JupiterVectorTime;
+import ch.iserver.ace.text.InsertOperation;
+import ch.iserver.ace.util.SynchronizedQueue;
 
 /**
  *
@@ -28,16 +35,22 @@ import junit.framework.TestCase;
 public class JupiterServerTest extends TestCase {
     
     private static final int NUM_CLIENTS = 2;
+    private JupiterServer server;
+    private int initialClientCount;
+    private ClientProxy[] proxies;
+    private TestNetService[] netService;
     
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
     protected void setUp() throws Exception {
-        JupiterServer server = new JupiterServer();
-        TestNetService net = new TestNetService();
-        ClientProxy[] proxies = new ClientProxy[NUM_CLIENTS];
+        server = new JupiterServer();
+        initialClientCount = server.getClientCount(); 
+        netService = new TestNetService[NUM_CLIENTS];
+        proxies = new ClientProxy[NUM_CLIENTS];
         for (int i = 0; i < NUM_CLIENTS; i++) {
-            proxies[i] = server.addClient(net);
+            netService[i] = new TestNetService();
+            proxies[i] = server.addClient(netService[i]);
         }
     }
     /* (non-Javadoc)
@@ -47,5 +60,45 @@ public class JupiterServerTest extends TestCase {
         
     }
     
+    public void testInitialization() throws Exception {
+        assertEquals(initialClientCount+NUM_CLIENTS, server.getClientCount());
+        
+    }
     
+    public void testServerWithOneClientProxy() throws Exception {
+        Map forwarders = server.getRequestForwarders();
+        assertEquals(NUM_CLIENTS, forwarders.size());
+        Iterator iter = forwarders.keySet().iterator();
+        //shutdown all request forwarders 
+        while (iter.hasNext()) {
+            Integer id = (Integer)iter.next();
+            RequestForwarder f = (RequestForwarder)forwarders.get(id);
+            f.interrupt();
+        }
+        ClientProxy testClient = proxies[0];
+        JupiterRequest req = new JupiterRequest(testClient.getSiteId(), 
+                new JupiterVectorTime(0,0), 
+                new InsertOperation(0, "a"));
+        testClient.receiveRequest(req);
+
+        Thread.sleep(2000);
+        
+        RequestSerializer serializer = server.getRequestSerializer();
+        Map outgoing = serializer.getOutgoingQueues();
+        assertEquals(NUM_CLIENTS, outgoing.size());
+        iter = outgoing.keySet().iterator();
+        while (iter.hasNext()) {
+        		Integer id = (Integer)iter.next();
+        		if ( id.intValue() == testClient.getSiteId() ) {
+        			assertTrue( ((SynchronizedQueue)outgoing.get(id)).isEmpty() );
+        		} else {
+        			assertEquals(1, ((SynchronizedQueue)outgoing.get(id)).size());
+        			JupiterRequest jupi = (JupiterRequest)
+								((SynchronizedQueue)outgoing.get(id)).get();
+        			assertEquals(id.intValue(), jupi.getSiteId());
+        			assertEquals(jupi.getJupiterVectorTime().getLocalOperationCount(), 0);
+        			assertEquals(jupi.getJupiterVectorTime().getRemoteOperationCount(), 1);
+        		}
+        }
+    }
 }

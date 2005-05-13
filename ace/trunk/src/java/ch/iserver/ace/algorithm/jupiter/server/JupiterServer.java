@@ -83,6 +83,14 @@ public class JupiterServer {
         //TODO:
         
     }
+    
+    /**
+     * 
+     * @return
+     */
+    Map getRequestForwarders() {
+        return requestForwarders;
+    }
 
 	/**
 	* Originaly intended for test use.

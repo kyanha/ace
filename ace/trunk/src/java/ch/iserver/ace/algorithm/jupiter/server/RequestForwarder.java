@@ -20,6 +20,8 @@
  */
 package ch.iserver.ace.algorithm.jupiter.server;
 
+import org.apache.log4j.Logger;
+
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.util.SynchronizedQueue;
 
@@ -27,6 +29,8 @@ import ch.iserver.ace.util.SynchronizedQueue;
  * Forwards requests from a queue to a client proxy.
  */
 public class RequestForwarder extends Thread {
+    
+    private static Logger LOG = Logger.getLogger(RequestForwarder.class);
 
     private ClientProxy proxy;
     private SynchronizedQueue queue;
@@ -50,7 +54,7 @@ public class RequestForwarder extends Thread {
                 proxy.sendRequest(req);
             }
         } catch (InterruptedException ie) {
-            //TODO:
+            LOG.fatal(ie);
         }
     }
     

@@ -104,13 +104,13 @@ public class Jupiter implements Algorithm {
         Iterator iter = ackRequestList.keySet().iterator();
         while(iter.hasNext()) {
         		Integer localOperationCount = (Integer)iter.next();
-        		if (localOperationCount.intValue() < jupReq.getJupiterVectorTime().getRemoteRequestCount()) {
+        		if (localOperationCount.intValue() < jupReq.getJupiterVectorTime().getRemoteOperationCount()) {
         		    ackRequestList.remove(localOperationCount);
         		}
         }
         
         //ASSERT msg.myMsgs == otherMsgs
-        assert jupReq.getJupiterVectorTime().getLocalOperationCount() == vectorTime.getRemoteRequestCount() : "msg.myMsgs != otherMsgs !!";
+        assert jupReq.getJupiterVectorTime().getLocalOperationCount() == vectorTime.getRemoteOperationCount() : "msg.myMsgs != otherMsgs !!";
         
         iter = ackRequestList.keySet().iterator();
         Operation newOp = jupReq.getOperation();

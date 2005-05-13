@@ -31,11 +31,18 @@ public class TestNetService implements NetService {
 
     private static Logger LOG = Logger.getLogger(TestNetService.class);
     
+    private Request req;
+    
     /* (non-Javadoc)
      * @see ch.iserver.ace.algorithm.jupiter.server.NetService#transmitRequest(ch.iserver.ace.algorithm.Request)
      */
     public void transmitRequest(Request req) {
         LOG.info(req);
+        this.req = req;
+    }
+    
+    public Request getLatestRequest() {
+        return req;
     }
 
 }

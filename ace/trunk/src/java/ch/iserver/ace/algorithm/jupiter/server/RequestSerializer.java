@@ -20,13 +20,18 @@
  */
 package ch.iserver.ace.algorithm.jupiter.server;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.Request;
+import ch.iserver.ace.algorithm.jupiter.JupiterRequest;
+import ch.iserver.ace.algorithm.jupiter.JupiterVectorTime;
 import ch.iserver.ace.util.SynchronizedQueue;
 
 /**
@@ -38,6 +43,8 @@ import ch.iserver.ace.util.SynchronizedQueue;
  * @see ClientProxy
  */
 public class RequestSerializer extends Thread {
+	
+    private static Logger LOG = Logger.getLogger(RequestSerializer.class);
 
     /**
      * The queue from which this serializer processes
@@ -66,8 +73,8 @@ public class RequestSerializer extends Thread {
      */
     public RequestSerializer(SynchronizedQueue queue) {
         requestQueue = queue;
-        clientProxies = new HashMap();
-        outgoingQueues = new HashMap();
+        clientProxies = Collections.synchronizedMap(new HashMap());
+        outgoingQueues = Collections.synchronizedMap(new HashMap());
         shutdown = false;
         pause = false;
     }
@@ -79,7 +86,7 @@ public class RequestSerializer extends Thread {
 				try {
 					data = (Object[]) requestQueue.get();
 				} catch (InterruptedException ie) {
-					//TODO:
+					LOG.fatal(ie);
 				}
 				ClientProxy client = (ClientProxy) data[0];
 				Request req = (Request) data[1];
@@ -87,7 +94,7 @@ public class RequestSerializer extends Thread {
 
 				Algorithm algo = client.getAlgorithm();
 				// switch the vector time (local and remote operation count)
-				algo.receiveRequest(switchedVectorTime(req));
+				algo.receiveRequest(switchVectorTime(req));
 				Operation op = ((OperationExtractDocumentModel) algo
 						.getDocument()).getOperation();
 
@@ -95,7 +102,7 @@ public class RequestSerializer extends Thread {
 				//TODO: this part could be parallelized at a later time.
 				Iterator iter = clientProxies.keySet().iterator();
 				while (iter.hasNext()) {
-					ClientProxy cl = (ClientProxy) iter.next();
+					ClientProxy cl = (ClientProxy)clientProxies.get((Integer) iter.next());
 					if (siteId != cl.getSiteId()) {
 						Request r = cl.getAlgorithm().generateRequest(op);
 						Integer id = new Integer(cl.getSiteId());
@@ -108,7 +115,7 @@ public class RequestSerializer extends Thread {
 				try {
 					Thread.sleep(10);
 				} catch (InterruptedException ie) {
-					//TODO:
+					LOG.fatal(ie);
 				}
             }
         } 
@@ -123,7 +130,6 @@ public class RequestSerializer extends Thread {
      * @see	 SynchronizedQueue 
      */
     public void addClientProxy(ClientProxy client, SynchronizedQueue queue) {
-        //TODO: synchronize??
         Integer id = new Integer(client.getSiteId());
         clientProxies.put(id, client);
         outgoingQueues.put(id, queue);
@@ -138,7 +144,6 @@ public class RequestSerializer extends Thread {
      * @see	  	ClientProxy
      */
     public ClientProxy removeClientProxy(int siteId) {
-        //TODO: synchronize??
         Integer id = new Integer(siteId);
         ClientProxy client = (ClientProxy)clientProxies.remove(id);
         outgoingQueues.remove(id);
@@ -149,14 +154,15 @@ public class RequestSerializer extends Thread {
     /**
      * Switches the localOperationCount with the RemoteOperationCount
      *
-     * @param	request
+     * @param	req
      */
-    private JupiterRequest switchVectorTime(JupiterRequest request) {
-    	return new JupiterRequest(request.getSiteId(),
-    		new JupiterVectorTime(request.getJupiterVectorTime().getRemoteOperationCount(),
-    			request.getJupiterVectorTime().getLocalOperationCount()),
-			request.getOperation());
-    }
+    private JupiterRequest switchVectorTime(Request req) {
+    		JupiterRequest request = (JupiterRequest)req;
+		return new JupiterRequest(request.getSiteId(), new JupiterVectorTime(
+				request.getJupiterVectorTime().getRemoteOperationCount(),
+				request.getJupiterVectorTime().getLocalOperationCount()),
+				request.getOperation());
+	}
     
     public void shutdown() {
 		shutdown = true;
