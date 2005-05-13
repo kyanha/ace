@@ -73,42 +73,42 @@ public class RequestSerializer extends Thread {
     }
     
     public void run() {
-    	while (!shutdown) {
-        	if(!pause) {
-	        	Object[] data = null;
-        		try {
-					data = (Object[])requestQueue.get();
-				} catch (InterruptedException ie) {
-            		//TODO:
-        		}
-				ClientProxy client = (ClientProxy)data[0];
-				Request req = (Request)data[1];
-				int siteId = client.getSiteId();
-				
-				Algorithm algo = client.getAlgorithm(); 
-				algo.receiveRequest(req);
-				Operation op = ((OperationExtractDocumentModel)
-										algo.getDocument()).getOperation();
-				
-				//distribute the operation to all clients
-				//TODO: this part could be parallelized at a later time.
-				Iterator iter = clientProxies.keySet().iterator();
-				while (iter.hasNext()) {
-					ClientProxy cl = (ClientProxy)iter.next();
-					if (siteId != cl.getSiteId()) {
-						Request r = cl.getAlgorithm().generateRequest(op);
-						Integer id = new Integer(cl.getSiteId());
-						((SynchronizedQueue)outgoingQueues.get(id)).add(r);
-					}
-				}
-			} else {
-				// pause
-				try {
-					Thread.sleep(10);
-				} catch (InterruptedException ie) {
-					//TODO:
-				}
-			}
+    		while (!shutdown) {
+            if (!pause) {
+                Object[] data = null;
+                try {
+                    data = (Object[]) requestQueue.get();
+                } catch (InterruptedException ie) {
+                    //TODO:
+                }
+                ClientProxy client = (ClientProxy) data[0];
+                Request req = (Request) data[1];
+                int siteId = client.getSiteId();
+
+                Algorithm algo = client.getAlgorithm();
+                algo.receiveRequest(req);
+                Operation op = ((OperationExtractDocumentModel) algo
+                        .getDocument()).getOperation();
+
+                //distribute the operation to all clients
+                //TODO: this part could be parallelized at a later time.
+                Iterator iter = clientProxies.keySet().iterator();
+                while (iter.hasNext()) {
+                    ClientProxy cl = (ClientProxy) iter.next();
+                    if (siteId != cl.getSiteId()) {
+                        Request r = cl.getAlgorithm().generateRequest(op);
+                        Integer id = new Integer(cl.getSiteId());
+                        ((SynchronizedQueue) outgoingQueues.get(id)).add(r);
+                    }
+                }
+            } else {
+                // pause
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException ie) {
+                    //TODO:
+                }
+            }
         } 
     }
     
