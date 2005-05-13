@@ -33,34 +33,34 @@ public class JupiterVectorTime implements Timestamp {
     private int localOperationCnt;
     
     /**
-     * Counter for the number of remote requests.
+     * Counter for the number of remote operations.
      */
-    private int remoteRequestCnt;
+    private int remoteOperationCnt;
     
     /**
      * Create a new JupiterVectorTime.
      * 
      * @param localCnt 	the local operation count.
-     * @param remoteCnt	the remote request count.
+     * @param remoteCnt	the remote operation count.
      */
     public JupiterVectorTime(int localCnt, int remoteCnt) {
-        assert localCnt >= 0 : "local operation count must be >= 0";
-        assert remoteCnt >= 0 : "remote request count must be >= 0";
+        assert localCnt >= 0  : "local operation count must be >= 0";
+        assert remoteCnt >= 0 : "remote operation count must be >= 0";
         localOperationCnt = localCnt;
-        remoteRequestCnt = remoteCnt;
+        remoteOperationCnt = remoteCnt;
     }
     
     /**
-     * @return Returns the clientMsgs.
+     * @return Returns the local operation count.
      */
     public int getLocalOperationCount() {
         return localOperationCnt;
     }
     /**
-     * @return Returns the serverMsgs.
+     * @return Returns the remote operation count.
      */
-    public int getRemoteRequestCount() {
-        return remoteRequestCnt;
+    public int getRemoteOperationCount() {
+        return remoteOperationCnt;
     }
     
     /**
@@ -73,12 +73,12 @@ public class JupiterVectorTime implements Timestamp {
     }
     
     /**
-     * Increment the remote request counter.
+     * Increment the remote operation counter.
      * 
      * @return 	the counter after increment.
      */
     public int incrementRemoteRequestCount() {
-        return ++remoteRequestCnt;
+        return ++remoteOperationCnt;
     }
     
 }
