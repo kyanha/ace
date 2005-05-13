@@ -56,7 +56,7 @@ public class RequestSerializer extends Thread {
      */
     private Map outgoingQueues;
     
-    private boolean shutdown, pause, isWaiting;
+    private boolean shutdown, pause;
     
     /**
      * Class Constructor. The requests are fetched from the given
@@ -71,45 +71,45 @@ public class RequestSerializer extends Thread {
         shutdown = false;
         pause = false;
     }
-    
-    public void run() {
+
+	public void run() {
 		while (!shutdown) {
-            if (!pause) {
-                Object[] data = null;
-                try {
-                	isWaiting = true;
-                    data = (Object[]) requestQueue.get();
-                    isWaiting = false;
-                } catch (InterruptedException ie) {
-                    //TODO:
-                }
-                ClientProxy client = (ClientProxy) data[0];
-                Request req = (Request) data[1];
-                int siteId = client.getSiteId();
+			if (!pause) {
+				Object[] data = null;
+				try {
+					data = (Object[]) requestQueue.get();
+				} catch (InterruptedException ie) {
+					//TODO:
+				}
+				ClientProxy client = (ClientProxy) data[0];
+				Request req = (Request) data[1];
+				int siteId = client.getSiteId();
 
-                Algorithm algo = client.getAlgorithm();
-                algo.receiveRequest(req);
-                Operation op = ((OperationExtractDocumentModel) algo
-                        .getDocument()).getOperation();
+				Algorithm algo = client.getAlgorithm();
+				// switch the vector time (local and remote operation count)
+				algo.receiveRequest(switchedVectorTime(req));
+				Operation op = ((OperationExtractDocumentModel) algo
+						.getDocument()).getOperation();
 
-                //distribute the operation to all clients
-                //TODO: this part could be parallelized at a later time.
-                Iterator iter = clientProxies.keySet().iterator();
-                while (iter.hasNext()) {
-                    ClientProxy cl = (ClientProxy) iter.next();
-                    if (siteId != cl.getSiteId()) {
-                        Request r = cl.getAlgorithm().generateRequest(op);
-                        Integer id = new Integer(cl.getSiteId());
-                        ((SynchronizedQueue) outgoingQueues.get(id)).add(r);
-                    }
-                }
-            } else {
-                // pause
-                try {
-                    Thread.sleep(10);
-                } catch (InterruptedException ie) {
-                    //TODO:
-                }
+				//distribute the operation to all clients
+				//TODO: this part could be parallelized at a later time.
+				Iterator iter = clientProxies.keySet().iterator();
+				while (iter.hasNext()) {
+					ClientProxy cl = (ClientProxy) iter.next();
+					if (siteId != cl.getSiteId()) {
+						Request r = cl.getAlgorithm().generateRequest(op);
+						Integer id = new Integer(cl.getSiteId());
+						// switch the vector time (local and remote operation count)
+						((SynchronizedQueue) outgoingQueues.get(id)).add(switchVectorTime(r));
+					}
+				}
+			} else {
+				// pause
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException ie) {
+					//TODO:
+				}
             }
         } 
     }
@@ -145,20 +145,29 @@ public class RequestSerializer extends Thread {
         return client;
     }
     
+    
+    /**
+     * Switches the localOperationCount with the RemoteOperationCount
+     *
+     * @param	request
+     */
+    private Request switchVectorTime(Request request) {
+    	return new JupiterRequest(req.getSiteId(),
+    		new JupiterVectorTime(req.getRemoteOperationCount(),
+    			req.getLocalOperationCount()),
+			req.getOperation());
+    }
+    
     public void shutdown() {
-    	shutdown = true;
+		shutdown = true;
     }
     
     public void pause() {
-    	pause = true;
+		pause = true;
     }
     
     public void proceed() {
-    	pause = false;
-    }
-    
-    public boolean isWaiting() {
-    	return isWaiting;
+		pause = false;
     }
 
 	/**
