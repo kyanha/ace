@@ -56,6 +56,8 @@ public class RequestSerializer extends Thread {
      */
     private Map outgoingQueues;
     
+    private boolean shutdown, pause;
+    
     /**
      * Class Constructor. The requests are fetched from the given
      * queue.
@@ -66,36 +68,48 @@ public class RequestSerializer extends Thread {
         requestQueue = queue;
         clientProxies = new HashMap();
         outgoingQueues = new HashMap();
+        shutdown = false;
+        pause = false;
     }
     
     public void run() {
-        try {
-            while (true) {
-	            Object[] data = (Object[])requestQueue.get();
-	            ClientProxy client = (ClientProxy)data[0];
-	            Request req = (Request)data[1];
-	            int siteId = client.getSiteId();
-	            
-	            Algorithm algo = client.getAlgorithm(); 
-	            algo.receiveRequest(req);
-	            Operation op = ((OperationExtractDocumentModel)
-	            						algo.getDocument()).getOperation();
-	            
-	            //distribute the operation to all clients
-	            //TODO: this part could be parallelized at a later time.
-	            Iterator iter = clientProxies.keySet().iterator();
-	            while (iter.hasNext()) {
-	                ClientProxy cl = (ClientProxy)iter.next();
-	                if (siteId != cl.getSiteId()) {
-	                    Request r = cl.getAlgorithm().generateRequest(op);
-	                    Integer id = new Integer(cl.getSiteId());
-	                    ((SynchronizedQueue)outgoingQueues.get(id)).add(r);
-	                }
-	            }
-            }
-        } catch (InterruptedException ie) {
-            //TODO:
-        }
+    	while (!shutdown) {
+        	if(!pause) {
+	        	Object[] data = null;
+        		try {
+					data = (Object[])requestQueue.get();
+				} catch (InterruptedException ie) {
+            		//TODO:
+        		}
+				ClientProxy client = (ClientProxy)data[0];
+				Request req = (Request)data[1];
+				int siteId = client.getSiteId();
+				
+				Algorithm algo = client.getAlgorithm(); 
+				algo.receiveRequest(req);
+				Operation op = ((OperationExtractDocumentModel)
+										algo.getDocument()).getOperation();
+				
+				//distribute the operation to all clients
+				//TODO: this part could be parallelized at a later time.
+				Iterator iter = clientProxies.keySet().iterator();
+				while (iter.hasNext()) {
+					ClientProxy cl = (ClientProxy)iter.next();
+					if (siteId != cl.getSiteId()) {
+						Request r = cl.getAlgorithm().generateRequest(op);
+						Integer id = new Integer(cl.getSiteId());
+						((SynchronizedQueue)outgoingQueues.get(id)).add(r);
+					}
+				}
+			} else {
+				// pause for 10 ms
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException ie) {
+					//TODO:
+				}
+			}
+        } 
     }
     
     /**
@@ -128,4 +142,17 @@ public class RequestSerializer extends Thread {
         outgoingQueues.remove(id);
         return client;
     }
+    
+    public void shutdown() {
+    	shutdown = true;
+    }
+    
+    public void pause() {
+    	pause = true;
+    }
+    
+    public void proceed() {
+    	pause = false;
+    }
+    
 }
