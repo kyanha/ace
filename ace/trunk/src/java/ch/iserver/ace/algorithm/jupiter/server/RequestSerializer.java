@@ -151,11 +151,11 @@ public class RequestSerializer extends Thread {
      *
      * @param	request
      */
-    private Request switchVectorTime(Request request) {
-    	return new JupiterRequest(req.getSiteId(),
-    		new JupiterVectorTime(req.getRemoteOperationCount(),
-    			req.getLocalOperationCount()),
-			req.getOperation());
+    private JupiterRequest switchVectorTime(JupiterRequest request) {
+    	return new JupiterRequest(request.getSiteId(),
+    		new JupiterVectorTime(request.getJupiterVectorTime().getRemoteOperationCount(),
+    			request.getJupiterVectorTime().getLocalOperationCount()),
+			request.getOperation());
     }
     
     public void shutdown() {
