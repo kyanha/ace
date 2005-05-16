@@ -81,4 +81,29 @@ public class JupiterVectorTime implements Timestamp {
         return ++remoteOperationCnt;
     }
     
+	public String toString() {
+		return "JupiterVectorTime(" + localOperationCnt + ",'" + remoteOperationCnt + "')";
+	}
+	
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		} else if (obj == null) {
+			return false;
+		} else if (obj.getClass().equals(getClass())) {
+			JupiterVectorTime vector = (JupiterVectorTime) obj;
+			return vector.localOperationCnt == localOperationCnt 
+					&& vector.remoteOperationCnt == remoteOperationCnt;
+		} else {
+			return false;
+		}
+	}
+	
+	public int hashCode() {
+		int hashcode = 17;
+		hashcode = 37 * hashcode + localOperationCnt;
+		hashcode = 37 * hashcode + remoteOperationCnt;
+		return hashcode;
+	}
+    
 }
