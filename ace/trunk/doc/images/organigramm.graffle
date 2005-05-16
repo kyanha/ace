@@ -23,10 +23,10 @@
 			<key>Head</key>
 			<dict>
 				<key>ID</key>
-				<integer>22</integer>
+				<integer>1</integer>
 			</dict>
 			<key>ID</key>
-			<integer>31</integer>
+			<integer>10</integer>
 			<key>Points</key>
 			<array>
 				<string>{288, 72}</string>
@@ -49,7 +49,7 @@
 			<key>Tail</key>
 			<dict>
 				<key>ID</key>
-				<integer>30</integer>
+				<integer>9</integer>
 			</dict>
 		</dict>
 		<dict>
@@ -58,7 +58,7 @@
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>ID</key>
-			<integer>30</integer>
+			<integer>9</integer>
 			<key>Shape</key>
 			<string>Rectangle</string>
 			<key>Text</key>
@@ -69,7 +69,7 @@
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
 
-\f0\b\fs24 \cf0 Projektauftraggeber
+\f0\b\fs24 \cf0 Auftraggeber
 \f1\b0 \
 J.-P. Dubois}</string>
 			</dict>
@@ -80,12 +80,12 @@ J.-P. Dubois}</string>
 			<key>Head</key>
 			<dict>
 				<key>ID</key>
-				<integer>27</integer>
+				<integer>6</integer>
 				<key>Info</key>
 				<integer>2</integer>
 			</dict>
 			<key>ID</key>
-			<integer>29</integer>
+			<integer>8</integer>
 			<key>Points</key>
 			<array>
 				<string>{216, 337.25}</string>
@@ -106,7 +106,7 @@ J.-P. Dubois}</string>
 			<key>Tail</key>
 			<dict>
 				<key>ID</key>
-				<integer>23</integer>
+				<integer>2</integer>
 			</dict>
 		</dict>
 		<dict>
@@ -115,10 +115,10 @@ J.-P. Dubois}</string>
 			<key>Head</key>
 			<dict>
 				<key>ID</key>
-				<integer>24</integer>
+				<integer>3</integer>
 			</dict>
 			<key>ID</key>
-			<integer>28</integer>
+			<integer>7</integer>
 			<key>Points</key>
 			<array>
 				<string>{216, 247.5}</string>
@@ -139,7 +139,7 @@ J.-P. Dubois}</string>
 			<key>Tail</key>
 			<dict>
 				<key>ID</key>
-				<integer>25</integer>
+				<integer>4</integer>
 			</dict>
 		</dict>
 		<dict>
@@ -148,10 +148,10 @@ J.-P. Dubois}</string>
 			<key>Head</key>
 			<dict>
 				<key>ID</key>
-				<integer>26</integer>
+				<integer>5</integer>
 			</dict>
 			<key>ID</key>
-			<integer>27</integer>
+			<integer>6</integer>
 			<key>Points</key>
 			<array>
 				<string>{288, 162}</string>
@@ -175,7 +175,7 @@ J.-P. Dubois}</string>
 			<key>Tail</key>
 			<dict>
 				<key>ID</key>
-				<integer>22</integer>
+				<integer>1</integer>
 			</dict>
 		</dict>
 		<dict>
@@ -184,7 +184,7 @@ J.-P. Dubois}</string>
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>ID</key>
-			<integer>26</integer>
+			<integer>5</integer>
 			<key>Shape</key>
 			<string>Rectangle</string>
 			<key>Text</key>
@@ -208,7 +208,7 @@ Lukas Zbinden}</string>
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>ID</key>
-			<integer>25</integer>
+			<integer>4</integer>
 			<key>Shape</key>
 			<string>Rectangle</string>
 			<key>Text</key>
@@ -231,7 +231,7 @@ Lukas Zbinden}</string>
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>ID</key>
-			<integer>24</integer>
+			<integer>3</integer>
 			<key>Shape</key>
 			<string>Rectangle</string>
 			<key>Text</key>
@@ -255,7 +255,7 @@ Lukas Zbinden}</string>
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>ID</key>
-			<integer>23</integer>
+			<integer>2</integer>
 			<key>Shape</key>
 			<string>Rectangle</string>
 			<key>Text</key>
@@ -278,7 +278,7 @@ C. Fuhrer}</string>
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>ID</key>
-			<integer>22</integer>
+			<integer>1</integer>
 			<key>Shape</key>
 			<string>Rectangle</string>
 			<key>Text</key>
@@ -430,7 +430,7 @@ Simon R\'8ass}</string>
 	CgkJCQkJPGtleT5jb20uYXBwbGUucHJpbnQudGlja2V0LmNsaWVudDwva2V5PgoJCQkJ
 	CTxzdHJpbmc+Y29tLmFwcGxlLnByaW50aW5nbWFuYWdlcjwvc3RyaW5nPgoJCQkJCTxr
 	ZXk+Y29tLmFwcGxlLnByaW50LnRpY2tldC5tb2REYXRlPC9rZXk+CgkJCQkJPGRhdGU+
-	MjAwNS0wNC0wNVQxMjowMDoyNVo8L2RhdGU+CgkJCQkJPGtleT5jb20uYXBwbGUucHJp
+	MjAwNS0wNC0wNVQxMzowNzowMFo8L2RhdGU+CgkJCQkJPGtleT5jb20uYXBwbGUucHJp
 	bnQudGlja2V0LnN0YXRlRmxhZzwva2V5PgoJCQkJCTxpbnRlZ2VyPjA8L2ludGVnZXI+
 	CgkJCQk8L2RpY3Q+CgkJCTwvYXJyYXk+CgkJPC9kaWN0PgoJCTxrZXk+Y29tLmFwcGxl
 	LnByaW50LlBhZ2VGb3JtYXQuUE1BZGp1c3RlZFBhcGVyUmVjdDwva2V5PgoJCTxkaWN0
@@ -445,7 +445,7 @@ Simon R\'8ass}</string>
 	CTwvYXJyYXk+CgkJCQkJPGtleT5jb20uYXBwbGUucHJpbnQudGlja2V0LmNsaWVudDwv
 	a2V5PgoJCQkJCTxzdHJpbmc+Y29tLmFwcGxlLnByaW50aW5nbWFuYWdlcjwvc3RyaW5n
 	PgoJCQkJCTxrZXk+Y29tLmFwcGxlLnByaW50LnRpY2tldC5tb2REYXRlPC9rZXk+CgkJ
-	CQkJPGRhdGU+MjAwNS0wNC0wNVQxMjowMDoyNVo8L2RhdGU+CgkJCQkJPGtleT5jb20u
+	CQkJPGRhdGU+MjAwNS0wNC0wNVQxMzowNzowMFo8L2RhdGU+CgkJCQkJPGtleT5jb20u
 	YXBwbGUucHJpbnQudGlja2V0LnN0YXRlRmxhZzwva2V5PgoJCQkJCTxpbnRlZ2VyPjA8
 	L2ludGVnZXI+CgkJCQk8L2RpY3Q+CgkJCTwvYXJyYXk+CgkJPC9kaWN0PgoJCTxrZXk+
 	Y29tLmFwcGxlLnByaW50LlBhcGVySW5mby5QTUNvbnN0cmFpbmVkUGFwZXI8L2tleT4K
@@ -538,7 +538,7 @@ Simon R\'8ass}</string>
 	<key>WindowInfo</key>
 	<dict>
 		<key>Frame</key>
-		<string>{{75, 35}, {555, 797}}</string>
+		<string>{{63, 12}, {555, 797}}</string>
 		<key>VisibleRegion</key>
 		<string>{{0, 0}, {540, 720}}</string>
 		<key>Zoom</key>
