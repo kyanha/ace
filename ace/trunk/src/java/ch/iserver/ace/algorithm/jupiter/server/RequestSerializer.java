@@ -63,6 +63,10 @@ public class RequestSerializer extends Thread {
      */
     private Map outgoingQueues;
     
+    /**
+     * boolean variables used to control the execution of the
+     * serializer.
+     */
     private boolean shutdown, pause;
     
     /**
@@ -87,6 +91,7 @@ public class RequestSerializer extends Thread {
 					data = (Object[]) requestQueue.get();
 				} catch (InterruptedException ie) {
 					LOG.fatal(ie);
+					return;
 				}
 				ClientProxy client = (ClientProxy) data[0];
 				Request req = (Request) data[1];
@@ -105,6 +110,14 @@ public class RequestSerializer extends Thread {
 					ClientProxy cl = (ClientProxy)clientProxies.get((Integer) iter.next());
 					if (siteId != cl.getSiteId()) {
 						Request r = cl.getAlgorithm().generateRequest(op);
+						
+				        //TODO: if the operation was generated from another client, the site id of the
+				        //request may not be changed!!!
+						//the following is a quick fix.
+						r = new JupiterRequest(siteId,
+											(JupiterVectorTime)r.getTimestamp(),r.getOperation());
+						
+						
 						Integer id = new Integer(cl.getSiteId());
 						// switch the vector time (local and remote operation count)
 						((SynchronizedQueue) outgoingQueues.get(id)).add(switchVectorTime(r));
@@ -152,9 +165,10 @@ public class RequestSerializer extends Thread {
     
     
     /**
-     * Switches the localOperationCount with the RemoteOperationCount
+     * Switches the localOperationCount with the remoteOperationCount 
+     * component in the given JupiterVectorTime instance.
      *
-     * @param	req
+     * @param	req the request to switch its vector time.
      */
     private JupiterRequest switchVectorTime(Request req) {
     		JupiterRequest request = (JupiterRequest)req;
@@ -177,11 +191,27 @@ public class RequestSerializer extends Thread {
     }
 
 	/**
-	* Originaly intended for test use.
+	* Originally intended for test use.
 	* Returns the outgoing queues.
 	*/
 	Map getOutgoingQueues() {
 		return outgoingQueues;
+	}
+
+	/**
+	* Originally intended for test use.
+	* Returns the client proxies.
+	*/
+	Map getClientProxies() {
+		return clientProxies;
+	}
+	
+	/**
+	* Originally intended for test use.
+	* Returns the request queue.
+	*/
+	SynchronizedQueue getRequestQueue() {
+		return requestQueue;
 	}
 
 }

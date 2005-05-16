@@ -92,7 +92,7 @@ public class JupiterRequest implements Request {
     }
     
     public String toString() {
-    	return "Request(" + siteId + ", " + vectorTime + ", " + operation + ")";
+    	return "JupiterRequest(" + siteId + ", " + vectorTime + ", " + operation + ")";
     }
 
 }

@@ -58,7 +58,7 @@ public class DefaultClientProxy implements ClientProxy {
      * @see ch.iserver.ace.algorithm.jupiter.server.ClientProxy#receiveRequest(ch.iserver.ace.algorithm.Request)
      */
     public void receiveRequest(Request req) {
-        requestForwardQueue.add( new Object[]{this, req} );
+    		requestForwardQueue.add(  new Object[]{this, req} );
     }
 
     /* (non-Javadoc)
@@ -72,5 +72,9 @@ public class DefaultClientProxy implements ClientProxy {
      */
     public int getSiteId() {
         return siteId;
+    }
+    
+    public SynchronizedQueue getRequestForwardQueue() {
+    		return requestForwardQueue;
     }
 }

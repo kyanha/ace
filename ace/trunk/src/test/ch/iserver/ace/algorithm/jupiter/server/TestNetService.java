@@ -20,6 +20,9 @@
  */
 package ch.iserver.ace.algorithm.jupiter.server;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 
 import ch.iserver.ace.algorithm.Request;
@@ -31,18 +34,18 @@ public class TestNetService implements NetService {
 
     private static Logger LOG = Logger.getLogger(TestNetService.class);
     
-    private Request req;
+    private List requests = new LinkedList();
     
     /* (non-Javadoc)
      * @see ch.iserver.ace.algorithm.jupiter.server.NetService#transmitRequest(ch.iserver.ace.algorithm.Request)
      */
     public void transmitRequest(Request req) {
         LOG.info(req);
-        this.req = req;
+        requests.add(req);
     }
     
-    public Request getLatestRequest() {
-        return req;
+    public List getRequests() {
+        return requests;
     }
 
 }

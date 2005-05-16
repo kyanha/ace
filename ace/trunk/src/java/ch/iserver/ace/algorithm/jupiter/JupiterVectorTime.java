@@ -25,7 +25,7 @@ import ch.iserver.ace.algorithm.Timestamp;
 /**
  * This class models the vector time for the Jupiter control algorithm. 
  */
-public class JupiterVectorTime implements Timestamp {
+public class JupiterVectorTime implements Timestamp, Cloneable {
 
     /**
      * Counter for the number of local operations. 
@@ -82,7 +82,7 @@ public class JupiterVectorTime implements Timestamp {
     }
     
 	public String toString() {
-		return "JupiterVectorTime(" + localOperationCnt + ",'" + remoteOperationCnt + "')";
+		return "JupiterVectorTime(" + localOperationCnt + "," + remoteOperationCnt + ")";
 	}
 	
 	public boolean equals(Object obj) {
@@ -104,6 +104,17 @@ public class JupiterVectorTime implements Timestamp {
 		hashcode = 37 * hashcode + localOperationCnt;
 		hashcode = 37 * hashcode + remoteOperationCnt;
 		return hashcode;
+	}
+	
+	public Object clone() {
+		try
+	    {
+	      return super.clone();
+	    }
+	    catch ( CloneNotSupportedException e ) {
+	    		// this shouldn't happen, since we are Cloneable
+	    		throw new InternalError();
+	    }
 	}
     
 }

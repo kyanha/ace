@@ -87,7 +87,9 @@ public class Jupiter implements Algorithm {
         //apply op locally;
         document.apply(op);
         //send(op, myMsgs, otherMsgs);
-        Request req = new JupiterRequest(siteId, vectorTime, op);
+        //TODO: if the operation was generated from another client, the site id of the
+        //request may not be changed!!!
+        Request req = new JupiterRequest(siteId, (JupiterVectorTime)vectorTime.clone(), op);
         //add(op, myMsgs) to outgoing;
         ackRequestList.put(new Integer(vectorTime.getLocalOperationCount()), op);
         //myMsgs = myMsgs + 1;
