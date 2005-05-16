@@ -68,7 +68,10 @@ public class SynchronizedQueue {
 	public synchronized void add(Object obj) {
 		queue.addLast(obj);
 		if (synchObj != null) {
-		    synchObj.notify();
+			//TODO: possible deadlock situation??
+			synchronized(synchObj) {
+				synchObj.notify();
+			}
 		}
 		notify();
 	}
@@ -129,5 +132,30 @@ public class SynchronizedQueue {
 	 */
 	public synchronized boolean isEmpty() {
 		return queue.isEmpty();
+	}
+	
+	public String toString() {
+		return "SynchronizedQueue(" + queue + ",'" + synchObj + "')";
+	}
+	
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		} else if (obj == null) {
+			return false;
+		} else if (obj.getClass().equals(getClass())) {
+			SynchronizedQueue q = (SynchronizedQueue) obj;
+			return q.queue.equals(queue) && 
+				(q.synchObj == null ? synchObj == null : q.synchObj.equals(synchObj));
+		} else {
+			return false;
+		}
+	}
+	
+	public int hashCode() {
+		int hashcode = 17;
+		hashcode = 37 * hashcode + queue.hashCode();
+		hashcode = 37 * hashcode + ((synchObj != null) ? synchObj.hashCode() : 0);
+		return hashcode;
 	}
 }
