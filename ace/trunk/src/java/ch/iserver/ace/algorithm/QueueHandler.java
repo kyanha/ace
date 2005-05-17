@@ -38,7 +38,7 @@ public class QueueHandler extends Thread {
      * The priority which is given to local operations when
      * processing the buffers. 
      */
-    private static final int LOCAL_OPERATION_PRIORITY = 5;
+    private static final int LOCAL_OPERATION_PRIORITY = 4;
 
     /**
      * The priority which is given to remote operations when
@@ -67,7 +67,7 @@ public class QueueHandler extends Thread {
     private SynchronizedQueue outgoingRequestBuffer;
 
     /**
-     * This object is used to synchronize with the two
+     * This object is used in conjunction with a notification mechanism with the two
      * buffers <code>localOperationBuffer</code> and <code>remoteRequestBuffer</code>.
      * When the queue handler realises that there are no more 
      * operations and requests to process, it waits on that object
@@ -128,6 +128,8 @@ public class QueueHandler extends Thread {
                     if (nextOp != null) {
                         Request req = algo.generateRequest(nextOp);
                         outgoingRequestBuffer.add(req);
+                    } else {
+                    		LOG.warn("null from operation buffer");
                     }
                 }
 
@@ -136,12 +138,14 @@ public class QueueHandler extends Thread {
                     Request nextReq = (Request)remoteRequestBuffer.get(0);
                     if (nextReq != null) {
                         algo.receiveRequest(nextReq);
+                    } else {
+                    		LOG.warn("null from request buffer");
                     }
                 }
 
                 // if no more requests -> wait
                 if (localOperationBuffer.isEmpty() && remoteRequestBuffer.isEmpty()) {
-                		LOG.info("waiting on queues...");
+//                		LOG.info("waiting on queues...");
                 		synchronized(synchObj) {
                 			synchObj.wait();
                 		}

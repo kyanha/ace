@@ -66,6 +66,13 @@ public class JupiterRequest implements Request {
         return siteId;
     }
 
+	/**
+	 * @param siteId The siteId to set.
+	 */
+	public void setSiteId(int siteId) {
+		this.siteId = siteId;
+	}
+	
     /* (non-Javadoc)
      * @see ch.iserver.ace.algorithm.Request#getOperation()
      */
@@ -92,7 +99,7 @@ public class JupiterRequest implements Request {
     }
     
     public String toString() {
-    	return "JupiterRequest(" + siteId + ", " + vectorTime + ", " + operation + ")";
+    		return "JupiterRequest(" + siteId + ", " + vectorTime + ", " + operation + ")";
     }
 
 }

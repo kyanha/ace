@@ -25,6 +25,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import ch.iserver.ace.DocumentModel;
 import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.Algorithm;
@@ -37,6 +39,8 @@ import ch.iserver.ace.algorithm.Timestamp;
  */
 public class Jupiter implements Algorithm {
 
+	private static Logger LOG = Logger.getLogger(Jupiter.class);
+	
     private List operationBuffer;
     private InclusionTransformation inclusion;
     private DocumentModel document;
@@ -87,8 +91,6 @@ public class Jupiter implements Algorithm {
         //apply op locally;
         document.apply(op);
         //send(op, myMsgs, otherMsgs);
-        //TODO: if the operation was generated from another client, the site id of the
-        //request may not be changed!!!
         Request req = new JupiterRequest(siteId, (JupiterVectorTime)vectorTime.clone(), op);
         //add(op, myMsgs) to outgoing;
         ackRequestList.put(new Integer(vectorTime.getLocalOperationCount()), op);
@@ -106,24 +108,30 @@ public class Jupiter implements Algorithm {
         Iterator iter = ackRequestList.keySet().iterator();
         while(iter.hasNext()) {
         		Integer localOperationCount = (Integer)iter.next();
-        		if (localOperationCount.intValue() < jupReq.getJupiterVectorTime().getRemoteOperationCount()) {
-        		    ackRequestList.remove(localOperationCount);
+        		if (localOperationCount.intValue() < 
+        			jupReq.getJupiterVectorTime().getRemoteOperationCount()) {
+        			iter.remove();
         		}
         }
         
         //ASSERT msg.myMsgs == otherMsgs
-        assert jupReq.getJupiterVectorTime().getLocalOperationCount() == vectorTime.getRemoteOperationCount() : "msg.myMsgs != otherMsgs !!";
+        assert jupReq.getJupiterVectorTime().getLocalOperationCount() == 
+        				vectorTime.getRemoteOperationCount() : "msg.myMsgs != otherMsgs !!";
         
         iter = ackRequestList.keySet().iterator();
         Operation newOp = jupReq.getOperation();
+        HashMap transformedOps = new HashMap();
         while (iter.hasNext()) {
             //transform new operation and the ones in the queue.
             Integer key = (Integer)iter.next();
             Operation existingOp = (Operation)ackRequestList.get(key);
             Operation transformedOp = inclusion.transform(newOp, existingOp);
-            ackRequestList.put(key, inclusion.transform(existingOp, newOp));
+            transformedOps.put(key, inclusion.transform(existingOp, newOp));
             newOp = transformedOp;
         }
+        //put all transformed operations into the 'outgoing' list.
+        ackRequestList.putAll(transformedOps);
+        
         document.apply(newOp);
         vectorTime.incrementRemoteRequestCount();
     }
@@ -132,6 +140,8 @@ public class Jupiter implements Algorithm {
      * @see ch.iserver.ace.algorithm.Algorithm#init(ch.iserver.ace.DocumentModel, ch.iserver.ace.algorithm.Timestamp)
      */
     public void init(DocumentModel doc, Timestamp timestamp) {
+    		assert doc != null : "document model may not be null";
+    		assert timestamp != null : "timestamp may not be null";
         document = doc;
         vectorTime = (JupiterVectorTime)timestamp;
     }
@@ -202,5 +212,13 @@ public class Jupiter implements Algorithm {
      */
     public void setSiteId(int siteId) {
         this.siteId = siteId;
+    }
+    
+    /**
+     * Originally intended for test purpose.
+     * @return the algo's vector time.
+     */
+    public JupiterVectorTime getVectorTime() {
+    		return vectorTime;
     }
 }

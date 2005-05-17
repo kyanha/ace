@@ -29,12 +29,12 @@ import ch.iserver.ace.util.SynchronizedQueue;
 public class DefaultRequestEngine implements RequestEngine {
     
     /**
-     * The buffer for local operations.
+     * The buffer for incoming local operations.
      */
     private SynchronizedQueue localOperationBuffer;
     
     /**
-     * The buffer for remote requests.
+     * The buffer for incoming remote requests.
      */
     private SynchronizedQueue remoteRequestBuffer;
     
