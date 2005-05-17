@@ -68,7 +68,6 @@ public class SynchronizedQueue {
 	public synchronized void add(Object obj) {
 		queue.addLast(obj);
 		if (synchObj != null) {
-			//TODO: possible deadlock situation??
 			synchronized(synchObj) {
 				synchObj.notify();
 			}

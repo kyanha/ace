@@ -44,7 +44,7 @@ import ch.iserver.ace.util.SynchronizedQueue;
  */
 public class RequestSerializer extends Thread {
 	
-    private static Logger LOG = Logger.getLogger(RequestSerializer.class);
+	private static Logger LOG = Logger.getLogger(RequestSerializer.class);
 
     /**
      * The queue from which this serializer processes
@@ -109,15 +109,9 @@ public class RequestSerializer extends Thread {
 				while (iter.hasNext()) {
 					ClientProxy cl = (ClientProxy)clientProxies.get((Integer) iter.next());
 					if (siteId != cl.getSiteId()) {
-						Request r = cl.getAlgorithm().generateRequest(op);
-						
-				        //TODO: if the operation was generated from another client, the site id of the
-				        //request may not be changed!!!
-						//the following is a quick fix.
-						r = new JupiterRequest(siteId,
-											(JupiterVectorTime)r.getTimestamp(),r.getOperation());
-						
-						
+						JupiterRequest r = (JupiterRequest)cl.getAlgorithm().generateRequest(op);
+						//set the site Id of the client that generated the request.
+						r.setSiteId(siteId);
 						Integer id = new Integer(cl.getSiteId());
 						// switch the vector time (local and remote operation count)
 						((SynchronizedQueue) outgoingQueues.get(id)).add(switchVectorTime(r));
