@@ -20,6 +20,8 @@
  */
 package ch.iserver.ace.algorithm;
 
+import org.apache.log4j.Logger;
+
 import ch.iserver.ace.Operation;
 import ch.iserver.ace.util.SynchronizedQueue;
 
@@ -29,6 +31,8 @@ import ch.iserver.ace.util.SynchronizedQueue;
  * from the algorithm are inserted into a buffer for outgoing requests.
  */
 public class QueueHandler extends Thread {
+	
+	private static Logger LOG = Logger.getLogger(QueueHandler.class);
 
     /**
      * The priority which is given to local operations when
@@ -137,11 +141,14 @@ public class QueueHandler extends Thread {
 
                 // if no more requests -> wait
                 if (localOperationBuffer.isEmpty() && remoteRequestBuffer.isEmpty()) {
-                    synchObj.wait();
+                		LOG.info("waiting on queues...");
+                		synchronized(synchObj) {
+                			synchObj.wait();
+                		}
                 }
             }
         } catch (InterruptedException ie) {
-            //TODO:
+            LOG.fatal(ie);
         }
     }
     

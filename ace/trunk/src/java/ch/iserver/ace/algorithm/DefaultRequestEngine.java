@@ -64,6 +64,7 @@ public class DefaultRequestEngine implements RequestEngine {
                 remoteRequestBuffer,
                 outgoingRequestBuffer,
                 synchObj);
+        queueHandler.start();
     }
     
     
@@ -121,6 +122,12 @@ public class DefaultRequestEngine implements RequestEngine {
     public void setRemoteRequestBuffer(SynchronizedQueue remoteRequestBuffer) {
         this.remoteRequestBuffer = remoteRequestBuffer;
     }
+	/**
+	 * @return Returns the queueHandler.
+	 */
+	public QueueHandler getQueueHandler() {
+		return queueHandler;
+	}
     /**
      * @param queueHandler The queueHandler to set.
      */
