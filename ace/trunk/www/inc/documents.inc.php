@@ -8,3 +8,10 @@
   <li><a href="http://ace.iserver.ch:81/repos/ace/ace/trunk/doc/pdf/projekthandbuch.pdf">Projekhandbuch (German)</a></li>
   <li><a href="http://ace.iserver.ch:81/repos/ace/ace/trunk/doc/pdf/projektplan.pdf">Projektplan (German)</a></li>
 </ul>
+<br>
+<ul>
+  <li>
+    <a href="http://ace.iserver.ch:81/repos/ace/ace/trunk/doc/pdf/algorithm.pdf">Report Evaluation Algorithm (English)</a>
+  </li>
+</ul>
+    
