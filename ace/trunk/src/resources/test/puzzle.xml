@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scenario initial="ABC" final="AcB">
     
-    <operation id="1" type="ch.iserver.ace.text.Insert">
+    <operation id="1" type="ch.iserver.ace.text.InsertOperation">
         <property name="position" value="1"/>
         <property name="text" value="c"/>
     </operation>
     
-    <operation id="2" type="ch.iserver.ace.text.Delete">
+    <operation id="2" type="ch.iserver.ace.text.DeleteOperation">
         <property name="position" value="2"/>
+        <property name="text" value="C"/>
     </operation>
     
     <site id="0">

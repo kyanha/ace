@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scenario initial="abcdefg" final="bcdfg">
     
-    <operation id="1" type="ch.iserver.ace.text.Delete">
+    <operation id="1" type="ch.iserver.ace.text.DeleteOperation">
         <property name="position" value="0"/>
+        <property name="text" value="a"/>
     </operation>
     
-    <operation id="2" type="ch.iserver.ace.text.Delete">
+    <operation id="2" type="ch.iserver.ace.text.DeleteOperation">
         <property name="position" value="0"/>
+        <property name="text" value="a"/>
     </operation>
     
-    <operation id="3" type="ch.iserver.ace.text.Delete">
+    <operation id="3" type="ch.iserver.ace.text.DeleteOperation">
         <property name="position" value="3"/>
+        <property name="text" value="e"/>
     </operation>
     
     <site id="1">

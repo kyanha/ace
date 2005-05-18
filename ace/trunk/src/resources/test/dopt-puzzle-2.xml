@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scenario initial="" final="xzy">
 
-    <operation id="1" type="ch.iserver.ace.text.Insert">
+    <operation id="1" type="ch.iserver.ace.text.InsertOperation">
         <property name="position" value="1"/>
         <property name="text" value="x"/>
     </operation>
     
-    <operation id="2" type="ch.iserver.ace.text.Insert">
+    <operation id="2" type="ch.iserver.ace.text.InsertOperation">
         <property name="position" value="1"/>
         <property name="text" value="y"/>
     </operation>
     
-    <operation id="3" type="ch.iserver.ace.text.Insert">
+    <operation id="3" type="ch.iserver.ace.text.InsertOperation">
         <property name="position" value="1"/>
         <property name="text" value="z"/>
     </operation>
