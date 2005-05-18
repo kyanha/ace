@@ -19,41 +19,41 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.test;
+package ch.iserver.ace.algorithm.jupiter;
 
 import ch.iserver.ace.DocumentModel;
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.Timestamp;
+import ch.iserver.ace.test.AlgorithmTestCase;
+import ch.iserver.ace.test.TestDocumentModel;
+import ch.iserver.ace.text.GOTOInclusionTransformation;
 
 /**
- * Factory for creating all the test relevant classes. There are
- * methods for creating algorithms, timestamps and documents.
+ * Test class for testing the jupiter algorithm implementation.
  */
-public interface AlgorithmTestFactory {
+public class JupiterTest extends AlgorithmTestCase {
+	
+	/**
+	 * @see ch.iserver.ace.test.AlgorithmTestFactory#createAlgorithm(int)
+	 */
+	public Algorithm createAlgorithm(int siteId) {
+		Jupiter jupiter = new Jupiter(siteId);
+		jupiter.setInclusionTransformation(new GOTOInclusionTransformation());
+		return jupiter;
+	}
 
 	/**
-	 * Creates a new algorithm. The new fully configured algorithm object
-	 * to test should be returned.
-	 * 
-	 * @return a new algorithm instance
+	 * @see ch.iserver.ace.test.AlgorithmTestFactory#createTimestamp()
 	 */
-	public Algorithm createAlgorithm(int siteId);
+	public Timestamp createTimestamp() {
+		return new JupiterVectorTime(0, 0);
+	}
 	
 	/**
-	 * Creates a new timestamp. This must be an initial timestamp that
-	 * is understood by the algorithm.
-	 * 
-	 * @return a new (initial) timestamp instance
+	 * @see ch.iserver.ace.test.AlgorithmTestFactory#createDocument(java.lang.String)
 	 */
-	public Timestamp createTimestamp();
-	
-	/**
-	 * Creates a new document model for use in the test. The document
-	 * state is given as argument.
-	 * 
-	 * @param state the document state
-	 * @return a new document model instance
-	 */
-	public DocumentModel createDocument(String state);
-	
+	public DocumentModel createDocument(String state) {
+		return new TestDocumentModel(state);
+	}
+
 }

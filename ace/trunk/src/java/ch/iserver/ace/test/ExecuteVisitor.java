@@ -77,7 +77,7 @@ public class ExecuteVisitor implements NodeVisitor {
 	public void visit(StartNode node) {
 		String siteId = node.getSiteId();
 		String state = node.getState();
-		Algorithm algorithm = getFactory().createAlgorithm();		
+		Algorithm algorithm = getFactory().createAlgorithm(Integer.parseInt(siteId));		
 		DocumentModel document = getFactory().createDocument(state);
 		Timestamp timestamp = getFactory().createTimestamp();
 		algorithm.init(document, timestamp);

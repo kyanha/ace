@@ -111,14 +111,14 @@ public class ExecuteVisitorTest extends TestCase {
 		g2.addRemoteSuccessor(r1);
 		
 		// define mock behavior
-		factory.createAlgorithm();
+		factory.createAlgorithm(0);
 		control.setReturnValue(algo1);
 		factory.createDocument("abc");
 		control.setReturnValue(null);
 		factory.createTimestamp();
 		control.setReturnValue(null);
 		
-		factory.createAlgorithm();
+		factory.createAlgorithm(1);
 		control.setReturnValue(algo2);
 		factory.createDocument("abc");
 		control.setReturnValue(null);
@@ -195,7 +195,7 @@ public class ExecuteVisitorTest extends TestCase {
 	}
 	
 	private static class AlgorithmTestFactoryStub implements AlgorithmTestFactory {
-		public Algorithm createAlgorithm() {
+		public Algorithm createAlgorithm(int siteId) {
 			return new AlgorithmStub();
 		}
 		public DocumentModel createDocument(String state) {
