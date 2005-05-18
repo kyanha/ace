@@ -42,7 +42,7 @@ public class TestDefaultRequestEngine extends TestCase {
 	private static final int NUM_REQUESTS = 100;
 	private static final int NUM_OPERATIONS = 150;
 	
-	private TestDocumentModel doc;
+	private DummyDocumentModel doc;
 	private Algorithm algo;
 	private DefaultRequestEngine engine;
 	private SynchronizedQueue outgoing;
@@ -51,7 +51,7 @@ public class TestDefaultRequestEngine extends TestCase {
 	 * @see TestCase#setUp()
 	 */
 	protected void setUp() throws Exception {
-		doc = new TestDocumentModel();
+		doc = new DummyDocumentModel();
 		algo = new Jupiter(new GOTOInclusionTransformation(), doc, SITE_ID);
 		engine = new DefaultRequestEngine(algo);
 		outgoing = engine.getOutgoingRequestBuffer();
