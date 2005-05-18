@@ -33,6 +33,14 @@ import ch.iserver.ace.text.GOTOInclusionTransformation;
  */
 public class JupiterTest extends AlgorithmTestCase {
 	
+	public void testPuzzleOne() throws Exception {
+		execute("/test/puzzle.xml");
+	}
+	
+	public void testPuzzleTwo() throws Exception {
+		execute("/test/dopt-puzzle-1.xml");
+	}
+	
 	/**
 	 * @see ch.iserver.ace.test.AlgorithmTestFactory#createAlgorithm(int)
 	 */

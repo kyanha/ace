@@ -29,12 +29,17 @@ public abstract class AlgorithmTestCase extends TestCase
 	 * @throws Exception if anything goes wrong
 	 */
 	protected void execute(InputStream stream) throws Exception {
+		assertNotNull(stream);
 		ScenarioLoader loader = new DefaultScenarioLoader();
 		DefaultScenarioBuilder builder = new DefaultScenarioBuilder();
 		loader.loadScenario(builder, stream);
 		Scenario scenario = builder.getScenario();
 		ExecuteVisitor visitor = new ExecuteVisitor(this);
 		scenario.accept(visitor);
+	}
+	
+	protected void execute(String resource) throws Exception {
+		execute(getClass().getResourceAsStream(resource));
 	}
 		
 }

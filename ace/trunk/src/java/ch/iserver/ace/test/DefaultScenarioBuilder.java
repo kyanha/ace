@@ -24,6 +24,7 @@ package ch.iserver.ace.test;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -64,6 +65,9 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 	/** list of reception nodes */
 	private List receptionNodes;
 	
+	/** set of all nodes */
+	private Set nodes;
+	
 	/**
 	 * @inheritDoc
 	 */
@@ -76,6 +80,7 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 		this.siteHelpers = new HashMap();
 		this.generationNodes = new HashMap();
 		this.receptionNodes = new ArrayList();
+		this.nodes = new HashSet();
 	}
 	
 	/**
@@ -85,6 +90,14 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 		operations.put(id, op);
 	}
 
+	protected void addNode(Node node) {
+		nodes.add(node);
+	}
+	
+	protected Set getNodes() {
+		return nodes;
+	}
+	
 	/**
 	 * @inheritDoc
 	 */
@@ -92,9 +105,9 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 		if (this.siteId != null) {
 			throw new ScenarioException("sites cannot nest");
 		}
-		
 		this.siteId = siteId;
 		StartNode node = new StartNode(siteId, initialState);
+		addNode(node);
 		startNodes.put(siteId, node);
 		localPredecessors.put(siteId, node);
 		siteHelpers.put(siteId, new SiteHelper());
@@ -113,6 +126,7 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 
 		Operation op = getOperation(ref);
 		Node node = new GenerationNode(siteId, ref, op);
+		addNode(node);
 		Node pred = getPredecessor(siteId);
 		pred.setLocalSuccessor(node);
 		addGeneratedOperation(ref, node);
@@ -130,6 +144,7 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 
 		Operation op = getOperation(ref);
 		Node node = new ReceptionNode(siteId, ref);
+		addNode(node);
 		Node pred = getPredecessor(siteId);
 		pred.setLocalSuccessor(node);
 		receptionNodes.add(node);
@@ -146,6 +161,7 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 		}
 		
 		Node node = new EndNode(siteId, finalState);
+		addNode(node);
 		Node pred = getPredecessor(siteId);
 		pred.setLocalSuccessor(node);
 		localPredecessors.put(siteId, null);
@@ -206,51 +222,7 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 	 * @throws ScenarioException if the graph is not a DAG
 	 */
 	protected List validateDAG() {
-		List result = new ArrayList();
-		
-		List stack = new ArrayList();
-		Iterator it = getStartNodes().iterator();
-		while (it.hasNext()) {
-			stack.add(it.next());
-		}
-		
-		int sites = getSitesCount();
-		int total = sites + getReceptionNodes().size() + getGenerationNodes().size();
-		Map incount = new HashMap();
-		
-		it = getReceptionNodes().iterator();
-		while (it.hasNext()) {
-			Node node = (Node) it.next();
-			incount.put(node, new Integer(2));
-		}
-		
-		it = getGenerationNodes().iterator();
-		while (it.hasNext()) {
-			Node node = (Node) it.next();
-			incount.put(node, new Integer(1));
-		}
-		
-		while (stack.size() > 0) {
-			Node node = (Node) stack.remove(0);
-			result.add(node);
-			
-			Iterator successors = node.getSuccessors().iterator();
-			
-			while (successors.hasNext()) {
-				Node succ = (Node) successors.next();
-				int count = ((Integer) incount.get(succ)).intValue() - 1;
-				incount.put(succ, new Integer(count));
-				if (count == 0) {
-					stack.add(succ);
-				}
-			}
-		}
-		
-		if (result.size() != total) {
-			throw new ScenarioException("not a dag: " + result.size() + "," + total);
-		}
-		
-		return result;
+		return GraphUtil.topologicalSort(getNodes());
 	}
 	
 	
