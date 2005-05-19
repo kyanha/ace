@@ -5,5 +5,6 @@
   <li><a href="mailto:<?=$contact?>">Send Feedback</a></li>
  </ul>
 
- <p>Copyright &copy; 2005 ace project team. All rights reserved.</p>
+ <p>Copyright &copy; 2005 ace project team. All rights reserved.<br>
+Last updated: 2005-05-19</p>
 </div>
