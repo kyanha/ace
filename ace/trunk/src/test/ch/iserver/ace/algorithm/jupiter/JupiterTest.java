@@ -41,6 +41,10 @@ public class JupiterTest extends AlgorithmTestCase {
 		execute("/test/dopt-puzzle-1.xml");
 	}
 	
+	public void testPuzzleThree() throws Exception {
+		execute("/test/ecscw03-fig3.xml");
+	}
+	
 	/**
 	 * @see ch.iserver.ace.test.AlgorithmTestFactory#createAlgorithm(int)
 	 */
