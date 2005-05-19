@@ -62,7 +62,6 @@ public class JupiterServerTest extends TestCase {
      */
     protected void tearDown() throws Exception {
         Map forwarders = server.getRequestForwarders();
-        assertEquals(NUM_CLIENTS, forwarders.size());
         Iterator iter = forwarders.keySet().iterator();
         //shutdown all request forwarders 
         while (iter.hasNext()) {
@@ -92,6 +91,22 @@ public class JupiterServerTest extends TestCase {
         		ClientProxy c = (ClientProxy)iter.next();
         		assertEquals(requestQueue, ((DefaultClientProxy)c).getRequestForwardQueue());
         }
+    }
+    
+    public void testRemoveClient() throws Exception {
+    		int siteId = proxies[0].getSiteId();
+    		server.removeClient(siteId);
+    		
+    		proxies[1].receiveRequest(new JupiterRequest(proxies[1].getSiteId(),
+    				new JupiterVectorTime(0,0),new InsertOperation(0, "a")));
+    		
+    		assertNull(server.getRequestForwarders().get(new Integer(siteId)));
+    		
+    		RequestSerializer serializer = server.getRequestSerializer();
+    		assertNull(serializer.getClientProxies().get(new Integer(siteId)));
+    		assertNull(serializer.getOutgoingQueues().get(new Integer(siteId)));
+    		assertEquals(NUM_CLIENTS - 1, serializer.getClientProxies().size());
+    		assertEquals(NUM_CLIENTS - 1, serializer.getOutgoingQueues().size());
     }
     
     /**
@@ -177,7 +192,6 @@ public class JupiterServerTest extends TestCase {
     				//it has not been processed yet.
     				assertTrue( vector.getLocalOperationCount() <= VECTORTIME_LOCALOP_COUNT + 1 );
     				assertEquals(remoteOpCount++, vector.getRemoteOperationCount());
-    				System.out.println(req+" - "+currSiteId);
     				assertTrue(req.getSiteId() != currSiteId);
     			}
     		}

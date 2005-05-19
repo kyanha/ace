@@ -49,15 +49,18 @@ public class RequestForwarder extends Thread {
     
     public void run() {
         try {
-            while (!shutdown) {
+            while (!shutdown && !isInterrupted()) {
                 Request req = (Request)queue.get();
                 proxy.sendRequest(req);
             }
         } catch (InterruptedException ie) {
-            LOG.fatal(ie);
+            LOG.warn(ie);
         }
+        LOG.info("RequestForwarder for ["+proxy.getSiteId()+"] terminated.\n");
     }
     
+    //TODO: this method is not useful for immediate shutdown, since most of the time 
+    //this thread may be in wait state on the queue...
     public void shutdown() {
         shutdown = true;
     }

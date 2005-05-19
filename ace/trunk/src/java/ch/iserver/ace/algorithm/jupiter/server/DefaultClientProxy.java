@@ -20,6 +20,8 @@
  */
 package ch.iserver.ace.algorithm.jupiter.server;
 
+import org.apache.log4j.Logger;
+
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.jupiter.Jupiter;
 import ch.iserver.ace.util.SynchronizedQueue;
@@ -29,6 +31,8 @@ import ch.iserver.ace.util.SynchronizedQueue;
  */
 public class DefaultClientProxy implements ClientProxy {
 
+	private static Logger LOG = Logger.getLogger(DefaultClientProxy.class);
+	
     private int siteId;
     private NetService net;
     private Jupiter algo;
@@ -51,14 +55,22 @@ public class DefaultClientProxy implements ClientProxy {
      * @see ch.iserver.ace.algorithm.jupiter.server.ClientProxy#sendRequest(ch.iserver.ace.algorithm.Request)
      */
     public void sendRequest(Request req) {
-        net.transmitRequest(req);
+    		if (net != null) {
+    			net.transmitRequest(req);
+    		} else {
+    			LOG.warn("net service null");
+    		}
     }
 
     /* (non-Javadoc)
      * @see ch.iserver.ace.algorithm.jupiter.server.ClientProxy#receiveRequest(ch.iserver.ace.algorithm.Request)
      */
     public void receiveRequest(Request req) {
-    		requestForwardQueue.add(  new Object[]{this, req} );
+    		//if the net service connection has been aborted, stop receiving and 
+    		//forwarding respectively, requests.
+    		if (net != null) {
+    			requestForwardQueue.add(  new Object[]{this, req} );
+    		}
     }
 
     /* (non-Javadoc)
@@ -76,5 +88,9 @@ public class DefaultClientProxy implements ClientProxy {
     
     public SynchronizedQueue getRequestForwardQueue() {
     		return requestForwardQueue;
+    }
+    
+    public synchronized void closeNetServiceConnection() {
+    		net = null;
     }
 }

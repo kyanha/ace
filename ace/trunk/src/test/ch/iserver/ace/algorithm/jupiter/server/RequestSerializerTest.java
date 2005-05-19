@@ -21,6 +21,11 @@
 package ch.iserver.ace.algorithm.jupiter.server;
 
 import junit.framework.TestCase;
+import ch.iserver.ace.algorithm.jupiter.Jupiter;
+import ch.iserver.ace.algorithm.jupiter.JupiterRequest;
+import ch.iserver.ace.algorithm.jupiter.JupiterVectorTime;
+import ch.iserver.ace.text.GOTOInclusionTransformation;
+import ch.iserver.ace.text.InsertOperation;
 import ch.iserver.ace.util.SynchronizedQueue;
 
 /**
@@ -42,19 +47,51 @@ public class RequestSerializerTest extends TestCase {
 		requestForwardQueue = new SynchronizedQueue();
 		outgoingQueue = new SynchronizedQueue();
 		serializer = new RequestSerializer(requestForwardQueue);
-		proxy = new DefaultClientProxy(CLIENT_SITE_ID,null,null,requestForwardQueue);
+		serializer.start();
+		proxy = new DefaultClientProxy(CLIENT_SITE_ID,
+				new TestNetService(),
+				new Jupiter(new GOTOInclusionTransformation(),
+						new OperationExtractDocumentModel(), CLIENT_SITE_ID),
+				requestForwardQueue);
 	}
+	
+	/* (non-Javadoc)
+	 * @see junit.framework.TestCase#tearDown()
+	 */
+	protected void tearDown() throws Exception {
+		serializer.interrupt();
+	}
+	
 	public void testAddRemoveClientProxy() throws Exception {
 		//add a client proxy
 		serializer.addClientProxy(proxy,outgoingQueue);
+		assertEquals(proxy, serializer.getClientProxies().get(new Integer(CLIENT_SITE_ID)));
+		assertEquals(outgoingQueue, serializer.getOutgoingQueues().get(new Integer(CLIENT_SITE_ID)));
 		assertEquals(1, serializer.getClientProxies().size());
 		assertEquals(1, serializer.getOutgoingQueues().size());
 		
+		//add a second client proxy
+		DefaultClientProxy p = new DefaultClientProxy(CLIENT_SITE_ID+1,
+							new TestNetService(),
+							new Jupiter(new GOTOInclusionTransformation(),
+									new OperationExtractDocumentModel(), CLIENT_SITE_ID+1),
+							requestForwardQueue);
+		serializer.addClientProxy(p, new SynchronizedQueue());
+		assertEquals(2, serializer.getClientProxies().size());
+		assertEquals(2, serializer.getOutgoingQueues().size());
+		
 		//remove a client proxy
-		ClientProxy p = serializer.removeClientProxy(CLIENT_SITE_ID);
-		assertEquals(proxy, p);
-		assertEquals(0, serializer.getClientProxies().size());
-		assertEquals(0, serializer.getOutgoingQueues().size());
+		serializer.removeClientProxy(CLIENT_SITE_ID);
+		
+		//receive a request so that the client proxy gets removed by the 
+		//request serializer
+		p.receiveRequest(new JupiterRequest(CLIENT_SITE_ID+1,
+				new JupiterVectorTime(0,0),new InsertOperation()));
+		
+		assertNull(serializer.getClientProxies().get(new Integer(CLIENT_SITE_ID)));
+		assertNull(serializer.getOutgoingQueues().get(new Integer(CLIENT_SITE_ID)));
+		assertEquals(1, serializer.getClientProxies().size());
+		assertEquals(1, serializer.getOutgoingQueues().size());
 	}
 	
 }

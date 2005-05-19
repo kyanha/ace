@@ -23,6 +23,8 @@ package ch.iserver.ace.algorithm.jupiter.server;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import ch.iserver.ace.algorithm.jupiter.Jupiter;
 import ch.iserver.ace.text.GOTOInclusionTransformation;
 import ch.iserver.ace.util.SynchronizedQueue;
@@ -32,6 +34,8 @@ import ch.iserver.ace.util.SynchronizedQueue;
  */
 public class JupiterServer {
     
+	private static Logger LOG = Logger.getLogger(JupiterServer.class);
+	
     private int siteIdCounter;
     private RequestSerializer serializer;
     private SynchronizedQueue requestForwardQueue;
@@ -72,6 +76,7 @@ public class JupiterServer {
         requestForwarders.put(new Integer(siteIdCounter), forwarder);
         forwarder.start();
         
+        LOG.info("addClient #"+siteIdCounter);
         return client;
     }
     
@@ -80,8 +85,14 @@ public class JupiterServer {
      * @param siteId
      */
     public void removeClient(int siteId) {
-        //TODO:
-        
+    		Integer id = new Integer(siteId);
+    		DefaultClientProxy proxy = (DefaultClientProxy)serializer.getClientProxies().get(id);
+        if (proxy != null) {
+        		proxy.closeNetServiceConnection();
+        		((RequestForwarder)requestForwarders.remove(id)).interrupt();
+        		serializer.removeClientProxy(siteId);
+        		LOG.info("removeClient #"+siteId);
+        }
     }
     
     /**
