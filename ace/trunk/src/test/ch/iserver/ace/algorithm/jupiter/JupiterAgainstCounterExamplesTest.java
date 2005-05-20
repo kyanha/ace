@@ -75,22 +75,20 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		Request req3 = site2.generateRequest(op3);
 		Request req1 = site3.generateRequest(op1);
 		
-		//send the operations op2 and op3 to the server
+		//send the operations op2, op3 and op1 (in this order) to the server
 		proxies[0].receiveRequest(req2);
 		proxies[1].receiveRequest(req3);
+		proxies[2].receiveRequest(req1);
 		
 		//First of all, op2 is integrated on site 2
-		assertEquals(1, net[1].getRequests().size());
+		assertEquals(2, net[1].getRequests().size());
 		req2 = (Request)net[1].getRequests().remove(0); 	//get op from server
 		site2.receiveRequest(req2);  						//pass op to client
 		
 		//next, integrate op3 on site 1
-		assertEquals(1, net[0].getRequests().size());
+		assertEquals(2, net[0].getRequests().size());
 		req3 = (Request)net[0].getRequests().remove(0);
 		site1.receiveRequest(req3);
-		
-		//now, op1 is sent to the server
-		proxies[2].receiveRequest(req1);
 		
 		//op1 is integrated on site 1
 		assertEquals(1, net[0].getRequests().size());
@@ -133,7 +131,7 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 	 * the C2 puzzle P1. Note that this example caused the following
 	 * algorithms and its transformation functions respectively to violate
 	 * TP 2 (at least these are mentioned): dOPT, adOPTed and GOTO 
-	 * (references [1], [9] and [15] in the paper).
+	 * (see references [1], [9] and [15] in the paper).
 	 * 
 	 */
 	public void testC2puzzleP1() throws Exception {
@@ -212,6 +210,104 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		site1.receiveRequest(req3);
 		String contentSite1 = ((TestDocumentModel)site1.getDocument()).getText();
 		assertEquals(FINAL, contentSite1);
+	}
+	
+	/**
+	 * This example is taken from RR-5188.pdf figure 5 and is called 
+	 * the C2 puzzle P2. Note that this example caused the following
+	 * algorithms and its transformation functions respectively to violate
+	 * TP 2 (at least these are mentioned): SOCT2 and SDT. 
+	 * (see references [12] and [6] in the paper).
+	 * 
+	 * Note that it is not possible to completely recreate this example
+	 * since Jupiter does not have to satisfy TP2 directly, i.e. with Jupiter
+	 * it is not possible that different sites receive requests from other sites
+	 * in different order as is the case in this example. Hence operations 3 and 4 arrive
+	 * in the same order at sites 2 and 3, respectively.
+	 * 
+	 * @throws Exception
+	 */
+	public void testC2puzzleP2() throws Exception {
+		final String INITIAL = "abcd";
+		final String FINAL   = "acxx";
+		
+		/** initialize system **/
+		JupiterServer server = createServer();
+		TestNetService[] net = new TestNetService[] {
+								new TestNetService(),
+								new TestNetService(),
+								new TestNetService(),
+								new TestNetService(),
+								new TestNetService() };
+		ClientProxy[] proxies = new ClientProxy[5];
+		proxies[0] = server.addClient(net[0]); //belongs to site 1
+		proxies[1] = server.addClient(net[1]); //belongs to site 2
+		proxies[2] = server.addClient(net[2]); //belongs to site 3
+		proxies[3] = server.addClient(net[3]); //belongs to site 4
+		proxies[4] = server.addClient(net[4]); //belongs to site 5
+		
+		Jupiter site1 = createClient(proxies[0].getSiteId(), INITIAL);
+		Jupiter site2 = createClient(proxies[1].getSiteId(), INITIAL);
+		Jupiter site3 = createClient(proxies[2].getSiteId(), INITIAL);
+		Jupiter site4 = createClient(proxies[3].getSiteId(), INITIAL);
+		Jupiter site5 = createClient(proxies[4].getSiteId(), INITIAL);
+		
+		DeleteOperation op1 = new DeleteOperation(1, "b");
+		InsertOperation op2 = new InsertOperation(3, "x");
+		InsertOperation op3 = new InsertOperation(3, "x");
+		DeleteOperation op4 = new DeleteOperation(3, "d");
+		
+		/** start scenario **/
+		Request req1 = site1.generateRequest(op1);
+		Request req2 = site5.generateRequest(op2);
+		Request req3 = site4.generateRequest(op3);
+		Request req4 = site5.generateRequest(op4);
+		
+		//send the operations op1, op3 and op4 in this order to the server
+		proxies[0].receiveRequest(req1);
+		proxies[3].receiveRequest(req3);
+		proxies[4].receiveRequest(req4);
+		proxies[0].receiveRequest(req2);
+		
+		//op1 is integrated at site 2 and 3
+		assertEquals(4, net[1].getRequests().size());
+		req1 = (Request)net[1].getRequests().remove(0); 	//get op from server
+		site2.receiveRequest(req1);  						//pass op to client
+		assertEquals(4, net[2].getRequests().size());
+		req1 = (Request)net[2].getRequests().remove(0);
+		site3.receiveRequest(req1);
+		
+		//op3 is integrated at site 2 and 3
+		req3 = (Request)net[1].getRequests().remove(0);
+		System.out.println(req3);
+		site2.receiveRequest(req3);
+		req3 = (Request)net[2].getRequests().remove(0);
+		site3.receiveRequest(req3);
+		
+		//op4 is integrated at site 2 and 3
+		req4 = (Request)net[1].getRequests().remove(0);
+		site2.receiveRequest(req4);
+		req4 = (Request)net[2].getRequests().remove(0);
+		site3.receiveRequest(req4);
+		
+		//op2 is integrated at site 2 and 3
+		req2 = (Request)net[1].getRequests().remove(0); 	
+		site2.receiveRequest(req2);
+		req2 = (Request)net[2].getRequests().remove(0);
+		site3.receiveRequest(req2);
+		
+		assertEquals(0, net[1].getRequests().size());
+		assertEquals(0, net[2].getRequests().size());
+		
+		/** analyze results **/
+		//lets see if sites 2 and 3 converge and if their document
+		//contents equals the expected content.
+		String contentSite2 = ((TestDocumentModel)site2.getDocument()).getText();
+		String contentSite3 = ((TestDocumentModel)site3.getDocument()).getText();
+		System.out.println(contentSite2 + " == " + contentSite3);
+		assertEquals(contentSite2, contentSite3);
+		assertEquals(FINAL, contentSite2);
+		assertEquals(FINAL, contentSite3);
 	}
 	
 	private Jupiter createClient(int siteId, String initialDocContent) {
