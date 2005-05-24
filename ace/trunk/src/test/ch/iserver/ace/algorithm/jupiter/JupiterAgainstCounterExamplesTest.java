@@ -310,6 +310,97 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		assertEquals(FINAL, contentSite3);
 	}
 	
+	/**
+	 * This example is taken from cscw04sdt.pdf figure 1 and is called 
+	 * 'a scenario of divergence and ERV (effects relation violation)'. 
+	 * It is similar to the examples in figure 4/5 from ecscw03.pdf 
+	 * (see {@link #testWithCounterexampleAgainstResselOT()}).
+	 * 
+	 * @throws Exception
+	 */
+	public void testScenarioOfDivergenceAndERV() throws Exception {
+		final String INITIAL = "abc";
+		final String FINAL   = "a21c";
+		
+		/** initialize system **/
+		JupiterServer server = createServer();
+		TestNetService[] net = new TestNetService[] {
+								new TestNetService(),
+								new TestNetService(),
+								new TestNetService() };
+		ClientProxy[] proxies = new ClientProxy[3];
+		proxies[0] = server.addClient(net[0]); //belongs to site 1
+		proxies[1] = server.addClient(net[1]); //belongs to site 2
+		proxies[2] = server.addClient(net[2]); //belongs to site 3
+		
+		Jupiter site1 = createClient(proxies[0].getSiteId(), INITIAL);
+		Jupiter site2 = createClient(proxies[1].getSiteId(), INITIAL);
+		Jupiter site3 = createClient(proxies[2].getSiteId(), INITIAL);
+		
+		InsertOperation op1 = new InsertOperation(2, "1");
+		InsertOperation op2 = new InsertOperation(1, "2");
+		DeleteOperation op3 = new DeleteOperation(1, "b");
+		
+		/** start scenario **/
+		//we generate 3 concurrent operations 
+		Request req1 = site1.generateRequest(op1);
+		Request req2 = site2.generateRequest(op2);
+		Request req3 = site3.generateRequest(op3);
+		
+		//send the operations op2, op3 and op1 (in this order) to the server
+		proxies[1].receiveRequest(req2);
+		proxies[2].receiveRequest(req3);
+		proxies[0].receiveRequest(req1);
+		
+		/* The operations arrive at the sites in the following order:
+		 * site 1: op2 op3 
+		 * site 2: op3 op1
+		 * site 3: op2 op1 
+		 */
+		
+		//let the server execute
+		Thread.sleep(1000);
+		
+		//process site 2
+		assertEquals(2, net[1].getRequests().size());
+		req3 = (Request)net[1].getRequests().remove(0);
+		site2.receiveRequest(req3);
+		req1 = (Request)net[1].getRequests().remove(0);
+		site2.receiveRequest(req1);
+		assertEquals(0, net[1].getRequests().size());
+		
+		//process site 3
+		assertEquals(2, net[2].getRequests().size());
+		req2 = (Request)net[2].getRequests().remove(0);
+		site3.receiveRequest(req2);
+		req1 = (Request)net[2].getRequests().remove(0);
+		site3.receiveRequest(req1);
+		assertEquals(0, net[2].getRequests().size());
+		
+		/** analyze results **/
+		//lets see if sites 2 and 3 converge and if their document
+		//contents equals the expected content.
+		String contentSite2 = ((TestDocumentModel)site2.getDocument()).getText();
+		String contentSite3 = ((TestDocumentModel)site3.getDocument()).getText();
+		System.out.println(contentSite2 + " == " + contentSite3);
+		assertEquals(contentSite2, contentSite3);
+		assertEquals(FINAL, contentSite2);
+		assertEquals(FINAL, contentSite3);
+		
+		//process site 1
+		/* Note that site 1 is not traced in the original example. 
+		 * Nonetheless, we do it to verify that all sites converge. 
+		 */
+		assertEquals(2, net[0].getRequests().size());
+		req2 = (Request)net[0].getRequests().remove(0); 	
+		site1.receiveRequest(req2);
+		req3 = (Request)net[0].getRequests().remove(0);
+		site1.receiveRequest(req3);
+		assertEquals(0, net[0].getRequests().size());
+		String contentSite1 = ((TestDocumentModel)site1.getDocument()).getText();
+		assertEquals(FINAL, contentSite1);
+	}
+	
 	private Jupiter createClient(int siteId, String initialDocContent) {
 		return new Jupiter(new GOTOInclusionTransformation(),
 							new TestDocumentModel(initialDocContent), 
