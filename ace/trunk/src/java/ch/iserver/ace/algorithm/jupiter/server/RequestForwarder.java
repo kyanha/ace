@@ -59,9 +59,8 @@ public class RequestForwarder extends Thread {
         LOG.info("RequestForwarder for ["+proxy.getSiteId()+"] terminated.\n");
     }
     
-    //TODO: this method is not useful for immediate shutdown, since most of the time 
-    //this thread may be in wait state on the queue...
     public void shutdown() {
+    		interrupt();
         shutdown = true;
     }
 }
