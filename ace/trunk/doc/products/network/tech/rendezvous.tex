@@ -1,0 +1,21 @@
+\section{Rendezvous / Bonjour}
+\emph{Bonjour}, formerly known as \emph{Rendezvous}, enables automatic discovery of computers, devices, and services on IP networks. It uses industry standard IP protocols to allow devices to automatically discover each other without the need to enter IP addresses or configure DNS servers. It is a technology developed by Apple that is submitted to the IETF as part of an ongoing standards-creation process. The technology is more generally known as zero-conf networking.
+
+There are \emph{Java} libraries available that allow to use this technology in any \emph{Java} application. The library needs a native library that is available for all major platforms. 
+
+DNS service discovery is a way of using standard DNS programming interfaces, servers, and packet formats to browse the network for services. It is compatible with, but not dependent on, multicast DNS. Multicast DNS is a way of using familiar DNS programming interfaces, packet formats and operating semantics, in a small network where no conventional DNS server has been installed.
+
+\subsection{Prototype}
+The technology is best described by a simple prototype. We've created a simple echo server and echo client that show off the basic features of this technology.
+
+\subsubsection{Echo Server}
+The echo server is implemented in the class \texttt{ch.iserver.ace.net.bonjour.EchoServer}. It is very similar to normal echo server implementation. First a \texttt{ServerSocket} is created listening on a particular socket. Then the service is registered with DNS service discovery system represented by the \texttt{com.apple.dnssd.DNSSD} class. A listener (\texttt{com.apple.dnssd.RegisterListener}) is used to inform the application when the registration was successull. Once the registration was successul, the echo server starts to service clients as any echo server would do.
+
+\subsubsection{Echo Client}
+The echo client (see \texttt{ch.iserver.ace.net.bonjour.EchoClient}) is a simple GUI that allows to send echo requests to echo servers. It browses the network for available echo servers and lists them in a combo box. The user can select one of those echo servers and send an echo request to them.
+
+The method \texttt{browse} of the \texttt{DNSSD} class is used to issue a browse request to the DNS service discovery system. We have to supply a \texttt{com.apple.dnssd.BrowseListener} implementation that gets called back whenever a service of specified type is found.
+
+Whenever the user sends a message to the currently selected echo server by entering a message in the bottom textfield and hitting enter, the service has to be resolved. This happens by calling \texttt{resolve} on the \texttt{DNSSD} class. The application is called back over a \texttt{com.apple.dnssd.ResolveListener}. The method \texttt{serviceResolved} is called on this listener when the service is resolved. This provides us with the service name, host name and port of the service. As a last step we have to get the IP address of the service. This is done by calling \texttt{queryRecord} on the \texttt{DNSSD} class. We get called back by a method call to \texttt{queryAnswered} in the \texttt{com.apple.dnssd.QueryListener} we supplied to the \texttt{queryRecord} call.
+
+At that point we do have enough information to contact the echo server and send the echo request over a plain socket connection. That's one important point to observer. This technology enables us to discover services on the network but does not impose any limitations on the way we communicate from client to server.
