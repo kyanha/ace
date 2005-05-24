@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<project name="ace-jgroups" default="compile"
+	     xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+	<property name="build.dir" value="build"/>
+	<property name="build.classes" value="${build.dir}/classes"/>
+	<property name="src.dir" value="src"/>
+	<property name="src.java" value="${src.dir}/java"/>
+	
+	<artifact:dependencies pathId="dependency.classpath">
+		<dependency groupId="jgroups" 
+		            artifactId="jgroups" 
+		            version="2.2.5"/>
+		<dependency groupId="commons-logging" 
+		            artifactId="commons-logging" 
+		            version="1.0.4"
+		            scope="runtime"/>
+	</artifact:dependencies>
+
+	<path id="build.classpath">
+		<path refid="dependency.classpath"/>
+	</path>
+
+	<path id="run.classpath">
+		<pathelement path="${build.classes}"/>
+		<path refid="build.classpath"/>
+	</path>
+	
+	<target name="clean">
+		<delete dir="${build.dir}"/>
+	</target>
+	
+	<target name="init">
+		<mkdir dir="${build.dir}"/>
+		<mkdir dir="${build.classes}"/>
+	</target>
+	
+	<target name="compile" depends="init">
+		<javac srcdir="${src.java}"
+		       destdir="${build.classes}"
+		       classpathref="build.classpath"
+		       deprecation="true"
+		       debug="true"
+		       optimize="false"/>
+	</target>
+	
+	<target name="run" depends="compile">
+		<java classname="${class}" fork="yes" classpathref="run.classpath">
+			<arg line="${args}"/>
+		</java>
+	</target>
+	
+</project>
+
