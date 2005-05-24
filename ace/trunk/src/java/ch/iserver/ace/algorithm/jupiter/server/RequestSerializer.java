@@ -102,7 +102,8 @@ public class RequestSerializer extends Thread {
 
 				Algorithm algo = client.getAlgorithm();
 				// switch the vector time (local and remote operation count)
-				algo.receiveRequest(switchVectorTime(req));
+//				algo.receiveRequest(switchVectorTime(req)); //obsolete
+				algo.receiveRequest(req);
 				Operation op = ((OperationExtractDocumentModel) algo
 						.getDocument()).getOperation();
 
@@ -139,7 +140,8 @@ public class RequestSerializer extends Thread {
 				Integer id = new Integer(cl.getSiteId());
 				// switch the vector time (local and remote operation count)
 				SynchronizedQueue q = (SynchronizedQueue) outgoingQueues.get(id);
-				if (q != null) q.add(switchVectorTime(r));
+//				if (q != null) q.add(switchVectorTime(r)); //obsolete
+				if (q != null) q.add(r);
 			}
 		}
 	}
@@ -177,7 +179,7 @@ public class RequestSerializer extends Thread {
         outgoingQueues.put(id, queue);
     }
     
-    /**
+    /** OBSOLETE
      * Removes a ClientProxy from this RequestSerializer.
      * 
      * @param  	siteId
