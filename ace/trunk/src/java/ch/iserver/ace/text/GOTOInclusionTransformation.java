@@ -55,12 +55,23 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
     	int lenA = insA.getTextLength();
     	int posB = insB.getPosition();
     	int lenB = insB.getTextLength();
-    	
+
     	if(posA < posB) {
-    		// Case 1:   operation A is before operation B. [///A///] [\\\B\\\]
+			/*
+			* Operation A starts before operation B.
+			* (B):       "ABCD"
+			* (A):      "12"
+			* (A'):     "12"
+			*/
     		transformedOperation = insA;
     	} else {
-    		// Case 2:   operation A is in or behind operation B. [\\\B\\\] [///A///]   OR   [\\\B\\[XX]//A///]
+			/*
+			* Operation A starts in or behind operation B. Index of operation A' must
+			* be increased by the length of the text of operation B.
+			* (B):      "ABCD"       |     "ABCD"
+			* (A):        "12"       |          "12"
+			* (A'):     "    12"     |          "12"
+			*/
     		transformedOperation = new InsertOperation(posA + lenB, insA.getText());
     	}
         return transformedOperation;
@@ -74,13 +85,30 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
     	int lenB = delB.getTextLength();
     	
     	if(posA <= posB) {
-    		// Case 1:   operation A is before or in operation B. [///A///] [\\\B\\\]   OR   [XXXABXXX]
+			/*
+			* Operation A starts before or at the same position like operation B.
+			* (B):      "ABCD"     |      "ABCD"
+			* (A):      "12"       |     "12"
+			* (A'):     "12"       |     "12"
+			*/
     		transformedOperation = insA;
     	} else if(posA > (posB + lenB)) {
-    		// Case 2:   operation A is after operation B. [\\\B\\\] [///A///]
+			/*
+			* Operation A starts after operation B. Index of operation A' must
+			* be reduced by the length of the text of operation B.
+			* (B):      "ABCD"
+			* (A):             "12"
+			* (A'):        "12"
+			*/
     		transformedOperation = new InsertOperation(posA - lenB, insA.getText());
     	} else {
-    		// Case 3:   operation a is in operation B. [\\\B\\[XX]//A///]
+			/*
+			* Operation A starts in operation B. Index of A' must be the index of
+			* operation B.
+			* (B):      "ABCD"
+			* (A):        "12"
+			* (A'):     "12"
+			*/
     		transformedOperation = new InsertOperation(posB, insA.getText());
     	}
         return transformedOperation;
@@ -94,15 +122,30 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
     	int lenB = insB.getTextLength();
     	
     	if(posB >= (posA + lenA)) {
-    		// Case 1:   start of operation B is after the end of operation A. [///A///] [\\\B\\\]
+			/*
+			* Operation A is completly before operation B.
+			* (B):          "ABCD"
+			* (A):      "12"
+			* (A'):     "12"
+			*/
     		transformedOperation = delA;
     	} else if(posA >= posB) {
-    		// Case 2:   start of operation A is in or behind start of operation B. [\\\B\\\] [///A///]   OR   [\\\B\\[XX]//A///]   OR   [XXXABXXX]
+			/*
+			* Operation A starts before or at the same position like operation B.
+			* (B):      "ABCD"       |     "ABCD"
+			* (A):      "12"         |       "12"
+			* (A'):         "12"     |           "12"
+			*/
     		transformedOperation = new DeleteOperation(posA + lenB, delA.getText());
     	} else {
-    		// insert position is in deleting range -> we need 2 delete operations.
-    		// 1st op: new DeleteOperation(posA, delA.subString(posA, posB-posA))
-    		// 2nd op: new DeleteOperation(posB + lenB, delA.subString(lenA - (posB - posA)), -1)
+			/*
+			* !NOT YET IMPLEMENTED!
+			* Operation B (insert) is in the range of operation A (delete). Operation A'
+			* must be splitted up into two delete operations.
+			* (B):       "ABCD"
+			* (A):      "123456"
+			* (A'):     "1"  "23456"
+			*/
     	}
         return transformedOperation;
     }
@@ -115,10 +158,27 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
     	int lenB = delB.getTextLength();
     	
     	if(posB >= (posA + lenA)) {
+			/*
+			* Operation A is completly before operation B.
+			* (B):          "ABCD"
+			* (A):      "12"
+			* (A'):     "12"
+			*/
     		transformedOperation = delA;
     	} else if(posA >= (posB + lenB)) {
-    		transformedOperation = new DeleteOperation(posA + lenB, delA.getText());
+			/*
+			* Operation A starts at the end or after operation B. Index of operation A'
+			* must be reduced by the length of the text of operation B.
+			* (B):      "ABCD"
+			* (A):             "12"
+			* (A'):        "12"
+			*/
+    		transformedOperation = new DeleteOperation(posA - lenB, delA.getText());
     	} else {
+    		/*
+			* !NOT YET IMPLEMENTED!
+			* Operation A and operation B are overlapping.
+			*/
     		if((posB <= posA) && ((posA + lenA) <= (posB - lenB))) {
     			transformedOperation = new DeleteOperation(0, "");
     		} else if((posB <= posA) && ((posA + lenA) > (posB + lenB))) {
