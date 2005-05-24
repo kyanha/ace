@@ -21,6 +21,8 @@
 package ch.iserver.ace.algorithm.jupiter;
 
 import junit.framework.TestCase;
+import ch.iserver.ace.DocumentModel;
+import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.jupiter.server.ClientProxy;
 import ch.iserver.ace.algorithm.jupiter.server.JupiterServer;
@@ -38,6 +40,91 @@ import ch.iserver.ace.text.InsertOperation;
  * Yet all tests are done with only character wise transformations. 
  */
 public class JupiterAgainstCounterExamplesTest extends TestCase {
+	
+	private class SiteConnection {
+		private Jupiter client;
+		private Jupiter proxy;
+		private DebugExtractDocumentModel model;
+		
+		private SiteConnection(int siteId, String initial) {
+			client = createClient(siteId, initial);
+			model  = new DebugExtractDocumentModel(siteId);
+			proxy  = createProxy(model, siteId);
+		}
+	}
+	
+	private static class DebugExtractDocumentModel implements DocumentModel {
+		private int siteId;
+		private Operation operation;
+		public DebugExtractDocumentModel(int siteId) {
+			this.siteId = siteId;
+		}
+		public void apply(Operation operation) {
+			System.out.println(siteId + ": " + operation);
+			this.operation = operation;
+		}
+		public Operation getOperation() {
+			return operation;
+		}
+	}
+	
+	public void testCounterexample() throws Exception {
+		final String INITIAL = "abc";
+		final String FINAL   = "axyc";
+
+		// sites
+		SiteConnection[] sites = new SiteConnection[] {
+				new SiteConnection(1, INITIAL),
+				new SiteConnection(2, INITIAL),
+				new SiteConnection(3, INITIAL)
+		};
+		
+		// operations
+		InsertOperation op1 = new InsertOperation(1, "x");
+		DeleteOperation op2 = new DeleteOperation(1, "b");
+		InsertOperation op3 = new InsertOperation(2, "y");
+		
+		// generate requests concurrently
+		Request r1 = sites[0].client.generateRequest(op2);
+		Request r2 = sites[1].client.generateRequest(op3);
+		Request r3 = sites[2].client.generateRequest(op1);
+		
+		// server-side processing of request r1
+		sites[0].proxy.receiveRequest(r1);
+		Operation op = (Operation) sites[0].model.getOperation();
+		Request req1 = sites[1].proxy.generateRequest(op);
+		Request req2 = sites[2].proxy.generateRequest(op);
+		sites[1].client.receiveRequest(req1);
+		sites[2].client.receiveRequest(req2);
+		
+		// server-side processing of request r2
+		sites[1].proxy.receiveRequest(r2);
+		op = (Operation) sites[1].model.getOperation();
+		req1 = sites[0].proxy.generateRequest(op);
+		req2 = sites[2].proxy.generateRequest(op);
+		sites[0].client.receiveRequest(req1);
+		sites[2].client.receiveRequest(req2);
+		
+		// server-side processing of request r3
+		sites[2].proxy.receiveRequest(r3);
+		op = (Operation) sites[2].model.getOperation();
+		req1 = sites[0].proxy.generateRequest(op);
+		req2 = sites[1].proxy.generateRequest(op);
+		sites[0].client.receiveRequest(req1);
+		sites[1].client.receiveRequest(req2);
+		
+		// verify
+		String content = ((TestDocumentModel) sites[0].client.getDocument()).getText();
+		assertEquals(FINAL, content);
+		content = ((TestDocumentModel) sites[1].client.getDocument()).getText();
+		assertEquals(FINAL, content);	
+		content = ((TestDocumentModel) sites[2].client.getDocument()).getText();
+		assertEquals(FINAL, content);
+	}
+	
+	private Jupiter createProxy(DocumentModel model, int siteId) {
+		return new Jupiter(new GOTOInclusionTransformation(), model, siteId);
+	}
 	
 	/**
 	 * This example is taken from ecscw03.pdf figure 4/5. 
@@ -113,17 +200,17 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		//TODO: site3 diverges!!!
 		
 //		//some additional tests
-//		assertEquals(2, net[2].getRequests().size());
+		assertEquals(2, net[2].getRequests().size());
 //		//here we apply op2 and op3 also to site 3 and compare
 //		//the document content with the other sites. However, this is 
 //		//not done in the original example.
-//		req2 = (Request)net[2].getRequests().remove(0);
-//		site3.receiveRequest(req2);
-//		req3 = (Request)net[2].getRequests().remove(0);
-//		site3.receiveRequest(req3);
-//		String contentSite3 = ((TestDocumentModel)site3.getDocument()).getText();
-//		System.out.println(contentSite3);
-//		assertEquals(FINAL, contentSite3);
+		req2 = (Request)net[2].getRequests().remove(0);
+		site3.receiveRequest(req2);
+		req3 = (Request)net[2].getRequests().remove(0);
+		site3.receiveRequest(req3);
+		String contentSite3 = ((TestDocumentModel)site3.getDocument()).getText();
+		System.out.println(contentSite3);
+		assertEquals(FINAL, contentSite3);
 	}
 	
 	/**
