@@ -89,7 +89,7 @@ public class JupiterServer {
     		DefaultClientProxy proxy = (DefaultClientProxy)serializer.getClientProxies().get(id);
         if (proxy != null) {
         		proxy.closeNetServiceConnection();
-        		((RequestForwarder)requestForwarders.remove(id)).interrupt();
+        		((RequestForwarder)requestForwarders.remove(id)).shutdown();
         		serializer.removeClientProxy(siteId);
         		LOG.info("removeClient #"+siteId);
         }
@@ -108,7 +108,7 @@ public class JupiterServer {
 	* Returns the client count.
 	*/
 	int getClientCount() {
-		return siteIdCounter;
+		return serializer.getClientProxies().size();
 	}
 	
 	/**
