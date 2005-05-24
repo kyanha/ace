@@ -146,7 +146,7 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 			* (A):      "123456"
 			* (A'):     "1"  "23456"
 			*/
-			throw new RunTimeException("transform(Delete,Insert): not yet implemented");
+		throw new RuntimeException("transform(Delete,Insert): not yet implemented");
     	}
         return transformedOperation;
     }
@@ -180,16 +180,17 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 			* !NOT YET IMPLEMENTED!
 			* Operation A and operation B are overlapping.
 			*/
-			throw new RunTimeException("transform(Delete,Delete): not yet implemented");
-    		if((posB <= posA) && ((posA + lenA) <= (posB - lenB))) {
-    			transformedOperation = new DeleteOperation(0, "");
-    		} else if((posB <= posA) && ((posA + lenA) > (posB + lenB))) {
-    			transformedOperation = new DeleteOperation(0, "");
-    		} else if((posB > posA) && ((posB + lenB) >= (posA + lenA))) {
-    			transformedOperation = new DeleteOperation(0, "");
-    		} else {
-    			transformedOperation = new DeleteOperation(0, "");
-    		}
+		throw new RuntimeException("transform(Delete,Delete): not yet implemented");
+    		
+//		if((posB <= posA) && ((posA + lenA) <= (posB - lenB))) {
+//    			transformedOperation = new DeleteOperation(0, "");
+//    		} else if((posB <= posA) && ((posA + lenA) > (posB + lenB))) {
+//    			transformedOperation = new DeleteOperation(0, "");
+//    		} else if((posB > posA) && ((posB + lenB) >= (posA + lenA))) {
+//    			transformedOperation = new DeleteOperation(0, "");
+//    		} else {
+//    			transformedOperation = new DeleteOperation(0, "");
+//    		}
     	}
         return transformedOperation;
     }
