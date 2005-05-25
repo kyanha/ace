@@ -33,6 +33,8 @@ import ch.iserver.ace.algorithm.InclusionTransformation;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.Timestamp;
 
+import ch.iserver.ace.text.*;
+
 /**
  * This class implements the client-side core of the Jupiter control algorithm.
  */
@@ -147,8 +149,16 @@ public void receiveRequest(Request req) {
         	OperationWrapper wrap = (OperationWrapper)ackRequestList.get(ackRequestListCnt);
         	Operation existingOp = wrap.getOperation();
 
+	if (newOp instanceof InsertOperation && existingOp instanceof InsertOperation) {
+		if(siteId > req.getSiteId()) {
+			((InsertOperation)newOp).setPosition(((InsertOperation)newOp).getPosition() + 1);
+		}
+	}
+	
         	Operation transformedOp = inclusion.transform(newOp, existingOp);
+			//System.out.println("T(newOp, eOp): " + newOp + " & " + existingOp + " -> " + transformedOp);
         	existingOp = inclusion.transform(existingOp, newOp);
+			//System.out.println("T(eOp, newOp): " + existingOp + " & " + newOp + " -> " + existingOp);
         	ackRequestList.set(ackRequestListCnt, new OperationWrapper(existingOp, wrap.getLocalOperationCount()));
 
         	newOp = transformedOp;
