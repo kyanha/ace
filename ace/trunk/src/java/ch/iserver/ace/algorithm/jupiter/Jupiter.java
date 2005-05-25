@@ -121,10 +121,8 @@ public class Jupiter implements Algorithm {
 	 */
 	public void receiveRequest(Request req) {
         JupiterRequest jupReq = (JupiterRequest)req;
-        //Discard acknowledged messages.
-
         System.out.println("ini:"+ackRequestList);
-
+        //Discard acknowledged messages.
         Iterator iter = ackRequestList.iterator();
         while(iter.hasNext()) {
         		OperationWrapper wrap = (OperationWrapper)iter.next();
@@ -141,14 +139,12 @@ public class Jupiter implements Algorithm {
         Operation newOp = jupReq.getOperation();
         
 		// transform
-        for(int ackRequestListCnt = 0; ackRequestListCnt < ackRequestList.size(); ackRequestListCnt++) {
+        for (int ackRequestListCnt = 0; ackRequestListCnt < ackRequestList.size(); ackRequestListCnt++) {
 	        	OperationWrapper wrap = (OperationWrapper)ackRequestList.get(ackRequestListCnt);
 	        	Operation existingOp = wrap.getOperation();
 	
 	        	Operation transformedOp = inclusion.transform(newOp, existingOp);
-	        	//System.out.println("T(newOp, eOp): " + newOp + " & " + existingOp + " -> " + transformedOp);
 	        	existingOp = inclusion.transform(existingOp, newOp);
-			//System.out.println("T(eOp, newOp): " + existingOp + " & " + newOp + " -> " + existingOp);
 	        	ackRequestList.set(ackRequestListCnt, new OperationWrapper(existingOp, wrap.getLocalOperationCount()));
 	
 	        	newOp = transformedOp;
@@ -167,7 +163,7 @@ public class Jupiter implements Algorithm {
 	 * @see Jupiter#generateRequest(Operation)
 	 * @see Jupiter#receiveRequest(Request)
 	 */
-	class OperationWrapper {
+	private class OperationWrapper {
 
 		private Operation op;
 
