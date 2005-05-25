@@ -45,6 +45,10 @@ public class JupiterTest extends AlgorithmTestCase {
 		execute("/test/ecscw03-fig3.xml");
 	}
 	
+	public void testInsertInsert() throws Exception {
+		execute("/test/insert-insert.xml");
+	}
+	
 	/**
 	 * @see ch.iserver.ace.test.AlgorithmTestFactory#createAlgorithm(int)
 	 */

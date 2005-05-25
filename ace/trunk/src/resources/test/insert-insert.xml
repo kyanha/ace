@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scenario initial="abc" final="a21bc">
+    
+    <operation id="1" type="ch.iserver.ace.text.InsertOperation">
+        <property name="position" value="1"/>
+        <property name="text" value="1"/>
+    </operation>
+    
+    <operation id="2" type="ch.iserver.ace.text.InsertOperation">
+        <property name="position" value="1"/>
+        <property name="text" value="2"/>
+    </operation>
+    
+    <site id="1">
+        <generate ref="1"/>
+        <receive ref="2"/>
+    </site>
+    
+    <site id="2">
+        <generate ref="2"/>
+        <receive ref="1"/>
+    </site>
+    
+</scenario>
