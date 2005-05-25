@@ -33,10 +33,11 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
     /* (non-Javadoc)
      * @see ch.iserver.ace.algorithm.InclusionTransformation#transform(ch.iserver.ace.Operation, ch.iserver.ace.Operation)
      */
-    private int transformCounter = 1;
+    private int transformedCnt = 1;
      
     public Operation transform(Operation op1, Operation op2) {
-    	System.out.println(transformCounter++);
+    	transformedCnt++;
+    	//System.out.println(transformedCnt++);
         Operation transformedOp;
         if (op1 instanceof InsertOperation && op2 instanceof InsertOperation) {
             transformedOp = transform((InsertOperation)op1, (InsertOperation)op2);
