@@ -1,0 +1,16 @@
+#
+# Echo Server/Client using BEEP
+#
+
+= Running =
+
+To run the server type:
+
+  ant run-server
+  
+To run the client type:
+
+  ant run-client
+  
+This ant target tries to connect to a echo server on the local machine.
+It sends 5 echo requests with 64 byte of data.
