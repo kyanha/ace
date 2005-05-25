@@ -41,16 +41,16 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
         Operation transformedOp;
         if (op1 instanceof InsertOperation && op2 instanceof InsertOperation) {
             transformedOp = transform((InsertOperation)op1, (InsertOperation)op2);
-            System.out.println("transform("+op1+", "+op2+") = "+transformedOp);
+            System.out.println("\ttransform("+op1+", "+op2+") = "+transformedOp);
         } else if (op1 instanceof InsertOperation && op2 instanceof DeleteOperation) {
             transformedOp = transform((InsertOperation)op1, (DeleteOperation)op2);
-            System.out.println("transform("+op1+", "+op2+") = "+transformedOp);
+            System.out.println("\ttransform("+op1+", "+op2+") = "+transformedOp);
         } else if (op1 instanceof DeleteOperation && op2 instanceof InsertOperation) {
             transformedOp = transform((DeleteOperation)op1, (InsertOperation)op2);
-            System.out.println("transform("+op1+", "+op2+") = "+transformedOp);
+            System.out.println("\ttransform("+op1+", "+op2+") = "+transformedOp);
         } else if (op1 instanceof DeleteOperation && op2 instanceof DeleteOperation) {
             transformedOp = transform((DeleteOperation)op1, (DeleteOperation)op2);
-            System.out.println("transform("+op1+", "+op2+") = "+transformedOp);
+            System.out.println("\ttransform("+op1+", "+op2+") = "+transformedOp);
         } else {
             throw new InvalidParameterException();
         }
@@ -64,7 +64,7 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
     	int posB = insB.getPosition();
     	int lenB = insB.getTextLength();
 
-    	if(posA < posB) {
+    	if(posA < posB || posA == posB && insA.getText().charAt(0) < insB.getText().charAt(0)) {
 			/*
 			* Operation A starts before operation B.
 			* (B):       "ABCD"
