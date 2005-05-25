@@ -44,7 +44,8 @@ import org.jgroups.View;
 import org.jgroups.blocks.PullPushAdapter;
 
 /**
- * 
+ * A SimpleChat application based on JGroups. It allows the user to
+ * join a JGroup group by name and send messages to the joined group.
  */
 public class SimpleChat extends JFrame {
 	private JButton joinButton;
@@ -61,6 +62,11 @@ public class SimpleChat extends JFrame {
 	private String group;
 	private ChatConfig config;
 	
+	/**
+	 * Create new SimpleChat client. 
+	 * 
+	 * @param config the chat config
+	 */
 	public SimpleChat(ChatConfig config) {
 		super();		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -144,7 +150,12 @@ public class SimpleChat extends JFrame {
 	private void handleException(Exception e) {
 		e.printStackTrace();
 	}
-	
+
+	/**
+	 * Enable/disable GUI.
+	 * 
+	 * @param enable whether to enable or disable GUI
+	 */
 	public void doEnable(boolean enable) {
 		joinButton.setEnabled(!enable);
 		leaveButton.setEnabled(enable);
@@ -152,50 +163,80 @@ public class SimpleChat extends JFrame {
 		messageField.setEnabled(enable);
 	}
 	
+	/**
+	 * Connect to group specified by its <var>name</var>.
+	 * 
+	 * @param name the name of the group to connect to
+	 * @throws ChannelException
+	 */
 	public void connect(String name) throws ChannelException {
 		try {
+			// remember the current group name
 			this.group = name;
+			
+			// create the channel
 			channel = new JChannel();
-			channel.setOpt(Channel.GET_STATE_EVENTS, new Boolean(true));
+			// connect to channel
 			channel.connect(name);
-			System.out.println("... trying to get state");
-			if (channel.getState(null, 5000)) {
-				System.out.println("... got state");
-			}
+			// create PullPushAdapter to receive messages with MessageListener
 			adapter = new PullPushAdapter(channel);
+			// add listeners (MessageListener and MembershipListener)
 			adapter.setListener(new MyMessageListener());
 			adapter.addMembershipListener(new MyMembershipListener());
+			
+			// adapt the window title to the new group name
 			setTitle(createTitle(config));
 		} finally {
 			doEnable(true);
 		}
 	}
 	
+	/**
+	 * Sends the given <var>message</var> to the current group. All current
+	 * members of the group will receive this message.
+	 * 
+	 * @param message the message text to send
+	 * @throws ChannelException
+	 */
 	public void send(String message) throws ChannelException {
 		if (channel != null) {
+			// create the message object based on user name and given message
 			String username = config.getUserName();
 			Message msg = new Message(null, null, username + "> " + message);
 			channel.send(msg);
 		}
 	}
 	
+	/**
+	 * Close the current channel, leaving the current group. This
+	 * method brings the application back to its initial state.
+	 */
 	public void disconnect() {
 		try {
+			// stop the PullPushAdapter
 			adapter.stop();
+			// disconnect from the channel
 			channel.disconnect();
+			// close the channel
 			channel.close();
 		} finally {
+			// reset state variables
 			group = null;
 			adapter = null;
 			channel = null;
+			// disable buttons, textfields, ...
 			doEnable(false);
 		}
 	}
-		
+	
+	/**
+	 * Simple MessageListener that prints appends the received message
+	 * text to the text area.
+	 */
 	private class MyMessageListener implements MessageListener {
 		public byte[] getState() {
 			System.out.println("*** get state");
-			return messageArea.getText().getBytes();
+			return null;
 		}
 	
 		public void receive(Message message) {
@@ -205,10 +246,12 @@ public class SimpleChat extends JFrame {
 	
 		public void setState(byte[] state) {
 			System.out.println("*** set state");
-			messageArea.setText(new String(state));
 		}
 	}
 	
+	/**
+	 * A MembershipListener that outputs any events to System.out.
+	 */
 	private class MyMembershipListener implements MembershipListener {
 		public void block() {
 			

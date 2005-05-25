@@ -22,10 +22,15 @@
 package ch.iserver.ace.net.jgroups;
 
 /**
- * 
+ * Simple interface to retrieve chat configuration.
  */
 public interface ChatConfig {
 
+	/**
+	 * Get the user name (nick name) of the active user.
+	 * 
+	 * @return the user name
+	 */
 	public String getUserName();
 	
 }

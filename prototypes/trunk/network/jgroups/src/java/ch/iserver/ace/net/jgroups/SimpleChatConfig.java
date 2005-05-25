@@ -24,11 +24,16 @@ package ch.iserver.ace.net.jgroups;
 import javax.swing.JOptionPane;
 
 /**
- * 
+ * Simple chat config implementation that asks the user for its username
+ * in a option pane.
  */
 public class SimpleChatConfig implements ChatConfig {
+	/** the user name */
 	private String username;
 	
+	/**
+	 * @inheritDoc
+	 */
 	public String getUserName() {
 		while (username == null) {
 			username = JOptionPane.showInputDialog("Enter nick name");
