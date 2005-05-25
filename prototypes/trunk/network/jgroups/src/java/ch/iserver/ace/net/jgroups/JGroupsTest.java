@@ -36,7 +36,7 @@ public class JGroupsTest {
 		System.out.println("... connected to " + group);
 		System.out.println("... local address is " + channel.getLocalAddress());
 		System.out.println("... waiting for messages");
-		
+
 		try {
 			Object obj = channel.receive(0);
 			if (obj instanceof Message) {
@@ -50,21 +50,21 @@ public class JGroupsTest {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static void main(String[] args) {
 		String props = "UDP(mcast_addr=228.1.2.3;mcast_port=45566;ip_ttl=32):"
 				+ "PING(timeout=3000;num_initial_members=6):"
-				+ "FD(timeout=5000):" + "VERIFY_SUSPECT(timeout=1500):"
-				+ "pbcast.STABLE(desired_avg_gossip=10000):"
+				+ "FD(timeout=5000):" 
+				+ "VERIFY_SUSPECT(timeout=1500):"
 				+ "pbcast.NAKACK(gc_lag=10;retransmit_timeout=3000):"
-				+ "UNICAST:" 
+				+ "pbcast.STABLE(desired_avg_gossip=10000):"
+				+ "UNICAST(timeout=5000):" 
 				+ "FRAG:"
-				+ "pbcast.GMS(join_timeout=5000;"
-				+ "join_retry_timeout=2000;shun=false;print_local_addr=false)";
+				+ "pbcast.GMS(join_timeout=5000;shun=false;print_local_addr=false)";
 		JChannel channel;
 		try {
-			//channel = new JChannel(props);
-			channel = new JChannel();
+			channel = new JChannel(props);
+			// channel = new JChannel();
 			System.out.println("... created channel");
 			new JGroupsTest(channel, args[0]);
 		} catch (ChannelException e) {
