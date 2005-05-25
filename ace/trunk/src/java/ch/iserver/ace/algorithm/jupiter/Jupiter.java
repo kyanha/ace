@@ -152,6 +152,7 @@ public void receiveRequest(Request req) {
 
 	if (newOp instanceof InsertOperation && existingOp instanceof InsertOperation) {
 		System.out.println("insert(" + siteId + ") / insert(" + jupReq.getSiteId() + ")");
+		System.out.println("jupReq = " + jupReq);
 		if(siteId > jupReq.getSiteId()) {
 			System.out.println("siteId > req.getSiteId()");
 			((InsertOperation)newOp).setPosition(((InsertOperation)newOp).getPosition() + 1);
