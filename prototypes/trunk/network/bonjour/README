@@ -1,0 +1,26 @@
+#
+# Bonjour (aka Rendezvous) enabled version of echo server/client
+#
+
+= Requirements =
+
+To build and run this example, one must download and install bonjour Java
+API from apple: http://developer.apple.com/darwin/projects/bonjour/
+You must register with ADC in order to download the source code.
+
+The Bonjour jar should be installed into JAVA_HOME/lib as well as the
+native JNI libraries should be installed into the correct place.
+
+
+= Running the Example =
+
+To run the server type:
+
+  ant run-server
+  
+To run the client type:
+
+  ant run-client
+  
+You can run multiple servers to see that the client discovers all of
+them.
