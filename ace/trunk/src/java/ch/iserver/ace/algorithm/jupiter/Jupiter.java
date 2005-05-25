@@ -33,8 +33,6 @@ import ch.iserver.ace.algorithm.InclusionTransformation;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.Timestamp;
 
-import ch.iserver.ace.text.*;
-
 /**
  * This class implements the client-side core of the Jupiter control algorithm.
  */
@@ -101,7 +99,6 @@ public class Jupiter implements Algorithm {
 	 */
 	public Request generateRequest(Operation op) {
 		//apply op locally;
-		System.out.print(siteId + ": ");
 		document.apply(op);
 
 		//send(op, myMsgs, otherMsgs);
@@ -122,11 +119,11 @@ public class Jupiter implements Algorithm {
 	 * 
 	 * @see ch.iserver.ace.algorithm.Algorithm#receiveRequest(ch.iserver.ace.algorithm.Request)
 	 */
-public void receiveRequest(Request req) {
+	public void receiveRequest(Request req) {
         JupiterRequest jupReq = (JupiterRequest)req;
         //Discard acknowledged messages.
 
-        System.out.println(siteId+":bf:"+ackRequestList);
+        System.out.println("ini:"+ackRequestList);
 
         Iterator iter = ackRequestList.iterator();
         while(iter.hasNext()) {
@@ -135,43 +132,29 @@ public void receiveRequest(Request req) {
         			iter.remove();
         		}
         }
-        System.out.println(siteId+":af:"+ackRequestList);
+        System.out.println("dsc:"+ackRequestList);
         
         //ASSERT msg.myMsgs == otherMsgs
         assert jupReq.getJupiterVectorTime().getLocalOperationCount() == 
         				vectorTime.getRemoteOperationCount() : "msg.myMsgs != otherMsgs !!";
-        	
-
+        				
         Operation newOp = jupReq.getOperation();
         
 		// transform
         for(int ackRequestListCnt = 0; ackRequestListCnt < ackRequestList.size(); ackRequestListCnt++) {
-        	OperationWrapper wrap = (OperationWrapper)ackRequestList.get(ackRequestListCnt);
-        	Operation existingOp = wrap.getOperation();
-
-
-	if (newOp instanceof InsertOperation && existingOp instanceof InsertOperation) {
-		System.out.println("insert(" + siteId + ") / insert(" + jupReq.getSiteId() + ")");
-		System.out.println("jupReq = " + jupReq);
-		if(siteId > jupReq.getSiteId()) {
-			System.out.println("siteId > req.getSiteId()");
-			if(   ((InsertOperation)newOp).getPosition() == ((InsertOperation)existingOp).getPosition()  ) {
-				((InsertOperation)newOp).setPosition(((InsertOperation)newOp).getPosition() + 1);
-			}
-		}
-	}
+	        	OperationWrapper wrap = (OperationWrapper)ackRequestList.get(ackRequestListCnt);
+	        	Operation existingOp = wrap.getOperation();
 	
-        	Operation transformedOp = inclusion.transform(newOp, existingOp);
-			//System.out.println("T(newOp, eOp): " + newOp + " & " + existingOp + " -> " + transformedOp);
-        	existingOp = inclusion.transform(existingOp, newOp);
+	        	Operation transformedOp = inclusion.transform(newOp, existingOp);
+	        	//System.out.println("T(newOp, eOp): " + newOp + " & " + existingOp + " -> " + transformedOp);
+	        	existingOp = inclusion.transform(existingOp, newOp);
 			//System.out.println("T(eOp, newOp): " + existingOp + " & " + newOp + " -> " + existingOp);
-        	ackRequestList.set(ackRequestListCnt, new OperationWrapper(existingOp, wrap.getLocalOperationCount()));
-
-        	newOp = transformedOp;
+	        	ackRequestList.set(ackRequestListCnt, new OperationWrapper(existingOp, wrap.getLocalOperationCount()));
+	
+	        	newOp = transformedOp;
         }
         
-        System.out.println(siteId+":af2:"+ackRequestList);
-        System.out.print(siteId+": ");
+        System.out.println("tnf:"+ackRequestList);
         document.apply(newOp);
         vectorTime.incrementRemoteRequestCount();
     }
