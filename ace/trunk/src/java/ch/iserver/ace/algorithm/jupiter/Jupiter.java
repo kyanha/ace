@@ -155,7 +155,9 @@ public void receiveRequest(Request req) {
 		System.out.println("jupReq = " + jupReq);
 		if(siteId > jupReq.getSiteId()) {
 			System.out.println("siteId > req.getSiteId()");
-			((InsertOperation)newOp).setPosition(((InsertOperation)newOp).getPosition() + 1);
+			if(   ((InsertOperation)newOp).getPosition() == ((InsertOperation)existingOp).getPosition()  ) {
+				((InsertOperation)newOp).setPosition(((InsertOperation)newOp).getPosition() + 1);
+			}
 		}
 	}
 	
