@@ -150,7 +150,7 @@ public void receiveRequest(Request req) {
         	Operation existingOp = wrap.getOperation();
 
 	if (newOp instanceof InsertOperation && existingOp instanceof InsertOperation) {
-		System.out.println("insert / insert");
+		System.out.println("insert(" + siteId + ") / insert(" + req.getSiteId() + ")");
 		if(siteId > req.getSiteId()) {
 			System.out.println("siteId > req.getSiteId()");
 			((InsertOperation)newOp).setPosition(((InsertOperation)newOp).getPosition() + 1);
