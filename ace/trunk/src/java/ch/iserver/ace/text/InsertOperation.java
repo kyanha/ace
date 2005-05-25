@@ -60,7 +60,7 @@ public class InsertOperation implements Operation {
 	}
 	
 	public String toString() {
-		return "Insert(" + position + ",'" + text + "')";
+		return "Insert(" + position + "," + text + ")";
 	}
 	
 	public boolean equals(Object obj) {

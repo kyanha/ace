@@ -55,6 +55,8 @@ public class Jupiter implements Algorithm {
      */
     private HashMap ackRequestList;
     
+    private List outgoing;
+    
     /**
      * Class constructor that creates a new Jupiter algorithm. The parameters fully 
      * initialize the algorithm.
@@ -69,6 +71,7 @@ public class Jupiter implements Algorithm {
         init(document, new JupiterVectorTime(0, 0));
         operationBuffer = new ArrayList();
         ackRequestList = new HashMap();
+        outgoing = new ArrayList();
     }
     
     /**
@@ -82,6 +85,7 @@ public class Jupiter implements Algorithm {
         this.siteId = siteId;
         operationBuffer = new ArrayList();
         ackRequestList = new HashMap();
+        outgoing = new ArrayList();
     }
     
     /* (non-Javadoc)
@@ -89,11 +93,13 @@ public class Jupiter implements Algorithm {
      */
     public Request generateRequest(Operation op) {
         //apply op locally;
+    		System.out.print(siteId+": "); 
         document.apply(op);
         //send(op, myMsgs, otherMsgs);
         Request req = new JupiterRequest(siteId, (JupiterVectorTime)vectorTime.clone(), op);
         //add(op, myMsgs) to outgoing;
-        ackRequestList.put(new Integer(vectorTime.getLocalOperationCount()), op);
+        /** ackRequestList.put(new Integer(vectorTime.getLocalOperationCount()), op); **/
+        outgoing.add(new Wrapper(op, vectorTime.getLocalOperationCount()));
         //myMsgs = myMsgs + 1;
         vectorTime.incrementLocalOperationCount();
         return req;
@@ -105,43 +111,98 @@ public class Jupiter implements Algorithm {
     public void receiveRequest(Request req) {
         JupiterRequest jupReq = (JupiterRequest)req;
         //Discard acknowledged messages.
-        Iterator iter = ackRequestList.keySet().iterator();
+//        System.out.println("bf:"+ackRequestList);
+        System.out.println("bf:"+outgoing);
+        /**Iterator iter = ackRequestList.keySet().iterator();**/
+        Iterator iter = outgoing.iterator();
         while(iter.hasNext()) {
+        		/**
         		Integer localOperationCount = (Integer)iter.next();
         		if (localOperationCount.intValue() < 
         			jupReq.getJupiterVectorTime().getRemoteOperationCount()) {
         			iter.remove();
         		}
+        		**/
+        		Wrapper wrap = (Wrapper)iter.next();
+        		if (wrap.getLocalOperationCount() < jupReq.getJupiterVectorTime().getRemoteOperationCount()) {
+        			iter.remove();
+        		}
         }
-        
+//        System.out.println("af:"+ackRequestList);
+        System.out.println("af:"+outgoing);
         //ASSERT msg.myMsgs == otherMsgs
         assert jupReq.getJupiterVectorTime().getLocalOperationCount() == 
         				vectorTime.getRemoteOperationCount() : "msg.myMsgs != otherMsgs !!";
-        
-        iter = ackRequestList.keySet().iterator();
+        	
+        /** iter = ackRequestList.keySet().iterator(); **/
+        	iter = outgoing.iterator();
         Operation newOp = jupReq.getOperation();
-        HashMap transformedOps = new HashMap();
+        
+        /** HashMap transformedOps = new HashMap(); **/
+        List transformedOperations = new ArrayList();
         while (iter.hasNext()) {
             //transform new operation and the ones in the queue.
-            Integer key = (Integer)iter.next();
+            /**
+        		Integer key = (Integer)iter.next();
             Operation existingOp = (Operation)ackRequestList.get(key);
             Operation transformedOp = inclusion.transform(newOp, existingOp);
             transformedOps.put(key, inclusion.transform(existingOp, newOp));
             newOp = transformedOp;
+            **/
+            Wrapper wrap = (Wrapper)iter.next();
+            Operation existingOp = wrap.getOperation();
+            Operation transformedOp = inclusion.transform(newOp, existingOp);
+            existingOp = inclusion.transform(existingOp, newOp);
+            transformedOperations.add(new Wrapper(existingOp, wrap.getLocalOperationCount()));
+            newOp = transformedOp;
         }
-        //put all transformed operations into the 'outgoing' list.
-        ackRequestList.putAll(transformedOps);
         
+        //put all transformed operations into the 'outgoing' list.
+//        ackRequestList.putAll(transformedOps);
+        //TODO: could there be a multithreading problem so that operations get lost??
+        assert outgoing.size() == transformedOperations.size() : "operations lost!";
+        outgoing = transformedOperations;
+//        System.out.println("af2:"+ackRequestList);
+        System.out.println("af2:"+outgoing);
+        System.out.print(siteId+": ");
         document.apply(newOp);
         vectorTime.incrementRemoteRequestCount();
+    }
+    
+    /**
+     * This is a simple helper class used in the implementation of the 
+     * Jupiter algorithm. A Wrapper instance is created with an 
+     * operation and the current local operation count and inserted
+     * into the outgoing queue (see {@link Jupiter#outgoing}).
+     *
+     * @see Jupiter#generateRequest(Operation)
+     * @see Jupiter#receiveRequest(Request)
+     */
+    class Wrapper {
+    	
+    		private Operation op;
+    		private int count;
+    	
+    		Wrapper(Operation op, int count) {
+    			this.op = op;
+    			this.count = count;
+    		}
+    		
+    		Operation getOperation() {
+    			return op;
+    		}
+    		
+    		int getLocalOperationCount() {
+    			return count;
+    		}
     }
     
     /* (non-Javadoc)
      * @see ch.iserver.ace.algorithm.Algorithm#init(ch.iserver.ace.DocumentModel, ch.iserver.ace.algorithm.Timestamp)
      */
     public void init(DocumentModel doc, Timestamp timestamp) {
-    		assert doc != null : "document model may not be null";
-    		assert timestamp != null : "timestamp may not be null";
+    		if ( doc == null || timestamp == null)
+    			throw new IllegalArgumentException("null parameter not allowed.");
         document = doc;
         vectorTime = (JupiterVectorTime)timestamp;
     }
