@@ -35,6 +35,8 @@ import ch.iserver.ace.text.InsertOperation;
  */
 public class TestDocumentModel extends PlainDocument implements DocumentModel {
 
+	private int siteId;
+	
 	public TestDocumentModel(String content) {
 		try {
 			insertString(0, content, null);
@@ -43,6 +45,12 @@ public class TestDocumentModel extends PlainDocument implements DocumentModel {
 			throw new RuntimeException("unexpected code path");
 		}
 	}
+	
+	public TestDocumentModel(int id, String content) {
+		this(content);
+		siteId = id;
+	}
+
 	
 	public void apply(Operation operation) {
 		try {
@@ -56,6 +64,7 @@ public class TestDocumentModel extends PlainDocument implements DocumentModel {
 		} catch (BadLocationException e) {
 			throw new DocumentModelException(e);
 		}
+		System.out.println("clientDoc.apply("+operation+") = "+getText());
 	}
 	
 	public String getText() {
