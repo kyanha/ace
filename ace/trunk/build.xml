@@ -91,6 +91,7 @@
 	
 	<target name="test" depends="compile-tests">
 		<junit showoutput="yes" printsummary="yes" fork="true">
+			<jvmarg value="-enableassertions"/>
 			<classpath refid="classpath.run"/>
 			<formatter type="plain"/>
 			<batchtest todir="${build.testreports}" unless="testcase">
