@@ -64,7 +64,7 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
     	int posB = insB.getPosition();
     	int lenB = insB.getTextLength();
     	//TODO: the char comparison could/should be replaced later by a client/server flag
-    	if(posA < posB || posA == posB && insA.getText().charAt(0) < insB.getText().charAt(0)) {
+    	if (posA < posB || posA == posB && insA.getText().charAt(0) < insB.getText().charAt(0)) {
 			/*
 			* Operation A starts before operation B.
 			* (B):       "ABCD"
