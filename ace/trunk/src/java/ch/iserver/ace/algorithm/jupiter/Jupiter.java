@@ -124,6 +124,10 @@ public class Jupiter implements Algorithm {
         System.out.println("ini:"+ackRequestList);
         //Discard acknowledged messages.
         Iterator iter = ackRequestList.iterator();
+        // TODO: what happens if jupReq.remoteOpCount < ackRequestList[0].localOpCount
+        //       this is a violation of a precondition for receiveRequest and
+        //       signifies a serious error condition...
+        //       => throw exception?!
         while(iter.hasNext()) {
         		OperationWrapper wrap = (OperationWrapper)iter.next();
         		if (wrap.getLocalOperationCount() < jupReq.getJupiterVectorTime().getRemoteOperationCount()) {
