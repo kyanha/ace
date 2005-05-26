@@ -121,13 +121,17 @@ public class Jupiter implements Algorithm {
 	 */
 	public void receiveRequest(Request req) {
         JupiterRequest jupReq = (JupiterRequest)req;
+        checkPreconditions(jupReq);
+        
+        //TODO: it is possible for the traffic to one side (client/server) to be one-sided, 
+        //e.g. only one client writes text and the other sites are idle.
+        //Therefore, each side must periodically generate explicit acknowledgments 
+        //(i.e. no-op messages) to prevent the outgoing queues from growing forever.
+        
         System.out.println("ini:"+ackRequestList);
+        
         //Discard acknowledged messages.
         Iterator iter = ackRequestList.iterator();
-        // TODO: what happens if jupReq.remoteOpCount < ackRequestList[0].localOpCount
-        //       this is a violation of a precondition for receiveRequest and
-        //       signifies a serious error condition...
-        //       => throw exception?!
         while(iter.hasNext()) {
         		OperationWrapper wrap = (OperationWrapper)iter.next();
         		if (wrap.getLocalOperationCount() < jupReq.getJupiterVectorTime().getRemoteOperationCount()) {
@@ -158,6 +162,26 @@ public class Jupiter implements Algorithm {
         document.apply(newOp);
         vectorTime.incrementRemoteRequestCount();
     }
+	
+	/**
+	 * Test 3 preconditions that must be fulfilled before transforming. They are taken 
+	 * from the Jupiter paper.
+	 * 
+	 * @param jupReq the request to be tested.
+	 */
+	private void checkPreconditions(JupiterRequest jupReq) {
+		if (!ackRequestList.isEmpty() && 
+				jupReq.getJupiterVectorTime().getRemoteOperationCount() 
+					< ((OperationWrapper)ackRequestList.get(0)).getLocalOperationCount()) {
+				throw new JupiterException("precondition #1 violated.");
+		} else if (jupReq.getJupiterVectorTime().getRemoteOperationCount() 
+				> vectorTime.getLocalOperationCount()) {
+			throw new JupiterException("precondition #2 violated.");
+		} else if (jupReq.getJupiterVectorTime().getLocalOperationCount() 
+				!= vectorTime.getRemoteOperationCount()) {
+			throw new JupiterException("precondition #3 violated.");
+		}
+	}
 	/**
 	 * This is a simple helper class used in the implementation of the Jupiter
 	 * algorithm. A OperationWrapper instance is created with an operation and
