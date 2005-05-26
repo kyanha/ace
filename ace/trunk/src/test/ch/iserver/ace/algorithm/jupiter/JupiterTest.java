@@ -55,6 +55,10 @@ public class JupiterTest extends AlgorithmTestCase {
 		execute("/test/multistep-path-divergence-4-2.xml");
 	}
 	
+	public void testPartialConcurrency() throws Exception {
+		execute("/test/partial-concurrency.xml");
+	}
+	
 	/**
 	 * @see ch.iserver.ace.test.AlgorithmTestFactory#createAlgorithm(int)
 	 */
