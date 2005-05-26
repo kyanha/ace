@@ -128,6 +128,11 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 	}
 	
 	/**
+	 * This is the same test as in {@link JupiterAgainstCounterExamplesTest#testCounterexample()}
+	 * but without the main classes that constitute the Jupiter server, namely {@link JupiterServer}
+	 * and {@link ch.iserver.ace.algorithm.jupiter.server.RequestSerializer}. These are circumvented
+	 * by having the logic of distributing the requests in this test method instead of in
+	 * {@link ch.iserver.ace.algorithm.jupiter.server.RequestSerializer}.
 	 * 
 	 * @throws Exception
 	 */
@@ -423,6 +428,15 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		assertEquals(FINAL, contentSite3);
 	}
 	
+	/**
+	 * This is the same test as in {@link JupiterAgainstCounterExamplesTest#testC2puzzleP1()	}
+	 * but without the main classes that constitute the Jupiter server, basically {@link JupiterServer}
+	 * and {@link ch.iserver.ace.algorithm.jupiter.server.RequestSerializer}. These are circumvented
+	 * by having the logic of distributing the requests in this test method instead of in
+	 * {@link ch.iserver.ace.algorithm.jupiter.server.RequestSerializer}.
+	 * 
+	 * @throws Exception
+	 */
 	public void testC2puzzleP2WithoutSerializer() throws Exception {
 		final String INITIAL = "abcd";
 		final String FINAL   = "acxx";
@@ -603,6 +617,123 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		assertEquals(0, net[0].getRequests().size());
 		String contentSite1 = ((TestDocumentModel)site1.getDocument()).getText();
 		assertEquals(FINAL, contentSite1);
+	}
+	
+	/**
+	 * This example is taken from cscw04sdt.pdf figure 12 and is called 
+	 * 'A divergence and ERV (effects relation violation) scenario of IMOR'.
+	 * It is a tricky counterexample to the transformation functions proposed in
+	 * ecscw03.pdf by Imine et al.
+	 * 
+	 * Note that it is not possible to completely recreate this example with the
+	 * Jupiter algorithm since the delivery of operations at all sites happens
+	 * in the same order. In this example, operations op2 and op3 arrive in different
+	 * order at site 1 and site 4, respectively. We implement it so that operations 
+	 * op2 and op3 arrive in the same order at both sites.
+	 * 
+	 * @throws Exception
+	 */
+	public void testDivergenceAndERVscenarioOfIMOR() throws Exception {
+		final String INITIAL = "0123";
+		/* Due to user intention violation the end result equals
+		 * "0abc23" instead of "0acb23", i.e. the 'b' comes before 'c' instead
+		 * of vice versa. Nevertheless, convergence is preserved.
+		 */
+		//final String FINAL   = "0acb23";
+		final String FINAL   = "0abc23";
+		
+		/** initialize system **/
+		JupiterServer server = createServer();
+		TestNetService[] net = new TestNetService[] {
+								new TestNetService(),
+								new TestNetService(),
+								new TestNetService(),
+								new TestNetService() };
+		ClientProxy[] proxies = new ClientProxy[4];
+		proxies[0] = server.addClient(net[0]); //belongs to site 1
+		proxies[1] = server.addClient(net[1]); //belongs to site 2
+		proxies[2] = server.addClient(net[2]); //belongs to site 3
+		proxies[3] = server.addClient(net[3]); //belongs to site 4
+		
+		
+		Jupiter site1 = createClient(proxies[0].getSiteId(), INITIAL);
+		Jupiter site2 = createClient(proxies[1].getSiteId(), INITIAL);
+		Jupiter site3 = createClient(proxies[2].getSiteId(), INITIAL);
+		Jupiter site4 = createClient(proxies[3].getSiteId(), INITIAL);
+		
+		InsertOperation op1 = new InsertOperation(2, "b");
+		DeleteOperation op2 = new DeleteOperation(1, "1");
+		InsertOperation op3 = new InsertOperation(2, "c");
+		InsertOperation op4 = new InsertOperation(1, "a");
+		
+		/** start scenario **/
+		Request req1 = site1.generateRequest(op1);
+		Request req2 = site2.generateRequest(op2);
+		Request req4 = site4.generateRequest(op4);
+		
+		//scenario flow:
+		//1. req4 -> proxy, send to and apply at clients 1 + 3
+		//2. generate req3 at client 3
+		//3. req2 -> proxy, send to and apply at clients 1 + 4
+		//4. req3 -> proxy, send to and apply at clients 1 + 4
+		//5. req1 -> proxy, send to and apply at client 4
+		
+		// server-side processing of request req4
+		System.out.println("--> s4.pr recv r4: "+req4);
+		proxies[3].receiveRequest(req4);
+		Request r4 = (Request)net[0].getRequests().remove(0);   
+		site1.receiveRequest(r4);
+		r4 = (Request)net[1].getRequests().remove(0);
+		site2.receiveRequest(r4);
+		r4 = (Request)net[2].getRequests().remove(0);
+		site3.receiveRequest(r4);
+		
+		//generate req3 at client 3
+		Request req3 = site3.generateRequest(op3);
+		
+		//server-side processing of request req2
+		System.out.println("--> s2.pr recv r2: "+req2);
+		proxies[1].receiveRequest(req2);
+		Request r2 = (Request)net[0].getRequests().remove(0);
+		site1.receiveRequest(r2);
+		r2 = (Request)net[2].getRequests().remove(0);
+		site3.receiveRequest(r2);
+		r2 = (Request)net[3].getRequests().remove(0);
+		site4.receiveRequest(r2);
+		
+		//server-side processing of request req3
+		System.out.println("--> s3.pr recv r3: "+req3);
+		proxies[2].receiveRequest(req3);
+		Request r3 = (Request)net[0].getRequests().remove(0);
+		System.out.println("--> s1.cl recv r3: "+r3);
+		site1.receiveRequest(r3);
+		r3 = (Request)net[1].getRequests().remove(0);
+		site2.receiveRequest(r3);
+		r3 = (Request)net[3].getRequests().remove(0);
+		site4.receiveRequest(r3);
+		
+		//server-side processing of request req1
+		System.out.println("--> s1.pr recv r1: "+req1);
+		proxies[0].receiveRequest(req1);
+		Request r1 = (Request)net[1].getRequests().remove(0);
+		site2.receiveRequest(r1);
+		r1 = (Request)net[2].getRequests().remove(0);
+		site3.receiveRequest(r1);
+		r1 = (Request)net[3].getRequests().remove(0);
+		site4.receiveRequest(r1);
+
+		
+		/** analyze results **/
+		String contentSite1 = ((TestDocumentModel)site1.getDocument()).getText();
+		String contentSite2 = ((TestDocumentModel)site2.getDocument()).getText();
+		String contentSite3 = ((TestDocumentModel)site3.getDocument()).getText();
+		String contentSite4 = ((TestDocumentModel)site4.getDocument()).getText();
+		System.out.println(contentSite1 + " == " + contentSite2 + " == " + contentSite3
+				+ " == " + contentSite4);
+		assertEquals(FINAL, contentSite1);
+		assertEquals(FINAL, contentSite2);
+		assertEquals(FINAL, contentSite3);
+		assertEquals(FINAL, contentSite4);		
 	}
 	
 	private Jupiter createClient(int siteId, String initialDocContent) {
