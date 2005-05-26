@@ -1,5 +1,6 @@
 package ch.iserver.ace.test;
 
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 import ch.iserver.ace.test.AlgorithmTestFactory;
@@ -39,7 +40,11 @@ public abstract class AlgorithmTestCase extends TestCase
 	}
 	
 	protected void execute(String resource) throws Exception {
-		execute(getClass().getResourceAsStream(resource));
+		InputStream stream = getClass().getResourceAsStream(resource);
+		if (stream == null) {
+			throw new FileNotFoundException(resource);
+		}
+		execute(stream);
 	}
 		
 }

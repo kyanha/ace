@@ -49,6 +49,12 @@ public class JupiterTest extends AlgorithmTestCase {
 		execute("/test/insert-insert.xml");
 	}
 	
+	public void testMultiStepPathDivergence() throws Exception {
+		execute("/test/multistep-path-divergence.xml");
+		execute("/test/multistep-path-divergence-inverse.xml");
+		execute("/test/multistep-path-divergence-4-2.xml");
+	}
+	
 	/**
 	 * @see ch.iserver.ace.test.AlgorithmTestFactory#createAlgorithm(int)
 	 */
