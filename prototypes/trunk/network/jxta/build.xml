@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<project name="ace-jxta" default="compile"
+	     xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+	<property name="build.dir" value="build"/>
+	<property name="build.classes" value="${build.dir}/classes"/>
+	<property name="src.dir" value="src"/>
+	<property name="src.java" value="${src.dir}/java"/>
+	<property name="lib.dir" value="lib"/>
+	
+	<artifact:dependencies pathId="dependency.classpath">
+		<dependency groupId="bouncycastle" 
+		            artifactId="bcprov-jdk14" 
+		            version="124"
+		            scope="runtime"/>
+	</artifact:dependencies>
+
+	<path id="build.classpath">
+		<path refid="dependency.classpath"/>
+		<fileset dir="${lib.dir}">
+			<include name="**/*.jar"/>
+		</fileset>
+	</path>
+
+	<path id="run.classpath">
+		<pathelement path="${build.classes}"/>
+		<path refid="build.classpath"/>
+	</path>
+	
+	<target name="clean">
+		<delete dir="${build.dir}"/>
+	</target>
+	
+	<target name="init">
+		<mkdir dir="${build.dir}"/>
+		<mkdir dir="${build.classes}"/>
+	</target>
+	
+	<target name="compile" depends="init">
+		<javac srcdir="${src.java}"
+		       destdir="${build.classes}"
+		       classpathref="build.classpath"
+		       deprecation="true"
+		       debug="true"
+		       optimize="false"/>
+	</target>
+	
+	<target name="run" depends="compile">
+		<java classname="${class}" fork="yes" classpathref="run.classpath"
+		      dir="${run.dir}"/>
+	</target>
+
+	<target name="run-server">
+		<mkdir dir="runtime/server"/>
+		<copy file="pipeserver.adv" todir="runtime/server"/>
+		<antcall target="run">
+			<param name="class" value="ch.iserver.ace.net.jxta.Server"/>
+			<param name="run.dir" value="runtime/server"/>
+		</antcall>
+	</target>
+
+	<target name="run-client">
+		<mkdir dir="runtime/client"/>
+		<antcall target="run">
+			<param name="class" value="ch.iserver.ace.net.jxta.Client"/>
+			<param name="run.dir" value="runtime/client"/>
+		</antcall>
+	</target>
+	
+</project>
+
