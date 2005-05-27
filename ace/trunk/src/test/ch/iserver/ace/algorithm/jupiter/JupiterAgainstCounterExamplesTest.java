@@ -23,6 +23,7 @@ package ch.iserver.ace.algorithm.jupiter;
 import junit.framework.TestCase;
 import ch.iserver.ace.DocumentModel;
 import ch.iserver.ace.Operation;
+import ch.iserver.ace.algorithm.DefaultRequestEngine;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.jupiter.server.ClientProxy;
 import ch.iserver.ace.algorithm.jupiter.server.JupiterServer;
@@ -681,6 +682,7 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		// server-side processing of request req4
 		System.out.println("--> s4.pr recv r4: "+req4);
 		proxies[3].receiveRequest(req4);
+		Thread.sleep(500);
 		Request r4 = (Request)net[0].getRequests().remove(0);   
 		site1.receiveRequest(r4);
 		r4 = (Request)net[1].getRequests().remove(0);
@@ -779,6 +781,7 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		
 		// server-side processing of request req1
 		proxies[0].receiveRequest(req1);
+		Thread.sleep(500);
 		Request r1 = (Request)net[1].getRequests().remove(0);   
 		site2.receiveRequest(r1);
 		r1 = (Request)net[2].getRequests().remove(0);
@@ -828,7 +831,7 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		proxies[0] = server.addClient(net[0]); //belongs to site 1
 		proxies[1] = server.addClient(net[1]); //belongs to site 2
 		proxies[2] = server.addClient(net[2]); //belongs to site 3
-		
+
 		Jupiter site1 = createClient(proxies[0].getSiteId(), INITIAL);
 		Jupiter site2 = createClient(proxies[1].getSiteId(), INITIAL);
 		Jupiter site3 = createClient(proxies[2].getSiteId(), INITIAL);
@@ -850,6 +853,7 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		
 		// server-side processing of request req3
 		proxies[2].receiveRequest(req3);
+		Thread.sleep(500);
 		Request r3 = (Request)net[0].getRequests().remove(0);   
 		site1.receiveRequest(r3);
 		r3 = (Request)net[1].getRequests().remove(0);
@@ -876,6 +880,90 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		String contentSite1 = ((TestDocumentModel)site1.getDocument()).getText();
 		String contentSite2 = ((TestDocumentModel)site2.getDocument()).getText();
 		String contentSite3 = ((TestDocumentModel)site3.getDocument()).getText();
+		System.out.println(contentSite1 + " == " + contentSite2 + " == " + contentSite3);
+		assertEquals(FINAL, contentSite1);
+		assertEquals(FINAL, contentSite2);
+		assertEquals(FINAL, contentSite3);
+	}
+	
+	/**
+	 * This is the same test as in {@link #testdOPTpuzzle2()} but uses
+	 * the {@link DefaultRequestEngine} at the client side instead of only
+	 * the algorithm {@link Jupiter}.
+	 * 
+	 * @throws Exception
+	 */
+	public void testdOPTpuzzle2WithRequestEngine() throws Exception {
+		final String INITIAL = "";
+		//we suppose that actual user intention was "xzy", but we cannot not remember 
+		//from where the example was taken, so we're not shure if the intention really 
+		//wasn't "xyz".
+		final String FINAL   = "xyz";
+		
+		/** initialize system **/
+		JupiterServer server = createServer();
+		TestNetService[] net = new TestNetService[] {
+								new TestNetService(),
+								new TestNetService(),
+								new TestNetService() };
+		ClientProxy[] proxies = new ClientProxy[3];
+		proxies[0] = server.addClient(net[0]); //belongs to site 1
+		proxies[1] = server.addClient(net[1]); //belongs to site 2
+		proxies[2] = server.addClient(net[2]); //belongs to site 3
+		
+		
+		DefaultRequestEngine eng1 = new DefaultRequestEngine(
+				createClient(proxies[0].getSiteId(), INITIAL));
+		DefaultRequestEngine eng2 = new DefaultRequestEngine(
+				createClient(proxies[1].getSiteId(), INITIAL));
+		DefaultRequestEngine eng3 = new DefaultRequestEngine(
+				createClient(proxies[2].getSiteId(), INITIAL));
+		
+		InsertOperation op1 = new InsertOperation(0, "x");
+		InsertOperation op2 = new InsertOperation(0, "y");
+		InsertOperation op3 = new InsertOperation(0, "z");
+		
+		/** start scenario **/
+		//we generate 3 concurrent operations 
+		eng2.generateRequest(op2);
+		eng3.generateRequest(op3);
+		
+		//scenario flow:
+		//1. req3 -> proxy -> client 1 + 2
+		//2. generate req1
+		//3. req1 -> proxy -> client 2 + 3 
+		//4. req2 -> proxy -> client 1 + 3
+		
+		// server-side processing of request req3
+		proxies[2].receiveRequest((Request)eng3.getOutgoingRequestBuffer().get());
+		Request r3 = (Request)net[0].getRequests().remove(0);   
+		eng1.receiveRequest(r3);
+		r3 = (Request)net[1].getRequests().remove(0);
+		eng2.receiveRequest(r3);
+		
+		eng1.generateRequest(op1);
+		
+		// server-side processing of request req1
+		proxies[0].receiveRequest((Request)eng1.getOutgoingRequestBuffer().get());
+		Request r1 = (Request)net[1].getRequests().remove(0);   
+		eng2.receiveRequest(r1);
+		r1 = (Request)net[2].getRequests().remove(0);
+		eng3.receiveRequest(r1);
+		
+		// server-side processing of request req2
+		proxies[1].receiveRequest((Request)eng2.getOutgoingRequestBuffer().get());
+		Request r2 = (Request)net[0].getRequests().remove(0);   
+		eng1.receiveRequest(r2);
+		r2 = (Request)net[2].getRequests().remove(0);
+		eng3.receiveRequest(r2);
+		
+		/** analyze results **/
+		String contentSite1 = ((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
+				.getDocument()).getText();
+		String contentSite2 = ((TestDocumentModel)eng2.getQueueHandler().getAlgorithm()
+				.getDocument()).getText();
+		String contentSite3 = ((TestDocumentModel)eng3.getQueueHandler().getAlgorithm()
+				.getDocument()).getText();
 		System.out.println(contentSite1 + " == " + contentSite2 + " == " + contentSite3);
 		assertEquals(FINAL, contentSite1);
 		assertEquals(FINAL, contentSite2);

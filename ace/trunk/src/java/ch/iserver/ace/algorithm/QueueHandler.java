@@ -168,4 +168,10 @@ public class QueueHandler extends Thread {
     public void setSynchronizationObject(Object obj) {
         this.synchObj = obj;
     }
+	/**
+	 * @return Returns the algo.
+	 */
+	public Algorithm getAlgorithm() {
+		return algo;
+	}
 }
