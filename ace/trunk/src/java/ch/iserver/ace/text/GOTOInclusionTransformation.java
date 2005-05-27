@@ -40,17 +40,21 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
     	//System.out.println(transformedCnt++);
         Operation transformedOp;
         if (op1 instanceof InsertOperation && op2 instanceof InsertOperation) {
-            transformedOp = transform((InsertOperation)op1, (InsertOperation)op2);
-            System.out.println("\ttransform("+op1+", "+op2+") = "+transformedOp);
+        		System.out.print("\ttransform("+op1+", "+op2+") = ");
+        		transformedOp = transform((InsertOperation)op1, (InsertOperation)op2);
+             System.out.println(transformedOp);
         } else if (op1 instanceof InsertOperation && op2 instanceof DeleteOperation) {
-            transformedOp = transform((InsertOperation)op1, (DeleteOperation)op2);
-            System.out.println("\ttransform("+op1+", "+op2+") = "+transformedOp);
+        		System.out.print("\ttransform("+op1+", "+op2+") = ");
+        		transformedOp = transform((InsertOperation)op1, (DeleteOperation)op2);
+        		System.out.println(transformedOp);
         } else if (op1 instanceof DeleteOperation && op2 instanceof InsertOperation) {
-            transformedOp = transform((DeleteOperation)op1, (InsertOperation)op2);
-            System.out.println("\ttransform("+op1+", "+op2+") = "+transformedOp);
+        		System.out.print("\ttransform("+op1+", "+op2+") = ");  
+        		transformedOp = transform((DeleteOperation)op1, (InsertOperation)op2);
+        		System.out.println(transformedOp);
         } else if (op1 instanceof DeleteOperation && op2 instanceof DeleteOperation) {
-            transformedOp = transform((DeleteOperation)op1, (DeleteOperation)op2);
-            System.out.println("\ttransform("+op1+", "+op2+") = "+transformedOp);
+        		System.out.print("\ttransform("+op1+", "+op2+") = ");
+        		transformedOp = transform((DeleteOperation)op1, (DeleteOperation)op2);
+        		System.out.println(transformedOp);
         } else {
             throw new InvalidParameterException();
         }
@@ -196,7 +200,8 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 				* (A):       "12"      |     "12"
 				* (A'):     "12"       |     "12"
 				*/
-				transformedOperation = new DeleteOperation(posA, delA.getText());
+				//TODO? information gets lost.
+				transformedOperation = new DeleteOperation(posA, "");
 			} else if((posB <= posA) && ((posA + lenA) > (posB + lenB))) {
 				/*
 				* Operation B starts before or at the same position like operation A
