@@ -196,7 +196,7 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 				* (A):       "12"      |     "12"
 				* (A'):     "12"       |     "12"
 				*/
-				transformedOperation = new DeleteOperation(0, delA.getText());
+				transformedOperation = new DeleteOperation(posA, delA.getText());
 			} else if((posB <= posA) && ((posA + lenA) > (posB + lenB))) {
 				/*
 				* Operation B starts before or at the same position like operation A
