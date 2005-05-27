@@ -80,7 +80,7 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 			* (A):        "12"       |          "12"
 			* (A'):     "    12"     |          "12"
 			*/
-    		transformedOperation = new InsertOperation(posA + lenB, insA.getText());
+   			transformedOperation = new InsertOperation(posA + lenB, insA.getText());
     	}
         return transformedOperation;
     }
@@ -154,7 +154,7 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 			* (A):      "123456"
 			* (A'):     "1"  "23456"
 			*/
-		throw new RuntimeException("transform(Delete,Insert): not yet implemented");
+			throw new RuntimeException("transform(Delete,Insert): not yet implemented");
     	}
         return transformedOperation;
     }
@@ -188,18 +188,44 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 			* !NOT YET IMPLEMENTED!
 			* Operation A and operation B are overlapping.
 			*/
-		throw new RuntimeException("transform(Delete,Delete): not yet implemented");
-    		
-//		if((posB <= posA) && ((posA + lenA) <= (posB - lenB))) {
-//    			transformedOperation = new DeleteOperation(0, "");
-//    		} else if((posB <= posA) && ((posA + lenA) > (posB + lenB))) {
-//    			transformedOperation = new DeleteOperation(0, "");
-//    		} else if((posB > posA) && ((posB + lenB) >= (posA + lenA))) {
-//    			transformedOperation = new DeleteOperation(0, "");
-//    		} else {
-//    			transformedOperation = new DeleteOperation(0, "");
-//    		}
-    	}
+			if((posB <= posA) && ((posA + lenA) <= (posB - lenB))) {
+				/*
+				* Operation B starts before or at the same position like operation A
+				* and ends after or at the same position like operation A.
+				* (B):      "ABCD"     |     "ABCD
+				* (A):       "12"      |     "12"
+				* (A'):     "12"       |     "12"
+				*/
+				transformedOperation = new DeleteOperation(0, delA.getText());
+			} else if((posB <= posA) && ((posA + lenA) > (posB + lenB))) {
+				/*
+				* Operation B starts before or at the same position like operation A
+				* and ends before operation A.
+				* (B):      "ABCD"
+				* (A):        "12345"
+				* (A'):     "345"
+				*/
+				transformedOperation = new DeleteOperation(posB, delA.getText().substring(posB + lenB, posA + lenA));
+			} else if((posB > posA) && ((posB + lenB) >= (posA + lenA))) {
+				/*
+				* Operation B starts after operation A and ends after or at the
+				* same position like operation A.
+				* (B):        "ABCD"
+				* (A):      "12345"
+				* (A'):     "12"
+				*/
+				transformedOperation = new DeleteOperation(posA, delA.getText().substring(1, posB - posA));
+			} else {
+				/*
+				* Operation B is fully in operation A.
+				* (B):       "ABCD"
+				* (A):      "123456"
+				* (A'):     "12"
+				*/
+				transformedOperation = new DeleteOperation(0, "");
+				throw new RuntimeException("transform(Delete,Delete): not yet implemented");    		
+			}
+		}
         return transformedOperation;
     }
 }
