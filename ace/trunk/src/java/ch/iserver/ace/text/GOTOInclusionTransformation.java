@@ -188,7 +188,7 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 			* !NOT YET IMPLEMENTED!
 			* Operation A and operation B are overlapping.
 			*/
-			if((posB <= posA) && ((posA + lenA) <= (posB - lenB))) {
+			if((posB <= posA) && ((posA + lenA) <= (posB + lenB))) {
 				/*
 				* Operation B starts before or at the same position like operation A
 				* and ends after or at the same position like operation A.
