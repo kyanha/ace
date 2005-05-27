@@ -13,7 +13,7 @@
 
 \emph{BEEP} specifies reusable tools for all these functions, instead of requiring the same decisions to be made over again for each new application. It provides a framework that integrates existing Internet standards for encryption and authentication and new standards for connection management. A networked application needs merely to supply the \emph{important} part, the part that distinguishes it from other applications, as a \emph{BEEP} profile. The mundane parts are the same for all protocols, and therefore can be coded as a library, freeing the application designer to focus on the interesting bits.
 
-\subsection{Why BEEP is Good}
+\paragraph{Why BEEP is Good:}
 \begin{itemize}
  \item It solves once a number of problems common to most connection-oriented application protocols.
  \item It allows a single application to operate in multiple roles, and even multiple roles simultanously.
@@ -21,15 +21,16 @@
  \item It is low-risk because it is grounded in established Internet practice and it is standardized by the IETF.
 \end{itemize}
 
-\subsection{When BEEP is Bad}
-Of course, there are a number of situations in which the use of \emph{BEEP} would be inappropriate. 
+\paragraph{When BEEP is Bad:} 
 \begin{itemize}
  \item If a protocol already exists and is widely deployed, there is little sense in rewriting it to take advantage of \emph{BEEP}.
  \item If a protocol is not unicast, \emph{BEEP} is an inappropriate choice of transport (for instance multicast video streaming).
  \item \emph{BEEP} is inappropriate for real-time protocols.
 \end{itemize}
 
-\subsection{BEEP Concepts}
+
+
+\subsection{Concepts}
 \emph{BEEP} is a peer-to-peer protocol in the sense that there is no notion of client or server. For convenience we'll refer to the peer that starts a connection as the \emph{initiator}, and the peer accepting the connection as the \emph{listener}. When a connection is established between the two, a \emph{BEEP} session is created.
 
 \subsubsection{Channels}
@@ -48,6 +49,7 @@ Data exchange profiles set expectations between the two peers as to what sort of
 \emph{BEEP} puts no limits on the kind of data a channel can carry. It uses the MIME standard to support payloads of arbitrary type.
 
 
+
 \subsection{Prototype}
 \subsubsection{Echo Server}
 The \emph{BEEP} implementation of an echo server can be found in \texttt{ch.iserver.ace.net.beep.EchoServer}. The code is straighforward. First a profile registry (\texttt{org.beepcore.beep.core.ProfileRegistry}) has to be created. All the supported profiles (\texttt{org.beepcore.beep.profile.Profile}) have to be added to the created profile registry by calling \texttt{addStartChannelListener}). The profiles are registered with an URI that is used as a key to specify a specific profile when creating a new channel.
@@ -62,8 +64,35 @@ The echo client (see \texttt{ch.iserver.ace.net.beep.EchoClient}) connects to th
 The \texttt{sendMSG} method on the channel allows us to send a message on the channel. We need to specify a \texttt{org.beepcore.beep.core.OutputDataStream} and a \texttt{org.beepcore.beep.core.ReplyListener}. The \texttt{org.beepcore.beep.lib.Reply} implements this interface and allows to retrieve the reply from the server.
 
 
-\subsection{APEX}
+
+\subsection{Analysis}
+\emph{BEEP} provides a framework for creating new application protocols. It fulfills our communication requirement pretty well, but not the discovery requirement. Other technologies could be used to discover shared documents, for instance \emph{Bonjour}.
+
+\subsubsection{Positive Points}
+\emph{BEEP} makes it relatively easy to create new protocols.
+
+The messages exchanged in channels is completely up to the application. It could be serialized Java objects (whereby one would loose language independence), XML messages or some binary format. There are implementations for Java, C, TCL, Ruby and others. So \emph{BEEP} would allow us to achieve interoperability with other collaborative editors programmed in other programming languages (unless, of course, we would use serialized Java objects as messages).
+
+\subsubsection{Negative Points}
+Creating \emph{BEEP} profiles is a low-level task. One has to deal with streams, bits and bytes. 
+
+We would need to develop a protocol specification. All the messages and possible responses would need to be defined (e.g. as XML messages).
+
+\subsubsection{Open Points}
+There are no open points, besides defining the protocol and its messages.
+
+
+
+\subsection{APEX} 
 \emph{APEX} is a \emph{BEEP} profile. On top of \emph{BEEP} it adds service discovery, application-level addressing, presence information, and permission management. In other words, it defines how to find a person with whom you are interested in communicating, regardless of where they are, not unlike an electronic mail address does. It also allows discovery of presence information, meaning that one can be notified when a coworker becomes available for a video conference. Finally, it provides a standard mechanism for permissions, specifying a service and database for defining permissions associated with user names, applications and transactions.
 
-There does not seem to be a \emph{Java} implementation for the \emph{APEX} profile, although it does sound interesting as it provides both discovery (presence information) and communication.
+From the general description this sound very much like what we need. It covers both discovery and communication. Unfortunately there does not seem to be a \emph{Java} implementation for the \emph{APEX} profile.
 
+
+
+\subsection{Resources}
+\begin{itemize}
+ \item \url{http://www.beepcore.org/} - official beepcore website
+ \item \url{http://www-106.ibm.com/developerworks/xml/library/x-beep/index.html} - a bird's-eye view on beep
+ \item \url{http://www-128.ibm.com/developerworks/xml/library/x-beep2.html} - a worm's eye view on beep
+\end{itemize}
