@@ -27,7 +27,7 @@ One of the most powerful features of \emph{JGroups} is its flexible protocol sta
 \emph{JGroups} allows developers to create reliable multicast applications where
 \emph{reliability} is a deployment issue and does not have to be implemented by the application developer. This saves application developers significant amounts of time and allows for the application to be deployed in different environments without having to change code.
 
-\subsection{Basics}
+\subsection{Concepts}
 In order to join a group and send messages, a process has to create a channel. A channel is similar to a socket. When a client connects to a channel, it gives the name of the group it would like to join. A channel is always associated with a particular group (in it's connected state). The protocol stack takes care that channels within the same group find each other. Whenever a client connects to a channel with group name G, then it tries to find existing channels with the same name and joins them. If no members exist, a new group will be created.
 
 When a channel is created, it is first in the unconnected state. The clients connects to the channel by calling \texttt{connect} supplying the group name of the group it wants to join. Once the channel is in the connected state, messages can be sent/received. A channel can be disconnected from a group by calling \texttt{disconnect} and it can be closed by calling \texttt{close}. A closed channel cannot be used anymore. Any attempt to do so results in an exception. The channel can only be connected to one group at the time. To communicate with multiple groups, multiple channels have to be created.
@@ -74,14 +74,19 @@ The prototype does not have any discovery mechanism for existing groups. The use
 \subsection{Analysis}
 \emph{JGroups} provides a very simple API to create groupware applications. A shared document in \ace could be represented as a separate group in \emph{JGroups}. 
 
-It is used in famous open source project like Tomcat (session replication), OSCache (J2EE caching solution) and Jetty (HTTP session replication). \emph{glicpse}, a collaborative editor plugin for \emph{eclipse} uses \emph{JGroups} too for multicast communication among sites.
+It is used in famous open source projects like Tomcat (session replication), OSCache (J2EE caching solution) and Jetty (HTTP session replication). \emph{glicpse}, a collaborative editor plugin for \emph{eclipse} uses \emph{JGroups} too for multicast communication among sites.
 
-\subsubsection{Shortcomings}
-To join a group, one has to know the name of the group to join. There would have to be some mechanism to discover the available groups, or more specifically, the available groups that represent shared documents in \ace. A central server could be used to register group names or a well-known group could be used to advertise/query for available documents.
+\emph{JGroups} provides both discovery and communication, the requirements for the network layer. Although, the discovery part would need some tweaking before it can be used, as one has to know the group name to join a group.
 
-The current implementation of the group membership service is very simplistic. Joining a group is always successul. There is no way to forbid a particular member the access the group. This is a serious problem as the confidentiality of the document content cannot be guaranteed. A custom group membership service protocol implementation could probably solve this particular problem.
+\subsubsection{Negative Points}
+To join a group, one has to know the name of the group to join. There would have to be some mechanism to discover the available groups, or more specifically, the available groups that represent shared documents in \ace. 
 
 The \emph{JGroups} library is not programming language independent. It uses serialized objects as message payload. This can be seen as and advantage or as a disadvantage depending on the requirements of the application.
+
+\subsubsection{Open Points}
+\paragraph{Group Membership:} The current implementation of the group membership service is very simplistic. Joining a group is always successul. There is no way to forbid a particular member the access the group. This is a serious problem as the confidentiality of the document content cannot be guaranteed. A custom group membership service protocol implementation could probably solve this particular problem. This must be investigated in more detail.
+
+\paragraph{Document Discovery:} As mentioned, to join a group, one has to know the group name beforehand. This is a serious shortcoming. There are several solutions possible. One would be to create a well-known group (e.g. a group named ACE) that every application is a member of. Peers in this group could then be queried about available published documents. Another solution would be to have a central server that keeps track of which documents are published. The second solution seems to be a bit clumsy as one has to setup a separate server.
 
 
 \subsection{Resources}
