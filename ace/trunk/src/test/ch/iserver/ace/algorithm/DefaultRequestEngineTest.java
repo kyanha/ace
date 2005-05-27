@@ -33,7 +33,7 @@ import ch.iserver.ace.util.SynchronizedQueue;
 /**
  *
  */
-public class TestDefaultRequestEngine extends TestCase {
+public class DefaultRequestEngineTest extends TestCase {
 
 	private static final int SITE_ID = 1;
 	private static final String TEXT = "a";
