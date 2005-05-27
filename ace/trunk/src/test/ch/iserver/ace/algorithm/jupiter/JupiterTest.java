@@ -60,6 +60,10 @@ public class JupiterTest extends AlgorithmTestCase {
 		execute("/test/partial-concurrency.xml");
 	}
 	
+	public void testDeleteDelete() throws Exception {
+		execute("/test/delete-delete-1.xml");
+	}
+	
 	/**
 	 * @see ch.iserver.ace.test.AlgorithmTestFactory#createAlgorithm(int)
 	 */
