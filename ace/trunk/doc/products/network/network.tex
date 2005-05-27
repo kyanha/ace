@@ -44,6 +44,25 @@ In \ace a user will be able to share a document so others can join him editing t
 \subsection{Communication}
 This is the basic requirement. Without some form of communication collaboration is infeasible. There are different technologies ranging from plain socket communication over remote method invocation to complex peer-to-peer frameworks.
 
+\subsection{Network Basics}
+The basic operations a user will perform on a document are:
+\begin{itemize}
+ \item publish a document
+ \item unpublish a document
+ \item join an editing session
+ \item leave an editing session
+\end{itemize}
+
+\subsection{Overview}
+In the following sections we introduce several network technologies that could be interesting for the implementation of \ace. 
+
+\begin{itemize}
+ \item \emph{JGroups}
+ \item \emph{Rendezvous/Bonjour}
+ \item \emph{Jini}
+ \item \emph{JXTA}
+ \item \emph{BEEP}
+\end{itemize}
 
 
 \input{tech/jgroups.tex}
@@ -52,7 +71,7 @@ This is the basic requirement. Without some form of communication collaboration 
 
 \section{Jini}
 
-\section{JXTA}
+\input{tech/jxta.tex}
 
 \input{tech/beep.tex}
 

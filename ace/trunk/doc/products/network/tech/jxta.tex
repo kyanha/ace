@@ -1,0 +1,150 @@
+\section{JXTA}
+\emph{JXTA} technology is a set of open protocols that allow any connected device on the network ranging from cell phones and wirless PDAs to PCs and servers to communicate and collaborate in a P2P manner.
+
+\emph{JXTA} peers create a virtual network where any peer can interact with other peers and resources directly even when some of the peers and resources are behind firewalls and NATs or are on different network transports.
+
+The project objectives of \emph{JXTA} are:
+\begin{itemize}
+ \item Interoperability - across different peer-to-peer systems and communities
+ \item Platform independence - multiple/diverse languages, systems and networks
+ \item Ubiquity - every device with a digital heartbeat
+\end{itemize}
+
+
+\subsection{Concepts}
+
+\subsubsection{Peers}
+A \emph{peer} is any networked device that implements one or more of the \emph{JXTA} protocols. Peers can include phones, PDAs, as well as PCs, servers and supercomputers. Each peer operates independently and asynchronously from all other peers, and is uniquely identified by a peer ID.
+
+Peers are not required to have direct point-to-point network connections between themselves. Intermediary peers may be used to route messages to peers that are separated due to physical network connections or network configuration (e.g. NATs, firewalls, proxies).
+
+Peers are typically configured to spontaneously discover each other on the network to form transient or persistent relationships called peer groups.
+
+\subsubsection{Peer Groups}
+A \emph{peer group} is a collection of peers that have agreed upon a common set of services. Peers self-organize into peer groups, each identified by a unique peer group ID. Each peer group can establish its own membership policy from open (anybody can join) to highly secure and protected (sufficient credentials are required to join).
+
+Peers may belong to more than one peer group simultaneously. By default, the first group that is instantiated is the Net Peer Group. All peers belong to the Net Peer Group. Peers may elect to join additional peer groups.
+
+There are several motivations fro creating peer groups:
+\begin{itemize}
+ \item \emph{To create a secure environment}: Groups create a local domain of control in which a specific security policy can be enforced. The security policy may be as simple as a plain text user name/password exchange, or as sophisticated as public key cryptography. Peer gropus form logical regions whose boundaries limit access to the peer group resources.
+ \item \emph{To create a coping environment}: Groups allow the establishment of a local domain of specialization. For example, peers may group together to implement a document sharing network or a CPU sharing network.
+ \item \emph{To create a monitoring environment}: Peer groups permit peers to monitor a set of peers for any special purpose (e.g. traffic introspection, accountability) 
+\end{itemize}
+
+A peer group provides a set of services called peer group services. \emph{JXTA} defines a core set of peer group services. Additional services can be developed for delivering specific services. In order for two peers to interact via a service, they must both be part of the same peer group.
+
+\subsubsection{Core Peer Group Services}
+The core peer group services include the following:
+\begin{itemize}
+ \item \emph{Discovery Service} - The discovery service is used by peer members to search for peer group resources, such as peers, peer groups, pipes and services.
+ \item \emph{Membership Service} - The membership service is used by current members to reject or accept a new group membership application. Peer wishing to join a peer group must first locate a current member, and then request to join. The application to join is either rejected or accepted by the collective set of current members. The membership service may enforce a vote of peers or elect a designated group representative to accept or reject new membership applications.
+ \item \emph{Access Service} - The access service is used to validate requests made by one peer to another. The peer receiving the request provides the requesting peers credentials and information about the request being made to determine if the access is permitted.
+ \item \emph{Pipe Service} - The pipe service is used to create and manage pipe connections between the peer group members.
+ \item \emph{Resolver Service} - The resolver service is used to send generic requests to other peers. Peers can define and exchange queries to find any information that may be needed (e.g. the status of a service).
+ \item \emph{Monitoring Service} - The monitoring service is used to allow one peer to monitor other members of the same peer group.
+\end{itemize}
+
+Not all the above services must be implemented by every peer group. A peer group is free to implement only the services it finds useful, and rely on the default net peer group to provide generic implementations of non-critical core services.
+
+\subsubsection{Network Services}
+Peers cooperate and communicate to publish, discover, and invoke network services. Peers can publish multiple services. Peers discover network services via the Peer Discovery Protocol. 
+
+The JXTA protocols recognize two levels of network services:
+\begin{itemize}
+ \item \emph{Peer Services}: A peer service is accessible only on the peer that is publishing that service. If that peer should fail, the service also fails. Multiple instances of the service can be run on different peers, but each instance publishes its own advertisement. 
+ \item \emph{Peer Group Services}: A peer group service is composed of a collection of instances (potentially cooperating with each other) of the service running on multiple members of the peer group. If any one peer fails, the collective peer group service is not affected (assuming the service is still available from another peer member). Peer group services are published as part of the peer group advertisement. 
+\end{itemize}
+
+\subsubsection{Pipes}
+JXTA peers use pipes to send messages to one another. Pipes are an asynchronous and unidirectional non reliable (with the exception of unicast secure pipes) message transfer mechanism used for communication, and data transfer. Pipes are indiscriminate; they support the transfer of any object, including binary code, data strings, and Java technology-based objects. 
+
+The pipe endpoints are referred to as the input pipe (the receiving end) and the output pipe (the sending end). Pipe endpoints are dynamically bound to peer endpoints at runtime. Peer endpoints correspond to available peer network interfaces (e.g., a TCP port and associated IP address) that can be used to send and receive message. JXTA pipes can have endpoints that are connected to different peers at different times, or may not be connected at all. 
+
+Pipes are virtual communication channels and may connect peers that do not have a direct physical link. In this 
+case, one or more intermediary peer endpoints are used to relay messages between the two pipe endpoints. 
+Pipes offer two modes of communication, point-to-point and propagate, as seen in . The JXTA core also provides 
+secure unicast pipes, a secure variant of the point-to-point pipe. 
+
+\begin{itemize}
+ \item \emph{Point-to-point Pipes}: A point-to-point pipe connects exactly two pipe endpoints together: an input pipe on one peer receives messages sent from the output pipe of another peer, it is also possible for multiple peers to bind to a single input pipe. 
+ \item \emph{Propagate Pipes}: A propagate pipe connects one output pipe to multiple input pipes. Messages flow from the output pipe (the propagation source) into the input pipes. All propagation is done within the scope of a peer group. That is, the output pipe and all input pipes must belong to the same peer group. 
+ \item \emph{Secure Unicast Pipes}: A secure unicast pipe is a type of point-to-point pipe that provides a secure, and reliable communication channel. 
+\end{itemize}
+
+\subsubsection{Bidirectional reliable communication channels}
+Since pipes provide unidirectional, unreliable communication channels, it is necessary to implement bidirectional and reliable communication channels. The platform provides the following to address the level of service quality required by the applications
+\paragraph{Reliability Library:} Ensures message sequencing, delivery and exposes message and stream based interfaces.
+\paragraph{JxtaSocket and JxtaServerSocket:} Provides \texttt{Socket} and \texttt{ServerSocket} implementations built on top of pipes and the reliability library. It exposes the well knwon stream based interface for communication. Furthermore it provides bidirectional and reliable communication channels.
+\paragraph{JxtaBiDiPipe and JxtaServerPipe:} Is built ont top of pipes and the reliability library. It provides bidirectional and reliable communication channels and exposes a message based interface.
+
+\subsubsection{Messages}
+A message is an object sent between \emph{JXTA} peers. It is the basic unit of data exchange between peers. Messages are sent and received by the Pipe Service and by the Endpoint Service. Typically, applications use the Pipe Service to create, send and receive messages. 
+
+A message is an ordered sequence of named and typed contents called message elements. Thus a message is essentially a set of name/value pairs. The content can be an arbitrary type. 
+
+The JXTA protocols are specified as a set of messages exchanged between peers. Each software platform binding describes how a message is converted to and from a native data structure such as a Java technology object or a C structure. 
+
+\subsubsection{Advertisements}
+All \emph{JXTA} network resources - such as peers, peer groups, pipes and services - are represented by an \emph{advertisement}. Advertisements are language-neutral meta-data structures represented as XML documents. The \emph{JXTA} protocols use advertisements to describe and publish the existence of peer resources. Peers discover resources by searching for their corresponding advertisements, and may cache any discovered advertisements locally.
+
+Each advertisement is published with a lifetime that specifies the availability of its associated resource. Lifetimes enable the deletion of obsolete resources without requiring any centralized control. An advertisement can be republished (before the original advertisement expires) to extend the lifetime of a resource.
+
+\subsubsection{Security}
+Dynamic P2P networks such as the \emph{JXTA} network need to support different levels of resource access. \emph{JXTA} peers operate in a role-based trust model, in which an individual peer acts under the authority granted to it by another trusted peer to perform a particular task. 
+
+\subsubsection{IDs}
+Peers, peer groups, pipes and other \emph{JXTA} resources need to be uniquely identifiable. A \emph{JXTA} ID uniquely identifies an entity and serves as a canonical way of referring to that entity. 
+
+
+
+\subsection{Prototype}
+The prototype is a very simple sample application from the programmers guide. There are two classes, \texttt{ch.iserver.ace.net.jxta.Server} and \texttt{ch.iserver.ace.net.jxta.Client}. The server first advertises a service, which the client discovers and sends a simple message to it. The communication is strictly unidirectional (and unreliable, as it is using pipes). The example could certainly be extended to provide a bidirectional and reliable service (e.g. to create an echo server, client).
+
+The server creates first a new module class advertisement and publishes it both locally and remotely (using the discovery service). Afterwards it creates a module specification advertisement. A pipe advertisement is read from the filesystem and attached to the module specification advertisement. This module specification advertisement is then also published locally and remotely.
+
+The server then creates an input pipe from the pipe advertisement and waits for messages on this pipe in an endless loop.
+
+The client first tries to discover the module specification advertisement published by the server. It queries for this advertisement by specifying a value (JXTASPEC:JXTA-EX1) for the name attribute of the specification. The advertisement can be already cached locally. In this case, the client does not need to send a discovery request. If the advertisement is not cached, it sends a discovery request to the network.
+
+Once the client has retrieved the desired module specification advertisement, it can extract the pipe advertisement from the specification advertisement. The pipe advertisement is then used to create an output pipe. The output pipe provides a way of sending a message to the server. When the message is sent successfully, the client shuts down.
+
+
+
+\subsection{Analysis}
+\emph{JXTA} does certainly sound very promising. It provides some features that seem very interesting for our application.
+
+\subsubsection{Positive Points}
+One of the most interesting features of \emph{JXTA} is its capability to penetrate firewalls and pass through NAT routers. This means that a user can share a document even if he is behind a NAT router and/or a firewall. The advertisement of a shared document can still be found from the outside. No central server is required to achieve this. \emph{JXTA} employs so called router and rendezvous peers, some special type of peers, to achieve this characteristic.
+
+By avoiding the use of a central server, there is no single point of failure. If our editor's network implementation would be based on \emph{JXTA}, no additional setup would be required for users (setup of server). A user could download an application and would be capable of directly using it.
+
+Further \emph{JXTA} is programming language independent. There is an implementation of the \emph{JXTA} protocols for \emph{Java} as well as there is one for \emph{C}. XML is used a lot in protocol messages, although this is not strictly necessary for custom services.
+
+\subsubsection{Negative Points}
+Although \emph{JXTA} exists since 2001 there do not seem to be many applications using it. Only a handful applications are listed on the jxta.org homepage.
+
+Another discomforting point is that we've stumbled across a serious bug in a so called stable release (2.3.3). A clone method caused a stack overflow exception and we had to use the latest build. The bug is even observable in an official sample application presented in the programmers guide.
+
+It seems to us that \emph{JXTA} is still in some way a research project and not rock solid and mature.
+
+\subsubsection{Open Points}
+Before we could decide to use \emph{JXTA} for the implementation of the network layer, we would need to explore this technology in greater detail:
+
+\paragraph{Performance:} We don't have much experience with this technology. Although the capabilities seem great, the question remains whether the overhead introduced by them is acceptable. Two separate aspects would have to be tested: (i) discovery performance and (ii) communication performance. The first point concerns itself with the question, how long it would take to find a published advertisement (e.g. a shared document). The second point concerns the communication throughput and latency once a connection (i.e. a pipe) has been connected.
+
+\paragraph{Application:} How would we map the desired network functionality of \ace (publish document, join document, leave document) to \emph{JXTA}?
+
+\paragraph{Membership Service:} The \emph{JXTA} documents mention that a custom implementation of the membership service can be used to decide who is allowed to join a group (a document) and who is not. Different possibilities exist, e.g. voting in a group or decision of the document owner.
+
+\paragraph{Security:} \emph{JXTA} seems to provide security services (e.g. transport layer security). It would certainly be interesting to make all communication within a group confidential.
+
+
+
+\subsection{Resources}
+\begin{itemize}
+ \item \url{http://www.jxta.org/} - \emph{JXTA} project website
+ \item \url{http://www.brendonwilson.com/projects/jxta/} - free book, slighlty outdated
+ \item \url{http://www.javaworld.com/javaworld/jw-05-2005/jw-0509-jxta.html} - Java World article
+ \item \url{http://www.developer.com/java/other/article.php/1450221} - article from developer.com
+\end{itemize}
