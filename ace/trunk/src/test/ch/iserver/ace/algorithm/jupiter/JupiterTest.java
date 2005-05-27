@@ -29,7 +29,8 @@ import ch.iserver.ace.test.TestDocumentModel;
 import ch.iserver.ace.text.GOTOInclusionTransformation;
 
 /**
- * Test class for testing the jupiter algorithm implementation.
+ * Test class for testing the jupiter algorithm implementation
+ * with the test framework.
  */
 public class JupiterTest extends AlgorithmTestCase {
 	
