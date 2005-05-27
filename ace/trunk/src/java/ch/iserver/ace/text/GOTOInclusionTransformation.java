@@ -223,7 +223,7 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 				* (A'):     "12"
 				*/
 				transformedOperation = new DeleteOperation(0, "");
-				throw new RuntimeException("transform(Delete,Delete): not yet implemented");    		
+				throw new RuntimeException("transform(Delete,Delete): not yet implemented ...");    		
 			}
 		}
         return transformedOperation;
