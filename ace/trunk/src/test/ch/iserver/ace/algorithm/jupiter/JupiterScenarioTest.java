@@ -490,6 +490,14 @@ public class JupiterScenarioTest extends TestCase {
 		assertEquals(FINAL, contentSite5);
 	}
 	
+	/**
+	 * Small scenario with 3 sites.
+	 * site 1: ins(0, 'I')
+	 * site 2: ins(0, 'I')
+	 * site 3: ins(0, 'I'), ins(0, ' '), ins(0, 'a'), ins(0, 'm')
+	 * 
+	 * @throws Exception
+	 */
 	public void testScenario() throws Exception {
 		final String INITIAL = "";
 		final String FINAL   = "III am";
