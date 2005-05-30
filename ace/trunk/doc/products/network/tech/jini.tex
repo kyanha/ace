@@ -1,4 +1,6 @@
 \section{Jini/RMI}
+\label{sect:jini}
+
 In a running \emph{Jini} system, there are three main players. There is a service, a client which would like to make use of services and a lookup service (service locator) which acts as a broker/locator between services and clients. Clients can query lookup services to dynamically discover services. Services register themselves with a lookup service so that they can be discovered by clients. The communication from client to service happens usually through a service proxy that communicates with RMI to the real service (although it could use any protocol).
 
 
