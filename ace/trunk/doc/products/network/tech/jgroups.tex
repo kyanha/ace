@@ -74,9 +74,11 @@ The prototype does not have any discovery mechanism for existing groups. The use
 \subsection{Analysis}
 \emph{JGroups} provides a very simple API to create groupware applications. A shared document in \ace could be represented as a separate group in \emph{JGroups}. 
 
-It is used in famous open source projects like Tomcat (session replication), OSCache (J2EE caching solution) and Jetty (HTTP session replication). \emph{glicpse}, a collaborative editor plugin for \emph{eclipse} uses \emph{JGroups} too for multicast communication among sites.
+It is used in famous open source projects like Tomcat (session replication), OSCache (J2EE caching solution) and Jetty (HTTP session replication). \emph{glicpse}, a collaborative editor plugin for \emph{eclipse} uses \emph{JGroups} too for multicast communication among sites. The main reason why we examined \emph{JGroups} was because \emph{Gclipse} (a collaborative editing plugin for \emph{Eclipse}) uses \emph{JGroups} as its underlying network layer.
 
 \emph{JGroups} provides both discovery and communication, the requirements for the network layer. Although, the discovery part would need some tweaking before it can be used, as one has to know the group name to join a group.
+
+For an operational transformation algorithm that needs to broadcast operations to all other sites, \emph{JGroups} would certainly be suitable. Note however that our chosen algorithm (Jupiter) does not need to broadcast messages. Multiple unicast connections are used between one server and several clients. Because of this aspect, we think to implement the network layer, \emph{JGroups} is not the best solution. We would need to teach \emph{JGroups} not to do group communication (and that is the prime feature of \emph{JGroups}). 
 
 \subsubsection{Negative Points}
 To join a group, one has to know the name of the group to join. There would have to be some mechanism to discover the available groups, or more specifically, the available groups that represent shared documents in \ace. 
