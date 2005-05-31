@@ -75,7 +75,7 @@ public class InsertOperation implements Operation {
 	}
 
 	public void setText(String text) {
-	    if (text != null)
+	    if (text == null)
 	    		throw new IllegalArgumentException("text may not be null");
 		this.text = text;
 	}
