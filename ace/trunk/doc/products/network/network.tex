@@ -28,29 +28,7 @@ pdfcreator={pdftex},
 \newpage
 
 
-\section{Introduction}
-The goal of the semester project is to create a fully functional operational transformation algorithm. We are implementing the \emph{Jupiter} algorithm. In the diploma project we will (most likely) build a collaborative text editor that uses this algorithm. One of the most central things to implement will be a network layer. The requirements for this layer will be detailed later (see \ref{sect:requirements}). But first let's define the purpose of this document.
-
-\subsection{Purpose}
-The purpose of this document is to examine existing networking solutions and to gather information so that we can decide how to implement the network layer of \ace. It is not a goal to select a network technology for \ace yet. This decision can be delayed further. 
-
-\subsection{Requirements}
-\label{sect:requirements}
-The network layer will need to provide the following two basic features:
-
-\begin{itemize}
- \item discovery
- \item communication
-\end{itemize}
-
-Let us explain these two basic points in greater detail.
-
-\subsubsection{Discovery}
-In \ace a user will be able to share a document so others can join him editing this document. Without a way of first advertising a shared document and then discovering it, the application is pretty useless. The discovery should be as simple as possible. There are several technologies that allow automatic discovery of services, for instance \emph{Jini}, \emph{Bonjour} (also known as zero-conf networking) and diverse peer-to-peer frameworks (e.g. \emph{JXTA}).
-
-\subsubsection{Communication}
-This is the basic requirement. When a user discovered a shared document and decided to join that document, there must be a way to communicate between the document publisher and the user that wants to join the document. There are different technologies ranging from plain socket communication over remote method invocation to complex peer-to-peer frameworks. They differ in several aspects such as ease of use and platfrom independence.
-
+\input{introduction}
 
 
 \section{General Aspects}
