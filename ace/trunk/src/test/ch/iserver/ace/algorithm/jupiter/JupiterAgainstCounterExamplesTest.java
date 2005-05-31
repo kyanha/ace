@@ -957,6 +957,8 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		r2 = (Request)net[2].getRequests().remove(0);
 		eng3.receiveRequest(r2);
 		
+		Thread.sleep(1000);
+		
 		/** analyze results **/
 		String contentSite1 = ((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
 				.getDocument()).getText();

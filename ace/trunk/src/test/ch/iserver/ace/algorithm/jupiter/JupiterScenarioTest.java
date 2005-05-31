@@ -48,11 +48,11 @@ public class JupiterScenarioTest extends TestCase {
 	 *
 	 * After 1. concurrent action: 	"I think,therefore  "  
 	 *
-	 * After 2. concurrent action:	"I think, therefore III am"
+	 * After 2. concurrent action:	"I think, therefore III am "
 	 *
-	 * After 3.concurrent action: 	"I think, therefore Iiam"
+	 * After 3.concurrent action: 	"I think, therefore I am "
 	 * 
-	 * Final string:					"I think, therefore Iiam!"
+	 * Final string:					"I think, therefore I am! "
 	 *
 	 * Timeline:
 	 * SITE 	|   STEP 1				|	STEP 2			 | STEP 3	| STEP 4
@@ -61,14 +61,14 @@ public class JupiterScenarioTest extends TestCase {
 	 * 2		| del i					| ins I				 |			|
 	 * 3		| ins fore				| ins I				 |			|
 	 * 4		| del en					| 					 | del 2. I	|
-	 * 5		| del thus, del worse		| ins I am			 |			| ins !
+	 * 5		| del thus, del worse		| ins "I am"			 |			| ins !
 	 *  
 	 * 
 	 * @throws Exception
 	 */
 	public void testFullScenario1() throws Exception {
 		final String INITIAL = "I thinken,therethus i worse";
-		final String FINAL   = "I think, therefore Iiam!";
+		final String FINAL   = "I think, therefore I am! ";
 		
 		/** initialize system **/
 		JupiterServer server = createServer();
@@ -318,6 +318,20 @@ public class JupiterScenarioTest extends TestCase {
 		eng4.receiveRequest(r5);
 		
 		/** end of concurrent step 1 **/
+		Thread.sleep(1000);
+		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
+				.getDocument()).getText().equals(((TestDocumentModel)eng2.getQueueHandler().getAlgorithm()
+				.getDocument()).getText()));
+		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
+				.getDocument()).getText().equals(((TestDocumentModel)eng3.getQueueHandler().getAlgorithm()
+				.getDocument()).getText()));
+		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
+				.getDocument()).getText().equals(((TestDocumentModel)eng4.getQueueHandler().getAlgorithm()
+				.getDocument()).getText()));
+		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
+				.getDocument()).getText().equals(((TestDocumentModel)eng5.getQueueHandler().getAlgorithm()
+				.getDocument()).getText()));
+		
 		
 		/** concurrent step 2 **/
 		//generate requests at site 1
@@ -334,7 +348,7 @@ public class JupiterScenarioTest extends TestCase {
 		
 //		generate requests at site 5
 		Operation op22 = new InsertOperation(18, "I");
-		Operation op23 = new InsertOperation(19, "i");
+		Operation op23 = new InsertOperation(19, " ");
 		Operation op24 = new InsertOperation(20, "a");
 		Operation op25 = new InsertOperation(21, "m");
 		eng5.generateRequest(op22);
@@ -415,10 +429,19 @@ public class JupiterScenarioTest extends TestCase {
 		eng5.receiveRequest(r2);
 		
 		/** end of concurrent step 2 **/
-		System.out.println(((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
-				.getDocument()).getText());
-		System.out.println(((TestDocumentModel)eng2.getQueueHandler().getAlgorithm()
-				.getDocument()).getText());		
+		Thread.sleep(1000);
+		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
+				.getDocument()).getText().equals(((TestDocumentModel)eng2.getQueueHandler().getAlgorithm()
+				.getDocument()).getText()));
+		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
+				.getDocument()).getText().equals(((TestDocumentModel)eng3.getQueueHandler().getAlgorithm()
+				.getDocument()).getText()));
+		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
+				.getDocument()).getText().equals(((TestDocumentModel)eng4.getQueueHandler().getAlgorithm()
+				.getDocument()).getText()));
+		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
+				.getDocument()).getText().equals(((TestDocumentModel)eng5.getQueueHandler().getAlgorithm()
+				.getDocument()).getText()));		
 		
 		/** concurrent step 3 **/
 		//generate requests at site 1
@@ -452,8 +475,22 @@ public class JupiterScenarioTest extends TestCase {
 		eng5.receiveRequest(r4);
 		
 		/** end of concurrent step 3 **/
-		
+		Thread.sleep(1000);
+		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
+				.getDocument()).getText().equals(((TestDocumentModel)eng2.getQueueHandler().getAlgorithm()
+				.getDocument()).getText()));
+		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
+				.getDocument()).getText().equals(((TestDocumentModel)eng3.getQueueHandler().getAlgorithm()
+				.getDocument()).getText()));
+		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
+				.getDocument()).getText().equals(((TestDocumentModel)eng4.getQueueHandler().getAlgorithm()
+				.getDocument()).getText()));
+		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
+				.getDocument()).getText().equals(((TestDocumentModel)eng5.getQueueHandler().getAlgorithm()
+				.getDocument()).getText()));
+ 		
 		/** concurrent step 4 **/
+		System.out.println(">>> step 4");
 //		generate requests at site 5
 		Operation op28 = new InsertOperation(23, "!");
 		eng5.generateRequest(op28);
@@ -468,9 +505,22 @@ public class JupiterScenarioTest extends TestCase {
 		eng3.receiveRequest(r5);
 		r5 = (Request)net[3].getRequests().remove(0);
 		eng4.receiveRequest(r5);
-		
+		System.out.println("<<< step 4");
+ 		
 		/** end of concurrent step 4 **/
 		Thread.sleep(1000);
+		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
+				.getDocument()).getText().equals(((TestDocumentModel)eng2.getQueueHandler().getAlgorithm()
+				.getDocument()).getText()));
+		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
+				.getDocument()).getText().equals(((TestDocumentModel)eng3.getQueueHandler().getAlgorithm()
+				.getDocument()).getText()));
+		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
+				.getDocument()).getText().equals(((TestDocumentModel)eng4.getQueueHandler().getAlgorithm()
+				.getDocument()).getText()));
+		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
+				.getDocument()).getText().equals(((TestDocumentModel)eng5.getQueueHandler().getAlgorithm()
+				.getDocument()).getText()));
 		
 		/** analyze results **/
 		String contentSite1 = ((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
@@ -483,6 +533,7 @@ public class JupiterScenarioTest extends TestCase {
 				.getDocument()).getText();
 		String contentSite5 = ((TestDocumentModel)eng5.getQueueHandler().getAlgorithm()
 				.getDocument()).getText();
+		System.out.println("'"+contentSite1+"'");
 		assertEquals(FINAL, contentSite1);
 		assertEquals(FINAL, contentSite2);
 		assertEquals(FINAL, contentSite3);
@@ -494,7 +545,7 @@ public class JupiterScenarioTest extends TestCase {
 	 * Small scenario with 3 sites.
 	 * site 1: ins(0, 'I')
 	 * site 2: ins(0, 'I')
-	 * site 3: ins(0, 'I'), ins(0, ' '), ins(0, 'a'), ins(0, 'm')
+	 * site 3: ins(0, 'I'), ins(1, ' '), ins(2, 'a'), ins(3, 'm')
 	 * 
 	 * @throws Exception
 	 */
@@ -578,6 +629,8 @@ public class JupiterScenarioTest extends TestCase {
 		eng1.receiveRequest(r2);
 		r2 = (Request)net[2].getRequests().remove(0);
 		eng3.receiveRequest(r2);
+		
+		Thread.sleep(1000);
 
 		/** analyze results **/
 		String contentSite1 = ((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()

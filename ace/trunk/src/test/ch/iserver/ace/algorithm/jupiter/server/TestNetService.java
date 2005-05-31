@@ -47,7 +47,7 @@ public class TestNetService implements NetService {
     public List getRequests() {
     		//wait a short time for the requests
     		try {
-    			Thread.sleep(250);
+    			Thread.sleep(100);
     		} catch (InterruptedException ie) {}
         return requests;
     }
