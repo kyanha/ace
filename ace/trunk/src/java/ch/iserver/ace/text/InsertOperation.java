@@ -51,7 +51,7 @@ public class InsertOperation implements Operation {
 	}
 
 	public void setPosition(int position) {
-	    if (position >= 0)
+	    if (position < 0)
 	    		throw new IllegalArgumentException("position index must be >= 0");
 		this.position = position;
 	}
@@ -69,7 +69,7 @@ public class InsertOperation implements Operation {
 	}
 	
 	public void setOrigin(int origin) {
-	    if (origin >= 0)
+	    if (origin < 0)
     			throw new IllegalArgumentException("origin index must be >= 0");
 		this.origin = origin;
 	}
