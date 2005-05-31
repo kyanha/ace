@@ -20,3 +20,5 @@ In \ace a user will be able to share a document so others can join him editing t
 
 \subsubsection{Communication}
 This is the basic requirement. When a user discovered a shared document and decided to join that document, there must be a way to communicate between the document publisher and the user that wants to join the document. There are different technologies ranging from plain socket communication over remote method invocation to complex peer-to-peer frameworks. They differ in several aspects such as ease of use and platfrom independence.
+
+The \emph{Jupiter} algorithm does not need a network layer that is capable of multicast. Each operation is sent to the server only. Clients must not be explicitely aware of other users editing the same document from the viewpoint of the algorithm. That is why some network technologies targeting multicast communication are most likely not an appropriate choice (although they would be for an algorithm that requires multicast messaging).
