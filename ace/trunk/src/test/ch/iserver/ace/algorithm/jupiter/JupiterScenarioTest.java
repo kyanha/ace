@@ -83,8 +83,7 @@ public class JupiterScenarioTest extends TestCase {
 		proxies[1] = server.addClient(net[1]); //belongs to site 2
 		proxies[2] = server.addClient(net[2]); //belongs to site 3
 		proxies[3] = server.addClient(net[3]); //belongs to site 4
-		proxies[4] = server.addClient(net[4]); //belongs to site 5
-		
+		proxies[4] = server.addClient(net[4]); //belongs to site 5	
 		
 		DefaultRequestEngine eng1 = createClientEngine(proxies[0].getSiteId(), INITIAL);
 		DefaultRequestEngine eng2 = createClientEngine(proxies[1].getSiteId(), INITIAL);
@@ -318,7 +317,7 @@ public class JupiterScenarioTest extends TestCase {
 		eng4.receiveRequest(r5);
 		
 		/** end of concurrent step 1 **/
-		Thread.sleep(1000);
+		Thread.sleep(500);
 		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
 				.getDocument()).getText().equals(((TestDocumentModel)eng2.getQueueHandler().getAlgorithm()
 				.getDocument()).getText()));
@@ -429,7 +428,7 @@ public class JupiterScenarioTest extends TestCase {
 		eng5.receiveRequest(r2);
 		
 		/** end of concurrent step 2 **/
-		Thread.sleep(1000);
+		Thread.sleep(500);
 		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
 				.getDocument()).getText().equals(((TestDocumentModel)eng2.getQueueHandler().getAlgorithm()
 				.getDocument()).getText()));
@@ -475,7 +474,7 @@ public class JupiterScenarioTest extends TestCase {
 		eng5.receiveRequest(r4);
 		
 		/** end of concurrent step 3 **/
-		Thread.sleep(1000);
+		Thread.sleep(500);
 		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
 				.getDocument()).getText().equals(((TestDocumentModel)eng2.getQueueHandler().getAlgorithm()
 				.getDocument()).getText()));
@@ -508,7 +507,7 @@ public class JupiterScenarioTest extends TestCase {
 		System.out.println("<<< step 4");
  		
 		/** end of concurrent step 4 **/
-		Thread.sleep(1000);
+		Thread.sleep(500);
 		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
 				.getDocument()).getText().equals(((TestDocumentModel)eng2.getQueueHandler().getAlgorithm()
 				.getDocument()).getText()));
@@ -630,7 +629,7 @@ public class JupiterScenarioTest extends TestCase {
 		r2 = (Request)net[2].getRequests().remove(0);
 		eng3.receiveRequest(r2);
 		
-		Thread.sleep(1000);
+		Thread.sleep(500);
 
 		/** analyze results **/
 		String contentSite1 = ((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()

@@ -169,7 +169,7 @@ public class JupiterServerTest extends TestCase {
     		}
     		
     		//hold on for a short time
-    		Thread.sleep(3000);
+    		Thread.sleep(1000);
     		
     		//at this point, assume that all requests have been processed and forwarded to all the
     		//clients, hence the request forward queue must be empty
@@ -183,7 +183,6 @@ public class JupiterServerTest extends TestCase {
     			List reqList = netService[i].getRequests();
     			assertEquals(NUM_CLIENTS-1, reqList.size());
     			Iterator iter = reqList.iterator();  
-    			int remoteOpCount = VECTORTIME_REMOTEOP_COUNT;
     			while (iter.hasNext()) {
     				Request req = (Request)iter.next();
     				JupiterVectorTime vector = (JupiterVectorTime)req.getTimestamp();
@@ -191,7 +190,7 @@ public class JupiterServerTest extends TestCase {
     				//processed before the other operations coming from the other clients or
     				//it has not been processed yet.
     				assertTrue( vector.getLocalOperationCount() <= VECTORTIME_LOCALOP_COUNT + 1 );
-    				assertEquals(remoteOpCount++, vector.getRemoteOperationCount());
+    				assertTrue( vector.getRemoteOperationCount() <= VECTORTIME_REMOTEOP_COUNT + 1 );
     				assertTrue(req.getSiteId() != currSiteId);
     			}
     		}

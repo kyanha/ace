@@ -120,7 +120,7 @@ public class DefaultRequestEngineTest extends TestCase {
 		}
 		Request[] reqs = new Request[NUM_REQUESTS];
 		for (int i=0; i < NUM_REQUESTS; i++) {
-			reqs[i] = new JupiterRequest(i%10, new JupiterVectorTime(0, i), 
+			reqs[i] = new JupiterRequest(i%10, new JupiterVectorTime(i, i), 
 											new InsertOperation(i, "b"));
 		}
 		
@@ -138,7 +138,8 @@ public class DefaultRequestEngineTest extends TestCase {
 		int t = 2;
 		while (!engine.getLocalOperationBuffer().isEmpty() || 
 				!engine.getRemoteRequestBuffer().isEmpty()) {
-			System.out.println("sleep "+t+"s");
+			System.out.println("sleep "+t+"s "+engine.getLocalOperationBuffer().size()+" "+
+					engine.getRemoteRequestBuffer().size());
 			Thread.sleep(2000);
 			t += 2;
 		}
