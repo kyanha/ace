@@ -29,20 +29,30 @@ import ch.iserver.ace.Operation;
 public class InsertOperation implements Operation {
 	private String text;
 	private int position;
+	private int origin;
 	
 	public InsertOperation() { }
 
 	public InsertOperation(int position, String text) {
 		setPosition(position);
 		setText(text);
+		origin = getPosition();
 	}
+	
+	public InsertOperation(int position, String text, int origin) {
+		setPosition(position);
+		setText(text);
+		this.origin = origin;
+	}
+	
 	
 	public int getPosition() {
 		return position;
 	}
 
 	public void setPosition(int position) {
-	    assert position >= 0 : "position index must be >= 0";
+	    if (position >= 0)
+	    		throw new IllegalArgumentException("position index must be >= 0");
 		this.position = position;
 	}
 
@@ -53,14 +63,25 @@ public class InsertOperation implements Operation {
 	public int getTextLength() {
 		return text.length();
 	}
+	
+	public int getOrigin() {
+		return origin;
+	}
+	
+	public void setOrigin(int origin) {
+	    if (origin >= 0)
+    			throw new IllegalArgumentException("origin index must be >= 0");
+		this.origin = origin;
+	}
 
 	public void setText(String text) {
-	    assert text != null : "text may not be null";
+	    if (text != null)
+	    		throw new IllegalArgumentException("text may not be null");
 		this.text = text;
 	}
 	
 	public String toString() {
-		return "Insert(" + position + "," + text + ")";
+		return "Insert(" + position + ",'" + text + "',"+origin+")";
 	}
 	
 	public boolean equals(Object obj) {
@@ -70,7 +91,7 @@ public class InsertOperation implements Operation {
 			return false;
 		} else if (obj.getClass().equals(getClass())) {
 			InsertOperation op = (InsertOperation) obj;
-			return op.position == position && op.text.equals(text);
+			return op.position == position && op.text.equals(text) && op.origin == origin;
 		} else {
 			return false;
 		}
@@ -78,6 +99,7 @@ public class InsertOperation implements Operation {
 	
 	public int hashCode() {
 		int hashcode = position;
+		hashcode += 13 * origin;
 		hashcode += 13 * text.hashCode();
 		return hashcode;
 	}
