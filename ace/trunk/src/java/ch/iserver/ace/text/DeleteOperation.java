@@ -42,7 +42,8 @@ public class DeleteOperation implements Operation {
 	}
 
 	public void setPosition(int position) {
-	    assert position >= 0 : "position index must be >= 0";
+		if (position < 0)
+    		throw new IllegalArgumentException("position index must be >= 0");
 		this.position = position;
 	}
 	
@@ -55,12 +56,13 @@ public class DeleteOperation implements Operation {
 	}
 	
 	public void setText(String text) {
-	    assert text != null : "text may not be null";
+	    if (text == null)
+    			throw new IllegalArgumentException("text may not be null");
 		this.text = text;
 	}
 	
 	public String toString() {
-		return "Delete(" + position + "," + text + ")";
+		return "Delete(" + position + ",'" + text + "')";
 	}
 	
 	public boolean equals(Object obj) {
