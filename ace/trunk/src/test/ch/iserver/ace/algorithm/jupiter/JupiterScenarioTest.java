@@ -129,8 +129,8 @@ public class JupiterScenarioTest extends TestCase {
 		Operation op12 = new DeleteOperation(15, "u");
 		Operation op13 = new DeleteOperation(15, "s");
 		Operation op14 = new DeleteOperation(22, "e");
-		Operation op15 = new DeleteOperation(21, "r");
-		Operation op16 = new DeleteOperation(20, "s");
+		Operation op15 = new DeleteOperation(21, "s");
+		Operation op16 = new DeleteOperation(20, "r");
 		Operation op17 = new DeleteOperation(19, "o");
 		Operation op18 = new DeleteOperation(18, "w");
 		eng5.generateRequest(op10);

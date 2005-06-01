@@ -59,6 +59,8 @@ public class TestDocumentModel extends PlainDocument implements DocumentModel {
 				insertString(op.getPosition(), op.getText(), null);
 			} else if (operation instanceof DeleteOperation) {
 				DeleteOperation op = (DeleteOperation) operation;
+				assert op.getText().equals(getText(op.getPosition(), op.getTextLength())) : 
+					op.getText()+" != "+getText(op.getPosition(), op.getTextLength());
 				remove(op.getPosition(), op.getTextLength());
 			}
 		} catch (BadLocationException e) {
