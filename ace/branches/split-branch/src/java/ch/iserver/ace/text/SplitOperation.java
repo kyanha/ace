@@ -50,4 +50,28 @@ public class SplitOperation implements Operation {
 	public void setSecond(Operation op2) {
 		this.op2 = op2;
 	}
+
+	public String toString() {
+		return "Split(" + op1 + ", " + op2 + ")";
+	}
+	
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		} else if (obj == null) {
+			return false;
+		} else if (obj.getClass().equals(getClass())) {
+			SplitOperation op = (SplitOperation) obj;
+			return op.getFirst().equals(op1) && op.getSecond().equals(op2); 
+		} else {
+			return false;
+		}
+	}
+	
+	public int hashCode() {
+		int hashcode = op1.hashCode();
+		hashcode += 17 * op2.hashCode();
+		return hashcode;
+	}
+	
 }
