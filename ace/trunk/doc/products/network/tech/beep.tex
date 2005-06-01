@@ -43,16 +43,16 @@ After the establishment of a session, the initiator asks to start a channel for 
 
 \subsection{Prototype}
 \subsubsection{Echo Server}
-The \emph{BEEP} implementation of an echo server can be found in \texttt{ch.iserver.ace.net.beep.EchoServer}. The code is straighforward. First a profile registry (\texttt{org.beepcore.beep.core.ProfileRegistry}) has to be created. All the supported profiles (\texttt{org.beepcore.beep.profile.Profile}) have to be added to the created profile registry by calling \texttt{addStartChannelListener}). The profiles are registered with an URI that is used as a key to specify a specific profile when creating a new channel.
+The \emph{BEEP} implementation of an echo server can be found in \texttt{EchoServer}. The code is straighforward. First a profile registry (\texttt{ProfileRegistry}) has to be created. All the supported profiles (\texttt{Profile}) have to be added to the created profile registry by calling \texttt{addStartChannelListener}). The profiles are registered with an URI that is used as a key to specify a specific profile when creating a new channel.
 
-Once the registry is set up and the profiles added, the server can start listening for client connections. The class \texttt{org.beepcore.beep.transport.tcp.TCPSessionCreator}'s \texttt{listen} method is used for this purpose. The server does not need to do anything special with the returned session as all the communication is handled by the selected profile.
+Once the registry is set up and the profiles added, the server can start listening for client connections. The class \texttt{TCPSessionCreator}'s \texttt{listen} method is used for this purpose. The server does not need to do anything special with the returned session as all the communication is handled by the selected profile.
 
-The echo server uses the existing \texttt{org.beepcore.beep.profile.echo.EchoProfile} profile. This profile implements the echo behavior.
+The echo server uses the existing \texttt{EchoProfile} profile. This profile implements the echo behavior.
 
 \subsubsection{Echo Client}
-The echo client (see \texttt{ch.iserver.ace.net.beep.EchoClient}) connects to the echo server and sends echo requests using the BEEP echo profile. First a session has to be created to the server. The method \texttt{initiate} in \texttt{org.beepcore.beep.transport.tcp.TCPSessionCreator} is used for that purpose. Once we have a session, we can start a channel by specifying the desired profile URI in a call to \texttt{startChannel} on the session.
+The echo client (see \texttt{EchoClient}) connects to the echo server and sends echo requests using the BEEP echo profile. First a session has to be created to the server. The method \texttt{initiate} in \texttt{TCPSessionCreator} is used for that purpose. Once we have a session, we can start a channel by specifying the desired profile URI in a call to \texttt{startChannel} on the session.
 
-The \texttt{sendMSG} method on the channel allows us to send a message on the channel. We need to specify a \texttt{org.beepcore.beep.core.OutputDataStream} and a \texttt{org.beepcore.beep.core.ReplyListener}. The \texttt{org.beepcore.beep.lib.Reply} implements this interface and allows to retrieve the reply from the server.
+The \texttt{sendMSG} method on the channel allows us to send a message on the channel. We need to specify a \texttt{OutputDataStream} and a \texttt{ReplyListener}. The \texttt{Reply} implements this interface and allows to retrieve the reply from the server.
 
 
 
