@@ -29,9 +29,9 @@ Peers may belong to more than one peer group simultaneously. By default, the fir
 
 There are several motivations fro creating peer groups:
 \begin{itemize}
- \item \emph{To create a secure environment}: Groups create a local domain of control in which a specific security policy can be enforced. The security policy may be as simple as a plain text user name/password exchange, or as sophisticated as public key cryptography. Peer gropus form logical regions whose boundaries limit access to the peer group resources.
- \item \emph{To create a coping environment}: Groups allow the establishment of a local domain of specialization. For example, peers may group together to implement a document sharing network or a CPU sharing network.
- \item \emph{To create a monitoring environment}: Peer groups permit peers to monitor a set of peers for any special purpose (e.g. traffic introspection, accountability) 
+ \item \emph{To create a secure environment}: Groups create a local domain of control in which a specific security policy can be enforced. The security policy may be as simple as a plain text user name/password exchange, or as sophisticated as public key cryptography. Peer groups form logical regions whose boundaries limit access to the peer group resources.
+ \item \emph{To create a scoping environment}: Groups allow the establishment of a local domain of specialization. For example, peers may group together to implement a document sharing network or a CPU sharing network.
+ \item \emph{To create a monitoring environment}: Peer groups permit peers to monitor a set of peers for any special purpose (e.g. traffic introspection, accountability). 
 \end{itemize}
 
 A peer group provides a set of services called peer group services. \emph{JXTA} defines a core set of peer group services. Additional services can be developed for delivering specific services. In order for two peers to interact via a service, they must both be part of the same peer group.
@@ -63,19 +63,16 @@ JXTA peers use pipes to send messages to one another. Pipes are an asynchronous 
 
 The pipe endpoints are referred to as the input pipe (the receiving end) and the output pipe (the sending end). Pipe endpoints are dynamically bound to peer endpoints at runtime. Peer endpoints correspond to available peer network interfaces (e.g., a TCP port and associated IP address) that can be used to send and receive message. JXTA pipes can have endpoints that are connected to different peers at different times, or may not be connected at all. 
 
-Pipes are virtual communication channels and may connect peers that do not have a direct physical link. In this 
-case, one or more intermediary peer endpoints are used to relay messages between the two pipe endpoints. 
-Pipes offer two modes of communication, point-to-point and propagate, as seen in . The JXTA core also provides 
-secure unicast pipes, a secure variant of the point-to-point pipe. 
+Pipes are virtual communication channels and may connect peers that do not have a direct physical link. In this case, one or more intermediary peer endpoints are used to relay messages between the two pipe endpoints. Pipes offer two modes of communication, point-to-point and propagate. The JXTA core also provides secure unicast pipes, a secure variant of the point-to-point pipe. 
 
-\begin{itemize}
- \item \emph{Point-to-point Pipes}: A point-to-point pipe connects exactly two pipe endpoints together: an input pipe on one peer receives messages sent from the output pipe of another peer, it is also possible for multiple peers to bind to a single input pipe. 
- \item \emph{Propagate Pipes}: A propagate pipe connects one output pipe to multiple input pipes. Messages flow from the output pipe (the propagation source) into the input pipes. All propagation is done within the scope of a peer group. That is, the output pipe and all input pipes must belong to the same peer group. 
- \item \emph{Secure Unicast Pipes}: A secure unicast pipe is a type of point-to-point pipe that provides a secure, and reliable communication channel. 
-\end{itemize}
+A \emph{point-to-point pipe} connects exactly two pipe endpoints together: an input pipe on one peer receives messages sent from the output pipe of another peer, it is also possible for multiple peers to bind to a single input pipe. 
 
-\subsubsection{Bidirectional reliable communication channels}
-Since pipes provide unidirectional, unreliable communication channels, it is necessary to implement bidirectional and reliable communication channels. The platform provides the following to address the level of service quality required by the applications
+A \emph{propagate pipe} connects one output pipe to multiple input pipes. Messages flow from the output pipe (the propagation source) into the input pipes. All propagation is done within the scope of a peer group. That is, the output pipe and all input pipes must belong to the same peer group. 
+
+A \emph{secure unicast pipe} is a type of point-to-point pipe that provides a secure, and reliable communication channel. 
+
+Since pipes provide unidirectional, unreliable communication channels, it is necessary to implement bidirectional and reliable communication channels. The platform provides the following to address the level of service quality required by the applications.
+
 \paragraph{Reliability Library:} Ensures message sequencing, delivery and exposes message and stream based interfaces.
 \paragraph{JxtaSocket and JxtaServerSocket:} Provides \texttt{Socket} and \texttt{ServerSocket} implementations built on top of pipes and the reliability library. It exposes the well knwon stream based interface for communication. Furthermore it provides bidirectional and reliable communication channels.
 \paragraph{JxtaBiDiPipe and JxtaServerPipe:} Is built ont top of pipes and the reliability library. It provides bidirectional and reliable communication channels and exposes a message based interface.
@@ -101,13 +98,13 @@ Peers, peer groups, pipes and other \emph{JXTA} resources need to be uniquely id
 
 
 \subsection{Prototype}
-The prototype is a very simple sample application from the programmers guide. There are two classes, \texttt{ch.iserver.ace.net.jxta.Server} and \texttt{ch.iserver.ace.net.jxta.Client}. The server first advertises a service, which the client discovers and sends a simple message to it. The communication is strictly unidirectional (and unreliable, as it is using pipes). The example could certainly be extended to provide a bidirectional and reliable service (e.g. to create an echo server, client).
+The prototype is a very simple sample application from the \emph{JXTA} programmers guide. There are two classes, \texttt{ch.iserver.ace.net.jxta.Server} and \texttt{ch.iserver.ace.net.jxta.Client}. The server first advertises a service, which the client discovers and sends a simple message to it. The communication is strictly unidirectional (and unreliable, as it is using pipes). The example could certainly be extended to provide a bidirectional and reliable service (e.g. to create an echo server, client).
 
 The server creates first a new module class advertisement and publishes it both locally and remotely (using the discovery service). Afterwards it creates a module specification advertisement. A pipe advertisement is read from the filesystem and attached to the module specification advertisement. This module specification advertisement is then also published locally and remotely.
 
 The server then creates an input pipe from the pipe advertisement and waits for messages on this pipe in an endless loop.
 
-The client first tries to discover the module specification advertisement published by the server. It queries for this advertisement by specifying a value (JXTASPEC:JXTA-EX1) for the name attribute of the specification. The advertisement can be already cached locally. In this case, the client does not need to send a discovery request. If the advertisement is not cached, it sends a discovery request to the network.
+The client first tries to discover the module specification advertisement published by the server. It queries for this advertisement by specifying a value ("JXTASPEC:JXTA-EX1") for the name attribute of the specification. The advertisement can be already cached locally. In this case, the client does not need to send a discovery request. If the advertisement is not cached, it sends a discovery request to the network.
 
 Once the client has retrieved the desired module specification advertisement, it can extract the pipe advertisement from the specification advertisement. The pipe advertisement is then used to create an output pipe. The output pipe provides a way of sending a message to the server. When the message is sent successfully, the client shuts down.
 
@@ -128,9 +125,7 @@ Further \emph{JXTA} is programming language independent. There is an implementat
 \subsubsection{Negative Points}
 Although \emph{JXTA} exists since 2001 there do not seem to be many applications using it. Only a handful applications are listed on the jxta.org homepage.
 
-Another discomforting point is that we've stumbled across a serious bug in a so called stable release (2.3.3). A clone method caused a stack overflow exception and we had to use the latest build. The bug is even observable in an official sample application presented in the programmers guide.
-
-It seems to us that \emph{JXTA} is still in some way a research project and not rock solid and mature.
+Another discomforting point is that we have stumbled across a serious bug in a so called stable release (2.3.3). A clone method caused a stack overflow exception and we had to use the latest build. The bug is even observable in an official sample application presented in the programmers guide. It seems to us that \emph{JXTA} is still in some way a research project and not rock solid and mature.
 
 \subsubsection{Open Points}
 Before we could decide to use \emph{JXTA} for the implementation of the network layer, we would need to explore this technology in greater detail:
@@ -147,8 +142,8 @@ Before we could decide to use \emph{JXTA} for the implementation of the network 
 
 \subsection{Resources}
 \begin{itemize}
- \item \url{http://www.jxta.org/} - \emph{JXTA} project website
- \item \url{http://www.brendonwilson.com/projects/jxta/} - free book, slighlty outdated
- \item \url{http://www.javaworld.com/javaworld/jw-05-2005/jw-0509-jxta.html} - Java World article
- \item \url{http://www.developer.com/java/other/article.php/1450221} - article from developer.com
+ \item \href{http://www.jxta.org/}{\emph{JXTA} project website}
+ \item \href{http://www.brendonwilson.com/projects/jxta/}{free book, slighlty outdated}
+ \item \href{http://www.javaworld.com/javaworld/jw-05-2005/jw-0509-jxta.html}{Java World article}
+ \item \href{http://www.developer.com/java/other/article.php/1450221}{article from developer.com}
 \end{itemize}
