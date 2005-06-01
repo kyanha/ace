@@ -166,32 +166,49 @@ public class GOTOInclusionTransformationTest extends TestCase {
 
 
 	public void testDeleteInsert01() throws Exception {
-		/*
-		* Operation A is completly before operation B.
-		* (B):          "ABCD"
-		* (A):      "12"
-		* (A'):     "12"
-		*/
+		// init
+		Operation delA, insB;
+		DeleteOperation result;
+		GOTOInclusionTransformation transform = new GOTOInclusionTransformation();
+
+		// insert after delete
+		delA = new DeleteOperation(1, "12");
+		insB = new InsertOperation(4, "ABCD");
+		result = (DeleteOperation)transform.transform(delA, insB);
+		assertEquals(1, result.getPosition());
+		assertEquals("12", result.getText());
 	}
 
 	public void testDeleteInsert02() throws Exception {
-		/*
-		* Operation A starts before or at the same position like operation B.
-		* (B):      "ABCD"       |     "ABCD"
-		* (A):      "12"         |       "12"
-		* (A'):         "12"     |           "12"
-		*/
+		// init
+		Operation delA, insB;
+		DeleteOperation result;
+		GOTOInclusionTransformation transform = new GOTOInclusionTransformation();
+
+		// insert starts before or at the same position like insert operation
+		delA = new DeleteOperation(1, "12");
+		insB = new InsertOperation(0, "ABCD");
+		result = (DeleteOperation)transform.transform(delA, insB);
+		assertEquals(5, result.getPosition());
+		assertEquals("12", result.getText());
+
+		delA = new DeleteOperation(1, "12");
+		insB = new InsertOperation(1, "ABCD");
+		result = (DeleteOperation)transform.transform(delA, insB);
+		assertEquals(5, result.getPosition());
+		assertEquals("12", result.getText());
 	}
 
 	public void testDeleteInsert03() throws Exception {
-		/*
-		* !NOT YET IMPLEMENTED!
-		* Operation B (insert) is in the range of operation A (delete). Operation A'
-		* must be splitted up into two delete operations.
-		* (B):       "ABCD"
-		* (A):      "123456"
-		* (A'):     "1"  "23456"
-		*/
+		// init
+		Operation delA, insB;
+		DeleteOperation result;
+		GOTOInclusionTransformation transform = new GOTOInclusionTransformation();
+
+		// insert starts before or at the same position like insert operation
+		delA = new DeleteOperation(1, "12");
+		insB = new InsertOperation(2, "ABCD");
+		result = (DeleteOperation)transform.transform(delA, insB);
 	}
 
 
@@ -199,61 +216,101 @@ public class GOTOInclusionTransformationTest extends TestCase {
 
 
 	public void testDeleteDelete01() throws Exception {
-		/*
-		* Operation A is completly before operation B.
-		* (B):          "ABCD"
-		* (A):      "12"
-		* (A'):     "12"
-		*/
+		// init
+		Operation delA, delB;
+		DeleteOperation result;
+		GOTOInclusionTransformation transform = new GOTOInclusionTransformation();
+
+		// Operation A is completly before operation B.
+		delA = new DeleteOperation(1, "12");
+		delB = new DeleteOperation(4, "ABCD");
+		result = (DeleteOperation)transform.transform(delA, delB);
+		assertEquals(1, result.getPosition());
+		assertEquals("12", result.getText());
 	}
 
 	public void testDeleteDelete02() throws Exception {
-		/*
-		* Operation A starts at the end or after operation B. Index of operation A'
-		* must be reduced by the length of the text of operation B.
-		* (B):      "ABCD"
-		* (A):             "12"
-		* (A'):        "12"
-		*/
+		// init
+		Operation delA, delB;
+		DeleteOperation result;
+		GOTOInclusionTransformation transform = new GOTOInclusionTransformation();
+
+		// Operation A starts at the end or after operation B. Index of operation A'
+		// must be reduced by the length of the text of operation B.
+		delA = new DeleteOperation(8, "12");
+		delB = new DeleteOperation(4, "ABCD");
+		result = (DeleteOperation)transform.transform(delA, delB);
+		assertEquals(4, result.getPosition());
+		assertEquals("12", result.getText());
+
+		delA = new DeleteOperation(10, "12");
+		delB = new DeleteOperation(4, "ABCD");
+		result = (DeleteOperation)transform.transform(delA, delB);
+		assertEquals(6, result.getPosition());
+		assertEquals("12", result.getText());
 	}
 
 	public void testDeleteDelete03() throws Exception {
-		/*
-		* Operation B starts before or at the same position like operation A
-		* and ends after or at the same position like operation A.
-		* (B):      "ABCD"     |     "ABCD
-		* (A):       "12"      |     "12"
-		* (A'):     "12"       |     "12"
-		*/
+		// init
+		Operation delA, delB;
+		DeleteOperation result;
+		GOTOInclusionTransformation transform = new GOTOInclusionTransformation();
+
+		// Operation B starts before or at the same position like operation A
+		// and ends after or at the same position like operation A.
+		delA = new DeleteOperation(4, "12");
+		delB = new DeleteOperation(4, "ABCD");
+		result = (DeleteOperation)transform.transform(delA, delB);
+		assertEquals(4, result.getPosition());
+		assertEquals("", result.getText());
+
+		delA = new DeleteOperation(6, "12");
+		delB = new DeleteOperation(4, "ABCD");
+		result = (DeleteOperation)transform.transform(delA, delB);
+		assertEquals(6, result.getPosition());
+		assertEquals("", result.getText());
 	}
 
 	public void testDeleteDelete04() throws Exception {
-		/*
-		* Operation B starts before or at the same position like operation A
-		* and ends before operation A.
-		* (B):      "ABCD"
-		* (A):        "12345"
-		* (A'):     "345"
-		*/
+		// init
+		Operation delA, delB;
+		DeleteOperation result;
+		GOTOInclusionTransformation transform = new GOTOInclusionTransformation();
+
+		// Operation B starts before or at the same position like operation A
+		// and ends before operation A.
+		delA = new DeleteOperation(6, "12345");
+		delB = new DeleteOperation(4, "ABCD");
+		result = (DeleteOperation)transform.transform(delA, delB);
+		assertEquals(4, result.getPosition());
+		assertEquals("345", result.getText());
 	}
 
 	public void testDeleteDelete05() throws Exception {
-		/*
-		* Operation B starts after operation A and ends after or at the
-		* same position like operation A.
-		* (B):        "ABCD"
-		* (A):      "12345"
-		* (A'):     "12"
-		*/
+		// init
+		Operation delA, delB;
+		DeleteOperation result;
+		GOTOInclusionTransformation transform = new GOTOInclusionTransformation();
+
+		// Operation B starts after operation A and ends after or at the
+		// same position like operation A.
+		delA = new DeleteOperation(2, "12345");
+		delB = new DeleteOperation(4, "ABCD");
+		result = (DeleteOperation)transform.transform(delA, delB);
+		assertEquals(2, result.getPosition());
+		assertEquals("12", result.getText());
 	}
 
 	public void testDeleteDelete06() throws Exception {
-		/*
-		* Operation B is fully in operation A.
-		* (B):       "ABCD"
-		* (A):      "123456"
-		* (A'):     "12"
-		*/
+		// init
+		Operation delA, delB;
+		DeleteOperation result;
+		GOTOInclusionTransformation transform = new GOTOInclusionTransformation();
+
+		// Operation B is fully in operation A.
+		delA = new DeleteOperation(2, "12345");
+		delB = new DeleteOperation(3, "ABC");
+		result = (DeleteOperation)transform.transform(delA, delB);
 	}
 
 }
