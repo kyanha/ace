@@ -311,6 +311,8 @@ public class GOTOInclusionTransformationTest extends TestCase {
 		delA = new DeleteOperation(2, "12345");
 		delB = new DeleteOperation(3, "ABC");
 		result = (DeleteOperation)transform.transform(delA, delB);
+		assertEquals(2, result.getPosition());
+		assertEquals("15", result.getText());
 	}
 
 }
