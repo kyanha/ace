@@ -226,10 +226,9 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 				* Operation B is fully in operation A.
 				* (B):       "ABCD"
 				* (A):      "123456"
-				* (A'):     "12"
+				* (A'):     "16"
 				*/
-				transformedOperation = new DeleteOperation(0, "");
-				throw new RuntimeException("transform(Delete,Delete): not yet implemented ...");    		
+				transformedOperation = new DeleteOperation(posA, delA.getText().substring(0, posB - posA) + delA.getText().substring(posB + lenB - posA, lenA));
 			}
 		}
         return transformedOperation;
