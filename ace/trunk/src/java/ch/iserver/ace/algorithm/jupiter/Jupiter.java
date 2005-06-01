@@ -111,6 +111,9 @@ public class Jupiter implements Algorithm {
 
 		//myMsgs = myMsgs + 1;
 		vectorTime.incrementLocalOperationCount();
+		
+		//TODO: save request in undo list (local undo)
+		
 		return req;
 	}
 
@@ -261,7 +264,15 @@ public class Jupiter implements Algorithm {
 	 * @see ch.iserver.ace.algorithm.Algorithm#undo()
 	 */
 	public Request undo() {
-		// TODO Auto-generated method stub
+		//get the users request that is to be undone
+		
+		//compute undo request in current state (getUndoRequestInState/translateRequest)
+		
+		//generateRequest
+		
+		//save undo request in redo list
+		
+		//return request to send to other participants
 		return null;
 	}
 
@@ -271,7 +282,10 @@ public class Jupiter implements Algorithm {
 	 * @see ch.iserver.ace.algorithm.Algorithm#redo()
 	 */
 	public Request redo() {
-		// TODO Auto-generated method stub
+		//...
+		
+		//save redo request in undo list
+		
 		return null;
 	}
 

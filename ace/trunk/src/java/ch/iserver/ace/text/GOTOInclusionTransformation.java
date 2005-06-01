@@ -189,8 +189,7 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 			*/
     		transformedOperation = new DeleteOperation(posA - lenB, delA.getText());
     	} else {
-    		/*
-			* !NOT YET IMPLEMENTED!
+    			/*
 			* Operation A and operation B are overlapping.
 			*/
 			if((posB <= posA) && ((posA + lenA) <= (posB + lenB))) {
