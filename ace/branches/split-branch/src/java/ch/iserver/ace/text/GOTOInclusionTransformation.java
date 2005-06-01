@@ -42,7 +42,7 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
         if (op1 instanceof InsertOperation && op2 instanceof InsertOperation) {
         		System.out.print("\ttransform("+op1+", "+op2+") = ");
         		transformedOp = transform((InsertOperation)op1, (InsertOperation)op2);
-             System.out.println(transformedOp);
+             	System.out.println(transformedOp);
         } else if (op1 instanceof InsertOperation && op2 instanceof DeleteOperation) {
         		System.out.print("\ttransform("+op1+", "+op2+") = ");
         		transformedOp = transform((InsertOperation)op1, (DeleteOperation)op2);
@@ -61,8 +61,8 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
         return transformedOp;
     }
     
-    private InsertOperation transform(InsertOperation insA, InsertOperation insB) {
-    	InsertOperation transformedOperation = null;
+    private Operation transform(InsertOperation insA, InsertOperation insB) {
+    	Operation transformedOperation = null;
     	int posA = insA.getPosition();
     	int lenA = insA.getTextLength();
     	int posB = insB.getPosition();
@@ -90,8 +90,8 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
         return transformedOperation;
     }
     
-    private InsertOperation transform(InsertOperation insA, DeleteOperation delB) {
-    	InsertOperation transformedOperation = null;
+    private Operation transform(InsertOperation insA, DeleteOperation delB) {
+    	Operation transformedOperation = null;
     	int posA = insA.getPosition();
     	int lenA = insA.getTextLength();
     	int posB = delB.getPosition();
@@ -127,8 +127,8 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
         return transformedOperation;
     }
     
-    private DeleteOperation transform(DeleteOperation delA, InsertOperation insB) {
-    	DeleteOperation transformedOperation = null;
+    private Operation transform(DeleteOperation delA, InsertOperation insB) {
+    	Operation transformedOperation = null;
     	int posA = delA.getPosition();
     	int lenA = delA.getTextLength();
     	int posB = insB.getPosition();
@@ -159,13 +159,15 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 			* (A):      "123456"
 			* (A'):     "1"  "23456"
 			*/
-			throw new RuntimeException("transform(Delete,Insert): not yet implemented");
+			transformedOperation = new SplitOperation(new DeleteOperation(posA, delA.getText().substring(0, posB - posA)),
+				new DeleteOperation(posA + lenB + (posB - posA), delA.getText().substring(posB - posA, lenA)));
+//			throw new RuntimeException("transform(Delete,Insert): not yet implemented");
     	}
         return transformedOperation;
     }
     
-    private DeleteOperation transform(DeleteOperation delA, DeleteOperation delB) {
-    	DeleteOperation transformedOperation;
+    private Operation transform(DeleteOperation delA, DeleteOperation delB) {
+    	Operation transformedOperation;
     	int posA = delA.getPosition();
     	int lenA = delA.getTextLength();
     	int posB = delB.getPosition();
