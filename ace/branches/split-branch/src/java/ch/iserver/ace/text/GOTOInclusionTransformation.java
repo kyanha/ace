@@ -152,7 +152,6 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
     		transformedOperation = new DeleteOperation(posA + lenB, delA.getText());
     	} else {
 			/*
-			* !NOT YET IMPLEMENTED!
 			* Operation B (insert) is in the range of operation A (delete). Operation A'
 			* must be splitted up into two delete operations.
 			* (B):       "ABCD"
@@ -161,7 +160,6 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 			*/
 			transformedOperation = new SplitOperation(new DeleteOperation(posA, delA.getText().substring(0, posB - posA)),
 				new DeleteOperation(posA + lenB + (posB - posA), delA.getText().substring(posB - posA, lenA)));
-//			throw new RuntimeException("transform(Delete,Insert): not yet implemented");
     	}
         return transformedOperation;
     }
