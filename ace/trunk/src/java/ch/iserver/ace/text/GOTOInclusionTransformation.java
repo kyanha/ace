@@ -199,7 +199,7 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 				* and ends after or at the same position like operation A.
 				* (B):      "ABCD"     |     "ABCD
 				* (A):       "12"      |     "12"
-				* (A'):     "12"       |     "12"
+				* (A'):     ""         |     ""
 				*/
 				//TODO? information gets lost.
 				transformedOperation = new DeleteOperation(posA, "");
@@ -211,7 +211,7 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 				* (A):        "12345"
 				* (A'):     "345"
 				*/
-				transformedOperation = new DeleteOperation(posB, delA.getText().substring(posB + lenB, posA + lenA));
+				transformedOperation = new DeleteOperation(posB, delA.getText().substring(posB + lenB - posA, lenA));
 			} else if((posB > posA) && ((posB + lenB) >= (posA + lenA))) {
 				/*
 				* Operation B starts after operation A and ends after or at the
@@ -220,7 +220,7 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 				* (A):      "12345"
 				* (A'):     "12"
 				*/
-				transformedOperation = new DeleteOperation(posA, delA.getText().substring(1, posB - posA));
+				transformedOperation = new DeleteOperation(posA, delA.getText().substring(0, posB - posA));
 			} else {
 				/*
 				* Operation B is fully in operation A.
