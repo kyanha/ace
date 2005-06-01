@@ -52,7 +52,7 @@ public class DefaultRequestEngineTest extends TestCase {
 	 */
 	protected void setUp() throws Exception {
 		doc = new DummyDocumentModel();
-		algo = new Jupiter(new GOTOInclusionTransformation(), doc, SITE_ID);
+		algo = new Jupiter(new GOTOInclusionTransformation(), doc, SITE_ID, true);
 		engine = new DefaultRequestEngine(algo);
 		outgoing = engine.getOutgoingRequestBuffer();
 	}

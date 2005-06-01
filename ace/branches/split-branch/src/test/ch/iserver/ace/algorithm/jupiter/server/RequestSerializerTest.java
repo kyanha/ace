@@ -51,7 +51,7 @@ public class RequestSerializerTest extends TestCase {
 		proxy = new DefaultClientProxy(CLIENT_SITE_ID,
 				new TestNetService(),
 				new Jupiter(new GOTOInclusionTransformation(),
-						new OperationExtractDocumentModel(), CLIENT_SITE_ID),
+						new OperationExtractDocumentModel(), CLIENT_SITE_ID, false),
 				requestForwardQueue);
 	}
 	
@@ -74,7 +74,7 @@ public class RequestSerializerTest extends TestCase {
 		DefaultClientProxy p = new DefaultClientProxy(CLIENT_SITE_ID+1,
 							new TestNetService(),
 							new Jupiter(new GOTOInclusionTransformation(),
-									new OperationExtractDocumentModel(), CLIENT_SITE_ID+1),
+									new OperationExtractDocumentModel(), CLIENT_SITE_ID+1, false),
 							requestForwardQueue);
 		serializer.addClientProxy(p, new SynchronizedQueue());
 		assertEquals(2, serializer.getClientProxies().size());

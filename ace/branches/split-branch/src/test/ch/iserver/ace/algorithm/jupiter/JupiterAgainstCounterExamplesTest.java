@@ -216,7 +216,7 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 	}
 	
 	private Jupiter createProxy(DocumentModel model, int siteId) {
-		return new Jupiter(new GOTOInclusionTransformation(), model, siteId);
+		return new Jupiter(new GOTOInclusionTransformation(), model, siteId, false);
 	}
 	
 	private class SiteConnection {
@@ -975,7 +975,7 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 	private Jupiter createClient(int siteId, String initialDocContent) {
 		return new Jupiter(new GOTOInclusionTransformation(),
 							new TestDocumentModel(siteId, initialDocContent), 
-							siteId);
+							siteId, true);
 	}
 	
 	private JupiterServer createServer() {

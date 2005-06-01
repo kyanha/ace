@@ -651,7 +651,7 @@ public class JupiterScenarioTest extends TestCase {
 	private Jupiter createClient(int siteId, String initialDocContent) {
 		return new Jupiter(new GOTOInclusionTransformation(),
 							new TestDocumentModel(siteId, initialDocContent), 
-							siteId);
+							siteId, true);
 	}
 	
 	private JupiterServer createServer() {

@@ -64,11 +64,15 @@ public class JupiterTest extends AlgorithmTestCase {
 		execute("/test/delete-delete-1.xml");
 	}
 	
+	public void testSplitOperation() throws Exception {
+		execute("/test/splitoperation-1.xml");
+	}
+	
 	/**
 	 * @see ch.iserver.ace.test.AlgorithmTestFactory#createAlgorithm(int)
 	 */
 	public Algorithm createAlgorithm(int siteId) {
-		Jupiter jupiter = new Jupiter(siteId);
+		Jupiter jupiter = new Jupiter(siteId, true);
 		jupiter.setInclusionTransformation(new GOTOInclusionTransformation());
 		return jupiter;
 	}
