@@ -1,0 +1,34 @@
+\section{Jini/RMI}
+\label{sect:jini}
+
+In a running \emph{Jini} system, there are three main players. There is a service, a client which would like to make use of services and a lookup service (service locator) which acts as a broker/locator between services and clients. Clients can query lookup services to dynamically discover services. Services register themselves with a lookup service so that they can be discovered by clients. The communication from client to service happens usually through a service proxy that communicates with RMI to the real service (although it could use any protocol).
+
+
+
+\subsection{Analysis}
+\emph{Jini/RMI} fulfills all our requirements, discovery and communication. Services are discovered through the lookup service. The lookup service is discovered either through unicast connections (in case that the lookup service is known in advance) or through multicast messages. A shared document could be represented as a document service that is registered in the lookup service.
+
+\subsubsection{Positive Points}
+We studied \emph{Jini} and \emph{RMI} in a semester course. So these technologies are known well enough to implement the network layer with them.
+
+A network layer based on \emph{Jini/RMI} would be relatively straightforward. The whole system would be based on Java.
+
+\subsubsection{Negative Points}
+\emph{Jini} relies on a JVM at each site, although not the whole system has to be implemented in \emph{Java} (e.g. services can be implemented in other programming languages). This is a serious drawback if we want to make \ace interoperable.
+
+\subsubsection{Open Points}
+There are no open points (besides designing the software).
+
+\subsubsection{Jini vs. Bonjour}
+At that point, it would be interesting to compare \emph{Jini} with \emph{Bonjour} (aka zero-conf networking). Both provide ways to dynamically discover services. One obvious difference is that \emph{Bonjour} does not rely on a JVM. Programs written in most programming language can discover services with it, as it is an extension to the domain name system (DNS). This is also one of the most obvious limitations of \emph{Bonjour} technology. \emph{Bonjour} can only discover that what could be stored in a traditional \emph{DNS} server. Usually all that is discovered through \emph{Bonjour} is an IP address and port number. It is then up to the client to know what to do with this information. If it does not know the protocol used to connect to that particular service, the information is pretty useless.
+
+\emph{Jini} on the other hand downloads a service object (usually a proxy object). The service object itself either does the requested work itself or in case of a proxy knows how to communicate with the real service. All the client has to know is the service interface (a Java interface).
+
+It is this transfer of service object that makes \emph{Jini} so much more powerful than \emph{Bonjour} technologies. Interesting enough, \emph{Bonjour} seems to be much more widely used than \emph{Jini}, most likely because it does not depend on a JVM.
+
+
+
+\subsection{Resources}
+\begin{itemize}
+ \item \url{http://www.jini.org/}
+\end{itemize}
