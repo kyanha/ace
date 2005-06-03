@@ -58,6 +58,7 @@ public class GOTOInclusionTransformationTest extends TestCase {
 		GOTOInclusionTransformation transform = new GOTOInclusionTransformation();
 				
 		// insert at the same position (ascii order)
+		transform.setTransformOpPrivileged(true);
 		insA = new InsertOperation(0, "12");
 		insB = new InsertOperation(0, "ABCD");
 		result = (InsertOperation)transform.transform(insA, insB);
@@ -120,7 +121,7 @@ public class GOTOInclusionTransformationTest extends TestCase {
 
 		// insert at the same position than delete
 		insA = new InsertOperation(0, "12");
-		delB = new InsertOperation(0, "ABCD");
+		delB = new DeleteOperation(0, "ABCD");
 		result = (InsertOperation)transform.transform(insA, delB);
 		assertEquals(0, result.getPosition());
 		assertEquals("12", result.getText());
