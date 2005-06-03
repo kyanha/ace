@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scenario initial="ac" final="a21c">
+<scenario initial="0123456789" final="0ABCD789">
     
-    <operation id="1" type="ch.iserver.ace.text.InsertOperation">
+    <operation id="1" type="ch.iserver.ace.text.DeleteOperation">
         <property name="position" value="1"/>
-        <property name="text" value="1"/>
+        <property name="text" value="123456"/>
     </operation>
     
     <operation id="2" type="ch.iserver.ace.text.InsertOperation">
-        <property name="position" value="1"/>
-        <property name="text" value="2"/>
+        <property name="position" value="2"/>
+        <property name="text" value="ABCD"/>
     </operation>
     
     <site id="1">

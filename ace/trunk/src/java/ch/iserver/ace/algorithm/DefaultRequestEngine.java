@@ -54,7 +54,9 @@ public class DefaultRequestEngine implements RequestEngine {
      * @param algo the algorithm implementation
      */
     public DefaultRequestEngine(Algorithm algo) {
-        assert algo != null : "algo may not be null";
+    		if (algo == null) {
+    			throw new IllegalArgumentException("algo may not be null");
+    		}
         Object synchObj = new Object();
         localOperationBuffer = new SynchronizedQueue(synchObj);
         remoteRequestBuffer = new SynchronizedQueue(synchObj);

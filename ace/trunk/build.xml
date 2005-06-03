@@ -79,7 +79,7 @@
 	</target>
 	
 	<target name="javadoc" depends="compile">
-		<javadoc destdir="${build.javadoc}" windowtitle="ACE API">
+		<javadoc destdir="${build.javadoc}" windowtitle="ACE API" source="1.4">
 		    <tag name="todo" scope="all" description="To do:" />
 			<packageset dir="${src.dir}/java" defaultexcludes="yes">
 				<include name="**/*"/>

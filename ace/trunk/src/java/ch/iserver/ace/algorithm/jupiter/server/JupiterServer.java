@@ -64,7 +64,7 @@ public class JupiterServer {
         //create client proxy
         Jupiter algo = new Jupiter(new GOTOInclusionTransformation(),
                 			new OperationExtractDocumentModel(), 
-                			++siteIdCounter);
+                			++siteIdCounter, false);
         ClientProxy client = new DefaultClientProxy(siteIdCounter, net, algo, requestForwardQueue);
         
         //add client proxy to request serializer

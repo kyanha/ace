@@ -51,7 +51,7 @@ public class RequestSerializerTest extends TestCase {
 		proxy = new DefaultClientProxy(CLIENT_SITE_ID,
 				new TestNetService(),
 				new Jupiter(new GOTOInclusionTransformation(),
-						new OperationExtractDocumentModel(), CLIENT_SITE_ID),
+						new OperationExtractDocumentModel(), CLIENT_SITE_ID, false),
 				requestForwardQueue);
 	}
 	
@@ -74,7 +74,7 @@ public class RequestSerializerTest extends TestCase {
 		DefaultClientProxy p = new DefaultClientProxy(CLIENT_SITE_ID+1,
 							new TestNetService(),
 							new Jupiter(new GOTOInclusionTransformation(),
-									new OperationExtractDocumentModel(), CLIENT_SITE_ID+1),
+									new OperationExtractDocumentModel(), CLIENT_SITE_ID+1, false),
 							requestForwardQueue);
 		serializer.addClientProxy(p, new SynchronizedQueue());
 		assertEquals(2, serializer.getClientProxies().size());
@@ -87,7 +87,7 @@ public class RequestSerializerTest extends TestCase {
 		//request serializer
 		p.receiveRequest(new JupiterRequest(CLIENT_SITE_ID+1,
 				new JupiterVectorTime(0,0),new InsertOperation()));
-		
+		Thread.sleep(500);
 		assertNull(serializer.getClientProxies().get(new Integer(CLIENT_SITE_ID)));
 		assertNull(serializer.getOutgoingQueues().get(new Integer(CLIENT_SITE_ID)));
 		assertEquals(1, serializer.getClientProxies().size());

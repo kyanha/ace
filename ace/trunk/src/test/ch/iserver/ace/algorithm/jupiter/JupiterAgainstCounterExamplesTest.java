@@ -216,7 +216,7 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 	}
 	
 	private Jupiter createProxy(DocumentModel model, int siteId) {
-		return new Jupiter(new GOTOInclusionTransformation(), model, siteId);
+		return new Jupiter(new GOTOInclusionTransformation(), model, siteId, false);
 	}
 	
 	private class SiteConnection {
@@ -636,12 +636,13 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 	 */
 	public void testDivergenceAndERVscenarioOfIMOR() throws Exception {
 		final String INITIAL = "0123";
-		/* Due to user intention violation the end result equals
-		 * "0abc23" instead of "0acb23", i.e. the 'b' comes before 'c' instead
-		 * of vice versa. Nevertheless, convergence is preserved.
+		/* Note that due to the arrival order at the proxies, it happens that
+		 * the final string is the expected one. With a different order, i.e. op1
+		 * is broadcasted before op5, the final string would be "0abc23" due to the
+		 * transformation limit that also depends on the operation arrival order at
+		 * the server.
 		 */
-		//final String FINAL   = "0acb23";
-		final String FINAL   = "0abc23";
+		final String FINAL   = "0acb23";
 		
 		/** initialize system **/
 		JupiterServer server = createServer();
@@ -812,14 +813,14 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 	}
 	
 	/**
-	 * 
+	 * This test is taken from sun98operational.pdf figure 2 and is called
+	 * the 'dOPT puzzle'.
+	 *  
 	 * @throws Exception
 	 */
 	public void testdOPTpuzzle2() throws Exception {
 		final String INITIAL = "";
-		//actual user intention was "xzy", but we cannot not remember from where 
-		//the example was taken, so we're not shure it the intention wasn't "xyz".
-		final String FINAL   = "xyz";
+		final String FINAL   = "xzy";
 		
 		/** initialize system **/
 		JupiterServer server = createServer();
@@ -895,10 +896,7 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 	 */
 	public void testdOPTpuzzle2WithRequestEngine() throws Exception {
 		final String INITIAL = "";
-		//we suppose that actual user intention was "xzy", but we cannot not remember 
-		//from where the example was taken, so we're not shure if the intention really 
-		//wasn't "xyz".
-		final String FINAL   = "xyz";
+		final String FINAL   = "xzy";
 		
 		/** initialize system **/
 		JupiterServer server = createServer();
@@ -975,7 +973,7 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 	private Jupiter createClient(int siteId, String initialDocContent) {
 		return new Jupiter(new GOTOInclusionTransformation(),
 							new TestDocumentModel(siteId, initialDocContent), 
-							siteId);
+							siteId, true);
 	}
 	
 	private JupiterServer createServer() {

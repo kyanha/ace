@@ -20,6 +20,9 @@
  */
 package ch.iserver.ace.text;
 
+
+import org.apache.log4j.Logger;
+
 import java.security.InvalidParameterException;
 
 import ch.iserver.ace.Operation;
@@ -29,6 +32,10 @@ import ch.iserver.ace.algorithm.InclusionTransformation;
  *
  */
 public class GOTOInclusionTransformation implements InclusionTransformation {
+	
+	private boolean isTransformOpPrivileged;
+	
+	private static Logger LOG = Logger.getLogger(GOTOInclusionTransformation.class);
 
     /* (non-Javadoc)
      * @see ch.iserver.ace.algorithm.InclusionTransformation#transform(ch.iserver.ace.Operation, ch.iserver.ace.Operation)
@@ -37,39 +44,40 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
      
     public Operation transform(Operation op1, Operation op2) {
     	transformedCnt++;
-    	//System.out.println(transformedCnt++);
+    	//LOG.info(transformedCnt++);
         Operation transformedOp;
         if (op1 instanceof InsertOperation && op2 instanceof InsertOperation) {
-        		System.out.print("\ttransform("+op1+", "+op2+") = ");
+        		System.out.print("\ttransform("+op1+", "+isTransformOpPrivileged+", "+op2+") = ");
         		transformedOp = transform((InsertOperation)op1, (InsertOperation)op2);
-             System.out.println(transformedOp);
+             	LOG.info(transformedOp);
         } else if (op1 instanceof InsertOperation && op2 instanceof DeleteOperation) {
         		System.out.print("\ttransform("+op1+", "+op2+") = ");
         		transformedOp = transform((InsertOperation)op1, (DeleteOperation)op2);
-        		System.out.println(transformedOp);
+        		LOG.info(transformedOp);
         } else if (op1 instanceof DeleteOperation && op2 instanceof InsertOperation) {
         		System.out.print("\ttransform("+op1+", "+op2+") = ");  
         		transformedOp = transform((DeleteOperation)op1, (InsertOperation)op2);
-        		System.out.println(transformedOp);
+        		LOG.info(transformedOp);
         } else if (op1 instanceof DeleteOperation && op2 instanceof DeleteOperation) {
         		System.out.print("\ttransform("+op1+", "+op2+") = ");
         		transformedOp = transform((DeleteOperation)op1, (DeleteOperation)op2);
-        		System.out.println(transformedOp);
+        		LOG.info(transformedOp);
         } else {
             throw new InvalidParameterException();
         }
         return transformedOp;
     }
     
-    private InsertOperation transform(InsertOperation insA, InsertOperation insB) {
-    	InsertOperation transformedOperation = null;
+    private Operation transform(InsertOperation insA, InsertOperation insB) {
+    	Operation transformedOperation = null;
     	int posA = insA.getPosition();
     	int lenA = insA.getTextLength();
     	int posB = insB.getPosition();
     	int lenB = insB.getTextLength();
     	//TODO: the char comparison could/should be replaced later by a client/server flag
     	if (posA < posB || posA == posB && insA.getOrigin() < insB.getOrigin() || 
-    			posA == posB && insA.getOrigin() == insB.getOrigin() && insA.getText().charAt(0) < insB.getText().charAt(0)) {
+    			posA == posB && insA.getOrigin() == insB.getOrigin() 
+				&& isTransformOpPrivileged /* && insA.getText().charAt(0) < insB.getText().charAt(0)) */) {
 			/*
 			* Operation A starts before operation B.
 			* (B):       "ABCD"
@@ -90,8 +98,8 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
         return transformedOperation;
     }
     
-    private InsertOperation transform(InsertOperation insA, DeleteOperation delB) {
-    	InsertOperation transformedOperation = null;
+    private Operation transform(InsertOperation insA, DeleteOperation delB) {
+    	Operation transformedOperation = null;
     	int posA = insA.getPosition();
     	int lenA = insA.getTextLength();
     	int posB = delB.getPosition();
@@ -127,8 +135,8 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
         return transformedOperation;
     }
     
-    private DeleteOperation transform(DeleteOperation delA, InsertOperation insB) {
-    	DeleteOperation transformedOperation = null;
+    private Operation transform(DeleteOperation delA, InsertOperation insB) {
+    	Operation transformedOperation = null;
     	int posA = delA.getPosition();
     	int lenA = delA.getTextLength();
     	int posB = insB.getPosition();
@@ -152,20 +160,20 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
     		transformedOperation = new DeleteOperation(posA + lenB, delA.getText());
     	} else {
 			/*
-			* !NOT YET IMPLEMENTED!
 			* Operation B (insert) is in the range of operation A (delete). Operation A'
 			* must be splitted up into two delete operations.
 			* (B):       "ABCD"
 			* (A):      "123456"
 			* (A'):     "1"  "23456"
 			*/
-			throw new RuntimeException("transform(Delete,Insert): not yet implemented");
+			transformedOperation = new SplitOperation(new DeleteOperation(posA, delA.getText().substring(0, posB - posA)),
+				new DeleteOperation(posA + lenB + (posB - posA), delA.getText().substring(posB - posA, lenA)));
     	}
         return transformedOperation;
     }
     
-    private DeleteOperation transform(DeleteOperation delA, DeleteOperation delB) {
-    	DeleteOperation transformedOperation;
+    private Operation transform(DeleteOperation delA, DeleteOperation delB) {
+    	Operation transformedOperation;
     	int posA = delA.getPosition();
     	int lenA = delA.getTextLength();
     	int posB = delB.getPosition();
@@ -231,5 +239,9 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 			}
 		}
         return transformedOperation;
+    }
+    
+    public void setTransformOpPrivileged(boolean value) {
+    		isTransformOpPrivileged = value;
     }
 }

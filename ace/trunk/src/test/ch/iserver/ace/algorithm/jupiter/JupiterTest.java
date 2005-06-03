@@ -64,14 +64,25 @@ public class JupiterTest extends AlgorithmTestCase {
 		execute("/test/delete-delete-1.xml");
 	}
 	
+	public void testSplitOperation() throws Exception {
+		execute("/test/splitoperation-1.xml");
+	}
+	
 	/**
 	 * @see ch.iserver.ace.test.AlgorithmTestFactory#createAlgorithm(int)
 	 */
 	public Algorithm createAlgorithm(int siteId) {
-		Jupiter jupiter = new Jupiter(siteId);
+		isClient = (algoCount % 2 == 1) ? false : true;
+		++algoCount;
+		Jupiter jupiter = new Jupiter(siteId, isClient);
 		jupiter.setInclusionTransformation(new GOTOInclusionTransformation());
 		return jupiter;
 	}
+	
+	//a flag not to be set on the algorithm, in order to have a client and a server
+	//algorithm instance.
+	private boolean isClient;
+	private int algoCount = 0;
 
 	/**
 	 * @see ch.iserver.ace.test.AlgorithmTestFactory#createTimestamp()

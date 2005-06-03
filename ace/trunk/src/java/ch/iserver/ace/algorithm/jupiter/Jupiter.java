@@ -32,6 +32,8 @@ import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.InclusionTransformation;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.Timestamp;
+import ch.iserver.ace.text.GOTOInclusionTransformation;
+import ch.iserver.ace.text.SplitOperation;
 
 /**
  * This class implements the client-side core of the Jupiter control algorithm.
@@ -42,13 +44,15 @@ public class Jupiter implements Algorithm {
 
 	private List operationBuffer;
 
-	private InclusionTransformation inclusion;
+	private GOTOInclusionTransformation inclusion;
 
 	private DocumentModel document;
 
 	private JupiterVectorTime vectorTime;
 
 	private int siteId;
+	
+	private boolean isClientSide;
 
 	/**
 	 * A list that contains the requests sent to the server which are to be
@@ -68,14 +72,17 @@ public class Jupiter implements Algorithm {
 	 *            the inital document model
 	 * @param timestamp
 	 *            the inital time stamp (state vector)
+	 * @param isClientSide
+	 * 			 true if the algorithm resides on the client side
 	 */
 	public Jupiter(InclusionTransformation it, DocumentModel document,
-			int siteId) {
-		inclusion = it;
+			int siteId, boolean isClientSide) {
+		inclusion = (GOTOInclusionTransformation)it;
 		this.siteId = siteId;
 		init(document, new JupiterVectorTime(0, 0));
 		operationBuffer = new ArrayList();
 		ackRequestList = new ArrayList();
+		this.isClientSide = isClientSide;
 	}
 
 	/**
@@ -85,9 +92,12 @@ public class Jupiter implements Algorithm {
 	 * 
 	 * @param siteId
 	 *            the site Id of this algorithm.
+	 * @param isClientSide
+	 * 			 true if the algorithm resides on the client side
 	 */
-	public Jupiter(int siteId) {
+	public Jupiter(int siteId, boolean isClientSide) {
 		this.siteId = siteId;
+		this.isClientSide = isClientSide;
 		operationBuffer = new ArrayList();
 		ackRequestList = new ArrayList();
 	}
@@ -99,20 +109,34 @@ public class Jupiter implements Algorithm {
 	 */
 	public Request generateRequest(Operation op) {
 		//apply op locally;
-		document.apply(op);
+        if (op instanceof SplitOperation) {
+    			SplitOperation split = (SplitOperation)op;
+    			document.apply(split.getFirst());
+    			document.apply(split.getSecond());
+        } else {
+    			document.apply(op);
+    		}
 
 		//send(op, myMsgs, otherMsgs);
 		Request req = new JupiterRequest(siteId, (JupiterVectorTime) vectorTime
 				.clone(), op);
 
 		//add(op, myMsgs) to outgoing;
-		ackRequestList.add(new OperationWrapper(op, vectorTime
+		if (op instanceof SplitOperation) {
+			SplitOperation split = (SplitOperation)op;
+			ackRequestList.add(new OperationWrapper(split.getFirst(), vectorTime
+					.getLocalOperationCount()));
+			ackRequestList.add(new OperationWrapper(split.getSecond(), vectorTime
+					.getLocalOperationCount()));
+		} else {
+			ackRequestList.add(new OperationWrapper(op, vectorTime
 				.getLocalOperationCount()));
+		}
 
 		//myMsgs = myMsgs + 1;
 		vectorTime.incrementLocalOperationCount();
 		
-		//TODO: save request in undo list (local undo)
+		//TODO: save request in history list (for local undo)
 		
 		return req;
 	}
@@ -154,15 +178,51 @@ public class Jupiter implements Algorithm {
 	        	OperationWrapper wrap = (OperationWrapper)ackRequestList.get(ackRequestListCnt);
 	        	Operation existingOp = wrap.getOperation();
 	
-	        	Operation transformedOp = inclusion.transform(newOp, existingOp);
-	        	existingOp = inclusion.transform(existingOp, newOp);
+	        	Operation transformedOp;
+	        	if (newOp instanceof SplitOperation) {
+	        		SplitOperation split = (SplitOperation)newOp;
+	        		if (isClientSide()) {
+	        			inclusion.setTransformOpPrivileged(true);
+	        			split.setFirst( inclusion.transform(split.getFirst(), existingOp) );
+	        			split.setSecond( inclusion.transform(split.getSecond(), existingOp) );
+	        			inclusion.setTransformOpPrivileged(false);
+	        			existingOp = inclusion.transform(existingOp, split.getFirst());
+	        			existingOp = inclusion.transform(existingOp, split.getSecond());
+	        		} else {
+	        			inclusion.setTransformOpPrivileged(false);
+	        			split.setFirst( inclusion.transform(split.getFirst(), existingOp) );
+	        			split.setSecond( inclusion.transform(split.getSecond(), existingOp) );
+	        			inclusion.setTransformOpPrivileged(true);
+	        			existingOp = inclusion.transform(existingOp, split.getFirst());
+	        			existingOp = inclusion.transform(existingOp, split.getSecond());
+	        		}
+	        		transformedOp = split;
+	        	} else {
+	        		if (isClientSide()) {
+	        			inclusion.setTransformOpPrivileged(true);
+	        			transformedOp = inclusion.transform(newOp, existingOp);
+	        			inclusion.setTransformOpPrivileged(false);
+		        		existingOp = inclusion.transform(existingOp, newOp);
+	        		} else {
+	        			inclusion.setTransformOpPrivileged(false);
+	        			transformedOp = inclusion.transform(newOp, existingOp);
+	        			inclusion.setTransformOpPrivileged(true);
+	        			existingOp = inclusion.transform(existingOp, newOp);
+	        		}
+	        	}
 	        	ackRequestList.set(ackRequestListCnt, new OperationWrapper(existingOp, wrap.getLocalOperationCount()));
 	
 	        	newOp = transformedOp;
         }
         
         System.out.println("tnf:"+ackRequestList);
-        document.apply(newOp);
+        if (isClientSide && newOp instanceof SplitOperation) {
+        		SplitOperation split = (SplitOperation)newOp;
+        		document.apply(split.getSecond());
+        		document.apply(split.getFirst());
+        } else {
+        		document.apply(newOp);
+        }
         vectorTime.incrementRemoteRequestCount();
     }
 	
@@ -284,7 +344,7 @@ public class Jupiter implements Algorithm {
 	public Request redo() {
 		//...
 		
-		//save redo request in undo list
+		//save redo request in history list
 		
 		return null;
 	}
@@ -296,7 +356,7 @@ public class Jupiter implements Algorithm {
 	 *            the inclusion transformation function to set.
 	 */
 	public void setInclusionTransformation(InclusionTransformation it) {
-		this.inclusion = it;
+		this.inclusion = (GOTOInclusionTransformation)it;
 	}
 
 	/**
@@ -329,5 +389,9 @@ public class Jupiter implements Algorithm {
 	 */
 	public JupiterVectorTime getVectorTime() {
 		return vectorTime;
+	}
+	
+	public boolean isClientSide() {
+		return isClientSide;
 	}
 }
