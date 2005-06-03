@@ -5,6 +5,7 @@
 \usepackage{ngerman}
 \usepackage{a4wide}
 \usepackage[dvips]{graphicx}
+\usepackage{float}
 
 \usepackage[
 pdfauthor={},
@@ -34,22 +35,178 @@ Der Erfahrungsbericht dient der Auswertung der Semesterarbeit im Sommersemester 
 \subsection{Referenzierte Dokumente}
 Die referenzierten Dokumente sind auf der Projekt-Webseite abrufbar: \href{http://ace.iserver.ch/}{http://ace.iserver.ch/}
 \begin{itemize}
- \item Projektplan (Version 1.1)
+ \item Projektplan (Version 1.0)
 \end{itemize}
 
 
 
 \section{Ausgangssituation}
+Das Editieren von Dokumenten in einer Gruppe kann eine grosse Herausforderung sein. Versionierungs Systeme wie Subversion oder CVS helfen einer Gruppe eine konsistente Kopie des Dokumentes zu haben, aber erlauben keine Zusammenarbeit in Echtzeit. Das kollaborative Bearbeiten des selben Dokumentes in Echtzeit in einer Gruppe ist heute kaum bekannt, obschon die Idee schon lange erforscht wird. Interessanterweise gibt es aber kaum kommerzielle Editoren, wobei uns SubEthaEdit für Mac OS X als einzige Anwendung bekannt ist.
+
+Wir sind der Überzeugung, dass Anwendungen, die es ermöglichen ein Dokument in Echtzeit in einer Gruppe zu bearbeiten ein grosses Potenzial haben. Unser Ziel ist es, den ersten platformunabhängigen und voll funktionsfähigen kollaborativen Text-Editor zu erstellen. 
+
+In der Semesterarbeit wollten wir die Grundlage legen für die Implementation des Texteditors. Das beinhaltete vorallem einen funktionsfähigen Concurrency Control Algorithmus zu implementieren.
+
+
+
+\section{Soll-Ist Vergleich}
+Im folgenden wird aufgezeigt, wo es im Projekt zu Differenzen zwischen der Planung und dem tatsächlichen Ablauf des Projektes gekommen ist.
+
+\subsection{Resultate}
+Während der Planung wurde festgelegt, welche Resultate während der Diplomarbeit 
+erreicht werden sollen.
+
+\begin{table}[H]
+ \begin{tabular}{|l|l|l|}
+  \hline
+   \headercol{1.4in}{Ergebnisse} &
+   \headercol{2in}{Soll} &
+   \headercol{2.2in}{Ist} \\
+  \hline
+   \contentcol{1.4in}{Projektantrag} &
+   \contentcol{2in}{Genehmigung Projektantrag} &
+   \contentcol{2.2in}{Projektantrag wurde erstellt und genehmigt} \\
+  \hline
+   \contentcol{1.4in}{Projekthandbuch} &
+   \contentcol{2in}{} &
+   \contentcol{2.2in}{Projekthandbuch erstellt} \\
+  \hline
+   \contentcol{1.4in}{Projektplan} &
+   \contentcol{2in}{} &
+   \contentcol{2.2in}{Projektplan erstellt} \\
+  \hline
+   \contentcol{1.4in}{Pflichtenheft} &
+   \contentcol{2in}{} &
+   \contentcol{2.2in}{Pflichtenheft erstellt} \\
+  \hline
+  \hline
+   \contentcol{1.4in}{Bericht Evaluation Algorithmus} &
+   \contentcol{2in}{erstellt} &
+   \contentcol{2.2in}{abgeschlossen} \\
+  \hline
+   \contentcol{1.4in}{Algorithmus} &
+   \contentcol{2in}{erstellt und dokumentiert} &
+   \contentcol{2.2in}{Der Algorithmus ist fertig implementiert. Wir hatten 
+   sogar noch die Möglichkeit Undo einzubauen.} \\
+  \hline
+   \contentcol{1.4in}{Testframework} &
+   \contentcol{2in}{erstellt und dokumentiert} &
+   \contentcol{2.2in}{Das Testframework ist erstellt und dokumentiert. 
+   Eine Anleitung zum Erstellen von Testfällen ist vorhanden.} \\
+  \hline
+  \hline
+   \contentcol{1.4in}{Bericht Evaluation GUI} &
+   \contentcol{2in}{erstellt} &
+   \contentcol{2.2in}{erstellt} \\
+  \hline
+   \contentcol{1.4in}{Bericht Evaluation Netzwerk} &
+   \contentcol{2in}{erstellt} &
+   \contentcol{2.2in}{erstellt} \\
+  \hline
+ \end{tabular}
+ \caption{Resultate}
+ \label{table:resultate}
+\end{table}
+ 
+
+\subsection{Termine}
+\begin{table}[H]
+ \begin{tabular}{|l|l|l|l}
+  \hline
+   \headercol{2in}{Ergebnis} &
+   \headercol{1in}{Soll} &
+   \headercol{1in}{Ist} &
+   \headercol{1in}{Status} \\
+  \hline
+   \contentcol{2in}{Projektantrag} &
+   \contentcol{1in}{11.03.2005} &
+   \contentcol{1in}{11.03.2005} &
+   \contentcol{1in}{abgeschlossen} \\
+  \hline
+   \contentcol{2in}{Pflichtenheft} &
+   \contentcol{1in}{05.04.2005} &
+   \contentcol{1in}{05.04.2005} &
+   \contentcol{1in}{abgeschlossen} \\
+  \hline
+   \contentcol{2in}{Projekthandbuch} &
+   \contentcol{1in}{15.04.2005} &
+   \contentcol{1in}{15.04.2005} &
+   \contentcol{1in}{abgeschlossen} \\ 
+  \hline
+   \contentcol{2in}{Projektplan} &
+   \contentcol{1in}{15.04.2005} &
+   \contentcol{1in}{15.04.2005} &
+   \contentcol{1in}{abgeschlossen} \\
+  \hline
+  \hline
+   \contentcol{2in}{Testframework} &
+   \contentcol{1in}{23.05.2005} &
+   \contentcol{1in}{23.05.2005} &
+   \contentcol{1in}{abgeschlossen} \\
+  \hline
+   \contentcol{2in}{Algorithmus} &
+   \contentcol{1in}{10.06.2005} &
+   \contentcol{1in}{???} &
+   \contentcol{1in}{???} \\
+  \hline
+  \hline
+   \contentcol{2in}{Bericht GUI} &
+   \contentcol{1in}{22.04.2005} &
+   \contentcol{1in}{???} &
+   \contentcol{1in}{???} \\
+  \hline
+   \contentcol{2in}{Bericht Netzwerk} &
+   \contentcol{1in}{10.06.2005} &
+   \contentcol{1in}{06.06.2005} &
+   \contentcol{1in}{abgeschlossen} \\
+  \hline
+ \end{tabular}
+ \caption{Termine}
+ \label{table:termine}
+\end{table}
+
+
+\subsection{Zeitaufwand}
+\begin{table}[H]
+ \begin{tabular}{|l|l|l|}
+  \headercol{2in}{Ergebnis} &
+  \headercol{1in}{Soll} &
+  \headercol{1in}{Ist} \\
+ \end{tabular}
+ \caption{Aufwände}
+ \label{table:aufwände}
+\end{table}
+
+Eine genauere Analyse der Aufwände findet man im Anhang Statistik (siehe \ref{app:statistik}).
+
+
+\subsection{Kosten}
+Die geplanten Kosten entsprechen in etwa den vorgesehenen Projektkosten, da der grösste Kostenpunkt, die variablen Kosten, ziemlich genau der Planung entspricht.
 
 
 
 \section{Erkenntnisse und Erfahrungen}
-\subsection{Einarbeiten in Themengebiet}
+\subsection{Einarbeiten in das Themengebiet}
 \subsection{Evaluation Algorithmen}
 \subsection{Implementation Algorithmus}
 \subsection{Implementation Testframework}
 \subsection{Analyse GUI/Netzwerk}
-\subsection{Unterstützung Projektführung}
+
+\subsection{Hermes}
+
+
+\subsection{Coaching Projektführung}
+Die Möglichkeit des Projektführungs-Coaching durch Herrn Helbling haben wir rege in Anspruch genommen. Diverse Fragen stellten wir auch per e-mail. Allgemein konnten wir einige wichtige Erkenntnisse daraus gewinnen. 
+
+Herr Helbling hat uns zu Beginn darauf aufmerksam gemacht, dass er einen gewissen Interessenkonflikt zwischen seiner Rolle als PM-Coach und seiner Rolle als Notengeber hat. Wir haben die Auswirkungen dieses Interessenkonflikt selber erlebt. Gewisse Fragen haben wir mehrmals gestellt und nie eine wirklich befriedigende Antwort erhalten. Verweise auf Hermes-Abschnitte sind in der Regel nicht sehr hilfreich, da man die betreffenden Punkte selber schon in Hermes angeschaut hat. 
+
+Unserer Meinung sollte man, wenn dieser Interessenkonflikt wirklich so gross ist, eine Änderung am System vornehmen. Es sollte evtl. ein anderer Dozent PM-Coach sein als der, der die Noten verteilt. Dies würde ein unvoreingenommenes Coaching ermöglichen, was sicher für alle beteiligten befriedigender wäre.
+
+
+\subsection{Coaching durch Fachdozenten}
+Die Betreuung durch den Fachdozenten wurde während der Projektarbeit nur selten benötigt. Bei Fragen standen uns Herr Dubois und Herr Fuhrer zur Verfügung, was die Zusammenarbeit erleichterte und ein zügiges Arbeiten ermöglichte. 
+
+
 \subsection{Projektarbeit}
 
 
@@ -62,7 +219,16 @@ Die referenzierten Dokumente sind auf der Projekt-Webseite abrufbar: \href{http:
 
 
 \section{Fazit}
+Alle unseren gesteckten Ziele wurden erreicht. Damit sind wir bereit, in der Diplomarbeit das eigentliche Ziel von \ace, einen kollaborativen Texteditor zu entwickeln, anzugehen.
 
+Es kann auch gesagt werden, dass das Projekt Spass gemacht hat und wir dabei viel lernen konnten. Dank der Projektarbeit konnten wir wichtige praktische Erfahrungen sammeln und uns in ein interessantes Themengebiet einarbeiten.
+
+Für das gesamte \ace Projektteam steht fest, dass wir das Projekt als Diplomarbeit fortsetzen werden.
+
+
+
+\newpage
+\include{appendix}
 
 
 \end{document}
