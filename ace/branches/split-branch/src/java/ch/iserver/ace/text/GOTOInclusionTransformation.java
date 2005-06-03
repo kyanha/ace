@@ -72,8 +72,7 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
     	//TODO: the char comparison could/should be replaced later by a client/server flag
     	if (posA < posB || posA == posB && insA.getOrigin() < insB.getOrigin() || 
     			posA == posB && insA.getOrigin() == insB.getOrigin() 
-				&& isTransformOpPrivileged) { //the server side operation is always given priority
-//				&& insA.getText().charAt(0) < insB.getText().charAt(0)) {
+				&& isTransformOpPrivileged /* && insA.getText().charAt(0) < insB.getText().charAt(0)) */) {
 			/*
 			* Operation A starts before operation B.
 			* (B):       "ABCD"
