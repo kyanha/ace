@@ -134,7 +134,7 @@ public class QueueHandler extends Thread {
                     		// redo
                     		Request req = algo.redo();
                         	outgoingRequestBuffer.add(req);
-                    	} else
+                    	} else {
                         	Request req = algo.generateRequest(nextOp);
                         	outgoingRequestBuffer.add(req);
                         }
