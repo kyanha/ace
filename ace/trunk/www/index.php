@@ -2,6 +2,8 @@
  <head>
   <title>ACE - a collaborative editor</title>
   <link rel="stylesheet" type="text/css" href="css/site.css" />
+  <meta name="keywords" content="ace, collaborative, editor, operational, transformation, concurrency, control, groupware"/>
+  <meta name="author" conten="ace project team"/>
   <style type="text/css"></style>
  </head>
  <body>
