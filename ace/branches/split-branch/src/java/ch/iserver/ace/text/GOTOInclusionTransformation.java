@@ -20,6 +20,9 @@
  */
 package ch.iserver.ace.text;
 
+
+import org.apache.log4j.Logger;
+
 import java.security.InvalidParameterException;
 
 import ch.iserver.ace.Operation;
@@ -31,6 +34,8 @@ import ch.iserver.ace.algorithm.InclusionTransformation;
 public class GOTOInclusionTransformation implements InclusionTransformation {
 	
 	private boolean isTransformOpPrivileged;
+	
+	private static Logger LOG = Logger.getLogger(GOTOInclusionTransformation.class);
 
     /* (non-Javadoc)
      * @see ch.iserver.ace.algorithm.InclusionTransformation#transform(ch.iserver.ace.Operation, ch.iserver.ace.Operation)
@@ -39,24 +44,24 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
      
     public Operation transform(Operation op1, Operation op2) {
     	transformedCnt++;
-    	//System.out.println(transformedCnt++);
+    	//LOG.info(transformedCnt++);
         Operation transformedOp;
         if (op1 instanceof InsertOperation && op2 instanceof InsertOperation) {
         		System.out.print("\ttransform("+op1+", "+isTransformOpPrivileged+", "+op2+") = ");
         		transformedOp = transform((InsertOperation)op1, (InsertOperation)op2);
-             	System.out.println(transformedOp);
+             	LOG.info(transformedOp);
         } else if (op1 instanceof InsertOperation && op2 instanceof DeleteOperation) {
         		System.out.print("\ttransform("+op1+", "+op2+") = ");
         		transformedOp = transform((InsertOperation)op1, (DeleteOperation)op2);
-        		System.out.println(transformedOp);
+        		LOG.info(transformedOp);
         } else if (op1 instanceof DeleteOperation && op2 instanceof InsertOperation) {
         		System.out.print("\ttransform("+op1+", "+op2+") = ");  
         		transformedOp = transform((DeleteOperation)op1, (InsertOperation)op2);
-        		System.out.println(transformedOp);
+        		LOG.info(transformedOp);
         } else if (op1 instanceof DeleteOperation && op2 instanceof DeleteOperation) {
         		System.out.print("\ttransform("+op1+", "+op2+") = ");
         		transformedOp = transform((DeleteOperation)op1, (DeleteOperation)op2);
-        		System.out.println(transformedOp);
+        		LOG.info(transformedOp);
         } else {
             throw new InvalidParameterException();
         }
