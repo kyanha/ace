@@ -128,10 +128,12 @@ public class QueueHandler extends Thread {
                     if (nextOp != null) {
                     	if(nextOp instanceof UndoOperation) {
                     		// undo
-                    		algo.undo();
+                    		Request req = algo.undo();
+                        	outgoingRequestBuffer.add(req);
                     	} else if (nextOp instanceof RedoOperation) {
                     		// redo
-                    		algo.redo();
+                    		Request req = algo.redo();
+                        	outgoingRequestBuffer.add(req);
                     	} else
                         	Request req = algo.generateRequest(nextOp);
                         	outgoingRequestBuffer.add(req);
