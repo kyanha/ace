@@ -1,0 +1,100 @@
+\section{JGroups}
+\label{sect:jgroups}
+
+\emph{JGroups} is a toolkit for reliable multicast communication. It can be used to create groups of processes whose members can send messages to each other. The main features include:
+
+\begin{itemize}
+ \item Group creation and deletion (members can spread across LANs or WANs).
+ \item Joining and leaving groups.
+ \item Membership detection and notification about joined/left/crashed members
+ \item Detection and removal of crashed members
+ \item Sending and receiving of member-to-group messages (point-to-multipoint)
+ \item Sending and receiving of member-to-member messages (point-to-point)
+\end{itemize}
+
+One of the most powerful features of \emph{JGroups} is its flexible protocol stack, which allows developers to adapt it to exactly match the application requirements and network characteristics. The benefit of this is that one has only to pay for what is actually used. By mixing and matching protocols, various differing application requirements can be satisfied. \emph{JGroups} comes with a number of protocols, for example
+
+\begin{itemize}
+ \item Transport protocols: UDP (IP multicast), TCP, JMS
+ \item Fragmentation of large messages
+ \item Reliable unicast and multicast message transmission. Lost messages are
+       retransmitted.
+ \item Failure detection: crashed members are excluded from membership
+ \item Ordering protocols: atomic (all-or-none message delivery), FIFO, causal,
+       total order (sequencer or token based)
+ \item Membership
+ \item Encryption
+\end{itemize}
+
+
+\subsection{Concepts}
+In order to join a group and send messages, a process has to create a channel. A channel is similar to a socket. When a client connects to a channel, it gives the name of the group it would like to join. A channel is always associated with a particular group (in it's connected state). The protocol stack takes care that channels within the same group find each other. Whenever a client connects to a channel with group name G, it tries to find existing channels with the same group name and joins them. If no members exist, a new group will be created.
+
+When a channel is created, it is first in the unconnected state. The clients connects to the channel by calling \texttt{connect} supplying the group name of the group it wants to join. Once the channel is in the connected state, messages can be sent/received. A channel can be disconnected from a group by calling \texttt{disconnect} and it can be closed by calling \texttt{close}. A closed channel cannot be used anymore. Any attempt to do so results in an exception. The channel can only be connected to one group at the time. To communicate with multiple groups, multiple channels have to be created.
+
+\subsubsection{Creating a channel}
+To create a channel we can use the public constructor of \texttt{JChannel}. 
+
+\begin{verbatim}
+public JChannel(Object properties) throws ChannelException
+\end{verbatim}
+
+The \texttt{properties} argument defines the composition of the protocol stack, that is the number and types of layers, their parameters and their order. For \texttt{JChannel} this has to be a string. For details about the composition of this string, please refer to the \emph{JGroups} users guide.
+
+\subsubsection{Sending messages}
+One of the two \texttt{send} methods of a channel is used to send messages to group members. The message payload can be any serializable object.
+
+\begin{verbatim}
+JChannel channel = ...;
+channel.send(null, null, "test");
+\end{verbatim}
+
+The above code fragment sends the string "test" to all the other members in the group.
+
+\subsubsection{Receiving messages}
+The \texttt{receive} method is used to receive messages. A channel receives messages asynchronously from the network and stores them in a queue. When \texttt{receive} is called, the first message in the queue is removed and returned. If there is no message in the queue, the method invocation blocks.
+
+There is a so-called \emph{building block} that provides a listener interface for receiving messages. The building block is called \texttt{PullPushAdapter}. This relieves the application developer from the task to create a separate reception thread. 
+
+\subsubsection{Transport Protocols}
+A transport protocol refers to the protocol at the bottom of the protocol stack which is responsible for sending and receiving messages to/from the network. There are a number of transport protocols in \emph{JGroups}.
+\begin{itemize}
+ \item The transport protocol UDP uses IP multicast by default but it can be configured to use multiple unicast messages instead of one multicast message. For discovery of initial members, the PING protocol can be configured to use a well-known server (\emph{GossipServer}). Both the UDP and the PING protocol must be configured to use IP unicast instead of multicast.
+ \item The TCP transport protocol can be used where UDP is undesired, most likely over WAN, where routers discard IP multicast. The TCPPING protocol can be used to determine initial group membership. No external gossip server is needed with this protocol, but other members have to be known in advance. The TCPGOSSIP protocol is essentially the same as the PING protcol instead only for TCP and not UDP.
+ \item The TUNNEL transport protocol can be used to tunnel firewalls. It needs a router server running outside of the firewall to tunnel the firewall.
+ \item The JMS transport protocol can be used to send messages with JMS.
+\end{itemize}
+
+
+\subsection{Prototype}
+The simple chat client (see \texttt{ch.iserver.ace.net.jgroups.SimpleChat}) is based on \emph{JGroups}. When started, it asks the user for its nick name. Then it displays the GUI. The GUI has a \emph{join} button that allows the user to join a group. The button prompts the user for a group name. The application connects to the group and enables the text field at the bottom of the window. The user can then send messages to the group. Other members of the group receive these messages.
+
+The prototype does not have any discovery mechanism for existing groups. The users must agree on a group name outside of the chat application. For a real chat application, this would be of course unacceptable.
+
+
+\subsection{Analysis}
+\emph{JGroups} provides a very simple API to create groupware applications. A shared document in \ace could be represented as a separate group in \emph{JGroups}. 
+
+It is used in famous open source projects like Tomcat (session replication), OSCache (J2EE caching solution) and Jetty (session replication). \emph{Glicpse}, a collaborative editor plugin for \emph{Eclipse} uses \emph{JGroups} too for multicast communication among sites. The main reason why we examined \emph{JGroups} was because of \emph{Gclipse}.
+
+\emph{JGroups} provides both discovery and communication, the requirements for the network layer. Although, the discovery part would need some tweaking before it can be used, as one has to know the group name to join a group.
+
+\subsubsection{Positive Points}
+\emph{JGroups} provides a very simple API to do multicast messaging. Furthermore it's configurable protocol stack allows a great deal of flexibility.
+
+\subsubsection{Negative Points}
+For an operational transformation algorithm that needs to broadcast operations to all other sites, \emph{JGroups} would certainly be suitable (e.g. \emph{GOTO}  or \emph{adOPTed}. Note however that our chosen algorithm (\emph{Jupiter}) does not need to broadcast messages. Multiple unicast connections are used between one server and several clients. Because of this aspect, we think to implement the network layer, \emph{JGroups} is not the best solution. We would need to teach \emph{JGroups} not to do group communication (and that is the prime feature of \emph{JGroups}). 
+
+The \emph{JGroups} library is not programming language independent. It uses serialized objects as message payload. This can be seen as and advantage or as a disadvantage depending on the requirements of the application.
+
+\subsubsection{Open Points}
+The current implementation of the group membership service is very simplistic. Joining a group is always successul. There is no way to forbid a particular member to access the group. This is a serious problem as the confidentiality of the document content cannot be guaranteed. A custom protocol implementation could solve this particular problem. This would need to be investigated in more detail.
+
+As mentioned, to join a group, one has to know the group name beforehand. This is a serious shortcoming. There are several solutions possible. One would be to create a well-known group (e.g. a group named "ACE") that every application instance is a member of. Peers in this group could then be queried about available published documents. Another solution would be to have a central server that keeps track of which documents are published. The second solution seems to be a bit clumsy as one has to setup a separate server.
+
+
+\subsection{Resources}
+\begin{itemize}
+ \item \href{http://www.jgroups.org/javagroupsnew/docs/index.html}{\emph{JGroups} website}
+ \item \href{http://www.jgroups.org/javagroupsnew/docs/newuser/index.html}{\emph{JGroups} users guide}
+\end{itemize}
