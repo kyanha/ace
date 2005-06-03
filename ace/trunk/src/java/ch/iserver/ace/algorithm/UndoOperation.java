@@ -1,5 +1,5 @@
 /*
- * $Id: DeleteOperation.java 423 2005-05-31 15:53:47Z zbinl $
+ * $$Id$$
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
