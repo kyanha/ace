@@ -29,6 +29,8 @@ import ch.iserver.ace.algorithm.InclusionTransformation;
  *
  */
 public class GOTOInclusionTransformation implements InclusionTransformation {
+	
+	private boolean isTransformOpPrivileged;
 
     /* (non-Javadoc)
      * @see ch.iserver.ace.algorithm.InclusionTransformation#transform(ch.iserver.ace.Operation, ch.iserver.ace.Operation)
@@ -40,7 +42,7 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
     	//System.out.println(transformedCnt++);
         Operation transformedOp;
         if (op1 instanceof InsertOperation && op2 instanceof InsertOperation) {
-        		System.out.print("\ttransform("+op1+", "+op2+") = ");
+        		System.out.print("\ttransform("+op1+", "+isTransformOpPrivileged+", "+op2+") = ");
         		transformedOp = transform((InsertOperation)op1, (InsertOperation)op2);
              	System.out.println(transformedOp);
         } else if (op1 instanceof InsertOperation && op2 instanceof DeleteOperation) {
@@ -69,7 +71,9 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
     	int lenB = insB.getTextLength();
     	//TODO: the char comparison could/should be replaced later by a client/server flag
     	if (posA < posB || posA == posB && insA.getOrigin() < insB.getOrigin() || 
-    			posA == posB && insA.getOrigin() == insB.getOrigin() && insA.getText().charAt(0) < insB.getText().charAt(0)) {
+    			posA == posB && insA.getOrigin() == insB.getOrigin() 
+				&& isTransformOpPrivileged) { //the server side operation is always given priority
+//				&& insA.getText().charAt(0) < insB.getText().charAt(0)) {
 			/*
 			* Operation A starts before operation B.
 			* (B):       "ABCD"
@@ -231,5 +235,9 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 			}
 		}
         return transformedOperation;
+    }
+    
+    public void setTransformOpPrivileged(boolean value) {
+    		isTransformOpPrivileged = value;
     }
 }

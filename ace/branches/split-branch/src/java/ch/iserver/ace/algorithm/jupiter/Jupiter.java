@@ -32,6 +32,7 @@ import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.InclusionTransformation;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.Timestamp;
+import ch.iserver.ace.text.GOTOInclusionTransformation;
 import ch.iserver.ace.text.SplitOperation;
 
 /**
@@ -43,7 +44,7 @@ public class Jupiter implements Algorithm {
 
 	private List operationBuffer;
 
-	private InclusionTransformation inclusion;
+	private GOTOInclusionTransformation inclusion;
 
 	private DocumentModel document;
 
@@ -76,7 +77,7 @@ public class Jupiter implements Algorithm {
 	 */
 	public Jupiter(InclusionTransformation it, DocumentModel document,
 			int siteId, boolean isClientSide) {
-		inclusion = it;
+		inclusion = (GOTOInclusionTransformation)it;
 		this.siteId = siteId;
 		init(document, new JupiterVectorTime(0, 0));
 		operationBuffer = new ArrayList();
@@ -135,7 +136,7 @@ public class Jupiter implements Algorithm {
 		//myMsgs = myMsgs + 1;
 		vectorTime.incrementLocalOperationCount();
 		
-		//TODO: save request in undo list (local undo)
+		//TODO: save request in history list (for local undo)
 		
 		return req;
 	}
@@ -180,16 +181,35 @@ public class Jupiter implements Algorithm {
 	        	Operation transformedOp;
 	        	if (newOp instanceof SplitOperation) {
 	        		SplitOperation split = (SplitOperation)newOp;
-	        		split.setFirst( inclusion.transform(split.getFirst(), existingOp) );
-	        		split.setSecond( inclusion.transform(split.getSecond(), existingOp) );
-	        		existingOp = inclusion.transform(existingOp, split.getFirst());
-	        		existingOp = inclusion.transform(existingOp, split.getSecond());
+	        		if (isClientSide()) {
+	        			inclusion.setTransformOpPrivileged(true);
+	        			split.setFirst( inclusion.transform(split.getFirst(), existingOp) );
+	        			split.setSecond( inclusion.transform(split.getSecond(), existingOp) );
+	        			inclusion.setTransformOpPrivileged(false);
+	        			existingOp = inclusion.transform(existingOp, split.getFirst());
+	        			existingOp = inclusion.transform(existingOp, split.getSecond());
+	        		} else {
+	        			inclusion.setTransformOpPrivileged(false);
+	        			split.setFirst( inclusion.transform(split.getFirst(), existingOp) );
+	        			split.setSecond( inclusion.transform(split.getSecond(), existingOp) );
+	        			inclusion.setTransformOpPrivileged(true);
+	        			existingOp = inclusion.transform(existingOp, split.getFirst());
+	        			existingOp = inclusion.transform(existingOp, split.getSecond());
+	        		}
 	        		transformedOp = split;
 	        	} else {
-	        		transformedOp = inclusion.transform(newOp, existingOp);
-	        		existingOp = inclusion.transform(existingOp, newOp);
+	        		if (isClientSide()) {
+	        			inclusion.setTransformOpPrivileged(true);
+	        			transformedOp = inclusion.transform(newOp, existingOp);
+	        			inclusion.setTransformOpPrivileged(false);
+		        		existingOp = inclusion.transform(existingOp, newOp);
+	        		} else {
+	        			inclusion.setTransformOpPrivileged(false);
+	        			transformedOp = inclusion.transform(newOp, existingOp);
+	        			inclusion.setTransformOpPrivileged(true);
+	        			existingOp = inclusion.transform(existingOp, newOp);
+	        		}
 	        	}
-	        	
 	        	ackRequestList.set(ackRequestListCnt, new OperationWrapper(existingOp, wrap.getLocalOperationCount()));
 	
 	        	newOp = transformedOp;
@@ -198,8 +218,8 @@ public class Jupiter implements Algorithm {
         System.out.println("tnf:"+ackRequestList);
         if (isClientSide && newOp instanceof SplitOperation) {
         		SplitOperation split = (SplitOperation)newOp;
+        		document.apply(split.getSecond());
         		document.apply(split.getFirst());
-			document.apply( inclusion.transform(split.getSecond(), split.getFirst()) );
         } else {
         		document.apply(newOp);
         }
@@ -324,7 +344,7 @@ public class Jupiter implements Algorithm {
 	public Request redo() {
 		//...
 		
-		//save redo request in undo list
+		//save redo request in history list
 		
 		return null;
 	}
@@ -336,7 +356,7 @@ public class Jupiter implements Algorithm {
 	 *            the inclusion transformation function to set.
 	 */
 	public void setInclusionTransformation(InclusionTransformation it) {
-		this.inclusion = it;
+		this.inclusion = (GOTOInclusionTransformation)it;
 	}
 
 	/**
