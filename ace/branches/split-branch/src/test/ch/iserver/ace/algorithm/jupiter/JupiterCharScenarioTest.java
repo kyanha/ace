@@ -39,7 +39,7 @@ import ch.iserver.ace.util.SynchronizedQueue;
  * from papers and implemented in 
  * {@link ch.iserver.ace.algorithm.jupiter.JupiterAgainstCounterExamplesTest}.
  */
-public class JupiterScenarioTest extends TestCase {
+public class JupiterCharScenarioTest extends TestCase {
 	
 	/**
 	 * This scenario includes an editing session with 5 participating sites.

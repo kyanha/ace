@@ -72,10 +72,17 @@ public class JupiterTest extends AlgorithmTestCase {
 	 * @see ch.iserver.ace.test.AlgorithmTestFactory#createAlgorithm(int)
 	 */
 	public Algorithm createAlgorithm(int siteId) {
-		Jupiter jupiter = new Jupiter(siteId, true);
+		isClient = (algoCount % 2 == 1) ? false : true;
+		++algoCount;
+		Jupiter jupiter = new Jupiter(siteId, isClient);
 		jupiter.setInclusionTransformation(new GOTOInclusionTransformation());
 		return jupiter;
 	}
+	
+	//a flag not to be set on the algorithm, in order to have a client and a server
+	//algorithm instance.
+	private boolean isClient;
+	private int algoCount = 0;
 
 	/**
 	 * @see ch.iserver.ace.test.AlgorithmTestFactory#createTimestamp()
