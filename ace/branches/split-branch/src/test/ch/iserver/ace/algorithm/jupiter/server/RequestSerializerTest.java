@@ -87,7 +87,7 @@ public class RequestSerializerTest extends TestCase {
 		//request serializer
 		p.receiveRequest(new JupiterRequest(CLIENT_SITE_ID+1,
 				new JupiterVectorTime(0,0),new InsertOperation()));
-		
+		Thread.sleep(500);
 		assertNull(serializer.getClientProxies().get(new Integer(CLIENT_SITE_ID)));
 		assertNull(serializer.getOutgoingQueues().get(new Integer(CLIENT_SITE_ID)));
 		assertEquals(1, serializer.getClientProxies().size());

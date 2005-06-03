@@ -35,7 +35,7 @@ public class OperationExtractDocumentModel implements DocumentModel {
      * @see ch.iserver.ace.DocumentModel#apply(ch.iserver.ace.Operation)
      */
     public void apply(Operation operation) {
-    		System.out.println(operation);
+    		System.out.println("OEDM: "+operation);
         this.operation = operation;
     }
     

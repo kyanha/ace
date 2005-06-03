@@ -29,6 +29,7 @@ import ch.iserver.ace.DocumentModelException;
 import ch.iserver.ace.Operation;
 import ch.iserver.ace.text.DeleteOperation;
 import ch.iserver.ace.text.InsertOperation;
+import ch.iserver.ace.text.SplitOperation;
 
 /**
  *
@@ -59,6 +60,16 @@ public class TestDocumentModel extends PlainDocument implements DocumentModel {
 				insertString(op.getPosition(), op.getText(), null);
 			} else if (operation instanceof DeleteOperation) {
 				DeleteOperation op = (DeleteOperation) operation;
+				assert op.getText().equals(getText(op.getPosition(), op.getTextLength())) : 
+					op.getText()+" != "+getText(op.getPosition(), op.getTextLength());
+				remove(op.getPosition(), op.getTextLength());
+			} else if (operation instanceof SplitOperation) {
+				SplitOperation split = (SplitOperation)operation;
+				DeleteOperation op = (DeleteOperation)split.getSecond();
+				assert op.getText().equals(getText(op.getPosition(), op.getTextLength())) : 
+					op.getText()+" != "+getText(op.getPosition(), op.getTextLength());
+				remove(op.getPosition(), op.getTextLength());
+				op = (DeleteOperation)split.getFirst();
 				assert op.getText().equals(getText(op.getPosition(), op.getTextLength())) : 
 					op.getText()+" != "+getText(op.getPosition(), op.getTextLength());
 				remove(op.getPosition(), op.getTextLength());
