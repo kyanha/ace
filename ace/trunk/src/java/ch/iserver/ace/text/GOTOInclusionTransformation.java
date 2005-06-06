@@ -40,28 +40,20 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
     /* (non-Javadoc)
      * @see ch.iserver.ace.algorithm.InclusionTransformation#transform(ch.iserver.ace.Operation, ch.iserver.ace.Operation)
      */
-    private int transformedCnt = 1;
-     
     public Operation transform(Operation op1, Operation op2) {
-    	transformedCnt++;
-    	//LOG.info(transformedCnt++);
         Operation transformedOp;
         if (op1 instanceof InsertOperation && op2 instanceof InsertOperation) {
-        		System.out.print("\ttransform("+op1+", "+isTransformOpPrivileged+", "+op2+") = ");
         		transformedOp = transform((InsertOperation)op1, (InsertOperation)op2);
-             	LOG.info(transformedOp);
+        		LOG.info("\ttransform("+op1+", "+isTransformOpPrivileged+", "+op2+") = "+transformedOp);
         } else if (op1 instanceof InsertOperation && op2 instanceof DeleteOperation) {
-        		System.out.print("\ttransform("+op1+", "+op2+") = ");
         		transformedOp = transform((InsertOperation)op1, (DeleteOperation)op2);
-        		LOG.info(transformedOp);
+        		LOG.info("\ttransform("+op1+", "+op2+") = "+transformedOp);
         } else if (op1 instanceof DeleteOperation && op2 instanceof InsertOperation) {
-        		System.out.print("\ttransform("+op1+", "+op2+") = ");  
         		transformedOp = transform((DeleteOperation)op1, (InsertOperation)op2);
-        		LOG.info(transformedOp);
+        		LOG.info("\ttransform("+op1+", "+op2+") = "+transformedOp);
         } else if (op1 instanceof DeleteOperation && op2 instanceof DeleteOperation) {
-        		System.out.print("\ttransform("+op1+", "+op2+") = ");
         		transformedOp = transform((DeleteOperation)op1, (DeleteOperation)op2);
-        		LOG.info(transformedOp);
+        		LOG.info("\ttransform("+op1+", "+op2+") = "+transformedOp);
         } else {
             throw new InvalidParameterException();
         }
@@ -74,7 +66,6 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
     	int lenA = insA.getTextLength();
     	int posB = insB.getPosition();
     	int lenB = insB.getTextLength();
-    	//TODO: the char comparison could/should be replaced later by a client/server flag
     	if (posA < posB || posA == posB && insA.getOrigin() < insB.getOrigin() || 
     			posA == posB && insA.getOrigin() == insB.getOrigin() 
 				&& isTransformOpPrivileged /* && insA.getText().charAt(0) < insB.getText().charAt(0)) */) {

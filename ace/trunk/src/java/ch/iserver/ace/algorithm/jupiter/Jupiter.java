@@ -147,9 +147,10 @@ public class Jupiter implements Algorithm {
 	 * @see ch.iserver.ace.algorithm.Algorithm#receiveRequest(ch.iserver.ace.algorithm.Request)
 	 */
 	public void receiveRequest(Request req) {
+		LOG.info(">>> recv");
         JupiterRequest jupReq = (JupiterRequest)req;
         checkPreconditions(jupReq);
-        System.out.println("ini:"+ackRequestList);
+        LOG.info("ini:"+ackRequestList);
         
         //TODO: it is possible for the traffic to one side (client/server) to be one-sided, 
         //e.g. only one client writes text and the other sites are idle.
@@ -159,13 +160,14 @@ public class Jupiter implements Algorithm {
         //Discard acknowledged messages.
         discardOperations(jupReq);
         
-        System.out.println("dsc:"+ackRequestList);
+        LOG.info("dsc:"+ackRequestList);
         				
 		Operation newOp = transform(jupReq.getOperation());
         
-        System.out.println("tnf:"+ackRequestList);
+        LOG.info("tnf:"+ackRequestList);
         apply(newOp);
         vectorTime.incrementRemoteRequestCount();
+        LOG.info("<<< recv");
     }
 	
 	/**

@@ -20,6 +20,8 @@
  */
 package ch.iserver.ace.algorithm.jupiter;
 
+import org.apache.log4j.Logger;
+
 import junit.framework.TestCase;
 import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.DefaultRequestEngine;
@@ -38,6 +40,8 @@ import ch.iserver.ace.util.SynchronizedQueue;
  */
 public class JupiterStringScenarioTest extends TestCase {
 
+	private static Logger LOG = Logger.getLogger("test");
+	
 	/**
 	 * This is a test scenario which uses strings instead of characters and the 
 	 * split operation, because of an insert operation made inside a delete operation.
@@ -90,7 +94,7 @@ public class JupiterStringScenarioTest extends TestCase {
 				.getDocument()).getText();
 		String contentSite2 = ((TestDocumentModel)eng2.getQueueHandler().getAlgorithm()
 				.getDocument()).getText();
-		System.out.println(contentSite1 + " == " + contentSite2);
+		LOG.info(contentSite1 + " == " + contentSite2);
 		assertEquals(FINAL, contentSite1);
 		assertEquals(FINAL, contentSite2);
 	}
@@ -235,7 +239,7 @@ public class JupiterStringScenarioTest extends TestCase {
 		assertTrue(	contentSite1.equals(contentSite3) );
 		assertTrue(	contentSite1.equals(contentSite4) );
 		assertTrue(	contentSite1.equals(contentSite5) );
-		System.out.println("'"+contentSite1+"'");
+		LOG.info("'"+contentSite1+"'");
 		//test the user intention preservation
 		assertEquals(FINAL, contentSite1);
 		assertEquals(FINAL, contentSite2);
@@ -397,7 +401,7 @@ public class JupiterStringScenarioTest extends TestCase {
 		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
 				.getDocument()).getText().equals(((TestDocumentModel)eng4.getQueueHandler().getAlgorithm()
 				.getDocument()).getText()));
-		System.out.println(((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
+		LOG.info(((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
 				.getDocument()).getText() + " == " +
 				((TestDocumentModel)eng5.getQueueHandler().getAlgorithm()
 						.getDocument()).getText());
@@ -530,7 +534,6 @@ public class JupiterStringScenarioTest extends TestCase {
 				.getDocument()).getText()));
  		
 		/** concurrent step 4 **/
-		System.out.println(">>> step 4");
 //		generate requests at site 5
 		Operation op13 = new InsertOperation(23, "!");
 		eng5.generateRequest(op13);
@@ -545,7 +548,6 @@ public class JupiterStringScenarioTest extends TestCase {
 		eng3.receiveRequest(r5);
 		r5 = (Request)net[3].getRequests().remove(0);
 		eng4.receiveRequest(r5);
-		System.out.println("<<< step 4");
  		
 		/** end of concurrent step 4 **/
 		Thread.sleep(500);
@@ -573,7 +575,7 @@ public class JupiterStringScenarioTest extends TestCase {
 				.getDocument()).getText();
 		String contentSite5 = ((TestDocumentModel)eng5.getQueueHandler().getAlgorithm()
 				.getDocument()).getText();
-		System.out.println("'"+contentSite1+"'");
+		LOG.info("'"+contentSite1+"'");
 		assertEquals(FINAL, contentSite1);
 		assertEquals(FINAL, contentSite2);
 		assertEquals(FINAL, contentSite3);
@@ -632,33 +634,33 @@ public class JupiterStringScenarioTest extends TestCase {
 		//#3: site 1,3,2 results in string: "II amI"
 		
 //		receive and distribute operations at proxy for site 1
-		System.out.println(">>> 1.pr recv");
+		LOG.info(">>> 1.pr recv");
 		proxies[0].receiveRequest((Request)queue1.get());
 		Request r1 = (Request)net[1].getRequests().remove(0);
-		System.out.println(">>> 2.cl recv");
+		LOG.info(">>> 2.cl recv");
 		eng2.receiveRequest(r1);
 		r1 = (Request)net[2].getRequests().remove(0);
-		System.out.println(">>> 3.cl recv");
+		LOG.info(">>> 3.cl recv");
 		eng3.receiveRequest(r1);
 		
 //		receive and distribute operations at proxy for site 3  
-		System.out.println(">>> 3.pr recv");
+		LOG.info(">>> 3.pr recv");
 		proxies[2].receiveRequest((Request)queue3.get());
 		Request r3 = (Request)net[0].getRequests().remove(0);
-		System.out.println(">>> 1.cl recv");
+		LOG.info(">>> 1.cl recv");
 		eng1.receiveRequest(r3);
 		r3 = (Request)net[1].getRequests().remove(0);
-		System.out.println(">>> 2.cl recv");
+		LOG.info(">>> 2.cl recv");
 		eng2.receiveRequest(r3);
 		
 //		receive and distribute operations at proxy for site 2
-		System.out.println(">>> 2.pr recv");
+		LOG.info(">>> 2.pr recv");
 		proxies[1].receiveRequest((Request)queue2.get());
 		Request r2 = (Request)net[0].getRequests().remove(0);
-		System.out.println(">>> 1.cl recv");
+		LOG.info(">>> 1.cl recv");
 		eng1.receiveRequest(r2);
 		r2 = (Request)net[2].getRequests().remove(0);
-		System.out.println(">>> 3.cl recv");
+		LOG.info(">>> 3.cl recv");
 		eng3.receiveRequest(r2);
 		
 		Thread.sleep(500);
@@ -670,7 +672,7 @@ public class JupiterStringScenarioTest extends TestCase {
 				.getDocument()).getText();
 		String contentSite3 = ((TestDocumentModel)eng3.getQueueHandler().getAlgorithm()
 				.getDocument()).getText();
-		System.out.println(contentSite1 + " == " + contentSite2 + " == " + contentSite3);
+		LOG.info(contentSite1 + " == " + contentSite2 + " == " + contentSite3);
 		assertEquals(FINAL, contentSite1);
 		assertEquals(FINAL, contentSite2);
 		assertEquals(FINAL, contentSite3);

@@ -75,8 +75,7 @@ public class JupiterServer {
         RequestForwarder forwarder = new RequestForwarder(outgoingQueue, client);
         requestForwarders.put(new Integer(siteIdCounter), forwarder);
         forwarder.start();
-        
-        LOG.info("addClient #"+siteIdCounter);
+        LOG.debug("addClient #"+siteIdCounter);
         return client;
     }
     
@@ -91,7 +90,7 @@ public class JupiterServer {
         		proxy.closeNetServiceConnection();
         		((RequestForwarder)requestForwarders.remove(id)).shutdown();
         		serializer.removeClientProxy(siteId);
-        		LOG.info("removeClient #"+siteId);
+        		LOG.debug("removeClient #"+siteId);
         }
     }
     

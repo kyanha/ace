@@ -20,6 +20,8 @@
  */
 package ch.iserver.ace.algorithm;
 
+import org.apache.log4j.Logger;
+
 import junit.framework.TestCase;
 import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.jupiter.Jupiter;
@@ -35,6 +37,8 @@ import ch.iserver.ace.util.SynchronizedQueue;
  */
 public class DefaultRequestEngineTest extends TestCase {
 
+	private static Logger LOG = Logger.getLogger("test");
+	
 	private static final int SITE_ID = 1;
 	private static final String TEXT = "a";
 	private static final int POSITION = 0;
@@ -138,7 +142,7 @@ public class DefaultRequestEngineTest extends TestCase {
 		int t = 2;
 		while (!engine.getLocalOperationBuffer().isEmpty() || 
 				!engine.getRemoteRequestBuffer().isEmpty()) {
-			System.out.println("sleep "+t+"s "+engine.getLocalOperationBuffer().size()+" "+
+			LOG.info("sleep "+t+"s "+engine.getLocalOperationBuffer().size()+" "+
 					engine.getRemoteRequestBuffer().size());
 			Thread.sleep(2000);
 			t += 2;
@@ -148,7 +152,7 @@ public class DefaultRequestEngineTest extends TestCase {
 		assertEquals(NUM_OPERATIONS+NUM_REQUESTS, doc.getOperations().size());
 		assertEquals(NUM_OPERATIONS, ((Jupiter)algo).getVectorTime().getLocalOperationCount());
 		assertEquals(NUM_REQUESTS, ((Jupiter)algo).getVectorTime().getRemoteOperationCount());
-		System.out.println("Document text:\n"+doc.getText());
+		LOG.info("Document text:\n"+doc.getText());
 	}
 
 }

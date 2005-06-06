@@ -40,7 +40,6 @@ public class TestNetService implements NetService {
      * @see ch.iserver.ace.algorithm.jupiter.server.NetService#transmitRequest(ch.iserver.ace.algorithm.Request)
      */
     public void transmitRequest(Request req) {
-        LOG.info(req);
         requests.add(req);
     }
     

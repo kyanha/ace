@@ -20,6 +20,8 @@
  */
 package ch.iserver.ace.algorithm.jupiter;
 
+import org.apache.log4j.Logger;
+
 import junit.framework.TestCase;
 import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.DefaultRequestEngine;
@@ -40,6 +42,8 @@ import ch.iserver.ace.util.SynchronizedQueue;
  * {@link ch.iserver.ace.algorithm.jupiter.JupiterAgainstCounterExamplesTest}.
  */
 public class JupiterCharScenarioTest extends TestCase {
+	
+	private static Logger LOG = Logger.getLogger("test");
 	
 	/**
 	 * This scenario includes an editing session with 5 participating sites.
@@ -489,7 +493,6 @@ public class JupiterCharScenarioTest extends TestCase {
 				.getDocument()).getText()));
  		
 		/** concurrent step 4 **/
-		System.out.println(">>> step 4");
 //		generate requests at site 5
 		Operation op28 = new InsertOperation(23, "!");
 		eng5.generateRequest(op28);
@@ -504,7 +507,6 @@ public class JupiterCharScenarioTest extends TestCase {
 		eng3.receiveRequest(r5);
 		r5 = (Request)net[3].getRequests().remove(0);
 		eng4.receiveRequest(r5);
-		System.out.println("<<< step 4");
  		
 		/** end of concurrent step 4 **/
 		Thread.sleep(500);
@@ -532,7 +534,7 @@ public class JupiterCharScenarioTest extends TestCase {
 				.getDocument()).getText();
 		String contentSite5 = ((TestDocumentModel)eng5.getQueueHandler().getAlgorithm()
 				.getDocument()).getText();
-		System.out.println("'"+contentSite1+"'");
+		LOG.info("'"+contentSite1+"'");
 		assertEquals(FINAL, contentSite1);
 		assertEquals(FINAL, contentSite2);
 		assertEquals(FINAL, contentSite3);
@@ -638,7 +640,7 @@ public class JupiterCharScenarioTest extends TestCase {
 				.getDocument()).getText();
 		String contentSite3 = ((TestDocumentModel)eng3.getQueueHandler().getAlgorithm()
 				.getDocument()).getText();
-		System.out.println(contentSite1 + " == " + contentSite2 + " == " + contentSite3);
+		LOG.info(contentSite1 + " == " + contentSite2 + " == " + contentSite3);
 		assertEquals(FINAL, contentSite1);
 		assertEquals(FINAL, contentSite2);
 		assertEquals(FINAL, contentSite3);

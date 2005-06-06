@@ -21,6 +21,9 @@
 package ch.iserver.ace.algorithm.jupiter;
 
 import junit.framework.TestCase;
+
+import org.apache.log4j.Logger;
+
 import ch.iserver.ace.DocumentModel;
 import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.DefaultRequestEngine;
@@ -41,6 +44,8 @@ import ch.iserver.ace.text.InsertOperation;
  * Yet all tests are done with only character wise transformations. 
  */
 public class JupiterAgainstCounterExamplesTest extends TestCase {
+	
+	private static Logger LOG = Logger.getLogger("test");
 	
 	/**
 	 * This example is taken from ecscw03.pdf figure 4/5. 
@@ -108,7 +113,7 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		//contents equals the expected content.
 		String contentSite1 = ((TestDocumentModel)site1.getDocument()).getText();
 		String contentSite2 = ((TestDocumentModel)site2.getDocument()).getText();
-		System.out.println(contentSite1 + " == " + contentSite2);
+		LOG.info(contentSite1 + " == " + contentSite2);
 		assertEquals(contentSite1, contentSite2);
 		assertEquals(FINAL, contentSite1);
 		assertEquals(FINAL, contentSite2);
@@ -124,7 +129,7 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		req3 = (Request)net[2].getRequests().remove(0);
 		site3.receiveRequest(req3);
 		String contentSite3 = ((TestDocumentModel)site3.getDocument()).getText();
-		System.out.println(contentSite3);
+		LOG.info(contentSite3);
 		assertEquals(FINAL, contentSite3);
 	}
 	
@@ -154,56 +159,56 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		InsertOperation op3 = new InsertOperation(2, "y");
 		
 		// generate requests concurrently
-		System.out.println("--> s1.cl genr r2");
+		LOG.info("--> s1.cl genr r2");
 		Request r1 = sites[0].client.generateRequest(op2);
-		System.out.println("--> s2.cl genr r3");
+		LOG.info("--> s2.cl genr r3");
 		Request r2 = sites[1].client.generateRequest(op3);
-		System.out.println("--> s3.cl genr r1");
+		LOG.info("--> s3.cl genr r1");
 		Request r3 = sites[2].client.generateRequest(op1);
 		
 		// server-side processing of request r1
-		System.out.println("--> s1.pr recv r2: "+r1);
+		LOG.info("--> s1.pr recv r2: "+r1);
 		sites[0].proxy.receiveRequest(r1);
 		Operation op = (Operation) sites[0].model.getOperation();
-		System.out.println("--> s2.pr genr r2");
+		LOG.info("--> s2.pr genr r2");
 		Request req1 = sites[1].proxy.generateRequest(op);
 		((JupiterRequest)req1).setSiteId(r1.getSiteId());
-		System.out.println("--> s3.pr genr r2");
+		LOG.info("--> s3.pr genr r2");
 		Request req2 = sites[2].proxy.generateRequest(op);
 		((JupiterRequest)req2).setSiteId(r1.getSiteId());
-		System.out.println("--> s2.cl recv r2: "+req1);
+		LOG.info("--> s2.cl recv r2: "+req1);
 		sites[1].client.receiveRequest(req1);
-		System.out.println("--> s3.cl recv r2: "+req2);
+		LOG.info("--> s3.cl recv r2: "+req2);
 		sites[2].client.receiveRequest(req2);
 		
 		// server-side processing of request r2
-		System.out.println("--> s2.pr recv r3: "+r2);
+		LOG.info("--> s2.pr recv r3: "+r2);
 		sites[1].proxy.receiveRequest(r2);
 		op = (Operation) sites[1].model.getOperation();
-		System.out.println("--> s1.pr genr r3");
+		LOG.info("--> s1.pr genr r3");
 		req1 = sites[0].proxy.generateRequest(op);
 		((JupiterRequest)req1).setSiteId(r2.getSiteId());
-		System.out.println("--> s3.pr genr r3");
+		LOG.info("--> s3.pr genr r3");
 		req2 = sites[2].proxy.generateRequest(op);
 		((JupiterRequest)req2).setSiteId(r2.getSiteId());
-		System.out.println("--> s1.cl recv r3: "+req1);
+		LOG.info("--> s1.cl recv r3: "+req1);
 		sites[0].client.receiveRequest(req1);
-		System.out.println("--> s3.cl recv r3: "+req2);
+		LOG.info("--> s3.cl recv r3: "+req2);
 		sites[2].client.receiveRequest(req2);
 		
 		// server-side processing of request r3
-		System.out.println("--> s3.pr recv r1: "+r3);
+		LOG.info("--> s3.pr recv r1: "+r3);
 		sites[2].proxy.receiveRequest(r3);
 		op = (Operation) sites[2].model.getOperation();
-		System.out.println("--> s1.pr genr r1");
+		LOG.info("--> s1.pr genr r1");
 		req1 = sites[0].proxy.generateRequest(op);
 		((JupiterRequest)req1).setSiteId(r3.getSiteId());
-		System.out.println("--> s2.pr genr r1");
+		LOG.info("--> s2.pr genr r1");
 		req2 = sites[1].proxy.generateRequest(op);
 		((JupiterRequest)req2).setSiteId(r3.getSiteId());
-		System.out.println("--> s1.cl recv r1: "+req1);
+		LOG.info("--> s1.cl recv r1: "+req1);
 		sites[0].client.receiveRequest(req1);
-		System.out.println("--> s2.cl recv r1: "+req2);
+		LOG.info("--> s2.cl recv r1: "+req2);
 		sites[1].client.receiveRequest(req2);
 		
 		// verify
@@ -238,7 +243,7 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 			this.siteId = siteId;
 		}
 		public void apply(Operation operation) {
-			System.out.println("proxyDoc.apply(" + operation+")");
+			LOG.info("proxyDoc.apply(" + operation+")");
 			this.operation = operation;
 		}
 		public Operation getOperation() {
@@ -314,7 +319,7 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		//contents equals the expected content.
 		String contentSite2 = ((TestDocumentModel)site2.getDocument()).getText();
 		String contentSite3 = ((TestDocumentModel)site3.getDocument()).getText();
-		System.out.println(contentSite2 + " == " + contentSite3);
+		LOG.info(contentSite2 + " == " + contentSite3);
 		assertEquals(contentSite2, contentSite3);
 		assertEquals(FINAL, contentSite2);
 		assertEquals(FINAL, contentSite3);
@@ -423,7 +428,7 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		//contents equals the expected content.
 		String contentSite2 = ((TestDocumentModel)site2.getDocument()).getText();
 		String contentSite3 = ((TestDocumentModel)site3.getDocument()).getText();
-		System.out.println(contentSite2 + " == " + contentSite3);
+		LOG.info(contentSite2 + " == " + contentSite3);
 		assertEquals(contentSite2, contentSite3);
 		assertEquals(FINAL, contentSite2);
 		assertEquals(FINAL, contentSite3);
@@ -499,18 +504,18 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		sites[3].client.receiveRequest(req3);
 		
 		// server-side processing of request r2
-		System.out.println("r2: "+r2);
+		LOG.info("r2: "+r2);
 		sites[0].proxy.receiveRequest(r2);
 		op = (Operation) sites[0].model.getOperation();
-		System.out.println("op2: "+op);
+		LOG.info("op2: "+op);
 		req1 = sites[1].proxy.generateRequest(op);
-		System.out.println(req1);
+		LOG.info(req1);
 		req2 = sites[2].proxy.generateRequest(op);
-		System.out.println(req2);
+		LOG.info(req2);
 		req3 = sites[3].proxy.generateRequest(op);
-		System.out.println(req3);
+		LOG.info(req3);
 		req4 = sites[4].proxy.generateRequest(op);
-		System.out.println(req4);
+		LOG.info(req4);
 		sites[1].client.receiveRequest(req1);
 		sites[2].client.receiveRequest(req2);
 		sites[3].client.receiveRequest(req3);
@@ -601,7 +606,7 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		//contents equals the expected content.
 		String contentSite2 = ((TestDocumentModel)site2.getDocument()).getText();
 		String contentSite3 = ((TestDocumentModel)site3.getDocument()).getText();
-		System.out.println(contentSite2 + " == " + contentSite3);
+		LOG.info(contentSite2 + " == " + contentSite3);
 		assertEquals(contentSite2, contentSite3);
 		assertEquals(FINAL, contentSite2);
 		assertEquals(FINAL, contentSite3);
@@ -681,7 +686,7 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		//5. req1 -> proxy, send to and apply at client 4
 		
 		// server-side processing of request req4
-		System.out.println("--> s4.pr recv r4: "+req4);
+		LOG.info("--> s4.pr recv r4: "+req4);
 		proxies[3].receiveRequest(req4);
 		Thread.sleep(500);
 		Request r4 = (Request)net[0].getRequests().remove(0);   
@@ -695,7 +700,7 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		Request req3 = site3.generateRequest(op3);
 		
 		//server-side processing of request req2
-		System.out.println("--> s2.pr recv r2: "+req2);
+		LOG.info("--> s2.pr recv r2: "+req2);
 		proxies[1].receiveRequest(req2);
 		Request r2 = (Request)net[0].getRequests().remove(0);
 		site1.receiveRequest(r2);
@@ -705,10 +710,10 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		site4.receiveRequest(r2);
 		
 		//server-side processing of request req3
-		System.out.println("--> s3.pr recv r3: "+req3);
+		LOG.info("--> s3.pr recv r3: "+req3);
 		proxies[2].receiveRequest(req3);
 		Request r3 = (Request)net[0].getRequests().remove(0);
-		System.out.println("--> s1.cl recv r3: "+r3);
+		LOG.info("--> s1.cl recv r3: "+r3);
 		site1.receiveRequest(r3);
 		r3 = (Request)net[1].getRequests().remove(0);
 		site2.receiveRequest(r3);
@@ -716,7 +721,7 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		site4.receiveRequest(r3);
 		
 		//server-side processing of request req1
-		System.out.println("--> s1.pr recv r1: "+req1);
+		LOG.info("--> s1.pr recv r1: "+req1);
 		proxies[0].receiveRequest(req1);
 		Request r1 = (Request)net[1].getRequests().remove(0);
 		site2.receiveRequest(r1);
@@ -731,7 +736,7 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		String contentSite2 = ((TestDocumentModel)site2.getDocument()).getText();
 		String contentSite3 = ((TestDocumentModel)site3.getDocument()).getText();
 		String contentSite4 = ((TestDocumentModel)site4.getDocument()).getText();
-		System.out.println(contentSite1 + " == " + contentSite2 + " == " + contentSite3
+		LOG.info(contentSite1 + " == " + contentSite2 + " == " + contentSite3
 				+ " == " + contentSite4);
 		assertEquals(FINAL, contentSite1);
 		assertEquals(FINAL, contentSite2);
@@ -806,7 +811,7 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		String contentSite1 = ((TestDocumentModel)site1.getDocument()).getText();
 		String contentSite2 = ((TestDocumentModel)site2.getDocument()).getText();
 		String contentSite3 = ((TestDocumentModel)site3.getDocument()).getText();
-		System.out.println(contentSite1 + " == " + contentSite2 + " == " + contentSite3);
+		LOG.info(contentSite1 + " == " + contentSite2 + " == " + contentSite3);
 		assertEquals(FINAL, contentSite1);
 		assertEquals(FINAL, contentSite2);
 		assertEquals(FINAL, contentSite3);
@@ -881,7 +886,7 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		String contentSite1 = ((TestDocumentModel)site1.getDocument()).getText();
 		String contentSite2 = ((TestDocumentModel)site2.getDocument()).getText();
 		String contentSite3 = ((TestDocumentModel)site3.getDocument()).getText();
-		System.out.println(contentSite1 + " == " + contentSite2 + " == " + contentSite3);
+		LOG.info(contentSite1 + " == " + contentSite2 + " == " + contentSite3);
 		assertEquals(FINAL, contentSite1);
 		assertEquals(FINAL, contentSite2);
 		assertEquals(FINAL, contentSite3);
@@ -964,7 +969,7 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 				.getDocument()).getText();
 		String contentSite3 = ((TestDocumentModel)eng3.getQueueHandler().getAlgorithm()
 				.getDocument()).getText();
-		System.out.println(contentSite1 + " == " + contentSite2 + " == " + contentSite3);
+		LOG.info(contentSite1 + " == " + contentSite2 + " == " + contentSite3);
 		assertEquals(FINAL, contentSite1);
 		assertEquals(FINAL, contentSite2);
 		assertEquals(FINAL, contentSite3);

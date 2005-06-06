@@ -37,9 +37,13 @@ public class RequestForwarder extends Thread {
     private boolean shutdown;
     
     /**
+     * Creates a new RequestForwarder using the given SynchronizationQueue and the given
+     * ClientProxy.
      * 
-     * @param proxy
-     * @param queue
+     * @param queue 		the queue to get the requests from.
+     * @param proxy 		the proxy to pass the request to.
+     * @see 				SynchronizedQueue
+     * @see 				ClientProxy
      */
     public RequestForwarder(SynchronizedQueue queue, ClientProxy proxy) {
         this.queue = queue;
@@ -47,6 +51,13 @@ public class RequestForwarder extends Thread {
         shutdown = false;
     }
     
+    /**
+     * Runs this RequestForwarder's task of passing requests from
+     * the queue to the client proxy.
+     * 
+     * @see SynchronizedQueue
+     * @see ClientProxy
+     */
     public void run() {
         try {
             while (!shutdown && !isInterrupted()) {
@@ -56,9 +67,11 @@ public class RequestForwarder extends Thread {
         } catch (InterruptedException ie) {
             LOG.warn(ie);
         }
-        LOG.info("RequestForwarder for ["+proxy.getSiteId()+"] terminated.\n");
     }
     
+    /**
+     * Shuts down this instance of RequestForwarder.
+     */
     public void shutdown() {
     		interrupt();
         shutdown = true;

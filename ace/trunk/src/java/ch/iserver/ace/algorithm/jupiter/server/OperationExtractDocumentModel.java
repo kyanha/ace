@@ -20,6 +20,8 @@
  */
 package ch.iserver.ace.algorithm.jupiter.server;
 
+import org.apache.log4j.Logger;
+
 import ch.iserver.ace.DocumentModel;
 import ch.iserver.ace.Operation;
 
@@ -29,13 +31,15 @@ import ch.iserver.ace.Operation;
  */
 public class OperationExtractDocumentModel implements DocumentModel {
 
+	private static Logger LOG = Logger.getLogger(OperationExtractDocumentModel.class);
+	
     private Operation operation;
     
     /* (non-Javadoc)
      * @see ch.iserver.ace.DocumentModel#apply(ch.iserver.ace.Operation)
      */
     public void apply(Operation operation) {
-    		System.out.println("OEDM: "+operation);
+    		LOG.info("oem.apply("+operation+")");
         this.operation = operation;
     }
     

@@ -24,6 +24,8 @@ package ch.iserver.ace.test;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 
+import org.apache.log4j.Logger;
+
 import ch.iserver.ace.DocumentModel;
 import ch.iserver.ace.DocumentModelException;
 import ch.iserver.ace.Operation;
@@ -36,6 +38,8 @@ import ch.iserver.ace.text.SplitOperation;
  */
 public class TestDocumentModel extends PlainDocument implements DocumentModel {
 
+	private static Logger LOG = Logger.getLogger(TestDocumentModel.class);
+	
 	private int siteId;
 	
 	public TestDocumentModel(String content) {
@@ -77,7 +81,7 @@ public class TestDocumentModel extends PlainDocument implements DocumentModel {
 		} catch (BadLocationException e) {
 			throw new DocumentModelException(e);
 		}
-		System.out.println("clientDoc.apply("+operation+") = "+getText());
+		LOG.info("clientDoc.apply("+operation+") = "+getText());
 	}
 	
 	public String getText() {

@@ -31,7 +31,6 @@ import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.jupiter.JupiterRequest;
-import ch.iserver.ace.algorithm.jupiter.JupiterVectorTime;
 import ch.iserver.ace.util.SynchronizedQueue;
 
 /**
@@ -63,6 +62,10 @@ public class RequestSerializer extends Thread {
      */
     private Map outgoingQueues;
     
+    /**
+     * A map that contains Integer (site id) to {@link Counter} 
+     * mappings.
+     */
     private Map cancelledClients;
     
     /**
@@ -86,6 +89,10 @@ public class RequestSerializer extends Thread {
         pause = false;
     }
 
+    /*
+     *  (non-Javadoc)
+     * @see java.lang.Runnable#run()
+     */
 	public void run() {
 		while (!shutdown) {
 			if (!pause) {
@@ -101,8 +108,6 @@ public class RequestSerializer extends Thread {
 				int siteId = client.getSiteId();
 
 				Algorithm algo = client.getAlgorithm();
-				// switch the vector time (local and remote operation count)
-//				algo.receiveRequest(switchVectorTime(req)); //obsolete
 				algo.receiveRequest(req);
 				Operation op = ((OperationExtractDocumentModel) algo
 						.getDocument()).getOperation();
@@ -138,9 +143,7 @@ public class RequestSerializer extends Thread {
 				//set the site Id of the client that generated the request.
 				r.setSiteId(siteId);
 				Integer id = new Integer(cl.getSiteId());
-				// switch the vector time (local and remote operation count)
 				SynchronizedQueue q = (SynchronizedQueue) outgoingQueues.get(id);
-//				if (q != null) q.add(switchVectorTime(r)); //obsolete
 				if (q != null) q.add(r);
 			}
 		}
@@ -179,7 +182,7 @@ public class RequestSerializer extends Thread {
         outgoingQueues.put(id, queue);
     }
     
-    /** OBSOLETE
+    /**
      * Removes a ClientProxy from this RequestSerializer.
      * 
      * @param  	siteId
@@ -195,29 +198,24 @@ public class RequestSerializer extends Thread {
     		}
     }
     
-    
     /**
-     * Switches the localOperationCount with the remoteOperationCount 
-     * component in the given JupiterVectorTime instance.
-     *
-     * @param	req the request to switch its vector time.
+     * Shuts down this RequestSerializer.
      */
-    private JupiterRequest switchVectorTime(Request req) {
-    		JupiterRequest request = (JupiterRequest)req;
-		return new JupiterRequest(request.getSiteId(), new JupiterVectorTime(
-				request.getJupiterVectorTime().getRemoteOperationCount(),
-				request.getJupiterVectorTime().getLocalOperationCount()),
-				request.getOperation());
-	}
-    
     public void shutdown() {
+    		//TODO: is an interrupt() call necessary?
 		shutdown = true;
     }
     
+    /**
+     * Pauses this RequestSerializer.
+     */
     public void pause() {
 		pause = true;
     }
     
+    /**
+     * Lets this RequestSerializer proceed. 
+     */
     public void proceed() {
 		pause = false;
     }
