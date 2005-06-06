@@ -149,32 +149,69 @@ public class Jupiter implements Algorithm {
 	public void receiveRequest(Request req) {
         JupiterRequest jupReq = (JupiterRequest)req;
         checkPreconditions(jupReq);
+        System.out.println("ini:"+ackRequestList);
         
         //TODO: it is possible for the traffic to one side (client/server) to be one-sided, 
         //e.g. only one client writes text and the other sites are idle.
         //Therefore, each side must periodically generate explicit acknowledgments 
         //(i.e. no-op messages) to prevent the outgoing queues from growing forever.
         
-        System.out.println("ini:"+ackRequestList);
-        
         //Discard acknowledged messages.
-        Iterator iter = ackRequestList.iterator();
+        discardOperations(jupReq);
+        
+        System.out.println("dsc:"+ackRequestList);
+        				
+		Operation newOp = transform(jupReq.getOperation());
+        
+        System.out.println("tnf:"+ackRequestList);
+        apply(newOp);
+        vectorTime.incrementRemoteRequestCount();
+    }
+	
+	/**
+	 * Discard from the other site (client/server) acknowledged operations.
+	 * 
+	 * @param jupReq the request to the remote operation count from
+	 */
+	private void discardOperations(JupiterRequest jupReq) {
+		Iterator iter = ackRequestList.iterator();
         while(iter.hasNext()) {
         		OperationWrapper wrap = (OperationWrapper)iter.next();
         		if (wrap.getLocalOperationCount() < jupReq.getJupiterVectorTime().getRemoteOperationCount()) {
         			iter.remove();
         		}
         }
-        System.out.println("dsc:"+ackRequestList);
-        
         //ASSERT msg.myMsgs == otherMsgs
         assert jupReq.getJupiterVectorTime().getLocalOperationCount() == 
         				vectorTime.getRemoteOperationCount() : "msg.myMsgs != otherMsgs !!";
-        				
-        Operation newOp = jupReq.getOperation();
-        
-		// transform
-        for (int ackRequestListCnt = 0; ackRequestListCnt < ackRequestList.size(); ackRequestListCnt++) {
+	}
+
+	/**
+	 * Applies an operation to the document model.
+	 * 
+	 * @param newOp the operation to be applied
+	 */
+	private void apply(Operation newOp) {
+		if (isClientSide && newOp instanceof SplitOperation) {
+        		SplitOperation split = (SplitOperation)newOp;
+        		document.apply(split.getSecond());
+        		document.apply(split.getFirst());
+        } else {
+        		document.apply(newOp);
+        }
+	}
+
+	/**
+	 * Transforms an operation with the operations in the outgoing queue
+	 * {@link #ackRequestList}.
+	 * 
+	 * @param newOp the operation to be transformed
+	 * @return the transformed operation
+	 * @see #ackRequestList
+	 */
+	private Operation transform(Operation newOp) {
+        for (int ackRequestListCnt = 0; 
+        		ackRequestListCnt < ackRequestList.size(); ackRequestListCnt++) {
 	        	OperationWrapper wrap = (OperationWrapper)ackRequestList.get(ackRequestListCnt);
 	        	Operation existingOp = wrap.getOperation();
 	
@@ -214,18 +251,9 @@ public class Jupiter implements Algorithm {
 	
 	        	newOp = transformedOp;
         }
-        
-        System.out.println("tnf:"+ackRequestList);
-        if (isClientSide && newOp instanceof SplitOperation) {
-        		SplitOperation split = (SplitOperation)newOp;
-        		document.apply(split.getSecond());
-        		document.apply(split.getFirst());
-        } else {
-        		document.apply(newOp);
-        }
-        vectorTime.incrementRemoteRequestCount();
-    }
-	
+		return newOp;
+	}
+
 	/**
 	 * Test 3 preconditions that must be fulfilled before transforming. They are taken 
 	 * from the Jupiter paper.
@@ -330,7 +358,7 @@ public class Jupiter implements Algorithm {
 		
 		//generateRequest
 		
-		//save undo request in redo list
+		//move pointer in history list
 		
 		//return request to send to other participants
 		return null;
