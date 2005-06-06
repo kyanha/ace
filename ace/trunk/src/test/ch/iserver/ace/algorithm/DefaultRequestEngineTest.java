@@ -43,8 +43,8 @@ public class DefaultRequestEngineTest extends TestCase {
 	private static final String TEXT = "a";
 	private static final int POSITION = 0;
 	
-	private static final int NUM_REQUESTS = 100;
-	private static final int NUM_OPERATIONS = 150;
+	private static final int NUM_REQUESTS = 15;
+	private static final int NUM_OPERATIONS = 30;
 	
 	private DummyDocumentModel doc;
 	private Algorithm algo;
