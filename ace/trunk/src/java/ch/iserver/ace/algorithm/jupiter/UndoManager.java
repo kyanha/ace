@@ -21,16 +21,14 @@
 package ch.iserver.ace.algorithm.jupiter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 
-import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.Request;
-import ch.iserver.ace.text.DeleteOperation;
-import ch.iserver.ace.text.InsertOperation;
 
 /**
  *
@@ -42,8 +40,8 @@ public class UndoManager {
 	private int nextUndoOperation;
 	
 	public UndoManager() {
-		localRequests = new ArrayList();
-		remoteRequests = new ArrayList();
+		localRequests = Collections.synchronizedList(new ArrayList());
+		remoteRequests = Collections.synchronizedList(new ArrayList());
 		nextUndoOperation = -1;
 	}
 	
@@ -54,7 +52,15 @@ public class UndoManager {
 	}
 	
 	public void addUndo(Request request) {
+		clearRedo();
 		localRequests.add(++nextUndoOperation, request);
+	}
+	
+	/**
+	 * Remove the redo requests that cannot be reached any more.
+	 */
+	private void clearRedo() {
+		localRequests.subList(nextUndoOperation+1, localRequests.size()).clear();
 	}
 	
 	public Request nextRedo() {
@@ -62,28 +68,8 @@ public class UndoManager {
 		return (Request)localRequests.get(++nextUndoOperation);
 	}
 	
-	public void clearRedo() {
-		
-	}
-	
 	public void addRemote(Request request) {
 		remoteRequests.add(request);
-	}
-	
-	public Operation mirror(Operation op) {
-		Operation transformedOp = null;
-		if (op instanceof InsertOperation) {
-			transformedOp = new DeleteOperation(
-					((InsertOperation)op).getPosition(), 
-					((InsertOperation)op).getText()
-					);
-		} else if (op instanceof DeleteOperation) {
-			transformedOp = new InsertOperation(
-					((DeleteOperation)op).getPosition(), 
-					((DeleteOperation)op).getText()
-					);
-		}
-		return transformedOp;
 	}
 	
 	/**
