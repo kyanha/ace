@@ -1,5 +1,5 @@
 /*
- * $$Id$$
+ * $Id$
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -24,11 +24,23 @@ package ch.iserver.ace.algorithm;
 import ch.iserver.ace.Operation;
 
 /**
- *
+ * A RedoOperation is simply used to indicate an redo request
+ * issued by the user through the GUI.
  */
 public class RedoOperation implements Operation {
 	
+	/**
+	 * Class constructor.
+	 */
 	public RedoOperation() { }
+	
+	/*
+	 *  (non-Javadoc)
+	 * @see ch.iserver.ace.Operation#inverse()
+	 */
+	public Operation inverse() {
+		throw new UnsupportedOperationException();
+	}
 
 	public String toString() {
 		return "Redo()";

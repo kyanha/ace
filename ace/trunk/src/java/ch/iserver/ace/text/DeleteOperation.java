@@ -24,7 +24,7 @@ package ch.iserver.ace.text;
 import ch.iserver.ace.Operation;
 
 /**
- *
+ * TODO: comments
  */
 public class DeleteOperation implements Operation {
 	private String text;
@@ -55,10 +55,19 @@ public class DeleteOperation implements Operation {
 		return text;
 	}
 	
+	
 	public void setText(String text) {
 	    if (text == null)
     			throw new IllegalArgumentException("text may not be null");
 		this.text = text;
+	}
+	
+	/*
+	 *  (non-Javadoc)
+	 * @see ch.iserver.ace.Operation#inverse()
+	 */
+	public Operation inverse() {
+		return new InsertOperation(getPosition(), getText());
 	}
 	
 	public String toString() {

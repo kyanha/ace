@@ -23,38 +23,91 @@ package ch.iserver.ace.text;
 import ch.iserver.ace.Operation;
 
 /**
- *
+ * The SplitOperation contains two operations. It is used
+ * when an operation needs to be split up under certain 
+ * transformation conditions.
+ * 
+ * @see ch.iserver.ace.Operation
  */
 public class SplitOperation implements Operation {
 
+	/**
+	 * The first operation.
+	 */
 	private Operation op1;
+	
+	/**
+	 * The second operation.
+	 */
 	private Operation op2;
 	
+	/**
+	 * Class constructor.
+	 * 
+	 * @param op1 	the first operation
+	 * @param op2	the second operation
+	 */
 	public SplitOperation(Operation op1, Operation op2) {
 		this.op1 = op1;
 		this.op2 = op2;
 	}
 	
+	/**
+	 * Returns the first operation.
+	 * 
+	 * @return
+	 */
 	public Operation getFirst() {
 		return op1;
 	}
 	
+	/**
+	 * Sets the first operation.
+	 * 
+	 * @param op1
+	 */
 	public void setFirst(Operation op1) {
 		this.op1 = op1;
 	}
 	
+	/**
+	 * Returns the second operation.
+	 * 
+	 * @return
+	 */
 	public Operation getSecond() {
 		return op2;
 	}
 	
+	/**
+	 * Sets the second operation.
+	 * 
+	 * @param op2
+	 */
 	public void setSecond(Operation op2) {
 		this.op2 = op2;
 	}
+	
+	/*
+	 *  (non-Javadoc)
+	 * @see ch.iserver.ace.Operation#inverse()
+	 */
+	public Operation inverse() {
+		throw new UnsupportedOperationException();
+	}
 
+	/*
+	 *  (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	public String toString() {
 		return "Split(" + op1 + ", " + op2 + ")";
 	}
 	
+	/*
+	 *  (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	public boolean equals(Object obj) {
 		if (obj == this) {
 			return true;
@@ -68,6 +121,10 @@ public class SplitOperation implements Operation {
 		}
 	}
 	
+	/*
+	 *  (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
 	public int hashCode() {
 		int hashcode = op1.hashCode();
 		hashcode += 17 * op2.hashCode();

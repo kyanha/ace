@@ -1,5 +1,5 @@
 /*
- * $$Id$$
+ * $Id$
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -24,11 +24,23 @@ package ch.iserver.ace.algorithm;
 import ch.iserver.ace.Operation;
 
 /**
- *
+ * An UndoOperation is simply used to indicate an undo request
+ * issued by the user through the GUI.
  */
 public class UndoOperation implements Operation {
 	
+	/**
+	 * Class constructor.
+	 */
 	public UndoOperation() { }
+	
+	/*
+	 *  (non-Javadoc)
+	 * @see ch.iserver.ace.Operation#inverse()
+	 */
+	public Operation inverse() {
+		throw new UnsupportedOperationException();
+	}
 
 	public String toString() {
 		return "Undo()";

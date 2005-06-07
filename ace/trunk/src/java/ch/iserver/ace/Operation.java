@@ -29,5 +29,12 @@ import java.io.Serializable;
  * does not contain any methods at all.
  */
 public interface Operation extends Serializable {
+	
+	/**
+	 * Returns the inverse of this operation.
+	 * 
+	 * @return the inverse of this operation
+	 */
+	public Operation inverse();
 
 }
