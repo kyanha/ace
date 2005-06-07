@@ -61,6 +61,8 @@ public class Jupiter implements Algorithm {
 	 * description.
 	 */
 	private List ackRequestList;
+	
+	private UndoManager undoManager;
 
 	/**
 	 * Class constructor that creates a new Jupiter algorithm. The parameters
@@ -83,6 +85,9 @@ public class Jupiter implements Algorithm {
 		operationBuffer = new ArrayList();
 		ackRequestList = new ArrayList();
 		this.isClientSide = isClientSide;
+		if (isClientSide()) {
+			undoManager = new UndoManager();
+		}
 	}
 
 	/**
@@ -108,6 +113,10 @@ public class Jupiter implements Algorithm {
 	 * @see ch.iserver.ace.algorithm.Algorithm#generateRequest(ch.iserver.ace.Operation)
 	 */
 	public Request generateRequest(Operation op) {
+		return generateRequest(op, false);
+	}
+	
+	private Request generateRequest(Operation op, boolean isUndoRedo) {
 		//apply op locally;
         if (op instanceof SplitOperation) {
     			SplitOperation split = (SplitOperation)op;
@@ -136,8 +145,10 @@ public class Jupiter implements Algorithm {
 		//myMsgs = myMsgs + 1;
 		vectorTime.incrementLocalOperationCount();
 		
-		//TODO: save request in history list (for local undo)
-		
+		//save request in history list (for local undo)
+		if (isClientSide && !isUndoRedo) {
+			undoManager.addUndo(req);
+		}
 		return req;
 	}
 
@@ -166,6 +177,14 @@ public class Jupiter implements Algorithm {
         
         LOG.info("tnf:"+ackRequestList);
         apply(newOp);
+        
+        //save remote request in history (for local undo)
+        if (isClientSide()) {
+        		undoManager.addRemote(
+        				new JupiterRequest(jupReq.getSiteId(), jupReq.getJupiterVectorTime(), newOp)
+        		);
+        }
+        
         vectorTime.incrementRemoteRequestCount();
         LOG.info("<<< recv");
     }
@@ -355,15 +374,24 @@ public class Jupiter implements Algorithm {
 	 */
 	public Request undo() {
 		//get the users request that is to be undone
+		Request req = undoManager.nextUndo();
 		
-		//compute undo request in current state (getUndoRequestInState/translateRequest)
+		// inverse the operation to be undone
+//		Operation op = undoManager.mirror(req.getOperation());
+		Operation op = req.getOperation().inverse();
+	
+		// get list of remote operation the undo operation has to transform with
+		int baseOpCount = ((JupiterVectorTime)req.getTimestamp()).getRemoteOperationCount();
+		List transformTargets = undoManager.getRemoteRequests(baseOpCount);
 		
-		//generateRequest
-		
-		//move pointer in history list
-		
-		//return request to send to other participants
-		return null;
+		// transform op with all operations in the list
+		Iterator iter = transformTargets.iterator();
+		while(iter.hasNext()) {
+			op = inclusion.transform(op, (Operation)iter.next());
+		}
+	
+		// generate request
+		return generateRequest(op, true);
 	}
 
 	/*
@@ -372,11 +400,24 @@ public class Jupiter implements Algorithm {
 	 * @see ch.iserver.ace.algorithm.Algorithm#redo()
 	 */
 	public Request redo() {
-		//...
+		//get the users request that is to be redone
+		Request req = undoManager.nextRedo();
 		
-		//save redo request in history list
+		// get the redo operation
+		Operation op = req.getOperation();
 		
-		return null;
+		// get list of remote operations the redo operation has to transform against
+		int baseOpCount = ((JupiterVectorTime)req.getTimestamp()).getRemoteOperationCount();
+		ArrayList transformTargets = (ArrayList)undoManager.getRemoteRequests(baseOpCount);
+		
+		// transform op with all operations in the list
+		Iterator iter = transformTargets.iterator();
+		while(iter.hasNext()) {
+			op = inclusion.transform(op, (Operation)iter.next());
+		}
+		
+		// generate request
+		return generateRequest(op, true);
 	}
 
 	/**
@@ -423,5 +464,13 @@ public class Jupiter implements Algorithm {
 	
 	public boolean isClientSide() {
 		return isClientSide;
+	}
+	
+	public boolean canUndo() {
+		return (isClientSide()) ? undoManager.canUndo() : false;
+	}
+	
+	public boolean canRedo() {
+		return (isClientSide()) ? undoManager.canRedo() : false;
 	}
 }
