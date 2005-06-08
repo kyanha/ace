@@ -15,6 +15,8 @@ pdfcreator={pdftex},
 
 \include{ace}
 
+\setlength{\parindent}{0pt}
+
 \begin{document}
 
 \include{titlepage}
@@ -35,27 +37,27 @@ Der Erfahrungsbericht dient der Auswertung der Semesterarbeit im Sommersemester 
 \subsection{Referenzierte Dokumente}
 Die referenzierten Dokumente sind auf der Projekt-Webseite abrufbar: \href{http://ace.iserver.ch/}{http://ace.iserver.ch/}
 \begin{itemize}
+ \item Projekthandbuch (Version 1.0)
  \item Projektplan (Version 1.0)
 \end{itemize}
 
 
 
 \section{Ausgangssituation}
-Das Editieren von Dokumenten in einer Gruppe kann eine grosse Herausforderung sein. Versionierungs Systeme wie Subversion oder CVS helfen einer Gruppe eine konsistente Kopie des Dokumentes zu haben, aber erlauben keine Zusammenarbeit in Echtzeit. Das kollaborative Bearbeiten des selben Dokumentes in Echtzeit in einer Gruppe ist heute kaum bekannt, obschon die Idee schon lange erforscht wird. Interessanterweise gibt es aber kaum kommerzielle Editoren, wobei uns SubEthaEdit für Mac OS X als einzige Anwendung bekannt ist.
+Das Editieren von Dokumenten in einer Gruppe kann eine grosse Herausforderung sein. Versionierungs Systeme wie Subversion oder CVS helfen einer Gruppe eine konsistente Kopie des Dokumentes zu haben, aber erlauben keine Zusammenarbeit in Echtzeit. Das kollaborative Bearbeiten des selben Dokumentes in Echtzeit in einer Gruppe ist heute kaum bekannt, obschon die Idee schon lange erforscht wird. Interessanterweise gibt es auch kaum kommerzielle Editoren, wobei uns SubEthaEdit für Mac OS X als einzige Anwendung bekannt ist.
 
 Wir sind der Überzeugung, dass Anwendungen, die es ermöglichen ein Dokument in Echtzeit in einer Gruppe zu bearbeiten ein grosses Potenzial haben. Unser Ziel ist es, den ersten platformunabhängigen und voll funktionsfähigen kollaborativen Text-Editor zu erstellen. 
 
-In der Semesterarbeit wollten wir die Grundlage legen für die Implementation des Texteditors. Das beinhaltete vorallem einen funktionsfähigen Concurrency Control Algorithmus zu implementieren.
+In der Semesterarbeit wollten wir die Grundlage legen für die Implementation des Texteditors. Das beinhaltete vorallem die Implementation eines funktionsfähigen Concurrency Control Algorithmus.
 
 
 
 \section{Soll-Ist Vergleich}
-Im folgenden wird aufgezeigt, wo es im Projekt zu Differenzen zwischen der Planung und dem tatsächlichen Ablauf des Projektes gekommen ist.
+Hier wird aufgezeigt, wo es im Projekt zu Differenzen zwischen der Planung und dem tatsächlichen Ablauf des Projektes gekommen ist.
 
 \subsection{Resultate}
 Während der Planung wurde festgelegt, welche Resultate während der Diplomarbeit 
-erreicht werden sollen.
-
+erreicht werden sollen. An dieser Stelle wird der Status dieser Resultate festgehalten.
 \begin{table}[H]
  \begin{tabular}{|l|l|l|}
   \hline
@@ -65,19 +67,19 @@ erreicht werden sollen.
   \hline
    \contentcol{1.4in}{Projektantrag} &
    \contentcol{2in}{Genehmigung Projektantrag} &
-   \contentcol{2.2in}{Projektantrag wurde erstellt und genehmigt} \\
+   \contentcol{2.2in}{Projektantrag wurde erstellt und genehmigt.} \\
   \hline
    \contentcol{1.4in}{Projekthandbuch} &
-   \contentcol{2in}{} &
-   \contentcol{2.2in}{Projekthandbuch erstellt} \\
+   \contentcol{2in}{Genehmigung Projekthandbuch} &
+   \contentcol{2.2in}{Projekthandbuch erstellt und genehmigt.} \\
   \hline
    \contentcol{1.4in}{Projektplan} &
-   \contentcol{2in}{} &
-   \contentcol{2.2in}{Projektplan erstellt} \\
+   \contentcol{2in}{Genehmigung Projektplan} &
+   \contentcol{2.2in}{Projektplan erstellt und genehmigt.} \\
   \hline
    \contentcol{1.4in}{Pflichtenheft} &
-   \contentcol{2in}{} &
-   \contentcol{2.2in}{Pflichtenheft erstellt} \\
+   \contentcol{2in}{Genehmigung Pflichtenheft} &
+   \contentcol{2.2in}{Pflichtenheft erstellt und genehmigt.} \\
   \hline
   \hline
    \contentcol{1.4in}{Bericht Evaluation Algorithmus} &
@@ -87,7 +89,7 @@ erreicht werden sollen.
    \contentcol{1.4in}{Algorithmus} &
    \contentcol{2in}{erstellt und dokumentiert} &
    \contentcol{2.2in}{Der Algorithmus ist fertig implementiert. Wir hatten 
-   sogar noch die Möglichkeit Undo einzubauen.} \\
+   sogar noch die Möglichkeit Undo/Redo einzubauen.} \\
   \hline
    \contentcol{1.4in}{Testframework} &
    \contentcol{2in}{erstellt und dokumentiert} &
@@ -108,8 +110,8 @@ erreicht werden sollen.
  \label{table:resultate}
 \end{table}
  
-
 \subsection{Termine}
+In diesem Abschnitt werden die Soll-Termine verglichen mit den effektiv eingehaltenen Terminen.
 \begin{table}[H]
  \begin{tabular}{|l|l|l|l}
   \hline
@@ -165,49 +167,135 @@ erreicht werden sollen.
  \label{table:termine}
 \end{table}
 
+\subsection{Aufwände}
+Für die ganze Semesterarbeit wurde ein Soll-Aufwand von 300 Stunden pro Person berechnet. Da die Projektarbeit zur Zeit noch nicht ganz fertig ist (Abgabe von Fachdokumenten Ende letze Schulwoche), können wir noch nicht sagen, ob wir diese Stundenanzahl genau erreichen werden. 
 
-\subsection{Zeitaufwand}
 \begin{table}[H]
  \begin{tabular}{|l|l|l|}
-  \headercol{2in}{Ergebnis} &
-  \headercol{1in}{Soll} &
-  \headercol{1in}{Ist} \\
+  \hline
+   \headercol{2in}{Phase} &
+   \headercol{1in}{Soll} &
+   \headercol{1.5in}{Ist} \\
+  \hline
+   \contentcol{2in}{Initialisierung} &
+   \contentcol{1in}{18.5 Tage} &
+   \contentcol{1.5in}{} \\
+  \hline
+   \contentcol{2in}{Teilprojekt Algorithmus} &
+   \contentcol{1in}{68 Tage} &
+   \contentcol{1.5in}{} \\
+  \hline
+   \contentcol{2in}{Teilprojekt Netzwerk} &
+   \contentcol{1in}{10 Tage} &
+   \contentcol{1.5in}{} \\
+  \hline
+   \contentcol{2in}{Teilprojekt GUI} &
+   \contentcol{1in}{6 Tage} &
+   \contentcol{1.5in}{} \\
+  \hline
+   \contentcol{2in}{Abschluss} &
+   \contentcol{1in}{9 Tage} &
+   \contentcol{1.5in}{Noch nicht bekannt, da Projekt nicht abgeschlossen.} \\
+  \hline
  \end{tabular}
  \caption{Aufwände}
  \label{table:aufwände}
 \end{table}
-
 Eine genauere Analyse der Aufwände findet man im Anhang Statistik (siehe \ref{app:statistik}).
 
-
 \subsection{Kosten}
-Die geplanten Kosten entsprechen in etwa den vorgesehenen Projektkosten, da der grösste Kostenpunkt, die variablen Kosten, ziemlich genau der Planung entspricht.
+Es gibt keine grossen Abweichungen von den geplanten Kosten.
 
 
 
-\section{Erkenntnisse und Erfahrungen}
-\subsection{Einarbeiten in das Themengebiet}
-\subsection{Evaluation Algorithmen}
-\subsection{Implementation Algorithmus}
-\subsection{Implementation Testframework}
-\subsection{Analyse GUI/Netzwerk}
-
-\subsection{Hermes}
+\section{Erkannte Probleme}
+???
 
 
-\subsection{Coaching Projektführung}
+
+\section{Zielerreichung}
+Wir haben alle uns gesetzten Ziele erreicht.
+
+\begin{table}[H]
+ \begin{tabular}{|l|l|}
+  \hline
+   \headercol{2.5in}{Ziel} &
+   \headercol{3in}{Status} \\
+  \hline
+   \contentcol{2.5in}{Aufbau von Know-How im Bereich CSCW} &
+   \contentcol{2in}{Wir haben uns intensiv in dieses Themengebiet eingearbeitet. Ein grosses Know-How wurde aufgebaut.} \\
+  \hline
+   \contentcol{2.5in}{Evaluation bestehender Algorithmen} &
+   \contentcol{3in}{Wir haben alle uns bekannten Algorithmen analysiert und den unseren Anforderungen am Besten entsprechenden ausgewählt.} \\
+  \hline
+   \contentcol{2.5in}{Implementation Algorithmus} &
+   \contentcol{3in}{Wir haben einen Algorithmus implementiert.} \\
+  \hline
+   \contentcol{2.5in}{Testframework für Algorithmus} &
+   \contentcol{3in}{Ein Testframework für Algorithmen wurde erstellt.} \\
+  \hline
+   \contentcol{2.5in}{Analyse GUI} &
+   \contentcol{3in}{Es wurde wie gefordert ein Bericht Evaluation GUI erstellt.} \\
+  \hline
+   \contentcol{2.5in}{Analyse Netzwerk/Kommunikation} &
+   \contentcol{3in}{Es wurde wie gefordert ein Bericht Evaluation Netzwerk erstellt.} \\
+  \hline
+ \end{tabular}
+ \caption{Zielerreichung}
+ \label{table:zielerreichung}
+\end{table}
+
+
+
+
+\section{Gewonnene Erkenntnisse}
+
+\subsection{Generelle Erkenntnisse}
+Da wir in dieser Projektarbeit viele neue Technologien anschauen konnten, haben wir gemerkt, wie wichtig es ist, sich detailiert über Technologien zu informieren, bevor man etwas damit entwickelt. Insbesondere bei der Auswahl Algorithmus haben wir viel Zeit investiert, was sich auch sehr gelohnt hat. Damit konnten wir die Risiken auf ein Minimum reduzieren.
+
+\subsection{Modell Hermes}
+Der Aufwand für das Erstellen der Projektmanagements-Dokumente gemäss Hermess war unserer Meinung deutlich zu hoch. Das liegt zum Einen sicher daran, dass wir diese Dokumente das erste Mal erstellten. Zum Anderen muss man sich sicher auch fragen, was sinnvoll ist und was nicht. In Hermes wird ein Tailoring gemacht, um  Hermes an das Projekt anzupassen. Wenn man jedoch für ein kleines Projekt 90 Prozent von Hermes durch Tailoring entfernt, so stellt sich die Frage, ob nicht ein Bottom-Up Ansatz effektiver wäre. 
+
+Im Allgemeinen kann man sicher sagen, dass ein angemessenes Projektmanagements sicher angebracht, ja gar unerlässlich ist. Wichtig ist, dass man den Aufwand dafür auf ein vertretbares, effizientes Mass bringt.
+
+\subsection{Technologie}
+Nach der Initialisierung des Projektes ging es an das Erarbeiten des Themengebietes: Computer Supported Cooperative Work (kurz CSCW). Dabei lasen wir viele Publikationen von diversen Universitäten. Dabei stellten wir fest, dass man Aussagen aus diesen Publikationen zum Teil mit Vorsicht lesen muss. Wir fanden einige Dokumente, die konzeptionelle Fehler hatten (z.B. fehlerhafter Algorithmen beschrieb). Zum Teil sind Beweise in diesen Dokumenten vorhanden. Diese nachzuvollziehen ist meistens nicht trivial. 
+
+\subsection{Infrastruktur}
+Die zur Verfügung gestellte Infrastruktur hat unsere Bedürfnisse erfüllt. Insbesondere die Wahl, die Projektdaten auf einem HTI externen Server zu verwalten hat sich als Erfolg erwiesen. Einzig die Anzahl Personen (ca. 20) in dem Projektraum könnte sich in der Diplomarbeit als störend erweisen.
+
+\subsection{Organisation}
+Die Projektorganisation in der Semesterarbiet ist gut gelungen und führte zu keiner Zeit zu Problemen. Sie ist klar geregelt und spielt für dieses Projekt nicht eine so tragende Rolle, wie dies in anderen Projekten in der Privatwirtschaft der Fall wäre. Die Hierarchie ist flacher und alle Entscheide werden als Gruppe getroffen. Die Aufgabenverteilung kann auch sehr agil behalten werden. Die enge Zusammenarbeit ist wichtig und schafft Synergien.
+
+\subsection{Projektarbeit/Teamarbeit}
+Die Teamarbeit war grundsätzlich sehr gut. Ein Problem war, dass wir uns jeweils nur Montag bis Mittwoch sahen. Dabei wurde zum Teil nicht genau kommuniziert, was in den restlichen Tagen geschieht.
+
+\subsection{Betreuung Fachdozenten}
+Die Betreuung durch den Fachdozenten wurde während der Projektarbeit nur selten benötigt. Bei Fragen standen uns Herr Dubois und Herr Fuhrer jederzeit zur Verfügung, was die Zusammenarbeit erleichterte und ein zügiges Arbeiten ermöglichte. Uns wurde in der Lösungswahl eine grosse Freiheit gelasen, was sehr angenehm war.
+
+\subsection{Betreuung PM-Coach}
 Die Möglichkeit des Projektführungs-Coaching durch Herrn Helbling haben wir rege in Anspruch genommen. Diverse Fragen stellten wir auch per e-mail. Allgemein konnten wir einige wichtige Erkenntnisse daraus gewinnen. 
 
-Herr Helbling hat uns zu Beginn darauf aufmerksam gemacht, dass er einen gewissen Interessenkonflikt zwischen seiner Rolle als PM-Coach und seiner Rolle als Notengeber hat. Wir haben die Auswirkungen dieses Interessenkonflikt selber erlebt. Gewisse Fragen haben wir mehrmals gestellt und nie eine wirklich befriedigende Antwort erhalten. Verweise auf Hermes-Abschnitte sind in der Regel nicht sehr hilfreich, da man die betreffenden Punkte selber schon in Hermes angeschaut hat. 
+Herr Helbling hat uns zu Beginn darauf aufmerksam gemacht, dass er einen gewissen Interessenkonflikt zwischen seiner Rolle als PM-Coach und seiner Rolle als Notengeber hat. Wir haben die Auswirkungen dieses Interessenkonflikt selber erlebt. Gewisse Fragen haben wir mehrmals gestellt und nie eine wirklich befriedigende Antwort erhalten. Generell hätten wir ein etwas aktiveres Coaching erwartet. 
 
-Unserer Meinung sollte man, wenn dieser Interessenkonflikt wirklich so gross ist, eine Änderung am System vornehmen. Es sollte evtl. ein anderer Dozent PM-Coach sein als der, der die Noten verteilt. Dies würde ein unvoreingenommenes Coaching ermöglichen, was sicher für alle beteiligten befriedigender wäre.
-
-
-\subsection{Coaching durch Fachdozenten}
-Die Betreuung durch den Fachdozenten wurde während der Projektarbeit nur selten benötigt. Bei Fragen standen uns Herr Dubois und Herr Fuhrer zur Verfügung, was die Zusammenarbeit erleichterte und ein zügiges Arbeiten ermöglichte. 
+Unserer Meinung sollte man, wenn dieser Interessenkonflikt wirklich so gross ist, eine Änderung am System vornehmen. Es sollte evtl. ein anderer Dozent PM-Coach sein als der, der die Noten verteilt. Dies würde ein unvoreingenommenes Coaching ermöglichen, was sicher für alle Beteiligten befriedigender wäre.
 
 
-\subsection{Projektarbeit}
+
+
+\section{Folgerungen}
+Für die Diplomarbeit können sicher einige Verbesserungen vorgenommen werden.
+
+\paragraph{Für die Diplomarbeit}
+\begin{itemize}
+ \item Klare Kommunikation im Team: kurzes Kick-off Meeting jeweils zu Beginn des Arbeitstages, klare Definition von Terminen und Zielen
+\end{itemize}
+
+\paragraph{Für die berufliche Zukunft}
+\begin{itemize}
+ \item Softwareentwicklung kann nicht so genau geplant werden. Die einzige Konstante ist die Änderung. Es ist unserer Meinung wichtig, dass Änderungen als Tatsache akzeptiert werden und dies im verwendeten Softwareentwicklungs-Prozess berücksichtigt wird.
+\end{itemize}
+
 
 
 
@@ -218,12 +306,13 @@ Die Betreuung durch den Fachdozenten wurde während der Projektarbeit nur selten 
 
 
 
+
 \section{Fazit}
 Alle unseren gesteckten Ziele wurden erreicht. Damit sind wir bereit, in der Diplomarbeit das eigentliche Ziel von \ace, einen kollaborativen Texteditor zu entwickeln, anzugehen.
 
 Es kann auch gesagt werden, dass das Projekt Spass gemacht hat und wir dabei viel lernen konnten. Dank der Projektarbeit konnten wir wichtige praktische Erfahrungen sammeln und uns in ein interessantes Themengebiet einarbeiten.
 
-Für das gesamte \ace Projektteam steht fest, dass wir das Projekt als Diplomarbeit fortsetzen werden.
+\textbf{Für das gesamte \ace Projektteam steht fest, dass wir das Projekt als Diplomarbeit fortsetzen werden.}
 
 
 
