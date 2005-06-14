@@ -30,7 +30,7 @@ pdfcreator={pdftex},
 
 
 \section{Introduction}
-Testing distributed systems can be complicated. The order of events in the system are generally non deterministic. In the literature about collaborative editing, sessions are depicted as in figure \ref{fig:session}.
+Testing distributed systems can be complicated. The order of events in the system are generally non deterministic. To specify specific order of events, sessions are depicted in similar figures as in figure \ref{fig:session} in the literature. The beginning of the arrows represent the generation of an operation and the ending of the arrows represent the reception of an operation.
 
 \begin{figure}[H]
  \centering
@@ -76,7 +76,7 @@ The \texttt{ScenarioLoader} is responsible to load a scenario from a given input
 
 The \texttt{ScenarioBuilder} is the interface needed to build a scenario. The \texttt{ScenarioLoader} uses this abstract interface to inform the builder about the structure of the scenario. The default implementation \texttt{DefaultScenarioBuilder} creates a \texttt{Scenario} object, which is an object model for a scenario. The default scenario builder represents the scenario as a graph. The nodes of the graph have specific semantic meaning. There are nodes for generation of operations, reception of messages and messages for the start/end of a site's lifecycle.
 
-The \texttt{Scenario} object built by the \texttt{DefaultScenarioBuilder} contains the nodes topologically sorted. That is, ancestors are visited before their children. 
+The \texttt{Scenario} object built by the \texttt{DefaultScenarioBuilder} contains the nodes topologically sorted. That is, ancestors are visited before their children (note, the graph in figure \ref{fig:session} is a directed acyclic graph). 
 
 \texttt{Scenario} has a method \texttt{accept} that takes a \texttt{NodeVisitor} as a parameter. The \texttt{NodeVisitor} has methods for all the existing node types. It gets called back for each node in the scenario. 
 
@@ -105,7 +105,7 @@ The nodes of the scenario graph are represented by the \texttt{Node} interface. 
 \subsection{Properties to Test}
 There are several properties that have to be checked on the generated scenario object in order to be sure that the scenario is correct. That is, given a correctly working algorithm implementation, the replayed scenario results in converging document states at all sites.
 
-\paragraph{GenerationNode}
+\paragraph{GenerationNode:}
 A \texttt{GenerationNode} must have the following properties:
 \begin{itemize}
  \item exactly one predecessor node (local)
@@ -114,14 +114,14 @@ A \texttt{GenerationNode} must have the following properties:
  \item that is there must be exaclty $n$ successor nodes
 \end{itemize}
 
-\paragraph{ReceptionNode}
+\paragraph{ReceptionNode:}
 A \texttt{ReceptionNode} must have the following properties:
 \begin{itemize}
  \item exactly two predecessor nodes, one local, one remote
  \item exactly on successor nodes
 \end{itemize}
 
-\paragraph{StartNode}
+\paragraph{StartNode:}
 A \texttt{StartNode} has the following properties:
 \begin{itemize}
  \item no predecessor
@@ -129,7 +129,7 @@ A \texttt{StartNode} has the following properties:
 \end{itemize}
 Note that these properties are not explicitely checked by the implementation.
 
-\paragraph{EndNode}
+\paragraph{EndNode:}
 An \texttt{EndNode} has the following properties:
 \begin{itemize}
  \item exactly one predecessor
@@ -137,7 +137,7 @@ An \texttt{EndNode} has the following properties:
 \end{itemize}
 Note that these properties are not explicitely checked by the implementation.
 
-\paragraph{Other Checks}
+\paragraph{Other Checks:}
 Beside the basic checks on the nodes, the following checks have to be done:
 \begin{itemize}
  \item no operation is generated and received at the same site
@@ -157,12 +157,13 @@ The default implementation of \texttt{ScenarioLoader} loads scenario definitions
 \begin{verbatim}
 <?xml version="1.0"?>
 <scenario initial="ABC" final="AcB">
-    <operation id="1" type="ch.iserver.ace.text.Insert">
+    <operation id="1" type="ch.iserver.ace.text.InsertOperation">
         <property name="position" value="1"/>
         <property name="text" value="c"/>
     </operation>
-    <operation id="2" type="ch.iserver.ace.text.Delete">
-        <property name="position" value="2"/>
+    <operation id="2" type="ch.iserver.ace.text.DeleteOperation">
+        <property name="position" value="1"/>
+        <property name="text" value="B"/>
     </operation>
     <site id="0">
         <generate ref="1"/>
@@ -196,7 +197,7 @@ To create a test case for a specific algorithm implementation, you should make t
        as input
 \end{enumerate} 
 
-The execute methods throws \texttt{VerificationException} if there was an error verifying the final state at all sites. That is, the document state diverged. A \texttt{ScenarioException} is thrown if there is an error loading/building the scenario.
+The execute methods throws a \texttt{VerificationException} if there was an error verifying the final state at all sites. That is, the document states diverged. A \texttt{ScenarioException} is thrown if there is an error loading/building the scenario.
 
 
 \end{document}
