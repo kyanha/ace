@@ -13,14 +13,14 @@ DNS service discovery is a way of using standard DNS programming interfaces, ser
 The technology is best described by a simple prototype. We've created a simple echo server and echo client that show off the basic features of this technology.
 
 \subsubsection{Echo Server}
-The echo server is implemented in the class \texttt{ch.iserver.ace.net.bonjour.EchoServer}. It is very similar to normal echo server implementation. First a \texttt{ServerSocket} is created listening on a particular socket. Then the service is registered with DNS service discovery system represented by the \texttt{com.apple.dnssd.DNSSD} class. A listener (\texttt{com.apple.dnssd.RegisterListener}) is used to inform the application when the registration was successful. Once the registration was successful, the echo server starts to service clients as any echo server would do.
+The echo server is implemented in the class \texttt{ch.iserver.ace.net.bonjour.EchoServer}. It is very similar to normal echo server implementation. First a \texttt{ServerSocket} is created listening on a particular socket. Then the service is registered with DNS service discovery system represented by the \texttt{DNSSD} class. A listener (\texttt{RegisterListener}) is used to inform the application when the registration was successful. Once the registration was successful, the echo server starts to service clients as any echo server would do.
 
 \subsubsection{Echo Client}
 The echo client (see \texttt{ch.iserver.ace.net.bonjour.EchoClient}) is a simple GUI that allows to send echo requests to echo servers. It browses the network for available echo servers and lists them in a combo box. The user can select one of those echo servers and send an echo request to them.
 
-The method \texttt{browse} of the \texttt{DNSSD} class is used to issue a browse request to the DNS service discovery system. We have to supply a \texttt{com.apple.dnssd.BrowseListener} implementation that gets called back whenever a service of specified type is found.
+The method \texttt{browse} of the \texttt{DNSSD} class is used to issue a browse request to the DNS service discovery system. We have to supply a \texttt{BrowseListener} implementation that gets called back whenever a service of specified type is found.
 
-Whenever the user sends a message to the currently selected echo server by entering a message in the bottom textfield and hitting enter, the service has to be resolved. This happens by calling \texttt{resolve} on the \texttt{DNSSD} class. The application is called back over a \texttt{com.apple.dnssd.ResolveListener}. The method \texttt{serviceResolved} is called on this listener when the service is resolved. This provides us with the service name, host name and port of the service. As a last step we have to get the IP address of the service. This is done by calling \texttt{queryRecord} on the \texttt{DNSSD} class. We get called back by a method call to \texttt{queryAnswered} in the \texttt{com.apple.dnssd.QueryListener} we supplied to the \texttt{queryRecord} call.
+Whenever the user sends a message to the currently selected echo server by entering a message in the bottom textfield and hitting enter, the service has to be resolved. This happens by calling \texttt{resolve} on the \texttt{DNSSD} class. The application is called back over a \texttt{ResolveListener}. The method \texttt{serviceResolved} is called on this listener when the service is resolved. This provides us with the service name, host name and port of the service. As a last step we have to get the IP address of the service. This is done by calling \texttt{queryRecord} on the \texttt{DNSSD} class. We get called back by a method call to \texttt{queryAnswered} in the \texttt{QueryListener} we supplied to the \texttt{queryRecord} call.
 
 At that point we do have enough information to contact the echo server and send the echo request over a plain socket connection. That is one important point to observe. This technology enables us to discover services on the network but does not impose any limitations on the way we communicate from client to server.
 
@@ -49,4 +49,6 @@ Implementing discovery using \emph{Bonjour} would be pretty straightforward. The
  \item \href{http://developer.apple.com/darwin/projects/bonjour/}{Developer site for \emph{Bonjour} technology}
  \item \href{http://www.macdevcenter.com/pub/a/mac/2004/08/31/osx_java.html}{Article about Java \emph{Bonjour}}
  \item \href{http://developer.apple.com/documentation/Java/Reference/DNSServiceDiscovery_JavaRef/index.html}{Java API documentation}
+ \item \href{http://files.multicastdns.org/draft-cheshire-dnsext-multicastdns.txt}{Multicast DNS Internet Draft}
+ \item \href{http://files.dns-sd.org/draft-cheshire-dnsext-dns-sd.txt}{DNS Based Service Discovery Internet Draft}
 \end{itemize}

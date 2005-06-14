@@ -14,7 +14,7 @@ We studied \emph{Jini} and \emph{RMI} in a semester course. So these technologie
 A network layer based on \emph{Jini/RMI} would be relatively straightforward. The whole system would be based on Java.
 
 \subsubsection{Negative Points}
-\emph{Jini} relies on a JVM at each site, although not the whole system has to be implemented in \emph{Java} (e.g. services can be implemented in other programming languages). This is a serious drawback if we want to make \ace interoperable.
+\emph{Jini} relies on a JVM at each site, although not the whole system has to be implemented in \emph{Java} (e.g. services can be implemented in other programming languages). The need for a JVM at each site is a drawback if we want to make \ace interoperable.
 
 \subsubsection{Open Points}
 \emph{Jini} needs a lookup service to discover services. We must decide which machines run a lookup service. This decision should be transparent to the end user.
@@ -24,7 +24,7 @@ At that point, it would be interesting to compare \emph{Jini} with \emph{Bonjour
 
 \emph{Jini} on the other hand downloads a service object (usually a proxy object). The service object itself either does the requested work itself or in case of a proxy knows how to communicate with the real service. All the client has to know is the service interface (a Java interface).
 
-It is this transfer of service object that makes \emph{Jini} so much more powerful than \emph{Bonjour} technologies. Interesting enough, \emph{Bonjour} seems to be much more widely adopted than \emph{Jini}, most likely because it does not depend on a JVM.
+It is this transfer of service object that makes \emph{Jini} so much more powerful than \emph{Bonjour} technology. Interesting enough, \emph{Bonjour} seems to be much more widely adopted than \emph{Jini}, most likely because it does not depend on a JVM.
 
 
 \subsection{Resources}

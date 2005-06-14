@@ -75,7 +75,7 @@ Since pipes provide unidirectional, unreliable communication channels, it is nec
 
 \paragraph{Reliability Library:} Ensures message sequencing, delivery and exposes message and stream based interfaces.
 \paragraph{JxtaSocket and JxtaServerSocket:} Provides \texttt{Socket} and \texttt{ServerSocket} implementations built on top of pipes and the reliability library. It exposes the well knwon stream based interface for communication. Furthermore it provides bidirectional and reliable communication channels.
-\paragraph{JxtaBiDiPipe and JxtaServerPipe:} Is built ont top of pipes and the reliability library. It provides bidirectional and reliable communication channels and exposes a message based interface.
+\paragraph{JxtaBiDiPipe and JxtaServerPipe:} Is built on top of pipes and the reliability library. It provides bidirectional and reliable communication channels and exposes a message based interface.
 
 \subsubsection{Messages}
 A message is an object sent between \emph{JXTA} peers. It is the basic unit of data exchange between peers. Messages are sent and received by the Pipe Service and by the Endpoint Service. Typically, applications use the Pipe Service to create, send and receive messages. 
@@ -123,7 +123,7 @@ By avoiding the use of a central server, there is no single point of failure. If
 Further \emph{JXTA} is programming language independent. There is an implementation of the \emph{JXTA} protocols for \emph{Java} as well as there is one for \emph{C}. XML is used a lot in protocol messages, although this is not strictly necessary for custom services.
 
 \subsubsection{Negative Points}
-Although \emph{JXTA} exists since 2001 there do not seem to be many applications using it. Only a handful applications are listed on the jxta.org homepage.
+Although \emph{JXTA} exists since 2001 there are not many applications using it. Only a handful applications are listed on the jxta.org homepage.
 
 Another discomforting point is that we have stumbled across a serious bug in a so called stable release (2.3.3). A clone method caused a stack overflow exception and we had to use the latest build. The bug is even observable in an official sample application presented in the programmers guide. It seems to us that \emph{JXTA} is still in some way a research project and not rock solid and mature.
 

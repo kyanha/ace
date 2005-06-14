@@ -59,10 +59,10 @@ There is a so-called \emph{building block} that provides a listener interface fo
 \subsubsection{Transport Protocols}
 A transport protocol refers to the protocol at the bottom of the protocol stack which is responsible for sending and receiving messages to/from the network. There are a number of transport protocols in \emph{JGroups}.
 \begin{itemize}
- \item The transport protocol UDP uses IP multicast by default but it can be configured to use multiple unicast messages instead of one multicast message. For discovery of initial members, the PING protocol can be configured to use a well-known server (\emph{GossipServer}). Both the UDP and the PING protocol must be configured to use IP unicast instead of multicast.
- \item The TCP transport protocol can be used where UDP is undesired, most likely over WAN, where routers discard IP multicast. The TCPPING protocol can be used to determine initial group membership. No external gossip server is needed with this protocol, but other members have to be known in advance. The TCPGOSSIP protocol is essentially the same as the PING protcol instead only for TCP and not UDP.
+ \item The transport protocol UDP uses IP multicast by default but it can be configured to use multiple unicast messages instead of one multicast message. For discovery of initial members, the PING protocol can be configured to use a well-known server (\emph{GossipServer}). 
+ \item The TCP transport protocol can be used where UDP is undesired, most likely over WAN, where routers discard IP multicast. The TCPPING protocol can be used to determine initial group membership. No external gossip server is needed with this protocol, but other members have to be known in advance. The TCPGOSSIP protocol is essentially the same as the PING protcol for UDP but only for TCP.
  \item The TUNNEL transport protocol can be used to tunnel firewalls. It needs a router server running outside of the firewall to tunnel the firewall.
- \item The JMS transport protocol can be used to send messages with JMS.
+ \item The JMS transport protocol can be used to send messages via JMS.
 \end{itemize}
 
 
@@ -83,7 +83,7 @@ It is used in famous open source projects like Tomcat (session replication), OSC
 \emph{JGroups} provides a very simple API to do multicast messaging. Furthermore it's configurable protocol stack allows a great deal of flexibility.
 
 \subsubsection{Negative Points}
-For an operational transformation algorithm that needs to broadcast operations to all other sites, \emph{JGroups} would certainly be suitable (e.g. \emph{GOTO}  or \emph{adOPTed}. Note however that our chosen algorithm (\emph{Jupiter}) does not need to broadcast messages. Multiple unicast connections are used between one server and several clients. Because of this aspect, we think to implement the network layer, \emph{JGroups} is not the best solution. We would need to teach \emph{JGroups} not to do group communication (and that is the prime feature of \emph{JGroups}). 
+For an operational transformation algorithm that needs to broadcast operations to all other sites, \emph{JGroups} would certainly be suitable (e.g. \emph{GOTO}  or \emph{adOPTed}). Note however that our chosen algorithm (\emph{Jupiter}) does not need to broadcast messages. Multiple unicast connections are used between one server and several clients. Because of this aspect, we think to implement the network layer, \emph{JGroups} is not the best solution. We would need to teach \emph{JGroups} not to do group communication (and that is the prime feature of \emph{JGroups}). 
 
 The \emph{JGroups} library is not programming language independent. It uses serialized objects as message payload. This can be seen as and advantage or as a disadvantage depending on the requirements of the application.
 
