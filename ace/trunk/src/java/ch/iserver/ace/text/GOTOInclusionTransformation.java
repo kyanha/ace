@@ -61,7 +61,7 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
     }
     
     private Operation transform(InsertOperation insA, InsertOperation insB) {
-    	Operation transformedOperation = null;
+    	InsertOperation transformedOperation = null;
     	int posA = insA.getPosition();
     	int lenA = insA.getTextLength();
     	int posB = insB.getPosition();
@@ -75,7 +75,10 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 			* (A):      "12"
 			* (A'):     "12"
 			*/
-    		transformedOperation = insA;
+    		transformedOperation = new InsertOperation(posA, insA.getText(), insA.getOrigin());
+    		transformedOperation.setUndo(insA.isUndo());
+//    		transformedOperation = insA;
+    		transformedOperation.addToHistory(insA);
     	} else {
 			/*
 			* Operation A starts in or behind operation B. Index of operation A' must
@@ -85,12 +88,14 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 			* (A'):     "    12"     |          "12"
 			*/
    			transformedOperation = new InsertOperation(posA + lenB, insA.getText(), insA.getOrigin());
+   			transformedOperation.setUndo(insA.isUndo());
+   			transformedOperation.addToHistory(insA);
     	}
         return transformedOperation;
     }
     
     private Operation transform(InsertOperation insA, DeleteOperation delB) {
-    	Operation transformedOperation = null;
+    	InsertOperation transformedOperation = null;
     	int posA = insA.getPosition();
     	int lenA = insA.getTextLength();
     	int posB = delB.getPosition();
@@ -103,7 +108,10 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 			* (A):      "12"       |     "12"
 			* (A'):     "12"       |     "12"
 			*/
-    		transformedOperation = insA;
+    		transformedOperation = new InsertOperation(posA, insA.getText(), insA.getOrigin());
+    		transformedOperation.setUndo(insA.isUndo());
+//    		transformedOperation = insA;
+    		transformedOperation.addToHistory(insA);
     	} else if(posA > (posB + lenB)) {
 			/*
 			* Operation A starts after operation B. Index of operation A' must
@@ -113,6 +121,8 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 			* (A'):        "12"
 			*/
     		transformedOperation = new InsertOperation(posA - lenB, insA.getText(), insA.getOrigin());
+    		transformedOperation.setUndo(insA.isUndo());
+    		transformedOperation.addToHistory(insA);
     	} else {
 			/*
 			* Operation A starts in operation B. Index of A' must be the index of
@@ -122,6 +132,8 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 			* (A'):     "12"
 			*/
     		transformedOperation = new InsertOperation(posB, insA.getText(), insA.getOrigin());
+    		transformedOperation.setUndo(insA.isUndo());
+    		transformedOperation.addToHistory(insA);
     	}
         return transformedOperation;
     }
@@ -140,7 +152,10 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 			* (A):      "12"
 			* (A'):     "12"
 			*/
-    		transformedOperation = delA;
+    		transformedOperation = new DeleteOperation(posA, delA.getText());
+    		((DeleteOperation)transformedOperation).setUndo(delA.isUndo());
+//    		transformedOperation = delA;
+    		transformedOperation.addToHistory(delA);
     	} else if(posA >= posB) {
 			/*
 			* Operation A starts before or at the same position like operation B.
@@ -149,6 +164,8 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 			* (A'):         "12"     |           "12"
 			*/
     		transformedOperation = new DeleteOperation(posA + lenB, delA.getText());
+    		((DeleteOperation)transformedOperation).setUndo(delA.isUndo());
+    		transformedOperation.addToHistory(delA);
     	} else {
 			/*
 			* Operation B (insert) is in the range of operation A (delete). Operation A'
@@ -157,14 +174,19 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 			* (A):      "123456"
 			* (A'):     "1"  "23456"
 			*/
-			transformedOperation = new SplitOperation(new DeleteOperation(posA, delA.getText().substring(0, posB - posA)),
-				new DeleteOperation(posA + lenB + (posB - posA), delA.getText().substring(posB - posA, lenA)));
+    			DeleteOperation del1 = new DeleteOperation(posA, delA.getText().substring(0, posB - posA));
+    			del1.setUndo(delA.isUndo());
+    			DeleteOperation del2 = new DeleteOperation(posA + lenB + (posB - posA), delA.getText().substring(posB - posA, lenA));
+    			del2.setUndo(delA.isUndo());
+			transformedOperation = new SplitOperation(del1, del2);
+			//TODO: how to add the history op? probably it is not necessesary.
+//			transformedOperation.addToHistory(delA);
     	}
         return transformedOperation;
     }
     
     private Operation transform(DeleteOperation delA, DeleteOperation delB) {
-    	Operation transformedOperation;
+    DeleteOperation transformedOperation;
     	int posA = delA.getPosition();
     	int lenA = delA.getTextLength();
     	int posB = delB.getPosition();
@@ -177,7 +199,10 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 			* (A):      "12"
 			* (A'):     "12"
 			*/
-    		transformedOperation = delA;
+    		transformedOperation = new DeleteOperation(posA, delA.getText());
+    		transformedOperation.setUndo(delA.isUndo());
+//    		transformedOperation = delA;
+    		transformedOperation.addToHistory(delA);
     	} else if(posA >= (posB + lenB)) {
 			/*
 			* Operation A starts at the end or after operation B. Index of operation A'
@@ -187,6 +212,8 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 			* (A'):        "12"
 			*/
     		transformedOperation = new DeleteOperation(posA - lenB, delA.getText());
+    		transformedOperation.setUndo(delA.isUndo());
+    		transformedOperation.addToHistory(delA);
     	} else {
     			/*
 			* Operation A and operation B are overlapping.
@@ -199,9 +226,11 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 				* (A):       "12"      |     "12"
 				* (A'):     ""         |     ""
 				*/
-				//TODO? information gets lost.
+				//TODO? information gets lost. -> why not create a noop-operation?
 				transformedOperation = new DeleteOperation(posA, "");
-			} else if((posB <= posA) && ((posA + lenA) > (posB + lenB))) {
+				transformedOperation.setUndo(delA.isUndo());
+				transformedOperation.addToHistory(delA);
+			} else if ((posB <= posA) && ((posA + lenA) > (posB + lenB))) {
 				/*
 				* Operation B starts before or at the same position like operation A
 				* and ends before operation A.
@@ -210,7 +239,9 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 				* (A'):     "345"
 				*/
 				transformedOperation = new DeleteOperation(posB, delA.getText().substring(posB + lenB - posA, lenA));
-			} else if((posB > posA) && ((posB + lenB) >= (posA + lenA))) {
+				transformedOperation.setUndo(delA.isUndo());
+				transformedOperation.addToHistory(delA);
+			} else if ((posB > posA) && ((posB + lenB) >= (posA + lenA))) {
 				/*
 				* Operation B starts after operation A and ends after or at the
 				* same position like operation A.
@@ -219,6 +250,8 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 				* (A'):     "12"
 				*/
 				transformedOperation = new DeleteOperation(posA, delA.getText().substring(0, posB - posA));
+				transformedOperation.setUndo(delA.isUndo());
+				transformedOperation.addToHistory(delA);
 			} else {
 				/*
 				* Operation B is fully in operation A.
@@ -227,6 +260,8 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 				* (A'):     "16"
 				*/
 				transformedOperation = new DeleteOperation(posA, delA.getText().substring(0, posB - posA) + delA.getText().substring(posB + lenB - posA, lenA));
+				transformedOperation.setUndo(delA.isUndo());
+				transformedOperation.addToHistory(delA);
 			}
 		}
         return transformedOperation;

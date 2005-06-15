@@ -69,6 +69,7 @@ public class DefaultClientProxy implements ClientProxy {
     		//if the net service connection has been aborted, stop receiving and 
     		//forwarding respectively, requests.
     		if (net != null) {
+    			LOG.info("--> recv "+req);
     			requestForwardQueue.add(  new Object[]{this, req} );
     		}
     }

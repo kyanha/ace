@@ -21,20 +21,42 @@
 
 package ch.iserver.ace.text;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.log4j.Logger;
+
 import ch.iserver.ace.Operation;
 
 /**
  * TODO: comments
  */
 public class DeleteOperation implements Operation {
+	
+	private static Logger LOG = Logger.getLogger(DeleteOperation.class);
+	
 	private String text;
 	private int position;
-	
-	public DeleteOperation() { }
+	private boolean isUndo;
+	private List transformationHistory;
+	  
+	public DeleteOperation() { 
+		setUndo(false);
+		transformationHistory = new ArrayList();
+	}
 
 	public DeleteOperation(int position, String text) {
 		setPosition(position);
 		setText(text);
+		setUndo(false);
+		transformationHistory = new ArrayList();
+	}
+	
+	public DeleteOperation(int position, String text, boolean isUndo) {
+		setPosition(position);
+		setText(text);
+		setUndo(isUndo);
+		transformationHistory = new ArrayList();
 	}
 	
 	public int getPosition() {
@@ -67,11 +89,44 @@ public class DeleteOperation implements Operation {
 	 * @see ch.iserver.ace.Operation#inverse()
 	 */
 	public Operation inverse() {
-		return new InsertOperation(getPosition(), getText());
+		return new InsertOperation(getPosition(), getText(), true);
+	}
+	
+	/*
+	 *  (non-Javadoc)
+	 * @see ch.iserver.ace.Operation#isUndo()
+	 */
+	public boolean isUndo() {
+		return isUndo;
+	}
+	
+	public void setUndo(boolean isUndo) {
+		this.isUndo = isUndo;
+	}
+	
+	/* (non-Javadoc)
+	 * @see ch.iserver.ace.Operation#addToHistory(ch.iserver.ace.Operation)
+	 */
+	public void addToHistory(Operation op) {
+//		//append the history of op to this operations history.
+//		List history = op.getTransformationHistory();
+//		if (!history.isEmpty()) {
+//			transformationHistory.addAll(new ArrayList(history));
+//		}
+		transformationHistory.add(op);
+		LOG.info("new operation history: "+transformationHistory);
+	}
+	
+	/* (non-Javadoc)
+	 * @see ch.iserver.ace.Operation#getOrigin()
+	 */
+	public List getTransformationHistory() {
+//		return (!transformationHistory.isEmpty()) ? (Operation)transformationHistory.get(0) : null;
+		return transformationHistory;
 	}
 	
 	public String toString() {
-		return "Delete(" + position + ",'" + text + "')";
+		return "Delete(" + position + ",'" + text + "',"+isUndo+")";
 	}
 	
 	public boolean equals(Object obj) {
@@ -81,7 +136,7 @@ public class DeleteOperation implements Operation {
 			return false;
 		} else if (obj.getClass().equals(getClass())) {
 			DeleteOperation op = (DeleteOperation) obj;
-			return op.position == position && op.text.equals(text);
+			return op.position == position && op.text.equals(text) && op.isUndo == isUndo;
 		} else {
 			return false;
 		}
@@ -89,8 +144,8 @@ public class DeleteOperation implements Operation {
 	
 	public int hashCode() {
 		int hashcode = position;
+		hashcode += 13 * (new Boolean(isUndo)).hashCode();
 		hashcode += 13 * text.hashCode();
 		return hashcode;
 	}
-	
 }

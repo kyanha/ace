@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scenario initial="ac" final="a21c">
+<scenario initial="ac" final="a12c">
     
     <operation id="1" type="ch.iserver.ace.text.InsertOperation">
         <property name="position" value="1"/>

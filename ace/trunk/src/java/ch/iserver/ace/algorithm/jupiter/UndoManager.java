@@ -35,6 +35,7 @@ import ch.iserver.ace.algorithm.Request;
  */
 public class UndoManager {
 
+	//TODO: limit size of undo buffer
 	private List localRequests;
 	private List remoteRequests;
 	private int nextUndoOperation;
@@ -60,7 +61,10 @@ public class UndoManager {
 	 * Remove the redo requests that cannot be reached any more.
 	 */
 	private void clearRedo() {
-		localRequests.subList(nextUndoOperation+1, localRequests.size()).clear();
+		//TODO: test this method
+		if (!localRequests.isEmpty() && nextUndoOperation < localRequests.size()-1) {
+			localRequests.subList(nextUndoOperation+1, localRequests.size()).clear();
+		}
 	}
 	
 	public Request nextRedo() {

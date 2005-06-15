@@ -21,6 +21,9 @@
 
 package ch.iserver.ace.text;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ch.iserver.ace.Operation;
 
 /**
@@ -30,6 +33,8 @@ public class InsertOperation implements Operation {
 	private String text;
 	private int position;
 	private int origin;
+	private boolean isUndo;
+	private List transformationHistory;
 	
 	public InsertOperation() { }
 
@@ -37,12 +42,25 @@ public class InsertOperation implements Operation {
 		setPosition(position);
 		setText(text);
 		origin = getPosition();
+		setUndo(false);
+		transformationHistory = new ArrayList();
+	}
+	
+	public InsertOperation(int position, String text, boolean isUndo) {
+		this(position, text);
+		origin = getPosition();
+		setUndo(isUndo);
 	}
 	
 	public InsertOperation(int position, String text, int origin) {
-		setPosition(position);
-		setText(text);
+		this(position, text);
 		this.origin = origin;
+		setUndo(false);
+	}
+	
+	public InsertOperation(int position, String text, int origin, boolean isUndo) {
+		this(position, text, origin);
+		setUndo(isUndo);
 	}
 	
 	public int getPosition() {
@@ -85,11 +103,42 @@ public class InsertOperation implements Operation {
 	 */
 	public Operation inverse() {
 		//TODO: origin position gets lost.
-		return new DeleteOperation(getPosition(), getText());
+		return new DeleteOperation(getPosition(), getText(), true);
+	}
+	
+	/*
+	 *  (non-Javadoc)
+	 * @see ch.iserver.ace.Operation#isUndo()
+	 */
+	public boolean isUndo() {
+		return isUndo;
+	}
+	
+	public void setUndo(boolean isUndo) {
+		this.isUndo = isUndo;
+	}
+	
+	/* (non-Javadoc)
+	 * @see ch.iserver.ace.Operation#addToHistory(ch.iserver.ace.Operation)
+	 */
+	public void addToHistory(Operation op) {
+//		//append the history of op to this operations history.
+//		List history = op.getTransformationHistory();
+//		if (!history.isEmpty()) {
+//			transformationHistory.addAll(new ArrayList(history));
+//		}
+		transformationHistory.add(op);
+	}
+	/* (non-Javadoc)
+	 * @see ch.iserver.ace.Operation#getOriginOperation()
+	 */
+	public List getTransformationHistory() {
+//		return (!transformationHistory.isEmpty()) ? (Operation)transformationHistory.get(0) : null;
+		return transformationHistory;
 	}
 	
 	public String toString() {
-		return "Insert(" + position + ",'" + text + "',"+origin+")";
+		return "Insert(" + position + ",'" + text + "',"+origin+","+isUndo+")";
 	}
 	
 	public boolean equals(Object obj) {
@@ -99,7 +148,7 @@ public class InsertOperation implements Operation {
 			return false;
 		} else if (obj.getClass().equals(getClass())) {
 			InsertOperation op = (InsertOperation) obj;
-			return op.position == position && op.text.equals(text) && op.origin == origin;
+			return op.position == position && op.text.equals(text) && op.origin == origin && op.isUndo == isUndo;
 		} else {
 			return false;
 		}
@@ -108,6 +157,7 @@ public class InsertOperation implements Operation {
 	public int hashCode() {
 		int hashcode = position;
 		hashcode += 13 * origin;
+		hashcode += 13 * (new Boolean(isUndo)).hashCode();
 		hashcode += 13 * text.hashCode();
 		return hashcode;
 	}

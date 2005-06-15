@@ -22,11 +22,12 @@
 package ch.iserver.ace;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * This interface must be implemented by all operations. An
  * operation is application dependent and therefore this interface
- * does not contain any methods at all.
+ * does not contain any specific methods at all.
  */
 public interface Operation extends Serializable {
 	
@@ -37,4 +38,26 @@ public interface Operation extends Serializable {
 	 */
 	public Operation inverse();
 
+	/**
+	 * Returns true iff this operation is an undo request.
+	 * 
+	 * @return returns true iff this operation is an undo request
+	 */
+	public boolean isUndo();
+	
+	/**
+	 * 
+	 * @param op
+	 */
+	public void addToHistory(Operation op);
+	
+	/**
+	 * Returns the original operation if this operation
+	 * was transformed one or more times. Otherwise null
+	 * is returned.
+	 * 
+	 * @return
+	 */
+	public List getTransformationHistory();
+	
 }

@@ -21,6 +21,8 @@
 
 package ch.iserver.ace.algorithm;
 
+import java.util.List;
+
 import ch.iserver.ace.Operation;
 
 /**
@@ -41,7 +43,28 @@ public class RedoOperation implements Operation {
 	public Operation inverse() {
 		throw new UnsupportedOperationException();
 	}
+	
+	/*
+	 *  (non-Javadoc)
+	 * @see ch.iserver.ace.Operation#isUndo()
+	 */
+	public boolean isUndo() {
+		return false;
+	}
 
+	/* (non-Javadoc)
+	 * @see ch.iserver.ace.Operation#addToHistory(ch.iserver.ace.Operation)
+	 */
+	public void addToHistory(Operation op) {
+		throw new UnsupportedOperationException();
+
+	}
+	/* (non-Javadoc)
+	 * @see ch.iserver.ace.Operation#getTransformationHistory()
+	 */
+	public List getTransformationHistory() {
+		return null;
+	}
 	public String toString() {
 		return "Redo()";
 	}

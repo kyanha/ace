@@ -75,7 +75,7 @@ public class JupiterServer {
         RequestForwarder forwarder = new RequestForwarder(outgoingQueue, client);
         requestForwarders.put(new Integer(siteIdCounter), forwarder);
         forwarder.start();
-        LOG.debug("addClient #"+siteIdCounter);
+        //LOG.debug("addClient #"+siteIdCounter);
         return client;
     }
     

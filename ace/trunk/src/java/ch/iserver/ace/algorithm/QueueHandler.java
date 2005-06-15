@@ -126,18 +126,17 @@ public class QueueHandler extends Thread {
                     // handle local request
                     Operation nextOp = (Operation) localOperationBuffer.get(0);
                     if (nextOp != null) {
+                    	Request req = null;
                     	if(nextOp instanceof UndoOperation) {
                     		// undo
-                    		Request req = algo.undo();
-                        	outgoingRequestBuffer.add(req);
+                    		req = algo.undo();
                     	} else if (nextOp instanceof RedoOperation) {
                     		// redo
-                    		Request req = algo.redo();
-                        	outgoingRequestBuffer.add(req);
+                    		req = algo.redo();
                     	} else {
-                        	Request req = algo.generateRequest(nextOp);
-                        	outgoingRequestBuffer.add(req);
-                        }
+                        	req = algo.generateRequest(nextOp);
+                    	}
+                    	outgoingRequestBuffer.add(req);
                     } else {
                     		LOG.warn("null from operation buffer");
                     }
@@ -163,6 +162,8 @@ public class QueueHandler extends Thread {
             }
         } catch (InterruptedException ie) {
             LOG.fatal(ie);
+        } catch (Exception e) {
+        		LOG.fatal(e);
         }
     }
     
