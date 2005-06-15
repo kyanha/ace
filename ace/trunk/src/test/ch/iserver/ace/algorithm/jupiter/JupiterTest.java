@@ -52,7 +52,13 @@ public class JupiterTest extends AlgorithmTestCase {
 	
 	public void testMultiStepPathDivergence() throws Exception {
 		execute("/test/multistep-path-divergence.xml");
+	}
+	
+	public void testMultiStepPathDivergenceInverse() throws Exception {
 		execute("/test/multistep-path-divergence-inverse.xml");
+	}
+	
+	public void testMultiStepPathDivergenceInverse_4_2() throws Exception {
 		execute("/test/multistep-path-divergence-4-2.xml");
 	}
 	
