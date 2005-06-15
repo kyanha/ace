@@ -43,7 +43,7 @@ import ch.iserver.ace.util.SynchronizedQueue;
  */
 public class JupiterCharScenarioTest extends TestCase {
 	
-	private static Logger LOG = Logger.getLogger("test");
+	private static Logger LOG = Logger.getLogger(JupiterCharScenarioTest.class);
 	
 	/**
 	 * This scenario includes an editing session with 5 participating sites.
@@ -237,8 +237,11 @@ public class JupiterCharScenarioTest extends TestCase {
 		r4 = (Request)net[4].getRequests().remove(0);
 		eng5.receiveRequest(r4);
 		
-		//receive and distribute operations at proxy for site  
+		//receive and distribute operations at proxy for site
+		LOG.info("********** receive at site 5");
 		proxies[4].receiveRequest((Request)queue5.get());
+		LOG.info("---------> get request for site 0");
+		Thread.sleep(200);
 		Request r5 = (Request)net[0].getRequests().remove(0);
 		eng1.receiveRequest(r5);
 		r5 = (Request)net[1].getRequests().remove(0);

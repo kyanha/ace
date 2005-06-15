@@ -45,7 +45,7 @@ import ch.iserver.ace.text.InsertOperation;
  */
 public class JupiterAgainstCounterExamplesTest extends TestCase {
 	
-	private static Logger LOG = Logger.getLogger("test");
+	private static Logger LOG = Logger.getLogger(JupiterAgainstCounterExamplesTest.class);
 	
 	/**
 	 * This example is taken from ecscw03.pdf figure 4/5. 
