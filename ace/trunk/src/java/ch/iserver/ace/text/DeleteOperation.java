@@ -21,9 +21,6 @@
 
 package ch.iserver.ace.text;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.log4j.Logger;
 
 import ch.iserver.ace.Operation;
@@ -38,25 +35,22 @@ public class DeleteOperation implements Operation {
 	private String text;
 	private int position;
 	private boolean isUndo;
-	private List transformationHistory;
+	private Operation original;
 	  
 	public DeleteOperation() { 
 		setUndo(false);
-		transformationHistory = new ArrayList();
 	}
 
 	public DeleteOperation(int position, String text) {
 		setPosition(position);
 		setText(text);
 		setUndo(false);
-		transformationHistory = new ArrayList();
 	}
 	
 	public DeleteOperation(int position, String text, boolean isUndo) {
 		setPosition(position);
 		setText(text);
 		setUndo(isUndo);
-		transformationHistory = new ArrayList();
 	}
 	
 	public int getPosition() {
@@ -104,25 +98,21 @@ public class DeleteOperation implements Operation {
 		this.isUndo = isUndo;
 	}
 	
-	/* (non-Javadoc)
-	 * @see ch.iserver.ace.Operation#addToHistory(ch.iserver.ace.Operation)
+	/*
+	 *  (non-Javadoc)
+	 * @see ch.iserver.ace.Operation#setOriginalOperation(ch.iserver.ace.Operation)
 	 */
-	public void addToHistory(Operation op) {
-//		//append the history of op to this operations history.
-//		List history = op.getTransformationHistory();
-//		if (!history.isEmpty()) {
-//			transformationHistory.addAll(new ArrayList(history));
-//		}
-		transformationHistory.add(op);
-		LOG.info("new operation history: "+transformationHistory);
+	public void setOriginalOperation(Operation op) {
+		original = op;
+		LOG.info("original operation: "+op);
 	}
 	
-	/* (non-Javadoc)
-	 * @see ch.iserver.ace.Operation#getOrigin()
+	/*
+	 *  (non-Javadoc)
+	 * @see ch.iserver.ace.Operation#getOriginalOperation()
 	 */
-	public List getTransformationHistory() {
-//		return (!transformationHistory.isEmpty()) ? (Operation)transformationHistory.get(0) : null;
-		return transformationHistory;
+	public Operation getOriginalOperation() {
+		return original;
 	}
 	
 	public String toString() {

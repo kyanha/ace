@@ -21,9 +21,6 @@
 
 package ch.iserver.ace.text;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import ch.iserver.ace.Operation;
 
 /**
@@ -34,7 +31,7 @@ public class InsertOperation implements Operation {
 	private int position;
 	private int origin;
 	private boolean isUndo;
-	private List transformationHistory;
+	private Operation original;
 	
 	public InsertOperation() { }
 
@@ -43,7 +40,6 @@ public class InsertOperation implements Operation {
 		setText(text);
 		origin = getPosition();
 		setUndo(false);
-		transformationHistory = new ArrayList();
 	}
 	
 	public InsertOperation(int position, String text, boolean isUndo) {
@@ -118,29 +114,24 @@ public class InsertOperation implements Operation {
 		this.isUndo = isUndo;
 	}
 	
-	/* (non-Javadoc)
-	 * @see ch.iserver.ace.Operation#addToHistory(ch.iserver.ace.Operation)
+	/*
+	 *  (non-Javadoc)
+	 * @see ch.iserver.ace.Operation#setOriginalOperation(ch.iserver.ace.Operation)
 	 */
-	public void addToHistory(Operation op) {
-//		//append the history of op to this operations history.
-//		List history = op.getTransformationHistory();
-//		if (!history.isEmpty()) {
-//			transformationHistory.addAll(new ArrayList(history));
-//		}
-		transformationHistory.add(op);
+	public void setOriginalOperation(Operation op) {
+		original = op;
 	}
 	/* (non-Javadoc)
 	 * @see ch.iserver.ace.Operation#getOriginOperation()
 	 */
-	public List getTransformationHistory() {
-//		return (!transformationHistory.isEmpty()) ? (Operation)transformationHistory.get(0) : null;
-		return transformationHistory;
+	public Operation getOriginalOperation() {
+		return original;
 	}
 	
 	public String toString() {
 		return "Insert(" + position + ",'" + text + "',"+origin+","+isUndo+")";
 	}
-	
+	//TODO: include original operation in equals/hashcode
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;

@@ -20,7 +20,6 @@
  */
 package ch.iserver.ace.text;
 
-import java.util.List;
 
 import ch.iserver.ace.Operation;
 
@@ -106,17 +105,18 @@ public class SplitOperation implements Operation {
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see ch.iserver.ace.Operation#addToHistory(ch.iserver.ace.Operation)
+	/*
+	 *  (non-Javadoc)
+	 * @see ch.iserver.ace.Operation#setOriginalOperation(ch.iserver.ace.Operation)
 	 */
-	public void addToHistory(Operation op) {
+	public void setOriginalOperation(Operation op) {
 		throw new UnsupportedOperationException();
 	}
 	/*
 	 *  (non-Javadoc)
-	 * @see ch.iserver.ace.Operation#getTransformationHistory()
+	 * @see ch.iserver.ace.Operation#getOriginalOperation()
 	 */
-	public List getTransformationHistory() {
+	public Operation getOriginalOperation() {
 		return null;
 	}
 	/*
