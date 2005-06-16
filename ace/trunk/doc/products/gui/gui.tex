@@ -83,53 +83,114 @@ The aim of multi-user scrollbars is to give a coarse overview of all cursor posi
 \end{figure}
 
 \subsection{Teleport and Split View}
-- teleport -> easy showing with shortcut
-
-- splitview -> permanent splitscreen
+There exists two similar ways to display the other users view. First there is the Teleport function which allows the user to see temporary the main view of another user. To observe other users for a longer time there should exists a split view. In addition to the users main view, there is a new window for each other user to observe containing his main view.
 
 \subsection{Document and User Handling}
-- share documents
+The most important thing for the user and document handling is simpleness. All features should be user-friendly. Maybe its the best to use drag \& drop for this components. First of all the users must be able to share documents and browse shared documents. This can be realized by a little new window representing all active users in a tree view. Assigned to each user in the tree, the documents shared by this user are listed. By double clicking on such a document one can join it. Of course the users can specify access rights to each shared document. For example imagine a little list above the user tree containing all shared documents of the current user. For each document there are some fields (read-only, read-write) into which other users can get added or removed by drag \& drop.
 
-- browser shared documents
-
-- invite user / join document
-
-- security and access management
 
 
 \section{Prototypes}
 \subsection{CustomPaint}
 \paragraph{Purpose:}
+The aim of this prototype is to find out the best way to represent more than one cursor in a text component.
 \paragraph{Description:}
+This prototype is a little class extended from JTextPane. The main functionality is in the overriden paint method which looks like:
+\begin{verbatim}
+public void paintComponent(Graphics g) {
+  super.paintComponent(g);
+  for each cursor to display
+    get the cursor position;
+    get the cursor color;
+    draw the cursor;
+}
+\end{verbatim}
 \paragraph{Notes:}
+There is a problem with rendering cursors in other lines than the real cursor is. A simple repaint() call at the end of the paintComponent method will avoid that but thats no a proper solution.
+
+
 
 \subsection{CustomView}
 \paragraph{Purpose:}
+This prototype shows another way to display more than one cursor in a text component.
 \paragraph{Description:}
+
+First of all there must exists a editor kit to set the custom view to a text component. This editor kit looks like:
+\begin{verbatim}
+public class CustomEditorKit extends StyledEditorKit implements ViewFactory {
+  public ViewFactory getViewFactory() {
+    return this;
+  }
+  public View create(Element elem) {
+    return new CustomView(elem);
+  }
+}
+\end{verbatim}
+
+The functionality of the paint function is the same as in the custom paint prototype. Not in the paint method of the component but in the paint method of the custom view component.
+\begin{verbatim}
+public class CustomView extends WrappedPlainView {
+  public void paint(Graphics g, Shape a) {
+    super.paint(g, a);
+    for each cursor to display
+      get the cursor position;
+      get the cursor color;
+      draw the cursor;
+  }
+}
+\end{verbatim}
+
+To use the custom view on a text component, the following lines are necessary.
+\begin{verbatim}
+JTextPane textPane = new JTextPane();
+textPane.setEditorKit(new CustomEditorKit());
+\end{verbatim}
+
 \paragraph{Notes:}
+This is the proper solution to display custom cursors. The only resting problem at the moment is that such a cursor cannot be larger than a text line.
+
+
+
 
 \subsection{CustomDocument}
 \paragraph{Purpose:}
-- catch keyborad inputs
+This prototype is created for finding the best way to capture the keyboard inputs from a text component.
 \paragraph{Description:}
-\paragraph{Notes:}
+A new styled document is needed for that prototype. The important methods to override in this class are insertString, remove and createPosition. Furthermore there must be some additional methods like insertXXXString. They are necesarry because the original insertString method no longer will insert text into the text component.
+\begin{verbatim}
+public class CatchKeyboardStyledDocument extends DefaultStyledDocument {
+  public void insertSynchedString(int offs, String str, AttributeSet a)$
+      throws BadLocationException {
+    super.insertString(offs, str, a);
+  }
+  public void insertString(int offs, String str, AttributeSet a)
+      throws BadLocationException {
+    // super.insertString(offs, str, a);
+    // -> removed because we want to capture the string
+    //      use insertSynchedString to insert a string
+    System.out.println("from JTextPane (insert): " + str);
+  }
+  ... other methods ...
+}\end{verbatim}
+
+
+Create the text component with the custom styled document:
+\begin{verbatim}
+JTextPane textPane = new JTextPane(new CatchKeyboardStyledDocument());
+\end{verbatim}
+
+To insert a string into the text component:
+\begin{verbatim}
+((CatchKeyboardStyledDocument)
+   textPane.getStyledDocument()).insertSynchedString(0, txt + "\n", null);
+\end{verbatim}
+
+%\paragraph{Notes:}
 
 
 
-\section{Other}
-\subsection{Undo / Redo}
-TODO: describe undo / redo
-
-\subsection{Global Textcomponent Interface}
-TODO: describe global interface
-
-\subsection{Distribute Document Changes}
-TODO: describe doc changes
-
-
-
-\newpage
-\input{appendix}
+%\newpage
+%\input{appendix}
 
 
 \newpage
