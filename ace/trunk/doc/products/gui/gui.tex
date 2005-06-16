@@ -32,10 +32,10 @@ pdfcreator={pdftex},
 
 
 \section{Introduction}
-The purpose of this report is to show usability requirements a user-friendly collaborative editor must have. The most usefull functions will be discussed in the following chapters. There existing also prototypes for some of these functions to ensure the realizability with JAVA text components.
+The purpose of this report is to show usability requirements for a user-friendly collaborative editor. The most useful functions will be discussed in the following chapters. There are also prototypes for some of these functions to ensure the feasibility with \emph{Java} text components.
 
 \section{Usability}
-Basicaly each user must be distinguishable from all the other users. To do that with different colors is probably one of the best solution. For example the red user has a dark red colored cursor, a light red color to highlight the text he changed and a red border around the text he selected. The users are listed with their colors in a separate window, so all participants can quite easy see which part in the multi-colored document belongs to which user. See \cite{usability} for more information about usability in groupware systems.
+Basically each user must be distinguishable from all the other users. To do that with different colors is probably one of the best solution. For example the red user has a dark red colored cursor, a light red color to highlight the text he changed and a red border around the text he selected. The users are listed with their colors in a separate window, so all participants can quite easily see which part in the multi-colored document belongs to which user. See \cite{usability} for more information about usability in groupware systems.
 
 \subsection{Main View}
 The main view is the users workspace where he can change the document or observe the other users. Important is to keep the main view as simple as possible. This means that it should not be overloaded with a lot of buttons, status labels, etc. because new users will loose their orientation.
@@ -48,17 +48,17 @@ The main view is the users workspace where he can change the document or observe
 \end{figure}
 
 \subsection{Multiple Cursors and Telepointers}
-To display the cursors of the other participants is a very usefull feature for observing their changes. This additional cursors must be clearly distinguishable and assigned to a user. Coloring all cursors with the user color (e.g. the green users cursor is painted in dark green) will be the most comfortable way to realize that. Moreover, this cursors should have another form than the standard cursor.
+Displaying the cursors of the other participants is a very useful feature for observing their actions. These additional cursors must be clearly distinguishable and assigned to a user. Coloring all cursors with the user color (e.g. the green users cursor is painted in dark green) will be the most comfortable way to realize that. Moreover, to even further help users distinguish these other cursors from their own cursor, they should have another form than the standard cursor.
 
-As described above for multiple cursors, it will be user friendly to display the content of the document in different colors too. On this way all participants knows which part is from which user.
+As described above for multiple cursors, it will be user friendly to display the content of the document in different colors too. In this way all participants know which part of the document originate from which user.
 \begin{figure}[H]
-\centering
-\frame{
-\includegraphics[height=3cm,width=5cm]{../../images/gui/gui_hlight_and_cursor.eps}
-}
-\caption{Multiple Cursors and Highlighted Text}
+ \centering
+ \frame{
+ \includegraphics[height=3cm,width=5cm]{../../images/gui/gui_hlight_and_cursor.eps}
+ }
+ \caption{Multiple Cursors and Highlighted Text}
 \end{figure}
-The other users mouse cursors are called telepointers. With this telepointers it is possible to show or explain something in the document. It should be possible to activate/deactivate this telepointers because a lot of different cursors and telepointers can be confusing to the users.
+The other users mouse cursors are called telepointers. With these telepointers it is possible to show or explain something in the document. It should be possible to activate/deactivate this telepointers because a lot of different cursors and telepointers can be confusing for the users.
 \begin{figure}[H]
 \centering
 \frame{
@@ -80,10 +80,10 @@ The aim of multi-user scrollbars is to give a coarse overview of all cursor posi
 \end{figure}
 
 \subsection{Teleport and Split View}
-There exists two similar ways to display the other users view. First there is the Teleport function which allows the user to see temporary the main view of another user. To observe other users for a longer time there should exists a split view. In addition to the users main view, there is a new window for each other user to observe containing his main view.
+Two similar ways to display the other users view exist. First there is the Teleport function which allows the user to see temporarily the main view of another user. To observe other users for a longer time, a split view should be provided. In addition to the user's main view, there is a new window for each other user to observe containing his main view.
 
 \subsection{Document and User Handling}
-The most important thing for the user and document handling is simpleness. All features should be user-friendly. Maybe its the best to use drag \& drop for this components. First of all the users must be able to share documents and browse shared documents. This can be realized by a little new window representing all active users in a tree view. Assigned to each user in the tree, the documents shared by this user are listed. By double clicking on such a document one can join it. Of course the users can specify access rights to each shared document. For example imagine a little list above the user tree containing all shared documents of the current user. For each document there are some fields (read-only, read-write) into which other users can get added or removed by drag \& drop.
+The most important thing for the user and document handling is simplicity. All features should be user-friendly. Maybe its the best to use drag \& drop for this components. First of all the users must be able to share documents and browse shared documents. This can be realized by a little new window representing all active users in a tree view. Assigned to each user in the tree are the documents shared by this user. By double clicking on such a document one can join it. Of course the users can assign access rights to each shared document. For example imagine a little list above the user tree containing all shared documents of the current user. For each document there are some fields (read-only, read-write) into which other users can get added or removed by drag \& drop.
 
 
 
@@ -92,7 +92,7 @@ The most important thing for the user and document handling is simpleness. All f
 \paragraph{Purpose:}
 The aim of this prototype is to find out the best way to represent more than one cursor in a text component.
 \paragraph{Description:}
-This prototype is a little class extended from JTextPane. The main functionality is in the overriden paint method which looks like:
+This prototype is a little class extending \texttt{JTextPane}. The main functionality is in the overridden paint method which looks like:
 \begin{verbatim}
 public void paintComponent(Graphics g) {
   super.paintComponent(g);
@@ -103,7 +103,7 @@ public void paintComponent(Graphics g) {
 }
 \end{verbatim}
 \paragraph{Notes:}
-There is a problem with rendering cursors in other lines than the real cursor is. A simple repaint() call at the end of the paintComponent method will avoid that but thats no a proper solution.
+There is a problem with rendering cursors in other lines than the real cursor is. A simple \texttt{repaint} call at the end of the \texttt{paintComponent} method will avoid that but thats no a proper solution.
 
 
 
@@ -112,7 +112,7 @@ There is a problem with rendering cursors in other lines than the real cursor is
 This prototype shows another way to display more than one cursor in a text component.
 \paragraph{Description:}
 
-First of all there must exists a editor kit to set the custom view to a text component. This editor kit looks like:
+First of all, a editor kit to set the custom view of a text component must exist. This editor kit looks like:
 \begin{verbatim}
 public class CustomEditorKit extends StyledEditorKit implements ViewFactory {
   public ViewFactory getViewFactory() {
@@ -124,7 +124,7 @@ public class CustomEditorKit extends StyledEditorKit implements ViewFactory {
 }
 \end{verbatim}
 
-The functionality of the paint function is the same as in the custom paint prototype. Not in the paint method of the component but in the paint method of the custom view component.
+The functionality of the paint function of the custom view is the same as in the custom paint prototype. 
 \begin{verbatim}
 public class CustomView extends WrappedPlainView {
   public void paint(Graphics g, Shape a) {
@@ -153,7 +153,7 @@ This is the proper solution to display custom cursors. The only resting problem 
 \paragraph{Purpose:}
 This prototype is created for finding the best way to capture the keyboard inputs from a text component.
 \paragraph{Description:}
-A new styled document is needed for that prototype. The important methods to override in this class are insertString, remove and createPosition. Furthermore there must be some additional methods like insertXXXString. They are necesarry because the original insertString method no longer will insert text into the text component.
+A new styled document is needed for that prototype. The important methods to override in this class are \texttt{insertString}, \texttt{remove} and \texttt{createPosition}. Furthermore there must be some additional methods like \texttt{insertXXXString}. They are necesarry because the original \texttt{insertString} method no longer will insert text into the text component.
 \begin{verbatim}
 public class CatchKeyboardStyledDocument extends DefaultStyledDocument {
   public void insertSynchedString(int offs, String str, AttributeSet a)$
@@ -182,12 +182,6 @@ To insert a string into the text component:
    textPane.getStyledDocument()).insertSynchedString(0, txt + "\n", null);
 \end{verbatim}
 
-%\paragraph{Notes:}
-
-
-
-%\newpage
-%\input{appendix}
 
 
 \newpage
