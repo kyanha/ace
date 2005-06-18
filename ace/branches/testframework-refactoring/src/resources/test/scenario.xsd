@@ -20,18 +20,38 @@
         </xs:annotation>
         <xs:complexType>
             <xs:sequence>
-                <xs:element ref="operation" maxOccurs="unbounded"/>
+                <xs:choice maxOccurs="unbounded">
+                    <xs:element ref="operation"/>
+                    <xs:element ref="undo-operation"/>
+                    <xs:element ref="redo-operation"/>
+                </xs:choice>
                 <xs:element ref="site" maxOccurs="unbounded"/>
             </xs:sequence>
             <xs:attribute name="initial" use="required" type="xs:string"/>
             <xs:attribute name="final" use="required" type="xs:string"/>
         </xs:complexType>
         <xs:key name="operationId">
-            <xs:selector xpath="operation"/>
+            <xs:selector xpath="operation | undo-operation | redo-operation"/>
             <xs:field xpath="@id"/>
         </xs:key>
         <xs:keyref refer="operationId" name="operationRef">
             <xs:selector xpath="site/generate | site/receive"/>
+            <xs:field xpath="@ref"/>
+        </xs:keyref>
+        <xs:key name="undoId">
+            <xs:selector xpath="undo-operation"/>
+            <xs:field xpath="@id"/>
+        </xs:key>        
+        <xs:keyref refer="undoId" name="undoRef">
+            <xs:selector xpath="site/undo"/>
+            <xs:field xpath="@ref"/>
+        </xs:keyref>
+        <xs:key name="redoId">
+            <xs:selector xpath="redo-operation"/>
+            <xs:field xpath="@id"/>
+        </xs:key>        
+        <xs:keyref refer="redoId" name="redoRef">
+            <xs:selector xpath="site/redo"/>
             <xs:field xpath="@ref"/>
         </xs:keyref>
     </xs:element>
@@ -54,6 +74,14 @@
         </xs:complexType>
     </xs:element>
     
+    <xs:element name="undo-operation" type="SpecialOperationType"/>
+    
+    <xs:element name="redo-operation" type="SpecialOperationType"/>
+    
+    <xs:complexType name="SpecialOperationType">
+        <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
+    </xs:complexType>
+    
     <xs:element name="site">
         <xs:annotation>
             <xs:documentation>
@@ -65,6 +93,8 @@
         <xs:complexType>
             <xs:choice maxOccurs="unbounded">
                 <xs:element ref="generate"/>
+                <xs:element ref="undo"/>
+                <xs:element ref="redo"/>
                 <xs:element ref="receive"/>
             </xs:choice>
             <xs:attribute name="id" use="required" type="xs:string"/>
@@ -92,6 +122,18 @@
                 as operation element.
             </xs:documentation>
         </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="ref" use="required" type="xs:positiveInteger"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="undo">
+        <xs:complexType>
+            <xs:attribute name="ref" use="required" type="xs:positiveInteger"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="redo">
         <xs:complexType>
             <xs:attribute name="ref" use="required" type="xs:positiveInteger"/>
         </xs:complexType>

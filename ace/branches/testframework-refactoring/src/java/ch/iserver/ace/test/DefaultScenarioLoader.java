@@ -70,6 +70,8 @@ public class DefaultScenarioLoader implements ScenarioLoader {
 			scenarioBuilder.init(initialState, finalState);
 		
 			processOperations(scenarioBuilder, root.getChildren("operation"));
+			processUndoOperations(scenarioBuilder, root.getChildren("undo-operation"));
+			processRedoOperations(scenarioBuilder, root.getChildren("redo-operation"));
 			processSites(scenarioBuilder, root.getChildren("site"));
 		} catch (JDOMException e) {
 			throw new ScenarioLoaderException(e);
@@ -97,6 +99,24 @@ public class DefaultScenarioLoader implements ScenarioLoader {
 			} catch (ClassNotFoundException e) {
 				throw new ScenarioLoaderException(e);
 			}
+		}
+	}
+	
+	protected void processUndoOperations(ScenarioBuilder builder, List operations) {
+		Iterator it = operations.iterator();
+		while (it.hasNext()) {
+			Element operationEl = (Element) it.next();
+			String id = operationEl.getAttributeValue("id");
+			builder.addUndo(id);
+		}
+	}
+
+	protected void processRedoOperations(ScenarioBuilder builder, List operations) {
+		Iterator it = operations.iterator();
+		while (it.hasNext()) {
+			Element operationEl = (Element) it.next();
+			String id = operationEl.getAttributeValue("id");
+			builder.addRedo(id);
 		}
 	}
 	
@@ -131,6 +151,10 @@ public class DefaultScenarioLoader implements ScenarioLoader {
 			String ref = childEl.getAttributeValue("ref");
 			if ("generate".equals(childEl.getName())) {
 				builder.addGeneration(ref);
+			} else if ("undo".equals(childEl.getName())) {
+				builder.addUndoGeneration(ref);
+			} else if ("redo".equals(childEl.getName())) {
+				builder.addRedoGeneration(ref);
 			} else if ("receive".equals(childEl.getName())) {
 				builder.addReception(ref);
 			}

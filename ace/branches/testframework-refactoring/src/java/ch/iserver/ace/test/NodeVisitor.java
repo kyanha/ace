@@ -48,7 +48,21 @@ public interface NodeVisitor {
 	 * 
 	 * @param node the node to visit
 	 */
-	public void visit(GenerationNode node);
+	public void visit(DoNode node);
+	
+	/**
+	 * Visit a node of type UndoNode.
+	 * 
+	 * @param node the node to visit
+	 */
+	public void visit(UndoNode node);
+	
+	/**
+	 * Visit a node of type RedoNode.
+	 * 
+	 * @param node the node to visit
+	 */
+	public void visit(RedoNode node);
 	
 	/**
 	 * Visit a node of type ReceptionNode.

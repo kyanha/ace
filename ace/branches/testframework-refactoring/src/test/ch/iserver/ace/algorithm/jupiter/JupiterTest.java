@@ -74,6 +74,14 @@ public class JupiterTest extends AlgorithmTestCase {
 		execute("/test/splitoperation-1.xml");
 	}
 	
+	public void testUndo() throws Exception {
+		execute("/test/undo.xml");
+	}
+	
+	public void testRedo() throws Exception {
+		execute("/test/redo.xml");
+	}
+	
 	/**
 	 * @see ch.iserver.ace.test.AlgorithmTestFactory#createAlgorithm(int)
 	 */

@@ -46,6 +46,8 @@ public interface ScenarioBuilder {
 	 * @throws ScenarioException in case of errors
 	 */
 	public void addOperation(String id, Operation op);
+	public void addUndo(String id);
+	public void addRedo(String id);
 	
 	/**
 	 * Notifies the builder of the start of a new site to process.
@@ -76,6 +78,24 @@ public interface ScenarioBuilder {
 	 * @throws ScenarioException in case of errors
 	 */
 	public void addGeneration(String opRef);
+	
+	/**
+	 * Adds the generation of an undo to the current site. The current
+	 * site is the last site for which startSite was called.
+	 *
+	 * @param opRef the undo reference
+	 * @throws ScenarioException in case of errors
+	 */
+	public void addUndoGeneration(String opRef);
+	
+	/**
+	 * Adds the generation of a redo to the current site. The current
+	 * site is the last site for wich startSite was called.
+	 * 
+	 * @param opRef the redo reference
+	 * @throws ScenarioException in case of errors
+	 */
+	public void addRedoGeneration(String opRef);
 	
 	/**
 	 * Notifies the builder of the end of a site. A call to startSite

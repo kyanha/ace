@@ -89,6 +89,14 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 	public void addOperation(String id, Operation op) {
 		operations.put(id, op);
 	}
+	
+	public void addUndo(String id) {
+	
+	}
+	
+	public void addRedo(String redo) {
+		
+	}
 
 	protected void addNode(Node node) {
 		nodes.add(node);
@@ -125,7 +133,33 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 		}
 
 		Operation op = getOperation(ref);
-		Node node = new GenerationNode(siteId, ref, op);
+		Node node = new DoNode(siteId, ref, op);
+		addNode(node);
+		Node pred = getPredecessor(siteId);
+		pred.setLocalSuccessor(node);
+		addGeneratedOperation(ref, node);
+		localPredecessors.put(siteId, node);
+		addToSiteGeneration(siteId, ref);
+	}
+	
+	/**
+	 * @inheritDoc
+	 */
+	public void addUndoGeneration(String ref) {
+		Node node = new UndoNode(siteId);
+		addNode(node);
+		Node pred = getPredecessor(siteId);
+		pred.setLocalSuccessor(node);
+		addGeneratedOperation(ref, node);
+		localPredecessors.put(siteId, node);
+		addToSiteGeneration(siteId, ref);
+	}
+	
+	/**
+	 * @inheritDoc
+	 */
+	public void addRedoGeneration(String ref) {
+		Node node = new RedoNode(siteId);
 		addNode(node);
 		Node pred = getPredecessor(siteId);
 		pred.setLocalSuccessor(node);
@@ -142,7 +176,6 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 			throw new ScenarioException("no previous startSite call");
 		}
 
-		Operation op = getOperation(ref);
 		Node node = new ReceptionNode(siteId, ref);
 		addNode(node);
 		Node pred = getPredecessor(siteId);

@@ -91,11 +91,26 @@ public class ExecuteVisitor implements NodeVisitor {
 	 * 
 	 * @param node the node to visit
 	 */
-	public void visit(GenerationNode node) {
-		String siteId = node.getSiteId();
+	public void visit(DoNode node) {
 		Operation op = node.getOperation(); 
-		Algorithm algo = getAlgorithm(siteId);
+		Algorithm algo = getAlgorithm(node.getSiteId());
 		Request request = algo.generateRequest(op);
+		Iterator it = node.getRemoteSuccessors().iterator();
+		while (it.hasNext()) {
+			ReceptionNode remote = (ReceptionNode) it.next();
+			remote.setRequest(request);
+		}
+	}
+	
+	/**
+	 * Visits an undo node. Calls undo on the local algorithm to
+	 * get a request that is then sent to all remote successors.
+	 * 
+	 * @param node the node to visit
+	 */
+	public void visit(UndoNode node) {
+		Algorithm algo = getAlgorithm(node.getSiteId());
+		Request request = algo.undo();
 		Iterator it = node.getRemoteSuccessors().iterator();
 		while (it.hasNext()) {
 			ReceptionNode remote = (ReceptionNode) it.next();
@@ -104,15 +119,30 @@ public class ExecuteVisitor implements NodeVisitor {
 	}
 
 	/**
+	 * Visits a redo node. Calls redo on the local algorithm to
+	 * get a request that is then sent to all remote successors.
+	 * 
+	 * @param node the node to visit
+	 */
+	public void visit(RedoNode node) {
+		Algorithm algo = getAlgorithm(node.getSiteId());
+		Request request = algo.redo();
+		Iterator it = node.getRemoteSuccessors().iterator();
+		while (it.hasNext()) {
+			ReceptionNode remote = (ReceptionNode) it.next();
+			remote.setRequest(request);
+		}
+	}
+	
+	/**
 	 * Visits a reception node. The stored request is retrieved from the
 	 * node and passed to the correct algorithm.
 	 * 
 	 * @param node the node to visit
 	 */
 	public void visit(ReceptionNode node) {
-		String siteId = node.getSiteId();
 		Request request = node.getRequest();
-		Algorithm algo = getAlgorithm(siteId);
+		Algorithm algo = getAlgorithm(node.getSiteId());
 		algo.receiveRequest(request);
 	}
 	

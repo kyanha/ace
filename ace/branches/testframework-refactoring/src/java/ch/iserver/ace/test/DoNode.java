@@ -21,9 +21,6 @@
 
 package ch.iserver.ace.test;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import ch.iserver.ace.Operation;
 
 /**
@@ -36,14 +33,12 @@ import ch.iserver.ace.Operation;
  *  <li>exactly one successor must be a local successor (i.e. from the same site)</li>
  * </ul>
  */
-public class GenerationNode extends AbstractNode {
-	/** list of remote successors (nodes that receive from this node) */
-	private List remoteSuccessors = new ArrayList();
+public class DoNode extends GenerationNode {
 	/** the operation to be generated */
 	private Operation operation;
 	/** the original id reference of the operation */
 	private String reference;
-	
+		
 	/**
 	 * Creates a new generation node belonging to the given site. The
 	 * <var>ref</var> contains the id of <var>op</var>, the operation
@@ -53,7 +48,7 @@ public class GenerationNode extends AbstractNode {
 	 * @param ref the id reference to the operation
 	 * @param op the operation to be generated
 	 */
-	public GenerationNode(String siteId, String ref, Operation op) {
+	public DoNode(String siteId, String ref, Operation op) {
 		super(siteId);
 		this.operation = op;
 		this.reference = ref;
@@ -75,36 +70,6 @@ public class GenerationNode extends AbstractNode {
 	 */
 	public String getReference() {
 		return reference;
-	}
-
-	/**
-	 * Adds a node as remote successor of this node.
-	 * 
-	 * @param successor the remote successor (a reception node)
-	 */
-	public void addRemoteSuccessor(ReceptionNode successor) {
-		remoteSuccessors.add(successor);
-	}
-	
-	/**
-	 * Gets the list of remote successors from this node.
-	 * 
-	 * @return the list of remote successors
-	 */
-	public List getRemoteSuccessors() {
-		return remoteSuccessors;
-	}
-	
-	/**
-	 * @inheritDoc
-	 */
-	public List getSuccessors() {
-		List result = new ArrayList();
-		if (getLocalSuccessor() != null) {
-			result.add(getLocalSuccessor());
-		}
-		result.addAll(getRemoteSuccessors());
-		return result;
 	}
 
 	/**

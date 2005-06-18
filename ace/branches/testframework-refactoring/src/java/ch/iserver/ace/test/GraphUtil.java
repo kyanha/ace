@@ -78,7 +78,15 @@ public class GraphUtil {
 			start.add(node);
 		}
 		
-		public void visit(GenerationNode node) {
+		public void visit(DoNode node) {
+			map.put(node, new Integer(1));
+		}
+		
+		public void visit(UndoNode node) {
+			map.put(node, new Integer(1));
+		}
+		
+		public void visit(RedoNode node) {
 			map.put(node, new Integer(1));
 		}
 		

@@ -63,8 +63,8 @@ public class ExecuteVisitorTest extends TestCase {
 		// create nodes
 		StartNode s1 = new StartNode("0", "abc");
 		StartNode s2 = new StartNode("1", "abc");
-		GenerationNode g1 = new GenerationNode("0", "1", new InsertOperation(1, "1"));
-		GenerationNode g2 = new GenerationNode("1", "2", new InsertOperation(1, "2"));
+		DoNode g1 = new DoNode("0", "1", new InsertOperation(1, "1"));
+		DoNode g2 = new DoNode("1", "2", new InsertOperation(1, "2"));
 		ReceptionNode r1 = new ReceptionNode("0", "2");
 		ReceptionNode r2 = new ReceptionNode("1", "1");
 		
@@ -103,8 +103,8 @@ public class ExecuteVisitorTest extends TestCase {
 		// create nodes
 		StartNode s1 = new StartNode("0", "abc");
 		StartNode s2 = new StartNode("1", "abc");
-		GenerationNode g1 = new GenerationNode("0", "1", new InsertOperation(1, "1"));
-		GenerationNode g2 = new GenerationNode("1", "2", new InsertOperation(1, "2"));
+		DoNode g1 = new DoNode("0", "1", new InsertOperation(1, "1"));
+		DoNode g2 = new DoNode("1", "2", new InsertOperation(1, "2"));
 		ReceptionNode r1 = new ReceptionNode("0", "2");
 		ReceptionNode r2 = new ReceptionNode("1", "1");
 		g1.addRemoteSuccessor(r2);
@@ -162,8 +162,8 @@ public class ExecuteVisitorTest extends TestCase {
 		// create nodes
 		StartNode s1 = new StartNode("0", "abc");
 		StartNode s2 = new StartNode("1", "abc");
-		GenerationNode g1 = new GenerationNode("0", "1", new InsertOperation(1, "1"));
-		GenerationNode g2 = new GenerationNode("1", "2", new InsertOperation(2, "2"));
+		DoNode g1 = new DoNode("0", "1", new InsertOperation(1, "1"));
+		DoNode g2 = new DoNode("1", "2", new InsertOperation(2, "2"));
 		ReceptionNode r1 = new ReceptionNode("0", "2");
 		ReceptionNode r2 = new ReceptionNode("1", "1");
 		EndNode e1 = new EndNode("0", "abc");

@@ -34,8 +34,8 @@ public class GraphUtilTest extends TestCase {
 	public void testSortTopological() {
 		StartNode s1 = new StartNode("1", "");
 		StartNode s2 = new StartNode("2", "");
-		GenerationNode g1 = new GenerationNode("1", "", null);
-		GenerationNode g2 = new GenerationNode("2", "", null);
+		DoNode g1 = new DoNode("1", "", null);
+		DoNode g2 = new DoNode("2", "", null);
 		ReceptionNode r1 = new ReceptionNode("1", "1");
 		ReceptionNode r2 = new ReceptionNode("2", "2");
 		EndNode e1 = new EndNode("1", "");
