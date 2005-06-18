@@ -1,0 +1,19 @@
+\subsection{GOTO}
+\label{algo:goto}
+
+The \emph{GOT} (see \ref{algo:got}) control algorithm integrated with the undo/do/redo scheme achieves both intention-preservation and convergence. Sun et. al \cite{sun98b} modified the \emph{GOT} control algorithm in such a way that the IT/ET functions must satisfy TP1 and TP2. The resulting algorithm is called \emph{GOTO} (GOT optimized).
+
+The original \emph{GOT} algorithm, given IT/ET functions that satisfy TP1 and TP2, can ensure both intention preservation and convergence without integrating with the undo/do/redo scheme or using a multi-dimensional graph. This results in a simplified control algorithm that uses fewer IT/ET transformations compared to \emph{GOT}.
+
+
+\subsubsection{Properties}
+\begin{itemize}
+ \item uses state vectors to determine causality relations
+ \item uses IT and ET
+ \item TP1 and TP2 must be ensured by IT/ET functions
+ \item architecture: replicated, multicast
+\end{itemize}
+
+
+\subsubsection{Implementations}
+The \emph{GOTO} control algorithm was implemented in the \emph{REDUCE} \cite{sun00a} prototype. 
