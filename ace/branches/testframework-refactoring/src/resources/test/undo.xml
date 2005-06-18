@@ -15,6 +15,7 @@
     
     <site id="1">
         <generate ref="1"/>
+        <verify expect="b"/>
         <undo ref="2"/>
         <receive ref="3"/>
     </site>
@@ -22,6 +23,7 @@
     <site id="2">
         <generate ref="3"/>
         <receive ref="1"/>
+        <verify expect="b"/>
         <receive ref="2"/>
     </site>
     

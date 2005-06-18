@@ -90,12 +90,21 @@ public interface ScenarioBuilder {
 	
 	/**
 	 * Adds the generation of a redo to the current site. The current
-	 * site is the last site for wich startSite was called.
+	 * site is the last site for which startSite was called.
 	 * 
 	 * @param opRef the redo reference
 	 * @throws ScenarioException in case of errors
 	 */
 	public void addRedoGeneration(String opRef);
+	
+	/**
+	 * Adds a verification point to the current site. The current
+	 * site is the last site for which startSite was called.
+	 * 
+	 * @param expect the expected document content
+	 * @throws ScenarioException in case of errors
+	 */
+	public void addVerification(String expect);
 	
 	/**
 	 * Notifies the builder of the end of a site. A call to startSite

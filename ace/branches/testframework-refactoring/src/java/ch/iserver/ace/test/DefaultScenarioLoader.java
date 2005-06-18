@@ -157,6 +157,9 @@ public class DefaultScenarioLoader implements ScenarioLoader {
 				builder.addRedoGeneration(ref);
 			} else if ("receive".equals(childEl.getName())) {
 				builder.addReception(ref);
+			} else if ("verify".equals(childEl.getName())) {
+				String expect = childEl.getAttributeValue("expect");
+				builder.addVerification(expect);
 			}
 		}
 	}

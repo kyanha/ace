@@ -188,6 +188,21 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 	/**
 	 * @inheritDoc
 	 */
+	public void addVerification(String expect) {
+		if (siteId == null) {
+			throw new ScenarioException("no previous startSite call");
+		}
+		
+		Node node = new VerificationNode(siteId, expect);
+		addNode(node);
+		Node pred = getPredecessor(siteId);
+		pred.setLocalSuccessor(node);
+		localPredecessors.put(siteId, node);
+	}
+	
+	/**
+	 * @inheritDoc
+	 */
 	public void endSite() {
 		if (siteId == null) {
 			throw new ScenarioException("no previous startSite call");

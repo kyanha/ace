@@ -95,6 +95,7 @@
                 <xs:element ref="generate"/>
                 <xs:element ref="undo"/>
                 <xs:element ref="redo"/>
+                <xs:element ref="verify"/>
                 <xs:element ref="receive"/>
             </xs:choice>
             <xs:attribute name="id" use="required" type="xs:string"/>
@@ -136,6 +137,12 @@
     <xs:element name="redo">
         <xs:complexType>
             <xs:attribute name="ref" use="required" type="xs:positiveInteger"/>
+        </xs:complexType>
+    </xs:element>
+   
+    <xs:element name="verify">
+        <xs:complexType>
+            <xs:attribute name="expect" use="required" type="xs:string"/>
         </xs:complexType>
     </xs:element>
     

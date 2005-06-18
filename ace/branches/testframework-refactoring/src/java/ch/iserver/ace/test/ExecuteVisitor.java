@@ -147,6 +147,18 @@ public class ExecuteVisitor implements NodeVisitor {
 	}
 	
 	/**
+	 * Visits a verification node. This node type is used to verify the
+	 * document content at an arbitrary point in the sites lifecycle.
+	 * 
+	 * @param node the node to visit
+	 * @throws VerificationException if the document state does not match
+	 *         the expected state
+	 */
+	public void visit(VerificationNode node) {
+		verify(node.getSiteId(), node.getState());
+	}
+	
+	/**
 	 * Visits an end node. This is the place where actual verification takes
 	 * place. The end node stores the expected content. This content is
 	 * compared to the actual document at the site. If they do not match
@@ -157,10 +169,23 @@ public class ExecuteVisitor implements NodeVisitor {
 	 *         expected state
 	 */
 	public void visit(EndNode node) {
-		Algorithm algo = getAlgorithm(node.getSiteId());
-		DocumentModel expected = getFactory().createDocument(node.getState());
+		verify(node.getSiteId(), node.getState());
+	}
+	
+	/**
+	 * Verifies that the current state at the given site corresponds
+	 * to the given state.
+	 * 
+	 * @param siteId the site to verify
+	 * @param state the expected state
+	 * @throws VerificationException if the document state does not match
+	 *         the expected state
+	 */
+	protected void verify(final String siteId, final String state) {
+		Algorithm algo = getAlgorithm(siteId);
+		DocumentModel expected = getFactory().createDocument(state);
 		if (!expected.equals(algo.getDocument())) {
-			throw new VerificationException(node.getSiteId(), 
+			throw new VerificationException(siteId, 
 					expected.toString(), 
 					algo.getDocument().toString());
 		}
