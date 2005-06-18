@@ -38,6 +38,9 @@ public abstract class AbstractNode implements Node {
 	 * @param siteId the site this node belongs to
 	 */
 	protected AbstractNode(String siteId) {
+		if (siteId == null) {
+			throw new IllegalArgumentException("siteId cannot be null");
+		}
 		this.siteId = siteId;
 	}
 	
