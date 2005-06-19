@@ -34,7 +34,7 @@ import ch.iserver.ace.algorithm.Request;
  *  <li>exactly two predecessor, one local the other remote</li>
  * </ul>
  */
-public class ReceptionNode extends AbstractNode {
+public class SimpleReceptionNode extends AbstractNode implements ReceptionNode {
 	/** the request to process */
 	private Request request;
 	/** the reference to the operation */
@@ -47,7 +47,7 @@ public class ReceptionNode extends AbstractNode {
 	 * @param siteId the id of the site this node belongs to
 	 * @param ref the reference to the received operation
 	 */
-	public ReceptionNode(String siteId, String ref) {
+	public SimpleReceptionNode(String siteId, String ref) {
 		super(siteId);
 		this.ref = ref;
 	}
@@ -62,19 +62,15 @@ public class ReceptionNode extends AbstractNode {
 		return ref;
 	}
 	
-	/**
-	 * Sets the request to be received by this node.
-	 * 
-	 * @param request the request to be received
+	/* (non-Javadoc)
+	 * @see ch.iserver.ace.test.ReceptionNode#setRequest(ch.iserver.ace.algorithm.Request)
 	 */
 	public void setRequest(Request request) {
 		this.request = request;
 	}
 	
-	/**
-	 * Gets the request to be received by this node.
-	 * 
-	 * @return the request to be received
+	/* (non-Javadoc)
+	 * @see ch.iserver.ace.test.ReceptionNode#getRequest()
 	 */
 	public Request getRequest() {
 		return request;

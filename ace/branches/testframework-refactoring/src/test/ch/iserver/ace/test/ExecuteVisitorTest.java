@@ -65,8 +65,8 @@ public class ExecuteVisitorTest extends TestCase {
 		StartNode s2 = new StartNode("1", "abc");
 		DoNode g1 = new DoNode("0", "1", new InsertOperation(1, "1"));
 		DoNode g2 = new DoNode("1", "2", new InsertOperation(1, "2"));
-		ReceptionNode r1 = new ReceptionNode("0", "2");
-		ReceptionNode r2 = new ReceptionNode("1", "1");
+		ReceptionNode r1 = new SimpleReceptionNode("0", "2");
+		ReceptionNode r2 = new SimpleReceptionNode("1", "1");
 		
 		// add remote successors
 		g1.addRemoteSuccessor(r2);
@@ -105,20 +105,20 @@ public class ExecuteVisitorTest extends TestCase {
 		StartNode s2 = new StartNode("1", "abc");
 		DoNode g1 = new DoNode("0", "1", new InsertOperation(1, "1"));
 		DoNode g2 = new DoNode("1", "2", new InsertOperation(1, "2"));
-		ReceptionNode r1 = new ReceptionNode("0", "2");
-		ReceptionNode r2 = new ReceptionNode("1", "1");
+		ReceptionNode r1 = new SimpleReceptionNode("0", "2");
+		ReceptionNode r2 = new SimpleReceptionNode("1", "1");
 		g1.addRemoteSuccessor(r2);
 		g2.addRemoteSuccessor(r1);
 		
 		// define mock behavior
-		factory.createAlgorithm(0);
+		factory.createAlgorithm(0, Boolean.FALSE);
 		control.setReturnValue(algo1);
 		factory.createDocument("abc");
 		control.setReturnValue(null);
 		factory.createTimestamp();
 		control.setReturnValue(null);
 		
-		factory.createAlgorithm(1);
+		factory.createAlgorithm(1, Boolean.TRUE);
 		control.setReturnValue(algo2);
 		factory.createDocument("abc");
 		control.setReturnValue(null);
@@ -164,8 +164,8 @@ public class ExecuteVisitorTest extends TestCase {
 		StartNode s2 = new StartNode("1", "abc");
 		DoNode g1 = new DoNode("0", "1", new InsertOperation(1, "1"));
 		DoNode g2 = new DoNode("1", "2", new InsertOperation(2, "2"));
-		ReceptionNode r1 = new ReceptionNode("0", "2");
-		ReceptionNode r2 = new ReceptionNode("1", "1");
+		ReceptionNode r1 = new SimpleReceptionNode("0", "2");
+		ReceptionNode r2 = new SimpleReceptionNode("1", "1");
 		EndNode e1 = new EndNode("0", "abc");
 		EndNode e2 = new EndNode("1", "abc");
 		
@@ -195,7 +195,7 @@ public class ExecuteVisitorTest extends TestCase {
 	}
 	
 	private static class AlgorithmTestFactoryStub implements AlgorithmTestFactory {
-		public Algorithm createAlgorithm(int siteId) {
+		public Algorithm createAlgorithm(int siteId, Object param) {
 			return new AlgorithmStub();
 		}
 		public DocumentModel createDocument(String state) {

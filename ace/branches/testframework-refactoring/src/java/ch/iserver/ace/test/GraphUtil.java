@@ -94,6 +94,10 @@ public class GraphUtil {
 			map.put(node, new Integer(2));
 		}
 		
+		public void visit(RelayNode node) {
+			map.put(node, new Integer(1));
+		}
+		
 		public void visit(VerificationNode node) {
 			map.put(node, new Integer(1));
 		}

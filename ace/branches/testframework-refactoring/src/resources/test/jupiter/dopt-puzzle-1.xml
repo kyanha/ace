@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scenario initial="abcdefg" final="bcdfg">
+    
+    <operation id="1" type="ch.iserver.ace.text.DeleteOperation">
+        <property name="position" value="0"/>
+        <property name="text" value="a"/>
+    </operation>
+    
+    <operation id="2" type="ch.iserver.ace.text.DeleteOperation">
+        <property name="position" value="0"/>
+        <property name="text" value="a"/>
+    </operation>
+    
+    <operation id="3" type="ch.iserver.ace.text.DeleteOperation">
+        <property name="position" value="3"/>
+        <property name="text" value="e"/>
+    </operation>
+    
+    <server>
+        <relay ref="1" id="10"/>
+        <relay ref="2" id="20"/>
+        <relay ref="3" id="30"/>
+    </server>
+    
+    <site id="1">
+        <generate ref="1"/>
+        <receive ref="20"/>
+        <receive ref="30"/>
+    </site>
+    
+    <site id="2">
+        <generate ref="2"/>
+        <generate ref="3"/>
+        <receive ref="10"/>
+    </site>
+    
+</scenario>

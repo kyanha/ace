@@ -21,7 +21,7 @@
 package ch.iserver.ace.test;
 
 
-public class RedoNode extends GenerationNode {
+public class RedoNode extends AbstractGenerationNode {
 
 	public RedoNode(String siteId) {
 		super(siteId);

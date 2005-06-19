@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:annotation>
+        <xs:documentation>
+            This schema defines the structure of XML scenario definition
+            files. These scenarios allow the specification of an exact
+            sequence of events in a collaborative editing systems.
+        </xs:documentation>
+    </xs:annotation>
+
+    <xs:element name="scenario">
+        <xs:annotation>
+            <xs:documentation>
+                The scenario element is the root element of a scenario
+                definition. It has attributes to specify initial and
+                final state of the document at all sites. Two types
+                of subelements allow to specify operations and sites
+                that exist in the scenario.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:choice maxOccurs="unbounded">
+                    <xs:element ref="operation"/>
+                    <xs:element ref="undo-operation"/>
+                    <xs:element ref="redo-operation"/>
+                </xs:choice>
+                <xs:element ref="server"/>
+                <xs:element ref="site" maxOccurs="unbounded"/>
+            </xs:sequence>
+            <xs:attribute name="initial" use="required" type="xs:string"/>
+            <xs:attribute name="final" use="required" type="xs:string"/>
+        </xs:complexType>
+        <xs:key name="operationId">
+            <xs:selector xpath="operation | undo-operation | redo-operation | server/relay"/>
+            <xs:field xpath="@id"/>
+        </xs:key>
+        <xs:keyref refer="operationId" name="operationRef">
+            <xs:selector xpath="site/generate | site/receive | server/relay"/>
+            <xs:field xpath="@ref"/>
+        </xs:keyref>
+        <xs:key name="undoId">
+            <xs:selector xpath="undo-operation"/>
+            <xs:field xpath="@id"/>
+        </xs:key>        
+        <xs:keyref refer="undoId" name="undoRef">
+            <xs:selector xpath="site/undo"/>
+            <xs:field xpath="@ref"/>
+        </xs:keyref>
+        <xs:key name="redoId">
+            <xs:selector xpath="redo-operation"/>
+            <xs:field xpath="@id"/>
+        </xs:key>        
+        <xs:keyref refer="redoId" name="redoRef">
+            <xs:selector xpath="site/redo"/>
+            <xs:field xpath="@ref"/>
+        </xs:keyref>
+    </xs:element>
+    
+    <xs:element name="operation">
+        <xs:annotation>
+            <xs:documentation>
+                An operation element declares an operation that is used
+                in the scenario. An operation gets an id to uniquely identify
+                it. Further a java operation object is specified along with
+                its properties.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="property" maxOccurs="unbounded"/>
+            </xs:sequence>
+            <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
+            <xs:attribute name="type" type="xs:string" use="required"/>
+        </xs:complexType>
+    </xs:element>
+   
+    <xs:element name="property">
+        <xs:annotation>
+            <xs:documentation>
+                The property element allows to specify properties and their
+                values on an operation object.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="name" use="required" type="xs:NMTOKEN"/>
+            <xs:attribute name="value" use="required" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="undo-operation" type="SpecialOperationType"/>
+    
+    <xs:element name="redo-operation" type="SpecialOperationType"/>
+    
+    <xs:complexType name="SpecialOperationType">
+        <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
+    </xs:complexType>
+    
+    <xs:element name="site">
+        <xs:annotation>
+            <xs:documentation>
+                A site element declares a site in the scenario. Most importantly,
+                a site element specifies the sequence of events occurring at
+                that site.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:choice maxOccurs="unbounded">
+                <xs:element ref="generate"/>
+                <xs:element ref="undo"/>
+                <xs:element ref="redo"/>
+                <xs:element ref="verify"/>
+                <xs:element ref="receive"/>
+            </xs:choice>
+            <xs:attribute name="id" use="required" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="server">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="relay" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="relay">
+        <xs:complexType>
+            <xs:attribute name="ref" use="required" type="xs:positiveInteger"/>
+            <xs:attribute name="id" use="required" type="xs:positiveInteger"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="generate">
+        <xs:annotation>
+            <xs:documentation>
+                The generate element declares the event 'generation of operation'
+                at a site. The ref attribute references an operation declared
+                as operation element.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="ref" use="required" type="xs:positiveInteger"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="undo">
+        <xs:complexType>
+            <xs:attribute name="ref" use="required" type="xs:positiveInteger"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="redo">
+        <xs:complexType>
+            <xs:attribute name="ref" use="required" type="xs:positiveInteger"/>
+        </xs:complexType>
+    </xs:element>
+   
+    <xs:element name="verify">
+        <xs:complexType>
+            <xs:attribute name="expect" use="required" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="receive">
+        <xs:annotation>
+            <xs:documentation>
+                The receive element declares the event 'reception of request'
+                at a site. The ref attribute references an operation declared
+                as operation element.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="ref" use="required" type="xs:positiveInteger"/>
+        </xs:complexType>
+    </xs:element>
+        
+</xs:schema>

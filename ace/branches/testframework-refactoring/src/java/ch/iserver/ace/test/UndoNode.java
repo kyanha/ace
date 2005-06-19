@@ -21,7 +21,7 @@
 package ch.iserver.ace.test;
 
 
-public class UndoNode extends GenerationNode {
+public class UndoNode extends AbstractGenerationNode {
 
 	public UndoNode(String siteId) {
 		super(siteId);

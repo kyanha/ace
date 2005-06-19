@@ -72,6 +72,13 @@ public interface NodeVisitor {
 	public void visit(ReceptionNode node);
 	
 	/**
+	 * Visit a node of type RelayNode.
+	 * 
+	 * @param node the node to visit
+	 */
+	public void visit(RelayNode node);
+	
+	/**
 	 * Visit a node of type VerificationNode.
 	 * 
 	 * @param node the node to visit

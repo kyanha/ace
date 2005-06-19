@@ -83,10 +83,14 @@ public class JupiterTest extends AlgorithmTestCase {
 	}
 	
 	/**
-	 * @see ch.iserver.ace.test.AlgorithmTestFactory#createAlgorithm(int)
+	 * @see ch.iserver.ace.test.AlgorithmTestFactory#createAlgorithm(int,Object)
 	 */
-	public Algorithm createAlgorithm(int siteId) {
-		isClient = (algoCount % 2 == 1) ? false : true;
+	public Algorithm createAlgorithm(int siteId, Object parameter) {
+		if (parameter != null) {
+			isClient = ((Boolean) parameter).booleanValue();
+		} else {
+			isClient = (algoCount % 2 == 1) ? false : true;
+		}
 		++algoCount;
 		Jupiter jupiter = new Jupiter(siteId, isClient);
 		jupiter.setInclusionTransformation(new GOTOInclusionTransformation());

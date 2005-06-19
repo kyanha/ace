@@ -36,8 +36,8 @@ public class GraphUtilTest extends TestCase {
 		StartNode s2 = new StartNode("2", "");
 		DoNode g1 = new DoNode("1", "", null);
 		DoNode g2 = new DoNode("2", "", null);
-		ReceptionNode r1 = new ReceptionNode("1", "1");
-		ReceptionNode r2 = new ReceptionNode("2", "2");
+		ReceptionNode r1 = new SimpleReceptionNode("1", "1");
+		ReceptionNode r2 = new SimpleReceptionNode("2", "2");
 		EndNode e1 = new EndNode("1", "");
 		EndNode e2 = new EndNode("2", "");
 		

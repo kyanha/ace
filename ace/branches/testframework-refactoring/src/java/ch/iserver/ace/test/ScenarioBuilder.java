@@ -107,6 +107,14 @@ public interface ScenarioBuilder {
 	public void addVerification(String expect);
 	
 	/**
+	 * Adds a relay event to the list of relay events.
+	 * 
+	 * @param ref the referenced operation
+	 * @param id  the id of this generation event
+	 */
+	public void addRelay(String ref, String id);
+	
+	/**
 	 * Notifies the builder of the end of a site. A call to startSite
 	 * must preceed this call.
 	 * 

@@ -21,49 +21,62 @@
 package ch.iserver.ace.test;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
-/**
- * A GenerationNode is an abstract base class for all classes that generate
- * an operation. Subclasses include nodes for doing, undoing and redoing
- * operations.
- */
-public abstract class GenerationNode extends AbstractNode {
-	/** list of remote successors (nodes that receive from this node) */
-	private List remoteSuccessors = new ArrayList();
+import ch.iserver.ace.algorithm.Request;
 
-	protected GenerationNode(String siteId) {
+/**
+ * TODO: add javadoc comments
+ */
+public class RelayNode extends AbstractNode implements ReceptionNode, GenerationNode {
+	/** the incoming request */
+	private Request request;
+	/** the referenced operation */
+	private String reference;
+	/** the id of this generation event */
+	private String id;
+	/** list of remote successors */
+	private List remoteSuccessors;
+	
+	public RelayNode(String siteId, String reference, String id) {
 		super(siteId);
+		this.reference = reference;
+		this.id = id;
+		this.remoteSuccessors = new LinkedList();
 	}
 	
-	/**
-	 * Adds a node as remote successor of this node.
-	 * 
-	 * @param successor the remote successor (a reception node)
-	 */
+	public String getReference() {
+		return reference;
+	}
+	
+	public Request getRequest() {
+		return request;
+	}
+	
+	public void setRequest(Request request) {
+		this.request = request;
+	}
+	
 	public void addRemoteSuccessor(ReceptionNode successor) {
 		remoteSuccessors.add(successor);
 	}
 	
-	/**
-	 * Gets the list of remote successors from this node.
-	 * 
-	 * @return the list of remote successors
-	 */
 	public List getRemoteSuccessors() {
 		return remoteSuccessors;
 	}
 	
-	/**
-	 * @inheritDoc
-	 */
 	public List getSuccessors() {
 		List result = new ArrayList();
 		if (getLocalSuccessor() != null) {
 			result.add(getLocalSuccessor());
 		}
-		result.addAll(getRemoteSuccessors());
+		result.addAll(remoteSuccessors);
 		return result;
+	}
+
+	public void accept(NodeVisitor visitor) {
+		visitor.visit(this);
 	}
 
 }

@@ -32,7 +32,7 @@ import ch.iserver.ace.Operation;
  *  <li>exactly one successor must be a local successor (i.e. from the same site)</li>
  * </ul>
  */
-public class DoNode extends GenerationNode {
+public class DoNode extends AbstractGenerationNode {
 	/** the operation to be generated */
 	private Operation operation;
 	/** the original id reference of the operation */

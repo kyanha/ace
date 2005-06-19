@@ -57,7 +57,7 @@ public class DefaultScenarioLoader implements ScenarioLoader {
 	 */
 	public void loadScenario(ScenarioBuilder scenarioBuilder, InputStream source) 
 			throws IOException {
-		InputStream schema = getClass().getResourceAsStream("/test/scenario.xsd");
+		InputStream schema = getSchema();
 		SAXBuilder builder = createSAXBuilder(schema);
 
 		try {
@@ -68,14 +68,22 @@ public class DefaultScenarioLoader implements ScenarioLoader {
 			String finalState = root.getAttributeValue("final");
 		
 			scenarioBuilder.init(initialState, finalState);
-		
-			processOperations(scenarioBuilder, root.getChildren("operation"));
-			processUndoOperations(scenarioBuilder, root.getChildren("undo-operation"));
-			processRedoOperations(scenarioBuilder, root.getChildren("redo-operation"));
-			processSites(scenarioBuilder, root.getChildren("site"));
+			
+			processRootChildren(scenarioBuilder, root);
 		} catch (JDOMException e) {
 			throw new ScenarioLoaderException(e);
 		}
+	}
+	
+	protected InputStream getSchema() {
+		return getClass().getResourceAsStream("/test/scenario.xsd");
+	}
+	
+	protected void processRootChildren(ScenarioBuilder builder, Element root) {
+		processOperations(builder, root.getChildren("operation"));
+		processUndoOperations(builder, root.getChildren("undo-operation"));
+		processRedoOperations(builder, root.getChildren("redo-operation"));
+		processSites(builder, root.getChildren("site"));
 	}
 	
 	protected void processOperations(ScenarioBuilder builder, List operations) { 
