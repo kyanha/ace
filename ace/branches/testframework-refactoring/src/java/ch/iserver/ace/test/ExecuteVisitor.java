@@ -82,23 +82,13 @@ public class ExecuteVisitor implements NodeVisitor {
 	public void visit(StartNode node) {
 		String state = node.getState();
 		Algorithm algorithm = getFactory().createAlgorithm(
-				Integer.parseInt(node.getSiteId()), Boolean.TRUE);
+				Integer.parseInt(node.getSiteId()), null);
 		DocumentModel document = getFactory().createDocument(state);
 		Timestamp timestamp = getFactory().createTimestamp();
 		algorithm.init(document, timestamp);
-		algorithms.put(node.getSiteId(), algorithm);
-		siteCreated(node.getSiteId());
+		setAlgorithm(node.getSiteId(), algorithm);
 	}
-
-	/**
-	 * Hook method for subclasses to do specific processing on site creation.
-	 * 
-	 * @param siteId the site that was created
-	 */
-	protected void siteCreated(String siteId) {
-		// hook method
-	}
-
+	
 	/**
 	 * Visits a generation node. It passes the stored operation to the algorithm
 	 * to create a request. The request is then set on all the remote successor
@@ -234,6 +224,16 @@ public class ExecuteVisitor implements NodeVisitor {
 			throw new ScenarioException("unknown site: " + siteId);
 		}
 		return algo;
+	}
+	
+	/**
+	 * Sets the algorithm for the given site.
+	 * 
+	 * @param siteId the site id of the site
+	 * @param algorithm the algorithm
+	 */
+	protected void setAlgorithm(String siteId, Algorithm algorithm) {
+		algorithms.put(siteId, algorithm);
 	}
 
 }

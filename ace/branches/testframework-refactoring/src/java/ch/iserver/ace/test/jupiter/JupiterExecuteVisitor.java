@@ -37,6 +37,7 @@ import ch.iserver.ace.test.ExecuteVisitor;
 import ch.iserver.ace.test.ReceptionNode;
 import ch.iserver.ace.test.RelayNode;
 import ch.iserver.ace.test.ScenarioException;
+import ch.iserver.ace.test.StartNode;
 
 /**
  * 
@@ -51,13 +52,21 @@ public class JupiterExecuteVisitor extends ExecuteVisitor {
 		serverAlgorithms = new HashMap();
 	}
 
-	protected void siteCreated(String siteId) {
+	public void visit(StartNode node) {
+		String state = node.getState();
 		Algorithm algorithm = getFactory().createAlgorithm(
-				Integer.parseInt(siteId), Boolean.FALSE);
+				Integer.parseInt(node.getSiteId()), Boolean.TRUE);
+		DocumentModel document = getFactory().createDocument(state);
 		Timestamp timestamp = getFactory().createTimestamp();
-		DocumentModel document = new OperationExtractDocumentModel();
 		algorithm.init(document, timestamp);
-		serverAlgorithms.put(siteId, algorithm);
+		setAlgorithm(node.getSiteId(), algorithm);
+
+		algorithm = getFactory().createAlgorithm(
+				Integer.parseInt(node.getSiteId()), Boolean.FALSE);
+		timestamp = getFactory().createTimestamp();
+		document = new OperationExtractDocumentModel();
+		algorithm.init(document, timestamp);
+		setServerAlgorithm(node.getSiteId(), algorithm);
 	}
 
 	public void visit(RelayNode node) {
@@ -85,6 +94,10 @@ public class JupiterExecuteVisitor extends ExecuteVisitor {
 			throw new ScenarioException("unknown site: " + siteId);
 		}
 		return algo;
+	}
+	
+	protected void setServerAlgorithm(String siteId, Algorithm algorithm) {
+		serverAlgorithms.put(siteId, algorithm);
 	}
 
 	protected Iterator getOtherServerAlgorithms(String siteId) {

@@ -111,14 +111,14 @@ public class ExecuteVisitorTest extends TestCase {
 		g2.addRemoteSuccessor(r1);
 		
 		// define mock behavior
-		factory.createAlgorithm(0, Boolean.FALSE);
+		factory.createAlgorithm(0, null);
 		control.setReturnValue(algo1);
 		factory.createDocument("abc");
 		control.setReturnValue(null);
 		factory.createTimestamp();
 		control.setReturnValue(null);
 		
-		factory.createAlgorithm(1, Boolean.TRUE);
+		factory.createAlgorithm(1, null);
 		control.setReturnValue(algo2);
 		factory.createDocument("abc");
 		control.setReturnValue(null);

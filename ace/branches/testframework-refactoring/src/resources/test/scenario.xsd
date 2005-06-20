@@ -13,45 +13,22 @@
             <xs:documentation>
                 The scenario element is the root element of a scenario
                 definition. It has attributes to specify initial and
-                final state of the document at all sites. Two types
-                of subelements allow to specify operations and sites
-                that exist in the scenario.
+                final state of the document at all sites. 
             </xs:documentation>
         </xs:annotation>
         <xs:complexType>
             <xs:sequence>
-                <xs:choice maxOccurs="unbounded">
-                    <xs:element ref="operation"/>
-                    <xs:element ref="undo-operation"/>
-                    <xs:element ref="redo-operation"/>
-                </xs:choice>
                 <xs:element ref="site" maxOccurs="unbounded"/>
             </xs:sequence>
             <xs:attribute name="initial" use="required" type="xs:string"/>
             <xs:attribute name="final" use="required" type="xs:string"/>
         </xs:complexType>
         <xs:key name="operationId">
-            <xs:selector xpath="operation | undo-operation | redo-operation"/>
+            <xs:selector xpath="site/generate | site/undo | site/redo"/>
             <xs:field xpath="@id"/>
         </xs:key>
         <xs:keyref refer="operationId" name="operationRef">
-            <xs:selector xpath="site/generate | site/receive"/>
-            <xs:field xpath="@ref"/>
-        </xs:keyref>
-        <xs:key name="undoId">
-            <xs:selector xpath="undo-operation"/>
-            <xs:field xpath="@id"/>
-        </xs:key>        
-        <xs:keyref refer="undoId" name="undoRef">
-            <xs:selector xpath="site/undo"/>
-            <xs:field xpath="@ref"/>
-        </xs:keyref>
-        <xs:key name="redoId">
-            <xs:selector xpath="redo-operation"/>
-            <xs:field xpath="@id"/>
-        </xs:key>        
-        <xs:keyref refer="redoId" name="redoRef">
-            <xs:selector xpath="site/redo"/>
+            <xs:selector xpath="site/receive"/>
             <xs:field xpath="@ref"/>
         </xs:keyref>
     </xs:element>
@@ -69,18 +46,22 @@
             <xs:sequence>
                 <xs:element ref="property" maxOccurs="unbounded"/>
             </xs:sequence>
-            <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
             <xs:attribute name="type" type="xs:string" use="required"/>
         </xs:complexType>
     </xs:element>
-    
-    <xs:element name="undo-operation" type="SpecialOperationType"/>
-    
-    <xs:element name="redo-operation" type="SpecialOperationType"/>
-    
-    <xs:complexType name="SpecialOperationType">
-        <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
-    </xs:complexType>
+
+    <xs:element name="property">
+        <xs:annotation>
+            <xs:documentation>
+                The property element allows to specify properties and their
+                values on an operation object.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="name" use="required" type="xs:NMTOKEN"/>
+            <xs:attribute name="value" use="required" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
     
     <xs:element name="site">
         <xs:annotation>
@@ -101,20 +82,7 @@
             <xs:attribute name="id" use="required" type="xs:string"/>
         </xs:complexType>
     </xs:element>
-    
-    <xs:element name="property">
-        <xs:annotation>
-            <xs:documentation>
-                The property element allows to specify properties and their
-                values on an operation object.
-            </xs:documentation>
-        </xs:annotation>
-        <xs:complexType>
-            <xs:attribute name="name" use="required" type="xs:NMTOKEN"/>
-            <xs:attribute name="value" use="required" type="xs:string"/>
-        </xs:complexType>
-    </xs:element>
-    
+        
     <xs:element name="generate">
         <xs:annotation>
             <xs:documentation>
@@ -124,19 +92,22 @@
             </xs:documentation>
         </xs:annotation>
         <xs:complexType>
-            <xs:attribute name="ref" use="required" type="xs:positiveInteger"/>
+            <xs:sequence>
+                <xs:element ref="operation"/>
+            </xs:sequence>
+            <xs:attribute name="id" use="required" type="xs:positiveInteger"/>
         </xs:complexType>
     </xs:element>
     
     <xs:element name="undo">
         <xs:complexType>
-            <xs:attribute name="ref" use="required" type="xs:positiveInteger"/>
+            <xs:attribute name="id" use="required" type="xs:positiveInteger"/>
         </xs:complexType>
     </xs:element>
 
     <xs:element name="redo">
         <xs:complexType>
-            <xs:attribute name="ref" use="required" type="xs:positiveInteger"/>
+            <xs:attribute name="id" use="required" type="xs:positiveInteger"/>
         </xs:complexType>
     </xs:element>
    
