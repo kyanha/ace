@@ -221,7 +221,7 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 		}
 		localPredecessors.put(siteId, node);
 		// 3) generation
-		addGeneratedOperation(ref, node);
+		addGeneratedOperation(id, node);
 	}
 	
 	/**

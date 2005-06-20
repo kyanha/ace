@@ -62,7 +62,8 @@ public class JupiterExecuteVisitor extends ExecuteVisitor {
 
 	public void visit(RelayNode node) {
 		// get 'client proxy' cp for the site of predecessor of n
-		Algorithm algo = getServerAlgorithm(node.getSiteId());
+		String siteId = "" + node.getRequest().getSiteId();
+		Algorithm algo = getServerAlgorithm(siteId);
 		// invoke cp.receiveRequest(n.getRequest())
 		algo.receiveRequest(node.getRequest());
 		// get transformed operation o'
@@ -70,7 +71,7 @@ public class JupiterExecuteVisitor extends ExecuteVisitor {
 				.getDocument();
 		Operation op = doc.getOperation();
 		// iterate over all other 'client proxy' as c
-		Iterator it = getOtherServerAlgorithms(node.getSiteId());
+		Iterator it = getOtherServerAlgorithms(siteId);
 		while (it.hasNext()) {
 			algo = (Algorithm) it.next();
 			// invoke c.generateRequest(o')
