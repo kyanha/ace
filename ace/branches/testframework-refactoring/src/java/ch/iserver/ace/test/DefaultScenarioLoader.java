@@ -81,8 +81,6 @@ public class DefaultScenarioLoader implements ScenarioLoader {
 	
 	protected void processRootChildren(ScenarioBuilder builder, Element root) {
 		processOperations(builder, root.getChildren("operation"));
-		processUndoOperations(builder, root.getChildren("undo-operation"));
-		processRedoOperations(builder, root.getChildren("redo-operation"));
 		processSites(builder, root.getChildren("site"));
 	}
 	
@@ -107,24 +105,6 @@ public class DefaultScenarioLoader implements ScenarioLoader {
 			} catch (ClassNotFoundException e) {
 				throw new ScenarioLoaderException(e);
 			}
-		}
-	}
-	
-	protected void processUndoOperations(ScenarioBuilder builder, List operations) {
-		Iterator it = operations.iterator();
-		while (it.hasNext()) {
-			Element operationEl = (Element) it.next();
-			String id = operationEl.getAttributeValue("id");
-			builder.addUndo(id);
-		}
-	}
-
-	protected void processRedoOperations(ScenarioBuilder builder, List operations) {
-		Iterator it = operations.iterator();
-		while (it.hasNext()) {
-			Element operationEl = (Element) it.next();
-			String id = operationEl.getAttributeValue("id");
-			builder.addRedo(id);
 		}
 	}
 	

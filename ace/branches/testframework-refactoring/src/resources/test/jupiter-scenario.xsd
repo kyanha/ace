@@ -8,7 +8,7 @@
         </xs:documentation>
     </xs:annotation>
 
-    <xs:element name="scenario">
+    <xs:element name="jupiter-scenario">
         <xs:annotation>
             <xs:documentation>
                 The scenario element is the root element of a scenario
@@ -22,39 +22,48 @@
             <xs:sequence>
                 <xs:choice maxOccurs="unbounded">
                     <xs:element ref="operation"/>
-                    <xs:element ref="undo-operation"/>
-                    <xs:element ref="redo-operation"/>
+                    <!--<xs:element ref="undo-operation"/>-->
+                    <!--<xs:element ref="redo-operation"/>-->
                 </xs:choice>
                 <xs:element ref="server"/>
-                <xs:element ref="site" maxOccurs="unbounded"/>
+                <xs:element ref="site" minOccurs="2" maxOccurs="unbounded"/>
             </xs:sequence>
             <xs:attribute name="initial" use="required" type="xs:string"/>
             <xs:attribute name="final" use="required" type="xs:string"/>
         </xs:complexType>
-        <xs:key name="operationId">
-            <xs:selector xpath="operation | undo-operation | redo-operation | server/relay"/>
+        
+        <xs:key name="generateId">
+            <xs:selector xpath="operation"/>
             <xs:field xpath="@id"/>
         </xs:key>
-        <xs:keyref refer="operationId" name="operationRef">
-            <xs:selector xpath="site/generate | site/receive | server/relay"/>
+        <xs:keyref refer="generateId" name="generateRef">
+            <xs:selector xpath="site/generate"/>
             <xs:field xpath="@ref"/>
         </xs:keyref>
-        <xs:key name="undoId">
-            <xs:selector xpath="undo-operation"/>
+        
+        <xs:key name="generationId">
+            <xs:selector xpath="operation | site/undo | site/redo"/>
             <xs:field xpath="@id"/>
-        </xs:key>        
-        <xs:keyref refer="undoId" name="undoRef">
-            <xs:selector xpath="site/undo"/>
+        </xs:key>
+        <xs:keyref refer="generationId" name="generationRef">
+            <xs:selector xpath="server/relay"/>
             <xs:field xpath="@ref"/>
         </xs:keyref>
-        <xs:key name="redoId">
-            <xs:selector xpath="redo-operation"/>
+        
+        <xs:key name="relayId">
+            <xs:selector xpath="server/relay"/>
             <xs:field xpath="@id"/>
-        </xs:key>        
-        <xs:keyref refer="redoId" name="redoRef">
-            <xs:selector xpath="site/redo"/>
+        </xs:key>
+        <xs:keyref refer="relayId" name="relayRef">
+            <xs:selector xpath="site/receive"/>
             <xs:field xpath="@ref"/>
         </xs:keyref>
+
+        <xs:unique name="operationId">
+            <xs:selector xpath="operation | site/undo | site/redo | server/relay"/>
+            <xs:field xpath="@id"/>
+        </xs:unique>
+        
     </xs:element>
     
     <xs:element name="operation">
@@ -88,13 +97,30 @@
         </xs:complexType>
     </xs:element>
     
-    <xs:element name="undo-operation" type="SpecialOperationType"/>
+    <!--<xs:element name="undo-operation" type="SpecialOperationType">
+        <xs:annotation>
+            <xs:documentation>
+                An undo-operation element declares the generation of an undo operation.
+            </xs:documentation>
+        </xs:annotation>
+    </xs:element>
     
-    <xs:element name="redo-operation" type="SpecialOperationType"/>
+    <xs:element name="redo-operation" type="SpecialOperationType">
+        <xs:annotation>
+            <xs:documentation>
+                A redo-operation element declares the generation of a redo operation.
+            </xs:documentation>
+        </xs:annotation>
+    </xs:element>
     
     <xs:complexType name="SpecialOperationType">
+        <xs:annotation>
+            <xs:documentation>
+                Type for undo/redo operation declarations.
+            </xs:documentation>
+        </xs:annotation>
         <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
-    </xs:complexType>
+    </xs:complexType>-->
     
     <xs:element name="site">
         <xs:annotation>
@@ -117,6 +143,12 @@
     </xs:element>
     
     <xs:element name="server">
+        <xs:annotation>
+            <xs:documentation>
+                The server element specifies the serialization order of events at the server.
+                The only allowed child element, relay, specifies the relay events.
+            </xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:sequence>
                 <xs:element ref="relay" maxOccurs="unbounded"/>
@@ -125,6 +157,13 @@
     </xs:element>
     
     <xs:element name="relay">
+        <xs:annotation>
+            <xs:documentation>
+                The relay element specifies a relay point on the server. The operation with
+                given reference ref is received. The transformed requests are identified by
+                the attribute id.
+            </xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:attribute name="ref" use="required" type="xs:positiveInteger"/>
             <xs:attribute name="id" use="required" type="xs:positiveInteger"/>
@@ -144,19 +183,38 @@
         </xs:complexType>
     </xs:element>
     
-    <xs:element name="undo">
-        <xs:complexType>
-            <xs:attribute name="ref" use="required" type="xs:positiveInteger"/>
-        </xs:complexType>
+    <xs:element name="undo" type="UndoRedoType">
+        <xs:annotation>
+            <xs:documentation>
+                Declares an undo event.
+            </xs:documentation>
+        </xs:annotation>
     </xs:element>
 
-    <xs:element name="redo">
-        <xs:complexType>
-            <xs:attribute name="ref" use="required" type="xs:positiveInteger"/>
-        </xs:complexType>
+    <xs:element name="redo" type="UndoRedoType">
+        <xs:annotation>
+            <xs:documentation>
+                Declares a redo event.
+            </xs:documentation>
+        </xs:annotation>
     </xs:element>
+    
+    <xs:complexType name="UndoRedoType">
+        <xs:annotation>
+            <xs:documentation>
+                The type used by undo/redo event elements.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:attribute name="id" use="required" type="xs:positiveInteger"/>
+    </xs:complexType>
+    
    
     <xs:element name="verify">
+        <xs:annotation>
+            <xs:documentation>
+                Declares a verify point at a given site.
+            </xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:attribute name="expect" use="required" type="xs:string"/>
         </xs:complexType>

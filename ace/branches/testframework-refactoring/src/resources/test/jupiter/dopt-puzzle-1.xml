@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scenario initial="abcdefg" final="bcdfg">
+<jupiter-scenario initial="abcdefg" final="bcdfg">
     
     <operation id="1" type="ch.iserver.ace.text.DeleteOperation">
         <property name="position" value="0"/>
@@ -34,4 +34,4 @@
         <receive ref="10"/>
     </site>
     
-</scenario>
+</jupiter-scenario>

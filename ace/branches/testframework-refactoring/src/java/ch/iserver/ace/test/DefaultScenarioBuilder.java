@@ -90,14 +90,6 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 		operations.put(id, op);
 	}
 	
-	public void addUndo(String id) {
-	
-	}
-	
-	public void addRedo(String redo) {
-		
-	}
-
 	protected void addNode(Node node) {
 		nodes.add(node);
 	}
@@ -145,27 +137,27 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 	/**
 	 * @inheritDoc
 	 */
-	public void addUndoGeneration(String ref) {
+	public void addUndoGeneration(String id) {
 		Node node = new UndoNode(siteId);
 		addNode(node);
 		Node pred = getPredecessor(siteId);
 		pred.setLocalSuccessor(node);
-		addGeneratedOperation(ref, node);
+		addGeneratedOperation(id, node);
 		localPredecessors.put(siteId, node);
-		addToSiteGeneration(siteId, ref);
+		addToSiteGeneration(siteId, id);
 	}
 	
 	/**
 	 * @inheritDoc
 	 */
-	public void addRedoGeneration(String ref) {
+	public void addRedoGeneration(String id) {
 		Node node = new RedoNode(siteId);
 		addNode(node);
 		Node pred = getPredecessor(siteId);
 		pred.setLocalSuccessor(node);
-		addGeneratedOperation(ref, node);
+		addGeneratedOperation(id, node);
 		localPredecessors.put(siteId, node);
-		addToSiteGeneration(siteId, ref);
+		addToSiteGeneration(siteId, id);
 	}
 
 	/**
