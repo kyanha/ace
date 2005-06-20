@@ -21,18 +21,14 @@
 
 package ch.iserver.ace.algorithm.jupiter;
 
-import ch.iserver.ace.DocumentModel;
-import ch.iserver.ace.algorithm.Algorithm;
-import ch.iserver.ace.algorithm.Timestamp;
-import ch.iserver.ace.test.AlgorithmTestCase;
-import ch.iserver.ace.test.TestDocumentModel;
-import ch.iserver.ace.text.GOTOInclusionTransformation;
+import ch.iserver.ace.test.jupiter.TwoWayTestCase;
+
 
 /**
  * Test class for testing the jupiter algorithm implementation
  * with the test framework.
  */
-public class JupiterTest extends AlgorithmTestCase {
+public class JupiterTest extends TwoWayTestCase {
 	
 	public void testPuzzleOne() throws Exception {
 		execute("/test/puzzle.xml");
@@ -82,38 +78,4 @@ public class JupiterTest extends AlgorithmTestCase {
 		execute("/test/redo.xml");
 	}
 	
-	/**
-	 * @see ch.iserver.ace.test.AlgorithmTestFactory#createAlgorithm(int,Object)
-	 */
-	public Algorithm createAlgorithm(int siteId, Object parameter) {
-		if (parameter != null) {
-			isClient = ((Boolean) parameter).booleanValue();
-		} else {
-			isClient = (algoCount % 2 == 1) ? false : true;
-		}
-		++algoCount;
-		Jupiter jupiter = new Jupiter(siteId, isClient);
-		jupiter.setInclusionTransformation(new GOTOInclusionTransformation());
-		return jupiter;
-	}
-	
-	//a flag not to be set on the algorithm, in order to have a client and a server
-	//algorithm instance.
-	private boolean isClient;
-	private int algoCount = 0;
-
-	/**
-	 * @see ch.iserver.ace.test.AlgorithmTestFactory#createTimestamp()
-	 */
-	public Timestamp createTimestamp() {
-		return new JupiterVectorTime(0, 0);
-	}
-	
-	/**
-	 * @see ch.iserver.ace.test.AlgorithmTestFactory#createDocument(java.lang.String)
-	 */
-	public DocumentModel createDocument(String state) {
-		return new TestDocumentModel(state);
-	}
-
 }

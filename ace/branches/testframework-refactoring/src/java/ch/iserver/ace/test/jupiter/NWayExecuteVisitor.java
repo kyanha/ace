@@ -40,14 +40,14 @@ import ch.iserver.ace.test.ScenarioException;
 import ch.iserver.ace.test.StartNode;
 
 /**
- * 
+ * TODO: comments
  */
-public class JupiterExecuteVisitor extends ExecuteVisitor {
+public class NWayExecuteVisitor extends ExecuteVisitor {
 
 	/** map from site ids to server side algorithms */
 	private Map serverAlgorithms;
 
-	public JupiterExecuteVisitor(AlgorithmTestFactory factory) {
+	public NWayExecuteVisitor(AlgorithmTestFactory factory) {
 		super(factory);
 		serverAlgorithms = new HashMap();
 	}

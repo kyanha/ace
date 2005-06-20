@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scenario initial="ABC" final="AcB">
         
-    <site id="0">
+    <site id="1">
         <generate id="1">
             <operation type="ch.iserver.ace.text.InsertOperation">
                 <property name="position" value="1"/>
@@ -11,7 +11,7 @@
         <receive ref="2"/>
     </site>
     
-    <site id="1">
+    <site id="2">
         <generate id="2">
             <operation type="ch.iserver.ace.text.DeleteOperation">
                 <property name="position" value="2"/>

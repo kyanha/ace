@@ -18,52 +18,23 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package ch.iserver.ace.test;
+package ch.iserver.ace.test.jupiter;
 
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-
-import junit.framework.TestCase;
 import ch.iserver.ace.DocumentModel;
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.Timestamp;
 import ch.iserver.ace.algorithm.jupiter.Jupiter;
 import ch.iserver.ace.algorithm.jupiter.JupiterVectorTime;
-import ch.iserver.ace.test.jupiter.JupiterExecuteVisitor;
-import ch.iserver.ace.test.jupiter.JupiterXMLScenarioLoader;
+import ch.iserver.ace.test.AlgorithmTestCase;
+import ch.iserver.ace.test.AlgorithmTestFactory;
+import ch.iserver.ace.test.TestDocumentModel;
 import ch.iserver.ace.text.GOTOInclusionTransformation;
 
 /**
  *
  */
-public abstract class JupiterTestCase extends TestCase implements AlgorithmTestFactory {
-	
-	/**
-	 * Executes the given scenario contained in <var>stream</var>.
-	 * The scenario is built using a default scenario builder and
-	 * loaded using a default scenario loader. Then the scenario
-	 * is executed with an execute visitor.
-	 * 
-	 * @param stream the source of the scenario
-	 * @throws Exception if anything goes wrong
-	 */
-	protected void execute(InputStream stream) throws Exception {
-		assertNotNull(stream);
-		ScenarioLoader loader = new JupiterXMLScenarioLoader();
-		DefaultScenarioBuilder builder = new DefaultScenarioBuilder();
-		loader.loadScenario(builder, stream);
-		Scenario scenario = builder.getScenario();
-		NodeVisitor visitor = new JupiterExecuteVisitor(this);
-		scenario.accept(visitor);
-	}
-	
-	protected void execute(String resource) throws Exception {
-		InputStream stream = getClass().getResourceAsStream(resource);
-		if (stream == null) {
-			throw new FileNotFoundException(resource);
-		}
-		execute(stream);
-	}
+public abstract class JupiterTestCase extends AlgorithmTestCase implements
+		AlgorithmTestFactory {
 	
 	/**
 	 * @see ch.iserver.ace.test.AlgorithmTestFactory#createAlgorithm(int,Object)
@@ -88,5 +59,5 @@ public abstract class JupiterTestCase extends TestCase implements AlgorithmTestF
 	public DocumentModel createDocument(String state) {
 		return new TestDocumentModel(state);
 	}
-		
+
 }

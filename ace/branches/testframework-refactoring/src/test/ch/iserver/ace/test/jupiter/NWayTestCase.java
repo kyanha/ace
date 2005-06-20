@@ -18,36 +18,24 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package ch.iserver.ace.algorithm.jupiter;
+package ch.iserver.ace.test.jupiter;
 
-import ch.iserver.ace.test.jupiter.NWayTestCase;
+import ch.iserver.ace.test.AlgorithmTestFactory;
+import ch.iserver.ace.test.NodeVisitor;
+import ch.iserver.ace.test.ScenarioLoader;
+
 
 /**
- * Test case for all different types of jupiter scenarios. It
- * uses the extended testframework suitable for the jupiter
- * algorithm (using a central server).
+ *
  */
-public class JupiterScenarioTest extends NWayTestCase {
-
-	/**
-	 * Tests a basic dOPT puzzle.
-	 */
-	public void testDOptPuzzle() throws Exception {
-		execute("/test/jupiter/dopt-puzzle-1.xml");
+public abstract class NWayTestCase extends JupiterTestCase {
+	
+	protected NodeVisitor createExecuteVisitor(AlgorithmTestFactory factory) {
+		return new NWayExecuteVisitor(this);
 	}
 	
-	/**
-	 * Tests some basic undo puzzle.
-	 */
-	public void testUndoPuzzle() throws Exception {
-		execute("/test/jupiter/undo.xml");
-	}
-
-	/**
-	 * Tests some basic redo puzzle.
-	 */
-	public void testRedoPuzzle() throws Exception {
-		execute("/test/jupiter/redo.xml");
+	protected ScenarioLoader createScenarioLoader() {
+		return new JupiterXMLScenarioLoader();
 	}
 	
 }

@@ -31,8 +31,10 @@ import java.util.List;
  * although that condition is not ensured by the implementation.
  */
 public class StartNode extends AbstractNode {
+	/** how many sites where generated before this one */
+	private final int sites;
 	/** the initial state of the document at the site */
-	private String state;
+	private final String state;
 	
 	/**
 	 * Creates a new start node belonging to the given site whose initial
@@ -41,9 +43,10 @@ public class StartNode extends AbstractNode {
 	 * @param siteId the id of the site this node belongs to
 	 * @param initialState the initial state at the site
 	 */
-	public StartNode(String siteId, String initialState) {
+	public StartNode(String siteId, String initialState, int sites) {
 		super(siteId);
 		this.state = initialState;
+		this.sites = sites;
 	}
 	
 	/**
@@ -53,6 +56,15 @@ public class StartNode extends AbstractNode {
 	 */
 	public String getState() {
 		return state;
+	}
+	
+	/**
+	 * Gets the number of sites generated before this one.
+	 * 
+	 * @return the number of sites generated before this one
+	 */
+	public int getSites() {
+		return sites;
 	}
 	
 	/**

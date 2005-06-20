@@ -61,8 +61,8 @@ public class ExecuteVisitorTest extends TestCase {
 		ExecuteVisitor visitor = new ExecuteVisitor(new AlgorithmTestFactoryStub());
 		
 		// create nodes
-		StartNode s1 = new StartNode("0", "abc");
-		StartNode s2 = new StartNode("1", "abc");
+		StartNode s1 = new StartNode("0", "abc", 0);
+		StartNode s2 = new StartNode("1", "abc", 1);
 		DoNode g1 = new DoNode("0", "1", new InsertOperation(1, "1"));
 		DoNode g2 = new DoNode("1", "2", new InsertOperation(1, "2"));
 		ReceptionNode r1 = new SimpleReceptionNode("0", "2");
@@ -101,8 +101,8 @@ public class ExecuteVisitorTest extends TestCase {
 		ExecuteVisitor visitor = new ExecuteVisitor(factory);
 		
 		// create nodes
-		StartNode s1 = new StartNode("0", "abc");
-		StartNode s2 = new StartNode("1", "abc");
+		StartNode s1 = new StartNode("0", "abc", 0);
+		StartNode s2 = new StartNode("1", "abc", 1);
 		DoNode g1 = new DoNode("0", "1", new InsertOperation(1, "1"));
 		DoNode g2 = new DoNode("1", "2", new InsertOperation(1, "2"));
 		ReceptionNode r1 = new SimpleReceptionNode("0", "2");
@@ -160,8 +160,8 @@ public class ExecuteVisitorTest extends TestCase {
 		List result = new ArrayList();
 		
 		// create nodes
-		StartNode s1 = new StartNode("0", "abc");
-		StartNode s2 = new StartNode("1", "abc");
+		StartNode s1 = new StartNode("0", "abc", 0);
+		StartNode s2 = new StartNode("1", "abc", 1);
 		DoNode g1 = new DoNode("0", "1", new InsertOperation(1, "1"));
 		DoNode g2 = new DoNode("1", "2", new InsertOperation(2, "2"));
 		ReceptionNode r1 = new SimpleReceptionNode("0", "2");

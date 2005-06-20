@@ -65,6 +65,9 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 	/** set of all nodes */
 	private Set nodes;
 	
+	/** the number of sites generated so far */
+	private int siteCount;
+	
 	/**
 	 * @inheritDoc
 	 */
@@ -77,6 +80,7 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 		this.generationNodes = new HashMap();
 		this.receptionNodes = new ArrayList();
 		this.nodes = new HashSet();
+		this.siteCount = 0;
 	}
 		
 	protected void addNode(Node node) {
@@ -95,7 +99,7 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 			throw new ScenarioException("sites cannot nest");
 		}
 		this.siteId = siteId;
-		StartNode node = new StartNode(siteId, initialState);
+		StartNode node = new StartNode(siteId, initialState, siteCount++);
 		addNode(node);
 		startNodes.put(siteId, node);
 		setPredecessor(siteId, node);
