@@ -95,7 +95,11 @@ public class GraphUtil {
 		}
 		
 		public void visit(RelayNode node) {
-			map.put(node, new Integer(1));
+			if (node.getPredecessor() != null) {
+				map.put(node, new Integer(2));
+			} else {
+				map.put(node, new Integer(1));
+			}
 		}
 		
 		public void visit(VerificationNode node) {

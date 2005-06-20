@@ -23,16 +23,31 @@ package ch.iserver.ace.algorithm.jupiter;
 import ch.iserver.ace.test.JupiterTestCase;
 
 /**
- * TODO: comments
+ * Test case for all different types of jupiter scenarios. It
+ * uses the extended testframework suitable for the jupiter
+ * algorithm (using a central server).
  */
 public class JupiterScenarioTest extends JupiterTestCase {
 
+	/**
+	 * Tests a basic dOPT puzzle.
+	 */
 	public void testDOptPuzzle() throws Exception {
 		execute("/test/jupiter/dopt-puzzle-1.xml");
 	}
 	
+	/**
+	 * Tests some basic undo puzzle.
+	 */
 	public void testUndoPuzzle() throws Exception {
 		execute("/test/jupiter/undo.xml");
+	}
+
+	/**
+	 * Tests some basic redo puzzle.
+	 */
+	public void testRedoPuzzle() throws Exception {
+		execute("/test/jupiter/redo.xml");
 	}
 	
 }

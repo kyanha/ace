@@ -39,15 +39,6 @@ public interface ScenarioBuilder {
 	public void init(String initialState, String finalState);
 	
 	/**
-	 * Adds an operation with the given id to the builder.
-	 * 
-	 * @param id the identifier of the operation
-	 * @param op the operation itself
-	 * @throws ScenarioException in case of errors
-	 */
-	public void addOperation(String id, Operation op);
-	
-	/**
 	 * Notifies the builder of the start of a new site to process.
 	 * Calls to startSite and endSite must be executed in proper
 	 * sequence. Most notably, after calling startSite this method
@@ -72,10 +63,10 @@ public interface ScenarioBuilder {
 	 * Adds the generation of an operation to the current site. The
 	 * current site is the last site for which startSite was called.
 	 * 
-	 * @param opRef the operation to be generated
+	 * @param id the id of this event
 	 * @throws ScenarioException in case of errors
 	 */
-	public void addGeneration(String opRef);
+	public void addGeneration(String id, Operation operation);
 	
 	/**
 	 * Adds the generation of an undo to the current site. The current

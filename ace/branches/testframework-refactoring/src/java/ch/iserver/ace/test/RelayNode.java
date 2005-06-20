@@ -39,11 +39,18 @@ public class RelayNode extends AbstractNode implements ReceptionNode, Generation
 	/** list of remote successors */
 	private List remoteSuccessors;
 	
+	/** predecessor of this node */
+	private Node predecessor;
+	
 	public RelayNode(String siteId, String reference, String id) {
 		super(siteId);
 		this.reference = reference;
 		this.id = id;
 		this.remoteSuccessors = new LinkedList();
+	}
+	
+	public String getId() {
+		return id;
 	}
 	
 	public String getReference() {
@@ -58,6 +65,14 @@ public class RelayNode extends AbstractNode implements ReceptionNode, Generation
 		this.request = request;
 	}
 	
+	public Node getPredecessor() {
+		return predecessor;
+	}
+
+	public void setPredecessor(Node predecessor) {
+		this.predecessor = predecessor;
+	}
+
 	public void addRemoteSuccessor(ReceptionNode successor) {
 		remoteSuccessors.add(successor);
 	}
@@ -77,6 +92,13 @@ public class RelayNode extends AbstractNode implements ReceptionNode, Generation
 
 	public void accept(NodeVisitor visitor) {
 		visitor.visit(this);
+	}
+	
+	public String toString() {
+		return getClass().getName() + "["
+				+ ",ref=" + getReference()
+				+ ",id=" + getId()
+				+ "]";
 	}
 
 }

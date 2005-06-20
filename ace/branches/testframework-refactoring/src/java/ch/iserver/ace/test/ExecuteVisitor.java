@@ -122,8 +122,7 @@ public class ExecuteVisitor implements NodeVisitor {
 	 * Visits an undo node. Calls undo on the local algorithm to get a request
 	 * that is then sent to all remote successors.
 	 * 
-	 * @param node
-	 *            the node to visit
+	 * @param node the node to visit
 	 */
 	public void visit(UndoNode node) {
 		Algorithm algo = getAlgorithm(node.getSiteId());
@@ -139,8 +138,7 @@ public class ExecuteVisitor implements NodeVisitor {
 	 * Visits a redo node. Calls redo on the local algorithm to get a request
 	 * that is then sent to all remote successors.
 	 * 
-	 * @param node
-	 *            the node to visit
+	 * @param node the node to visit
 	 */
 	public void visit(RedoNode node) {
 		Algorithm algo = getAlgorithm(node.getSiteId());

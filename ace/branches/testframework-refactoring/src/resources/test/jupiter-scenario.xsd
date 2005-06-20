@@ -14,13 +14,12 @@
                 The scenario element is the root element of a scenario
                 definition. It has attributes to specify initial and
                 final state of the document at all sites. Two types
-                of subelements allow to specify operations and sites
-                that exist in the scenario.
+                of subelements allow to specify the sequence of server
+                and site elements.
             </xs:documentation>
         </xs:annotation>
         <xs:complexType>
             <xs:sequence>
-                <xs:element ref="operation" maxOccurs="unbounded"/>
                 <xs:element ref="server"/>
                 <xs:element ref="site" minOccurs="2" maxOccurs="unbounded"/>
             </xs:sequence>
@@ -38,7 +37,7 @@
         </xs:keyref>
         
         <xs:key name="generationId">
-            <xs:selector xpath="operation | site/undo | site/redo"/>
+            <xs:selector xpath="site/generate | site/undo | site/redo"/>
             <xs:field xpath="@id"/>
         </xs:key>
         <xs:keyref refer="generationId" name="generationRef">
@@ -66,8 +65,7 @@
         <xs:annotation>
             <xs:documentation>
                 An operation element declares an operation that is used
-                in the scenario. An operation gets an id to uniquely identify
-                it. Further a java operation object is specified along with
+                in the scenario. A java operation object is specified along with
                 its properties.
             </xs:documentation>
         </xs:annotation>
@@ -75,7 +73,6 @@
             <xs:sequence>
                 <xs:element ref="property" maxOccurs="unbounded"/>
             </xs:sequence>
-            <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
             <xs:attribute name="type" type="xs:string" use="required"/>
         </xs:complexType>
     </xs:element>
@@ -150,7 +147,10 @@
             </xs:documentation>
         </xs:annotation>
         <xs:complexType>
-            <xs:attribute name="ref" use="required" type="xs:positiveInteger"/>
+            <xs:sequence>
+                <xs:element ref="operation"/>
+            </xs:sequence>
+            <xs:attribute name="id" use="required" type="xs:positiveInteger"/>
         </xs:complexType>
     </xs:element>
     

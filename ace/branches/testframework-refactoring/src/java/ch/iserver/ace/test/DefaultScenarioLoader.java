@@ -80,34 +80,9 @@ public class DefaultScenarioLoader implements ScenarioLoader {
 	}
 	
 	protected void processRootChildren(ScenarioBuilder builder, Element root) {
-		processOperations(builder, root.getChildren("operation"));
 		processSites(builder, root.getChildren("site"));
 	}
-	
-	protected void processOperations(ScenarioBuilder builder, List operations) { 
-		Iterator it = operations.iterator();
 		
-		while (it.hasNext()) {
-			Element operationEl = (Element) it.next();
-			String id = operationEl.getAttributeValue("id");
-			String type = operationEl.getAttributeValue("type");
-			try {
-				Operation operation = (Operation) Class.forName(type).newInstance();
-				Map params = getProperties(operationEl);
-				BeanUtils.populate(operation, params);
-				builder.addOperation(id, operation);
-			} catch (InstantiationException e) {
-				throw new ScenarioLoaderException(e);
-			} catch (IllegalAccessException e) {
-				throw new ScenarioLoaderException(e);
-			} catch (InvocationTargetException e) {
-				throw new ScenarioLoaderException(e);
-			} catch (ClassNotFoundException e) {
-				throw new ScenarioLoaderException(e);
-			}
-		}
-	}
-	
 	protected Map getProperties(Element el) {
 		Map result = new HashMap();
 		Iterator it = el.getChildren("property").iterator();
@@ -136,9 +111,10 @@ public class DefaultScenarioLoader implements ScenarioLoader {
 		Iterator it = children.iterator();
 		while (it.hasNext()) {
 			Element childEl = (Element) it.next();
-			String ref = childEl.getAttributeValue("ref");
 			if ("generate".equals(childEl.getName())) {
-				builder.addGeneration(ref);
+				String id = childEl.getAttributeValue("id");
+				Operation op = processOperation(childEl.getChild("operation"));
+				builder.addGeneration(id, op);
 			} else if ("undo".equals(childEl.getName())) {
 				String id = childEl.getAttributeValue("id");
 				builder.addUndoGeneration(id);
@@ -146,11 +122,30 @@ public class DefaultScenarioLoader implements ScenarioLoader {
 				String id = childEl.getAttributeValue("id");
 				builder.addRedoGeneration(id);
 			} else if ("receive".equals(childEl.getName())) {
+				String ref = childEl.getAttributeValue("ref");
 				builder.addReception(ref);
 			} else if ("verify".equals(childEl.getName())) {
 				String expect = childEl.getAttributeValue("expect");
 				builder.addVerification(expect);
 			}
+		}
+	}
+	
+	protected Operation processOperation(Element operationEl) { 
+		String type = operationEl.getAttributeValue("type");
+		try {
+			Operation operation = (Operation) Class.forName(type).newInstance();
+			Map params = getProperties(operationEl);
+			BeanUtils.populate(operation, params);
+			return operation;
+		} catch (InstantiationException e) {
+			throw new ScenarioLoaderException(e);
+		} catch (IllegalAccessException e) {
+			throw new ScenarioLoaderException(e);
+		} catch (InvocationTargetException e) {
+			throw new ScenarioLoaderException(e);
+		} catch (ClassNotFoundException e) {
+			throw new ScenarioLoaderException(e);
 		}
 	}
 	

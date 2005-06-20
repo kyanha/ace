@@ -22,13 +22,27 @@ package ch.iserver.ace.test;
 
 
 public class RedoNode extends AbstractGenerationNode {
-
-	public RedoNode(String siteId) {
+	/** the id of this event */
+	private final String id;
+	
+	public RedoNode(String siteId, String id) {
 		super(siteId);
+		this.id = id;
+	}
+	
+	public String getId() {
+		return id;
 	}
 	
 	public void accept(NodeVisitor visitor) {
 		visitor.visit(this);
+	}
+	
+	public String toString() {
+		return getClass().getName() + "["
+				+ "site=" + getSiteId()
+				+ ",id=" + getId()
+				+ "]";
 	}
 
 }
