@@ -29,23 +29,24 @@ pdfcreator={pdftex},
 
 
 \section{Introduction}
-The purpose of this document is to give a general overview of all the available documents, 
+\subsection{Purpose}
+The purpose of this document is to give a general overview of all the available documents, the achieved results and to make a brief outlook.
 
 \subsection{Referenced Documents}
 All the referenced documents can be found on the project website (\href{http://ace.iserver.ch/}{http://ace.iserver.ch}) or in the subversion repository.
 \begin{itemize}
  \item PM Documents
  \begin{itemize}
-  \item Projekthandbuch
-  \item Projektplan
-  \item Erfahrungsbericht
+  \item \href{http://ace.iserver.ch:81/repos/ace/ace/trunk/doc/pdf/projectmanual.pdf}{Project Manual}
+  \item \href{http://ace.iserver.ch:81/repos/ace/ace/trunk/doc/pdf/projektplan.pdf}{Project Plan}
+  \item \href{http://ace.iserver.ch:81/repos/ace/ace/trunk/doc/pdf/erfahrungsbericht.pdf}{Final Report PM}
  \end{itemize}
  \item Other Documents
  \begin{itemize}
-  \item Report Evaluation Algorithm
-  \item Report Implementation Algorithm
-  \item Report Evaluation Network
-  \item Report Evaluation GUI
+  \item \href{http://ace.iserver.ch:81/repos/ace/ace/trunk/doc/pdf/algorithm.pdf}{Report Evaluation Algorithm}
+  \item \href{http://ace.iserver.ch:81/repos/ace/ace/trunk/doc/pdf/implementation-algorithm.pdf}{Report Implementation Algorithm}
+  \item \href{http://ace.iserver.ch:81/repos/ace/ace/trunk/doc/pdf/network.pdf}{Report Evaluation Network}
+  \item \href{http://ace.iserver.ch:81/repos/ace/ace/trunk/doc/pdf/gui.pdf}{Report Evaluation GUI}
  \end{itemize}
 \end{itemize}
 
@@ -53,11 +54,31 @@ All the referenced documents can be found on the project website (\href{http://a
 \section{Project}
 The planned project structure is described in the project plan and project manual.
 
-\subsection{Steps}
-The project was split into three distinct phases: initialization, construction, and termination. The construction phase was split into three subprojects: algorithm, network, and GUI.
+\subsection{Phases}
+The project was split into three distinct phases: initialization, construction, and termination. The construction phase was split into three subprojects: algorithm, network, and GUI. The lifecycle model is depicted in figure \ref{fig:lifecycle}.
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=8cm,height=8.5cm]{../../images/vorgehensmodell.eps}
+ \caption{Lifecycle Model used in Semester Project}
+ \label{fig:lifecycle}
+\end{figure}
+
+\subsection{Decisions}
+The following decisions have been made:
+\begin{itemize}
+ \item algorithm: Jupiter
+ \item resulting from the above point: client-server architecture
+\end{itemize}
+Several decisions are deliberately left open:
+\begin{itemize}
+ \item Which network technologies do we use for implementation of network layer?
+ \item Will the concurrency control algorithm be integrated into an existing application (for instance \emph{JEdit}) or will we develop a standalone application?
+\end{itemize}
+Further, we have decided to continue the project as our diploma project.
 
 \subsection{Results}
-The expected results are described in the project plan. 
+The expected results are described in the project plan. In the following sections all the major documents are presented. These documents are the source of all the information about the project itself.
 
 \subsubsection{Algorithm}
 \paragraph{Report Evaluation Algorithm:} 
@@ -66,7 +87,7 @@ This report describes the core principles of collaborative editing, evaluates se
 \paragraph{Report Implementation Algorithm:} 
 This report describes which algorithm we chose in great detail. Also a justification for our selection is given.
 
-\paraggraph{Report Implementation Testframework:}
+\paragraph{Report Implementation Testframework:}
 This report describes the testframework and shows how one can define testcases (so called scenarios) for the testframework.
 
 \subsubsection{Network}
@@ -79,9 +100,9 @@ The evaluation report GUI describes several key problems that must be solved in 
 
 
 \section{Status}
-The goals as described in the project manual are all achieved. However, the implementation of undo in the algorithm still has some situation where it fails. We have a complete understanding how to solve these problems. The solution is not yet implemented.
+The goals as described in the project manual are all achieved. However, the implementation of undo in the algorithm still has some flaws. Although we have a complete understanding how to solve these problems, the solution is not yet implemented.
 
-See the \emph{report implementation algorithm} for a description of the remaining issues in the implementation of the user undo/redo.
+See the \emph{report implementation algorithm} for a description of the remaining issues in the implementation of undo/redo.
 
 
 \section{Outlook}
@@ -102,3 +123,4 @@ The implementation of a collaborative text editor will be the main goal of the d
 \end{itemize}
 
 \end{document}
+
