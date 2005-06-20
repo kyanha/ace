@@ -44,13 +44,13 @@ import ch.iserver.ace.Operation;
  * Default implementation of the ScenarioLoader interface. Reads scenarios from
  * an xml file that is valid with respect to a schema (/test/scenario.xsd).
  */
-public class DefaultScenarioLoader implements ScenarioLoader {
+public class XMLScenarioLoader implements ScenarioLoader {
 	static final String W3C_XML_SCHEMA = "http://www.w3.org/2001/XMLSchema";
 	static final String JAXP_SCHEMA_LANGUAGE = "http://java.sun.com/xml/jaxp/properties/schemaLanguage";
 	static final String JAXP_SCHEMA_SOURCE = "http://java.sun.com/xml/jaxp/properties/schemaSource";
 
 	/** default implementation of scenario loader interface */
-	public DefaultScenarioLoader() { }
+	public XMLScenarioLoader() { }
 	
 	/**
 	 * @inheritDoc

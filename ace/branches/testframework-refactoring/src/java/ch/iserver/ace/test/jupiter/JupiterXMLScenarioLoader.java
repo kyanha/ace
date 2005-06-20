@@ -26,13 +26,13 @@ import java.util.Iterator;
 
 import org.jdom.Element;
 
-import ch.iserver.ace.test.DefaultScenarioLoader;
+import ch.iserver.ace.test.XMLScenarioLoader;
 import ch.iserver.ace.test.ScenarioBuilder;
 
 /**
  *
  */
-public class JupiterXMLScenarioLoader extends DefaultScenarioLoader {
+public class JupiterXMLScenarioLoader extends XMLScenarioLoader {
 
 	protected InputStream getSchema() {
 		return getClass().getResourceAsStream("/test/jupiter-scenario.xsd");

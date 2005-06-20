@@ -21,7 +21,7 @@
 package ch.iserver.ace.test.jupiter;
 
 import ch.iserver.ace.test.AlgorithmTestFactory;
-import ch.iserver.ace.test.DefaultScenarioLoader;
+import ch.iserver.ace.test.XMLScenarioLoader;
 import ch.iserver.ace.test.NodeVisitor;
 import ch.iserver.ace.test.ScenarioLoader;
 
@@ -36,7 +36,7 @@ public abstract class TwoWayTestCase extends JupiterTestCase {
 	}
 	
 	protected ScenarioLoader createScenarioLoader() {
-		return new DefaultScenarioLoader();
+		return new XMLScenarioLoader();
 	}
 	
 }
