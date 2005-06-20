@@ -28,7 +28,77 @@ pdfcreator={pdftex},
 \newpage
 
 
+\section{Introduction}
+The purpose of this document is to give a general overview of all the available documents, 
+
+\subsection{Referenced Documents}
+All the referenced documents can be found on the project website (\href{http://ace.iserver.ch/}{http://ace.iserver.ch}) or in the subversion repository.
+\begin{itemize}
+ \item PM Documents
+ \begin{itemize}
+  \item Projekthandbuch
+  \item Projektplan
+  \item Erfahrungsbericht
+ \end{itemize}
+ \item Other Documents
+ \begin{itemize}
+  \item Report Evaluation Algorithm
+  \item Report Implementation Algorithm
+  \item Report Evaluation Network
+  \item Report Evaluation GUI
+ \end{itemize}
+\end{itemize}
 
 
+\section{Project}
+The planned project structure is described in the project plan and project manual.
+
+\subsection{Steps}
+The project was split into three distinct phases: initialization, construction, and termination. The construction phase was split into three subprojects: algorithm, network, and GUI.
+
+\subsection{Results}
+The expected results are described in the project plan. 
+
+\subsubsection{Algorithm}
+\paragraph{Report Evaluation Algorithm:} 
+This report describes the core principles of collaborative editing, evaluates several algorithms and proposes a few for a possible implementation.
+
+\paragraph{Report Implementation Algorithm:} 
+This report describes which algorithm we chose in great detail. Also a justification for our selection is given.
+
+\paraggraph{Report Implementation Testframework:}
+This report describes the testframework and shows how one can define testcases (so called scenarios) for the testframework.
+
+\subsubsection{Network}
+\paragraph{Report Evaluation Network:}
+This report describes the requirements a network layer of \ace must fulfill. It further describes some avaible network technologies and explains whether they are suitable. A set of selection criteria is given at the end of this report.
+
+\subsubsection{GUI}
+\paragraph{Report Evaluation GUI:}
+The evaluation report GUI describes several key problems that must be solved in the graphical user interface of \ace.
+
+
+\section{Status}
+The goals as described in the project manual are all achieved. However, the implementation of undo in the algorithm still has some situation where it fails. We have a complete understanding how to solve these problems. The solution is not yet implemented.
+
+See the \emph{report implementation algorithm} for a description of the remaining issues in the implementation of the user undo/redo.
+
+
+\section{Outlook}
+We achieved the main objectives of the semester project. We have built a good and solid foundation for a collaborative application. Now, we would like to make a brief outlook for the time up to the diploma project and also for the diploma project itself.
+
+\subsection{Summer}
+\begin{itemize}
+ \item complete implementation of algorithm (undo/redo)
+ \item selection of network technology
+ \item GUI: integrated in existing application or standalone application?
+\end{itemize}
+
+\subsection{Diploma Project}
+The implementation of a collaborative text editor will be the main goal of the diploma project. This goal includes several other goals that are needed for a fully functioning application.
+\begin{itemize}
+ \item network layer (discovery of available shared documents, communication)
+ \item GUI: integration of algorithm, sharing of documents, discovery of shared documents
+\end{itemize}
 
 \end{document}
