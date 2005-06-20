@@ -31,4 +31,8 @@ public class JupiterScenarioTest extends JupiterTestCase {
 		execute("/test/jupiter/dopt-puzzle-1.xml");
 	}
 	
+	public void testUndoPuzzle() throws Exception {
+		execute("/test/jupiter/undo.xml");
+	}
+	
 }

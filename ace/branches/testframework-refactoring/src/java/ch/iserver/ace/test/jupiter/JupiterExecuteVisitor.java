@@ -53,7 +53,7 @@ public class JupiterExecuteVisitor extends ExecuteVisitor {
 
 	protected void siteCreated(String siteId) {
 		Algorithm algorithm = getFactory().createAlgorithm(
-				Integer.parseInt(siteId), Boolean.TRUE);
+				Integer.parseInt(siteId), Boolean.FALSE);
 		Timestamp timestamp = getFactory().createTimestamp();
 		DocumentModel document = new OperationExtractDocumentModel();
 		algorithm.init(document, timestamp);

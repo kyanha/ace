@@ -82,7 +82,7 @@ public class ExecuteVisitor implements NodeVisitor {
 	public void visit(StartNode node) {
 		String state = node.getState();
 		Algorithm algorithm = getFactory().createAlgorithm(
-				Integer.parseInt(node.getSiteId()), Boolean.FALSE);
+				Integer.parseInt(node.getSiteId()), Boolean.TRUE);
 		DocumentModel document = getFactory().createDocument(state);
 		Timestamp timestamp = getFactory().createTimestamp();
 		algorithm.init(document, timestamp);

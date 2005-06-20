@@ -140,9 +140,11 @@ public class DefaultScenarioLoader implements ScenarioLoader {
 			if ("generate".equals(childEl.getName())) {
 				builder.addGeneration(ref);
 			} else if ("undo".equals(childEl.getName())) {
-				builder.addUndoGeneration(ref);
+				String id = childEl.getAttributeValue("id");
+				builder.addUndoGeneration(id);
 			} else if ("redo".equals(childEl.getName())) {
-				builder.addRedoGeneration(ref);
+				String id = childEl.getAttributeValue("id");
+				builder.addRedoGeneration(id);
 			} else if ("receive".equals(childEl.getName())) {
 				builder.addReception(ref);
 			} else if ("verify".equals(childEl.getName())) {

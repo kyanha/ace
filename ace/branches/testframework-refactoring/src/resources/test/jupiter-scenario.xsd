@@ -20,11 +20,7 @@
         </xs:annotation>
         <xs:complexType>
             <xs:sequence>
-                <xs:choice maxOccurs="unbounded">
-                    <xs:element ref="operation"/>
-                    <!--<xs:element ref="undo-operation"/>-->
-                    <!--<xs:element ref="redo-operation"/>-->
-                </xs:choice>
+                <xs:element ref="operation" maxOccurs="unbounded"/>
                 <xs:element ref="server"/>
                 <xs:element ref="site" minOccurs="2" maxOccurs="unbounded"/>
             </xs:sequence>
@@ -96,31 +92,6 @@
             <xs:attribute name="value" use="required" type="xs:string"/>
         </xs:complexType>
     </xs:element>
-    
-    <!--<xs:element name="undo-operation" type="SpecialOperationType">
-        <xs:annotation>
-            <xs:documentation>
-                An undo-operation element declares the generation of an undo operation.
-            </xs:documentation>
-        </xs:annotation>
-    </xs:element>
-    
-    <xs:element name="redo-operation" type="SpecialOperationType">
-        <xs:annotation>
-            <xs:documentation>
-                A redo-operation element declares the generation of a redo operation.
-            </xs:documentation>
-        </xs:annotation>
-    </xs:element>
-    
-    <xs:complexType name="SpecialOperationType">
-        <xs:annotation>
-            <xs:documentation>
-                Type for undo/redo operation declarations.
-            </xs:documentation>
-        </xs:annotation>
-        <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
-    </xs:complexType>-->
     
     <xs:element name="site">
         <xs:annotation>
