@@ -28,6 +28,9 @@ import java.util.List;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 
+import org.apache.log4j.Logger;
+
+import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.Request;
 
 /**
@@ -35,12 +38,17 @@ import ch.iserver.ace.algorithm.Request;
  */
 public class UndoManager {
 
+	private static Logger LOG = Logger.getLogger(UndoManager.class);
+	
 	//TODO: limit size of undo buffer
+	private List localUndoCandidates;
+	//this list contains all local requests (incl. undo's, redo's)
 	private List localRequests;
 	private List remoteRequests;
 	private int nextUndoOperation;
 	
 	public UndoManager() {
+		localUndoCandidates = Collections.synchronizedList(new ArrayList());
 		localRequests = Collections.synchronizedList(new ArrayList());
 		remoteRequests = Collections.synchronizedList(new ArrayList());
 		nextUndoOperation = -1;
@@ -49,31 +57,35 @@ public class UndoManager {
 	public Request nextUndo() {
 		if (!canUndo()) throw new CannotUndoException(); 
 		//return undo request and move history list pointer
-		return (Request)localRequests.get(nextUndoOperation--);
+		return (Request)localUndoCandidates.get(nextUndoOperation--);
 	}
 	
 	public void addUndo(Request request) {
 		clearRedo();
-		localRequests.add(++nextUndoOperation, request);
+		localUndoCandidates.add(++nextUndoOperation, request);
 	}
 	
 	/**
 	 * Remove the redo requests that cannot be reached any more.
 	 */
 	private void clearRedo() {
-		//TODO: test this method
-		if (!localRequests.isEmpty() && nextUndoOperation < localRequests.size()-1) {
-			localRequests.subList(nextUndoOperation+1, localRequests.size()).clear();
+		//TODO: test this method thorougly
+		if (!localUndoCandidates.isEmpty() && nextUndoOperation < localUndoCandidates.size()-1) {
+			localUndoCandidates.subList(nextUndoOperation+1, localUndoCandidates.size()).clear();
 		}
 	}
 	
 	public Request nextRedo() {
 		if (!canRedo()) throw new CannotRedoException();
-		return (Request)localRequests.get(++nextUndoOperation);
+		return (Request)localUndoCandidates.get(++nextUndoOperation);
 	}
 	
 	public void addRemote(Request request) {
 		remoteRequests.add(request);
+	}
+	
+	public void addLocal(Request request) {
+		localRequests.add(request);
 	}
 	
 	/**
@@ -94,12 +106,82 @@ public class UndoManager {
 		return tmp;
 	}
 	
+	/**
+	 * yet index of requestes is wrong!!! 
+	 * 
+	 * @param base
+	 * @return
+	 */
+	public List getLocalTransformationSet(int base) {
+		LOG.info("localRequest: "+localRequests);
+		//TODO: this is a code duplication of OutgoingQueue.getTransformationSet()...
+		//only consider operations with localOperationCount count >= base
+		List reqs = new ArrayList();
+		Iterator iter = localRequests.iterator();
+		while (iter.hasNext()) {
+			Request req = (Request)iter.next();
+			if (((JupiterVectorTime)req.getTimestamp()).getLocalOperationCount() >= base) {
+				reqs.add(req);
+			}			
+		}
+
+		List result;
+		if (reqs.size() <= 1) {
+			result = new ArrayList();
+			if (!reqs.isEmpty()) {
+				result.add(new Object[]{(Request)reqs.get(0),new Integer(0)});
+			}
+		} else {
+			int undos = 0, pairs = 0;
+			List tmp = new ArrayList(reqs);
+			//reverse list so that undo pairs can be recognized
+			Collections.reverse(tmp);
+			iter = tmp.iterator();
+			//count the number of undo pairs
+			//operations list examples: {d,u,u,d,d} {d,d,u,u} {u,u,d}; u=undo, d=do 
+			while (iter.hasNext()) {
+				Request r = (Request)iter.next();
+				Operation op = r.getOperation();
+				if (op.isUndo()) {
+					undos++;
+				} else if (undos > 0) {
+					pairs++;
+					undos--;
+				}
+			}
+			iter = tmp.iterator();
+			result = new ArrayList();
+			int undoCnt = 0, opIndex = 0;
+			while (iter.hasNext()) {
+				Request r = (Request)iter.next();
+				Operation op = r.getOperation();
+				if (op.isUndo() && pairs > 0 && undos == 0) { 
+					undoCnt++;
+					pairs--;
+				} else if (undoCnt == 0) {
+					//TODO: this is can be improved, but we have to remember the index of this wrap 
+					//into the operation list, so that it can be updated later.
+					//the list we iterate in is in reverse order, hence the position 
+					//is calculated as follows: operations.size()-1-opIndex
+					result.add(new Object[]{r, new Integer(localRequests.size()-1-opIndex)});
+					if (op.isUndo()) undos--;
+				} else {
+					undoCnt--;
+				}
+				++opIndex;
+			}
+		}
+		Collections.reverse(result);
+		LOG.info("set size: "+result.size());
+		return result;
+	}
+	
 	public boolean canUndo() {
 		return (nextUndoOperation >= 0);
 	}
 	
 	public boolean canRedo() {
-		return (localRequests.size() > 0 && nextUndoOperation < localRequests.size()-1);
+		return (localUndoCandidates.size() > 0 && nextUndoOperation < localUndoCandidates.size()-1);
 	}
 	
 }
