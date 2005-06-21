@@ -40,7 +40,7 @@ import ch.iserver.ace.util.SynchronizedQueue;
  */
 public class JupiterStringScenarioTest extends TestCase {
 
-	private static Logger LOG = Logger.getLogger("test");
+	private static Logger LOG = Logger.getLogger(JupiterStringScenarioTest.class);
 	
 	/**
 	 * This is a test scenario which uses strings instead of characters and the 
