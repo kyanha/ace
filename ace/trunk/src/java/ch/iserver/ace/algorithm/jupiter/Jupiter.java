@@ -63,7 +63,7 @@ public class Jupiter implements Algorithm {
 	 */
 	private OutgoingQueue ackRequestList;
 	//TODO: limit size of undo candidates
-	private List undoCandidates;
+	private List remoteUndoCandidates;
 	
 	private UndoManager undoManager;
 
@@ -87,11 +87,11 @@ public class Jupiter implements Algorithm {
 		init(document, new JupiterVectorTime(0, 0));
 		operationBuffer = new ArrayList();
 		ackRequestList = new OutgoingQueue();
-		undoCandidates = new ArrayList();
+		remoteUndoCandidates = new ArrayList();
 		this.isClientSide = isClientSide;
-		if (isClientSide()) {
+//		if (isClientSide()) {
 			undoManager = new UndoManager();
-		}
+//		}
 	}
 
 	/**
@@ -109,10 +109,10 @@ public class Jupiter implements Algorithm {
 		this.isClientSide = isClientSide;
 		operationBuffer = new ArrayList();
 		ackRequestList = new OutgoingQueue();
-		undoCandidates = new ArrayList();
-		if (isClientSide()) {
+		remoteUndoCandidates = new ArrayList();
+//		if (isClientSide()) {
 			undoManager = new UndoManager();
-		}
+//		}
 	}
 
 	/*
@@ -157,6 +157,7 @@ public class Jupiter implements Algorithm {
 		if (isClientSide && !isUndoRedo) {
 			undoManager.addUndo(req);
 		}
+		undoManager.addLocal(req);
 		return req;
 	}
 
@@ -184,20 +185,29 @@ public class Jupiter implements Algorithm {
         Operation newOp = jupReq.getOperation();
         if (newOp.isUndo()) {
         		LOG.info("undo: "+newOp);
-        		//always the last operation in the undoCandidates list belongs
+        		//always the last operation in the remoteUndoCandidates list belongs
         		//to the current undo operation.
-        		OperationWrapper wrap1  = (OperationWrapper)undoCandidates.remove(undoCandidates.size()-1);
-        		LOG.info("undo opposite: "+wrap1.getOperation());
+        		OperationWrapper wrap1  = (OperationWrapper)remoteUndoCandidates.remove(remoteUndoCandidates.size()-1);
+        		LOG.info("undo opposite: "+wrap1);
         		newOp = wrap1.getOperation().inverse();
         		//transform newOp against remaining operations
-        		Iterator iter = ackRequestList.getOperations().iterator();
+        		
+        		//TODO: the operations in the outgoing queue might not be the correct
+        		//operations to transform with. it should be something like:
+        		//ackRequestList.getTransformationSet()
+//        		Iterator iter = ackRequestList.getOperations().iterator();
+        		List transformOps = undoManager.getLocalTransformationSet(wrap1.getLocalOperationCount());
+        		Iterator iter = transformOps.iterator();
+        		
+        		//TODO: the requests which are in the outgoing queue as well should be transformed too
+        		inclusion.setTransformOpPrivileged(isClientSide());
         		while (iter.hasNext()) {
-        			OperationWrapper wrap2 = (OperationWrapper)iter.next();
-        			Operation op = wrap2.getOperation();
-        			if (wrap2.getLocalOperationCount() >= wrap1.getLocalOperationCount()) {
-        				//TODO: which operation is privileged??
+        			Object[] data = (Object[])iter.next();
+        			Request r = (Request)data[0];
+        			Operation op = r.getOperation();
+//        			if (wrap2.getLocalOperationCount() >= wrap1.getLocalOperationCount()) {
         				newOp = inclusion.transform(newOp, op);
-        			}
+//        			}
         		}
         		LOG.info("transformed op: "+newOp);
         } else {
@@ -205,7 +215,6 @@ public class Jupiter implements Algorithm {
         }
         
 		//if server side, add newOp to undoBuffer
-//		if (!isClientSide() && !jupReq.getOperation().isUndo()) {
 		if (!jupReq.getOperation().isUndo()) {
 			//local operation count means, that this newOp was already transformed against
 			//localOperationCount operations. So when an undo operation arrives, we 
@@ -213,8 +222,8 @@ public class Jupiter implements Algorithm {
 			//in the outgoing queue, i.e. the operations, which have a
 			//localOperationCount greater or equals to the localOperationCount belonging to
 			//this newOp.
-			undoCandidates.add(new OperationWrapper(newOp, vectorTime.getLocalOperationCount()));
-//			LOG.info("undo candidates: "+undoCandidates);
+			remoteUndoCandidates.add(new OperationWrapper(newOp, vectorTime.getLocalOperationCount()));
+//			LOG.info("undo candidates: "+remoteUndoCandidates);
 		}
 		
         apply(newOp);
@@ -286,6 +295,7 @@ public class Jupiter implements Algorithm {
 	        	int opIndex = ((Integer)data[1]).intValue();
 	        	
 	        	Operation transformedOp;
+	        	LOG.info("existingOp: "+existingOp+" && "+newOp.getOriginalOperation());
 	        	if (existingOp.isUndo() && newOp.getOriginalOperation() != null) {
 	        		Operation origin = newOp.getOriginalOperation();
 	        		LOG.info("use original operation: "+newOp+" ==> "+origin);
@@ -444,15 +454,14 @@ public class Jupiter implements Algorithm {
 						undos--;
 					}
 				}
-				LOG.info(pairs+" undo pairs in operation list.");
+				LOG.info(pairs+" undo pairs in operation list, "+undos+" single undos.");
 				iter = tmp.iterator();
 				result = new ArrayList();
 				int undoCnt = 0, opIndex = 0;
 				while (iter.hasNext()) {
 					OperationWrapper wrap = (OperationWrapper)iter.next();
 					Operation op = wrap.getOperation();
-					//TODO: does it work with the pairs variable?
-					if (op.isUndo() && pairs > 0) { 
+					if (op.isUndo() && pairs > 0 && undos == 0) { 
 						undoCnt++;
 						pairs--;
 					} else if (undoCnt == 0) {
@@ -461,13 +470,13 @@ public class Jupiter implements Algorithm {
 						//the list we iterate in is in reverse order, hence the position 
 						//is calculated: operations.size()-1-opIndex
 						result.add(new Object[]{wrap, new Integer(operations.size()-1-opIndex)});
+						if (op.isUndo()) undos--;
 					} else {
 						undoCnt--;
 					}
 					++opIndex;
 				}
 			}
-			//TODO: revert result list??????????
 			Collections.reverse(result);
 			return result;
 		}
@@ -523,8 +532,10 @@ public class Jupiter implements Algorithm {
 	 * @see ch.iserver.ace.algorithm.Algorithm#undo()
 	 */
 	public Request undo() {
+		LOG.info("--> undo");
 		//get the users request that is to be undone
 		Request req = undoManager.nextUndo();
+		LOG.info("undo req: "+req);
 		
 		// inverse the operation to be undone
 		//the mirror function from Ressel undo is done by the
@@ -535,13 +546,15 @@ public class Jupiter implements Algorithm {
 		// get list of remote operation the undo operation has to transform with
 		int baseOpCount = ((JupiterVectorTime)req.getTimestamp()).getRemoteOperationCount();
 		List transformTargets = undoManager.getRemoteRequests(baseOpCount);
+		LOG.info("transform targets: "+transformTargets);
 		
 		// transform op with all operations in the list
 		Iterator iter = transformTargets.iterator();
 		while(iter.hasNext()) {
-			op = inclusion.transform(op, (Operation)iter.next());
+			op = inclusion.transform(op, ((Request)iter.next()).getOperation());
 		}
 	
+		LOG.info("<-- undo");
 		// generate request
 		return generateRequest(op, true);
 	}
