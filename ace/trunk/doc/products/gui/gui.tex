@@ -35,7 +35,7 @@ pdfcreator={pdftex},
 The purpose of this report is to show usability requirements for a user-friendly collaborative editor. The most useful functions will be discussed in the following chapters. There are also prototypes for some of these functions to ensure the feasibility with \emph{Java} text components.
 
 \section{Usability}
-Basically each user must be distinguishable from all the other users. To do that with different colors is probably one of the best solution. For example the red user has a dark red colored cursor, a light red color to highlight the text he changed and a red border around the text he selected. The users are listed with their colors in a separate window, so all participants can quite easily see which part in the multi-colored document belongs to which user. See \cite{usability} for more information about usability in groupware systems.
+Basically each user must be distinguishable from all the other users. To do that with different colors is probably one of the best solution. For example the red user has a dark red colored cursor, a light red color to highlight the text he changed and a red border around the text he selected. The users are listed with their colors in a separate window, so all participants can quite easily see which part in the multi-colored text document belongs to which user. It is important that each user is aware of other user's actions in order to avoid possible conflicts, for example two users correcting the same spelling mistake. See \cite{usability} for more information about usability in groupware systems.
 
 \subsection{Main View}
 The main view is the users workspace where he can change the document or observe the other users. Important is to keep the main view as simple as possible. This means that it should not be overloaded with a lot of buttons, status labels, etc. because new users will loose their orientation.
@@ -58,7 +58,7 @@ As described above for multiple cursors, it will be user friendly to display the
  }
  \caption{Multiple Cursors and Highlighted Text}
 \end{figure}
-The other users mouse cursors are called telepointers. With these telepointers it is possible to show or explain something in the document. It should be possible to activate/deactivate this telepointers because a lot of different cursors and telepointers can be confusing for the users.
+The other users mouse cursors are called telepointers. With these telepointers it is possible to point to something in the document. It should be possible to activate/deactivate this telepointers because a lot of different cursors and telepointers can be confusing for the users.
 \begin{figure}[H]
 \centering
 \frame{
@@ -80,14 +80,35 @@ The aim of multi-user scrollbars is to give a coarse overview of all cursor posi
 \end{figure}
 
 \subsection{Teleport and Split View}
-Two similar ways to display the other users view exist. First there is the Teleport function which allows the user to see temporarily the main view of another user. To observe other users for a longer time, a split view should be provided. In addition to the user's main view, there is a new window for each other user to observe containing his main view.
+Two similar ways to display the other users view exist. First there is the Teleport function which allows the user to see temporarily the main view of another user. To observe other users for a longer time, a split view should be provided.
 
 \subsection{Document and User Handling}
-The most important thing for the user and document handling is simplicity. All features should be user-friendly. Maybe its the best to use drag \& drop for this components. First of all the users must be able to share documents and browse shared documents. This can be realized by a little new window representing all active users in a tree view. Assigned to each user in the tree are the documents shared by this user. By double clicking on such a document one can join it. Of course the users can assign access rights to each shared document. For example imagine a little list above the user tree containing all shared documents of the current user. For each document there are some fields (read-only, read-write) into which other users can get added or removed by drag \& drop.
+In a collaborative application, it must be possible to publish a document, so other users can join the editing. Other users will discover these documents and can opt to join. The publisher allows or denies access based on access rights he determines. The process of publishing and joining documents as well as assigning access rights should be as seamless as possible in order to provide a great user experience.
 
+A possible solution could be based on drag \& drop. Browsing for available documents can be realized by a little new window representing all active users in a tree view. Assigned to each user in the tree are the documents published by this user. By double clicking on such a document one can ask permission to join it. Of course the users can assign access rights to each shared document. This can be realized by a list docked to each open document where the owner of the document can drag \& drop requesting users from the category "Awaiting" to the category "Read/Write" or "Read/Only".
+
+
+\section{Requirements}
+In this section, we describe the basic requirements for the graphical user interface of a collaborative text editor.
+
+\subsection{Intercept User Input}
+Because all user inputs must be first processed by the synchronization algorithm, the text component must be able to catch all the keyboard inputs.
+
+\subsection{Awareness Information}
+As seen in the last section, it is important in a collaborative application that users are aware of other user's actions. Important awareness information includes telecursors and multi-user scrollbars. Less important, but still useful , are telepointers.
+
+It would be helpful if one can follow other users actions. For this reason, a split view should be provided that follows the other users cursor.
+
+\subsection{Discover Published Documents}
+A user should have a straightforward way to discover other published documents. These documents should be displayed in user interface component and allow the user to join them.
+
+\subsection{Publish Documents}
+A user should have the opportunity to publish a document (i.e. make it publicly available so others can join the document). The publisher of a document should have a simple way to specify the access rights for the document (e.g. read-only or full-access).
 
 
 \section{Prototypes}
+Prototypes are used to ensure that the requirement described above can be realized with java text components.
+
 \subsection{CustomPaint}
 \paragraph{Purpose:}
 The aim of this prototype is to find out the best way to represent more than one cursor in a text component.
@@ -156,7 +177,7 @@ This prototype is created for finding the best way to capture the keyboard input
 A new styled document is needed for that prototype. The important methods to override in this class are \texttt{insertString}, \texttt{remove} and \texttt{createPosition}. Furthermore there must be some additional methods like \texttt{insertXXXString}. They are necesarry because the original \texttt{insertString} method no longer will insert text into the text component.
 \begin{verbatim}
 public class CatchKeyboardStyledDocument extends DefaultStyledDocument {
-  public void insertSynchedString(int offs, String str, AttributeSet a)$
+  public void insertSynchedString(int offs, String str, AttributeSet a)
       throws BadLocationException {
     super.insertString(offs, str, a);
   }
