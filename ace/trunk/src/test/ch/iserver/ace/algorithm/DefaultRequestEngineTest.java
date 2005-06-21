@@ -37,7 +37,7 @@ import ch.iserver.ace.util.SynchronizedQueue;
  */
 public class DefaultRequestEngineTest extends TestCase {
 
-	private static Logger LOG = Logger.getLogger("test");
+	private static Logger LOG = Logger.getLogger(DefaultRequestEngineTest.class);
 	
 	private static final int SITE_ID = 1;
 	private static final String TEXT = "a";
