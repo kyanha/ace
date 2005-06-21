@@ -89,9 +89,7 @@ public class Jupiter implements Algorithm {
 		ackRequestList = new OutgoingQueue();
 		remoteUndoCandidates = new ArrayList();
 		this.isClientSide = isClientSide;
-//		if (isClientSide()) {
-			undoManager = new UndoManager();
-//		}
+		undoManager = new UndoManager();
 	}
 
 	/**
@@ -110,9 +108,7 @@ public class Jupiter implements Algorithm {
 		operationBuffer = new ArrayList();
 		ackRequestList = new OutgoingQueue();
 		remoteUndoCandidates = new ArrayList();
-//		if (isClientSide()) {
-			undoManager = new UndoManager();
-//		}
+		undoManager = new UndoManager();
 	}
 
 	/*
@@ -192,22 +188,15 @@ public class Jupiter implements Algorithm {
         		newOp = wrap1.getOperation().inverse();
         		//transform newOp against remaining operations
         		
-        		//TODO: the operations in the outgoing queue might not be the correct
-        		//operations to transform with. it should be something like:
-        		//ackRequestList.getTransformationSet()
-//        		Iterator iter = ackRequestList.getOperations().iterator();
         		List transformOps = undoManager.getLocalTransformationSet(wrap1.getLocalOperationCount());
         		Iterator iter = transformOps.iterator();
         		
-        		//TODO: the requests which are in the outgoing queue as well should be transformed too
         		inclusion.setTransformOpPrivileged(isClientSide());
         		while (iter.hasNext()) {
         			Object[] data = (Object[])iter.next();
         			Request r = (Request)data[0];
         			Operation op = r.getOperation();
-//        			if (wrap2.getLocalOperationCount() >= wrap1.getLocalOperationCount()) {
-        				newOp = inclusion.transform(newOp, op);
-//        			}
+        			newOp = inclusion.transform(newOp, op);
         		}
         		LOG.info("transformed op: "+newOp);
         } else {
@@ -331,7 +320,6 @@ public class Jupiter implements Algorithm {
 	        			existingOp = inclusion.transform(existingOp, newOp);
 	        		}
 	        	}
-	        	//TODO: is this correct?? the transformSet list is in reverse order.
 	        	assert wrap.getLocalOperationCount() == ((OperationWrapper)ackRequestList.getOperations().
 	        			get(opIndex)).getLocalOperationCount() : "getTransformationSet failed";
 	        	ackRequestList.set(opIndex, new OperationWrapper(existingOp, wrap.getLocalOperationCount()));
@@ -465,10 +453,10 @@ public class Jupiter implements Algorithm {
 						undoCnt++;
 						pairs--;
 					} else if (undoCnt == 0) {
-						//TODO: this is a hack, but we have to remember the index of this wrap 
+						//TODO: this can be improved, but we need to remember the index of this wrap 
 						//into the operation list, so that it can be updated later
 						//the list we iterate in is in reverse order, hence the position 
-						//is calculated: operations.size()-1-opIndex
+						//is calculated as follows: operations.size()-1-opIndex
 						result.add(new Object[]{wrap, new Integer(operations.size()-1-opIndex)});
 						if (op.isUndo()) undos--;
 					} else {
@@ -538,9 +526,9 @@ public class Jupiter implements Algorithm {
 		LOG.info("undo req: "+req);
 		
 		// inverse the operation to be undone
-		//the mirror function from Ressel undo is done by the
-		//inverse() (-> invert operation) and 
-		//generateRequest() (-> update vector time) calls.
+		//the mirror function from Ressel undo is done in two steps:
+		//1. inverse() (-> invert operation) and 
+		//2. generateRequest() (-> update vector time) calls.
 		Operation op = req.getOperation().inverse();
 	
 		// get list of remote operation the undo operation has to transform with
