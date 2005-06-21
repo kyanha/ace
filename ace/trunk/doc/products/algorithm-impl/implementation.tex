@@ -25,21 +25,25 @@ They are represented by the Operation Interface.
 \subsubsection{DeleteOperation}
 \subsubsection{SplitOperation}
   - no operation
-  - wrapper to handle special cases -> \cite{Delete_Insert}
+  - wrapper to handle special cases -> \ref{Delete_Insert}
 
 
 \subsection{Request}
 
+\newpage
 \subsection{GOTO Transformation Functions}
 
 \subsubsection{Overview}
-Transformation functions are used to transform two operations.
-- stringwise
+The GOTO (generic operation transformation optimized) transformation functions are designed to work with strings. The advantage is that less transformations are needed when a string has been inserted into a text. To understand the exigence of transformation functions see \emph{Evaluation Algorithms}.
 
+The inclusion transformation functions are used to check the influence of a given operation B to another operation A. If so, the operation A will be transformed into operation A'. To transform an operation means to adapt position and text of the operation. In the majority of cases this is a very simple process. But sometimes it is necessary to extract a text fragment or to split up an operation in two parts. For more details about splitting an operation into two parts see \ref{Delete_Insert}.
+
+All possible transformations \emph{cases} with two insert/delete operations are represented by diagram \ref{Transformation Overview} and explained in the following sections:
 \begin{figure}[H]
 \centering
 \includegraphics[height=12cm,width=16cm]{../../images/algo-impl/transform_overview.eps}
 \caption{Transformation Overview}
+\label{Transformation Overview}
 \end{figure}
 
 \subsubsection{Insert/Insert}
