@@ -522,6 +522,310 @@ public class JupiterCharUndoTest extends TestCase {
 	}
 	
 	/**
+	 * This is the same test as {@link JupiterCharUndoTest#testDelDelUndoPuzzle4()} but
+	 * has a different order in which the operations arrive at the server.
+	 * 
+	 * @throws Exception
+	 */
+	public void testDelDelUndoPuzzle4a() throws Exception {
+		final String INITIAL = "b";
+		final String FINAL   = "";
+		
+		/** initialize system **/
+		JupiterServer server = createServer();
+		TestNetService[] net = new TestNetService[] {
+								new TestNetService(),
+								new TestNetService() };
+		ClientProxy[] proxies = new ClientProxy[2];
+		proxies[0] = server.addClient(net[0]); //belongs to site 1
+		proxies[1] = server.addClient(net[1]); //belongs to site 2
+		
+		
+		DefaultRequestEngine eng1 = new DefaultRequestEngine(
+				createClient(proxies[0].getSiteId(), INITIAL));
+		DefaultRequestEngine eng2 = new DefaultRequestEngine(
+				createClient(proxies[1].getSiteId(), INITIAL));
+		SynchronizedQueue queue1 = eng1.getOutgoingRequestBuffer();
+		SynchronizedQueue queue2 = eng2.getOutgoingRequestBuffer();
+		
+		Operation op = new DeleteOperation(0, "b");
+		eng1.generateRequest(op);
+		op = new InsertOperation(0, "a");		
+		eng1.generateRequest(op);
+		op = new UndoOperation();
+		eng1.generateRequest(op);
+		op = new UndoOperation();
+		eng1.generateRequest(op);
+		op = new DeleteOperation(0, "b");
+		eng2.generateRequest(op);
+		 
+		LOG.info("recv s1.pr");
+		proxies[0].receiveRequest((Request)queue1.get());
+		Request r1 = (Request)net[1].getRequests().remove(0);
+		LOG.info("recv s2.cl");
+		eng2.receiveRequest(r1);
+		LOG.info("recv s1.pr");
+		proxies[0].receiveRequest((Request)queue1.get());
+		r1 = (Request)net[1].getRequests().remove(0);
+		LOG.info("recv s2.cl");
+		eng2.receiveRequest(r1);
+		LOG.info("recv s1.pr");
+		proxies[0].receiveRequest((Request)queue1.get());
+		r1 = (Request)net[1].getRequests().remove(0);
+		LOG.info("recv s2.cl");
+		eng2.receiveRequest(r1);
+		LOG.info("recv s2.pr");
+		proxies[1].receiveRequest((Request)queue2.get());
+		r1 = (Request)net[0].getRequests().remove(0);
+		LOG.info("recv s1.cl "+r1);
+		eng1.receiveRequest(r1);
+		LOG.info("recv s1.pr");
+		proxies[0].receiveRequest((Request)queue1.get());
+		r1 = (Request)net[1].getRequests().remove(0);
+		LOG.info("recv s2.cl");
+		eng2.receiveRequest(r1);
+	
+		Thread.sleep(500);
+
+		/** analyze results **/
+		String contentSite1 = ((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
+				.getDocument()).getText();
+		String contentSite2 = ((TestDocumentModel)eng2.getQueueHandler().getAlgorithm()
+				.getDocument()).getText();
+		//System.out.println(contentSite1 + " == " + contentSite2);
+		assertEquals(FINAL, contentSite1);
+		assertEquals(FINAL, contentSite2);
+	}
+	
+	/**
+	 * This is the same test as {@link JupiterCharUndoTest#testDelDelUndoPuzzle4()} but
+	 * has a different order in which the operations arrive at the server.
+	 * 
+	 * @throws Exception
+	 */
+	public void testDelDelUndoPuzzle4b() throws Exception {
+		final String INITIAL = "b";
+		final String FINAL   = "";
+		
+		/** initialize system **/
+		JupiterServer server = createServer();
+		TestNetService[] net = new TestNetService[] {
+								new TestNetService(),
+								new TestNetService() };
+		ClientProxy[] proxies = new ClientProxy[2];
+		proxies[0] = server.addClient(net[0]); //belongs to site 1
+		proxies[1] = server.addClient(net[1]); //belongs to site 2
+		
+		
+		DefaultRequestEngine eng1 = new DefaultRequestEngine(
+				createClient(proxies[0].getSiteId(), INITIAL));
+		DefaultRequestEngine eng2 = new DefaultRequestEngine(
+				createClient(proxies[1].getSiteId(), INITIAL));
+		SynchronizedQueue queue1 = eng1.getOutgoingRequestBuffer();
+		SynchronizedQueue queue2 = eng2.getOutgoingRequestBuffer();
+		
+		Operation op = new DeleteOperation(0, "b");
+		eng1.generateRequest(op);
+		op = new InsertOperation(0, "a");		
+		eng1.generateRequest(op);
+		op = new UndoOperation();
+		eng1.generateRequest(op);
+		op = new UndoOperation();
+		eng1.generateRequest(op);
+		op = new DeleteOperation(0, "b");
+		eng2.generateRequest(op);
+		 
+		LOG.info("recv s1.pr");
+		proxies[0].receiveRequest((Request)queue1.get());
+		Request r1 = (Request)net[1].getRequests().remove(0);
+		LOG.info("recv s2.cl");
+		eng2.receiveRequest(r1);
+		LOG.info("recv s2.pr");
+		proxies[1].receiveRequest((Request)queue2.get());
+		r1 = (Request)net[0].getRequests().remove(0);
+		LOG.info("recv s1.cl "+r1);
+		eng1.receiveRequest(r1);
+		LOG.info("recv s1.pr");
+		proxies[0].receiveRequest((Request)queue1.get());
+		r1 = (Request)net[1].getRequests().remove(0);
+		LOG.info("recv s2.cl");
+		eng2.receiveRequest(r1);
+		LOG.info("recv s1.pr");
+		proxies[0].receiveRequest((Request)queue1.get());
+		r1 = (Request)net[1].getRequests().remove(0);
+		LOG.info("recv s2.cl");
+		eng2.receiveRequest(r1);
+		LOG.info("recv s1.pr");
+		proxies[0].receiveRequest((Request)queue1.get());
+		r1 = (Request)net[1].getRequests().remove(0);
+		LOG.info("recv s2.cl");
+		eng2.receiveRequest(r1);
+	
+		Thread.sleep(500);
+
+		/** analyze results **/
+		String contentSite1 = ((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
+				.getDocument()).getText();
+		String contentSite2 = ((TestDocumentModel)eng2.getQueueHandler().getAlgorithm()
+				.getDocument()).getText();
+//		System.out.println(contentSite1 + " == " + contentSite2);
+		assertEquals(FINAL, contentSite1);
+		assertEquals(FINAL, contentSite2);
+	}
+	
+	/**
+	 * This is the same test as {@link JupiterCharUndoTest#testDelDelUndoPuzzle4()} but
+	 * has a different order in which the operations arrive at the server.
+	 * 
+	 * @throws Exception
+	 */
+	public void testDelDelUndoPuzzle4c() throws Exception {
+		final String INITIAL = "b";
+		final String FINAL   = "";
+		
+		/** initialize system **/
+		JupiterServer server = createServer();
+		TestNetService[] net = new TestNetService[] {
+								new TestNetService(),
+								new TestNetService() };
+		ClientProxy[] proxies = new ClientProxy[2];
+		proxies[0] = server.addClient(net[0]); //belongs to site 1
+		proxies[1] = server.addClient(net[1]); //belongs to site 2
+		
+		
+		DefaultRequestEngine eng1 = new DefaultRequestEngine(
+				createClient(proxies[0].getSiteId(), INITIAL));
+		DefaultRequestEngine eng2 = new DefaultRequestEngine(
+				createClient(proxies[1].getSiteId(), INITIAL));
+		SynchronizedQueue queue1 = eng1.getOutgoingRequestBuffer();
+		SynchronizedQueue queue2 = eng2.getOutgoingRequestBuffer();
+		
+		Operation op = new DeleteOperation(0, "b");
+		eng1.generateRequest(op);
+		op = new InsertOperation(0, "a");		
+		eng1.generateRequest(op);
+		op = new UndoOperation();
+		eng1.generateRequest(op);
+		op = new UndoOperation();
+		eng1.generateRequest(op);
+		op = new DeleteOperation(0, "b");
+		eng2.generateRequest(op);
+		 
+		LOG.info("recv s2.pr");
+		proxies[1].receiveRequest((Request)queue2.get());
+		Request r1 = (Request)net[0].getRequests().remove(0);
+		LOG.info("recv s1.cl "+r1);
+		eng1.receiveRequest(r1);
+		LOG.info("recv s1.pr");
+		proxies[0].receiveRequest((Request)queue1.get());
+		r1 = (Request)net[1].getRequests().remove(0);
+		LOG.info("recv s2.cl");
+		eng2.receiveRequest(r1);
+		LOG.info("recv s1.pr");
+		proxies[0].receiveRequest((Request)queue1.get());
+		r1 = (Request)net[1].getRequests().remove(0);
+		LOG.info("recv s2.cl");
+		eng2.receiveRequest(r1);
+		LOG.info("recv s1.pr");
+		proxies[0].receiveRequest((Request)queue1.get());
+		r1 = (Request)net[1].getRequests().remove(0);
+		LOG.info("recv s2.cl");
+		eng2.receiveRequest(r1);
+		LOG.info("recv s1.pr");
+		proxies[0].receiveRequest((Request)queue1.get());
+		r1 = (Request)net[1].getRequests().remove(0);
+		LOG.info("recv s2.cl");
+		eng2.receiveRequest(r1);
+	
+		Thread.sleep(500);
+
+		/** analyze results **/
+		String contentSite1 = ((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
+				.getDocument()).getText();
+		String contentSite2 = ((TestDocumentModel)eng2.getQueueHandler().getAlgorithm()
+				.getDocument()).getText();
+//		System.out.println(contentSite1 + " == " + contentSite2);
+		assertEquals(FINAL, contentSite1);
+		assertEquals(FINAL, contentSite2);
+	}
+	
+	/**
+	 * This is the same test as {@link JupiterCharUndoTest#testDelDelUndoPuzzle4()} but
+	 * has a different order in which the operations arrive at the server.
+	 * 
+	 * @throws Exception
+	 */
+	public void testDelDelUndoPuzzle4d() throws Exception {
+		final String INITIAL = "b";
+		final String FINAL   = "";
+		
+		/** initialize system **/
+		JupiterServer server = createServer();
+		TestNetService[] net = new TestNetService[] {
+								new TestNetService(),
+								new TestNetService() };
+		ClientProxy[] proxies = new ClientProxy[2];
+		proxies[0] = server.addClient(net[0]); //belongs to site 1
+		proxies[1] = server.addClient(net[1]); //belongs to site 2
+		
+		
+		DefaultRequestEngine eng1 = new DefaultRequestEngine(
+				createClient(proxies[0].getSiteId(), INITIAL));
+		DefaultRequestEngine eng2 = new DefaultRequestEngine(
+				createClient(proxies[1].getSiteId(), INITIAL));
+		SynchronizedQueue queue1 = eng1.getOutgoingRequestBuffer();
+		SynchronizedQueue queue2 = eng2.getOutgoingRequestBuffer();
+		
+		Operation op = new DeleteOperation(0, "b");
+		eng1.generateRequest(op);
+		op = new InsertOperation(0, "a");		
+		eng1.generateRequest(op);
+		op = new UndoOperation();
+		eng1.generateRequest(op);
+		op = new UndoOperation();
+		eng1.generateRequest(op);
+		op = new DeleteOperation(0, "b");
+		eng2.generateRequest(op);
+		 
+		LOG.info("recv s1.pr");
+		proxies[0].receiveRequest((Request)queue1.get());
+		Request r1 = (Request)net[1].getRequests().remove(0);
+		LOG.info("recv s2.cl");
+		eng2.receiveRequest(r1);
+		LOG.info("recv s1.pr");
+		proxies[0].receiveRequest((Request)queue1.get());
+		r1 = (Request)net[1].getRequests().remove(0);
+		LOG.info("recv s2.cl");
+		eng2.receiveRequest(r1);
+		LOG.info("recv s1.pr");
+		proxies[0].receiveRequest((Request)queue1.get());
+		r1 = (Request)net[1].getRequests().remove(0);
+		LOG.info("recv s2.cl");
+		eng2.receiveRequest(r1);
+		LOG.info("recv s1.pr");
+		proxies[0].receiveRequest((Request)queue1.get());
+		r1 = (Request)net[1].getRequests().remove(0);
+		LOG.info("recv s2.cl");
+		eng2.receiveRequest(r1);
+		LOG.info("recv s2.pr");
+		proxies[1].receiveRequest((Request)queue2.get());
+		r1 = (Request)net[0].getRequests().remove(0);
+		LOG.info("recv s1.cl "+r1);
+		eng1.receiveRequest(r1);
+	
+		Thread.sleep(500);
+
+		/** analyze results **/
+		String contentSite1 = ((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
+				.getDocument()).getText();
+		String contentSite2 = ((TestDocumentModel)eng2.getQueueHandler().getAlgorithm()
+				.getDocument()).getText();
+//		System.out.println(contentSite1 + " == " + contentSite2);
+		assertEquals(FINAL, contentSite1);
+		assertEquals(FINAL, contentSite2);
+	}
+	
+	/**
 	 * This is the same test as in {@link #testDelDelUndoPuzzle()} but uses
 	 * only one ClientProxy. This means that the requests from the second site
 	 * are directly handed to the ClientProxy instead of having a second one so 
@@ -566,10 +870,80 @@ public class JupiterCharUndoTest extends TestCase {
 		/** analyze results **/
 		String contentSite1 = ((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
 				.getDocument()).getText();
-//		String contentSite2 = proxies[0].getAlgorithm().getDocument()
+		assertEquals(FINAL, contentSite1);
+	}
+	
+	/**
+	 * This test checks if the scenario of figure 6 from the Ressel Undo paper
+	 * is handled correclty by the Jupiter Undo implementation.
+	 * 
+	 * @throws Exception
+	 */
+	public void testFigure6() throws Exception {
+//		System.out.println("*************>> testFigure6()");
+//		LOG.info("*************>> testFigure6()");
+		final String INITIAL = "ab";
+		final String FINAL   = "ab";
+		
+		/** initialize system **/
+		JupiterServer server = createServer();
+		TestNetService[] net = new TestNetService[] {
+								new TestNetService(),
+								new TestNetService() };
+		ClientProxy[] proxies = new ClientProxy[2];
+		proxies[0] = server.addClient(net[0]); //belongs to site 1
+		proxies[1] = server.addClient(net[1]); //belongs to site 2
+		
+		
+		DefaultRequestEngine eng1 = new DefaultRequestEngine(
+				createClient(proxies[0].getSiteId(), INITIAL));
+		DefaultRequestEngine eng2 = new DefaultRequestEngine(
+				createClient(proxies[1].getSiteId(), INITIAL));
+		SynchronizedQueue queue1 = eng1.getOutgoingRequestBuffer();
+		SynchronizedQueue queue2 = eng2.getOutgoingRequestBuffer();
+		
+		Operation op = new DeleteOperation(0, "a");
+		eng1.generateRequest(op);
+		LOG.info("recv s1.pr #1");
+		proxies[0].receiveRequest((Request)queue1.get());
+		Request r1 = (Request)net[1].getRequests().remove(0);
+		LOG.info("recv s2.cl");
+		eng2.receiveRequest(r1);
+		Thread.sleep(250);
+		op = new DeleteOperation(0, "b");
+		LOG.info("genr s2.cl");
+		eng2.generateRequest(op);		
+		LOG.info("recv s2.pr #1");
+		proxies[1].receiveRequest((Request)queue2.get());
+		r1 = (Request)net[0].getRequests().remove(0);
+		LOG.info("recv s1.cl");
+		eng1.receiveRequest(r1);
+		
+		op = new UndoOperation();
+		eng1.generateRequest(op);
+		op = new UndoOperation();
+		eng2.generateRequest(op);
+		LOG.info("recv s1.pr #2");
+		proxies[0].receiveRequest((Request)queue1.get());
+		r1 = (Request)net[1].getRequests().remove(0);
+		LOG.info("recv s2.cl");
+		eng2.receiveRequest(r1);
+		LOG.info("recv s2.pr #2");
+		proxies[1].receiveRequest((Request)queue2.get());
+		r1 = (Request)net[0].getRequests().remove(0);
+		LOG.info("recv s1.cl "+r1);
+		eng1.receiveRequest(r1);
+	
+		Thread.sleep(500);
+
+		/** analyze results **/
+		String contentSite1 = ((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
+				.getDocument()).getText();
+		String contentSite2 = ((TestDocumentModel)eng2.getQueueHandler().getAlgorithm()
+				.getDocument()).getText();
 //		System.out.println(contentSite1 + " == " + contentSite2);
 		assertEquals(FINAL, contentSite1);
-//		assertEquals(FINAL, contentSite2);
+		assertEquals(FINAL, contentSite2);
 	}
 	
 	
