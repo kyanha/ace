@@ -104,7 +104,7 @@ public class DeleteOperation implements Operation {
 	 */
 	public void setOriginalOperation(Operation op) {
 		original = op;
-		LOG.info("original operation: "+op);
+		LOG.info("setOriginalOperation("+op+")");
 	}
 	
 	/*
@@ -116,7 +116,7 @@ public class DeleteOperation implements Operation {
 	}
 	
 	public String toString() {
-		return "Delete(" + position + ",'" + text + "',"+isUndo+")";
+		return "Delete(" + position + ",'" + text + "',"+isUndo+", "+original+")";
 	}
 	
 	public boolean equals(Object obj) {
@@ -126,7 +126,8 @@ public class DeleteOperation implements Operation {
 			return false;
 		} else if (obj.getClass().equals(getClass())) {
 			DeleteOperation op = (DeleteOperation) obj;
-			return op.position == position && op.text.equals(text) && op.isUndo == isUndo;
+			return op.position == position && op.text.equals(text) 
+				&& op.isUndo == isUndo && op.original.equals(original);
 		} else {
 			return false;
 		}
@@ -136,6 +137,7 @@ public class DeleteOperation implements Operation {
 		int hashcode = position;
 		hashcode += 13 * (new Boolean(isUndo)).hashCode();
 		hashcode += 13 * text.hashCode();
+		hashcode += 13 * original.hashCode();
 		return hashcode;
 	}
 }
