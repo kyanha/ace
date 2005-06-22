@@ -131,33 +131,56 @@ Operation A and operation B are overlapping. Operation B is fully in operation A
 \begin{figure}[H]
 \centering
 \includegraphics[height=8.74cm,width=14.95cm]{../../images/algo-impl/algorithm_diagram.eps}
-\caption{Transformation Overview}
-\label{Transformation Overview}
+\caption{Algorithm architecture}
+\label{Algorithm architecture}
 \end{figure}
+
+The algorithm component centers around the Jupiter class, which is an implementation of the Algorithm interface. Jupiter processes all requests with the collaboration of the GOTOInclusionTransformation. All transformed operations are applied to the DocumentModel instance. The Timestamp class represents the current state vector, i.e. the location in the 2-dimensional state space of the \emph{Jupiter} algorithm. The UndoManager class is apparently used for undo/redo functionality and is further described in \ref{undo_redo}.
+
 
 \section{Client}
 \begin{figure}[H]
 \centering
 \includegraphics[height=13.04cm,width=15.46cm]{../../images/algo-impl/client_diagram.eps}
-\caption{Transformation Overview}
-\label{Transformation Overview}
+\caption{Client architecture}
+\label{Client architecture}
 \end{figure}
-\subsubsection{Core}
 
-\subsubsection{Algorithm}
+The client component centers around the RequestEngine class. The RequestEngine is a mediator between the GUI, network and algorithm components. It receives requests from the GUI and the network, respectively. All requests are passed to synchronized queues, one for local requests and one for remote requests. The requests are read out from the queues by the QueueHandler class. This thread waits on the queues until a request has been received. Each request is then handed to the algorithm package for processing. Processing involves transforming the operation and applying it to the document model. 
+
+Locally generated requests are returned from the algorithm package  to the QueueHandler which in turn passes it to another SynchronizedQueue, namely the outgoing queue. From there, all outgoing requests are forwarded to the network package by the RequestForwarder class. 
+
 
 \section{Server}
 \begin{figure}[H]
 \centering
 \includegraphics[height=9.8cm,width=15.36cm]{../../images/algo-impl/server_diagram.eps}
-\caption{Transformation Overview}
-\label{Transformation Overview}
+\caption{Server architecture}
+\label{Server architecture}
 \end{figure}
 
+The \emph{Jupiter} server component is the turntable in a multi-user collaborative editing session. It achieves n-way communication by use of the 2-way synchronization protocol of \emph{Jupiter} between each client and its corresponding ClientProxy on the server side (instances of class ClientProxy). The \emph{Jupiter} server component can be started and organized by creating a new instance of class JupiterServer. It allows to manage client proxies, that is to add and remove them.
+
+\subsection{Adding a client}
+When a new client is added to the server, a new ClientProxy is created. It is passed references to instances of the following types: NetService, Algorithm (Jupiter), SynchronizedQueue. The NetService class is used to forward outgoing requests to the network layer. The algorithm is responsible for the operational transformation. Since no real document model is used at the server side, a special implementation of the DocumentModel interface, OperationExtractDocumentModel, lets the algorithm extract the latest applied operation.
+
+Afterwards, the ClientProxy instance is added to the RequestSerializer. Finally, a RequestForwarder for this ClientProxy is created. It is responsible for forwarding all requests that were issued by other clients and are to be sent to the opposite of the ClientProxy, namely the client itself. The RequestForwarder reads requests from the SynchronizedQueue and passes them to the ClientProxy by invoking $sendRequest(request)$.
+
+\subsection{Removing a client}
+When a client proxy is to be removed, firstly its connection to the net service is closed. Then the RequestForwarder, belonging to the client proxy, is shut down. Finally, the client proxy is removed from the RequestSerializer. The removal from the RequestSerializer is more complicated. At the time of removal, there may still be a couple of requests which have been issued by the client to be removed. Therefore, the client proxy may not be removed until all these requests have been processed, i.e. transformed and sent to all other clients. This is done by remembering the number of requests in the request queue, say $r$. After $r$ requests have been processed from that moment on, the client proxy can savely be released. This mechanism is achieved by a helper class named Counter.
+
+\subsection{Receiving and sending a request}
+The received request is passed from the network layer to the corresponding ClientProxy instance. The ClientProxy itself only forwards the request to the SynchronizedQueue, namely request queue. Actually all ClientProxy's forward their requests to the same synchronized queue. By that, a global serialization is achieved. From the request queue, the request is read out by the RequestSerializer thread. The request is then passed to its corresponding client proxy for transformation. Afterwards, the transformed request is distributed to all other clients. This is done by first calling $generateRequest(operation)$ on each ClientProxy's algorithm and then adding the returned request to the outgoing queue of the ClientProxy. From there, the RequestForwarder will read out the request and pass it to the ClientProxy which in turn forwards it to the net service. Finally, the net service transmits the request to the client.
+
+The SynchronizedQueue's enable us to have a flexible interaction of the different components such as ClientProxy, RequestSerializer, RequestForwarder. No component blocks except the ones which read from the queue, e.g. RequestSerializer, RequestForwarder.
 
 \section{Undo/Redo}
+\label{undo_redo}
+For the undo implementation, we worked closely with the paper "Reducing the Problems of Group Undo" from Ressel et al., adapting the \emph{adOPTed} undo for the \emph{Jupiter} algorithm. 
+The implementation of undo functionality has started but has not finished by the time. The undo works in simple cases both for characterwise and stringwise operations. But it fails in more complex scenarios (cf. classes $JupiterCharUndoTest.java$ and $JupiterStringUndoTest.java$, respectively. At first, we assumed that we could implement the undo with some auxiliary data structures and would not have to build the whole state space. In fact, it worked for example 3 as well as for example 4 (known as the "del-del-undo-puzzle") taken from the above paper, but it finally failed at the "order puzzle" in figure 6 of the same paper. The "order puzzle" showed us that the auxiliary data structures would not be sufficient for more complex undo scenarios and that we would need to implement the whole state space as is the case in the \emph{adOPTed} algorithm and undo, respectively. 
+Therefore we will not further describe the undo implementation we have done so far as much of it will become unusable as soon as we implement the state space. Building the state space means keeping track of every operation and calculating all possible transformation paths.
 
-
+Nevertheless, two issues will remain. Firstly, each operation has a method $isUndo()$ to detect undo operations and to treat them separately. Secondly, the UndoManager class is used to manage undo and redo requests.
 
 \section{Tests}
 Testing the algorithm implementation was considered a very high priority. Without a correctly working algorithm, it will be difficult or even impossible to create a collaborative text-editor. Because of the significance of this algorithm we invested a lot of time to test it.
@@ -170,9 +193,11 @@ We gathered many test cases form publications about operational transformation a
 
 % TODO: insert all test cases that were taken from papers
 \begin{itemize}
- \item 
- \item 
- \item 
+ \item Figures 3, 4 and 5 in "Proving Correctness of Transformation Functions in Real-Time Groupware", Imine et al.
+ \item "C2 puzzle P1" and "C2 puzzle P2" (figures 3 and 5, respectively) in "Achieving Convergence with Operational Transformation in Distributed Groupware Systems", Imine et al.
+ \item "A scenario of divergence and ERV" and  "A divergence and ERV scenario of IMOR" (figures 1 and 12, respectively) in "Preserving Operation Effects Relation in Group Editors", Du Li and Rui Li
+ \item figure 5 in "Concurrent Operations in a Distributed and Mobile Collaborative Environment", Suleiman et al.
+ \item the "dOPT puzzle" (figure 2) in "Operational Transformation in Real-Time Group Editors: Issues, Algorithms, Achievements", Sun et al. 
 \end{itemize}
 
 Our algorithm is capable of solving these complex puzzles. This is a step in the right direction, but that alone is not enough. So we devised additional test cases that cover trivial as well as complex scenarios.
