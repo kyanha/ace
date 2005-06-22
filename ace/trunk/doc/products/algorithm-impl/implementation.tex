@@ -128,14 +128,33 @@ Operation A and operation B are overlapping. Operation B is fully in operation A
 
 
 
-\subsection{Client}
+\section{Client}
 
 
-\subsection{Server}
+\section{Server}
 
 
-\subsection{Undo/Redo}
+\section{Undo/Redo}
 
 
-\subsection{Tests}
 
+\section{Tests}
+Testing the algorithm implementation was considered a very high priority. Without a correctly working algorithm, it will be difficult or even impossible to create a collaborative text-editor. Because of the significance of this algorithm we invested a lot of time to test it.
+
+\subsection{Testframework}
+In the literature about operational transformation, so called puzzles are omnipresent. These puzzles are exact specification of the order of events, like the generation of a request or the reception of a request. We were soon convinced that in order to test our algorithm it would be possible to have a testframework that accepts such a puzzle (called scenario) as input and replays the sequence of events on a set of algorithms. To find out more about this testframework, see the document 'Report Implementation Testframework'.
+
+\subsection{Test Cases}
+We gathered many test cases form publications about operational transformation algorithms. The puzzles presented in these papers often represent particularly tricky issues that other algorithms failed to resolve. Here is a list of test cases that were taken from papers:
+
+% TODO: insert all test cases that were taken from papers
+\begin{itemize}
+ \item 
+ \item 
+ \item 
+\end{itemize}
+
+Our algorithm is capable of solving these complex puzzles. This is a step in the right direction, but that alone is not enough. So we devised additional test cases that cover trivial as well as complex scenarios.
+
+\subsection{JUnit Tests}
+It is one of our goals to have a good test coverage with \emph{JUnit} tests.
