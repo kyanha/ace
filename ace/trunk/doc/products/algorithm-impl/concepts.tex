@@ -40,7 +40,7 @@ As we have seen, it is helpful to show the two dimensional state space that both
 
 If there is a conflict, the paths will diverge, as shown in figure \ref{fig:concepts.statespace}. The client and server moved to the state $(1,1)$ together by first processing a client request, and then a server request. At that point, the client and server processed different requests (concurrently), moving to state $(2,1)$ and $(1,2)$ respectively. They each received and processed the other's message using the transformation function to move to state $(2,2)$.
 
-The algorithm labels each request with the state the sender was in just before the message was generated (state vector). The recipient uses these labels to detect conflicts. Two concurrent requests have to be transformed, but they can only be transformed directly when they were generated from the same state of the document.
+The algorithm labels each request with the state the sender was in just before the message was generated (state vector). The recipient uses these labels to insert the request into his state space. If the request does not start from the current state the recipient is in, there is a conflict (concurrent request). Two concurrent requests have to be transformed, but they can only be transformed directly when they were generated from the same state of the document.
 
 If client and server diverge more than one step in the state space graph, the transformation function cannot be applied directly. Let us consider the state space in figure \ref{fig:concepts.statespace2}. The client has executed $c$ and receives the conflicting request $s1$ from the server. It uses the transformation function to computer $s1'$ to get to the state $(1,1)$. The server then generates $s2$ from the state $(0,1)$, indicating that it still has not processed $c$. What should the client do now? It cannot use the transformation function directly because $c$ and $s2$ were not generated from the same document state.
 
@@ -69,45 +69,41 @@ When a client sends a request to the server, the corresponding client proxy algo
 
 One thing must be taken care of in the implementation. Only one request may be processed by the server at any time. That is, the processing of requests from clients must be serialized. Otherwise, the algorithm will not work correctly.
 
-\paragraph{N-Way Example:} In order to better understand how the n-way synchronization work, we examine a simple example. In figure \ref{fig:concepts.nway-example-1}, the bottom two state graphs represent two clients, the top two state graphs represent the server, or more exactly the client proxy algorithms on the server. In the first step, both clients generate a request and send it to the server (see figure \ref{fig:concepts.nway-example-1}).
+\paragraph{n-way Example:} In order to better understand how the n-way synchronization work, we examine a simple example. In figure \ref{fig:concepts.nway-example-1}, the bottom two state graphs represent two clients, the top two state graphs represent the server, or more exactly the client proxy algorithms on the server. 
+
+In the first step, both clients generate a request and send it to the server (see figure \ref{fig:concepts.nway-example-1}). Then the request from client 1 arrives at the server earlier than the request from client 2 and is therefore processed first (see figure \ref{fig:concepts.nway-example-2}). In the next step, the request from client 2 is processed by the server (see figure \ref{fig:concepts.nway-example-3}). In the last step both clients receive the transformed request from their corresponding client proxy on the server side (see figure \ref{fig:concepts.nway-example-4}). They insert the requests at the right positions in their state space, doing transformations as necessary (client 2 has to transform the incoming message, client 1 not).
 
 \begin{figure}[H]
  \centering
- \includegraphics[width=14.5cm,height=8.75cm]{../../images/concepts_nway-example-1.eps}
- \caption{N-Way Example (Step 1)}
+ \includegraphics[width=10.0cm,height=7.54cm]{../../images/concepts_nway-example-1.eps}
+ \caption{n-way example (step 1)}
  \label{fig:concepts.nway-example-1}
 \end{figure}
 
-The request from client 1 arrives earlier at the server and is therefore processed first (see figure \ref{fig:concepts.nway-example-2}).
-
 \begin{figure}[H]
  \centering
- \includegraphics[width=14.5cm,height=9.0cm]{../../images/concepts_nway-example-2.eps}
- \caption{N-Way Example (Step 2)}
+ \includegraphics[width=10.0cm,height=7.74cm]{../../images/concepts_nway-example-2.eps}
+ \caption{n-way example (step 2)}
  \label{fig:concepts.nway-example-2}
 \end{figure}
 
-Then the request from client 2 is processed by the server (see figure \ref{fig:concepts.nway-example-3}). 
-
 \begin{figure}[H]
  \centering
- \includegraphics[width=14.5cm,height=9.03cm]{../../images/concepts_nway-example-3.eps}
- \caption{N-Way Example (Step 3)}
+ \includegraphics[width=10.0cm,height=7.77cm]{../../images/concepts_nway-example-3.eps}
+ \caption{n-way example (step 3)}
  \label{fig:concepts.nway-example-3}
 \end{figure}
 
-In the last step both clients receive the transformed request from their corresponding client proxy on the server side. They insert the requests at the right positions in their state space, doing transformations as necessary (client 2 has to transform the incoming message, client 1 not).
-
 \begin{figure}[H]
  \centering
- \includegraphics[width=14.5cm,height=9.95cm]{../../images/concepts_nway-example-4.eps}
- \caption{N-Way Example (Step 4)}
+ \includegraphics[width=10.0cm,height=7.77cm]{../../images/concepts_nway-example-4.eps}
+ \caption{n-way example (step 4)}
  \label{fig:concepts.nway-example-4}
 \end{figure}
 
 
 \subsection{Undo/Redo}
-The 
+In the preceeding sections, we have presented the basic transformation algorithm. In this section we will show how undo/redo of local operations can be achieved in a real-time collaborative editor. This introduces a whole set of new problems that necessitate additions to the transformation algorithm.
 
 \subsubsection{Problems of Local Group Undo}
 Global group undo is not much different from common single-user undo schemes. It can be implemented by executing the inverse command for each user command to be undone. The operation to be undone is the globally last operation that was executed. Global undo always leads to a former application state. In contrast, local group undo (undoing the last operation from the local user) is more complex, because in most cases it does not lead to a former application state.
@@ -177,7 +173,50 @@ The solution to the order puzzle in example 2 can be computed with the same oper
 
 
 \subsubsection{Additional Problems in n-Way Situation}
-% TODO: transformation history
+Unfortunately, there exists another problem in the n-way situation that do not exist in the 2-way situation. To illustrate the problem and the solution we introduce another example.
+
+\paragraph{Example 4:} First, user $X$ generates the request $Del[0,b]$ from the initial document state 'b'. Then, he undoes that change immediately (generating the mirror request $Ins[0,b]$). User $Y$ generates the request $Del[0,b]$ concurrently to the two requests from user $X$ (see figure \ref{fig:concepts.transformation-history-1}). In figure \ref{fig:concepts.transformation-history-2} the first request from user $X$ is processed by the server and then by the user $Y$. Nothing unusual happens in this situation. Then the request from user $Y$ is processed by the server, resulting in a Noop operation (see figure \ref{fig:concepts.transformation-history-3}).
+
+The next step (see figure \ref{fig:concepts.transformation-history-4}) reveals the interesting problem. The Noop operation is inserted into the state space of user $X$. Now we need to calculate operation $O_{x}$. Because the Noop operation is between a do-undo pair (mirror), $O_{x}$ must be calculated by folding the state space graph, that is by putting the dashed operation $O_{x}$ from the bottom to the top line. The problem is, we do not know what this operation was, so we cannot apply the fold operator.
+
+In figure \ref{fig:concepts.transformation-history-5} we see a similar problem on the server-side, or more specifically at the client proxy of user $X$ at the server. Here, the undo request from user $X$ has arrived at the server and is inserted into the state space graph at the correct position (from $(0,1)$ to $(0,2)$). Because we have a do-undo pair (mirror) on the bottom line, we must have a mirror operation on the second line too according to our transformation rules. In order to calculate $O_{y}$ we need to know the operation marked with three question marks first. This operation can be calculated by transforming $Del[0,b]$ against $O_{x}$. Once again, this operation is missing.
+
+So how do we find out $O_{x}$? The answer lies in the fact that the Noop request resulted from a transformation, so $O_{x}$ was known by the client proxy of user $Y$. It is $Del[0,b]$. If we remember the transformation history of an operation, we can use these previous forms of an operation to successfully apply mirror and fold operators and thus solve the problem presented in this example.
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=10cm,height=8.36cm]{../../images/concepts_transformation-history-1.eps}
+ \caption{n-way undo problem (step 1)}
+ \label{fig:concepts.transformation-history-1}
+\end{figure}
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=10cm,height=8.69cm]{../../images/concepts_transformation-history-2.eps}
+ \caption{n-way undo problem (step 2)}
+ \label{fig:concepts.transformation-history-2}
+\end{figure}
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=10cm,height=8.69cm]{../../images/concepts_transformation-history-3.eps}
+ \caption{n-way undo problem (step 3)}
+ \label{fig:concepts.transformation-history-3}
+\end{figure}
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=10cm,height=8.69cm]{../../images/concepts_transformation-history-4.eps}
+ \caption{n-way undo problem (step 4)}
+ \label{fig:concepts.transformation-history-4}
+\end{figure}
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=10cm,height=8.69cm]{../../images/concepts_transformation-history-5.eps}
+ \caption{n-way undo problem (step 5)}
+ \label{fig:concepts.transformation-history-5}
+\end{figure}
 
 
 \subsubsection{Redo}
