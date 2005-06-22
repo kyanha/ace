@@ -1,4 +1,5 @@
-\section{Concepts}
+\chapter{Concepts}
+\section{Jupiter}
 \emph{Jupiter} is a collaboration system that supports shared documents, shared tools, and, optionally, live audio/video communication. It was developed by \emph{Xerox}. It is conceptually a collaborative windowing toolkit. The low-level communication facilities are based on operational transformation.
 
 The operational transformation algorithm employed in the \emph{Jupiter} system is derived from \emph{dOPT}. A centralized architecture and thus the reduction to point-to-point connections makes the algorithm significantly simpler than other operational transformation algorithms. The basic \emph{Jupiter} algorithm is only suitable for two sites. However, it was shown in \cite{jupiter95} and in greater detail in \cite{netedit:thesis} how to use several point-to-point connections to build a tree-structured $n$-site algorithm (see figure \ref{fig:concepts.nway}).
@@ -10,7 +11,7 @@ The operational transformation algorithm employed in the \emph{Jupiter} system i
  \label{fig:concepts.nway}
 \end{figure}
 
-\subsection{Jupiter Algorithm}
+\subsection{Algorithm}
 The general tool for handling conflicting (i.e. concurrent) requests is the transformation function, called $xform$ in \cite{jupiter95}.
 
 $$ xform(c,s)=\{c',s'\} $$

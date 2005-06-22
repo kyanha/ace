@@ -1,7 +1,7 @@
 
-\section{Implementation}
+\chapter{Implementation}
 
-\subsection{Operation}
+\section{Operation}
 Text editing can be realized with only two operations. 
  - Insert
  - Delete
@@ -11,7 +11,7 @@ All operations have some equivalent properties. They must provide a function cal
 
 They are represented by the Operation Interface.
  
-\subsubsection{Operation Hierarchy}
+\subsection{Operation Hierarchy}
 \begin{figure}[H]
 \centering
 \includegraphics[height=5.74cm,width=11.59cm]{../../images/algo-impl/operation_classdiagram.eps}
@@ -19,18 +19,18 @@ They are represented by the Operation Interface.
 \label{Operation Hierarchy}
 \end{figure}
 
-\subsubsection{InsertOperation}
+\subsection{InsertOperation}
 
 
-\subsubsection{DeleteOperation}
-\subsubsection{SplitOperation}
+\subsection{DeleteOperation}
+\subsection{SplitOperation}
 \label{Split_Operation}
   - no operation
   - wrapper to handle special cases -> \ref{Delete_Insert}
 
 
 \newpage
-\subsection{Request}
+\section{Request}
 \begin{figure}[H]
 \centering
 \includegraphics[height=6.87cm,width=12.09cm]{../../images/algo-impl/request_classdiagram.eps}
@@ -40,9 +40,9 @@ They are represented by the Operation Interface.
 
 
 \newpage
-\subsection{GOTO Transformation Functions}
+\section{GOTO Transformation Functions}
 
-\subsubsection{Overview}
+\subsection{Overview}
 The GOTO (generic operation transformation optimized) transformation functions are designed to work with strings. The advantage is that less transformations are needed when a string has been inserted into a text. To understand the exigence of transformation functions see \emph{Report Evaluation Algorithms}.
 
 The inclusion transformation functions are used to check the influence of a given operation B to another operation A. If so, the operation A will be transformed into operation A'. To transform an operation means to adapt position and text of the operation. In the majority of cases this is a very simple process. But sometimes it is necessary to extract a text fragment or to split up an operation in two parts. For more details about splitting operations into two parts see \ref{Split_Operation}.
@@ -55,7 +55,7 @@ All possible transformations \emph{cases} with two insert/delete operations are 
 \label{Transformation Overview}
 \end{figure}
 
-\subsubsection{Insert/Insert}
+\subsection{Insert/Insert}
 \begin{itemize}
 \item \textbf{Case 1:}
 Operation A starts before or at the same position as operation B. Sometimes some special handling is necessary. See \emph{Special Case} in section \ref{Special_Case} for detailed information about that.
@@ -90,7 +90,7 @@ At the same time each site generates an insert operation with the same position.
 This problem can only be eliminated by privileging one operation. But which operation should be preferred? And how to guarantee that on all sites this will be the same operation? One possible solution would be to use the site id's (e.g. site 1 is always privileged against site 2 and site 3, site 2 is only to site 3). Especially when using this tranformation functions with the jupiter algoritm always the operation generated on the server part can be privileged.
 \end{itemize}
 
-\subsubsection{Insert/Delete}
+\subsection{Insert/Delete}
 \begin{itemize}
 \item \textbf{Case 3:}
 Operation A starts before or at the same position as operation B. Nothing has to be transformed.
@@ -100,7 +100,7 @@ Operation A starts after operation B. Index of operation A' must be reduced by t
 Operation A starts in operation B. Index of operation A' must be the index of operation B.
 \end{itemize}
 
-\subsubsection{Delete/Insert}
+\subsection{Delete/Insert}
 \begin{itemize}
 \item \textbf{Case 6:}
 Operation A is completly before operation B. Nothing has to be transformed.
@@ -110,7 +110,7 @@ Operation A starts before or at the same position as operation B. Index of opera
 Operation B is in the range of operation A. Operation A' must be splitted into two delete operations. For more details about this process see \cite{Split_Operation}.
 \end{itemize}
 
-\subsubsection{Delete/Delete}
+\subsection{Delete/Delete}
 \begin{itemize}
 \item \textbf{Case 9:}
 Operation A is completly before operation B. Nothing has to be transformed.
