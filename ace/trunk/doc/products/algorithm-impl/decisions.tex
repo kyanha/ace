@@ -1,0 +1,30 @@
+\section{Decisions}
+\subsection{Selection of algorithm}
+Based on the pre-selection in 4.3.5 of document \href{http://ace.iserver.ch:81/repos/ace/ace/trunk/doc/pdf/algorithm.pdf}{Report Evaluation Algorithm}, only two algorithms passed the criterias, namely \emph{Jupiter} and \emph{adOPTed}. We finally agreed on the \emph{Jupiter} algorithm. Following is a list of arguments that justifies our decision.
+
+\begin{itemize}
+ \item In our discretion, \emph{Jupiter} is the less complex algorithm than \emph{adOPTed}. We considered \emph{adOPTed} the algorithm which entails a higher risk in the occurence of unforeseen implementation problems. Therefore, we followed the well-known KISS programming paradigma.
+ \item More technical issues remained unanswered on the \emph{adOPTed} algorithm, e.g. concurrent joining/writing. Therefore, we would have taken a higher risk when choosing \emph{adOPTed}.
+ \item \emph{Jupiter} entails a better scalability. Whereas the number of communication paths in \emph{adOPTed} increases with $n(n-1)$, where $n$ is the number of clients, it only rises linearly with the number of clients in \emph{Jupiter}.
+ \item In our humble opinion, the client/server model of \emph{Jupiter} matches better the concept of collaborative editing, i.e. one client announces a document and becomes the server, whereas other clients connect with the server and join the collaborative editing session.
+\end{itemize}
+
+Recapitulating, with \emph{Jupiter} we have chosen the algorithm with the higher feasibility, that is to say, the one algorithm which is saver for a succesful implementation.
+
+\subsection{Selection of transformation function}
+The \emph{Jupiter} algorithm makes use of a set of transformation functions. Nevertheless, no such functions are proposed in the paper. Therefore, we had to choose a set of transformation functions which would meet the needs of \emph{Jupiter}. The follwoing list identifies the three preconditions for the transformation functions:
+\begin{itemize}
+ \item only IT required
+ \item TP1 must be satisfied (cf. section 4 in \href{http://ace.iserver.ch:81/repos/ace/ace/trunk/doc/pdf/algorithm.pdf}{Report Evaluation Algorithm})
+ \item should be extensible to stringwise transformations
+\end{itemize}
+
+Following is a list of possible transformation functions that meet some or all of the preconditions.
+\begin{itemize}
+ \item IT from \emph{SOCT2}, satisfies TP1 but not TP2 \footnote{Prove in "Achieving convergence with operational transformation in distributed groupware systems", Imine et al.}, only characterwise
+ \item IT from \emph{SDT}, satisfies TP1 but not TP2 \footnote{Prove in "Achieving convergence with operational transformation in distributed groupware systems", Imine et al.}, only characterwise
+ \item IT from \emph{Imine et al.} \footnote{cf. "Achieving convergence with operational transformation in distributed groupware systems", Imine et al.}, satisfies both TP1 and TP2, only characterwise
+ \item IT from \emph{GOTO}, satisfies TP1 but not TP2 \footnote{Prove in "Proving correctness of transformation functions in real-time groupware", Imine et al.}, character- and stringwise
+ \end{itemize}
+
+It is clear that all the three preconditions are only met by the transformation functions of the \emph{GOTO} algorithm. They are proposed in "Reversible inclusion and exclusion transformation for string-wise operations in  cooperative editing systems", Sun et al.
