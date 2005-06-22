@@ -6,6 +6,8 @@
 	<property name="build.javadoc" value="${build.dir}/api"/>
 	<property name="build.resources" value="${build.dir}/resources"/>
 	<property name="build.testreports" value="${build.dir}/testreports"/>
+	<property name="dist.dir" value="dist/tmp"/>
+	<property name="docs.dir" value="doc/pdf"/>
 	<property name="src.dir" value="src"/>
 	<property name="src.test" value="${src.dir}/test"/>
 	
@@ -104,6 +106,38 @@
 			</batchtest>
 			<test if="testcase" todir="${build.testreports}" name="${testcase}"/>
 		</junit>
+	</target>
+	
+	<target name="dist" depends="javadoc">
+	    <mkdir dir="${dist.dir}"/>
+	    <mkdir dir="${dist.dir}/docs"/>
+	    <mkdir dir="${dist.dir}/docs/pm"/>
+	    <mkdir dir="${dist.dir}/docs/products"/>
+	    <copy todir="${dist.dir}/docs/api">
+	        <fileset dir="${build.javadoc}"/>
+	    </copy>
+	    <copy todir="${dist.dir}/docs/pm">
+	        <fileset dir="${docs.dir}">
+	            <include name="projektantrag.pdf"/>
+	            <include name="pflichtenheft.pdf"/>
+	            <include name="projekthandbuch.pdf"/>
+	            <include name="projektplan.pdf"/>
+	            <include name="erfahrungsbericht.pdf"/>
+	        </fileset>
+	    </copy>
+	    <copy todir="${dist.dir}/docs/products">
+	        <fileset dir="${docs.dir}">
+	            <include name="algorithm.pdf"/>
+	            <include name="algorithm-impl.pdf"/>
+	            <include name="finalreport.pdf"/>
+	            <include name="gui.pdf"/>
+	            <include name="network.pdf"/>
+	            <include name="testframework.pdf"/>
+	        </fileset>
+	    </copy>
+	    <copy todir="${dist.dir}/src">
+	        <fileset dir="${src.dir}"/>
+	    </copy>
 	</target>
 
 </project>
