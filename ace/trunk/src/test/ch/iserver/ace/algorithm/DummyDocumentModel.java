@@ -28,15 +28,17 @@ import ch.iserver.ace.Operation;
 import ch.iserver.ace.text.InsertOperation;
 
 /**
- *
+ * This is dummy document model implementation for simple text.
+ * 
+ * @see ch.iserver.ace.DocumentModel
  */
 public class DummyDocumentModel implements DocumentModel {
 
 	private List operations = new LinkedList();
 	private String text = "";
 	
-	/* (non-Javadoc)
-	 * @see ch.iserver.ace.DocumentModel#apply(ch.iserver.ace.Operation)
+	/**
+	 * {@inheritDoc}
 	 */
 	public void apply(Operation operation) {
 		operations.add(operation);
@@ -44,11 +46,19 @@ public class DummyDocumentModel implements DocumentModel {
 			text += ((InsertOperation)operation).getText();
 		}
 	}
-	
+	/**
+	 * Returns all received operations.
+	 * 
+	 * @return a list with all received operations
+	 */
 	public List getOperations() {
 		return operations;
 	}
-	
+	/**
+	 * Returns the document content.
+	 * 
+	 * @return the document content
+	 */
 	public String getText() {
 		return text;
 	}

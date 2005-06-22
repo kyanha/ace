@@ -30,20 +30,43 @@ import ch.iserver.ace.text.GOTOInclusionTransformation;
 import ch.iserver.ace.util.SynchronizedQueue;
 
 /**
- *
+ * JupiterServer is used for the client management on the server. Clients can 
+ * be added and removed.
+ * 
  */
 public class JupiterServer {
     
 	private static Logger LOG = Logger.getLogger(JupiterServer.class);
 	
+	/**
+	 * counter for site id assignment
+	 */
     private int siteIdCounter;
-    private RequestSerializer serializer;
-    private SynchronizedQueue requestForwardQueue;
-    private Map requestForwarders;
     
     /**
+     * the request serializer
      * 
-     *
+     * @see RequestSerializer 
+     */
+    private RequestSerializer serializer;
+    
+    /**
+     *  a queue containing the request forwarders
+     * 
+     * @see RequestForwarder
+     */
+    private SynchronizedQueue requestForwardQueue;
+    
+    /**
+     * a collection with siteId to request forwarder mappings.
+     * 
+     * @see RequestForwarder 
+     */
+    private Map requestForwarders;
+    
+    
+    /**
+     * Class constructor. 
      */
     public JupiterServer() {
         siteIdCounter = 0;
@@ -57,8 +80,8 @@ public class JupiterServer {
     /**
      * Adds a new client to this Jupiter server instance.
      * 
-     * @param net
-     * @return	the client proxy just created.
+     * @param net 	the net service implementation
+     * @return		the client proxy just created.
      */
     public synchronized ClientProxy addClient(NetService net) {
         //create client proxy
@@ -80,8 +103,11 @@ public class JupiterServer {
     }
     
     /**
+     * Removes a client given its siteId. The client is immediately stopped
+     * from forwarding any more requests. The client is removed not until all
+     * requests waiting at the server at the time of removal have been processed. 
      * 
-     * @param siteId
+     * @param siteId the siteId of the client to remove
      */
     public void removeClient(int siteId) {
     		Integer id = new Integer(siteId);
@@ -95,8 +121,10 @@ public class JupiterServer {
     }
     
     /**
+     * Returns a map with all the request forwarders.
      * 
-     * @return
+     * @return the request forwarders
+     * @see RequestForwarder
      */
     Map getRequestForwarders() {
         return requestForwarders;
@@ -105,6 +133,8 @@ public class JupiterServer {
 	/**
 	* Originaly intended for test use.
 	* Returns the client count.
+	* 
+	* @return the number of clients
 	*/
 	int getClientCount() {
 		return serializer.getClientProxies().size();
@@ -113,6 +143,9 @@ public class JupiterServer {
 	/**
 	* Originaly intended for test use.
 	* Returns to RequestSerializer.
+	* 
+	* @return the request serializer
+	* @see RequestSerializer
 	*/
 	RequestSerializer getRequestSerializer() {
 		return serializer;

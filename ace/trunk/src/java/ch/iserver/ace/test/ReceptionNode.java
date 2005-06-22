@@ -82,7 +82,7 @@ public class ReceptionNode extends AbstractNode {
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public List getSuccessors() {
 		List result = new ArrayList();
@@ -93,14 +93,14 @@ public class ReceptionNode extends AbstractNode {
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void accept(NodeVisitor visitor) {
 		visitor.visit(this);
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public String toString() {
 		return getClass().getName() + "[site=" + getSiteId() + ",ref=" + ref + "]";

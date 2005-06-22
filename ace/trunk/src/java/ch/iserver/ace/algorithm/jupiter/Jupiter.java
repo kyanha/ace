@@ -75,8 +75,8 @@ public class Jupiter implements Algorithm {
 	 *            the inclusion transformation to be used
 	 * @param document
 	 *            the inital document model
-	 * @param timestamp
-	 *            the inital time stamp (state vector)
+	 * @param siteId
+	 * 			 the site id
 	 * @param isClientSide
 	 * 			 true if the algorithm resides on the client side
 	 */
@@ -111,10 +111,8 @@ public class Jupiter implements Algorithm {
 		undoManager = new UndoManager();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see ch.iserver.ace.algorithm.Algorithm#generateRequest(ch.iserver.ace.Operation)
+	/**
+	 * {@inheritDoc}
 	 */
 	public Request generateRequest(Operation op) {
 		return generateRequest(op, false);
@@ -157,10 +155,8 @@ public class Jupiter implements Algorithm {
 		return req;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see ch.iserver.ace.algorithm.Algorithm#receiveRequest(ch.iserver.ace.algorithm.Request)
+	/**
+	 * {@inheritDoc}
 	 */
 	public void receiveRequest(Request req) {
 		LOG.info(">>> recv");
@@ -377,6 +373,9 @@ public class Jupiter implements Algorithm {
 			return count;
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public String toString() {
 			return ("OperationWrapper(" + op + ", " + count + ")");
 		}
@@ -395,14 +394,30 @@ public class Jupiter implements Algorithm {
 			operations = new ArrayList();
 		}
 		
+		/**
+		 * Adds an operation wrapper to this queue.
+		 * 
+		 * @param wrap the wrap to add
+		 */
 		public void add(OperationWrapper wrap) {
 			operations.add(wrap);
 		}
 		
+		/**
+		 * Sets an operation wrapper at a specified position.
+		 * 
+		 * @param index the index where the wrap is set
+		 * @param wrap the wrap to set
+		 */
 		public void set(int index, OperationWrapper wrap) {
 			operations.set(index, wrap);
 		}
 		
+		/**
+		 * Returns all operations.
+		 * 
+		 * @return the list with all operations
+		 */
 		public List getOperations() {
 			return operations;
 		}
@@ -413,7 +428,7 @@ public class Jupiter implements Algorithm {
 		 * in the list are excluded (this represents the 'fold' mechanism described in 
 		 * the Ressel Undo paper).
 		 * 
-		 * @return
+		 * @return the list with the operations to transform against
 		 */
 		public List getTransformationSet() {
 			//TODO: test this method thorougly
@@ -469,16 +484,16 @@ public class Jupiter implements Algorithm {
 			return result;
 		}
 		
+		/**
+		 * {@inheritDoc}
+		 */
 		public String toString() {
 			return "OutgoingQueue("+operations.toString()+")";
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see ch.iserver.ace.algorithm.Algorithm#init(ch.iserver.ace.DocumentModel,
-	 *      ch.iserver.ace.algorithm.Timestamp)
+	/**
+	 * {@inheritDoc}
 	 */
 	public void init(DocumentModel doc, Timestamp timestamp) {
 		if (doc == null || timestamp == null)
@@ -487,37 +502,29 @@ public class Jupiter implements Algorithm {
 		vectorTime = (JupiterVectorTime) timestamp;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see ch.iserver.ace.algorithm.Algorithm#getDocument()
+	/**
+	 * {@inheritDoc}
 	 */
 	public DocumentModel getDocument() {
 		return document;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see ch.iserver.ace.algorithm.Algorithm#siteAdded(int)
+	/**
+	 * {@inheritDoc}
 	 */
 	public void siteAdded(int siteId) {
 		throw new UnsupportedOperationException();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see ch.iserver.ace.algorithm.Algorithm#siteRemoved(int)
+	/**
+	 * {@inheritDoc}
 	 */
 	public void siteRemoved(int siteId) {
 		throw new UnsupportedOperationException();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see ch.iserver.ace.algorithm.Algorithm#undo()
+	/**
+	 * {@inheritDoc}
 	 */
 	public Request undo() {
 		LOG.info("--> undo");
@@ -547,10 +554,8 @@ public class Jupiter implements Algorithm {
 		return generateRequest(op, true);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see ch.iserver.ace.algorithm.Algorithm#redo()
+	/**
+	 * {@inheritDoc}
 	 */
 	public Request redo() {
 		//get the users request that is to be redone
@@ -615,14 +620,29 @@ public class Jupiter implements Algorithm {
 		return vectorTime;
 	}
 	
+	/**
+	 * Checks if this algorithm locates client side.
+	 * 
+	 * @return true if this algorithm locates client side
+	 */
 	public boolean isClientSide() {
 		return isClientSide;
 	}
 	
+	/**
+	 * Returns true if this algorithm can undo operations.
+	 * 
+	 * @return true if this algorithm can undo operations
+	 */
 	public boolean canUndo() {
 		return (isClientSide()) ? undoManager.canUndo() : false;
 	}
 	
+	/**
+	 * Returns true if this algorithm can redo operations.
+	 * 
+	 * @return true if this algorithm can redo operations
+	 */
 	public boolean canRedo() {
 		return (isClientSide()) ? undoManager.canRedo() : false;
 	}

@@ -29,7 +29,9 @@ import ch.iserver.ace.text.InsertOperation;
 import ch.iserver.ace.util.SynchronizedQueue;
 
 /**
- *
+ * This class has test methods to test the RequestSerializer class.
+ * 
+ * @see ch.iserver.ace.algorithm.jupiter.server.RequestSerializer
  */
 public class RequestSerializerTest extends TestCase {
 
@@ -40,8 +42,8 @@ public class RequestSerializerTest extends TestCase {
 	private ClientProxy proxy;
 	
 	
-	/* (non-Javadoc)
-	 * @see junit.framework.TestCase#setUp()
+	/**
+	 * {@inheritDoc}
 	 */
 	protected void setUp() throws Exception {
 		requestForwardQueue = new SynchronizedQueue();
@@ -55,13 +57,16 @@ public class RequestSerializerTest extends TestCase {
 				requestForwardQueue);
 	}
 	
-	/* (non-Javadoc)
-	 * @see junit.framework.TestCase#tearDown()
+	/**
+	 * {@inheritDoc}
 	 */
 	protected void tearDown() throws Exception {
 		serializer.interrupt();
 	}
 	
+	/** 
+     * @throws Exception
+     */
 	public void testAddRemoveClientProxy() throws Exception {
 		//add a client proxy
 		serializer.addClientProxy(proxy,outgoingQueue);

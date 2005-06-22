@@ -35,14 +35,19 @@ public class OperationExtractDocumentModel implements DocumentModel {
 	
     private Operation operation;
     
-    /* (non-Javadoc)
-     * @see ch.iserver.ace.DocumentModel#apply(ch.iserver.ace.Operation)
+    /**
+     * {@inheritDoc}
      */
     public void apply(Operation operation) {
     		LOG.info("oem.apply("+operation+")");
         this.operation = operation;
     }
     
+    /**
+     * Returns the latest operation applied.
+     * 
+     * @return the latest operation applied
+     */
     public Operation getOperation() {
         return operation;
     }

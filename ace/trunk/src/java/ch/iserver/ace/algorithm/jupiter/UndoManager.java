@@ -47,6 +47,9 @@ public class UndoManager {
 	private List remoteRequests;
 	private int nextUndoOperation;
 	
+	/**
+	 * Class constructor.
+	 */
 	public UndoManager() {
 		localUndoCandidates = Collections.synchronizedList(new ArrayList());
 		localRequests = Collections.synchronizedList(new ArrayList());
@@ -54,12 +57,23 @@ public class UndoManager {
 		nextUndoOperation = -1;
 	}
 	
+	/**
+	 * Returns the request which can be undone next.
+	 * 
+	 * @return the request that can be undone next
+	 * @throws CannotUndoException
+	 */
 	public Request nextUndo() {
 		if (!canUndo()) throw new CannotUndoException(); 
 		//return undo request and move history list pointer
 		return (Request)localUndoCandidates.get(nextUndoOperation--);
 	}
 	
+	/**
+	 * Adds an undo request.
+	 *
+	 * @param request the request to be added
+	 */
 	public void addUndo(Request request) {
 		clearRedo();
 		localUndoCandidates.add(++nextUndoOperation, request);
@@ -75,15 +89,32 @@ public class UndoManager {
 		}
 	}
 	
+	/**
+	 * Returns the next redo request.
+	 * 
+	 * @return the next request that can be redone
+	 * @throws CannotRedoException
+	 */
 	public Request nextRedo() {
 		if (!canRedo()) throw new CannotRedoException();
 		return (Request)localUndoCandidates.get(++nextUndoOperation);
 	}
 	
+	/**
+	 * Adds a remote request, e.g. a request that has been received
+	 * over the network.
+	 * 
+	 * @param request the remote request
+	 */
 	public void addRemote(Request request) {
 		remoteRequests.add(request);
 	}
 	
+	/**
+	 * Adds a locally generated request.
+	 * 
+	 * @param request the local request to be added
+	 */
 	public void addLocal(Request request) {
 		localRequests.add(request);
 	}
@@ -107,10 +138,11 @@ public class UndoManager {
 	}
 	
 	/**
-	 * yet index of requestes is wrong!!! 
+	 * Returns a list of Object[]{Request, index} which all have
+	 * a <code>localOperationCount</code> greater or equals to <code>base</code>.
 	 * 
-	 * @param base
-	 * @return
+	 * @param base the base count
+	 * @return a list of object arrays
 	 */
 	public List getLocalTransformationSet(int base) {
 		LOG.info("localRequest: "+localRequests);
@@ -176,10 +208,20 @@ public class UndoManager {
 		return result;
 	}
 	
+	/**
+	 * Returns true if an undo can be performed.
+	 * 
+	 * @return true if an undo can be performed
+	 */
 	public boolean canUndo() {
 		return (nextUndoOperation >= 0);
 	}
 	
+	/**
+	 * Returns true if a redo can be performed.
+	 * 
+	 * @return true if a redo can be performed
+	 */
 	public boolean canRedo() {
 		return (localUndoCandidates.size() > 0 && nextUndoOperation < localUndoCandidates.size()-1);
 	}

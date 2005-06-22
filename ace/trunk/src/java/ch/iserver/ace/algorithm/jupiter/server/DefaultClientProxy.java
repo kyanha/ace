@@ -27,7 +27,10 @@ import ch.iserver.ace.algorithm.jupiter.Jupiter;
 import ch.iserver.ace.util.SynchronizedQueue;
 
 /**
- *
+ * This is the default implementation of the interface 
+ * {@link ch.iserver.ace.algorithm.jupiter.server.ClientProxy}.
+ * 
+ * @see ch.iserver.ace.algorithm.jupiter.server.ClientProxy
  */
 public class DefaultClientProxy implements ClientProxy {
 
@@ -39,10 +42,19 @@ public class DefaultClientProxy implements ClientProxy {
     private SynchronizedQueue requestForwardQueue;
     
     /**
+     * Constructor.
      * 
+     * @param siteId
+     * 				the site id
      * @param net
+     * 				the net service
      * @param algo
+     * 				the algorithm implementation Jupiter
      * @param queue
+     * 				the synchronized queue for forwarding of requests
+     * @see NetService
+     * @see Jupiter
+     * @see SynchronizedQueue
      */
     public DefaultClientProxy(int siteId, NetService net, Jupiter algo, SynchronizedQueue queue) {
         this.siteId = siteId;
@@ -51,8 +63,8 @@ public class DefaultClientProxy implements ClientProxy {
         requestForwardQueue = queue;
     }
     
-    /* (non-Javadoc)
-     * @see ch.iserver.ace.algorithm.jupiter.server.ClientProxy#sendRequest(ch.iserver.ace.algorithm.Request)
+    /**
+     * {@inheritDoc}
      */
     public void sendRequest(Request req) {
     		if (net != null) {
@@ -62,8 +74,8 @@ public class DefaultClientProxy implements ClientProxy {
     		}
     }
 
-    /* (non-Javadoc)
-     * @see ch.iserver.ace.algorithm.jupiter.server.ClientProxy#receiveRequest(ch.iserver.ace.algorithm.Request)
+    /**
+     * {@inheritDoc}
      */
     public void receiveRequest(Request req) {
     		//if the net service connection has been aborted, stop receiving and 
@@ -74,23 +86,35 @@ public class DefaultClientProxy implements ClientProxy {
     		}
     }
 
-    /* (non-Javadoc)
-     * @see ch.iserver.ace.algorithm.jupiter.server.ClientProxy#getAlgorithm()
+    /**
+     * {@inheritDoc}
      */
     public Jupiter getAlgorithm() {
         return algo;
     }
-    /* (non-Javadoc)
-     * @see ch.iserver.ace.algorithm.jupiter.server.ClientProxy#getSiteId()
+    
+    /**
+     * {@inheritDoc}
      */
     public int getSiteId() {
         return siteId;
     }
     
+    /**
+     * Returns the request forward queue.
+     * 
+     * @return the request forward queue
+     */
     public SynchronizedQueue getRequestForwardQueue() {
     		return requestForwardQueue;
     }
     
+    /** 
+     * Closes the connection to the net service in that 
+     * the client proxy does not forward requests any longer.
+     *
+     * @see NetService
+     */
     public synchronized void closeNetServiceConnection() {
     		net = null;
     }

@@ -53,7 +53,7 @@ public class DefaultScenarioLoader implements ScenarioLoader {
 	public DefaultScenarioLoader() { }
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void loadScenario(ScenarioBuilder scenarioBuilder, InputStream source) 
 			throws IOException {

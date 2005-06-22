@@ -42,21 +42,21 @@ public abstract class AbstractNode implements Node {
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public String getSiteId() {
 		return siteId;
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void setLocalSuccessor(Node successor) {
 		this.localSuccessor = successor;
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public Node getLocalSuccessor() {
 		return localSuccessor;

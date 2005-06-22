@@ -48,10 +48,13 @@ public class JupiterRequest implements Request {
     /**
      * Class constructor.
      * 
-     * @param siteId 	the Id from the originating site.
-     * @param vt		the vector time corresponding to the document state
+     * @param siteId 	
+     * 				the Id from the originating site.
+     * @param vectorTime		
+     * 				the vector time corresponding to the document state
      * 				when the request was created.
-     * @param op		the operation to be executed.
+     * @param operation		
+     * 				the operation to be executed.
      */
     public JupiterRequest(int siteId, JupiterVectorTime vectorTime, Operation operation) {
         this.siteId = siteId;
@@ -59,8 +62,10 @@ public class JupiterRequest implements Request {
         this.operation = operation;
     }
 
-    /* (non-Javadoc)
-     * @see ch.iserver.ace.algorithm.Request#getSiteId()
+    /**
+     * Returns the site id.
+     * 
+     * @return the site id
      */
     public int getSiteId() {
         return siteId;
@@ -73,15 +78,15 @@ public class JupiterRequest implements Request {
 		this.siteId = siteId;
 	}
 	
-    /* (non-Javadoc)
-     * @see ch.iserver.ace.algorithm.Request#getOperation()
+    /**
+     * {@inheritDoc}
      */
     public Operation getOperation() {
         return operation;
     }
 
-    /* (non-Javadoc)
-     * @see ch.iserver.ace.algorithm.Request#getTimestamp()
+    /**
+     * {@inheritDoc}
      */
     public Timestamp getTimestamp() {
         return vectorTime;
@@ -98,6 +103,9 @@ public class JupiterRequest implements Request {
         return vectorTime;
     }
     
+    /**
+     * {@inheritDoc}
+     */
     public String toString() {
     		return "JupiterRequest(" + siteId + ", " + vectorTime + ", " + operation + ")";
     }

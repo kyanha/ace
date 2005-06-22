@@ -236,16 +236,35 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		}
 	}
 	
+	/**
+	 * This is a helper class for debugging with the document model implementation.
+	 */
 	private static class DebugExtractDocumentModel implements DocumentModel {
 		private int siteId;
 		private Operation operation;
+		
+		/**
+		 * Class constructor.
+		 * 
+		 * @param siteId the site id
+		 */
 		public DebugExtractDocumentModel(int siteId) {
 			this.siteId = siteId;
 		}
+		
+		/**
+		 * {@inheritDoc}
+		 */
 		public void apply(Operation operation) {
 			LOG.info("proxyDoc.apply(" + operation+")");
 			this.operation = operation;
 		}
+		
+		/**
+		 * Returns the latest operation applied.
+		 * 
+		 * @return the latest operation applied
+		 */
 		public Operation getOperation() {
 			return operation;
 		}
@@ -258,6 +277,7 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 	 * TP 2 (at least these are mentioned): dOPT, adOPTed and GOTO 
 	 * (see references [1], [9] and [15] in the paper).
 	 * 
+	 * @throws Exception
 	 */
 	public void testC2puzzleP1() throws Exception {
 		final String INITIAL = "core";
@@ -538,7 +558,7 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 	 * This example is taken from cscw04sdt.pdf figure 1 and is called 
 	 * 'a scenario of divergence and ERV (effects relation violation)'. 
 	 * It is similar to the examples in figure 4/5 from ecscw03.pdf 
-	 * (see {@link #testWithCounterexampleAgainstResselOT()}).
+	 * (see {@link #testCounterexample()}).
 	 * 
 	 * @throws Exception
 	 */
@@ -747,7 +767,7 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 	/**
 	 * This example is taken from 82890036.pdf figure 5 and it is similar to the 
 	 * examples in {@link #testScenarioOfDivergenceAndERV()}
-	 * and {@link #testWithCounterexampleAgainstResselOT()}.
+	 * and {@link #testCounterexample()}.
 	 * 
 	 * @throws Exception
 	 */

@@ -155,6 +155,8 @@ public class ExecuteVisitorTest extends TestCase {
 	
 	/**
 	 * Creates a normal sequence of nodes.
+	 * 
+	 * @return an iterator for the sequence of nodes.
 	 */
 	protected Iterator createTestSequence() {
 		List result = new ArrayList();
@@ -195,9 +197,15 @@ public class ExecuteVisitorTest extends TestCase {
 	}
 	
 	private static class AlgorithmTestFactoryStub implements AlgorithmTestFactory {
+		/**
+		 * {@inheritDoc}
+		 */
 		public Algorithm createAlgorithm(int siteId) {
 			return new AlgorithmStub();
 		}
+		/**
+		 * {@inheritDoc}
+		 */
 		public DocumentModel createDocument(String state) {
 			return new DocumentModel() {
 				public void apply(Operation operation) {
@@ -208,6 +216,9 @@ public class ExecuteVisitorTest extends TestCase {
 				}
 			};
 		}
+		/**
+		 * {@inheritDoc}
+		 */
 		public Timestamp createTimestamp() {
 			return new Timestamp() { };
 		}
@@ -216,22 +227,39 @@ public class ExecuteVisitorTest extends TestCase {
 	private static class AlgorithmStub implements Algorithm {
 		private DocumentModel doc;
 		private Timestamp timestamp;
+		/**
+		 * {@inheritDoc}
+		 */
 		public DocumentModel getDocument() {
 			return doc;
 		}
+		/**
+		 * {@inheritDoc}
+		 */
 		public void init(DocumentModel doc, Timestamp timestamp) {
 			this.doc = doc;
 			this.timestamp = timestamp;
-		}			
+		}	
+		/**
+		 * {@inheritDoc}
+		 */
 		public void siteRemoved(int siteId) {
 	
 		}
+		/**
+		 * {@inheritDoc}
+		 */
 		public void siteAdded(int siteId) {
 	
-		}			
+		}	
+		/**
+		 * {@inheritDoc}
+		 */
 		public void receiveRequest(Request req) {
-	
 		}
+		/**
+		 * {@inheritDoc}
+		 */
 		public Request generateRequest(final Operation op) {
 			return new Request() {
 				public Timestamp getTimestamp() {
@@ -247,9 +275,15 @@ public class ExecuteVisitorTest extends TestCase {
 			
 			};
 		}
+		/**
+		 * {@inheritDoc}
+		 */
 		public Request undo() {
 			return null;
 		}
+		/**
+		 * {@inheritDoc}
+		 */
 		public Request redo() {
 			return null;
 		}

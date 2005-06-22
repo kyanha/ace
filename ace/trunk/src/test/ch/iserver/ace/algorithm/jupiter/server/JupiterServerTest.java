@@ -32,7 +32,9 @@ import ch.iserver.ace.text.InsertOperation;
 import ch.iserver.ace.util.SynchronizedQueue;
 
 /**
- *
+ * This class has test methods to test the JupiterServer.
+ * 
+ * @see ch.iserver.ace.algorithm.jupiter.server.JupiterServer
  */
 public class JupiterServerTest extends TestCase {
     
@@ -44,8 +46,8 @@ public class JupiterServerTest extends TestCase {
     private ClientProxy[] proxies;
     private TestNetService[] netService;
     
-    /* (non-Javadoc)
-     * @see junit.framework.TestCase#setUp()
+    /**
+     * {@inheritDoc}
      */
     protected void setUp() throws Exception {
         server = new JupiterServer();
@@ -57,8 +59,9 @@ public class JupiterServerTest extends TestCase {
             proxies[i] = server.addClient(netService[i]);
         }
     }
-    /* (non-Javadoc)
-     * @see junit.framework.TestCase#tearDown()
+    
+    /**
+     * {@inheritDoc}
      */
     protected void tearDown() throws Exception {
         Map forwarders = server.getRequestForwarders();
@@ -76,6 +79,9 @@ public class JupiterServerTest extends TestCase {
         netService = null;
     }
     
+    /** 
+     * @throws Exception
+     */
     public void testInitialization() throws Exception {
         assertEquals(initialClientCount+NUM_CLIENTS, server.getClientCount());
         RequestSerializer serializer = server.getRequestSerializer();
@@ -93,6 +99,9 @@ public class JupiterServerTest extends TestCase {
         }
     }
     
+    /** 
+     * @throws Exception
+     */
     public void testRemoveClient() throws Exception {
     		int siteId = proxies[0].getSiteId();
     		server.removeClient(siteId);
@@ -148,12 +157,13 @@ public class JupiterServerTest extends TestCase {
         			assertTrue(id.intValue() != jupi.getSiteId());
         			assertEquals(0, jupi.getJupiterVectorTime().getLocalOperationCount());
         			assertEquals(0, jupi.getJupiterVectorTime().getRemoteOperationCount());
-        			//TODO: is that correct??
-//        			assertEquals(1, jupi.getJupiterVectorTime().getRemoteOperationCount());
         		}
         }
     }
     
+    /** 
+     * @throws Exception
+     */
     public void testServerWithNRequests() throws Exception {
     		//create requests.
     		JupiterRequest[] requests = new JupiterRequest[NUM_CLIENTS];

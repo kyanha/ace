@@ -81,10 +81,16 @@ public class JupiterVectorTime implements Timestamp, Cloneable {
         return ++remoteOperationCnt;
     }
     
+    /**
+     * {@inheritDoc}
+     */
 	public String toString() {
 		return "JupiterVectorTime(" + localOperationCnt + "," + remoteOperationCnt + ")";
 	}
 	
+	/**
+     * {@inheritDoc}
+     */
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
@@ -99,6 +105,9 @@ public class JupiterVectorTime implements Timestamp, Cloneable {
 		}
 	}
 	
+	/**
+     * {@inheritDoc}
+     */
 	public int hashCode() {
 		int hashcode = 17;
 		hashcode = 37 * hashcode + localOperationCnt;
@@ -106,6 +115,9 @@ public class JupiterVectorTime implements Timestamp, Cloneable {
 		return hashcode;
 	}
 	
+	/**
+     * {@inheritDoc}
+     */
 	public Object clone() {
 		try
 	    {

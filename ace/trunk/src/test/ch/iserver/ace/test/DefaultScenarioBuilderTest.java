@@ -4,8 +4,14 @@ import ch.iserver.ace.text.DeleteOperation;
 import ch.iserver.ace.text.InsertOperation;
 import junit.framework.TestCase;
 
+/**
+ * 
+ */
 public class DefaultScenarioBuilderTest extends TestCase {
 
+	/**
+	 * 
+	 */
 	public void testSimple() {
 		ScenarioBuilder builder = new DefaultScenarioBuilder();
 		builder.init("abc", "a1c");
@@ -23,6 +29,9 @@ public class DefaultScenarioBuilderTest extends TestCase {
 		builder.endSite();
 	}
 	
+	/**
+	 * 
+	 */
 	public void testComplex() {
 		ScenarioBuilder builder = new DefaultScenarioBuilder();
 		builder.init("abc", "a12cd");

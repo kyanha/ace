@@ -23,10 +23,15 @@ package ch.iserver.ace.util;
 import junit.framework.TestCase;
 
 /**
- *
+ * This class tests the SynchronizedQueue class.
+ * 
+ * @see ch.iserver.ace.util.SynchronizedQueue
  */
 public class SynchronizedQueueTest extends TestCase {
 
+	/**
+	 * @throws Exception
+	 */
 	public void testEqualityWithoutSynchObj() throws Exception {
 		SynchronizedQueue q1 = new SynchronizedQueue();
 		SynchronizedQueue q2 = new SynchronizedQueue();
@@ -49,6 +54,9 @@ public class SynchronizedQueueTest extends TestCase {
 		assertEquals(q1, q2);	
 	}
 	
+	/**
+	 * @throws Exception
+	 */
 	public void testEqualityWithSynchObj() throws Exception {
 		Object synchObj = new Object();
 		SynchronizedQueue q1 = new SynchronizedQueue(synchObj);

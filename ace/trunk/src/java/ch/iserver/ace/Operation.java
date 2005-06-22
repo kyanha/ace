@@ -54,7 +54,7 @@ public interface Operation extends Serializable {
 	 * Returns the original operation if this operation
 	 * was transformed. Otherwise null is returned.
 	 * 
-	 * @return
+	 * @return the original operation
 	 */
 	public Operation getOriginalOperation();
 	

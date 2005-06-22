@@ -31,6 +31,9 @@ import junit.framework.TestCase;
  */
 public class GraphUtilTest extends TestCase {
 
+	/**
+	 * 
+	 */
 	public void testSortTopological() {
 		StartNode s1 = new StartNode("1", "");
 		StartNode s2 = new StartNode("2", "");

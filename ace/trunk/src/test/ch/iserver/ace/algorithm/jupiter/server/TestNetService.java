@@ -28,7 +28,9 @@ import org.apache.log4j.Logger;
 import ch.iserver.ace.algorithm.Request;
 
 /**
- *
+ * A NetService implementation for test purpose.
+ * 
+ * @see ch.iserver.ace.algorithm.jupiter.server.NetService
  */
 public class TestNetService implements NetService {
 
@@ -36,13 +38,18 @@ public class TestNetService implements NetService {
     
     private List requests = new LinkedList();
     
-    /* (non-Javadoc)
-     * @see ch.iserver.ace.algorithm.jupiter.server.NetService#transmitRequest(ch.iserver.ace.algorithm.Request)
+    /**
+     * {@inheritDoc}
      */
     public void transmitRequest(Request req) {
         requests.add(req);
     }
     
+    /**
+     * Returns a list with all requests that have been received.
+     * 
+     * @return a list with all received requests
+     */
     public List getRequests() {
     		//wait a short time for the requests
     		try {

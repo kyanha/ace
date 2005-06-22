@@ -34,7 +34,7 @@ import ch.iserver.ace.text.InsertOperation;
 import ch.iserver.ace.text.SplitOperation;
 
 /**
- *
+ * This is a document model implemenation used only for test purpose.
  */
 public class TestDocumentModel extends PlainDocument implements DocumentModel {
 
@@ -42,6 +42,11 @@ public class TestDocumentModel extends PlainDocument implements DocumentModel {
 	
 	private int siteId;
 	
+	/**
+	 * Class constructor.
+	 * 
+	 * @param content the initial content
+	 */
 	public TestDocumentModel(String content) {
 		try {
 			insertString(0, content, null);
@@ -51,12 +56,22 @@ public class TestDocumentModel extends PlainDocument implements DocumentModel {
 		}
 	}
 	
+	/**
+	 * Class constructor.
+	 * 
+	 * @param id		
+	 * 			the site id 
+	 * @param content
+	 * 			the initial content	
+	 */
 	public TestDocumentModel(int id, String content) {
 		this(content);
 		siteId = id;
 	}
 
-	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void apply(Operation operation) {
 		try {
 			if (operation instanceof InsertOperation) {
@@ -84,6 +99,11 @@ public class TestDocumentModel extends PlainDocument implements DocumentModel {
 		LOG.info("clientDoc.apply("+operation+") = "+getText());
 	}
 	
+	/**
+	 * Returns the content of this document.
+	 * 
+	 * @return the content of this document
+	 */
 	public String getText() {
 		try {
 			return getText(0, getLength());
@@ -92,6 +112,9 @@ public class TestDocumentModel extends PlainDocument implements DocumentModel {
 		}
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean equals(Object obj) {
 		if (obj == this) {
 			return true;
@@ -105,10 +128,16 @@ public class TestDocumentModel extends PlainDocument implements DocumentModel {
 		}
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public int hashCode() {
 		return getText().hashCode();
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public String toString() {
 		return getText();
 	}

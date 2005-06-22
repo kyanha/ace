@@ -28,8 +28,16 @@ package ch.iserver.ace.algorithm.jupiter;
  */
 public class JupiterException extends RuntimeException {
 
+	/**
+	 * Constructor.
+	 */
 	public JupiterException() {}
 	
+	/**
+	 * Constructor.
+	 * 
+	 * @param message an error message
+	 */
 	public JupiterException(String message) {
 		super(message);
 	}

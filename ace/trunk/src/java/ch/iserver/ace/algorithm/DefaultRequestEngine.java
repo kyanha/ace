@@ -70,8 +70,8 @@ public class DefaultRequestEngine implements RequestEngine {
     }
     
     
-    /* (non-Javadoc)
-     * @see ch.iserver.ace.algorithm.RequestEngine#generateRequest(ch.iserver.ace.Operation)
+    /**
+     * {@inheritDoc}
      */
     public void generateRequest(Operation op) {
         if (op != null) {
@@ -79,8 +79,8 @@ public class DefaultRequestEngine implements RequestEngine {
         }
     }
 
-    /* (non-Javadoc)
-     * @see ch.iserver.ace.algorithm.RequestEngine#receiveRequest(ch.iserver.ace.algorithm.Request)
+    /**
+     * {@inheritDoc}
      */
     public void receiveRequest(Request req) {
         if (req != null) {

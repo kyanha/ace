@@ -28,15 +28,15 @@ import ch.iserver.ace.text.GOTOInclusionTransformation;
 import ch.iserver.ace.text.InsertOperation;
 
 /**
- * This class tests the Jupiter algorithm implementation of ACE against
- * several counter-examples where other OT algorithms failed. The examples
- * are taken from several papers, especially the two papers from Imine et al.
- * 
- * Yet all tests are done with only character wise transformations. 
+ * This class tests the GOTO transformation functions with all the possible transformation
+ * situations.
  */
 public class GOTOInclusionTransformationTest extends TestCase {
 
-
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	public void testInsertInsert01() throws Exception {
 		// init
 		Operation insA, insB;
@@ -51,6 +51,10 @@ public class GOTOInclusionTransformationTest extends TestCase {
 		assertEquals("12", result.getText());
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	public void testInsertInsert02() throws Exception {
 		// init
 		Operation insA, insB;
@@ -81,6 +85,10 @@ public class GOTOInclusionTransformationTest extends TestCase {
 
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	public void testInsertInsert03() throws Exception {
 		// init
 		Operation insA, insB;
@@ -102,10 +110,10 @@ public class GOTOInclusionTransformationTest extends TestCase {
 		assertEquals("12", result.getText());
 	}
 
-
-
-
-
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	public void testInsertDelete01() throws Exception {
 		// init
 		Operation insA, delB;
@@ -127,6 +135,10 @@ public class GOTOInclusionTransformationTest extends TestCase {
 		assertEquals("12", result.getText());
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	public void testInsertDelete02() throws Exception {
 		// init
 		Operation insA, delB;
@@ -148,6 +160,10 @@ public class GOTOInclusionTransformationTest extends TestCase {
 		assertEquals("12", result.getText());
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	public void testInsertDelete03() throws Exception {
 		// init
 		Operation insA, delB;
@@ -162,10 +178,10 @@ public class GOTOInclusionTransformationTest extends TestCase {
 		assertEquals("12", result.getText());
 	}
 
-
-
-
-
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	public void testDeleteInsert01() throws Exception {
 		// init
 		Operation delA, insB;
@@ -180,6 +196,10 @@ public class GOTOInclusionTransformationTest extends TestCase {
 		assertEquals("12", result.getText());
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	public void testDeleteInsert02() throws Exception {
 		// init
 		Operation delA, insB;
@@ -200,6 +220,10 @@ public class GOTOInclusionTransformationTest extends TestCase {
 		assertEquals("12", result.getText());
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	public void testDeleteInsert03() throws Exception {
 		// init
 		Operation delA, insB;
@@ -219,10 +243,10 @@ public class GOTOInclusionTransformationTest extends TestCase {
 		assertEquals("567890", delOp2.getText());
 	}
 
-
-
-
-
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	public void testDeleteDelete01() throws Exception {
 		// init
 		Operation delA, delB;
@@ -237,6 +261,10 @@ public class GOTOInclusionTransformationTest extends TestCase {
 		assertEquals("12", result.getText());
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	public void testDeleteDelete02() throws Exception {
 		// init
 		Operation delA, delB;
@@ -258,6 +286,10 @@ public class GOTOInclusionTransformationTest extends TestCase {
 		assertEquals("12", result.getText());
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	public void testDeleteDelete03() throws Exception {
 		// init
 		Operation delA, delB;
@@ -279,6 +311,10 @@ public class GOTOInclusionTransformationTest extends TestCase {
 		assertEquals("", result.getText());
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	public void testDeleteDelete04() throws Exception {
 		// init
 		Operation delA, delB;
@@ -294,6 +330,10 @@ public class GOTOInclusionTransformationTest extends TestCase {
 		assertEquals("345", result.getText());
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	public void testDeleteDelete05() throws Exception {
 		// init
 		Operation delA, delB;
@@ -309,6 +349,10 @@ public class GOTOInclusionTransformationTest extends TestCase {
 		assertEquals("12", result.getText());
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	public void testDeleteDelete06() throws Exception {
 		// init
 		Operation delA, delB;

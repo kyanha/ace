@@ -56,7 +56,7 @@ public class SplitOperation implements Operation {
 	/**
 	 * Returns the first operation.
 	 * 
-	 * @return
+	 * @return the first operation
 	 */
 	public Operation getFirst() {
 		return op1;
@@ -74,7 +74,7 @@ public class SplitOperation implements Operation {
 	/**
 	 * Returns the second operation.
 	 * 
-	 * @return
+	 * @return the second operation
 	 */
 	public Operation getSecond() {
 		return op2;
@@ -89,47 +89,43 @@ public class SplitOperation implements Operation {
 		this.op2 = op2;
 	}
 	
-	/*
-	 *  (non-Javadoc)
-	 * @see ch.iserver.ace.Operation#inverse()
+	/**
+	 * {@inheritDoc}
 	 */
 	public Operation inverse() {
 		throw new UnsupportedOperationException();
 	}
 	
-	/*
-	 *  (non-Javadoc)
-	 * @see ch.iserver.ace.Operation#isUndo()
+	/**
+	 * {@inheritDoc}
 	 */
 	public boolean isUndo() {
 		return false;
 	}
 
-	/*
-	 *  (non-Javadoc)
-	 * @see ch.iserver.ace.Operation#setOriginalOperation(ch.iserver.ace.Operation)
+	/**
+	 * {@inheritDoc}
 	 */
 	public void setOriginalOperation(Operation op) {
 		throw new UnsupportedOperationException();
 	}
-	/*
-	 *  (non-Javadoc)
-	 * @see ch.iserver.ace.Operation#getOriginalOperation()
+	
+	/**
+	 * {@inheritDoc}
 	 */
 	public Operation getOriginalOperation() {
 		return null;
 	}
-	/*
-	 *  (non-Javadoc)
-	 * @see java.lang.Object#toString()
+	
+	/**
+	 * {@inheritDoc}
 	 */
 	public String toString() {
 		return "Split(" + op1 + ", " + op2 + ")";
 	}
 	
-	/*
-	 *  (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
+	/**
+	 * {@inheritDoc}
 	 */
 	public boolean equals(Object obj) {
 		if (obj == this) {
@@ -144,9 +140,8 @@ public class SplitOperation implements Operation {
 		}
 	}
 	
-	/*
-	 *  (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
+	/**
+	 * {@inheritDoc}
 	 */
 	public int hashCode() {
 		int hashcode = op1.hashCode();

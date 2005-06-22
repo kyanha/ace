@@ -89,9 +89,8 @@ public class RequestSerializer extends Thread {
         pause = false;
     }
 
-    /*
-     *  (non-Javadoc)
-     * @see java.lang.Runnable#run()
+    /**
+     * {@inheritDoc}
      */
 	public void run() {
 		while (!shutdown) {
@@ -222,7 +221,9 @@ public class RequestSerializer extends Thread {
 
 	/**
 	* Originally intended for test use.
-	* Returns the outgoing queues.
+	* Returns the outgoing queues (siteId - outgoing queue mappings).
+	* 
+	* @return a map with all the outgoing queues.
 	*/
 	Map getOutgoingQueues() {
 		return outgoingQueues;
@@ -230,7 +231,9 @@ public class RequestSerializer extends Thread {
 
 	/**
 	* Originally intended for test use.
-	* Returns the client proxies.
+	* Returns the client proxies (siteId - client proxy mappings).
+	* 
+	* @return a map with all the client proxies.
 	*/
 	Map getClientProxies() {
 		return clientProxies;
@@ -239,6 +242,8 @@ public class RequestSerializer extends Thread {
 	/**
 	* Originally intended for test use.
 	* Returns the request queue.
+	* 
+	* @return the request queue
 	*/
 	SynchronizedQueue getRequestQueue() {
 		return requestQueue;

@@ -68,7 +68,11 @@ public class DefaultRequestEngineTest extends TestCase {
 		engine.getQueueHandler().interrupt();
 	}
 
-
+	/**
+	 * Tests the {@link DefaultRequestEngine#generateRequest(Operation)} method.
+	 * 
+	 * @throws Exception
+	 */
 	public void testGenerateRequest() throws Exception {
 		Operation op = new InsertOperation(POSITION, TEXT);
 		//let the queue handler go into wait state on queues
@@ -101,6 +105,11 @@ public class DefaultRequestEngineTest extends TestCase {
 		assertEquals(TEXT, del.getText());
 	}
 	
+	/**
+	 * Tests the {@link DefaultRequestEngine#receiveRequest(Request)} method.
+	 * 
+	 * @throws Exception
+	 */
 	public void testReceiveRequest() throws Exception {
 		int otherMsgsBefore = ((Jupiter)algo).getVectorTime().getRemoteOperationCount();
 		Operation op = new InsertOperation(POSITION, TEXT);
@@ -117,6 +126,10 @@ public class DefaultRequestEngineTest extends TestCase {
 		assertEquals(otherMsgsBefore + 1, ((Jupiter)algo).getVectorTime().getRemoteOperationCount());
 	}
 	
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	public void testGenerateRequestReceiveRequestAlternatively() throws Exception {
 		Operation[] ops = new Operation[NUM_OPERATIONS];
 		for (int i=0; i < NUM_OPERATIONS; i++) {

@@ -35,7 +35,8 @@ public interface AlgorithmTestFactory {
 	 * Creates a new algorithm. The new fully configured algorithm object
 	 * to test should be returned.
 	 * 
-	 * @return a new algorithm instance
+	 * @param siteId		the site id
+	 * @return 			a new algorithm instance
 	 */
 	public Algorithm createAlgorithm(int siteId);
 	

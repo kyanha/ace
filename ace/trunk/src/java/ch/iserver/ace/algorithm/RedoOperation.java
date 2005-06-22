@@ -35,37 +35,38 @@ public class RedoOperation implements Operation {
 	 */
 	public RedoOperation() { }
 	
-	/*
-	 *  (non-Javadoc)
-	 * @see ch.iserver.ace.Operation#inverse()
+	/**
+	 * {@inheritDoc}
 	 */
 	public Operation inverse() {
 		throw new UnsupportedOperationException();
 	}
 	
-	/*
-	 *  (non-Javadoc)
-	 * @see ch.iserver.ace.Operation#isUndo()
+	/**
+	 * {@inheritDoc}
 	 */
 	public boolean isUndo() {
 		return false;
 	}
 
-	/*
-	 *  (non-Javadoc)
-	 * @see ch.iserver.ace.Operation#setOriginalOperation(ch.iserver.ace.Operation)
+	/**
+	 * {@inheritDoc}
 	 */
 	public void setOriginalOperation(Operation op) {
 		throw new UnsupportedOperationException();
 
 	}
-	/*
-	 *  (non-Javadoc)
-	 * @see ch.iserver.ace.Operation#getOriginalOperation()
+	
+	/**
+	 * {@inheritDoc}
 	 */
 	public Operation getOriginalOperation() {
 		return null;
 	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public String toString() {
 		return "Redo()";
 	}

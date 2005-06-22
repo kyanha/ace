@@ -24,26 +24,47 @@ package ch.iserver.ace.test;
 import java.util.Collection;
 import java.util.Iterator;
 
-
+/**
+ * 
+ *
+ */
 public class Scenario {
 	private String initialState;
 	private String finalState;
 	private Collection nodes;
 	
+	/**
+	 * 
+	 * @param initialState
+	 * @param finalState
+	 * @param nodes
+	 */
 	public Scenario(String initialState, String finalState, Collection nodes) { 
 		this.initialState = initialState;
 		this.finalState = finalState;
 		this.nodes = nodes;
 	}
 		
+	/**
+	 * 
+	 * @return String
+	 */
 	public String getInitialState() {
 		return initialState;
 	}
 	
+	/**
+	 * 
+	 * @return String
+	 */
 	public String getFinalState() {
 		return finalState;
 	}
 			
+	/**
+	 * 
+	 * @param visitor
+	 */
 	public void accept(NodeVisitor visitor) {
 		Iterator it = nodes.iterator();
 		while (it.hasNext()) {

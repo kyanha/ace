@@ -51,7 +51,7 @@ public class SynchronizedQueue {
 	
 	/**
 	 * Creates a new empty object queue.
-	 * @param snychObj the object to notify when this queue turns nonempty.
+	 * @param synchObj the object to notify when this queue turns nonempty.
 	 */
 	public SynchronizedQueue(Object synchObj) {
 		this.queue = new LinkedList();
@@ -88,7 +88,7 @@ public class SynchronizedQueue {
 	 * 
 	 * @return Object an object from the beginning of the queue
 	 * @throws InterruptedException
-	 * @see #getObject(int)
+	 * @see #get(int)
 	 */
 	public synchronized Object get() throws InterruptedException {
 		while (queue.isEmpty()) {
@@ -141,10 +141,16 @@ public class SynchronizedQueue {
 		return queue.isEmpty();
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public String toString() {
 		return "SynchronizedQueue(" + queue + ",'" + synchObj + "')";
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
@@ -159,6 +165,9 @@ public class SynchronizedQueue {
 		}
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public int hashCode() {
 		int hashcode = 17;
 		hashcode = 37 * hashcode + queue.hashCode();

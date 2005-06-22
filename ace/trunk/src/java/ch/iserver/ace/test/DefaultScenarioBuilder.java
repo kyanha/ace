@@ -69,7 +69,7 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 	private Set nodes;
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void init(String initialState, String finalState) {
 		this.initialState = initialState;
@@ -84,7 +84,7 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void addOperation(String id, Operation op) {
 		operations.put(id, op);
@@ -99,7 +99,7 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void startSite(String siteId) {
 		if (this.siteId != null) {
@@ -114,7 +114,7 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 	}
 
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void addGeneration(String ref) {
 		if (siteId == null) {
@@ -135,7 +135,7 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 	}
 
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void addReception(String ref) {
 		if (siteId == null) {
@@ -153,7 +153,7 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void endSite() {
 		if (siteId == null) {

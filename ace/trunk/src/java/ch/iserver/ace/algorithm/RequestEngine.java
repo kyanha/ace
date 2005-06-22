@@ -23,11 +23,25 @@ package ch.iserver.ace.algorithm;
 import ch.iserver.ace.Operation;
 
 /**
- *
+ * The RequestEngine is the front-end component for the queue handler
+ * and algorithm.
+ * 
+ * @see ch.iserver.ace.algorithm.QueueHandler
+ * @see ch.iserver.ace.algorithm.Algorithm
  */
 public interface RequestEngine {
 
+	/**
+	 * Generates a request from a given operation.
+	 * 
+	 * @param op the generated operation passed from the GUI
+	 */
     public void generateRequest(Operation op);
     
+    /**
+     * Receive a request sent over the network.
+     * 
+     * @param req the request to be received
+     */
     public void receiveRequest(Request req);
 }

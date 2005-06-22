@@ -45,18 +45,34 @@ public class VerificationException extends ScenarioException {
 		this.was = was;
 	}
 
+	/**
+	 * Returns the site id.
+	 * 
+	 * @return the site id
+	 */
 	public String getSiteId() {
 		return siteId;
 	}
 	
+	/**
+	 * 
+	 * @return String
+	 */
 	public String getExpected() {
 		return expected;
 	}
 
+	/**
+	 * 
+	 * @return String
+	 */
 	public String getWas() {
 		return was;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public String toString() {
 		return getClass().getName() + "[siteId=" + siteId 
 				+ ",expected=" + expected 

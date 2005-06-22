@@ -82,7 +82,7 @@ public class QueueHandler extends Thread {
      * </pre>
      * Hence the queue handler returns from the wait state and can proceed its execution.
      * 
-     * @see SynchronizationQueue
+     * @see ch.iserver.ace.util.SynchronizedQueue
      */
     private Object synchObj;
     
@@ -91,9 +91,9 @@ public class QueueHandler extends Thread {
      * Creates a new QueueHandler.
      * 
      * @param algo the algorithm to pass the operations
-     * @param localOperationBuffer a buffer containing local operations
-     * @param remoteRequestBuffer a buffer containing remote requests
-     * @param outgoingRequestBuffer a buffer for outgoing requests
+     * @param localOpBuf a buffer containing local operations
+     * @param remoteReqBuf a buffer containing remote requests
+     * @param outReqBuf a buffer for outgoing requests
      * @param synchObj a synchronization object to be used in conjunction with 
      * 				  the buffers.
      * @see SynchronizedQueue

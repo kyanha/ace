@@ -58,6 +58,8 @@ public class EndNode extends AbstractNode {
 	/**
 	 * Prohibits setting the local successor by throwing a
 	 * <code>UnsupportedOperationException</code>.
+	 * 
+	 * @param successor the succesor node
 	 */
 	public void setLocalSuccessor(Node successor) {
 		throw new UnsupportedOperationException("EndNode has no successors");
@@ -65,20 +67,22 @@ public class EndNode extends AbstractNode {
 	
 	/**
 	 * Returns an empty list as an end node never has any successor.
+	 * 
+	 * @return an empty list
 	 */
 	public List getSuccessors() {
 		return new ArrayList();
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void accept(NodeVisitor visitor) {
 		visitor.visit(this);
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public String toString() {
 		return getClass().getName() + "[siteId=" + getSiteId()

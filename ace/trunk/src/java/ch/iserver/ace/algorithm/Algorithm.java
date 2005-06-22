@@ -51,6 +51,8 @@ public interface Algorithm {
 	 * sent to the other sites.
 	 * 
 	 * @param op the operation for which a request should be generated
+	 * @return the generated request
+	 * @see Request
 	 */
 	public Request generateRequest(Operation op);
 	
