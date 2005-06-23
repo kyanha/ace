@@ -25,7 +25,7 @@
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>ID</key>
-			<integer>58</integer>
+			<integer>13</integer>
 			<key>Shape</key>
 			<string>Rectangle</string>
 			<key>Style</key>
@@ -51,7 +51,7 @@
 			<key>Class</key>
 			<string>LineGraphic</string>
 			<key>ID</key>
-			<integer>57</integer>
+			<integer>12</integer>
 			<key>Labels</key>
 			<array>
 				<dict>
@@ -81,8 +81,8 @@
 			</array>
 			<key>Points</key>
 			<array>
-				<string>{186.443, 254.09}</string>
-				<string>{186.443, 201.014}</string>
+				<string>{187.443, 254.09}</string>
+				<string>{187.443, 201.014}</string>
 			</array>
 			<key>Rotation</key>
 			<real>270</real>
@@ -101,7 +101,7 @@
 			<key>Class</key>
 			<string>LineGraphic</string>
 			<key>ID</key>
-			<integer>56</integer>
+			<integer>11</integer>
 			<key>Labels</key>
 			<array>
 				<dict>
@@ -129,8 +129,8 @@
 			</array>
 			<key>Points</key>
 			<array>
-				<string>{134.948, 201.55}</string>
-				<string>{188.024, 201.55}</string>
+				<string>{135.374, 201.55}</string>
+				<string>{188.45, 201.55}</string>
 			</array>
 			<key>Style</key>
 			<dict>
@@ -149,7 +149,7 @@
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>ID</key>
-			<integer>55</integer>
+			<integer>10</integer>
 			<key>Shape</key>
 			<string>Rectangle</string>
 			<key>Style</key>
@@ -167,7 +167,7 @@
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>ID</key>
-			<integer>54</integer>
+			<integer>9</integer>
 			<key>Shape</key>
 			<string>Rectangle</string>
 			<key>Style</key>
@@ -185,7 +185,7 @@
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>ID</key>
-			<integer>53</integer>
+			<integer>8</integer>
 			<key>Shape</key>
 			<string>Rectangle</string>
 			<key>Style</key>
@@ -203,7 +203,7 @@
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>ID</key>
-			<integer>52</integer>
+			<integer>7</integer>
 			<key>Shape</key>
 			<string>Rectangle</string>
 			<key>Style</key>
@@ -229,7 +229,7 @@
 			<key>Class</key>
 			<string>LineGraphic</string>
 			<key>ID</key>
-			<integer>51</integer>
+			<integer>6</integer>
 			<key>Labels</key>
 			<array>
 				<dict>
@@ -259,8 +259,8 @@
 			</array>
 			<key>Points</key>
 			<array>
-				<string>{187.471, 306.167}</string>
-				<string>{187.471, 253.091}</string>
+				<string>{187.471, 305.741}</string>
+				<string>{187.471, 252.665}</string>
 			</array>
 			<key>Rotation</key>
 			<real>270</real>
@@ -279,7 +279,7 @@
 			<key>Class</key>
 			<string>LineGraphic</string>
 			<key>ID</key>
-			<integer>50</integer>
+			<integer>5</integer>
 			<key>Labels</key>
 			<array>
 				<dict>
@@ -307,8 +307,8 @@
 			</array>
 			<key>Points</key>
 			<array>
-				<string>{134.948, 254.55}</string>
-				<string>{188.024, 254.55}</string>
+				<string>{135.374, 254.55}</string>
+				<string>{188.45, 254.55}</string>
 			</array>
 			<key>Style</key>
 			<dict>
@@ -325,7 +325,7 @@
 			<key>Class</key>
 			<string>LineGraphic</string>
 			<key>ID</key>
-			<integer>49</integer>
+			<integer>4</integer>
 			<key>Labels</key>
 			<array>
 				<dict>
@@ -375,7 +375,7 @@
 			<key>Class</key>
 			<string>LineGraphic</string>
 			<key>ID</key>
-			<integer>48</integer>
+			<integer>3</integer>
 			<key>Labels</key>
 			<array>
 				<dict>
@@ -403,8 +403,8 @@
 			</array>
 			<key>Points</key>
 			<array>
-				<string>{134.948, 305.55}</string>
-				<string>{188.024, 305.55}</string>
+				<string>{135.374, 305.55}</string>
+				<string>{188.45, 305.55}</string>
 			</array>
 			<key>Style</key>
 			<dict>
@@ -423,7 +423,7 @@
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>ID</key>
-			<integer>47</integer>
+			<integer>2</integer>
 			<key>Shape</key>
 			<string>Rectangle</string>
 			<key>Style</key>
@@ -449,7 +449,7 @@
 			<key>Class</key>
 			<string>LineGraphic</string>
 			<key>ID</key>
-			<integer>46</integer>
+			<integer>1</integer>
 			<key>Labels</key>
 			<array>
 				<dict>
@@ -522,13 +522,16 @@
 		</dict>
 	</array>
 	<key>LayoutInfo</key>
-	<dict/>
+	<dict>
+		<key>ChildOrdering</key>
+		<integer>0</integer>
+	</dict>
 	<key>LinksVisible</key>
 	<string>NO</string>
 	<key>MagnetsVisible</key>
 	<string>NO</string>
 	<key>ModificationDate</key>
-	<string>2005-06-21 14:15:30 +0200</string>
+	<string>2005-06-23 09:55:49 +0200</string>
 	<key>Modifier</key>
 	<string>Simon</string>
 	<key>Orientation</key>
@@ -615,7 +618,7 @@
 	CQkJCTwvYXJyYXk+CgkJCQkJPGtleT5jb20uYXBwbGUucHJpbnQudGlja2V0LmNsaWVu
 	dDwva2V5PgoJCQkJCTxzdHJpbmc+Y29tLmFwcGxlLnByaW50aW5nbWFuYWdlcjwvc3Ry
 	aW5nPgoJCQkJCTxrZXk+Y29tLmFwcGxlLnByaW50LnRpY2tldC5tb2REYXRlPC9rZXk+
-	CgkJCQkJPGRhdGU+MjAwNS0wNi0yMVQxMTowMTowM1o8L2RhdGU+CgkJCQkJPGtleT5j
+	CgkJCQkJPGRhdGU+MjAwNS0wNi0yM1QwNzo1NTowOFo8L2RhdGU+CgkJCQkJPGtleT5j
 	b20uYXBwbGUucHJpbnQudGlja2V0LnN0YXRlRmxhZzwva2V5PgoJCQkJCTxpbnRlZ2Vy
 	PjA8L2ludGVnZXI+CgkJCQk8L2RpY3Q+CgkJCTwvYXJyYXk+CgkJPC9kaWN0PgoJCTxr
 	ZXk+Y29tLmFwcGxlLnByaW50LlBhZ2VGb3JtYXQuUE1BZGp1c3RlZFBhcGVyUmVjdDwv
@@ -629,7 +632,7 @@
 	CQkJCTxrZXk+Y29tLmFwcGxlLnByaW50LnRpY2tldC5jbGllbnQ8L2tleT4KCQkJCQk8
 	c3RyaW5nPmNvbS5hcHBsZS5wcmludGluZ21hbmFnZXI8L3N0cmluZz4KCQkJCQk8a2V5
 	PmNvbS5hcHBsZS5wcmludC50aWNrZXQubW9kRGF0ZTwva2V5PgoJCQkJCTxkYXRlPjIw
-	MDUtMDYtMjFUMTE6MDE6MDNaPC9kYXRlPgoJCQkJCTxrZXk+Y29tLmFwcGxlLnByaW50
+	MDUtMDYtMjNUMDc6NTU6MDhaPC9kYXRlPgoJCQkJCTxrZXk+Y29tLmFwcGxlLnByaW50
 	LnRpY2tldC5zdGF0ZUZsYWc8L2tleT4KCQkJCQk8aW50ZWdlcj4wPC9pbnRlZ2VyPgoJ
 	CQkJPC9kaWN0PgoJCQk8L2FycmF5PgoJCTwvZGljdD4KCQk8a2V5PmNvbS5hcHBsZS5w
 	cmludC5QYXBlckluZm8uUE1QYXBlck5hbWU8L2tleT4KCQk8ZGljdD4KCQkJPGtleT5j
@@ -729,9 +732,9 @@
 		<key>ShowStatusBar</key>
 		<true/>
 		<key>VisibleRegion</key>
-		<string>{{0, 0}, {576, 644}}</string>
+		<string>{{85.9575, 142.128}, {245.106, 274.043}}</string>
 		<key>Zoom</key>
-		<string>1</string>
+		<string>2.35</string>
 	</dict>
 </dict>
 </plist>
