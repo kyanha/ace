@@ -59,6 +59,52 @@ Locally generated requests are returned from the algorithm package to the \textt
 
 The idea behind the \texttt{Algorithm, GUI and Network} packages is to have the flexibility to switch an implementation without affecting the rest of the system.
 
+\subsection{Workflow}
+The workflow of the \emph{Jupiter} client is depicted in the following figure.
+\begin{figure}[H]
+\centering
+\includegraphics[height=9.5cm,width=14.3cm]{../../images/algo-impl/workflow_client.eps}
+\caption{Client workflow.}
+\label{Client workflow.}
+\end{figure}
+
+\subsection{Sequence diagram: Generate local operation}
+\begin{figure}[H]
+\centering
+\includegraphics[height=4.23cm,width=10.09cm]{../../images/algo-impl/client_generate_request.eps}
+\caption{From GUI to local operation buffer.}
+\label{From GUI to local operation buffer.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[height=7.3cm,width=13.86cm]{../../images/algo-impl/queue_handler.eps}
+\caption{The queue handler processes the operation.}
+\label{The queue handler processes the operation.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[height=3.42cm,width=10.09cm]{../../images/algo-impl/requestForwarder.eps}
+\caption{The request forwarder hands the request over to the network.}
+\label{The request forwarder hands the request over to the network.}
+\end{figure}
+
+\subsection{Sequence diagram: Receive a remote request}
+\begin{figure}[H]
+\centering
+\includegraphics[height=4.48cm,width=10.09cm]{../../images/algo-impl/client_receive_request.eps}
+\caption{From network to remote request buffer.}
+\label{From network to remote request buffer.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[height=8.71cm,width=14.76cm]{../../images/algo-impl/queuehandler_receive_request.eps}
+\caption{The queue handler processes the request.}
+\label{The queue handler processes the request.}
+\end{figure}
+
 
 \section{Server}
 \begin{figure}[H]
@@ -77,6 +123,15 @@ Afterwards, the \texttt{ClientProxy} instance is added to the \texttt{RequestSer
 
 \subsection{Removing a client}
 When a client proxy is to be removed, firstly its connection to the net service is closed. Then the \texttt{RequestForwarder}, belonging to the client proxy, is shut down. Finally, the client proxy is removed from the \texttt{RequestSerializer}. The removal from the \texttt{RequestSerializer} is more complicated. At the time of removal, there may still be a couple of requests which have been issued by the client to be removed. Therefore, the client proxy may not be removed until all these requests have been processed, i.e. transformed and sent to all other clients. This is done by remembering the number of requests in the request queue, say $r$. After $r$ requests have been processed from that moment on, the client proxy can savely be released. This mechanism is achieved by a helper class named \texttt{Counter}.
+
+\subsection{Workflow}
+The workflow of the \emph{Jupiter} server is depicted in the following figure.
+\begin{figure}[H]
+\centering
+\includegraphics[height=9.64cm,width=14.3cm]{../../images/algo-impl/workflow_server.eps}
+\caption{Server workflow.}
+\label{Server workflow.}
+\end{figure}
 
 \subsection{Receiving and sending a request}
 The received request is passed from the network layer to the corresponding \texttt{ClientProxy} instance. The {ClientProxy} itself only forwards the request to the {SynchronizedQueue}, namely request queue. Actually all {ClientProxy}'s forward their requests to the same synchronized queue. By that, a global serialization is achieved. From the request queue, the request is read out by the \texttt{RequestSerializer} thread. The request is then passed to its corresponding client proxy for transformation. Afterwards, the transformed request is distributed to all other clients. This is done by first calling \texttt{generateRequest(operation)} on each \texttt{ClientProxy}'s algorithm and then adding the returned request to the outgoing queue of the \texttt{ClientProxy}. From there, the \texttt{RequestForwarder} will read out the request and pass it to the \texttt{ClientProxy} which in turn forwards it to the net service. Finally, the net service transmits the request to the client.
