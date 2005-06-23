@@ -34,8 +34,8 @@ import ch.iserver.ace.algorithm.jupiter.JupiterRequest;
 import ch.iserver.ace.util.SynchronizedQueue;
 
 /**
- * RequestSerializer processes requests from a queue in that
- * it passes them to the originating ClientProxy for transformation 
+ * RequestSerializer processes requests from a queue (first-in-first-out principle) 
+ * in that it passes them to the originating ClientProxy for transformation 
  * first and afterwards distributes them to all other registered 
  * client proxies. 
  *
