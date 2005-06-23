@@ -41,7 +41,7 @@ Testing distributed systems can be complicated. The order of events in the syste
 
 In order to implement a collaborative application, one should be able to specify such scenarios (testcases) with expected results (final states). This is the reason why we decided to implement a testframework.
 
-Effectively the test framework will allow to test the operational transformation algorithm implementation. This is the core part of a collaborative editing application. Other parts of the system will have to be tested otherwise and are intentionally left out.
+Effectively the test framework will allow to test the operational transformation algorithm implementation. This is the core part of a collaborative editing application. Other parts of the system will have to be tested differently and are intentionally left out.
 
 
 \subsection{Requirements}
@@ -51,10 +51,10 @@ The testframework has the following basic requirements:
  \item specify initial and final states
  \item verify that final states are equal at the end at all sites
 \end{itemize}
-Further the following requirements are given:
+Further, the following requirements are given:
 \begin{itemize}
  \item independent of algorithm implementation (testframework uses only 
-       abstract and application independent classes and interfaces)
+       algorithm implementation independent classes and interfaces)
  \item applicable to any algorithm implementation
 \end{itemize}
 If not all the aspects of a given algorithm implementation can be tested by the testframework, specific tests have to be written.
@@ -80,13 +80,13 @@ The \texttt{Scenario} object built by the \texttt{DefaultScenarioBuilder} contai
 
 \texttt{Scenario} has a method \texttt{accept} that takes a \texttt{NodeVisitor} as a parameter. The \texttt{NodeVisitor} has methods for all the existing node types. It gets called back for each node in the scenario. 
 
-The \texttt{ExecuteVisitor} executes a given scenario. That is, it replays the scenario on a given algorithm implementation. The \texttt{AlgorithmTestFactory} is used to create the algorithm implementation object for each site. It has also methods for creating documents and timestamps.
+The \texttt{ExecuteVisitor} executes a given scenario. That is, it replays the scenario on a given set of objects of an algorithm implementation. The \texttt{AlgorithmTestFactory} is used to create the algorithm implementation object for each site. It has also methods for creating documents and timestamps.
 
 
 \subsection{Scenario Graph}
-To understand the inner workings of the \texttt{ch.iserver.ace.test} package, one must know the structure of a scenario. A scenario consists of vertical lines that represent the lifecycle of a site. On these vertical lines, there are certain events. These events can be seen as nodes in the graph. From generation events there are edges both to the next local event and edges to all remote sites (send events). The reception of a message (represented by a reception node) are another type of node.
+To understand the inner workings of the \texttt{ch.iserver.ace.test} package, one must know the structure of a scenario. A scenario consists of vertical lines that represent the lifecycle of a site. On these vertical lines, there are certain events. These events can be seen as nodes in the graph. From generation events, there are edges both to the next local event and edges to all remote sites (send events). The reception of a message (represented by a reception node) are another type of node.
 
-The scenario graph has a special property. It is a directed acyclic graph. This special property is a necessary condition to check on a generated scenario object model. It is used to process the graph in topological order.
+The scenario graph has a special property. It is a directed acyclic graph. This special property is a necessary condition to check on a generated scenario object model. It is used to process the graph in correct order (i.e. topological order).
 
 \begin{figure}[H]
  \centering
@@ -190,14 +190,22 @@ To create a test case for a specific algorithm implementation, you should make t
 
 \begin{enumerate}
  \item create subclass of \texttt{AlgorithmTestCase}
- \item add implementation for methods of \texttt{AlgorithmTestFactory} interface.
-       This includes methods for creating the algorithm, initial timestamps
-       and document models.
- \item add test methods calling execute with the corresponding scenario
-       as input
+ \item add implementation for methods of \texttt{AlgorithmTestFactory} interface. This includes methods for creating the algorithm, initial timestamps and document models.
+ \item add test methods calling execute with the corresponding scenario as input
 \end{enumerate} 
 
 The execute methods throws a \texttt{VerificationException} if there was an error verifying the final state at all sites. That is, the document states diverged. A \texttt{ScenarioException} is thrown if there is an error loading/building the scenario.
 
+
+\section{Outlook}
+The testframework as it exists today proved that it is generally very useful. However, it has some limitations. Namely, it is not particularly well-suited to testing the \emph{Jupiter} algorithm. \emph{Jupiter} does only work correctly in the case of two sites. For more than two sites, a central server is required that forwards requests. It is impossible to specify this server component at the moment. This comes from the fact, that we decided that the testframework must be algorithm implementation independent. Further, it is not possible to test undo/redo operations. This is a shortcoming that should be removed in a future version.
+
+\subsection{Planned Improvements}
+These two points mentioned above are planned to be implemented in order to make the testframework even more useful:
+
+\begin{itemize}
+ \item extend testframework to support testing \emph{Jupiter} algorithm with scenario files
+ \item extend testframework to support undo/redo operations
+\end{itemize}
 
 \end{document}
