@@ -235,3 +235,102 @@ The integration of a redo operation, as far as we know, has never been considere
 \end{figure}
 
 In figure \ref{fig:concepts.redo} we see how a redo is inserted into the state space. First, the last operation from this user must be a undo (or there are only undo-redo pairs between the current state and an undo operation). This is clearly the case in this example. We then copy the corresponding do operation to the current column in the state space on the same line as the original operation (see arrow labeled redo). Then, we have to transform this copied operation to the current state, so that it can be applied. 
+
+
+\section{GOTO Transformation Functions}
+\label{GOTO Transformation Functions}
+
+\subsection{Overview}
+The GOTO (generic operation transformation optimized) transformation functions are designed to work with strings as well as characters. The advantage is that less transformations have to be done when a string is inserted into a text. To understand the exigence of transformation functions see \emph{Report Evaluation Algorithms}.
+
+The inclusion transformation functions are used to include the effect of a given operation B into another operation A. The transformed operation A' is returned. To transform an operation means to adapt position and text of the operation. In the majority of cases this is a very simple process. But sometimes it is necessary to extract a text fragment or to split up an operation into two parts. For more details about splitting operations see \ref{Split_Operation}.
+
+All possible transformation \emph{cases} with two insert/delete operations are depicted in figure \ref{Transformation Overview} and explained in the following sections:
+\begin{figure}[H]
+\centering
+\includegraphics[height=9.98cm,width=13.75cm]{../../images/algo-impl/transform_overview.eps}
+\caption{Transformation Overview}
+\label{Transformation Overview}
+\end{figure}
+
+\subsection{Insert/Insert}
+\begin{itemize}
+\item \textbf{Case 1:}
+Operation A starts before or at the same position as operation B. Sometimes a special handling is necessary. See \emph{Special Case} in section \ref{Special_Case} for detailed information about that.
+\item \textbf{Case 2:}
+Operation A starts inside or after operation B. Index of operation A' must be increased by the length of the text of operation B.
+\item \textbf{Special case:}
+\label{Special_Case}
+It can happen that two insert operations (for example \texttt{Ins(0,'a')} and \texttt{Ins(0,'b')}) have the same position. How should the correct transformation look like (does the insertion of 'a' have to be before or after 'b')? This is an undecidable problem. Therefore some extra rules must be defined. The first approach to solve this problem is by preferring the operation with the lower ascii value. With this method the final text would be 'ab'. The following figure demonstrates that this solution can violate the user's intention:
+\begin{figure}[H]
+\centering
+%\includegraphics[height=9.77cm,width=14.25cm]{../../images/algo-impl/transform_ins_ins_charpos.eps}
+\includegraphics[height=4.63cm,width=7.12cm]{../../images/algo-impl/transform_ins_ins_charpos.eps}
+\caption{Transformation based on character code}
+\label{Transformation based on character code}
+\end{figure}
+The scenario depicted in figure \ref{Transformation based on character code} demonstrates an editing session with 3 users (sites). Each site generates a request concurrently. For simplicity only the process flow at site 2 is shown. The initial document state is 'b'. After applying the own operation (\texttt{Del(0,'b')}) the document becomes empty. Then the two other operations arrive. First the operation \texttt{Ins(0,'c')} from site 1 and then \texttt{Ins(1,'a')} from site 3, which will be transformed into \texttt{Ins(0,'a')}, because the delete operation has an effect on it. The two operations (\texttt{Ins(0,'a')} from site 3 and \texttt{Ins(0,'c')}) from site 1 must be transformed and the resulting document state becomes 'ac', which violates the user intentions.
+
+The second approach works with some extra information. If an operation has been generated, the original position is saved too. Adapted to the scenario in figure \ref{Transformation based on character code} the insert operation of site 1 would look like \texttt{Ins(0,'a',0)}. Similar to the insert operation of site 1 the insert operation of site 3 looks like \texttt{Ins(1,'b',1)}. The added third parameter represents the original position. At the beginning the position and the original position have the same value. The difference of the two positions is shown after a transfomation. Unlike the position (first parameter) the original position will never be transformed/changed and remains the same for the livetime of the operation.
+
+Considering the second approach, the site 1 sends the request \texttt{Ins(0,'c',0)} to site 2. After site 2 received the request, site 3 sends the request \texttt{Ins(1,'a',1)}. On site 2 this request will first be transformed against \texttt{Del(0,'b')} into \texttt{Ins(0,'a',1)}. This is necessary because while site 3 was generating the request, site 2 deleted the character \texttt{b}. After this transformation the new request has to be transformed with the request from site 1. This transformation would look like \texttt{transform( Ins(0,'a',1), Ins(0,'c',0) )} which means that the effect from the operation \texttt{Ins(0,'c',0)}) will be included into operation \texttt{Ins(0,'a',1)}. Now the problem is the same as before, but with the extra information it can be solved. After detecting that the two operations have the same position the transformation function compares the original positions. With this solution the 'c' will be inserted before the 'a' and the user intention is preserved.
+
+Unfortunately figure \ref{Transformation based on character code} shows that even with using original positions in the transformation function, problems can occur:
+\begin{figure}[H]
+\centering
+%\includegraphics[height=7.26cm,width=10.26cm]{../../images/algo-impl/transform_ins_ins_origpos.eps}
+\includegraphics[height=3.63cm,width=5.13cm]{../../images/algo-impl/transform_ins_ins_origpos.eps}
+\caption{Transformation based on equal original positions}
+\label{Transformation based on equal original positions}
+\end{figure}
+At the same time each site generates an insert operation with the same position. The insert operation from site 1 looks like \texttt{Ins(1,'b',1)} and the operation from site 2 is \texttt{Ins(1,'c',1)}. When site 2 receives the request from site 1 the operations have to be tranformed (\texttt{transform( Ins(1,'b',1) , Ins(1,'c',1) )}). The transformation function will detect that the two operations have the same position and will check the original positions. Unfortunately the original positions have the same values. Therefore the approach to solve this problem by using original positions will fail too.
+
+This problem can only be eliminated by privileging one operation. But which operation should be preferred? And how to guarantee that on all sites this will be the same operation? One possible solution would be to use the site id's (e.g. site 1 is always privileged against site 2 and site 3, site 2 is only privileged against site 3). When using this transformation function with the \emph{Jupiter} algorithm, the operation which has been issued by the server side is always privileged (client/server flag).
+
+\item \textbf{The concept of last synchronization point (LSP)}
+Again we consider the situation where to insert operation are to be transformed and both have the same positions. The comparison of the original positions works quite well as shown above. But it has shortcomings. What if the two operations do not relate on the same context and document state, respectively? Though the comparison of the original positions can still take place, it is a weak comparison because the user's intention may get lost as shown in the example depicted in the following figure:
+\includegraphics[height=8.56in,width=4.92cm]{../../images/algo-impl/transform_ins_ins_lsp.eps}
+
+Only site 4 is considered. When all operations have arrived, the last transformation to be done includes the two insert operations. Both are equivalent in that they have the same positions as well as the same original positions. The remarkable thing is that though the two original positions are equal, they do not relate on the same document state. Operation $Ins(2,'c',2)$ from site 3 was generated after the operation from site 4 had been received. It is clear that the user's intentions of site 3 and 1 are violated in that user 1 inserted 'b' after '1' and user 3 inserted 'c' before '1', but in the final document state the 'b' is placed before 'c'. Here the comparison of the original positions fails. We need a more advanced concept. 
+
+Therefore we introduce the concept of "last synchronization point" (LSP), analogously adapted to our implementation of \emph{Jupiter}. It is taken from paper "Preserving Operation Effects Relation in Group Editors", Du Li and Rui Li. The idea comes right into play at the situation described above. When the two original positions need to be compared, it should first be ensured that both operations and original positions, respectively, rely on the same document state. If this happens, they can savely be compared and in case of equality the client/server flag included. If they do not relate on the same document state, we need to find a last synchronization point where the two operations can correctly be compared. In the example above, this would be achieved as follows. When the two insert operations are compared, it is detected that they cannot be compared as is. Therefore, the first operation from site 4 would be excluded from  operation $Ins(2,'c',2)$, which in fact is the first one at site 3. With this exclusion, we arrive at the same document state for both operations and thus we can compare them correctly. Operation $Ins(2,'b',2)$ would be transformed so that 'b' gets inserted after 'c', which was the user's implicit but actual intention.
+
+Recapitulating, we would like to implement this concept to improve the system's ability to preserve the user's intention also in the most complex situations. Yet we do not know if the LSP concept can be implemented at all in our system. This feature is left open as future  work.
+\end{itemize}
+
+\subsection{Insert/Delete}
+\begin{itemize}
+\item \textbf{Case 3:}
+Operation A starts before or at the same position as operation B. Nothing has to be transformed.
+\item \textbf{Case 4:}
+Operation A starts after operation B. Index of operation A' must be reduced by the length of the text of operation B.
+\item \textbf{Case 5:}
+Operation A starts inside operation B. Index of operation A' must be the index of operation B.
+\end{itemize}
+
+\subsection{Delete/Insert}
+\label{Delete_Insert}
+\begin{itemize}
+\item \textbf{Case 6:}
+Operation A is completly before operation B. Nothing has to be transformed.
+\item \textbf{Case 7:}
+Operation A starts before or at the same position as operation B. Index of operation A' must be increased by the length of the text of operation B.
+\item \textbf{Case 8:}
+Operation B is in the range of operation A. Operation A' must be splitted into two delete operations. For more details about the split operation see \ref{Split_Operation}.
+\end{itemize}
+
+\subsection{Delete/Delete}
+\begin{itemize}
+\item \textbf{Case 9:}
+Operation A is completely before operation B. Nothing has to be transformed.
+\item \textbf{Case 10:}
+Operation A starts at the end or after operation B. Index of operation A' must be reduced by the length of the text of operation B.
+\item \textbf{Case 11:}
+Operation A and operation B are overlapping. Operation B starts before or at the same position as operation A and ends after or at the same position as operation A. Content of operation A has already been deleted by operation B. Therefore, nothing has to be deleted anymore by operation A. A' is called a noop (no-operation).
+\item \textbf{Case 12:}
+Operation A and operation B are overlapping. Operation B starts before or at the same position as operation A and ends before operation A. The overlapping part of the two operations has been deleted by operation B. Operation A' has to delete only the remaining text (text after the overlapping text of the two operations).
+\item \textbf{Case 13:}
+Operation A and operation B are overlapping. Operation B starts after operation A and ends after or at the same position as operation A. The overlapping part of the two operations has been deleted by operation B. Operation A' has to delete the remaining text (text before the overlapping text of the two operations).
+\item \textbf{Case 14:}
+Operation A and operation B are overlapping. Operation B is fully inside operation A. The overlapping part of the two operations has been deleted by operation B. Operation A' has to delete the remaining text (text before and after the overlapping text of the two operations).
+\end{itemize}
