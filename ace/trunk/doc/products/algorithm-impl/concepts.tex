@@ -289,7 +289,13 @@ This problem can only be eliminated by privileging one operation. But which oper
 
 \item \textbf{The concept of last synchronization point (LSP)}
 Again we consider the situation where to insert operation are to be transformed and both have the same positions. The comparison of the original positions works quite well as shown above. But it has shortcomings. What if the two operations do not relate on the same context and document state, respectively? Though the comparison of the original positions can still take place, it is a weak comparison because the user's intention may get lost as shown in the example depicted in the following figure:
-\includegraphics[height=8.56in,width=4.92cm]{../../images/algo-impl/transform_ins_ins_lsp.eps}
+
+\begin{figure}[H]
+\centering
+\includegraphics[height=8.56in,width=4.92in]{../../images/algo-impl/transform_ins_ins_lsp.eps}
+\caption{Shortcoming of original position comparison}
+\label{Shortcoming of original position comparison}
+\end{figure}
 
 Only site 4 is considered. When all operations have arrived, the last transformation to be done includes the two insert operations. Both are equivalent in that they have the same positions as well as the same original positions. The remarkable thing is that though the two original positions are equal, they do not relate on the same document state. Operation $Ins(2,'c',2)$ from site 3 was generated after the operation from site 4 had been received. It is clear that the user's intentions of site 3 and 1 are violated in that user 1 inserted 'b' after '1' and user 3 inserted 'c' before '1', but in the final document state the 'b' is placed before 'c'. Here the comparison of the original positions fails. We need a more advanced concept. 
 

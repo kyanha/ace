@@ -37,8 +37,9 @@ How a request will be sent to a server or another client is not part of this cha
 \label{Algorithm architecture}
 \end{figure}
 
-The algorithm component centers around the Jupiter class, which is an implementation of the Algorithm interface. Jupiter processes all requests with the collaboration of the GOTOInclusionTransformation. All transformed operations are applied to the DocumentModel instance. The Timestamp class represents the current state vector, i.e. the location in the 2-dimensional state space of the \emph{Jupiter} algorithm. The UndoManager class is apparently used for undo/redo functionality and is further described in \ref{undo_redo}.
+The algorithm component centers around the \texttt{Jupiter} class, which is an implementation of the \texttt{Algorithm} interface. \texttt{Jupiter} processes all requests with the collaboration of the GOTOInclusionTransformation. All transformed operations are applied to the DocumentModel instance. The Timestamp class represents the current version of the document. In the case of the \emph{Jupiter} algorithm, the timestamp is a vector time. The vector time represents the current location in the 2-dimensional state space of the \emph{Jupiter} algorithm. The UndoManager class is used for undo/redo functionality and is further described in \ref{undo_redo}. The \texttt{OutgoingQueue} stores all requests that remain to be acknowledged by the server. A request is acknowledged if the state vector of an incoming request indicates that the server has processed the request.
 
+The idea behind the \texttt{Algorithm} interface is to have the flexibility to switch the algorithm implementation without affecting the rest of the system.
 
 \section{Client}
 \begin{figure}[H]
