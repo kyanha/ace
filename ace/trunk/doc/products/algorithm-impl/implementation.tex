@@ -2,9 +2,9 @@
 \chapter{Implementation}
 
 \section{Operation}
-Operation are used to decribe changements made in a document. For this purpose they must contain the information: \emph{what} has to be changed and \emph{where} this has to be changed.
+Operations are used to decribe changements made in a document. For this purpose they must contain the information: \emph{what} has been changed and \emph{where} it has been changed.
 
-In case of simple text editing only two operations are required. An insert operation (e.g. \texttt{Ins(1,'hello')}) which will insert the string 'hello' at position 1 and an delete operation (e.g. \texttt{Del(10, 'world')}) which will delete the string 'world' at position 10. With this two operation all can be made.
+In case of simple text editing only two operations are required. An insert operation (e.g. \texttt{Ins(1,'hello')}) which will insert the string 'hello' at position 1 and an delete operation (e.g. \texttt{Del(10, 'world')}) which will delete the string 'world' at position 10.
 
 \begin{figure}[H]
 \centering
@@ -14,10 +14,10 @@ In case of simple text editing only two operations are required. An insert opera
 \end{figure}
 
 \label{Split_Operation}
-As depicted in figure \ref{Operation Hierarchy} there exists a third operation besides the \texttt{InsertOperation} and the \texttt{DeleteOperation}. The so-called \texttt{SplitOperation} is a helper object used to encapsulate two delete operations. This is necessary when an insert operation occurs in the range of a delete operation. For more details see \emph{Case 8} in \ref{Delete_Insert}.
+As depicted in figure \ref{Operation Hierarchy} there exists a third operation besides the \texttt{InsertOperation} and \texttt{DeleteOperation}. The so-called \texttt{SplitOperation} is a helper object used to encapsulate two operations (usually two delete operations). This special operation is required when transforming an insert operation which occurs in the range of a delete operation. For more details about transformation functions see \ref{GOTO Transformation Functions}, especially the spitting scenario described in \emph{Case 8} in \ref{Delete_Insert}.
 
 \section{Request}
-A request is used to distribute changements of a document over the network. It must contain all important informations such as an operation (what has changed and at which position), a timestamp (in which document state this changement has been generated) and a siteID (who has changed it). Figure \ref{Request Class Diagram} shows this relationship.
+A request is used to distribute changes of a document over the network. It contains all important information such as an operation (what has changed and at which position), a timestamp (document state on which the operation is based) and the site id of the generating site. (see figure \ref{Request Class Diagram})
 
 \begin{figure}[H]
 \centering
@@ -26,10 +26,11 @@ A request is used to distribute changements of a document over the network. It m
 \label{Request Class Diagram}
 \end{figure}
 
-How exaclty a request will be send to a server or another client is not part of this chapter and depends on the network technology (see \emph{Report Evaluation Network}) used.
+How a request will be sent to a server or another client is not part of this chapter and depends on the network technology (see \emph{Report Evaluation Network}) used.
 
 
 \section{GOTO Transformation Functions}
+\label{GOTO Transformation Functions}
 
 \subsection{Overview}
 The GOTO (generic operation transformation optimized) transformation functions are designed to work with string as well as characters. The advantage is that less transformations are needed when a string has been inserted into a text. To understand the exigence of transformation functions see \emph{Report Evaluation Algorithms}.
