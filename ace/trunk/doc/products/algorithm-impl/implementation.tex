@@ -2,16 +2,10 @@
 \chapter{Implementation}
 
 \section{Operation}
-Text editing can be realized with only two operations. 
- - Insert
- - Delete
- - Split
+Operation are used to decribe changements made in a document. For this purpose they must contain the information: \emph{what} has to be changed and \emph{where} this has to be changed.
 
-All operations have some equivalent properties. They must provide a function called \texttt{inverse()} that returns the inverse operation, a . 
+In case of simple text editing only two operations are required. An insert operation (e.g. \texttt{Ins(1,'hello')}) which will insert the string 'hello' at position 1 and an delete operation (e.g. \texttt{Del(10, 'world')}) which will delete the string 'world' at position 10. With this two operation all can be made.
 
-They are represented by the Operation Interface.
- 
-\subsection{Operation Hierarchy}
 \begin{figure}[H]
 \centering
 \includegraphics[height=5.74cm,width=11.59cm]{../../images/algo-impl/operation_classdiagram.eps}
@@ -19,15 +13,8 @@ They are represented by the Operation Interface.
 \label{Operation Hierarchy}
 \end{figure}
 
-\subsection{InsertOperation}
-
-
-\subsection{DeleteOperation}
-\subsection{SplitOperation}
 \label{Split_Operation}
-  - no operation
-  - wrapper to handle special cases -> \ref{Delete_Insert}
-
+As depicted in figure \ref{Operation Hierarchy} there exists a third operation besides the \texttt{InsertOperation} and the \texttt{DeleteOperation}. The so-called \texttt{SplitOperation} is a helper object used to encapsulate two delete operations. This is necessary when an insert operation occurs in the range of a delete operation. For more details see \emph{Case 8} in \ref{Delete_Insert}.
 
 \section{Request}
 A request is used to distribute changements of a document over the network. It must contain all important informations such as an operation (what has changed and at which position), a timestamp (in which document state this changement has been generated) and a siteID (who has changed it). Figure \ref{Request Class Diagram} shows this relationship.
@@ -73,13 +60,13 @@ It can occur that two insert operations (for example \texttt{Ins(0,'a')} and \te
 \caption{Transformation based on character code}
 \label{Transformation based on character code}
 \end{figure}
-The scenario depicted in figure \ref{Insert based on character ord} demonstrates an editing session with 3 users (sites). Each site generates a request concurrently. For simplicity only the process flow at site 2 is shown. The initial document state is \texttt{b}. After applying the own operation (\texttt{Del(0,'b')}) then document becomes empty. Then the two other operations arrive. First the operation \texttt{Ins(0,'c')} from site 1 and then \texttt{Ins(1,'a')} from site 3 which will be transformed into \texttt{Ins(0,'a')} because the delete operation has an effect on it. The two operations (\texttt{Ins(0,'a')} and \texttt{Ins(0,'c')}) left remain to be transformed and the problem described in the previous paragraph occures.
+The scenario depicted in figure \ref{Transformation based on character code} demonstrates an editing session with 3 users (sites). Each site generates a request concurrently. For simplicity only the process flow at site 2 is shown. The initial document state is \texttt{b}. After applying the own operation (\texttt{Del(0,'b')}) then document becomes empty. Then the two other operations arrive. First the operation \texttt{Ins(0,'c')} from site 1 and then \texttt{Ins(1,'a')} from site 3 which will be transformed into \texttt{Ins(0,'a')} because the delete operation has an effect on it. The two operations (\texttt{Ins(0,'a')} and \texttt{Ins(0,'c')}) left remain to be transformed and the problem described in the previous paragraph occures.
 
 The second approach works with some extra information. If an operation has been generated the original position is saved too. Adapted to the scenario in figure \ref{Transformation based on character code} the insert operation of site 1 would look like \texttt{Ins(0,'a',0)}. Similar to the insert operation of site 1 the insert operation of site 3 looks like \texttt{Ins(1,'b',1)}. The added third parameter represents the original position. At the beginning the position and the original position have the same value. The difference of the two positions is shown after a transfomation. Unlike the position (first parameter) the original position will never be transformed/changed and remains the same for the livetime of the operation.
 
 Considering the second approach, the site 1 sends the request \texttt{Ins(0,'c',0)} to site 2. After site 2 received the request, site 3 sends the request \texttt{Ins(1,'a',1)}. On site 2 this request will first be transformed against \texttt{Del(0,'b')} into \texttt{Ins(0,'a',1)}. This is necessary because while site 3 was generating the request, site 2 deleted the character \texttt{b}. After this transformation the new request has to be transformed with the request from site 1. This transformation would look like \texttt{transform( Ins(0,'a',1), Ins(0,'c',0) )} which means that the effect from the operation \texttt{Ins(0,'c',0)}) will be included into operation \texttt{Ins(0,'a',1)}. The problem to solve now is the same as before, but with the extra information its not longer infeasible. After detecting that the two operations have the same position the transformation function compares the original positions. With this solution the \texttt{c} will be inserted before the \texttt{a} and the user intention is preserved.
 
-Figure \ref{Insert based on original positions} shows that even with using original positions another problem can occur:
+Figure \ref{Transformation based on character code} shows that even with using original positions another problem can occur:
 \begin{figure}[H]
 \centering
 %\includegraphics[height=7.26cm,width=10.26cm]{../../images/algo-impl/transform_ins_ins_origpos.eps}
@@ -107,13 +94,14 @@ Operation A starts inside operation B. Index of operation A' must be the index o
 \end{itemize}
 
 \subsection{Delete/Insert}
+\label{Delete_Insert}
 \begin{itemize}
 \item \textbf{Case 6:}
 Operation A is completly before operation B. Nothing has to be transformed.
 \item \textbf{Case 7:}
 Operation A starts before or at the same position as operation B. Index of operation A' must be increased by the length of the text of operation B.
 \item \textbf{Case 8:}
-Operation B is in the range of operation A. Operation A' must be splitted into two delete operations. For more details about this process see \ref{Split_Operation}.
+Operation B is in the range of operation A. Operation A' must be splitted into two delete operations. For more details about the split operation see \ref{Split_Operation}.
 \end{itemize}
 
 \subsection{Delete/Delete}
@@ -192,7 +180,7 @@ Nevertheless, two issues will remain. Firstly, each operation has a method $isUn
 Testing the algorithm implementation was considered a very high priority. Without a correctly working algorithm, it will be difficult or even impossible to create a collaborative text-editor. Because of the significance of this algorithm we invested a lot of time to test it.
 
 \subsection{Testframework}
-In the literature about operational transformation, so called puzzles are omnipresent. These puzzles are exact specification of the order of events, like the generation of a request or the reception of a request. We were soon convinced that in order to test our algorithm it would be possible to have a testframework that accepts such a puzzle (called scenario) as input and replays the sequence of events on a set of algorithms. To find out more about this testframework, see the document 'Report Implementation Testframework'.
+In the literature about operational transformation, so called puzzles are omnipresent. These puzzles are exact specification of the order of events, like the generation of a request or the reception of a request. We were soon convinced that in order to test our algorithm it would be possible to have a testframework that accepts such a puzzle (called scenario) as input and replays the sequence of events on a set of algorithms. To find out more about this testframework, see the document emph{Report Implementation Testframework}.
 
 \subsection{Test Cases}
 We gathered many test cases form publications about operational transformation algorithms. The puzzles presented in these papers often represent particularly tricky issues that other algorithms failed to resolve. Here is a list of test cases that were taken from papers:
