@@ -112,7 +112,9 @@ In the preceeding sections, we have presented the basic transformation algorithm
 \subsection{Problems of Local Group Undo}
 Global group undo is not much different from common single-user undo schemes. It can be implemented by executing the inverse operation for each user operation to be undone. The operation to be undone is the globally last operation that was executed. Global undo always leads to a former application state. In contrast, local group undo (undoing the last operation from the local user) is more complex, because in most cases it does not lead to a former application state.
 
-\paragraph{Example 1:} Suppose the initial document state is 'm'. Now user $X$ executes the operation \texttt{Ins[1,s]} to insert the character 's' at position 1 of the document. Then user $Y$ executes \texttt{Ins[1,a]} to insert the character 'a' at position 1 resulting in a document state 'mas'. Now user $X$ decides to undo his last insertion operation. What has to be done? The naive, but incorrect approach would just execute \texttt{Del[1,s]}, i.e. the inverse to \texttt{Ins[1,s]}. However, the current character at position 1 is not 's' but 'a'. The situation is depicted in figure \ref{fig:concepts.naiveundo}.
+\paragraph{Example 1:} 
+\label{example1}
+Suppose the initial document state is 'm'. Now user $X$ executes the operation \texttt{Ins[1,s]} to insert the character 's' at position 1 of the document. Then user $Y$ executes \texttt{Ins[1,a]} to insert the character 'a' at position 1 resulting in a document state 'mas'. Now user $X$ decides to undo his last insertion operation. What has to be done? The naive, but incorrect approach would just execute \texttt{Del[1,s]}, i.e. the inverse to \texttt{Ins[1,s]}. However, the current character at position 1 is not 's' but 'a'. The situation is depicted in figure \ref{fig:concepts.naiveundo}.
 
 \begin{figure}[htb]
  \centering
@@ -124,6 +126,7 @@ Global group undo is not much different from common single-user undo schemes. It
 Obviously, just executing the inverse of the last local operation cannot achieve the correct result. In addition, there are more situations were local group undo methods can fail. One characteristic example is the following problem, which is called \emph{order puzzle}.
 
 \paragraph{Example 2:}
+\label{example2}
 Suppose we start with a document containing 'ab'. Now user 'X' first deletes 'a' by executing \texttt{Del[0,a]}. Afterwards user $Y$ deletes 'b' by issuing the operation \texttt{Del[0,b]}. This will leave the document empty. Now both users undo their operations. The expected application state should be 'ab' afterwards, because undoing all operations should not modify the original application state. Unfortunately, a naive undo solution could yield the wrong state 'ba'. The solution to the order puzzle will be presented in a later section (see section \ref{sect:concepts.order-puzzle-solution}).
 
 \subsection{Transformation-Based Local Group Undo}
@@ -140,7 +143,9 @@ In example 1, we insert the inverse operation \texttt{Del[1,s]} immediately afte
 
 Unfortunately, the computation of requests in the interaction model by transformation and by mirroring is not sufficient to solve the \emph{order puzzle} in example 2.
 
-\paragraph{Example 3:} Suppose both users $X$ and $Y$ simultaneously delete the single character 'b' (see figure \ref{fig:concepts.basicfold}). The corresponding transformation rule transforms both operations to \texttt{Noop} operations (no operation, operation without any effect on the document state), since deleting the same character twice is impossible. Now suppose, user $Y$ wants to undo his operation \texttt{Del[0,b]}. We know this can be achieved by applying the mirror operator, producing the operation \texttt{Ins[0,b]}. Now, how can the missing operations be computed? By just applying the transformation rule, the operations would just be copied without modification, e.g., another \texttt{Noop} operation would lead from state 'b' to the end state 'b' (in the upper right corner). However, this violates the principle of correctness, namely that a set of do-undo pairs like \texttt{Del[0,b]} and \texttt{Ins[0,b]} should have no effect on other users' operations. If this were to be satisfied, the resulting state should be empty, like when executing user X's operation \texttt{Del[0,b]} only. 
+\paragraph{Example 3:} 
+\label{example3}
+Suppose both users $X$ and $Y$ simultaneously delete the single character 'b' (see figure \ref{fig:concepts.basicfold}). The corresponding transformation rule transforms both operations to \texttt{Noop} operations (no operation, operation without any effect on the document state), since deleting the same character twice is impossible. Now suppose, user $Y$ wants to undo his operation \texttt{Del[0,b]}. We know this can be achieved by applying the mirror operator, producing the operation \texttt{Ins[0,b]}. Now, how can the missing operations be computed? By just applying the transformation rule, the operations would just be copied without modification, e.g., another \texttt{Noop} operation would lead from state 'b' to the end state 'b' (in the upper right corner). However, this violates the principle of correctness, namely that a set of do-undo pairs like \texttt{Del[0,b]} and \texttt{Ins[0,b]} should have no effect on other users' operations. If this were to be satisfied, the resulting state should be empty, like when executing user X's operation \texttt{Del[0,b]} only. 
 
 \begin{figure}[htb]
  \centering
