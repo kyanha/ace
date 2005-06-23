@@ -129,7 +129,7 @@ Suppose we start with a document containing 'ab'. Now user 'X' first deletes 'a'
 \subsection{Transformation-Based Local Group Undo}
 Let us return to the example 1. Suppose we want to undo the last operation after an operation from another participant has already been executed. For correctness of local group undo, we require that the effect of the undo request does not depend on other users' requests. Therefore, we may safely assume, that we issued the undo operation immediately after the execution of the operation to be undone. Then the appropriate transformations can be applied to gain the operation that has to be executed in the present state. 
 
-In example 1, we insert the inverse operation \texttt{Del[1,s]} immediately after the operation. The procedure of inserting the inverse operation is called \emph{mirroring}. In the next step, the inverse operation \textttDel[1,s]} is transformed against the operation \texttt{Ins[1,a]} from user $Y$, which results in the correct operation \texttt{Del[2,s]}. See figure \ref{fig:concepts.undobytransformation}.
+In example 1, we insert the inverse operation \texttt{Del[1,s]} immediately after the operation. The procedure of inserting the inverse operation is called \emph{mirroring}. In the next step, the inverse operation \texttt{Del[1,s]} is transformed against the operation \texttt{Ins[1,a]} from user $Y$, which results in the correct operation \texttt{Del[2,s]}. See figure \ref{fig:concepts.undobytransformation}.
 
 \begin{figure}[htb]
  \centering
