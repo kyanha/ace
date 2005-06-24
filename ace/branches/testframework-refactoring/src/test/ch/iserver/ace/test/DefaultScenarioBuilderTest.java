@@ -44,4 +44,56 @@ public class DefaultScenarioBuilderTest extends TestCase {
 		builder.endSite();
 	}
 	
+	public void testWithServer() {
+		ScenarioBuilder builder = new DefaultScenarioBuilder();
+		builder.init("abc", "a1b2cd");
+		
+		builder.startSite("1");
+		builder.addGeneration("1", new InsertOperation(1, "1"));
+		builder.addReception("20");
+		builder.endSite();
+		
+		builder.startSite("2");
+		builder.addGeneration("2", new InsertOperation(2, "2"));
+		builder.addReception("10");
+		builder.endSite();
+		
+		builder.addRelay("1", "10");
+		builder.addRelay("2", "20");
+	}
+	
+	public void testWithUndoRedo() {
+		ScenarioBuilder builder = new DefaultScenarioBuilder();
+		builder.init("", "a");
+		
+		builder.startSite("1");
+		builder.addGeneration("1", new InsertOperation(0, "a"));
+		builder.addUndoGeneration("2");
+		builder.addRedoGeneration("3");
+		builder.endSite();
+		
+		builder.startSite("2");
+		builder.addReception("1");
+		builder.addReception("2");
+		builder.addReception("3");
+		builder.endSite();
+	}
+	
+	public void testWithVerification() {
+		ScenarioBuilder builder = new DefaultScenarioBuilder();
+		builder.init("", "");
+		
+		builder.startSite("1");
+		builder.addGeneration("1", new InsertOperation(0, "a"));
+		builder.addVerification("a");
+		builder.addUndoGeneration("2");
+		builder.endSite();
+		
+		builder.startSite("2");
+		builder.addReception("1");
+		builder.addVerification("a");
+		builder.addReception("2");
+		builder.endSite();
+	}
+	
 }
