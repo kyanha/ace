@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scenario initial="" final="dcb">
+    
+    <operation id="1" type="ch.iserver.ace.text.InsertOperation">
+        <property name="position" value="0"/>
+        <property name="text" value="a"/>
+    </operation>
+    
+    <operation id="2" type="ch.iserver.ace.text.InsertOperation">
+        <property name="position" value="0"/>
+        <property name="text" value="b"/>
+    </operation>
+
+    <operation id="3" type="ch.iserver.ace.text.InsertOperation">
+        <property name="position" value="0"/>
+        <property name="text" value="c"/>
+    </operation>
+
+    <operation id="4" type="ch.iserver.ace.text.InsertOperation">
+        <property name="position" value="0"/>
+        <property name="text" value="d"/>
+    </operation>
+
+    <operation id="5" type="ch.iserver.ace.text.DeleteOperation">
+        <property name="position" value="1"/>
+        <property name="text" value="a"/>
+    </operation>
+    
+    <site id="1">
+        <generate ref="1"/>
+        <generate ref="2"/>
+        <generate ref="3"/>
+        <generate ref="4"/>
+        <receive ref="5"/>
+    </site>
+    
+    <site id="2">
+        <receive ref="1"/>
+        <receive ref="2"/>
+        <generate ref="5"/>
+        <receive ref="3"/>
+        <receive ref="4"/>
+    </site>
+    
+</scenario>
