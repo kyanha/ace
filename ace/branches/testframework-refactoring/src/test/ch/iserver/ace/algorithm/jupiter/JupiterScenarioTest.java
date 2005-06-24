@@ -57,4 +57,11 @@ public class JupiterScenarioTest extends NWayTestCase {
 		execute("/test/jupiter/3-sites.xml");
 	}
 	
+	/**
+	 * Tests some basic puzzle with 4 sites.
+	 */
+	public void test4Sites() throws Exception {
+		execute("/test/jupiter/4-sites.xml");
+	}
+	
 }
