@@ -127,7 +127,7 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 	 * @inheritDoc
 	 */
 	public void addUndoGeneration(String id) {
-		Node node = new UndoNode(siteId);
+		Node node = new UndoNode(siteId, id);
 		addNode(node);
 		Node pred = getPredecessor(siteId);
 		pred.setLocalSuccessor(node);

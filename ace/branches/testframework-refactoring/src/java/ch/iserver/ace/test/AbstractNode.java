@@ -28,7 +28,7 @@ package ch.iserver.ace.test;
  */
 public abstract class AbstractNode implements Node {
 	/** the site this node belongs to */
-	private String siteId;
+	private final String siteId;
 	/** the local successor of this node */
 	private Node localSuccessor;
 	

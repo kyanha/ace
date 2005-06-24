@@ -35,9 +35,26 @@ public abstract class AbstractGenerationNode extends AbstractNode
 	
 	/** list of remote successors (nodes that receive from this node) */
 	private Set remoteSuccessors = new HashSet();
+	
+	/** the event id */
+	private final String eventId;
 
-	protected AbstractGenerationNode(String siteId) {
+	/**
+	 * Creates a new node.
+	 * 
+	 * @param siteId the site id
+	 * @param eventId the generation event id
+	 */
+	protected AbstractGenerationNode(String siteId, String eventId) {
 		super(siteId);
+		this.eventId = eventId;
+	}
+	
+	/**
+	 * @inheritDoc
+	 */
+	public String getEventId() {
+		return eventId;
 	}
 
 	/**

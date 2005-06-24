@@ -35,8 +35,6 @@ import ch.iserver.ace.Operation;
 public class DoNode extends AbstractGenerationNode {
 	/** the operation to be generated */
 	private Operation operation;
-	/** the original id reference of the operation */
-	private String reference;
 		
 	/**
 	 * Creates a new generation node belonging to the given site. The
@@ -48,9 +46,8 @@ public class DoNode extends AbstractGenerationNode {
 	 * @param op the operation to be generated
 	 */
 	public DoNode(String siteId, String ref, Operation op) {
-		super(siteId);
+		super(siteId, ref);
 		this.operation = op;
-		this.reference = ref;
 	}
 
 	/**
@@ -63,15 +60,6 @@ public class DoNode extends AbstractGenerationNode {
 	}
 	
 	/**
-	 * Gets the id reference to the operation to be generated.
-	 * 
-	 * @return the id reference
-	 */
-	public String getReference() {
-		return reference;
-	}
-
-	/**
 	 * @inheritDoc
 	 */
 	public void accept(NodeVisitor visitor) {
@@ -83,8 +71,8 @@ public class DoNode extends AbstractGenerationNode {
 	 */
 	public String toString() {
 		return getClass().getName() 
-				+ "[site=" + getSiteId() 
-				+ ",ref=" + getReference()
+				+ "[siteId=" + getSiteId() 
+				+ ",eventId=" + getEventId()
 				+ ",operation=" + getOperation()
 				+ "]";
 	}

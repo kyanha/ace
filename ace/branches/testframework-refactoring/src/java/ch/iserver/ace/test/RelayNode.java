@@ -39,7 +39,7 @@ public class RelayNode extends AbstractNode implements ReceptionNode, Generation
 	/** the referenced operation */
 	private String reference;
 	/** the id of this generation event */
-	private String id;
+	private String eventId;
 	/** set of remote successors */
 	private Set remoteSuccessors;
 	/** predecessor of this node */
@@ -56,17 +56,15 @@ public class RelayNode extends AbstractNode implements ReceptionNode, Generation
 	public RelayNode(String siteId, String reference, String id) {
 		super(siteId);
 		this.reference = reference;
-		this.id = id;
+		this.eventId = id;
 		this.remoteSuccessors = new HashSet();
 	}
 	
 	/**
-	 * Gets the event id of this node
-	 * 
-	 * @return the id of this node
+	 * @inheritDoc
 	 */
-	public String getId() {
-		return id;
+	public String getEventId() {
+		return eventId;
 	}
 	
 	/**
@@ -147,8 +145,8 @@ public class RelayNode extends AbstractNode implements ReceptionNode, Generation
 	public String toString() {
 		return getClass().getName() + "["
 				+ "siteId=" + getSiteId()
+				+ ",eventId=" + getEventId()
 				+ ",ref=" + getReference()
-				+ ",id=" + getId()
 				+ "]";
 	}
 

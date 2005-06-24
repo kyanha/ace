@@ -44,4 +44,13 @@ public interface GenerationNode extends Node {
 	 */
 	public Set getRemoteSuccessors();
 	
+	/**
+	 * Gets the event id of this node. Event ids are used to link generation
+	 * events to reception events. They are kept for informational purposes
+	 * too.
+	 * 
+	 * @return the event id of this generation node
+	 */
+	public String getEventId();
+	
 }

@@ -38,7 +38,7 @@ public class SimpleReceptionNode extends AbstractNode implements ReceptionNode {
 	/** the request to process */
 	private Request request;
 	/** the reference to the operation */
-	private String ref;
+	private final String ref;
 	
 	/**
 	 * Creates a new reception node belonging to the given site and

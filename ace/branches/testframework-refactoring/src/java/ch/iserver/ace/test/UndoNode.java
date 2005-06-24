@@ -33,8 +33,8 @@ public class UndoNode extends AbstractGenerationNode {
 	 * 
 	 * @param siteId the site id of the site this node resides on
 	 */
-	public UndoNode(String siteId) {
-		super(siteId);
+	public UndoNode(String siteId, String eventId) {
+		super(siteId, eventId);
 	}
 	
 	/**
@@ -50,6 +50,7 @@ public class UndoNode extends AbstractGenerationNode {
 	public String toString() {
 		return getClass().getName() + "["
 				+ "siteId=" + getSiteId()
+				+ ",eventId=" + getEventId()
 				+ "]";
 	}
 

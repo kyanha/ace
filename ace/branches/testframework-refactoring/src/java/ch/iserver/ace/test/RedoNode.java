@@ -28,8 +28,6 @@ package ch.iserver.ace.test;
  * is explicitely given (the algorithm implementation knows about it).
  */
 public class RedoNode extends AbstractGenerationNode {
-	/** the id of this event */
-	private final String id;
 	
 	/**
 	 * Creates a new redo node for the given site. The id is used to
@@ -39,19 +37,9 @@ public class RedoNode extends AbstractGenerationNode {
 	 * @param id the id of the vent
 	 */
 	public RedoNode(String siteId, String id) {
-		super(siteId);
-		this.id = id;
+		super(siteId, id);
 	}
-	
-	/**
-	 * Gets the event id of this node.
-	 * 
-	 * @return the id of this node
-	 */
-	public String getId() {
-		return id;
-	}
-	
+		
 	/**
 	 * @inheritDoc
 	 */
@@ -64,8 +52,8 @@ public class RedoNode extends AbstractGenerationNode {
 	 */
 	public String toString() {
 		return getClass().getName() + "["
-				+ "site=" + getSiteId()
-				+ ",id=" + getId()
+				+ "siteId=" + getSiteId()
+				+ ",eventId=" + getEventId()
 				+ "]";
 	}
 

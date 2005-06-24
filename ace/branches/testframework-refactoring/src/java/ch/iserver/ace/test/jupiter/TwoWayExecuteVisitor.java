@@ -29,14 +29,25 @@ import ch.iserver.ace.test.ExecuteVisitor;
 import ch.iserver.ace.test.StartNode;
 
 /**
- * TODO: comments
+ * A two way execute visitor is to be used with standard scenario files
+ * and jupiter. It determines which site is to be a server and which
+ * to be a client in a deterministic way.
  */
 public class TwoWayExecuteVisitor extends ExecuteVisitor {
 
+	/**
+	 * Creates a new two way execute visitor that uses the given algorithm
+	 * factory.
+	 * 
+	 * @param factory the factory to use
+	 */
 	public TwoWayExecuteVisitor(AlgorithmTestFactory factory) {
 		super(factory);
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public void visit(StartNode node) {
 		String state = node.getState();
 		Boolean isClient = Boolean.valueOf(node.getSites() % 2 == 0);

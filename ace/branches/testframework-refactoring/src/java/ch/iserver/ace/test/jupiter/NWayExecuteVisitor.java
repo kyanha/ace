@@ -88,7 +88,7 @@ public class NWayExecuteVisitor extends ExecuteVisitor {
 			ReceptionNode remote = (ReceptionNode) succ.next();
 			algo = getServerAlgorithm(remote.getSiteId());
 			Request request = algo.generateRequest(op);
-			LOG.info("send " + node.getId() + " to " + remote.getSiteId() + " (" + request + ")");
+			LOG.info("send " + node.getEventId() + " to " + remote.getSiteId() + " (" + request + ")");
 			remote.setRequest(request);
 		}
 	}
