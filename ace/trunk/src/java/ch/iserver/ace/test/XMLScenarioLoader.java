@@ -114,7 +114,7 @@ public class XMLScenarioLoader implements ScenarioLoader {
 			if ("generate".equals(childEl.getName())) {
 				String id = childEl.getAttributeValue("id");
 				Operation op = processOperation(childEl.getChild("operation"));
-				builder.addGeneration(id, op);
+				builder.addDoGeneration(id, op);
 			} else if ("undo".equals(childEl.getName())) {
 				String id = childEl.getAttributeValue("id");
 				builder.addUndoGeneration(id);

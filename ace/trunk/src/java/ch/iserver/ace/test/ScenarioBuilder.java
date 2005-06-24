@@ -66,7 +66,7 @@ public interface ScenarioBuilder {
 	 * @param id the id of this event
 	 * @throws ScenarioException in case of errors
 	 */
-	public void addGeneration(String id, Operation operation);
+	public void addDoGeneration(String id, Operation operation);
 	
 	/**
 	 * Adds the generation of an undo to the current site. The current

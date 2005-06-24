@@ -126,7 +126,7 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 	/**
 	 * @inheritDoc
 	 */
-	public void addGeneration(final String id, final Operation op) {
+	public void addDoGeneration(final String id, final Operation op) {
 		checkCurrentSite();
 		addGenerationNode(new DoNode(currentSiteId, id, op));
 	}

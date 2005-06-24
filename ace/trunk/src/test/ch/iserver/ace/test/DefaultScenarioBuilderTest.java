@@ -17,12 +17,12 @@ public class DefaultScenarioBuilderTest extends TestCase {
 		builder.init("abc", "a1c");
 		
 		builder.startSite("1");
-		builder.addGeneration("1", new InsertOperation(1, "1"));
+		builder.addDoGeneration("1", new InsertOperation(1, "1"));
 		builder.addReception("2");
 		builder.endSite();
 		
 		builder.startSite("2");
-		builder.addGeneration("2", new DeleteOperation(1, "b"));
+		builder.addDoGeneration("2", new DeleteOperation(1, "b"));
 		builder.addReception("1");
 		builder.endSite();
 		
@@ -39,18 +39,18 @@ public class DefaultScenarioBuilderTest extends TestCase {
 		
 		builder.startSite("1");
 		builder.addReception("3");
-		builder.addGeneration("1", new InsertOperation(1, "1"));
+		builder.addDoGeneration("1", new InsertOperation(1, "1"));
 		builder.addReception("2");
 		builder.endSite();
 
 		builder.startSite("2");
-		builder.addGeneration("2", new InsertOperation(1, "2"));
+		builder.addDoGeneration("2", new InsertOperation(1, "2"));
 		builder.addReception("3");
 		builder.addReception("1");
 		builder.endSite();
 
 		builder.startSite("3");
-		builder.addGeneration("3", new DeleteOperation(1, "b"));
+		builder.addDoGeneration("3", new DeleteOperation(1, "b"));
 		builder.addReception("1");
 		builder.addReception("2");
 		builder.endSite();
@@ -64,12 +64,12 @@ public class DefaultScenarioBuilderTest extends TestCase {
 		builder.init("abc", "a1b2cd");
 		
 		builder.startSite("1");
-		builder.addGeneration("1", new InsertOperation(1, "1"));
+		builder.addDoGeneration("1", new InsertOperation(1, "1"));
 		builder.addReception("20");
 		builder.endSite();
 		
 		builder.startSite("2");
-		builder.addGeneration("2", new InsertOperation(2, "2"));
+		builder.addDoGeneration("2", new InsertOperation(2, "2"));
 		builder.addReception("10");
 		builder.endSite();
 		
@@ -85,7 +85,7 @@ public class DefaultScenarioBuilderTest extends TestCase {
 		builder.init("", "a");
 		
 		builder.startSite("1");
-		builder.addGeneration("1", new InsertOperation(0, "a"));
+		builder.addDoGeneration("1", new InsertOperation(0, "a"));
 		builder.addUndoGeneration("2");
 		builder.addRedoGeneration("3");
 		builder.endSite();
@@ -105,7 +105,7 @@ public class DefaultScenarioBuilderTest extends TestCase {
 		builder.init("", "");
 		
 		builder.startSite("1");
-		builder.addGeneration("1", new InsertOperation(0, "a"));
+		builder.addDoGeneration("1", new InsertOperation(0, "a"));
 		builder.addVerification("a");
 		builder.addUndoGeneration("2");
 		builder.endSite();
