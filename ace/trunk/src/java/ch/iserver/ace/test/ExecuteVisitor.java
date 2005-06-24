@@ -76,6 +76,18 @@ public class ExecuteVisitor implements NodeVisitor {
 	public AlgorithmTestFactory getFactory() {
 		return factory;
 	}
+	
+	/**
+	 * Adds an algorithm for the given site id. This method exists manly
+	 * for testing purposes. It helps to circumvent calling visit for
+	 * a start node in order to create an algorithm.
+	 * 
+	 * @param siteId the site id
+	 * @param algorithm the algorithm
+	 */
+	void addAlgorithm(String siteId, Algorithm algorithm) {
+		setAlgorithm(siteId, algorithm);
+	}
 
 	/**
 	 * Visits a start node. It initializes the algorithm at the site represented
@@ -214,10 +226,16 @@ public class ExecuteVisitor implements NodeVisitor {
 	protected void verify(final String siteId, final String state) {
 		Algorithm algo = getAlgorithm(siteId);
 		DocumentModel expected = getFactory().createDocument(state);
-		if (!expected.equals(algo.getDocument())) {
-			throw new VerificationException(siteId, expected.toString(), algo
-					.getDocument().toString());
+		DocumentModel actual = algo.getDocument();
+		if (!expected.equals(actual)) {
+			throw new VerificationException(siteId, 
+					nullSafeToString(expected), 
+					nullSafeToString(actual));
 		}
+	}
+	
+	private String nullSafeToString(Object o) {
+		return o == null ? "" : o.toString();
 	}
 
 	/**

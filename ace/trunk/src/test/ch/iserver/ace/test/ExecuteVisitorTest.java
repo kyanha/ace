@@ -21,10 +21,6 @@
 
 package ch.iserver.ace.test;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import junit.framework.TestCase;
 
 import org.easymock.MockControl;
@@ -34,55 +30,173 @@ import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.Timestamp;
-import ch.iserver.ace.text.InsertOperation;
 
 /**
  * Tests the ExecuteVisitor class.
  */
 public class ExecuteVisitorTest extends TestCase {
+	
+	public void testStartNode() {
+		// setup mock objects
+		MockControl control = MockControl.createControl(AlgorithmTestFactory.class);
+		MockControl algoCtrl = MockControl.createControl(Algorithm.class);
+		AlgorithmTestFactory factory = (AlgorithmTestFactory) control.getMock();
+		Algorithm algo = (Algorithm) algoCtrl.getMock();
+		
+		// create scenario
+		StartNode s = new StartNode("0", "abc", 0);
+		
+		// define mock behavior
+		factory.createAlgorithm(0, null);
+		control.setReturnValue(algo);
+		factory.createDocument("abc");
+		control.setReturnValue(null);
+		factory.createTimestamp();
+		control.setReturnValue(null);
+				
+		algo.init(null, null);
+						
+		// create test object
+		ExecuteVisitor visitor = new ExecuteVisitor(factory);
+		
+		// replay
+		control.replay();
+		algoCtrl.replay();
+		
+		// execute scenario
+		s.accept(visitor);
+		
+		// verify
+		control.verify();
+		algoCtrl.verify();
+	}
+		
+	public void testVisitDoNode() {
+		// setup mock objects
+		MockControl rcptCtrl1 = MockControl.createControl(ReceptionNode.class);
+		MockControl rcptCtrl2 = MockControl.createControl(ReceptionNode.class);
+		MockControl algoCtrl = MockControl.createControl(Algorithm.class);
+		Algorithm algo = (Algorithm) algoCtrl.getMock();
+		
+		// create scenario
+		DoNode d = new DoNode("0", "0", null);
+		ReceptionNode r1 = (ReceptionNode) rcptCtrl1.getMock();
+		ReceptionNode r2 = (ReceptionNode) rcptCtrl2.getMock();
+		d.addRemoteSuccessor(r1);
+		d.addRemoteSuccessor(r2);
 
-	/**
-	 * Perform a normal execution flow. Check that no exceptions occur.
-	 */
-	public void testNormalExecution() {
-		ExecuteVisitor visitor = new ExecuteVisitor(new AlgorithmTestFactoryStub());
-		Iterator it = createTestSequence();
-		while (it.hasNext()) {
-			Node node = (Node) it.next();
-			node.accept(visitor);
-		}
+		// helper objects
+		Request req = new TestRequest(0, null);
+		
+		// define mock behavior				
+		algo.generateRequest(null);
+		algoCtrl.setReturnValue(req);
+				
+		r1.setRequest(req);
+		r2.setRequest(req);
+		
+		// create test object
+		ExecuteVisitor visitor = new ExecuteVisitor(null);
+		visitor.addAlgorithm("0", algo);
+		
+		// replay
+		algoCtrl.replay();
+		rcptCtrl1.replay();
+		rcptCtrl2.replay();
+		
+		// execute scenario
+		d.accept(visitor);
+		
+		// verify
+		algoCtrl.verify();
+		rcptCtrl1.verify();
+		rcptCtrl2.verify();
 	}
 	
-	/**
-	 * The purpose of this test is to check that when visiting a generation node
-	 * the remote reception nodes get the generated request.
-	 */
-	public void testVisitGenerationNode() {
-		ExecuteVisitor visitor = new ExecuteVisitor(new AlgorithmTestFactoryStub());
+	public void testVisitUndoNode() {
+		// setup mock objects
+		MockControl rcptCtrl1 = MockControl.createControl(ReceptionNode.class);
+		MockControl rcptCtrl2 = MockControl.createControl(ReceptionNode.class);
+		MockControl algoCtrl = MockControl.createControl(Algorithm.class);
+		Algorithm algo = (Algorithm) algoCtrl.getMock();
 		
-		// create nodes
-		StartNode s1 = new StartNode("0", "abc", 0);
-		StartNode s2 = new StartNode("1", "abc", 1);
-		DoNode g1 = new DoNode("0", "1", new InsertOperation(1, "1"));
-		DoNode g2 = new DoNode("1", "2", new InsertOperation(1, "2"));
-		ReceptionNode r1 = new SimpleReceptionNode("0", "2");
-		ReceptionNode r2 = new SimpleReceptionNode("1", "1");
+		// create scenario
+		UndoNode g = new UndoNode("0", "0");
+		ReceptionNode r1 = (ReceptionNode) rcptCtrl1.getMock();
+		ReceptionNode r2 = (ReceptionNode) rcptCtrl2.getMock();
+		g.addRemoteSuccessor(r1);
+		g.addRemoteSuccessor(r2);
+
+		// helper objects
+		Request req = new TestRequest(0, null);
 		
-		// add remote successors
-		g1.addRemoteSuccessor(r2);
-		g2.addRemoteSuccessor(r1);
+		// define mock behavior				
+		algo.undo();
+		algoCtrl.setReturnValue(req);
+				
+		r1.setRequest(req);
+		r2.setRequest(req);
 		
-		// test
-		s1.accept(visitor);
-		s2.accept(visitor);
-		assertNull(r1.getRequest());
-		assertNull(r2.getRequest());
-		g1.accept(visitor);
-		g2.accept(visitor);
-		assertNotNull(r1.getRequest());
-		assertNotNull(r2.getRequest());
+		// create test object
+		ExecuteVisitor visitor = new ExecuteVisitor(null);
+		visitor.addAlgorithm("0", algo);
+		
+		// replay
+		algoCtrl.replay();
+		rcptCtrl1.replay();
+		rcptCtrl2.replay();
+		
+		// execute scenario
+		g.accept(visitor);
+		
+		// verify
+		algoCtrl.verify();
+		rcptCtrl1.verify();
+		rcptCtrl2.verify();
 	}
 	
+	public void testVisitRedoNode() {
+		// setup mock objects
+		MockControl rcptCtrl1 = MockControl.createControl(ReceptionNode.class);
+		MockControl rcptCtrl2 = MockControl.createControl(ReceptionNode.class);
+		MockControl algoCtrl = MockControl.createControl(Algorithm.class);
+		Algorithm algo = (Algorithm) algoCtrl.getMock();
+		
+		// create scenario
+		RedoNode g = new RedoNode("0", "0");
+		ReceptionNode r1 = (ReceptionNode) rcptCtrl1.getMock();
+		ReceptionNode r2 = (ReceptionNode) rcptCtrl2.getMock();
+		g.addRemoteSuccessor(r1);
+		g.addRemoteSuccessor(r2);
+
+		// helper objects
+		Request req = new TestRequest(0, null);
+		
+		// define mock behavior				
+		algo.redo();
+		algoCtrl.setReturnValue(req);
+				
+		r1.setRequest(req);
+		r2.setRequest(req);
+		
+		// create test object
+		ExecuteVisitor visitor = new ExecuteVisitor(null);
+		visitor.addAlgorithm("0", algo);
+		
+		// replay
+		algoCtrl.replay();
+		rcptCtrl1.replay();
+		rcptCtrl2.replay();
+		
+		// execute scenario
+		g.accept(visitor);
+		
+		// verify
+		algoCtrl.verify();
+		rcptCtrl1.verify();
+		rcptCtrl2.verify();
+	}
+		
 	/**
 	 * The main purpose of this test is to test that generateRequest
 	 * and receiveRequest are executed by the execute visitor on
@@ -90,169 +204,208 @@ public class ExecuteVisitorTest extends TestCase {
 	 */
 	public void testVisitReceptionNode() {
 		// setup mock objects
+		MockControl algoCtrl = MockControl.createControl(Algorithm.class);
+		Algorithm algo = (Algorithm) algoCtrl.getMock();
+
+		// create test object
+		ExecuteVisitor visitor = new ExecuteVisitor(null);
+		visitor.addAlgorithm("0", algo);
+		
+		// create nodes
+		ReceptionNode r = new SimpleReceptionNode("0", "2");
+		
+		// helper object
+		TestRequest req = new TestRequest(1, null);
+		
+		// define mock behavior		
+		algo.receiveRequest(req);
+		
+		// replay behavior
+		algoCtrl.replay();
+		
+		// execute test
+		r.setRequest(req);
+		r.accept(visitor);
+		
+		// verify method calls
+		algoCtrl.verify();
+	}
+	
+	public void testVerificationNode() {
+		// setup mock objects
 		MockControl control = MockControl.createControl(AlgorithmTestFactory.class);
-		MockControl algoCtrl1 = MockControl.createControl(Algorithm.class);
-		MockControl algoCtrl2 = MockControl.createControl(Algorithm.class);
+		MockControl algoCtrl = MockControl.createControl(Algorithm.class);
 		AlgorithmTestFactory factory = (AlgorithmTestFactory) control.getMock();
-		Algorithm algo1 = (Algorithm) algoCtrl1.getMock();
-		Algorithm algo2 = (Algorithm) algoCtrl2.getMock();
+		Algorithm algo = (Algorithm) algoCtrl.getMock();
+		DocumentModel document = new TestDocument(true);
 
 		// create test object
 		ExecuteVisitor visitor = new ExecuteVisitor(factory);
+		visitor.addAlgorithm("0", algo);
 		
 		// create nodes
-		StartNode s1 = new StartNode("0", "abc", 0);
-		StartNode s2 = new StartNode("1", "abc", 1);
-		DoNode g1 = new DoNode("0", "1", new InsertOperation(1, "1"));
-		DoNode g2 = new DoNode("1", "2", new InsertOperation(1, "2"));
-		ReceptionNode r1 = new SimpleReceptionNode("0", "2");
-		ReceptionNode r2 = new SimpleReceptionNode("1", "1");
-		g1.addRemoteSuccessor(r2);
-		g2.addRemoteSuccessor(r1);
+		VerificationNode v = new VerificationNode("0", "abc");
 		
 		// define mock behavior
-		factory.createAlgorithm(0, null);
-		control.setReturnValue(algo1);
 		factory.createDocument("abc");
-		control.setReturnValue(null);
-		factory.createTimestamp();
-		control.setReturnValue(null);
-		
-		factory.createAlgorithm(1, null);
-		control.setReturnValue(algo2);
-		factory.createDocument("abc");
-		control.setReturnValue(null);
-		factory.createTimestamp();
-		control.setReturnValue(null);
+		control.setReturnValue(document);
 
-		algo1.init(null, null);
-		algo2.init(null, null);
-		algo1.generateRequest(new InsertOperation(1, "1"));
-		algoCtrl1.setReturnValue(null);
-		algo2.generateRequest(new InsertOperation(1, "2"));
-		algoCtrl2.setReturnValue(null);
-		algo1.receiveRequest(null);
-		algo2.receiveRequest(null);
-		
+		algo.getDocument();
+		algoCtrl.setReturnValue(null);
+				
 		// replay behavior
-		algoCtrl1.replay();
-		algoCtrl2.replay();
+		algoCtrl.replay();
 		control.replay();
 		
 		// execute test
-		s1.accept(visitor);		
-		s2.accept(visitor);
-		g1.accept(visitor);
-		g2.accept(visitor);		
-		r1.accept(visitor);
-		r2.accept(visitor);
+		v.accept(visitor);
 		
 		// verify method calls
 		control.verify();
-		algoCtrl1.verify();
-		algoCtrl2.verify();
+		algoCtrl.verify();
 	}
-	
-	/**
-	 * Creates a normal sequence of nodes.
-	 */
-	protected Iterator createTestSequence() {
-		List result = new ArrayList();
+
+	public void testVerificationNodeFail() {
+		// setup mock objects
+		MockControl control = MockControl.createControl(AlgorithmTestFactory.class);
+		MockControl algoCtrl = MockControl.createControl(Algorithm.class);
+		AlgorithmTestFactory factory = (AlgorithmTestFactory) control.getMock();
+		Algorithm algo = (Algorithm) algoCtrl.getMock();
+		DocumentModel document = new TestDocument(false);
+
+		// create test object
+		ExecuteVisitor visitor = new ExecuteVisitor(factory);
+		visitor.addAlgorithm("0", algo);
 		
 		// create nodes
-		StartNode s1 = new StartNode("0", "abc", 0);
-		StartNode s2 = new StartNode("1", "abc", 1);
-		DoNode g1 = new DoNode("0", "1", new InsertOperation(1, "1"));
-		DoNode g2 = new DoNode("1", "2", new InsertOperation(2, "2"));
-		ReceptionNode r1 = new SimpleReceptionNode("0", "2");
-		ReceptionNode r2 = new SimpleReceptionNode("1", "1");
-		EndNode e1 = new EndNode("0", "abc");
-		EndNode e2 = new EndNode("1", "abc");
+		VerificationNode v = new VerificationNode("0", "abc");
 		
-		// set local successors
-		s1.setLocalSuccessor(g1);
-		g1.setLocalSuccessor(r1);
-		r1.setLocalSuccessor(e1);
-		s2.setLocalSuccessor(g2);
-		g2.setLocalSuccessor(r2);
-		r2.setLocalSuccessor(e2);
+		// define mock behavior
+		factory.createDocument("abc");
+		control.setReturnValue(document);
 		
-		// add remote successors
-		g1.addRemoteSuccessor(r2);
-		g2.addRemoteSuccessor(r1);
+		algo.getDocument();
+		algoCtrl.setReturnValue(null);
+				
+		// replay behavior
+		algoCtrl.replay();
+		control.replay();
 		
-		// add nodes to result
-		result.add(s1);
-		result.add(g1);
-		result.add(s2);
-		result.add(g2);
-		result.add(r1);
-		result.add(r2);
-		result.add(e1);
-		result.add(e2);
+		// execute test		
+		try {
+			v.accept(visitor);
+			fail("verification must fail - documents are not equal");
+		} catch (VerificationException ex) {
+			// this is expected
+		}
 		
-		return result.iterator();
+		// verify method calls
+		control.verify();
+		algoCtrl.verify();
 	}
 	
-	private static class AlgorithmTestFactoryStub implements AlgorithmTestFactory {
-		public Algorithm createAlgorithm(int siteId, Object param) {
-			return new AlgorithmStub();
+	public void testEndNode() {
+		// setup mock objects
+		MockControl control = MockControl.createControl(AlgorithmTestFactory.class);
+		MockControl algoCtrl = MockControl.createControl(Algorithm.class);
+		AlgorithmTestFactory factory = (AlgorithmTestFactory) control.getMock();
+		Algorithm algo = (Algorithm) algoCtrl.getMock();
+		DocumentModel document = new TestDocument(true);
+
+		// create test object
+		ExecuteVisitor visitor = new ExecuteVisitor(factory);
+		visitor.addAlgorithm("0", algo);
+		
+		// create nodes
+		EndNode e = new EndNode("0", "abc");
+		
+		// define mock behavior
+		factory.createDocument("abc");
+		control.setReturnValue(document);
+		
+		algo.getDocument();
+		algoCtrl.setReturnValue(null);
+				
+		// replay behavior
+		algoCtrl.replay();
+		control.replay();
+		
+		// execute test
+		e.accept(visitor);
+		
+		// verify method calls
+		control.verify();
+		algoCtrl.verify();
+	}
+
+	public void testEndNodeFail() {
+		// setup mock objects
+		MockControl control = MockControl.createControl(AlgorithmTestFactory.class);
+		MockControl algoCtrl = MockControl.createControl(Algorithm.class);
+		AlgorithmTestFactory factory = (AlgorithmTestFactory) control.getMock();
+		Algorithm algo = (Algorithm) algoCtrl.getMock();
+		DocumentModel document = new TestDocument(false);
+
+		// create test object
+		ExecuteVisitor visitor = new ExecuteVisitor(factory);
+		visitor.addAlgorithm("0", algo);
+		
+		// create nodes
+		EndNode v = new EndNode("0", "abc");
+		
+		// define mock behavior
+		factory.createDocument("abc");
+		control.setReturnValue(document);
+		
+		algo.getDocument();
+		algoCtrl.setReturnValue(null);
+				
+		// replay behavior
+		algoCtrl.replay();
+		control.replay();
+		
+		// execute test
+		try {
+			v.accept(visitor);
+			fail("verification must fail - documents are not equal");
+		} catch (VerificationException ex) {
+			// this is expected
 		}
-		public DocumentModel createDocument(String state) {
-			return new DocumentModel() {
-				public void apply(Operation operation) {
-					
-				}
-				public boolean equals(Object o) {
-					return true;
-				}
-			};
-		}
-		public Timestamp createTimestamp() {
-			return new Timestamp() { };
-		}
+		
+		// verify method calls
+		control.verify();
+		algoCtrl.verify();
 	}
 	
-	private static class AlgorithmStub implements Algorithm {
-		private DocumentModel doc;
-		private Timestamp timestamp;
-		public DocumentModel getDocument() {
-			return doc;
+	private static class TestRequest implements Request {
+		private int siteId;
+		private Operation operation;
+		public TestRequest(int siteId, Operation operation) {
+			this.siteId = siteId;
+			this.operation = operation;
 		}
-		public void init(DocumentModel doc, Timestamp timestamp) {
-			this.doc = doc;
-			this.timestamp = timestamp;
-		}			
-		public void siteRemoved(int siteId) {
-	
+		public Operation getOperation() {
+			return operation;
 		}
-		public void siteAdded(int siteId) {
-	
-		}			
-		public void receiveRequest(Request req) {
-	
+		public int getSiteId() {
+			return siteId;
 		}
-		public Request generateRequest(final Operation op) {
-			return new Request() {
-				public Timestamp getTimestamp() {
-					return new Timestamp() { };
-				}
-				public Operation getOperation() {
-					return op;
-				}
-			
-				public int getSiteId() {
-					return 0;
-				}
-			
-			};
-		}
-		public Request undo() {
+		public Timestamp getTimestamp() {
 			return null;
 		}
-		public Request redo() {
-			return null;
+	}
+	
+	private static class TestDocument implements DocumentModel {
+		private boolean result;
+		public TestDocument(boolean result) {
+			this.result = result;
+		}
+		public void apply(Operation operation) {
+			// do nothing
+		}
+		public boolean equals(Object o) {
+			return result;
 		}
 	}
-		
+			
 }
