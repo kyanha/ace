@@ -25,6 +25,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import ch.iserver.ace.DocumentModel;
 import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.Algorithm;
@@ -45,6 +47,9 @@ import ch.iserver.ace.algorithm.Timestamp;
  * </p>
  */
 public class ExecuteVisitor implements NodeVisitor {
+	/** logger class */
+	private static final Logger LOG = Logger.getLogger(ExecuteVisitor.class);
+	
 	/** the factory used to create the needed objects */
 	private AlgorithmTestFactory factory;
 
@@ -80,6 +85,7 @@ public class ExecuteVisitor implements NodeVisitor {
 	 *            the node to visit
 	 */
 	public void visit(StartNode node) {
+		LOG.info("visit: " + node);
 		String state = node.getState();
 		Algorithm algorithm = getFactory().createAlgorithm(
 				Integer.parseInt(node.getSiteId()), null);
@@ -98,6 +104,7 @@ public class ExecuteVisitor implements NodeVisitor {
 	 *            the node to visit
 	 */
 	public void visit(DoNode node) {
+		LOG.info("visit: " + node);
 		Operation op = node.getOperation();
 		Algorithm algo = getAlgorithm(node.getSiteId());
 		Request request = algo.generateRequest(op);
@@ -115,6 +122,7 @@ public class ExecuteVisitor implements NodeVisitor {
 	 * @param node the node to visit
 	 */
 	public void visit(UndoNode node) {
+		LOG.info("visit: " + node);
 		Algorithm algo = getAlgorithm(node.getSiteId());
 		Request request = algo.undo();
 		Iterator it = node.getRemoteSuccessors().iterator();
@@ -131,6 +139,7 @@ public class ExecuteVisitor implements NodeVisitor {
 	 * @param node the node to visit
 	 */
 	public void visit(RedoNode node) {
+		LOG.info("visit: " + node);
 		Algorithm algo = getAlgorithm(node.getSiteId());
 		Request request = algo.redo();
 		Iterator it = node.getRemoteSuccessors().iterator();
@@ -148,6 +157,7 @@ public class ExecuteVisitor implements NodeVisitor {
 	 *            the node to visit
 	 */
 	public void visit(ReceptionNode node) {
+		LOG.info("visit: " + node);
 		Request request = node.getRequest();
 		Algorithm algo = getAlgorithm(node.getSiteId());
 		algo.receiveRequest(request);
@@ -170,6 +180,7 @@ public class ExecuteVisitor implements NodeVisitor {
 	 *             if the document state does not match the expected state
 	 */
 	public void visit(VerificationNode node) {
+		LOG.info("visit: " + node);
 		verify(node.getSiteId(), node.getState());
 	}
 
@@ -185,6 +196,7 @@ public class ExecuteVisitor implements NodeVisitor {
 	 *             if the document state does not match the expected state
 	 */
 	public void visit(EndNode node) {
+		LOG.info("visit: " + node);
 		verify(node.getSiteId(), node.getState());
 	}
 

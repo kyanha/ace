@@ -22,9 +22,9 @@ package ch.iserver.ace.test.jupiter;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
+
+import org.apache.log4j.Logger;
 
 import ch.iserver.ace.DocumentModel;
 import ch.iserver.ace.Operation;
@@ -40,10 +40,14 @@ import ch.iserver.ace.test.ScenarioException;
 import ch.iserver.ace.test.StartNode;
 
 /**
- * TODO: comments
+ * This execute visitor is to be used with jupiter scenarios with a central
+ * server. First of all, it creates additional algorithms for the server side
+ * and second it knows how to handle relay nodes.
  */
 public class NWayExecuteVisitor extends ExecuteVisitor {
-
+	/** private logger instance */
+	private static final Logger LOG = Logger.getLogger(NWayExecuteVisitor.class);
+	
 	/** map from site ids to server side algorithms */
 	private Map serverAlgorithms;
 
@@ -53,6 +57,7 @@ public class NWayExecuteVisitor extends ExecuteVisitor {
 	}
 
 	public void visit(StartNode node) {
+		LOG.info("visit: " + node);
 		String state = node.getState();
 		Algorithm algorithm = getFactory().createAlgorithm(
 				Integer.parseInt(node.getSiteId()), Boolean.TRUE);
@@ -70,21 +75,21 @@ public class NWayExecuteVisitor extends ExecuteVisitor {
 	}
 
 	public void visit(RelayNode node) {
+		LOG.info("visit: " + node);
 		String siteId = "" + node.getRequest().getSiteId();
 		Algorithm algo = getServerAlgorithm(siteId);
 		algo.receiveRequest(node.getRequest());
 		OperationExtractDocumentModel doc = (OperationExtractDocumentModel) 
 				algo.getDocument();
 		Operation op = doc.getOperation();
-		Iterator it = getOtherServerAlgorithms(siteId);
-		while (it.hasNext()) {
-			algo = (Algorithm) it.next();
+		LOG.info("receive from " + siteId + ": " + op);
+		Iterator succ = node.getRemoteSuccessors().iterator();
+		while (succ.hasNext()) {
+			ReceptionNode remote = (ReceptionNode) succ.next();
+			algo = getServerAlgorithm(remote.getSiteId());
 			Request request = algo.generateRequest(op);
-			Iterator succ = node.getRemoteSuccessors().iterator();
-			while (succ.hasNext()) {
-				ReceptionNode remote = (ReceptionNode) succ.next();
-				remote.setRequest(request);
-			}
+			LOG.info("send " + node.getId() + " to " + remote.getSiteId() + " (" + request + ")");
+			remote.setRequest(request);
 		}
 	}
 
@@ -98,18 +103,6 @@ public class NWayExecuteVisitor extends ExecuteVisitor {
 	
 	protected void setServerAlgorithm(String siteId, Algorithm algorithm) {
 		serverAlgorithms.put(siteId, algorithm);
-	}
-
-	protected Iterator getOtherServerAlgorithms(String siteId) {
-		List result = new LinkedList();
-		Iterator keys = serverAlgorithms.keySet().iterator();
-		while (keys.hasNext()) {
-			String key = (String) keys.next();
-			if (!siteId.equals(key)) {
-				result.add(serverAlgorithms.get(key));
-			}
-		}
-		return result.iterator();
 	}
 
 }
