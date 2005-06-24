@@ -1,13 +1,13 @@
 package ch.iserver.ace.test;
 
+import junit.framework.TestCase;
 import ch.iserver.ace.text.DeleteOperation;
 import ch.iserver.ace.text.InsertOperation;
-import junit.framework.TestCase;
 
 public class DefaultScenarioBuilderTest extends TestCase {
 
 	public void testSimple() {
-		ScenarioBuilder builder = new DefaultScenarioBuilder();
+		DefaultScenarioBuilder builder = new DefaultScenarioBuilder();
 		builder.init("abc", "a1c");
 		
 		builder.startSite("1");
@@ -19,10 +19,13 @@ public class DefaultScenarioBuilderTest extends TestCase {
 		builder.addGeneration("2", new DeleteOperation(1, "b"));
 		builder.addReception("1");
 		builder.endSite();
+		
+		// get the scenario
+		builder.getScenario();
 	}
 	
 	public void testComplex() {
-		ScenarioBuilder builder = new DefaultScenarioBuilder();
+		DefaultScenarioBuilder builder = new DefaultScenarioBuilder();
 		builder.init("abc", "a12cd");
 		
 		builder.startSite("1");
@@ -42,10 +45,13 @@ public class DefaultScenarioBuilderTest extends TestCase {
 		builder.addReception("1");
 		builder.addReception("2");
 		builder.endSite();
+		
+		// get the scenario
+		builder.getScenario();
 	}
 	
 	public void testWithServer() {
-		ScenarioBuilder builder = new DefaultScenarioBuilder();
+		DefaultScenarioBuilder builder = new DefaultScenarioBuilder();
 		builder.init("abc", "a1b2cd");
 		
 		builder.startSite("1");
@@ -60,10 +66,13 @@ public class DefaultScenarioBuilderTest extends TestCase {
 		
 		builder.addRelay("1", "10");
 		builder.addRelay("2", "20");
+		
+		// get the scenario
+		builder.getScenario();
 	}
 	
 	public void testWithUndoRedo() {
-		ScenarioBuilder builder = new DefaultScenarioBuilder();
+		DefaultScenarioBuilder builder = new DefaultScenarioBuilder();
 		builder.init("", "a");
 		
 		builder.startSite("1");
@@ -77,10 +86,13 @@ public class DefaultScenarioBuilderTest extends TestCase {
 		builder.addReception("2");
 		builder.addReception("3");
 		builder.endSite();
+		
+		// get the scenario
+		builder.getScenario();
 	}
 	
 	public void testWithVerification() {
-		ScenarioBuilder builder = new DefaultScenarioBuilder();
+		DefaultScenarioBuilder builder = new DefaultScenarioBuilder();
 		builder.init("", "");
 		
 		builder.startSite("1");
@@ -94,6 +106,9 @@ public class DefaultScenarioBuilderTest extends TestCase {
 		builder.addVerification("a");
 		builder.addReception("2");
 		builder.endSite();
+		
+		// get the scenario
+		builder.getScenario();
 	}
 	
 }
