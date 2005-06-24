@@ -29,16 +29,21 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
+ * Utility class that contains graph related methods.
  */
 public class GraphUtil {
 
+	/** avoid instantiation of this class */
 	private GraphUtil() { }
 	
 	/**
-	 * 
-	 * @param nodes
-	 * @return List
+	 * Sorts the given collection of nodes. The nodes are
+	 * expected to form a directed acyclic graph. If this is
+	 * not the case, a ScenarioException is thrown. The result
+	 * is a topologically sorted list of nodes.
+	 *
+	 * @param nodes a collection of Node objects to be sorted
+	 * @return a topologically sorted list of nodes
 	 */
 	public static List topologicalSort(Collection nodes) {
 		List result = new ArrayList();
@@ -74,64 +79,58 @@ public class GraphUtil {
 		return result;
 	}
 	
+	/**
+	 * Inner class used to initialize the incount of nodes.
+	 */
 	private static class Incount implements NodeVisitor {
 		private Map map = new HashMap();
 		private List start = new ArrayList();
 		
-		/**
-		 * {@inheritDoc}
-		 */
 		public void visit(StartNode node) {
 			map.put(node, new Integer(0));
 			start.add(node);
 		}
 		
-		/**
-		 * {@inheritDoc}
-		 */
-		public void visit(GenerationNode node) {
+		public void visit(DoNode node) {
 			map.put(node, new Integer(1));
 		}
 		
-		/**
-		 * {@inheritDoc}
-		 */
+		public void visit(UndoNode node) {
+			map.put(node, new Integer(1));
+		}
+		
+		public void visit(RedoNode node) {
+			map.put(node, new Integer(1));
+		}
+		
 		public void visit(ReceptionNode node) {
 			map.put(node, new Integer(2));
 		}
 		
-		/**
-		 * {@inheritDoc}
-		 */
+		public void visit(RelayNode node) {
+			if (node.getLocalPredecessor() != null) {
+				map.put(node, new Integer(2));
+			} else {
+				map.put(node, new Integer(1));
+			}
+		}
+		
+		public void visit(VerificationNode node) {
+			map.put(node, new Integer(1));
+		}
+		
 		public void visit(EndNode node) {
 			map.put(node, new Integer(1));
 		}
 		
-		/**
-		 * Returns a list with all the start nodes.
-		 * 
-		 * @return the start nodes
-		 */
 		public List getStartNodes() {
 			return start;
 		}
 		
-		/**
-		 * Returns the incount.
-		 * 
-		 * @param node the node
-		 * @return the incount for the given node
-		 */
 		public int getIncount(Node node) {
 			return ((Integer) map.get(node)).intValue();
 		}
 		
-		/**
-		 * Decrements the incount for the given node.
-		 * 
-		 * @param node the node to decrement its incount
-		 * @return the incount after decrement
-		 */
 		public int decrementIncount(Node node) {
 			int incount = getIncount(node) - 1;
 			map.put(node, new Integer(incount));

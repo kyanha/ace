@@ -100,6 +100,9 @@
 				<fileset dir="${src.test}">
 					<include name="**/*Test*.java"/>
 					<exclude name="ch/iserver/ace/test/AlgorithmTestCase.java"/>
+					<exclude name="ch/iserver/ace/test/jupiter/JupiterTestCase.java"/>
+					<exclude name="ch/iserver/ace/test/jupiter/TwoWayTestCase.java"/>
+					<exclude name="ch/iserver/ace/test/jupiter/NWayTestCase.java"/>
 					<exclude name="ch/iserver/ace/algorithm/jupiter/server/TestNetService.java"/>
 					<exclude name="ch/iserver/ace/algorithm/DummyDocumentModel.java"/>
 				</fileset>

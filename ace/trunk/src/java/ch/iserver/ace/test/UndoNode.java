@@ -20,33 +20,38 @@
  */
 package ch.iserver.ace.test;
 
-import ch.iserver.ace.algorithm.Request;
 
 /**
- * This interface represents a node that receives requests. The
- * requests are received by a call to {@link #setRequest(Request)}.
+ * A node implementation that represents an undo generation event. This
+ * is a generation node. In contrast to a DoNode, no explicit operation
+ * is required as the operation is implicitely known by the algorithm.
  */
-public interface ReceptionNode extends Node {
+public class UndoNode extends AbstractGenerationNode {
 
 	/**
-	 * Sets the request to be received by this node.
+	 * Creates a new undo node.
 	 * 
-	 * @param request the request to be received
+	 * @param siteId the site id of the site this node resides on
 	 */
-	public void setRequest(Request request);
-
-	/**
-	 * Gets the request to be received by this node.
-	 * 
-	 * @return the request to be received
-	 */
-	public Request getRequest();
+	public UndoNode(String siteId, String eventId) {
+		super(siteId, eventId);
+	}
 	
 	/**
-	 * Gets the referenced operation id of this node.
-	 * 
-	 * @return the operation id
+	 * @inheritDoc
 	 */
-	public String getReference();
+	public void accept(NodeVisitor visitor) {
+		visitor.visit(this);
+	}
+
+	/**
+	 * @return a string representation of this node
+	 */
+	public String toString() {
+		return getClass().getName() + "["
+				+ "siteId=" + getSiteId()
+				+ ",eventId=" + getEventId()
+				+ "]";
+	}
 
 }

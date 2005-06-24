@@ -86,8 +86,8 @@ public class EndNode extends AbstractNode {
 	 */
 	public String toString() {
 		return getClass().getName() + "[siteId=" + getSiteId()
-				+ ",state" + state
-				+ "]";
+				+ ",state='" + state
+				+ "']";
 	}
 
 }

@@ -18,51 +18,43 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-
 package ch.iserver.ace.test;
 
 
 /**
- * Abstract base class for node implementations. Both site id and
- * local successor properties are handled in this base class.
+ * Node implementation that represents the generation of a redo operation.
+ * This is a generation node. The only difference to a DoNode is that
+ * this node does not need any operation. The operation to be redone
+ * is explicitely given (the algorithm implementation knows about it).
  */
-public abstract class AbstractNode implements Node {
-	/** the site this node belongs to */
-	private final String siteId;
-	/** the local successor of this node */
-	private Node localSuccessor;
+public class RedoNode extends AbstractGenerationNode {
 	
 	/**
-	 * Creates a new abstract node belonging to the given site.
+	 * Creates a new redo node for the given site. The id is used to
+	 * link this event to its successors (i.e. the receivers).
 	 * 
-	 * @param siteId the site this node belongs to
+	 * @param siteId the site id of the site where this node resides
+	 * @param id the id of the vent
 	 */
-	protected AbstractNode(String siteId) {
-		if (siteId == null) {
-			throw new IllegalArgumentException("siteId cannot be null");
-		}
-		this.siteId = siteId;
+	public RedoNode(String siteId, String id) {
+		super(siteId, id);
+	}
+		
+	/**
+	 * @inheritDoc
+	 */
+	public void accept(NodeVisitor visitor) {
+		visitor.visit(this);
 	}
 	
 	/**
-	 * {@inheritDoc}
+	 * @return a string representation of this node
 	 */
-	public String getSiteId() {
-		return siteId;
+	public String toString() {
+		return getClass().getName() + "["
+				+ "siteId=" + getSiteId()
+				+ ",eventId=" + getEventId()
+				+ "]";
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setLocalSuccessor(Node successor) {
-		this.localSuccessor = successor;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public Node getLocalSuccessor() {
-		return localSuccessor;
-	}
-	
+
 }

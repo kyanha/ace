@@ -61,12 +61,12 @@ public class ExecuteVisitorTest extends TestCase {
 		ExecuteVisitor visitor = new ExecuteVisitor(new AlgorithmTestFactoryStub());
 		
 		// create nodes
-		StartNode s1 = new StartNode("0", "abc");
-		StartNode s2 = new StartNode("1", "abc");
-		GenerationNode g1 = new GenerationNode("0", "1", new InsertOperation(1, "1"));
-		GenerationNode g2 = new GenerationNode("1", "2", new InsertOperation(1, "2"));
-		ReceptionNode r1 = new ReceptionNode("0", "2");
-		ReceptionNode r2 = new ReceptionNode("1", "1");
+		StartNode s1 = new StartNode("0", "abc", 0);
+		StartNode s2 = new StartNode("1", "abc", 1);
+		DoNode g1 = new DoNode("0", "1", new InsertOperation(1, "1"));
+		DoNode g2 = new DoNode("1", "2", new InsertOperation(1, "2"));
+		ReceptionNode r1 = new SimpleReceptionNode("0", "2");
+		ReceptionNode r2 = new SimpleReceptionNode("1", "1");
 		
 		// add remote successors
 		g1.addRemoteSuccessor(r2);
@@ -82,22 +82,90 @@ public class ExecuteVisitorTest extends TestCase {
 		assertNotNull(r1.getRequest());
 		assertNotNull(r2.getRequest());
 	}
+	
+	/**
+	 * The main purpose of this test is to test that generateRequest
+	 * and receiveRequest are executed by the execute visitor on
+	 * the algorithms.
+	 */
+	public void testVisitReceptionNode() {
+		// setup mock objects
+		MockControl control = MockControl.createControl(AlgorithmTestFactory.class);
+		MockControl algoCtrl1 = MockControl.createControl(Algorithm.class);
+		MockControl algoCtrl2 = MockControl.createControl(Algorithm.class);
+		AlgorithmTestFactory factory = (AlgorithmTestFactory) control.getMock();
+		Algorithm algo1 = (Algorithm) algoCtrl1.getMock();
+		Algorithm algo2 = (Algorithm) algoCtrl2.getMock();
+
+		// create test object
+		ExecuteVisitor visitor = new ExecuteVisitor(factory);
 		
+		// create nodes
+		StartNode s1 = new StartNode("0", "abc", 0);
+		StartNode s2 = new StartNode("1", "abc", 1);
+		DoNode g1 = new DoNode("0", "1", new InsertOperation(1, "1"));
+		DoNode g2 = new DoNode("1", "2", new InsertOperation(1, "2"));
+		ReceptionNode r1 = new SimpleReceptionNode("0", "2");
+		ReceptionNode r2 = new SimpleReceptionNode("1", "1");
+		g1.addRemoteSuccessor(r2);
+		g2.addRemoteSuccessor(r1);
+		
+		// define mock behavior
+		factory.createAlgorithm(0, null);
+		control.setReturnValue(algo1);
+		factory.createDocument("abc");
+		control.setReturnValue(null);
+		factory.createTimestamp();
+		control.setReturnValue(null);
+		
+		factory.createAlgorithm(1, null);
+		control.setReturnValue(algo2);
+		factory.createDocument("abc");
+		control.setReturnValue(null);
+		factory.createTimestamp();
+		control.setReturnValue(null);
+
+		algo1.init(null, null);
+		algo2.init(null, null);
+		algo1.generateRequest(new InsertOperation(1, "1"));
+		algoCtrl1.setReturnValue(null);
+		algo2.generateRequest(new InsertOperation(1, "2"));
+		algoCtrl2.setReturnValue(null);
+		algo1.receiveRequest(null);
+		algo2.receiveRequest(null);
+		
+		// replay behavior
+		algoCtrl1.replay();
+		algoCtrl2.replay();
+		control.replay();
+		
+		// execute test
+		s1.accept(visitor);		
+		s2.accept(visitor);
+		g1.accept(visitor);
+		g2.accept(visitor);		
+		r1.accept(visitor);
+		r2.accept(visitor);
+		
+		// verify method calls
+		control.verify();
+		algoCtrl1.verify();
+		algoCtrl2.verify();
+	}
+	
 	/**
 	 * Creates a normal sequence of nodes.
-	 * 
-	 * @return an iterator for the sequence of nodes.
 	 */
 	protected Iterator createTestSequence() {
 		List result = new ArrayList();
 		
 		// create nodes
-		StartNode s1 = new StartNode("0", "abc");
-		StartNode s2 = new StartNode("1", "abc");
-		GenerationNode g1 = new GenerationNode("0", "1", new InsertOperation(1, "1"));
-		GenerationNode g2 = new GenerationNode("1", "2", new InsertOperation(2, "2"));
-		ReceptionNode r1 = new ReceptionNode("0", "2");
-		ReceptionNode r2 = new ReceptionNode("1", "1");
+		StartNode s1 = new StartNode("0", "abc", 0);
+		StartNode s2 = new StartNode("1", "abc", 1);
+		DoNode g1 = new DoNode("0", "1", new InsertOperation(1, "1"));
+		DoNode g2 = new DoNode("1", "2", new InsertOperation(2, "2"));
+		ReceptionNode r1 = new SimpleReceptionNode("0", "2");
+		ReceptionNode r2 = new SimpleReceptionNode("1", "1");
 		EndNode e1 = new EndNode("0", "abc");
 		EndNode e2 = new EndNode("1", "abc");
 		
@@ -127,15 +195,9 @@ public class ExecuteVisitorTest extends TestCase {
 	}
 	
 	private static class AlgorithmTestFactoryStub implements AlgorithmTestFactory {
-		/**
-		 * {@inheritDoc}
-		 */
-		public Algorithm createAlgorithm(int siteId) {
+		public Algorithm createAlgorithm(int siteId, Object param) {
 			return new AlgorithmStub();
 		}
-		/**
-		 * {@inheritDoc}
-		 */
 		public DocumentModel createDocument(String state) {
 			return new DocumentModel() {
 				public void apply(Operation operation) {
@@ -146,9 +208,6 @@ public class ExecuteVisitorTest extends TestCase {
 				}
 			};
 		}
-		/**
-		 * {@inheritDoc}
-		 */
 		public Timestamp createTimestamp() {
 			return new Timestamp() { };
 		}
@@ -157,39 +216,22 @@ public class ExecuteVisitorTest extends TestCase {
 	private static class AlgorithmStub implements Algorithm {
 		private DocumentModel doc;
 		private Timestamp timestamp;
-		/**
-		 * {@inheritDoc}
-		 */
 		public DocumentModel getDocument() {
 			return doc;
 		}
-		/**
-		 * {@inheritDoc}
-		 */
 		public void init(DocumentModel doc, Timestamp timestamp) {
 			this.doc = doc;
 			this.timestamp = timestamp;
-		}	
-		/**
-		 * {@inheritDoc}
-		 */
+		}			
 		public void siteRemoved(int siteId) {
 	
 		}
-		/**
-		 * {@inheritDoc}
-		 */
 		public void siteAdded(int siteId) {
 	
-		}	
-		/**
-		 * {@inheritDoc}
-		 */
+		}			
 		public void receiveRequest(Request req) {
+	
 		}
-		/**
-		 * {@inheritDoc}
-		 */
 		public Request generateRequest(final Operation op) {
 			return new Request() {
 				public Timestamp getTimestamp() {
@@ -205,15 +247,9 @@ public class ExecuteVisitorTest extends TestCase {
 			
 			};
 		}
-		/**
-		 * {@inheritDoc}
-		 */
 		public Request undo() {
 			return null;
 		}
-		/**
-		 * {@inheritDoc}
-		 */
 		public Request redo() {
 			return null;
 		}

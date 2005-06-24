@@ -18,35 +18,25 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package ch.iserver.ace.test;
+package ch.iserver.ace.test.jupiter;
 
-import ch.iserver.ace.algorithm.Request;
+import ch.iserver.ace.test.AlgorithmTestFactory;
+import ch.iserver.ace.test.XMLScenarioLoader;
+import ch.iserver.ace.test.NodeVisitor;
+import ch.iserver.ace.test.ScenarioLoader;
+
 
 /**
- * This interface represents a node that receives requests. The
- * requests are received by a call to {@link #setRequest(Request)}.
+ *
  */
-public interface ReceptionNode extends Node {
+public abstract class TwoWayTestCase extends JupiterTestCase {
 
-	/**
-	 * Sets the request to be received by this node.
-	 * 
-	 * @param request the request to be received
-	 */
-	public void setRequest(Request request);
-
-	/**
-	 * Gets the request to be received by this node.
-	 * 
-	 * @return the request to be received
-	 */
-	public Request getRequest();
+	protected NodeVisitor createExecuteVisitor(AlgorithmTestFactory factory) {
+		return new TwoWayExecuteVisitor(factory);
+	}
 	
-	/**
-	 * Gets the referenced operation id of this node.
-	 * 
-	 * @return the operation id
-	 */
-	public String getReference();
-
+	protected ScenarioLoader createScenarioLoader() {
+		return new XMLScenarioLoader();
+	}
+	
 }

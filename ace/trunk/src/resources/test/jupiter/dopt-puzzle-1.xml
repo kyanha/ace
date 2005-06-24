@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scenario initial="abcdefg" final="bcdfg">
-
+<jupiter-scenario initial="abcdefg" final="bcdfg">
+       
+    <server>
+        <relay ref="1" id="10"/>
+        <relay ref="2" id="20"/>
+        <relay ref="3" id="30"/>
+    </server>
+    
     <site id="1">
         <generate id="1">
             <operation type="ch.iserver.ace.text.DeleteOperation">
@@ -8,8 +14,8 @@
                 <property name="text" value="a"/>
             </operation>
         </generate>
-        <receive ref="2"/>
-        <receive ref="3"/>
+        <receive ref="20"/>
+        <receive ref="30"/>
     </site>
     
     <site id="2">
@@ -25,7 +31,7 @@
                 <property name="text" value="e"/>
             </operation>
         </generate>
-        <receive ref="1"/>
+        <receive ref="10"/>
     </site>
     
-</scenario>
+</jupiter-scenario>

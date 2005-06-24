@@ -3,13 +3,6 @@ package ch.iserver.ace.test;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-import ch.iserver.ace.test.AlgorithmTestFactory;
-import ch.iserver.ace.test.DefaultScenarioBuilder;
-import ch.iserver.ace.test.DefaultScenarioLoader;
-import ch.iserver.ace.test.ExecuteVisitor;
-import ch.iserver.ace.test.Scenario;
-import ch.iserver.ace.test.ScenarioLoader;
-
 import junit.framework.TestCase;
 
 /**
@@ -31,11 +24,11 @@ public abstract class AlgorithmTestCase extends TestCase
 	 */
 	protected void execute(InputStream stream) throws Exception {
 		assertNotNull(stream);
-		ScenarioLoader loader = new DefaultScenarioLoader();
+		ScenarioLoader loader = createScenarioLoader();
 		DefaultScenarioBuilder builder = new DefaultScenarioBuilder();
 		loader.loadScenario(builder, stream);
 		Scenario scenario = builder.getScenario();
-		ExecuteVisitor visitor = new ExecuteVisitor(this);
+		NodeVisitor visitor = createExecuteVisitor(this);
 		scenario.accept(visitor);
 	}
 	
@@ -46,5 +39,9 @@ public abstract class AlgorithmTestCase extends TestCase
 		}
 		execute(stream);
 	}
+
+	protected abstract ScenarioLoader createScenarioLoader();
+
+	protected abstract NodeVisitor createExecuteVisitor(AlgorithmTestFactory factory);
 		
 }

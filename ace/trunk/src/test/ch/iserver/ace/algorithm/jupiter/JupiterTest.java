@@ -21,117 +21,61 @@
 
 package ch.iserver.ace.algorithm.jupiter;
 
-import ch.iserver.ace.DocumentModel;
-import ch.iserver.ace.algorithm.Algorithm;
-import ch.iserver.ace.algorithm.Timestamp;
-import ch.iserver.ace.test.AlgorithmTestCase;
-import ch.iserver.ace.test.TestDocumentModel;
-import ch.iserver.ace.text.GOTOInclusionTransformation;
+import ch.iserver.ace.test.jupiter.TwoWayTestCase;
+
 
 /**
  * Test class for testing the jupiter algorithm implementation
  * with the test framework.
  */
-public class JupiterTest extends AlgorithmTestCase {
+public class JupiterTest extends TwoWayTestCase {
 	
-	/**
-	 * @throws Exception
-	 */
 	public void testPuzzleOne() throws Exception {
 		execute("/test/puzzle.xml");
 	}
 	
-	/**
-	 * @throws Exception
-	 */
 	public void testPuzzleTwo() throws Exception {
 		execute("/test/dopt-puzzle-1.xml");
 	}
 	
-	/**
-	 * @throws Exception
-	 */
 	public void testPuzzleThree() throws Exception {
 		execute("/test/ecscw03-fig3.xml");
 	}
 	
-	/**
-	 * @throws Exception
-	 */
 	public void testInsertInsert() throws Exception {
 		execute("/test/insert-insert.xml");
 	}
 	
-	/**
-	 * @throws Exception
-	 */
 	public void testMultiStepPathDivergence() throws Exception {
 		execute("/test/multistep-path-divergence.xml");
 	}
 	
-	/**
-	 * @throws Exception
-	 */
 	public void testMultiStepPathDivergenceInverse() throws Exception {
 		execute("/test/multistep-path-divergence-inverse.xml");
 	}
 	
-	/**
-	 * @throws Exception
-	 */
 	public void testMultiStepPathDivergenceInverse_4_2() throws Exception {
 		execute("/test/multistep-path-divergence-4-2.xml");
 	}
 	
-	/**
-	 * @throws Exception
-	 */
 	public void testPartialConcurrency() throws Exception {
 		execute("/test/partial-concurrency.xml");
 	}
 	
-	/**
-	 * @throws Exception
-	 */
 	public void testDeleteDelete() throws Exception {
 		execute("/test/delete-delete-1.xml");
 	}
 	
-	/**
-	 * @throws Exception
-	 */
 	public void testSplitOperation() throws Exception {
 		execute("/test/splitoperation-1.xml");
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
-	public Algorithm createAlgorithm(int siteId) {
-		isClient = (algoCount % 2 == 1) ? false : true;
-		++algoCount;
-		Jupiter jupiter = new Jupiter(siteId, isClient);
-		jupiter.setInclusionTransformation(new GOTOInclusionTransformation());
-		return jupiter;
+	public void testUndo() throws Exception {
+		execute("/test/undo.xml");
 	}
 	
-	//a flag not to be set on the algorithm, in order to have a client and a server
-	//algorithm instance.
-	private boolean isClient;
-	private int algoCount = 0;
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public Timestamp createTimestamp() {
-		return new JupiterVectorTime(0, 0);
+	public void testRedo() throws Exception {
+		execute("/test/redo.xml");
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
-	public DocumentModel createDocument(String state) {
-		return new TestDocumentModel(state);
-	}
-
 }

@@ -18,61 +18,66 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-
 package ch.iserver.ace.test;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import ch.iserver.ace.algorithm.Request;
 
 /**
- * Node implementation that represents the start of the site lifecycle
- * in a scenario. A start node should never have any predecessors
- * although that condition is not ensured by the implementation.
+ * A reception node represents the reception of a remote request.
+ * Such a node must have the following properties.
+ *
+ * <ul>
+ *  <li>at most one local successor</li>
+ *  <li>exactly two predecessor, one local the other remote</li>
+ * </ul>
  */
-public class StartNode extends AbstractNode {
-	/** how many sites where generated before this one */
-	private final int sites;
-	/** the initial state of the document at the site */
-	private final String state;
+public class SimpleReceptionNode extends AbstractNode implements ReceptionNode {
+	/** the request to process */
+	private Request request;
+	/** the reference to the operation */
+	private final String ref;
 	
 	/**
-	 * Creates a new start node belonging to the given site whose initial
-	 * state is given by <var>initialState</var>.
+	 * Creates a new reception node belonging to the given site and
+	 * referencing the given operation.
 	 * 
 	 * @param siteId the id of the site this node belongs to
-	 * @param initialState the initial state at the site
+	 * @param ref the reference to the received operation
 	 */
-	public StartNode(String siteId, String initialState, int sites) {
+	public SimpleReceptionNode(String siteId, String ref) {
 		super(siteId);
-		this.state = initialState;
-		this.sites = sites;
+		this.ref = ref;
 	}
 	
 	/**
-	 * Gets the initial state at the local site.
+	 * Gets the reference to the operation that is to be received
+	 * by this node.
 	 * 
-	 * @return the initial state
+	 * @return the reference to the operation
 	 */
-	public String getState() {
-		return state;
+	public String getReference() {
+		return ref;
 	}
 	
 	/**
-	 * Gets the number of sites generated before this one.
-	 * 
-	 * @return the number of sites generated before this one
+	 * @see ch.iserver.ace.test.ReceptionNode#setRequest(ch.iserver.ace.algorithm.Request)
 	 */
-	public int getSites() {
-		return sites;
+	public void setRequest(Request request) {
+		this.request = request;
 	}
 	
 	/**
-	 * Gets a list of successors. A start node has zero or one
-	 * successor. If there is a local successor, it is the only
-	 * successor of this node.
-	 * 
-	 * @return the list of successors (at most one)
+	 * @see ch.iserver.ace.test.ReceptionNode#getRequest()
+	 */
+	public Request getRequest() {
+		return request;
+	}
+	
+	/**
+	 * @inheritDoc
 	 */
 	public List getSuccessors() {
 		List result = new ArrayList();
@@ -81,21 +86,19 @@ public class StartNode extends AbstractNode {
 		}
 		return result;
 	}
-		
+	
 	/**
-	 * {@inheritDoc}
+	 * @inheritDoc
 	 */
 	public void accept(NodeVisitor visitor) {
 		visitor.visit(this);
 	}
 	
 	/**
-	 * {@inheritDoc}
+	 * @inheritDoc
 	 */
 	public String toString() {
-		return getClass().getName() + "[site=" + getSiteId()
-				+ ",state=" + state 
-				+ "]";
+		return getClass().getName() + "[site=" + getSiteId() + ",ref=" + ref + "]";
 	}
 	
 }

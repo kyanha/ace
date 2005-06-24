@@ -1,31 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- This scenario was taken from the paper 'Concurrent Operations in a 
+     Distributed and Mobile Collaborative Environment' figure 3. -->
 <scenario initial="telefone" final="telephone">
-    <!-- This scenario was taken from the paper 'Concurrent Operations in a 
-		Distributed and Mobile Collaborative Environment' figure 3. -->
-    <operation id="1" type="ch.iserver.ace.text.InsertOperation">
-        <property name="position" value="4"/>
-        <property name="text" value="p"/>
-    </operation>
-    
-    <operation id="2" type="ch.iserver.ace.text.InsertOperation">
-        <property name="position" value="5"/>
-        <property name="text" value="h"/>
-    </operation>
-	
-    <operation id="3" type="ch.iserver.ace.text.DeleteOperation">
-        <property name="position" value="4"/>
-        <property name="text" value="f"/>
-    </operation>
     
     <site id="1">
-        <generate ref="1"/>
-        <generate ref="2"/>
+        <generate id="1">
+            <operation type="ch.iserver.ace.text.InsertOperation">
+                <property name="position" value="4"/>
+                <property name="text" value="p"/>
+            </operation>
+        </generate>
+        <generate id="2">
+            <operation type="ch.iserver.ace.text.InsertOperation">
+                <property name="position" value="5"/>
+                <property name="text" value="h"/>
+            </operation>
+        </generate>
         <receive ref="3"/>
     </site>
     
     <site id="2">
-        <generate ref="3"/>		
+        <generate id="3">
+            <operation type="ch.iserver.ace.text.DeleteOperation">
+                <property name="position" value="4"/>
+                <property name="text" value="f"/>
+            </operation>
+        </generate>		
         <receive ref="1"/>
 	    <receive ref="2"/>	
     </site>
+    
 </scenario>

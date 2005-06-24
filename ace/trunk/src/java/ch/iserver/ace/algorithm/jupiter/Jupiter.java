@@ -566,12 +566,13 @@ public class Jupiter implements Algorithm {
 		
 		// get list of remote operations the redo operation has to transform against
 		int baseOpCount = ((JupiterVectorTime)req.getTimestamp()).getRemoteOperationCount();
-		ArrayList transformTargets = (ArrayList)undoManager.getRemoteRequests(baseOpCount);
+		List transformTargets = undoManager.getRemoteRequests(baseOpCount);
 		
 		// transform op with all operations in the list
 		Iterator iter = transformTargets.iterator();
 		while(iter.hasNext()) {
-			op = inclusion.transform(op, (Operation)iter.next());
+			Operation other = ((Request) iter.next()).getOperation();
+			op = inclusion.transform(op, other);
 		}
 		
 		// generate request

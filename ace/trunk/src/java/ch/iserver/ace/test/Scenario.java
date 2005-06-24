@@ -25,45 +25,50 @@ import java.util.Collection;
 import java.util.Iterator;
 
 /**
- * 
- *
+ * This class represents a scenerio. It contains the scenario graph.
  */
 public class Scenario {
+	/** the initial state of the scenario */
 	private String initialState;
+	/** the expected final state of the scenario */
 	private String finalState;
+	/** the collection of nodes */
 	private Collection nodes;
 	
 	/**
-	 * 
-	 * @param initialState
-	 * @param finalState
-	 * @param nodes
+	 * Creates a new scenario with the given initial state, final state
+	 * and graph of nodes.
 	 */
 	public Scenario(String initialState, String finalState, Collection nodes) { 
 		this.initialState = initialState;
 		this.finalState = finalState;
 		this.nodes = nodes;
 	}
-		
+	
 	/**
-	 * 
-	 * @return String
+	 * Gets the initial state of the scenario.
+	 *
+	 * @return the initial state
 	 */
 	public String getInitialState() {
 		return initialState;
 	}
 	
 	/**
-	 * 
-	 * @return String
+	 * Gets the final state of the scenario.
+	 *
+	 * @return the final state
 	 */
 	public String getFinalState() {
 		return finalState;
 	}
-			
+	
 	/**
-	 * 
-	 * @param visitor
+	 * Accepts the given node visitor that gets called back
+	 * for each node in the graph. The callbacks occur in 
+	 * topological order.
+	 *
+	 * @param visitor the node visitor that visits the nodes
 	 */
 	public void accept(NodeVisitor visitor) {
 		Iterator it = nodes.iterator();

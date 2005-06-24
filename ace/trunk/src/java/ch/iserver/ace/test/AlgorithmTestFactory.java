@@ -38,7 +38,7 @@ public interface AlgorithmTestFactory {
 	 * @param siteId		the site id
 	 * @return 			a new algorithm instance
 	 */
-	public Algorithm createAlgorithm(int siteId);
+	public Algorithm createAlgorithm(int siteId, Object parameter);
 	
 	/**
 	 * Creates a new timestamp. This must be an initial timestamp that
