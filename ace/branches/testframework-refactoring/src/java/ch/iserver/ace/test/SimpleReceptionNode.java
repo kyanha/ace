@@ -62,14 +62,14 @@ public class SimpleReceptionNode extends AbstractNode implements ReceptionNode {
 		return ref;
 	}
 	
-	/* (non-Javadoc)
+	/**
 	 * @see ch.iserver.ace.test.ReceptionNode#setRequest(ch.iserver.ace.algorithm.Request)
 	 */
 	public void setRequest(Request request) {
 		this.request = request;
 	}
 	
-	/* (non-Javadoc)
+	/**
 	 * @see ch.iserver.ace.test.ReceptionNode#getRequest()
 	 */
 	public Request getRequest() {
