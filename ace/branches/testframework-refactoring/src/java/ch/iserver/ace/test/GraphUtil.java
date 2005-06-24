@@ -29,12 +29,22 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
+ * Utility class that contains graph related methods.
  */
 public class GraphUtil {
 
+	/** avoid instantiation of this class */
 	private GraphUtil() { }
 	
+	/**
+	 * Sorts the given collection of nodes. The nodes are
+	 * expected to form a directed acyclic graph. If this is
+	 * not the case, a ScenarioException is thrown. The result
+	 * is a topologically sorted list of nodes.
+	 *
+	 * @param nodes a collection of Node objects to be sorted
+	 * @return a topologically sorted list of nodes
+	 */
 	public static List topologicalSort(Collection nodes) {
 		List result = new ArrayList();
 		
@@ -69,6 +79,9 @@ public class GraphUtil {
 		return result;
 	}
 	
+	/**
+	 * Inner class used to initialize the incount of nodes.
+	 */
 	private static class Incount implements NodeVisitor {
 		private Map map = new HashMap();
 		private List start = new ArrayList();
