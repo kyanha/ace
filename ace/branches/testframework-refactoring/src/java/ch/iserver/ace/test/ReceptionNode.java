@@ -23,7 +23,8 @@ package ch.iserver.ace.test;
 import ch.iserver.ace.algorithm.Request;
 
 /**
- * TODO: javadoc comment
+ * This interface represents a node that receives requests. The
+ * requests are received by a call to {@link #setRequest(Request)}.
  */
 public interface ReceptionNode extends Node {
 

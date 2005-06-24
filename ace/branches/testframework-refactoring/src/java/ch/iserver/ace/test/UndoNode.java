@@ -21,14 +21,36 @@
 package ch.iserver.ace.test;
 
 
+/**
+ * A node implementation that represents an undo generation event. This
+ * is a generation node. In contrast to a DoNode, no explicit operation
+ * is required as the operation is implicitely known by the algorithm.
+ */
 public class UndoNode extends AbstractGenerationNode {
 
+	/**
+	 * Creates a new undo node.
+	 * 
+	 * @param siteId the site id of the site this node resides on
+	 */
 	public UndoNode(String siteId) {
 		super(siteId);
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public void accept(NodeVisitor visitor) {
 		visitor.visit(this);
+	}
+
+	/**
+	 * @return a string representation of this node
+	 */
+	public String toString() {
+		return getClass().getName() + "["
+				+ "siteId=" + getSiteId()
+				+ "]";
 	}
 
 }

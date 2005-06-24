@@ -21,23 +21,47 @@
 package ch.iserver.ace.test;
 
 
+/**
+ * Node implementation that represents the generation of a redo operation.
+ * This is a generation node. The only difference to a DoNode is that
+ * this node does not need any operation. The operation to be redone
+ * is explicitely given (the algorithm implementation knows about it).
+ */
 public class RedoNode extends AbstractGenerationNode {
 	/** the id of this event */
 	private final String id;
 	
+	/**
+	 * Creates a new redo node for the given site. The id is used to
+	 * link this event to its successors (i.e. the receivers).
+	 * 
+	 * @param siteId the site id of the site where this node resides
+	 * @param id the id of the vent
+	 */
 	public RedoNode(String siteId, String id) {
 		super(siteId);
 		this.id = id;
 	}
 	
+	/**
+	 * Gets the event id of this node.
+	 * 
+	 * @return the id of this node
+	 */
 	public String getId() {
 		return id;
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public void accept(NodeVisitor visitor) {
 		visitor.visit(this);
 	}
 	
+	/**
+	 * @return a string representation of this node
+	 */
 	public String toString() {
 		return getClass().getName() + "["
 				+ "site=" + getSiteId()

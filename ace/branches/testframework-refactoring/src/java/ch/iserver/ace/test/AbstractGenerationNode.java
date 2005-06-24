@@ -21,10 +21,12 @@
 package ch.iserver.ace.test;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
- * A GenerationNode is an abstract base class for all classes that generate an
+ * An abstract base class for all classes that generate an
  * operation. Subclasses include nodes for doing, undoing and redoing
  * operations.
  */
@@ -32,7 +34,7 @@ public abstract class AbstractGenerationNode extends AbstractNode
 		implements GenerationNode {
 	
 	/** list of remote successors (nodes that receive from this node) */
-	private List remoteSuccessors = new ArrayList();
+	private Set remoteSuccessors = new HashSet();
 
 	protected AbstractGenerationNode(String siteId) {
 		super(siteId);
@@ -53,7 +55,7 @@ public abstract class AbstractGenerationNode extends AbstractNode
 	 * 
 	 * @return the list of remote successors
 	 */
-	public List getRemoteSuccessors() {
+	public Set getRemoteSuccessors() {
 		return remoteSuccessors;
 	}
 

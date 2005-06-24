@@ -21,13 +21,17 @@
 package ch.iserver.ace.test;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import ch.iserver.ace.algorithm.Request;
 
 /**
- * TODO: add javadoc comments
+ * Node implementation that represents a relay event on the server. The
+ * server receives operations from the clients and then relays it to the
+ * clients (after appropriate transformations have been done). This node
+ * exactly represents that event.
  */
 public class RelayNode extends AbstractNode implements ReceptionNode, GenerationNode {
 	/** the incoming request */
@@ -36,51 +40,91 @@ public class RelayNode extends AbstractNode implements ReceptionNode, Generation
 	private String reference;
 	/** the id of this generation event */
 	private String id;
-	/** list of remote successors */
-	private List remoteSuccessors;
-	
+	/** set of remote successors */
+	private Set remoteSuccessors;
 	/** predecessor of this node */
 	private Node predecessor;
 	
+	/**
+	 * Creates a new relay node residing at the given site, referencing the 
+	 * given event (receiving side) and having the given event id.
+	 * 
+	 * @param siteId the site id of the site this node resides on
+	 * @param reference the referenced event
+	 * @param id the event id
+	 */
 	public RelayNode(String siteId, String reference, String id) {
 		super(siteId);
 		this.reference = reference;
 		this.id = id;
-		this.remoteSuccessors = new LinkedList();
+		this.remoteSuccessors = new HashSet();
 	}
 	
+	/**
+	 * Gets the event id of this node
+	 * 
+	 * @return the id of this node
+	 */
 	public String getId() {
 		return id;
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public String getReference() {
 		return reference;
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public Request getRequest() {
 		return request;
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public void setRequest(Request request) {
 		this.request = request;
 	}
 	
+	/**
+	 * Gets the predecessor of this node or null if there is none.
+	 * 
+	 * @return the predecessor of this node
+	 */
 	public Node getPredecessor() {
 		return predecessor;
 	}
 
+	/**
+	 * Sets the predecessor of this node to the given object.
+	 * 
+	 * @param predecessor the new predecessor of this node
+	 */
 	public void setPredecessor(Node predecessor) {
 		this.predecessor = predecessor;
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public void addRemoteSuccessor(ReceptionNode successor) {
 		remoteSuccessors.add(successor);
 	}
 	
-	public List getRemoteSuccessors() {
+	/**
+	 * @inheritDoc
+	 */
+	public Set getRemoteSuccessors() {
 		return remoteSuccessors;
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public List getSuccessors() {
 		List result = new ArrayList();
 		if (getLocalSuccessor() != null) {
@@ -90,12 +134,19 @@ public class RelayNode extends AbstractNode implements ReceptionNode, Generation
 		return result;
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public void accept(NodeVisitor visitor) {
 		visitor.visit(this);
 	}
 	
+	/**
+	 * @return a string representation of this node
+	 */
 	public String toString() {
 		return getClass().getName() + "["
+				+ "siteId=" + getSiteId()
 				+ ",ref=" + getReference()
 				+ ",id=" + getId()
 				+ "]";
