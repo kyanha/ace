@@ -43,7 +43,7 @@ public class RelayNode extends AbstractNode implements ReceptionNode, Generation
 	/** set of remote successors */
 	private Set remoteSuccessors;
 	/** predecessor of this node */
-	private Node predecessor;
+	private Node localPredecessor;
 	
 	/**
 	 * Creates a new relay node residing at the given site, referencing the 
@@ -93,8 +93,8 @@ public class RelayNode extends AbstractNode implements ReceptionNode, Generation
 	 * 
 	 * @return the predecessor of this node
 	 */
-	public Node getPredecessor() {
-		return predecessor;
+	public Node getLocalPredecessor() {
+		return localPredecessor;
 	}
 
 	/**
@@ -102,8 +102,8 @@ public class RelayNode extends AbstractNode implements ReceptionNode, Generation
 	 * 
 	 * @param predecessor the new predecessor of this node
 	 */
-	public void setPredecessor(Node predecessor) {
-		this.predecessor = predecessor;
+	public void setLocalPredecessor(Node predecessor) {
+		this.localPredecessor = predecessor;
 	}
 
 	/**

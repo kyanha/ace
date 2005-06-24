@@ -108,7 +108,7 @@ public class GraphUtil {
 		}
 		
 		public void visit(RelayNode node) {
-			if (node.getPredecessor() != null) {
+			if (node.getLocalPredecessor() != null) {
 				map.put(node, new Integer(2));
 			} else {
 				map.put(node, new Integer(1));

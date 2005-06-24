@@ -113,7 +113,6 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 		if (siteId == null) {
 			throw new ScenarioException("no previous startSite call");
 		}
-
 		Node node = new DoNode(siteId, id, op);
 		addNode(node);
 		Node pred = getPredecessor(siteId);
@@ -156,7 +155,6 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 		if (siteId == null) {
 			throw new ScenarioException("no previous startSite call");
 		}
-
 		Node node = new SimpleReceptionNode(siteId, ref);
 		addNode(node);
 		Node pred = getPredecessor(siteId);
@@ -172,8 +170,7 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 	public void addVerification(String expect) {
 		if (siteId == null) {
 			throw new ScenarioException("no previous startSite call");
-		}
-		
+		}		
 		Node node = new VerificationNode(siteId, expect);
 		addNode(node);
 		Node pred = getPredecessor(siteId);
@@ -186,10 +183,10 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 	 */
 	public void addRelay(String ref, String id) {
 		if (ref == null) {
-			throw new ScenarioException("operation reference cannot be null");
+			throw new IllegalArgumentException("operation reference cannot be null");
 		}
 		if (id == null) {
-			throw new ScenarioException("id cannot be null");
+			throw new IllegalArgumentException("id cannot be null");
 		}
 		RelayNode node = new RelayNode("server", ref, id);
 		addNode(node);
@@ -199,7 +196,7 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 		Node pred = getPredecessor(siteId);
 		if (pred != null) {
 			pred.setLocalSuccessor(node);
-			node.setPredecessor(pred);
+			node.setLocalPredecessor(pred);
 		}
 		setPredecessor(siteId, node);
 		// 3) generation
