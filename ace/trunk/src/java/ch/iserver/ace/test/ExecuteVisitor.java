@@ -248,7 +248,7 @@ public class ExecuteVisitor implements NodeVisitor {
 	 * @throws ScenarioException
 	 *             if there is no algorithm for the site
 	 */
-	protected Algorithm getAlgorithm(String siteId) {
+	public Algorithm getAlgorithm(String siteId) {
 		Algorithm algo = (Algorithm) algorithms.get(siteId);
 		if (algo == null) {
 			throw new ScenarioException("unknown site: " + siteId);

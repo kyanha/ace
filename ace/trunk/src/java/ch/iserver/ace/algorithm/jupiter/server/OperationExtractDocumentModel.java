@@ -51,5 +51,9 @@ public class OperationExtractDocumentModel implements DocumentModel {
     public Operation getOperation() {
         return operation;
     }
+    
+    public boolean equals(Object obj) {
+    		return obj instanceof OperationExtractDocumentModel;
+    }
 
 }
