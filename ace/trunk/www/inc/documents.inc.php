@@ -9,7 +9,9 @@
 </ul>
 <h3>Documentation</h3>
 <ul>
+  <li><a href="http://ace.iserver.ch:81/repos/ace/ace/trunk/doc/pdf/finalreport.pdf">Final Report (English)</a></li>
   <li><a href="http://ace.iserver.ch:81/repos/ace/ace/trunk/doc/pdf/algorithm.pdf">Report Evaluation Algorithm (English)</a></li>
+  <li><a href="http://ace.iserver.ch:81/repos/ace/ace/trunk/doc/pdf/algorithm-impl.pdf">Report Implementation Algorithm (English)</a></li>
   <li><a href="http://ace.iserver.ch:81/repos/ace/ace/trunk/doc/pdf/testframework.pdf">Testframework (English)</a></li>
   <li><a href="http://ace.iserver.ch:81/repos/ace/ace/trunk/doc/pdf/network.pdf">Evaluation Report Network (English)</a></li>
   <li><a href="http://ace.iserver.ch:81/repos/ace/ace/trunk/doc/pdf/gui.pdf">Evaluation Report GUI (English)</a></li>
