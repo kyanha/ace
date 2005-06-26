@@ -36,6 +36,9 @@ import ch.iserver.ace.algorithm.Timestamp;
  */
 public class ExecuteVisitorTest extends TestCase {
 	
+	/**
+	 * Tests that visiting a start node does what its supposed to do.
+	 */
 	public void testStartNode() {
 		// setup mock objects
 		MockControl control = MockControl.createControl(AlgorithmTestFactory.class);
@@ -70,7 +73,10 @@ public class ExecuteVisitorTest extends TestCase {
 		control.verify();
 		algoCtrl.verify();
 	}
-		
+	
+	/**
+	 * Tests that visiting a do node does work correctly.
+	 */
 	public void testVisitDoNode() {
 		// setup mock objects
 		MockControl rcptCtrl1 = MockControl.createControl(ReceptionNode.class);
@@ -113,6 +119,9 @@ public class ExecuteVisitorTest extends TestCase {
 		rcptCtrl2.verify();
 	}
 	
+	/**
+	 * Tests that visiting an undo node works correctly.
+	 */
 	public void testVisitUndoNode() {
 		// setup mock objects
 		MockControl rcptCtrl1 = MockControl.createControl(ReceptionNode.class);
@@ -155,6 +164,9 @@ public class ExecuteVisitorTest extends TestCase {
 		rcptCtrl2.verify();
 	}
 	
+	/**
+	 * Tests that the visiting of a redo node works correctly.
+	 */
 	public void testVisitRedoNode() {
 		// setup mock objects
 		MockControl rcptCtrl1 = MockControl.createControl(ReceptionNode.class);
@@ -231,6 +243,10 @@ public class ExecuteVisitorTest extends TestCase {
 		algoCtrl.verify();
 	}
 	
+	/**
+	 * Tests that a verification node does not fail if the verification
+	 * of the document state is successful.
+	 */
 	public void testVerificationNode() {
 		// setup mock objects
 		MockControl control = MockControl.createControl(AlgorithmTestFactory.class);
@@ -265,6 +281,10 @@ public class ExecuteVisitorTest extends TestCase {
 		algoCtrl.verify();
 	}
 
+	/**
+	 * Tests that a verification node fails if the document state does
+	 * not match the expected state.
+	 */
 	public void testVerificationNodeFail() {
 		// setup mock objects
 		MockControl control = MockControl.createControl(AlgorithmTestFactory.class);
@@ -304,6 +324,10 @@ public class ExecuteVisitorTest extends TestCase {
 		algoCtrl.verify();
 	}
 	
+	/**
+	 * Tests that the verification of an end node does not fail if
+	 * the document state is equal to the expected state.
+	 */
 	public void testEndNode() {
 		// setup mock objects
 		MockControl control = MockControl.createControl(AlgorithmTestFactory.class);
@@ -338,6 +362,10 @@ public class ExecuteVisitorTest extends TestCase {
 		algoCtrl.verify();
 	}
 
+	/**
+	 * Tests that the verification of an end node fails if the document
+	 * states are not equal.
+	 */
 	public void testEndNodeFail() {
 		// setup mock objects
 		MockControl control = MockControl.createControl(AlgorithmTestFactory.class);

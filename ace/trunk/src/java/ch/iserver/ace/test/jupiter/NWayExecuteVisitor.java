@@ -51,11 +51,24 @@ public class NWayExecuteVisitor extends ExecuteVisitor {
 	/** map from site ids to server side algorithms */
 	private Map serverAlgorithms;
 
+	/**
+	 * Creates a new NWayExecuteVisitor that uses the given
+	 * AlgorithmTestFactory to create algorithms, documents and
+	 * initial timestamps.
+	 * 
+	 * @param factory the factory
+	 */
 	public NWayExecuteVisitor(AlgorithmTestFactory factory) {
 		super(factory);
 		serverAlgorithms = new HashMap();
 	}
 
+	/**
+	 * Visits a StartNode. This method creates all the necessary
+	 * algorithms using the AlgorithmTestFactory. 
+	 * 
+	 * @param node the node to visit
+	 */
 	public void visit(StartNode node) {
 		LOG.info("visit: " + node);
 		String state = node.getState();
@@ -74,11 +87,20 @@ public class NWayExecuteVisitor extends ExecuteVisitor {
 		setServerAlgorithm(node.getSiteId(), algorithm);
 	}
 
+	/**
+	 * Visits a RelayNode. This method shows how the
+	 * server conceptually works. The implementation for the real server
+	 * uses threads and synchronization techniques that are not necessary
+	 * here.
+	 * 
+	 * @param node the node to visit
+	 */
 	public void visit(RelayNode node) {
 		LOG.info("visit: " + node);
 		String siteId = "" + node.getRequest().getSiteId();
 		Algorithm algo = getServerAlgorithm(siteId);
 		algo.receiveRequest(node.getRequest());
+		// TODO: remove dependency on OperationExtractDocumentModel
 		OperationExtractDocumentModel doc = (OperationExtractDocumentModel) 
 				algo.getDocument();
 		Operation op = doc.getOperation();
@@ -88,11 +110,20 @@ public class NWayExecuteVisitor extends ExecuteVisitor {
 			ReceptionNode remote = (ReceptionNode) succ.next();
 			algo = getServerAlgorithm(remote.getSiteId());
 			Request request = algo.generateRequest(op);
-			LOG.info("send " + node.getEventId() + " to " + remote.getSiteId() + " (" + request + ")");
 			remote.setRequest(request);
 		}
 	}
 
+	/**
+	 * Gets the server side algorithm for the given site. This method
+	 * throws a {@link ScenarioException} if there is no server-side
+	 * algorithm for the given side. The return value of this method
+	 * is never null.
+	 * 
+	 * @param siteId the site id of the site
+	 * @return the server side algorithm for the site
+	 * @throws ScenarioException if there is no server side algorithm
+	 */
 	protected Algorithm getServerAlgorithm(String siteId) {
 		Algorithm algo = (Algorithm) serverAlgorithms.get(siteId);
 		if (algo == null) {
@@ -101,8 +132,14 @@ public class NWayExecuteVisitor extends ExecuteVisitor {
 		return algo;
 	}
 	
+	/**
+	 * Sets the server side algorithm for the given site.
+	 * 
+	 * @param siteId the site
+	 * @param algorithm the server side algorithm for the site
+	 */
 	protected void setServerAlgorithm(String siteId, Algorithm algorithm) {
 		serverAlgorithms.put(siteId, algorithm);
 	}
-
+	
 }

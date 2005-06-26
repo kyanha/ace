@@ -13,6 +13,9 @@ import ch.iserver.ace.test.StartNode;
  */
 public class TwoWayExecuteVisitorTestCase extends TestCase {
 
+	/**
+	 * Tests the process of visiting a start node.
+	 */
 	public void testVisitStartNode() {
 		// setup mock objects
 		MockControl control = MockControl.createControl(AlgorithmTestFactory.class);
