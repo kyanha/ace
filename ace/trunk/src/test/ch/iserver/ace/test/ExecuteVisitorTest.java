@@ -103,7 +103,7 @@ public class ExecuteVisitorTest extends TestCase {
 		
 		// create test object
 		ExecuteVisitor visitor = new ExecuteVisitor(null);
-		visitor.addAlgorithm("0", algo);
+		visitor.setAlgorithm("0", algo);
 		
 		// replay
 		algoCtrl.replay();
@@ -148,7 +148,7 @@ public class ExecuteVisitorTest extends TestCase {
 		
 		// create test object
 		ExecuteVisitor visitor = new ExecuteVisitor(null);
-		visitor.addAlgorithm("0", algo);
+		visitor.setAlgorithm("0", algo);
 		
 		// replay
 		algoCtrl.replay();
@@ -193,7 +193,7 @@ public class ExecuteVisitorTest extends TestCase {
 		
 		// create test object
 		ExecuteVisitor visitor = new ExecuteVisitor(null);
-		visitor.addAlgorithm("0", algo);
+		visitor.setAlgorithm("0", algo);
 		
 		// replay
 		algoCtrl.replay();
@@ -221,7 +221,7 @@ public class ExecuteVisitorTest extends TestCase {
 
 		// create test object
 		ExecuteVisitor visitor = new ExecuteVisitor(null);
-		visitor.addAlgorithm("0", algo);
+		visitor.setAlgorithm("0", algo);
 		
 		// create nodes
 		ReceptionNode r = new SimpleReceptionNode("0", "2");
@@ -257,7 +257,7 @@ public class ExecuteVisitorTest extends TestCase {
 
 		// create test object
 		ExecuteVisitor visitor = new ExecuteVisitor(factory);
-		visitor.addAlgorithm("0", algo);
+		visitor.setAlgorithm("0", algo);
 		
 		// create nodes
 		VerificationNode v = new VerificationNode("0", "abc");
@@ -295,7 +295,7 @@ public class ExecuteVisitorTest extends TestCase {
 
 		// create test object
 		ExecuteVisitor visitor = new ExecuteVisitor(factory);
-		visitor.addAlgorithm("0", algo);
+		visitor.setAlgorithm("0", algo);
 		
 		// create nodes
 		VerificationNode v = new VerificationNode("0", "abc");
@@ -338,7 +338,7 @@ public class ExecuteVisitorTest extends TestCase {
 
 		// create test object
 		ExecuteVisitor visitor = new ExecuteVisitor(factory);
-		visitor.addAlgorithm("0", algo);
+		visitor.setAlgorithm("0", algo);
 		
 		// create nodes
 		EndNode e = new EndNode("0", "abc");
@@ -376,7 +376,7 @@ public class ExecuteVisitorTest extends TestCase {
 
 		// create test object
 		ExecuteVisitor visitor = new ExecuteVisitor(factory);
-		visitor.addAlgorithm("0", algo);
+		visitor.setAlgorithm("0", algo);
 		
 		// create nodes
 		EndNode v = new EndNode("0", "abc");

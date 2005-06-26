@@ -78,18 +78,6 @@ public class ExecuteVisitor implements NodeVisitor {
 	}
 	
 	/**
-	 * Adds an algorithm for the given site id. This method exists manly
-	 * for testing purposes. It helps to circumvent calling visit for
-	 * a start node in order to create an algorithm.
-	 * 
-	 * @param siteId the site id
-	 * @param algorithm the algorithm
-	 */
-	void addAlgorithm(String siteId, Algorithm algorithm) {
-		setAlgorithm(siteId, algorithm);
-	}
-
-	/**
 	 * Visits a start node. It initializes the algorithm at the site represented
 	 * by this node.
 	 * 
