@@ -32,9 +32,26 @@ import ch.iserver.ace.Operation;
 public interface Algorithm {
 
 	/**
+	 * Checks whether an undo is possible at the moment. If this
+	 * method returns true, a subsequent call to undo must succeed.
+	 * 
+	 * @return true iff an undo is possible
+	 */
+	public boolean canUndo();
+	
+	/**
+	 * Checks whether a redo is possible at the moment. If this
+	 * method returns true, a subsequent call to redo must succeed.
+	 * 
+	 * @return true iff a redo is possible
+	 */
+	public boolean canRedo();
+	
+	/**
 	 * Undo the last local operation.
 	 * 
 	 * @return the request to be sent to other sites
+	 * @throws javax.swing.undo.CannotUndoException iff an undo is impossible
 	 */
 	public Request undo();
 	
@@ -42,6 +59,7 @@ public interface Algorithm {
 	 * Redo the last undone local operation.
 	 * 
 	 * @return the request to be sent to other sites
+	 * @throws javax.swing.undo.CannotRedoException iff a redo is impossible
 	 */
 	public Request redo();
 	
