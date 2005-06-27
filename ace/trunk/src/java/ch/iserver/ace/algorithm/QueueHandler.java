@@ -32,7 +32,7 @@ import ch.iserver.ace.util.SynchronizedQueue;
  */
 public class QueueHandler extends Thread {
 
-	private static Logger LOG = Logger.getLogger(QueueHandler.class);
+	private static final Logger LOG = Logger.getLogger(QueueHandler.class);
 
 	/**
 	 * The priority which is given to local operations when processing the

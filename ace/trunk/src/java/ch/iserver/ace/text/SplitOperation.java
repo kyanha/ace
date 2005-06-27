@@ -65,7 +65,7 @@ public class SplitOperation implements Operation {
 	/**
 	 * Sets the first operation.
 	 * 
-	 * @param op1
+	 * @param op1 the first operation
 	 */
 	public void setFirst(Operation op1) {
 		this.op1 = op1;
@@ -83,7 +83,7 @@ public class SplitOperation implements Operation {
 	/**
 	 * Sets the second operation.
 	 * 
-	 * @param op2
+	 * @param op2 the second operation
 	 */
 	public void setSecond(Operation op2) {
 		this.op2 = op2;

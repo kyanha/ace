@@ -52,7 +52,7 @@ public interface Request extends Serializable {
 
 	/**
 	 * Gets the timestamp that specifies the definition context of the enclosed
-	 * operation
+	 * operation.
 	 * 
 	 * @return the timestamp of the definition context
 	 */

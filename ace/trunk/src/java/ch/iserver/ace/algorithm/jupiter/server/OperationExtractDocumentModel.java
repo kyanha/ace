@@ -26,34 +26,46 @@ import ch.iserver.ace.DocumentModel;
 import ch.iserver.ace.Operation;
 
 /**
- * This is a dummy document model whose sole purpose is to extract
- * the last operation applied to the document.
+ * This is a dummy document model whose sole purpose is to extract the last
+ * operation applied to the document.
  */
 public class OperationExtractDocumentModel implements DocumentModel {
 
-	private static Logger LOG = Logger.getLogger(OperationExtractDocumentModel.class);
+	private static final Logger LOG = Logger
+			.getLogger(OperationExtractDocumentModel.class);
+
+	private Operation operation;
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void apply(Operation operation) {
+		LOG.info("oem.apply(" + operation + ")");
+		this.operation = operation;
+	}
+
+	/**
+	 * Returns the latest operation applied.
+	 * 
+	 * @return the latest operation applied
+	 */
+	public Operation getOperation() {
+		return operation;
+	}
+
+	/**
+	 * @param obj the object to compare
+	 * @return true iff <var>obj</var> is equal to this object 
+	 */
+	public boolean equals(Object obj) {
+		return obj instanceof OperationExtractDocumentModel;
+	}
 	
-    private Operation operation;
-    
-    /**
-     * {@inheritDoc}
-     */
-    public void apply(Operation operation) {
-    		LOG.info("oem.apply("+operation+")");
-        this.operation = operation;
-    }
-    
-    /**
-     * Returns the latest operation applied.
-     * 
-     * @return the latest operation applied
-     */
-    public Operation getOperation() {
-        return operation;
-    }
-    
-    public boolean equals(Object obj) {
-    		return obj instanceof OperationExtractDocumentModel;
-    }
+	/**
+	 * @return the hash code of this object
+	 */
+	public int hashCode() {
+		return 31;
+	}
 
 }

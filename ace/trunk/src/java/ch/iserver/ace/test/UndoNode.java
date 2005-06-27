@@ -32,6 +32,7 @@ public class UndoNode extends AbstractGenerationNode {
 	 * Creates a new undo node.
 	 * 
 	 * @param siteId the site id of the site this node resides on
+	 * @param eventId the id of the event
 	 */
 	public UndoNode(String siteId, String eventId) {
 		super(siteId, eventId);

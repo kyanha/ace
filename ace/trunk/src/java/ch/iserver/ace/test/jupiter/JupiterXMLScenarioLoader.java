@@ -34,15 +34,25 @@ import ch.iserver.ace.test.ScenarioBuilder;
  */
 public class JupiterXMLScenarioLoader extends XMLScenarioLoader {
 
+	/**
+	 * @inheritDoc
+	 */
 	protected InputStream getSchema() {
 		return getClass().getResourceAsStream("/test/jupiter-scenario.xsd");
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	protected void processRootChildren(ScenarioBuilder builder, Element root) {
 		super.processRootChildren(builder, root);
 		processServer(builder, root.getChild("server"));
 	}
 	
+	/**
+	 * @param builder the scenario builder
+	 * @param serverEl the server element to process
+	 */
 	protected void processServer(ScenarioBuilder builder, Element serverEl) {
 		Iterator it = serverEl.getChildren("relay").iterator();
 		while (it.hasNext()) {

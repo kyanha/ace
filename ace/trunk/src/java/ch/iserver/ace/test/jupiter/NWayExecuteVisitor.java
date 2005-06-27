@@ -45,10 +45,11 @@ import ch.iserver.ace.test.StartNode;
  * and second it knows how to handle relay nodes.
  */
 public class NWayExecuteVisitor extends ExecuteVisitor {
-	/** private logger instance */
-	private static final Logger LOG = Logger.getLogger(NWayExecuteVisitor.class);
+	/** private logger instance. */
+	private static final Logger LOG = 
+			Logger.getLogger(NWayExecuteVisitor.class);
 	
-	/** map from site ids to server side algorithms */
+	/** map from site ids to server side algorithms. */
 	private Map serverAlgorithms;
 
 	/**

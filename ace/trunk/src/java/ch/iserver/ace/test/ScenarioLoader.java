@@ -34,7 +34,8 @@ public interface ScenarioLoader {
 	 * 
 	 * @param builder the builder that processes the events
 	 * @param source the source from where to load the scenario
-	 * @throws ScenarioLoaderException if the input is illegal or contains errors
+	 * @throws ScenarioLoaderException if the input is illegal or contains 
+	 *         errors
 	 * @throws IOException in case of IO related problems
 	 */
 	public void loadScenario(ScenarioBuilder builder, InputStream source) 

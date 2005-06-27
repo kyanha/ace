@@ -25,11 +25,11 @@ package ch.iserver.ace.test;
  * Scenario exception thrown while verifying the final document state.
  */
 public class VerificationException extends ScenarioException {
-	/** the site of failed verification */
+	/** the site of failed verification. */
 	private String siteId;
-	/** the expected content */
+	/** the expected content. */
 	private String expected;
-	/** the effective content */
+	/** the effective content. */
 	private String was;
 	
 	/**
@@ -56,7 +56,7 @@ public class VerificationException extends ScenarioException {
 	
 	/**
 	 * 
-	 * @return String
+	 * @return the expected state
 	 */
 	public String getExpected() {
 		return expected;
@@ -64,7 +64,7 @@ public class VerificationException extends ScenarioException {
 
 	/**
 	 * 
-	 * @return String
+	 * @return the actual state
 	 */
 	public String getWas() {
 		return was;

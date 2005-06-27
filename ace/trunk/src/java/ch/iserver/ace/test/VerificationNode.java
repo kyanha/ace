@@ -29,7 +29,7 @@ import java.util.List;
  * a site at an arbitrary time in the lifecycle of a site. 
  */
 public class VerificationNode extends AbstractNode {
-	/** the expected state at the site */
+	/** the expected state at the site. */
 	private final String state;
 
 	/**
@@ -53,6 +53,9 @@ public class VerificationNode extends AbstractNode {
 		return state;
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public List getSuccessors() {
 		List result = new ArrayList();
 		if (getLocalSuccessor() != null) {
@@ -61,10 +64,16 @@ public class VerificationNode extends AbstractNode {
 		return result;
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public void accept(NodeVisitor visitor) {
 		visitor.visit(this);
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public String toString() {
 		return getClass().getName() + "["
 		        + "site=" + getSiteId()

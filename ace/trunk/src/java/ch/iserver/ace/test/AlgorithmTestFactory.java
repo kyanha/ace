@@ -36,6 +36,7 @@ public interface AlgorithmTestFactory {
 	 * to test should be returned.
 	 * 
 	 * @param siteId		the site id
+	 * @param parameter  an optional factory dependent parameter
 	 * @return 			a new algorithm instance
 	 */
 	public Algorithm createAlgorithm(int siteId, Object parameter);

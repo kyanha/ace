@@ -29,11 +29,12 @@ import ch.iserver.ace.Operation;
  * <ul>
  *  <li>exactly one predecessor node</li>
  *  <li>exactly n successor nodes where n is the number of sites</li>
- *  <li>exactly one successor must be a local successor (i.e. from the same site)</li>
+ *  <li>exactly one successor must be a local successor 
+ *      (i.e. from the same site)</li>
  * </ul>
  */
 public class DoNode extends AbstractGenerationNode {
-	/** the operation to be generated */
+	/** the operation to be generated. */
 	private Operation operation;
 		
 	/**

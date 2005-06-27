@@ -31,17 +31,18 @@ import java.util.List;
  * although that condition is not ensured by the implementation.
  */
 public class StartNode extends AbstractNode {
-	/** how many sites where generated before this one */
+	/** how many sites where generated before this one. */
 	private final int sites;
-	/** the initial state of the document at the site */
+	/** the initial state of the document at the site. */
 	private final String state;
 	
 	/**
 	 * Creates a new start node belonging to the given site whose initial
 	 * state is given by <var>initialState</var>.
 	 * 
-	 * @param siteId the id of the site this node belongs to
-	 * @param initialState the initial state at the site
+	 * @param siteId  the id of the site this node belongs to
+	 * @param initialState  the initial state at the site
+	 * @param sites  the number of sites generated prior to this site
 	 */
 	public StartNode(String siteId, String initialState, int sites) {
 		super(siteId);

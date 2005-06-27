@@ -31,7 +31,7 @@ import java.util.List;
  * {@link ch.iserver.ace.test.Node#getLocalSuccessor()} returns always null.
  */
 public class EndNode extends AbstractNode {
-	/** the expected final state at the site */
+	/** the expected final state at the site. */
 	private String state;
 	
 	/**

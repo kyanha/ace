@@ -31,7 +31,7 @@ public class JupiterException extends RuntimeException {
 	/**
 	 * Constructor.
 	 */
-	public JupiterException() {}
+	public JupiterException() { }
 	
 	/**
 	 * Constructor.

@@ -45,8 +45,10 @@ public interface Operation extends Serializable {
 	public boolean isUndo();
 	
 	/**
+	 * Sets the original operation if this operation was
+	 * transformed.
 	 * 
-	 * @param op
+	 * @param op the origional operation
 	 */
 	public void setOriginalOperation(Operation op);
 	

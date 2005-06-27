@@ -27,9 +27,9 @@ package ch.iserver.ace.test;
  * local successor properties are handled in this base class.
  */
 public abstract class AbstractNode implements Node {
-	/** the site this node belongs to */
+	/** the site this node belongs to. */
 	private final String siteId;
-	/** the local successor of this node */
+	/** the local successor of this node. */
 	private Node localSuccessor;
 	
 	/**

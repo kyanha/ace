@@ -24,7 +24,7 @@ import ch.iserver.ace.Operation;
 import ch.iserver.ace.util.SynchronizedQueue;
 
 /**
- *
+ * 
  */
 public class DefaultRequestEngine implements RequestEngine {
 
@@ -44,14 +44,15 @@ public class DefaultRequestEngine implements RequestEngine {
 	private SynchronizedQueue outgoingRequestBuffer;
 
 	/**
-	 * The queue handler which intermediates between the request engine
-	 * and the algorithm.
+	 * The queue handler which intermediates between the request engine and the
+	 * algorithm.
 	 */
 	private QueueHandler queueHandler;
 
 	/**
 	 * 
-	 * @param algo the algorithm implementation
+	 * @param algo
+	 *            the algorithm implementation
 	 */
 	public DefaultRequestEngine(Algorithm algo) {
 		if (algo == null) {
@@ -92,9 +93,11 @@ public class DefaultRequestEngine implements RequestEngine {
 	}
 
 	/**
-	 * @param localOperationBuffer The localOperationBuffer to set.
+	 * @param localOperationBuffer
+	 *            The localOperationBuffer to set.
 	 */
-	public void setLocalOperationBuffer(SynchronizedQueue localOperationBuffer) {
+	public void setLocalOperationBuffer(
+			SynchronizedQueue localOperationBuffer) {
 		this.localOperationBuffer = localOperationBuffer;
 	}
 
@@ -106,9 +109,11 @@ public class DefaultRequestEngine implements RequestEngine {
 	}
 
 	/**
-	 * @param outgoingRequestBuffer The outgoingRequestBuffer to set.
+	 * @param outgoingRequestBuffer
+	 *            The outgoingRequestBuffer to set.
 	 */
-	public void setOutgoingRequestBuffer(SynchronizedQueue outgoingRequestBuffer) {
+	public void setOutgoingRequestBuffer(
+			SynchronizedQueue outgoingRequestBuffer) {
 		this.outgoingRequestBuffer = outgoingRequestBuffer;
 	}
 
@@ -120,7 +125,8 @@ public class DefaultRequestEngine implements RequestEngine {
 	}
 
 	/**
-	 * @param remoteRequestBuffer The remoteRequestBuffer to set.
+	 * @param remoteRequestBuffer
+	 *            The remoteRequestBuffer to set.
 	 */
 	public void setRemoteRequestBuffer(SynchronizedQueue remoteRequestBuffer) {
 		this.remoteRequestBuffer = remoteRequestBuffer;
@@ -134,7 +140,8 @@ public class DefaultRequestEngine implements RequestEngine {
 	}
 
 	/**
-	 * @param queueHandler The queueHandler to set.
+	 * @param queueHandler
+	 *            The queueHandler to set.
 	 */
 	public void setQueueHandler(QueueHandler queueHandler) {
 		this.queueHandler = queueHandler;

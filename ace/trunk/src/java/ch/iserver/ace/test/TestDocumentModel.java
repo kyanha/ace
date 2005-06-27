@@ -38,14 +38,15 @@ import ch.iserver.ace.text.SplitOperation;
  */
 public class TestDocumentModel extends PlainDocument implements DocumentModel {
 
-	private static Logger LOG = Logger.getLogger(TestDocumentModel.class);
-	
+	private static final Logger LOG = Logger.getLogger(TestDocumentModel.class);
+
 	private int siteId;
-	
+
 	/**
 	 * Class constructor.
 	 * 
-	 * @param content the initial content
+	 * @param content
+	 *            the initial content
 	 */
 	public TestDocumentModel(String content) {
 		try {
@@ -55,14 +56,14 @@ public class TestDocumentModel extends PlainDocument implements DocumentModel {
 			throw new RuntimeException("unexpected code path");
 		}
 	}
-	
+
 	/**
 	 * Class constructor.
 	 * 
-	 * @param id		
-	 * 			the site id 
+	 * @param id
+	 *            the site id
 	 * @param content
-	 * 			the initial content	
+	 *            the initial content
 	 */
 	public TestDocumentModel(int id, String content) {
 		this(content);
@@ -79,26 +80,35 @@ public class TestDocumentModel extends PlainDocument implements DocumentModel {
 				insertString(op.getPosition(), op.getText(), null);
 			} else if (operation instanceof DeleteOperation) {
 				DeleteOperation op = (DeleteOperation) operation;
-				assert op.getText().equals(getText(op.getPosition(), op.getTextLength())) : 
-					op.getText()+" != "+getText(op.getPosition(), op.getTextLength());
+				assert op.getText().equals(
+						getText(op.getPosition(), op.getTextLength())) : op
+						.getText()
+						+ " != "
+						+ getText(op.getPosition(), op.getTextLength());
 				remove(op.getPosition(), op.getTextLength());
 			} else if (operation instanceof SplitOperation) {
-				SplitOperation split = (SplitOperation)operation;
-				DeleteOperation op = (DeleteOperation)split.getSecond();
-				assert op.getText().equals(getText(op.getPosition(), op.getTextLength())) : 
-					op.getText()+" != "+getText(op.getPosition(), op.getTextLength());
+				SplitOperation split = (SplitOperation) operation;
+				DeleteOperation op = (DeleteOperation) split.getSecond();
+				assert op.getText().equals(
+						getText(op.getPosition(), op.getTextLength())) : op
+						.getText()
+						+ " != "
+						+ getText(op.getPosition(), op.getTextLength());
 				remove(op.getPosition(), op.getTextLength());
-				op = (DeleteOperation)split.getFirst();
-				assert op.getText().equals(getText(op.getPosition(), op.getTextLength())) : 
-					op.getText()+" != "+getText(op.getPosition(), op.getTextLength());
+				op = (DeleteOperation) split.getFirst();
+				assert op.getText().equals(
+						getText(op.getPosition(), op.getTextLength())) : op
+						.getText()
+						+ " != "
+						+ getText(op.getPosition(), op.getTextLength());
 				remove(op.getPosition(), op.getTextLength());
 			}
 		} catch (BadLocationException e) {
 			throw new DocumentModelException(e);
 		}
-		LOG.info("clientDoc.apply("+operation+") = "+getText());
+		LOG.info("clientDoc.apply(" + operation + ") = " + getText());
 	}
-	
+
 	/**
 	 * Returns the content of this document.
 	 * 
@@ -111,7 +121,7 @@ public class TestDocumentModel extends PlainDocument implements DocumentModel {
 			throw new DocumentModelException(e);
 		}
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -127,19 +137,19 @@ public class TestDocumentModel extends PlainDocument implements DocumentModel {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public int hashCode() {
 		return getText().hashCode();
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public String toString() {
 		return getText();
 	}
-	
+
 }

@@ -28,7 +28,8 @@ import ch.iserver.ace.Operation;
 public interface InclusionTransformation {
 
 	/**
-	 * Include operation <var>op2</var> into the context of operation <var>op1</var>.
+	 * Include operation <var>op2</var> into the context of operation 
+	 * <var>op1</var>.
 	 * The transformed operation <var>op1'</var> is returned.
 	 * 
 	 * @param op1

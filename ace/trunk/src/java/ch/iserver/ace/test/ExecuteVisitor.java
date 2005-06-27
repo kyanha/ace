@@ -47,13 +47,13 @@ import ch.iserver.ace.algorithm.Timestamp;
  * </p>
  */
 public class ExecuteVisitor implements NodeVisitor {
-	/** logger class */
+	/** logger class. */
 	private static final Logger LOG = Logger.getLogger(ExecuteVisitor.class);
 	
-	/** the factory used to create the needed objects */
+	/** the factory used to create the needed objects. */
 	private AlgorithmTestFactory factory;
 
-	/** map from site ids to algorithms */
+	/** map from site ids to algorithms. */
 	private Map algorithms;
 
 	/**

@@ -23,74 +23,78 @@ package ch.iserver.ace.algorithm.jupiter;
 import ch.iserver.ace.algorithm.Timestamp;
 
 /**
- * This class models the vector time for the Jupiter control algorithm. 
+ * This class models the vector time for the Jupiter control algorithm.
  */
 public class JupiterVectorTime implements Timestamp, Cloneable {
 
-    /**
-     * Counter for the number of local operations. 
-     */
-    private int localOperationCnt;
-    
-    /**
-     * Counter for the number of remote operations.
-     */
-    private int remoteOperationCnt;
-    
-    /**
-     * Create a new JupiterVectorTime.
-     * 
-     * @param localCnt 	the local operation count.
-     * @param remoteCnt	the remote operation count.
-     */
-    public JupiterVectorTime(int localCnt, int remoteCnt) {
-        assert localCnt >= 0  : "local operation count must be >= 0";
-        assert remoteCnt >= 0 : "remote operation count must be >= 0";
-        localOperationCnt = localCnt;
-        remoteOperationCnt = remoteCnt;
-    }
-    
-    /**
-     * @return Returns the local operation count.
-     */
-    public int getLocalOperationCount() {
-        return localOperationCnt;
-    }
-    /**
-     * @return Returns the remote operation count.
-     */
-    public int getRemoteOperationCount() {
-        return remoteOperationCnt;
-    }
-    
-    /**
-     * Increment the local operation counter.
-     * 
-     * @return	the counter after increment.
-     */
-    public int incrementLocalOperationCount() {
-        return ++localOperationCnt;
-    }
-    
-    /**
-     * Increment the remote operation counter.
-     * 
-     * @return 	the counter after increment.
-     */
-    public int incrementRemoteRequestCount() {
-        return ++remoteOperationCnt;
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-	public String toString() {
-		return "JupiterVectorTime(" + localOperationCnt + "," + remoteOperationCnt + ")";
-	}
-	
 	/**
-     * {@inheritDoc}
-     */
+	 * Counter for the number of local operations.
+	 */
+	private int localOperationCnt;
+
+	/**
+	 * Counter for the number of remote operations.
+	 */
+	private int remoteOperationCnt;
+
+	/**
+	 * Create a new JupiterVectorTime.
+	 * 
+	 * @param localCnt
+	 *            the local operation count.
+	 * @param remoteCnt
+	 *            the remote operation count.
+	 */
+	public JupiterVectorTime(int localCnt, int remoteCnt) {
+		assert localCnt >= 0 : "local operation count must be >= 0";
+		assert remoteCnt >= 0 : "remote operation count must be >= 0";
+		localOperationCnt = localCnt;
+		remoteOperationCnt = remoteCnt;
+	}
+
+	/**
+	 * @return Returns the local operation count.
+	 */
+	public int getLocalOperationCount() {
+		return localOperationCnt;
+	}
+
+	/**
+	 * @return Returns the remote operation count.
+	 */
+	public int getRemoteOperationCount() {
+		return remoteOperationCnt;
+	}
+
+	/**
+	 * Increment the local operation counter.
+	 * 
+	 * @return the counter after increment.
+	 */
+	public int incrementLocalOperationCount() {
+		return ++localOperationCnt;
+	}
+
+	/**
+	 * Increment the remote operation counter.
+	 * 
+	 * @return the counter after increment.
+	 */
+	public int incrementRemoteRequestCount() {
+		return ++remoteOperationCnt;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String toString() {
+		return "JupiterVectorTime(" + localOperationCnt + ","
+				+ remoteOperationCnt + ")";
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
@@ -98,35 +102,33 @@ public class JupiterVectorTime implements Timestamp, Cloneable {
 			return false;
 		} else if (obj.getClass().equals(getClass())) {
 			JupiterVectorTime vector = (JupiterVectorTime) obj;
-			return vector.localOperationCnt == localOperationCnt 
+			return vector.localOperationCnt == localOperationCnt
 					&& vector.remoteOperationCnt == remoteOperationCnt;
 		} else {
 			return false;
 		}
 	}
-	
+
 	/**
-     * {@inheritDoc}
-     */
+	 * {@inheritDoc}
+	 */
 	public int hashCode() {
 		int hashcode = 17;
 		hashcode = 37 * hashcode + localOperationCnt;
 		hashcode = 37 * hashcode + remoteOperationCnt;
 		return hashcode;
 	}
-	
+
 	/**
-     * {@inheritDoc}
-     */
+	 * {@inheritDoc}
+	 */
 	public Object clone() {
-		try
-	    {
-	      return super.clone();
-	    }
-	    catch ( CloneNotSupportedException e ) {
-	    		// this shouldn't happen, since we are Cloneable
-	    		throw new InternalError();
-	    }
+		try {
+			return super.clone();
+		} catch (CloneNotSupportedException e) {
+			// this shouldn't happen, since we are Cloneable
+			throw new InternalError();
+		}
 	}
-    
+
 }

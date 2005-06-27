@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -18,41 +18,3 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-
-package ch.iserver.ace.test;
-
-/**
- * Exception thrown by scenario loader.
- */
-public class ScenarioLoaderException extends ScenarioException {
-
-	/**
-	 * 
-	 */
-	public ScenarioLoaderException() {
-		super();
-	}
-
-	/**
-	 * @param message the exception message
-	 */
-	public ScenarioLoaderException(String message) {
-		super(message);
-	}
-
-	/**
-	 * @param message the exception message
-	 * @param cause the exception cause
-	 */
-	public ScenarioLoaderException(String message, Throwable cause) {
-		super(message, cause);
-	}
-
-	/**
-	 * @param cause the exception cause
-	 */
-	public ScenarioLoaderException(Throwable cause) {
-		super(cause);
-	}
-
-}

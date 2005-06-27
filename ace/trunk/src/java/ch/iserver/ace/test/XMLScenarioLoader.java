@@ -46,43 +46,59 @@ import ch.iserver.ace.Operation;
  */
 public class XMLScenarioLoader implements ScenarioLoader {
 	static final String W3C_XML_SCHEMA = "http://www.w3.org/2001/XMLSchema";
-	static final String JAXP_SCHEMA_LANGUAGE = "http://java.sun.com/xml/jaxp/properties/schemaLanguage";
-	static final String JAXP_SCHEMA_SOURCE = "http://java.sun.com/xml/jaxp/properties/schemaSource";
 
-	/** default implementation of scenario loader interface */
+	static final String JAXP_SCHEMA_LANGUAGE = 
+			"http://java.sun.com/xml/jaxp/properties/schemaLanguage";
+
+	static final String JAXP_SCHEMA_SOURCE = 
+			"http://java.sun.com/xml/jaxp/properties/schemaSource";
+
+	/** default implementation of scenario loader interface. */
 	public XMLScenarioLoader() { }
-	
+
 	/**
 	 * @inheritDoc
 	 */
-	public void loadScenario(ScenarioBuilder scenarioBuilder, InputStream source) 
+	public void loadScenario(ScenarioBuilder builder, 
+			InputStream source)
 			throws IOException {
 		InputStream schema = getSchema();
-		SAXBuilder builder = createSAXBuilder(schema);
+		SAXBuilder saxBuilder = createSAXBuilder(schema);
 
 		try {
-			Document doc = builder.build(source);
+			Document doc = saxBuilder.build(source);
 			Element root = doc.getRootElement();
-		
+
 			String initialState = root.getAttributeValue("initial");
 			String finalState = root.getAttributeValue("final");
-		
-			scenarioBuilder.init(initialState, finalState);
-			
-			processRootChildren(scenarioBuilder, root);
+
+			builder.init(initialState, finalState);
+
+			processRootChildren(builder, root);
 		} catch (JDOMException e) {
 			throw new ScenarioLoaderException(e);
 		}
 	}
-	
+
+	/**
+	 * @return input stream for xml schema
+	 */
 	protected InputStream getSchema() {
 		return getClass().getResourceAsStream("/test/scenario.xsd");
 	}
-	
+
+	/**
+	 * @param builder the scenario builder
+	 * @param root the root element
+	 */
 	protected void processRootChildren(ScenarioBuilder builder, Element root) {
 		processSites(builder, root.getChildren("site"));
 	}
-		
+
+	/**
+	 * @param el the element who has property child elements
+	 * @return a map of property name to values
+	 */
 	protected Map getProperties(Element el) {
 		Map result = new HashMap();
 		Iterator it = el.getChildren("property").iterator();
@@ -94,10 +110,14 @@ public class XMLScenarioLoader implements ScenarioLoader {
 		}
 		return result;
 	}
-	
+
+	/**
+	 * @param builder the scenario builder
+	 * @param sites a list of site elements
+	 */
 	protected void processSites(ScenarioBuilder builder, List sites) {
 		Iterator it = sites.iterator();
-		
+
 		while (it.hasNext()) {
 			Element siteEl = (Element) it.next();
 			String siteId = siteEl.getAttributeValue("id");
@@ -106,8 +126,13 @@ public class XMLScenarioLoader implements ScenarioLoader {
 			builder.endSite();
 		}
 	}
-	
-	protected void processSiteChildren(ScenarioBuilder builder, List children) {
+
+	/**
+	 * @param builder the scenario builder
+	 * @param children a list of site children
+	 */
+	protected void processSiteChildren(ScenarioBuilder builder, 
+			List children) {
 		Iterator it = children.iterator();
 		while (it.hasNext()) {
 			Element childEl = (Element) it.next();
@@ -130,11 +155,16 @@ public class XMLScenarioLoader implements ScenarioLoader {
 			}
 		}
 	}
-	
-	protected Operation processOperation(Element operationEl) { 
+
+	/**
+	 * @param operationEl an operation element
+	 * @return the operation represented by the element
+	 */
+	protected Operation processOperation(Element operationEl) {
 		String type = operationEl.getAttributeValue("type");
 		try {
-			Operation operation = (Operation) Class.forName(type).newInstance();
+			Operation operation = 
+					(Operation) Class.forName(type).newInstance();
 			Map params = getProperties(operationEl);
 			BeanUtils.populate(operation, params);
 			return operation;
@@ -148,9 +178,16 @@ public class XMLScenarioLoader implements ScenarioLoader {
 			throw new ScenarioLoaderException(e);
 		}
 	}
-	
-	protected SAXBuilder createSAXBuilder(InputStream schema) throws IOException {
-		SAXBuilder builder = new SAXBuilder("org.apache.xerces.parsers.SAXParser");
+
+	/**
+	 * @param schema the xml schema input stream
+	 * @return a configured sax builder that validates
+	 * @throws IOException if an IO related error occurs
+	 */
+	protected SAXBuilder createSAXBuilder(InputStream schema)
+			throws IOException {
+		SAXBuilder builder = new SAXBuilder(
+				"org.apache.xerces.parsers.SAXParser");
 		builder.setProperty(JAXP_SCHEMA_LANGUAGE, W3C_XML_SCHEMA);
 		builder.setProperty(JAXP_SCHEMA_SOURCE, schema);
 		builder.setErrorHandler(new DefaultHandler() {
@@ -158,8 +195,8 @@ public class XMLScenarioLoader implements ScenarioLoader {
 				throw e;
 			}
 		});
-		
+
 		return builder;
 	}
-	
+
 }

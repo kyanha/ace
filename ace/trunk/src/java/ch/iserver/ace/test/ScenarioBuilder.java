@@ -64,6 +64,7 @@ public interface ScenarioBuilder {
 	 * current site is the last site for which startSite was called.
 	 * 
 	 * @param id the id of this event
+	 * @param operation the generated operation
 	 * @throws ScenarioException in case of errors
 	 */
 	public void addDoGeneration(String id, Operation operation);
@@ -72,7 +73,7 @@ public interface ScenarioBuilder {
 	 * Adds the generation of an undo to the current site. The current
 	 * site is the last site for which startSite was called.
 	 *
-	 * @param opRef the undo reference
+	 * @param id the undo reference
 	 * @throws ScenarioException in case of errors
 	 */
 	public void addUndoGeneration(String id);
@@ -81,7 +82,7 @@ public interface ScenarioBuilder {
 	 * Adds the generation of a redo to the current site. The current
 	 * site is the last site for which startSite was called.
 	 * 
-	 * @param opRef the redo reference
+	 * @param id the redo reference
 	 * @throws ScenarioException in case of errors
 	 */
 	public void addRedoGeneration(String id);

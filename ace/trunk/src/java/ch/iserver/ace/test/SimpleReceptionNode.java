@@ -26,56 +26,59 @@ import java.util.List;
 import ch.iserver.ace.algorithm.Request;
 
 /**
- * A reception node represents the reception of a remote request.
- * Such a node must have the following properties.
- *
+ * A reception node represents the reception of a remote request. Such a node
+ * must have the following properties.
+ * 
  * <ul>
- *  <li>at most one local successor</li>
- *  <li>exactly two predecessor, one local the other remote</li>
+ * <li>at most one local successor</li>
+ * <li>exactly two predecessor, one local the other remote</li>
  * </ul>
  */
 public class SimpleReceptionNode extends AbstractNode implements ReceptionNode {
-	/** the request to process */
+	/** the request to process. */
 	private Request request;
-	/** the reference to the operation */
+
+	/** the reference to the operation. */
 	private final String ref;
-	
+
 	/**
-	 * Creates a new reception node belonging to the given site and
-	 * referencing the given operation.
+	 * Creates a new reception node belonging to the given site and referencing
+	 * the given operation.
 	 * 
-	 * @param siteId the id of the site this node belongs to
-	 * @param ref the reference to the received operation
+	 * @param siteId
+	 *            the id of the site this node belongs to
+	 * @param ref
+	 *            the reference to the received operation
 	 */
 	public SimpleReceptionNode(String siteId, String ref) {
 		super(siteId);
 		this.ref = ref;
 	}
-	
+
 	/**
-	 * Gets the reference to the operation that is to be received
-	 * by this node.
+	 * Gets the reference to the operation that is to be received by this node.
 	 * 
 	 * @return the reference to the operation
 	 */
 	public String getReference() {
 		return ref;
 	}
-	
+
 	/**
-	 * @see ch.iserver.ace.test.ReceptionNode#setRequest(ch.iserver.ace.algorithm.Request)
+	 * @see ch.iserver.ace.test.ReceptionNode#setRequest(
+	 *              ch.iserver.ace.algorithm.Request)
 	 */
 	public void setRequest(Request request) {
 		this.request = request;
 	}
-	
+
 	/**
 	 * @see ch.iserver.ace.test.ReceptionNode#getRequest()
 	 */
 	public Request getRequest() {
 		return request;
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
@@ -86,19 +89,20 @@ public class SimpleReceptionNode extends AbstractNode implements ReceptionNode {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
 	public void accept(NodeVisitor visitor) {
 		visitor.visit(this);
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
 	public String toString() {
-		return getClass().getName() + "[site=" + getSiteId() + ",ref=" + ref + "]";
+		return getClass().getName() + "[site=" + getSiteId() + ",ref=" + ref
+				+ "]";
 	}
-	
+
 }

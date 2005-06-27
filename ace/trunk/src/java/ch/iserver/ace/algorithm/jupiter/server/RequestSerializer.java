@@ -34,64 +34,62 @@ import ch.iserver.ace.algorithm.jupiter.JupiterRequest;
 import ch.iserver.ace.util.SynchronizedQueue;
 
 /**
- * RequestSerializer processes requests from a queue (first-in-first-out principle) 
- * in that it passes them to the originating ClientProxy for transformation 
- * first and afterwards distributes them to all other registered 
- * client proxies. 
- *
+ * RequestSerializer processes requests from a queue (first-in-first-out
+ * principle) in that it passes them to the originating ClientProxy for
+ * transformation first and afterwards distributes them to all other registered
+ * client proxies.
+ * 
  * @see ClientProxy
  */
 public class RequestSerializer extends Thread {
-	
-	private static Logger LOG = Logger.getLogger(RequestSerializer.class);
 
-    /**
-     * The queue from which this serializer processes
-     * the request.
-     */
-    private SynchronizedQueue requestQueue;
-    
-    /**
-     * A map that contains Integer (site id) to ClientProxy pairs.
-     */
-    private Map clientProxies;
-    
-    /**
-     * A map that contains Integer (site id) to SynchronizedQueue 
-     * (outgoing request queue) pairs.
-     */
-    private Map outgoingQueues;
-    
-    /**
-     * A map that contains Integer (site id) to {@link Counter} 
-     * mappings.
-     */
-    private Map cancelledClients;
-    
-    /**
-     * boolean variables used to control the execution of the
-     * serializer.
-     */
-    private boolean shutdown, pause;
-    
-    /**
-     * Class Constructor. The requests are fetched from the given
-     * queue.
-     * 
-     * @param queue	the queue from which requests are processed.
-     */
-    public RequestSerializer(SynchronizedQueue queue) {
-        requestQueue = queue;
-        clientProxies = Collections.synchronizedMap(new HashMap());
-        outgoingQueues = Collections.synchronizedMap(new HashMap());
-        cancelledClients = Collections.synchronizedMap(new HashMap());
-        shutdown = false;
-        pause = false;
-    }
+	private static final Logger LOG = 
+			Logger.getLogger(RequestSerializer.class);
 
-    /**
-     * {@inheritDoc}
-     */
+	/**
+	 * The queue from which this serializer processes the request.
+	 */
+	private SynchronizedQueue requestQueue;
+
+	/**
+	 * A map that contains Integer (site id) to ClientProxy pairs.
+	 */
+	private Map clientProxies;
+
+	/**
+	 * A map that contains Integer (site id) to SynchronizedQueue (outgoing
+	 * request queue) pairs.
+	 */
+	private Map outgoingQueues;
+
+	/**
+	 * A map that contains Integer (site id) to {@link Counter} mappings.
+	 */
+	private Map cancelledClients;
+
+	/**
+	 * boolean variables used to control the execution of the serializer.
+	 */
+	private boolean shutdown, pause;
+
+	/**
+	 * Class Constructor. The requests are fetched from the given queue.
+	 * 
+	 * @param queue
+	 *            the queue from which requests are processed.
+	 */
+	public RequestSerializer(SynchronizedQueue queue) {
+		requestQueue = queue;
+		clientProxies = Collections.synchronizedMap(new HashMap());
+		outgoingQueues = Collections.synchronizedMap(new HashMap());
+		cancelledClients = Collections.synchronizedMap(new HashMap());
+		shutdown = false;
+		pause = false;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public void run() {
 		while (!shutdown) {
 			if (!pause) {
@@ -111,11 +109,13 @@ public class RequestSerializer extends Thread {
 				Operation op = ((OperationExtractDocumentModel) algo
 						.getDocument()).getOperation();
 
-				//TODO: the distribution mechanism could be parallelized at a later time.
+				// TODO: the distribution mechanism could be parallelized at a
+				// later time.
 				distributeOperation(op, siteId);
 
-				if (!cancelledClients.isEmpty())
+				if (!cancelledClients.isEmpty()) {
 					checkClientProxyRemoval();
+				}
 			} else {
 				// pause
 				try {
@@ -123,43 +123,50 @@ public class RequestSerializer extends Thread {
 				} catch (InterruptedException ie) {
 					LOG.fatal(ie);
 				}
-            }
-        } 
-    }
-    
-    /**
-     * Distributes an operation to all registered clients.
-     * 
-	 * @param op 	the operation to distribute
-	 * @param siteId the id of the client which generated the operation
-	 */
-	private void distributeOperation(Operation op, int siteId) {
-		Iterator iter = clientProxies.keySet().iterator();
-		while (iter.hasNext()) {
-			ClientProxy cl = (ClientProxy)clientProxies.get((Integer) iter.next());
-			if (siteId != cl.getSiteId()) {
-				JupiterRequest r = (JupiterRequest)cl.getAlgorithm().generateRequest(op);
-				//set the site Id of the client that generated the request.
-				r.setSiteId(siteId);
-				Integer id = new Integer(cl.getSiteId());
-				SynchronizedQueue q = (SynchronizedQueue) outgoingQueues.get(id);
-				if (q != null) q.add(r);
 			}
 		}
 	}
 
 	/**
-	 * Checks if a client proxy is ready for removal, i.e. the timer
-	 * has elapsed. This means that no more operations generated by this client are
-	 * in the request queue. Hence, the client proxy can be removed from this serializers
-	 * list.
+	 * Distributes an operation to all registered clients.
+	 * 
+	 * @param op
+	 *            the operation to distribute
+	 * @param siteId
+	 *            the id of the client which generated the operation
+	 */
+	private void distributeOperation(Operation op, int siteId) {
+		Iterator iter = clientProxies.keySet().iterator();
+		while (iter.hasNext()) {
+			ClientProxy cl = (ClientProxy) clientProxies.get((Integer) iter
+					.next());
+			if (siteId != cl.getSiteId()) {
+				JupiterRequest r = (JupiterRequest) cl.getAlgorithm()
+						.generateRequest(op);
+				// set the site Id of the client that generated the request.
+				r.setSiteId(siteId);
+				Integer id = new Integer(cl.getSiteId());
+				SynchronizedQueue q = (SynchronizedQueue) outgoingQueues
+						.get(id);
+				if (q != null) {
+					q.add(r);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Checks if a client proxy is ready for removal, i.e. the timer has
+	 * elapsed. This means that no more operations generated by this client are
+	 * in the request queue. Hence, the client proxy can be removed from this
+	 * serializers list.
 	 */
 	private void checkClientProxyRemoval() {
-		synchronized(cancelledClients) {
+		synchronized (cancelledClients) {
 			Iterator iter = cancelledClients.keySet().iterator();
 			while (iter.hasNext()) {
-				Integer id = (Integer)iter.next();
-				Counter c = (Counter)cancelledClients.get(id);
+				Integer id = (Integer) iter.next();
+				Counter c = (Counter) cancelledClients.get(id);
 				if (c.countdown()) {
 					clientProxies.remove(id);
 				}
@@ -168,105 +175,105 @@ public class RequestSerializer extends Thread {
 	}
 
 	/**
-     * Adds a client proxy to this RequestSerializer.
-     * 
-     * @param client			the client proxy to add.
-     * @param queue			the queue for outgoing requests.
-     * @see 	 ClientProxy
-     * @see	 SynchronizedQueue 
-     */
-    public void addClientProxy(ClientProxy client, SynchronizedQueue queue) {
-        Integer id = new Integer(client.getSiteId());
-        clientProxies.put(id, client);
-        outgoingQueues.put(id, queue);
-    }
-    
-    /**
-     * Removes a ClientProxy from this RequestSerializer.
-     * 
-     * @param  	siteId
-     * @see	  	ClientProxy
-     */
-    public void removeClientProxy(int siteId) {
-    		Integer id = new Integer(siteId);
-    		if (clientProxies.containsKey(id)) {
-        		cancelledClients.put(id, new Counter(requestQueue.size()));
-        		outgoingQueues.remove(id);
-    		} else {
-    			LOG.warn("client id ["+siteId+"] unknown.");
-    		}
-    }
-    
-    /**
-     * Shuts down this RequestSerializer.
-     */
-    public void shutdown() {
-    		//TODO: is an interrupt() call necessary?
-		shutdown = true;
-    }
-    
-    /**
-     * Pauses this RequestSerializer.
-     */
-    public void pause() {
-		pause = true;
-    }
-    
-    /**
-     * Lets this RequestSerializer proceed. 
-     */
-    public void proceed() {
-		pause = false;
-    }
+	 * Adds a client proxy to this RequestSerializer.
+	 * 
+	 * @param client
+	 *            the client proxy to add.
+	 * @param queue
+	 *            the queue for outgoing requests.
+	 * @see ClientProxy
+	 * @see SynchronizedQueue
+	 */
+	public void addClientProxy(ClientProxy client, SynchronizedQueue queue) {
+		Integer id = new Integer(client.getSiteId());
+		clientProxies.put(id, client);
+		outgoingQueues.put(id, queue);
+	}
 
 	/**
-	* Originally intended for test use.
-	* Returns the outgoing queues (siteId - outgoing queue mappings).
-	* 
-	* @return a map with all the outgoing queues.
-	*/
+	 * Removes a ClientProxy from this RequestSerializer.
+	 * 
+	 * @param siteId
+	 * @see ClientProxy
+	 */
+	public void removeClientProxy(int siteId) {
+		Integer id = new Integer(siteId);
+		if (clientProxies.containsKey(id)) {
+			cancelledClients.put(id, new Counter(requestQueue.size()));
+			outgoingQueues.remove(id);
+		} else {
+			LOG.warn("client id [" + siteId + "] unknown.");
+		}
+	}
+
+	/**
+	 * Shuts down this RequestSerializer.
+	 */
+	public void shutdown() {
+		// TODO: is an interrupt() call necessary?
+		shutdown = true;
+	}
+
+	/**
+	 * Pauses this RequestSerializer.
+	 */
+	public void pause() {
+		pause = true;
+	}
+
+	/**
+	 * Lets this RequestSerializer proceed.
+	 */
+	public void proceed() {
+		pause = false;
+	}
+
+	/**
+	 * Originally intended for test use. Returns the outgoing queues (siteId -
+	 * outgoing queue mappings).
+	 * 
+	 * @return a map with all the outgoing queues.
+	 */
 	Map getOutgoingQueues() {
 		return outgoingQueues;
 	}
 
 	/**
-	* Originally intended for test use.
-	* Returns the client proxies (siteId - client proxy mappings).
-	* 
-	* @return a map with all the client proxies.
-	*/
+	 * Originally intended for test use. Returns the client proxies (siteId -
+	 * client proxy mappings).
+	 * 
+	 * @return a map with all the client proxies.
+	 */
 	Map getClientProxies() {
 		return clientProxies;
 	}
-	
+
 	/**
-	* Originally intended for test use.
-	* Returns the request queue.
-	* 
-	* @return the request queue
-	*/
+	 * Originally intended for test use. Returns the request queue.
+	 * 
+	 * @return the request queue
+	 */
 	SynchronizedQueue getRequestQueue() {
 		return requestQueue;
 	}
-	
+
 	/**
-	 * Simple helper class for removing client proxies at 
-	 * the rigth time.
+	 * Simple helper class for removing client proxies at the rigth time.
 	 */
 	class Counter {
-		
+
 		private int value;
-		
+
 		Counter(int value) {
 			this.value = value;
 		}
-		
+
 		int getValue() {
 			return value;
 		}
-		
+
 		boolean countdown() {
-			return (--value <= 0); 
+			return (--value <= 0);
 		}
 	}
 

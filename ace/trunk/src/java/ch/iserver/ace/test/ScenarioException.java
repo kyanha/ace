@@ -34,22 +34,22 @@ public class ScenarioException extends RuntimeException {
 	}
 
 	/**
-	 * @param message
+	 * @param message the exception message
 	 */
 	public ScenarioException(String message) {
 		super(message);
 	}
 
 	/**
-	 * @param message
-	 * @param cause
+	 * @param message the exception message
+	 * @param cause the exception cause
 	 */
 	public ScenarioException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
 	/**
-	 * @param cause
+	 * @param cause the exception cause
 	 */
 	public ScenarioException(Throwable cause) {
 		super(cause);

@@ -28,16 +28,20 @@ import java.util.Iterator;
  * This class represents a scenerio. It contains the scenario graph.
  */
 public class Scenario {
-	/** the initial state of the scenario */
+	/** the initial state of the scenario. */
 	private String initialState;
-	/** the expected final state of the scenario */
+	/** the expected final state of the scenario. */
 	private String finalState;
-	/** the collection of nodes */
+	/** the collection of nodes. */
 	private Collection nodes;
 	
 	/**
 	 * Creates a new scenario with the given initial state, final state
 	 * and graph of nodes.
+	 * 
+	 * @param initialState the initial state
+	 * @param finalState the expected final state
+	 * @param nodes a collection of nodes
 	 */
 	public Scenario(String initialState, String finalState, Collection nodes) { 
 		this.initialState = initialState;

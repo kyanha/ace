@@ -26,49 +26,49 @@ import org.apache.log4j.Logger;
 import ch.iserver.ace.Operation;
 
 /**
- * The DeleteOperation is used to hold a text together with its position 
- * that is to be deleted in the document model.
+ * The DeleteOperation is used to hold a text together with its position that is
+ * to be deleted in the document model.
  */
 public class DeleteOperation implements Operation {
-	
-	private static Logger LOG = Logger.getLogger(DeleteOperation.class);
-	
+
+	private static final Logger LOG = Logger.getLogger(DeleteOperation.class);
+
 	/**
-	 * the text to be deleted
+	 * the text to be deleted.
 	 */
 	private String text;
-	
+
 	/**
-	 * the position in the document where the text is to be deleted
+	 * the position in the document where the text is to be deleted.
 	 */
 	private int position;
-	
+
 	/**
-	 * flag to indicate whether this operation is an undo
+	 * flag to indicate whether this operation is an undo.
 	 */
 	private boolean isUndo;
-	
+
 	/**
-	 * this operation's original operation, i.e if an operation
-	 * is transformed, a new operation is created and the old one
-	 * passed to it as the original operation  
+	 * this operation's original operation, i.e if an operation is transformed,
+	 * a new operation is created and the old one passed to it as the original
+	 * operation.
 	 */
 	private Operation original;
-	  
+
 	/**
 	 * Class constructor.
 	 */
-	public DeleteOperation() { 
+	public DeleteOperation() {
 		setUndo(false);
 	}
 
 	/**
 	 * Class constructor.
 	 * 
-	 * @param position 
-	 * 				the position into the document
-	 * @param text 
-	 * 				the text to be deleted
+	 * @param position
+	 *            the position into the document
+	 * @param text
+	 *            the text to be deleted
 	 */
 	public DeleteOperation(int position, String text) {
 		setPosition(position);
@@ -80,18 +80,18 @@ public class DeleteOperation implements Operation {
 	 * Class constructor.
 	 * 
 	 * @param position
-	 * 				the position into the document
+	 *            the position into the document
 	 * @param text
-	 * 				the text to be deleted
+	 *            the text to be deleted
 	 * @param isUndo
-	 * 				flag to indicate whether this operation is an undo
+	 *            flag to indicate whether this operation is an undo
 	 */
 	public DeleteOperation(int position, String text, boolean isUndo) {
 		setPosition(position);
 		setText(text);
 		setUndo(isUndo);
 	}
-	
+
 	/**
 	 * Returns the position.
 	 * 
@@ -101,18 +101,19 @@ public class DeleteOperation implements Operation {
 		return position;
 	}
 
-	
 	/**
 	 * Sets the position of this operation.
 	 * 
-	 * @param position the position to set
+	 * @param position
+	 *            the position to set
 	 */
 	public void setPosition(int position) {
-		if (position < 0)
-    		throw new IllegalArgumentException("position index must be >= 0");
+		if (position < 0) {
+			throw new IllegalArgumentException("position index must be >= 0");
+		}
 		this.position = position;
 	}
-	
+
 	/**
 	 * Returns the text length.
 	 * 
@@ -121,7 +122,7 @@ public class DeleteOperation implements Operation {
 	public int getTextLength() {
 		return text.length();
 	}
-	
+
 	/**
 	 * Returns the text to be deleted.
 	 * 
@@ -130,63 +131,67 @@ public class DeleteOperation implements Operation {
 	public String getText() {
 		return text;
 	}
-	
+
 	/**
 	 * Sets the text to be deleted.
 	 * 
-	 * @param text 	the text to be deleted
+	 * @param text
+	 *            the text to be deleted
 	 */
 	public void setText(String text) {
-	    if (text == null)
-    			throw new IllegalArgumentException("text may not be null");
+		if (text == null) {
+			throw new IllegalArgumentException("text may not be null");
+		}
 		this.text = text;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public Operation inverse() {
 		return new InsertOperation(getPosition(), getText(), true);
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public boolean isUndo() {
 		return isUndo;
 	}
-	
+
 	/**
 	 * Marks this operation as undo.
 	 * 
-	 * @param isUndo flag whether this operation is an undo
+	 * @param isUndo
+	 *            flag whether this operation is an undo
 	 */
 	public void setUndo(boolean isUndo) {
 		this.isUndo = isUndo;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public void setOriginalOperation(Operation op) {
 		original = op;
-		LOG.info("setOriginalOperation("+op+")");
+		LOG.info("setOriginalOperation(" + op + ")");
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public Operation getOriginalOperation() {
 		return original;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return "Delete(" + position + ",'" + text + "',"+isUndo+", "+original+")";
+		return "Delete(" + position + ",'" + text + "'," + isUndo + ", "
+				+ original + ")";
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -197,19 +202,19 @@ public class DeleteOperation implements Operation {
 			return false;
 		} else if (obj.getClass().equals(getClass())) {
 			DeleteOperation op = (DeleteOperation) obj;
-			return op.position == position && op.text.equals(text) 
-				&& op.isUndo == isUndo && op.original.equals(original);
+			return op.position == position && op.text.equals(text)
+					&& op.isUndo == isUndo && op.original.equals(original);
 		} else {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public int hashCode() {
 		int hashcode = position;
-		hashcode += 13 * (new Boolean(isUndo)).hashCode();
+		hashcode += 13 * (Boolean.valueOf(isUndo)).hashCode();
 		hashcode += 13 * text.hashCode();
 		hashcode += 13 * original.hashCode();
 		return hashcode;

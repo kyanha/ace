@@ -33,10 +33,10 @@ import java.util.Set;
 public abstract class AbstractGenerationNode extends AbstractNode 
 		implements GenerationNode {
 	
-	/** list of remote successors (nodes that receive from this node) */
+	/** list of remote successors (nodes that receive from this node). */
 	private Set remoteSuccessors = new HashSet();
 	
-	/** the event id */
+	/** the event id. */
 	private final String eventId;
 
 	/**
@@ -51,7 +51,7 @@ public abstract class AbstractGenerationNode extends AbstractNode
 	}
 	
 	/**
-	 * @inheritDoc
+	 * @return the event id
 	 */
 	public String getEventId() {
 		return eventId;

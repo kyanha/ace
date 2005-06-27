@@ -38,36 +38,38 @@ import ch.iserver.ace.Operation;
  */
 public class DefaultScenarioBuilder implements ScenarioBuilder {
 
-	/** the initial state of the scenario */
+	/** the initial state of the scenario. */
 	private String initialState;
-	
-	/** the final state of the scenario */
+
+	/** the final state of the scenario. */
 	private String finalState;
-	
-	/** the current site id */
+
+	/** the current site id. */
 	private String currentSiteId;
-		
-	/** map of local predecessor (maps site ids to the last node at the site) */
+
+	/** 
+	 * map of local predecessor (maps site ids to the last node at the site). 
+	 */
 	private Map localPredecessors;
-		
-	/** map of site helper objects (maps site ids to SiteHelper objects) */
+
+	/** map of site helper objects (maps site ids to SiteHelper objects). */
 	private Map siteHelpers;
-	
-	/** site helper object for server */
+
+	/** site helper object for server. */
 	private SiteHelper serverHelper;
-	
-	/** map of generation nodes (maps operation ids to generation nodes) */
+
+	/** map of generation nodes (maps operation ids to generation nodes). */
 	private Map generationNodes;
-	
-	/** list of reception nodes */
+
+	/** list of reception nodes. */
 	private List receptionNodes;
-	
-	/** set of all nodes */
+
+	/** set of all nodes. */
 	private Set nodes;
-	
-	/** the number of sites generated so far */
+
+	/** the number of sites generated so far. */
 	private int siteCount;
-	
+
 	/**
 	 * @inheritDoc
 	 */
@@ -82,15 +84,24 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 		this.nodes = new HashSet();
 		this.siteCount = 0;
 	}
-		
+
+	/**
+	 * @param node add node to set of nodes
+	 */
 	protected void addNode(Node node) {
 		nodes.add(node);
 	}
-	
+
+	/**
+	 * @return the set of all nodes
+	 */
 	protected Set getNodes() {
 		return nodes;
 	}
-	
+
+	/**
+	 * @param node adds the generation node
+	 */
 	protected void addGenerationNode(GenerationNode node) {
 		addNode(node);
 		Node pred = getPredecessor(node.getSiteId());
@@ -99,7 +110,10 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 		setPredecessor(node.getSiteId(), node);
 		addToSiteGeneration(node.getSiteId(), node.getEventId());
 	}
-	
+
+	/**
+	 * @param node adds the reception node
+	 */
 	protected void addReceptionNode(ReceptionNode node) {
 		addNode(node);
 		Node pred = getPredecessor(node.getSiteId());
@@ -108,7 +122,7 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 		setPredecessor(node.getSiteId(), node);
 		addToSiteReception(node.getSiteId(), node.getReference());
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
@@ -130,7 +144,7 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 		checkCurrentSite();
 		addGenerationNode(new DoNode(currentSiteId, id, op));
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
@@ -138,7 +152,7 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 		checkCurrentSite();
 		addGenerationNode(new UndoNode(currentSiteId, id));
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
@@ -154,24 +168,24 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 		checkCurrentSite();
 		addReceptionNode(new SimpleReceptionNode(currentSiteId, ref));
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
 	public void addVerification(String expect) {
-		checkCurrentSite();		
+		checkCurrentSite();
 		Node node = new VerificationNode(currentSiteId, expect);
 		addNode(node);
 		Node pred = getPredecessor(currentSiteId);
 		pred.setLocalSuccessor(node);
 		setPredecessor(currentSiteId, node);
 	}
-		
+
 	/**
 	 * @inheritDoc
 	 */
 	public void endSite() {
-		checkCurrentSite();		
+		checkCurrentSite();
 		Node node = new EndNode(currentSiteId, finalState);
 		addNode(node);
 		Node pred = getPredecessor(currentSiteId);
@@ -179,7 +193,7 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 		setPredecessor(currentSiteId, null);
 		currentSiteId = null;
 	}
-	
+
 	private void checkCurrentSite() {
 		if (currentSiteId == null) {
 			throw new ScenarioException("no previous startSite call");
@@ -191,7 +205,8 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 	 */
 	public void addRelay(String ref, String id) {
 		if (ref == null) {
-			throw new IllegalArgumentException("operation reference cannot be null");
+			throw new IllegalArgumentException(
+					"operation reference cannot be null");
 		}
 		if (id == null) {
 			throw new IllegalArgumentException("id cannot be null");
@@ -212,7 +227,7 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 		addGeneratedOperation(id, node);
 		serverHelper.addGeneration(node.getEventId());
 	}
-	
+
 	/**
 	 * Finishes the build process and returns the scenario object.
 	 * 
@@ -227,40 +242,40 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 			GenerationNode source = getGenerationNode(ref);
 			source.addRemoteSuccessor(target);
 		}
-		
+
 		// 2) validate graph
 		List nodes = validateDAG();
-		
+
 		// 3) create result
 		return new Scenario(initialState, finalState, nodes);
 	}
-		
+
 	/**
-	 * Validates that all the operations form a directed acyclic graph 
-	 * and returns a topologically ordered list of nodes.
+	 * Validates that all the operations form a directed acyclic graph and
+	 * returns a topologically ordered list of nodes.
 	 * 
 	 * @return a topologically ordered list of nodes
-	 * @throws ScenarioException if the graph is not a DAG
+	 * @throws ScenarioException
+	 *             if the graph is not a DAG
 	 */
 	protected List validateDAG() {
 		return GraphUtil.topologicalSort(getNodes());
 	}
-	
-	
+
 	// --> internal helper methods <--
-			
+
 	private Node getPredecessor(String siteId) {
 		return (Node) localPredecessors.get(siteId);
 	}
-	
+
 	private void setPredecessor(String siteId, Node node) {
 		localPredecessors.put(siteId, node);
 	}
-		
+
 	private Collection getReceptionNodes() {
 		return receptionNodes;
 	}
-	
+
 	private List getReceptionNodes(String id) {
 		List result = new ArrayList();
 		Iterator it = receptionNodes.iterator();
@@ -272,60 +287,62 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 		}
 		return result;
 	}
-	
+
 	private Collection getGenerationNodes() {
 		return generationNodes.values();
 	}
-	
+
 	private GenerationNode getGenerationNode(String id) {
 		return (GenerationNode) generationNodes.get(id);
 	}
-	
+
 	private void addGeneratedOperation(String ref, Node node) {
 		if (isGenerated(ref)) {
-			throw new ScenarioException("operation " + ref + " already generated");
+			throw new ScenarioException("operation " + ref
+					+ " already generated");
 		}
 		generationNodes.put(ref, node);
 	}
-	
+
 	private boolean isGenerated(String id) {
 		return generationNodes.containsKey(id);
 	}
-		
+
 	private void addToSiteGeneration(String siteId, String ref) {
 		SiteHelper helper = getSiteHelper(siteId);
 		helper.addGeneration(ref);
 	}
-	
+
 	private void addToSiteReception(String siteId, String ref) {
 		SiteHelper helper = getSiteHelper(siteId);
 		helper.addReception(ref);
 	}
-	
+
 	private SiteHelper getSiteHelper(String siteId) {
 		return (SiteHelper) siteHelpers.get(siteId);
 	}
-	
-	
+
 	// --> internal helper classes <--
-	
+
 	/**
 	 * Basic helper object for site related checks.
 	 */
 	private static class SiteHelper {
 		private Set generated = new TreeSet();
+
 		private Set received = new TreeSet();
-		
+
 		private void addGeneration(String id) {
 			generated.add(id);
 		}
-		
+
 		private void addReception(String ref) {
 			if (generated.contains(ref)) {
 				throw new ScenarioException("cannot receive local operation");
 			}
 			if (received.contains(ref)) {
-				throw new ScenarioException("cannot receive the same operation twice");
+				throw new ScenarioException(
+						"cannot receive the same operation twice");
 			}
 			received.add(ref);
 		}

@@ -29,7 +29,7 @@ public class DocumentModelException extends RuntimeException {
 	/**
 	 * Constructor.
 	 * 
-	 * @param msg
+	 * @param msg the message
 	 */
 	public DocumentModelException(String msg) {
 		super(msg);
@@ -38,7 +38,7 @@ public class DocumentModelException extends RuntimeException {
 	/**
 	 * Constructor.
 	 * 
-	 * @param t
+	 * @param t a nested throwable
 	 */
 	public DocumentModelException(Throwable t) {
 		super(t);

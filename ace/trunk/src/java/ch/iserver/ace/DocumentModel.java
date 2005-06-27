@@ -22,18 +22,19 @@
 package ch.iserver.ace;
 
 /**
- * This interface represents an abstraction of a document independent 
- * of whether it is a text document, a whiteboard document or any other
- * document. 
+ * This interface represents an abstraction of a document independent of whether
+ * it is a text document, a whiteboard document or any other document.
  */
 public interface DocumentModel {
 
 	/**
 	 * Applies an operation to this document model.
 	 * 
-	 * @param operation the operation to be applied
-	 * @throws DocumentModelException if an error occurs while applying operation
+	 * @param operation
+	 *            the operation to be applied
+	 * @throws ch.iserver.ace.DocumentModelException
+	 *             if an error occurs while applying operation
 	 */
-	public void apply(Operation operation);
-	
+	public void apply(Operation operation) throws DocumentModelException;
+
 }

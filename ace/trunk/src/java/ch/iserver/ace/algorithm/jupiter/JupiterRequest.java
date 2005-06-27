@@ -28,86 +28,88 @@ import ch.iserver.ace.algorithm.Timestamp;
  * This class models a Jupiter request.
  */
 public class JupiterRequest implements Request {
-    
-    /**
-     * The id from the originating site.
-     */
-    private int siteId;
-    
-    /**
-     * The vector time of this request.
-     */
-    private JupiterVectorTime vectorTime;
-    
-    /**
-     * The operation to be excecuted by the receiving site.
-     */
-    private Operation operation;
-    
-    
-    /**
-     * Class constructor.
-     * 
-     * @param siteId 	
-     * 				the Id from the originating site.
-     * @param vectorTime		
-     * 				the vector time corresponding to the document state
-     * 				when the request was created.
-     * @param operation		
-     * 				the operation to be executed.
-     */
-    public JupiterRequest(int siteId, JupiterVectorTime vectorTime, Operation operation) {
-        this.siteId = siteId;
-        this.vectorTime = vectorTime;
-        this.operation = operation;
-    }
-
-    /**
-     * Returns the site id.
-     * 
-     * @return the site id
-     */
-    public int getSiteId() {
-        return siteId;
-    }
 
 	/**
-	 * @param siteId The siteId to set.
+	 * The id from the originating site.
+	 */
+	private int siteId;
+
+	/**
+	 * The vector time of this request.
+	 */
+	private JupiterVectorTime vectorTime;
+
+	/**
+	 * The operation to be excecuted by the receiving site.
+	 */
+	private Operation operation;
+
+	/**
+	 * Class constructor.
+	 * 
+	 * @param siteId
+	 *            the Id from the originating site.
+	 * @param vectorTime
+	 *            the vector time corresponding to the document state when the
+	 *            request was created.
+	 * @param operation
+	 *            the operation to be executed.
+	 */
+	public JupiterRequest(int siteId, JupiterVectorTime vectorTime,
+			Operation operation) {
+		this.siteId = siteId;
+		this.vectorTime = vectorTime;
+		this.operation = operation;
+	}
+
+	/**
+	 * Returns the site id.
+	 * 
+	 * @return the site id
+	 */
+	public int getSiteId() {
+		return siteId;
+	}
+
+	/**
+	 * @param siteId
+	 *            The siteId to set.
 	 */
 	public void setSiteId(int siteId) {
 		this.siteId = siteId;
 	}
-	
-    /**
-     * {@inheritDoc}
-     */
-    public Operation getOperation() {
-        return operation;
-    }
 
-    /**
-     * {@inheritDoc}
-     */
-    public Timestamp getTimestamp() {
-        return vectorTime;
-    }
-   
-    /**
-     * Convenience method that returns the Jupiter vector time
-     * of this request. Therefore, no cast is needed.
-     * 
-     * @return 	the Jupiter vector of this request.
-     * @see JupiterVectorTime
-     */
-    public JupiterVectorTime getJupiterVectorTime() {
-        return vectorTime;
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public String toString() {
-    		return "JupiterRequest(" + siteId + ", " + vectorTime + ", " + operation + ")";
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public Operation getOperation() {
+		return operation;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Timestamp getTimestamp() {
+		return vectorTime;
+	}
+
+	/**
+	 * Convenience method that returns the Jupiter vector time of this request.
+	 * Therefore, no cast is needed.
+	 * 
+	 * @return the Jupiter vector of this request.
+	 * @see JupiterVectorTime
+	 */
+	public JupiterVectorTime getJupiterVectorTime() {
+		return vectorTime;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String toString() {
+		return "JupiterRequest(" + siteId + ", " + vectorTime + ", "
+				+ operation + ")";
+	}
 
 }

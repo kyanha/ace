@@ -29,51 +29,55 @@ import ch.iserver.ace.util.SynchronizedQueue;
  * Forwards requests from a queue to a client proxy.
  */
 public class RequestForwarder extends Thread {
-    
-    private static Logger LOG = Logger.getLogger(RequestForwarder.class);
 
-    private ClientProxy proxy;
-    private SynchronizedQueue queue;
-    private boolean shutdown;
-    
-    /**
-     * Creates a new RequestForwarder using the given SynchronizationQueue and the given
-     * ClientProxy.
-     * 
-     * @param queue 		the queue to get the requests from.
-     * @param proxy 		the proxy to pass the request to.
-     * @see 				SynchronizedQueue
-     * @see 				ClientProxy
-     */
-    public RequestForwarder(SynchronizedQueue queue, ClientProxy proxy) {
-        this.queue = queue;
-        this.proxy = proxy;
-        shutdown = false;
-    }
-    
-    /**
-     * Runs this RequestForwarder's task of passing requests from
-     * the queue to the client proxy.
-     * 
-     * @see SynchronizedQueue
-     * @see ClientProxy
-     */
-    public void run() {
-        try {
-            while (!shutdown && !isInterrupted()) {
-                Request req = (Request)queue.get();
-                proxy.sendRequest(req);
-            }
-        } catch (InterruptedException ie) {
-            LOG.warn(ie);
-        }
-    }
-    
-    /**
-     * Shuts down this instance of RequestForwarder.
-     */
-    public void shutdown() {
-    		interrupt();
-        shutdown = true;
-    }
+	private static final Logger LOG = Logger.getLogger(RequestForwarder.class);
+
+	private ClientProxy proxy;
+
+	private SynchronizedQueue queue;
+
+	private boolean shutdown;
+
+	/**
+	 * Creates a new RequestForwarder using the given SynchronizationQueue and
+	 * the given ClientProxy.
+	 * 
+	 * @param queue
+	 *            the queue to get the requests from.
+	 * @param proxy
+	 *            the proxy to pass the request to.
+	 * @see SynchronizedQueue
+	 * @see ClientProxy
+	 */
+	public RequestForwarder(SynchronizedQueue queue, ClientProxy proxy) {
+		this.queue = queue;
+		this.proxy = proxy;
+		shutdown = false;
+	}
+
+	/**
+	 * Runs this RequestForwarder's task of passing requests from the queue to
+	 * the client proxy.
+	 * 
+	 * @see SynchronizedQueue
+	 * @see ClientProxy
+	 */
+	public void run() {
+		try {
+			while (!shutdown && !isInterrupted()) {
+				Request req = (Request) queue.get();
+				proxy.sendRequest(req);
+			}
+		} catch (InterruptedException ie) {
+			LOG.warn(ie);
+		}
+	}
+
+	/**
+	 * Shuts down this instance of RequestForwarder.
+	 */
+	public void shutdown() {
+		interrupt();
+		shutdown = true;
+	}
 }

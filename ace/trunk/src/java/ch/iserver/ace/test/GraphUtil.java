@@ -31,9 +31,9 @@ import java.util.Map;
 /**
  * Utility class that contains graph related methods.
  */
-public class GraphUtil {
+public final class GraphUtil {
 
-	/** avoid instantiation of this class */
+	/** avoid instantiation of this class. */
 	private GraphUtil() { }
 	
 	/**
@@ -73,7 +73,8 @@ public class GraphUtil {
 		
 		int total = nodes.size();
 		if (result.size() != total) {
-			throw new ScenarioException("not a dag: " + result.size() + "," + total);
+			throw new ScenarioException("not a dag: " 
+					+ result.size() + "," + total);
 		}
 
 		return result;

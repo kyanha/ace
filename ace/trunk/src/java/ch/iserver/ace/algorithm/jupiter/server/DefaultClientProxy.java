@@ -27,95 +27,100 @@ import ch.iserver.ace.algorithm.jupiter.Jupiter;
 import ch.iserver.ace.util.SynchronizedQueue;
 
 /**
- * This is the default implementation of the interface 
+ * This is the default implementation of the interface
  * {@link ch.iserver.ace.algorithm.jupiter.server.ClientProxy}.
  * 
  * @see ch.iserver.ace.algorithm.jupiter.server.ClientProxy
  */
 public class DefaultClientProxy implements ClientProxy {
 
-	private static Logger LOG = Logger.getLogger(DefaultClientProxy.class);
-	
-    private int siteId;
-    private NetService net;
-    private Jupiter algo;
-    private SynchronizedQueue requestForwardQueue;
-    
-    /**
-     * Constructor.
-     * 
-     * @param siteId
-     * 				the site id
-     * @param net
-     * 				the net service
-     * @param algo
-     * 				the algorithm implementation Jupiter
-     * @param queue
-     * 				the synchronized queue for forwarding of requests
-     * @see NetService
-     * @see Jupiter
-     * @see SynchronizedQueue
-     */
-    public DefaultClientProxy(int siteId, NetService net, Jupiter algo, SynchronizedQueue queue) {
-        this.siteId = siteId;
-        this.net = net;
-        this.algo = algo;
-        requestForwardQueue = queue;
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public void sendRequest(Request req) {
-    		if (net != null) {
-    			net.transmitRequest(req);
-    		} else {
-    			LOG.warn("net service null");
-    		}
-    }
+	private static final Logger LOG = Logger
+			.getLogger(DefaultClientProxy.class);
 
-    /**
-     * {@inheritDoc}
-     */
-    public void receiveRequest(Request req) {
-    		//if the net service connection has been aborted, stop receiving and 
-    		//forwarding respectively, requests.
-    		if (net != null) {
-    			LOG.info("--> recv "+req);
-    			requestForwardQueue.add(  new Object[]{this, req} );
-    		}
-    }
+	private int siteId;
 
-    /**
-     * {@inheritDoc}
-     */
-    public Jupiter getAlgorithm() {
-        return algo;
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public int getSiteId() {
-        return siteId;
-    }
-    
-    /**
-     * Returns the request forward queue.
-     * 
-     * @return the request forward queue
-     */
-    public SynchronizedQueue getRequestForwardQueue() {
-    		return requestForwardQueue;
-    }
-    
-    /** 
-     * Closes the connection to the net service in that 
-     * the client proxy does not forward requests any longer.
-     *
-     * @see NetService
-     */
-    public synchronized void closeNetServiceConnection() {
-    		net = null;
-    }
+	private NetService net;
+
+	private Jupiter algo;
+
+	private SynchronizedQueue requestForwardQueue;
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param siteId
+	 *            the site id
+	 * @param net
+	 *            the net service
+	 * @param algo
+	 *            the algorithm implementation Jupiter
+	 * @param queue
+	 *            the synchronized queue for forwarding of requests
+	 * @see NetService
+	 * @see Jupiter
+	 * @see SynchronizedQueue
+	 */
+	public DefaultClientProxy(int siteId, NetService net, Jupiter algo,
+			SynchronizedQueue queue) {
+		this.siteId = siteId;
+		this.net = net;
+		this.algo = algo;
+		requestForwardQueue = queue;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void sendRequest(Request req) {
+		if (net != null) {
+			net.transmitRequest(req);
+		} else {
+			LOG.warn("net service null");
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void receiveRequest(Request req) {
+		// if the net service connection has been aborted, stop receiving and
+		// forwarding respectively, requests.
+		if (net != null) {
+			LOG.info("--> recv " + req);
+			requestForwardQueue.add(new Object[] { this, req });
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Jupiter getAlgorithm() {
+		return algo;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public int getSiteId() {
+		return siteId;
+	}
+
+	/**
+	 * Returns the request forward queue.
+	 * 
+	 * @return the request forward queue
+	 */
+	public SynchronizedQueue getRequestForwardQueue() {
+		return requestForwardQueue;
+	}
+
+	/**
+	 * Closes the connection to the net service in that the client proxy does
+	 * not forward requests any longer.
+	 * 
+	 * @see NetService
+	 */
+	public synchronized void closeNetServiceConnection() {
+		net = null;
+	}
 }

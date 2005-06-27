@@ -24,54 +24,56 @@ package ch.iserver.ace.text;
 import ch.iserver.ace.Operation;
 
 /**
- * The InsertOperation is used to hold a text together with its position index. 
+ * The InsertOperation is used to hold a text together with its position index.
  * The text is to be inserted in the document model.
  */
 public class InsertOperation implements Operation {
-	
+
 	/**
-	 * the text to be inserted
+	 * the text to be inserted.
 	 */
 	private String text;
-	
+
 	/**
-	 * the position index in the document model
+	 * the position index in the document model.
 	 */
 	private int position;
-	
+
 	/**
-	 * the origin position index where the insert operation
-	 * was originally intended. This concept could be extended
-	 * in such a way that two origin positions could be compared
-	 * to each other based on the same context. Therefore, if the
-	 * two positions do not relate on the same document context, a least
-	 * synchronization point (LSP) would have to be determined.
+	 * the origin position index where the insert operation was originally
+	 * intended. This concept could be extended in such a way that two origin
+	 * positions could be compared to each other based on the same context.
+	 * Therefore, if the two positions do not relate on the same document
+	 * context, a least synchronization point (LSP) would have to be determined.
 	 */
 	private int origin;
-	
+
 	/**
-	 * flag to indicate whether this operation is an undo
+	 * flag to indicate whether this operation is an undo.
 	 */
 	private boolean isUndo;
-	
+
 	/**
-	 * this operation's original operation, i.e if an operation
-	 * is transformed, a new operation is created and the old one
-	 * passed to it as the original operation  
+	 * this operation's original operation, i.e if an operation is transformed,
+	 * a new operation is created and the old one passed to it as the original
+	 * operation.
 	 */
 	private Operation original;
-	
-	/**
-	 * Class constructor.
-	 *
-	 */
-	public InsertOperation() { }
 
 	/**
 	 * Class constructor.
 	 * 
-	 * @param position 	the position in the document
-	 * @param text		the text to be inserted
+	 */
+	public InsertOperation() {
+	}
+
+	/**
+	 * Class constructor.
+	 * 
+	 * @param position
+	 *            the position in the document
+	 * @param text
+	 *            the text to be inserted
 	 */
 	public InsertOperation(int position, String text) {
 		setPosition(position);
@@ -79,46 +81,55 @@ public class InsertOperation implements Operation {
 		origin = getPosition();
 		setUndo(false);
 	}
-	
+
 	/**
 	 * Class constructor.
 	 * 
-	 * @param position	the position in the document
-	 * @param text		the text to be inserted
-	 * @param isUndo		flag to indicate an undo operation
+	 * @param position
+	 *            the position in the document
+	 * @param text
+	 *            the text to be inserted
+	 * @param isUndo
+	 *            flag to indicate an undo operation
 	 */
 	public InsertOperation(int position, String text, boolean isUndo) {
 		this(position, text);
 		origin = getPosition();
 		setUndo(isUndo);
 	}
-	
+
 	/**
 	 * Class constructor.
 	 * 
-	 * @param position	the position in the document
-	 * @param text		the text to be inserted
-	 * @param origin		the origin position of this insert operation
+	 * @param position
+	 *            the position in the document
+	 * @param text
+	 *            the text to be inserted
+	 * @param origin
+	 *            the origin position of this insert operation
 	 */
 	public InsertOperation(int position, String text, int origin) {
 		this(position, text);
 		this.origin = origin;
 		setUndo(false);
 	}
-	
+
 	/**
-	 * the text to be inserted
-	 * 
-	 * @param position	the position in the document
-	 * @param text		the text to be inserted
-	 * @param origin		the origin position of this insert operation
-	 * @param isUndo		flag to indicate an undo operation
+	 * @param position
+	 *            the position in the document
+	 * @param text
+	 *            the text to be inserted
+	 * @param origin
+	 *            the origin position of this insert operation
+	 * @param isUndo
+	 *            flag to indicate an undo operation
 	 */
-	public InsertOperation(int position, String text, int origin, boolean isUndo) {
+	public InsertOperation(int position, String text, int origin, 
+			boolean isUndo) {
 		this(position, text, origin);
 		setUndo(isUndo);
 	}
-	
+
 	/**
 	 * Returns the position.
 	 * 
@@ -131,11 +142,13 @@ public class InsertOperation implements Operation {
 	/**
 	 * Sets the position of this operation.
 	 * 
-	 * @param position the position to set
+	 * @param position
+	 *            the position to set
 	 */
 	public void setPosition(int position) {
-	    if (position < 0)
-	    		throw new IllegalArgumentException("position index must be >= 0");
+		if (position < 0) {
+			throw new IllegalArgumentException("position index must be >= 0");
+		}
 		this.position = position;
 	}
 
@@ -147,7 +160,7 @@ public class InsertOperation implements Operation {
 	public String getText() {
 		return text;
 	}
-	
+
 	/**
 	 * Returns the text length.
 	 * 
@@ -156,7 +169,7 @@ public class InsertOperation implements Operation {
 	public int getTextLength() {
 		return text.length();
 	}
-	
+
 	/**
 	 * Returns the origin position.
 	 * 
@@ -165,74 +178,80 @@ public class InsertOperation implements Operation {
 	public int getOrigin() {
 		return origin;
 	}
-	
+
 	/**
 	 * Sets the origin position.
 	 * 
-	 * @param origin the origin position to set
+	 * @param origin
+	 *            the origin position to set
 	 */
 	public void setOrigin(int origin) {
-	    if (origin < 0)
-    			throw new IllegalArgumentException("origin index must be >= 0");
+		if (origin < 0) {
+			throw new IllegalArgumentException("origin index must be >= 0");
+		}
 		this.origin = origin;
 	}
 
 	/**
 	 * Sets the text to be deleted.
 	 * 
-	 * @param text 	the text to be deleted
+	 * @param text
+	 *            the text to be deleted
 	 */
 	public void setText(String text) {
-	    if (text == null)
-	    		throw new IllegalArgumentException("text may not be null");
+		if (text == null) {
+			throw new IllegalArgumentException("text may not be null");
+		}
 		this.text = text;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public Operation inverse() {
-		//TODO: origin position gets lost.
+		// TODO: origin position gets lost.
 		return new DeleteOperation(getPosition(), getText(), true);
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public boolean isUndo() {
 		return isUndo;
 	}
-	
+
 	/**
 	 * Marks this operation as undo.
 	 * 
-	 * @param isUndo flag whether this operation is an undo
+	 * @param isUndo
+	 *            flag whether this operation is an undo
 	 */
 	public void setUndo(boolean isUndo) {
 		this.isUndo = isUndo;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public void setOriginalOperation(Operation op) {
 		original = op;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public Operation getOriginalOperation() {
 		return original;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return "Insert(" + position + ",'" + text + "',"+origin+","+isUndo+")";
+		return "Insert(" + position + ",'" + text + "'," + origin + ","
+				+ isUndo + ")";
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -243,23 +262,24 @@ public class InsertOperation implements Operation {
 			return false;
 		} else if (obj.getClass().equals(getClass())) {
 			InsertOperation op = (InsertOperation) obj;
-			return op.position == position && op.text.equals(text) && op.origin == origin 
-				&& op.isUndo == isUndo && op.original.equals(original);
+			return op.position == position && op.text.equals(text)
+					&& op.origin == origin && op.isUndo == isUndo
+					&& op.original.equals(original);
 		} else {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public int hashCode() {
 		int hashcode = position;
 		hashcode += 13 * origin;
-		hashcode += 13 * (new Boolean(isUndo)).hashCode();
+		hashcode += 13 * (Boolean.valueOf(isUndo)).hashCode();
 		hashcode += 13 * text.hashCode();
 		hashcode += 13 * original.hashCode();
 		return hashcode;
 	}
-	
+
 }

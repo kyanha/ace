@@ -21,6 +21,9 @@
 
 package ch.iserver.ace.algorithm;
 
+import javax.swing.undo.CannotRedoException;
+import javax.swing.undo.CannotUndoException;
+
 import ch.iserver.ace.DocumentModel;
 import ch.iserver.ace.Operation;
 
@@ -54,7 +57,7 @@ public interface Algorithm {
 	 * @throws javax.swing.undo.CannotUndoException
 	 *             iff an undo is impossible
 	 */
-	public Request undo();
+	public Request undo() throws CannotUndoException;
 
 	/**
 	 * Redo the last undone local operation.
@@ -63,7 +66,7 @@ public interface Algorithm {
 	 * @throws javax.swing.undo.CannotRedoException
 	 *             iff a redo is impossible
 	 */
-	public Request redo();
+	public Request redo() throws CannotRedoException;
 
 	/**
 	 * Generates a request for the given operation. The operation is a locally
