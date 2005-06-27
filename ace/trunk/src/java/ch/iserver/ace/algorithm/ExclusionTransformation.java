@@ -23,19 +23,21 @@ package ch.iserver.ace.algorithm;
 import ch.iserver.ace.Operation;
 
 /**
- *
+ * 
  */
 public interface ExclusionTransformation {
 
-    /**
-     * Exclude operation <var>op2</var> from the context of operation 
-     * <var>op1</var>. The transformed operation <var>op1'</var> is returned.
-     * 
-     * @param op1 the operation from which another is to be contextually excluded.
-     * @param op2 the operation to be excluded.
-     * @return the transformed operation <var>op1'</var>
-     */
-    public Operation transform(Operation op1, Operation op2);
-    
-    
+	/**
+	 * Exclude operation <var>op2</var> from the context of operation <var>op1</var>.
+	 * The transformed operation <var>op1'</var> is returned.
+	 * 
+	 * @param op1
+	 *            the operation from which another is to be contextually
+	 *            excluded.
+	 * @param op2
+	 *            the operation to be excluded.
+	 * @return the transformed operation <var>op1'</var>
+	 */
+	public Operation transform(Operation op1, Operation op2);
+
 }

@@ -21,27 +21,27 @@
 
 package ch.iserver.ace.algorithm;
 
-
 import ch.iserver.ace.Operation;
 
 /**
- * A RedoOperation is simply used to indicate an redo request
- * issued by the user through the GUI.
+ * A RedoOperation is simply used to indicate an redo request issued by the user
+ * through the GUI.
  */
 public class RedoOperation implements Operation {
-	
+
 	/**
 	 * Class constructor.
 	 */
-	public RedoOperation() { }
-	
+	public RedoOperation() {
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public Operation inverse() {
 		throw new UnsupportedOperationException();
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -56,7 +56,7 @@ public class RedoOperation implements Operation {
 		throw new UnsupportedOperationException();
 
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */

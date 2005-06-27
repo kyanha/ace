@@ -27,113 +27,116 @@ import ch.iserver.ace.util.SynchronizedQueue;
  *
  */
 public class DefaultRequestEngine implements RequestEngine {
-    
-    /**
-     * The buffer for incoming local operations.
-     */
-    private SynchronizedQueue localOperationBuffer;
-    
-    /**
-     * The buffer for incoming remote requests.
-     */
-    private SynchronizedQueue remoteRequestBuffer;
-    
-    /**
-     * The buffer for outgoing requests.
-     */
-    private SynchronizedQueue outgoingRequestBuffer;
-    
-    /**
-     * The queue handler which intermediates between the request engine
-     * and the algorithm.
-     */
-    private QueueHandler queueHandler;
-    
-    /**
-     * 
-     * @param algo the algorithm implementation
-     */
-    public DefaultRequestEngine(Algorithm algo) {
-    		if (algo == null) {
-    			throw new IllegalArgumentException("algo may not be null");
-    		}
-        Object synchObj = new Object();
-        localOperationBuffer = new SynchronizedQueue(synchObj);
-        remoteRequestBuffer = new SynchronizedQueue(synchObj);
-        outgoingRequestBuffer = new SynchronizedQueue();
-        queueHandler = new QueueHandler(algo,
-                localOperationBuffer,
-                remoteRequestBuffer,
-                outgoingRequestBuffer,
-                synchObj);
-        queueHandler.start();
-    }
-    
-    
-    /**
-     * {@inheritDoc}
-     */
-    public void generateRequest(Operation op) {
-        if (op != null) {
-            localOperationBuffer.add(op);
-        }
-    }
 
-    /**
-     * {@inheritDoc}
-     */
-    public void receiveRequest(Request req) {
-        if (req != null) {
-            remoteRequestBuffer.add(req);
-        }
-    }
+	/**
+	 * The buffer for incoming local operations.
+	 */
+	private SynchronizedQueue localOperationBuffer;
 
-    /**
-     * @return Returns the localOperationBuffer.
-     */
-    public SynchronizedQueue getLocalOperationBuffer() {
-        return localOperationBuffer;
-    }
-    /**
-     * @param localOperationBuffer The localOperationBuffer to set.
-     */
-    public void setLocalOperationBuffer(SynchronizedQueue localOperationBuffer) {
-        this.localOperationBuffer = localOperationBuffer;
-    }
-    /**
-     * @return Returns the outgoingRequestBuffer.
-     */
-    public SynchronizedQueue getOutgoingRequestBuffer() {
-        return outgoingRequestBuffer;
-    }
-    /**
-     * @param outgoingRequestBuffer The outgoingRequestBuffer to set.
-     */
-    public void setOutgoingRequestBuffer(SynchronizedQueue outgoingRequestBuffer) {
-        this.outgoingRequestBuffer = outgoingRequestBuffer;
-    }
-    /**
-     * @return Returns the remoteRequestBuffer.
-     */
-    public SynchronizedQueue getRemoteRequestBuffer() {
-        return remoteRequestBuffer;
-    }
-    /**
-     * @param remoteRequestBuffer The remoteRequestBuffer to set.
-     */
-    public void setRemoteRequestBuffer(SynchronizedQueue remoteRequestBuffer) {
-        this.remoteRequestBuffer = remoteRequestBuffer;
-    }
+	/**
+	 * The buffer for incoming remote requests.
+	 */
+	private SynchronizedQueue remoteRequestBuffer;
+
+	/**
+	 * The buffer for outgoing requests.
+	 */
+	private SynchronizedQueue outgoingRequestBuffer;
+
+	/**
+	 * The queue handler which intermediates between the request engine
+	 * and the algorithm.
+	 */
+	private QueueHandler queueHandler;
+
+	/**
+	 * 
+	 * @param algo the algorithm implementation
+	 */
+	public DefaultRequestEngine(Algorithm algo) {
+		if (algo == null) {
+			throw new IllegalArgumentException("algo may not be null");
+		}
+		Object synchObj = new Object();
+		localOperationBuffer = new SynchronizedQueue(synchObj);
+		remoteRequestBuffer = new SynchronizedQueue(synchObj);
+		outgoingRequestBuffer = new SynchronizedQueue();
+		queueHandler = new QueueHandler(algo, localOperationBuffer,
+				remoteRequestBuffer, outgoingRequestBuffer, synchObj);
+		queueHandler.start();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void generateRequest(Operation op) {
+		if (op != null) {
+			localOperationBuffer.add(op);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void receiveRequest(Request req) {
+		if (req != null) {
+			remoteRequestBuffer.add(req);
+		}
+	}
+
+	/**
+	 * @return Returns the localOperationBuffer.
+	 */
+	public SynchronizedQueue getLocalOperationBuffer() {
+		return localOperationBuffer;
+	}
+
+	/**
+	 * @param localOperationBuffer The localOperationBuffer to set.
+	 */
+	public void setLocalOperationBuffer(SynchronizedQueue localOperationBuffer) {
+		this.localOperationBuffer = localOperationBuffer;
+	}
+
+	/**
+	 * @return Returns the outgoingRequestBuffer.
+	 */
+	public SynchronizedQueue getOutgoingRequestBuffer() {
+		return outgoingRequestBuffer;
+	}
+
+	/**
+	 * @param outgoingRequestBuffer The outgoingRequestBuffer to set.
+	 */
+	public void setOutgoingRequestBuffer(SynchronizedQueue outgoingRequestBuffer) {
+		this.outgoingRequestBuffer = outgoingRequestBuffer;
+	}
+
+	/**
+	 * @return Returns the remoteRequestBuffer.
+	 */
+	public SynchronizedQueue getRemoteRequestBuffer() {
+		return remoteRequestBuffer;
+	}
+
+	/**
+	 * @param remoteRequestBuffer The remoteRequestBuffer to set.
+	 */
+	public void setRemoteRequestBuffer(SynchronizedQueue remoteRequestBuffer) {
+		this.remoteRequestBuffer = remoteRequestBuffer;
+	}
+
 	/**
 	 * @return Returns the queueHandler.
 	 */
 	public QueueHandler getQueueHandler() {
 		return queueHandler;
 	}
-    /**
-     * @param queueHandler The queueHandler to set.
-     */
-    public void setQueueHandler(QueueHandler queueHandler) {
-        this.queueHandler = queueHandler;
-    }
+
+	/**
+	 * @param queueHandler The queueHandler to set.
+	 */
+	public void setQueueHandler(QueueHandler queueHandler) {
+		this.queueHandler = queueHandler;
+	}
 }

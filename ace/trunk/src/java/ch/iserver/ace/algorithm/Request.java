@@ -26,11 +26,11 @@ import java.io.Serializable;
 import ch.iserver.ace.Operation;
 
 /**
- * This interface represents a request. Requests are typically sent over
- * the network to other sites. A request consists at least of the 
- * identifier of the sending site, an operation and a timestamp that 
- * specifies the definition context of the operation.
- *
+ * This interface represents a request. Requests are typically sent over the
+ * network to other sites. A request consists at least of the identifier of the
+ * sending site, an operation and a timestamp that specifies the definition
+ * context of the operation.
+ * 
  * @see ch.iserver.ace.Operation
  * @see ch.iserver.ace.algorithm.Timestamp
  */
@@ -42,20 +42,20 @@ public interface Request extends Serializable {
 	 * @return the identifier of the sending site
 	 */
 	public int getSiteId();
-	
+
 	/**
 	 * Gets the operation to be propagated.
 	 * 
 	 * @return the operation
 	 */
 	public Operation getOperation();
-	
+
 	/**
-	 * Gets the timestamp that specifies the definition context of the
-	 * enclosed operation
+	 * Gets the timestamp that specifies the definition context of the enclosed
+	 * operation
 	 * 
 	 * @return the timestamp of the definition context
 	 */
 	public Timestamp getTimestamp();
-	
+
 }

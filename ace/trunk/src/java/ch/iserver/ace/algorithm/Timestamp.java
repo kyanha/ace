@@ -24,11 +24,11 @@ package ch.iserver.ace.algorithm;
 import java.io.Serializable;
 
 /**
- * This interface represents the concept of a timestamp. Timestamps is a 
- * general concept, so this interface remains empty.
+ * This interface represents the concept of a timestamp. Timestamps is a general
+ * concept, so this interface remains empty.
  * 
  * @see ch.iserver.ace.algorithm.VectorTime
  */
 public interface Timestamp extends Serializable {
-	
+
 }

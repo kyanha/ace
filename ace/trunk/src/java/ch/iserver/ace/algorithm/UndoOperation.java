@@ -21,27 +21,27 @@
 
 package ch.iserver.ace.algorithm;
 
-
 import ch.iserver.ace.Operation;
 
 /**
- * An UndoOperation is simply used to indicate an undo request
- * issued by the user through the GUI.
+ * An UndoOperation is simply used to indicate an undo request issued by the
+ * user through the GUI.
  */
 public class UndoOperation implements Operation {
-	
+
 	/**
 	 * Class constructor.
 	 */
-	public UndoOperation() { }
-	
+	public UndoOperation() {
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public Operation inverse() {
 		throw new UnsupportedOperationException();
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -55,14 +55,14 @@ public class UndoOperation implements Operation {
 	public void setOriginalOperation(Operation op) {
 		throw new UnsupportedOperationException();
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public Operation getOriginalOperation() {
 		return null;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */

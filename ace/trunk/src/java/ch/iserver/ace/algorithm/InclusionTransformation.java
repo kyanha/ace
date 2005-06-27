@@ -23,18 +23,21 @@ package ch.iserver.ace.algorithm;
 import ch.iserver.ace.Operation;
 
 /**
- *
+ * 
  */
 public interface InclusionTransformation {
 
-    /**
-     * Include operation <var>op2</var> into the context of operation 
-     * <var>op1</var>. The transformed operation <var>op1'</var> is returned.
-     * 
-     * @param op1 the operation into which another is to be contextually included.
-     * @param op2 the operation to be included.
-     * @return the transformed operation <var>op1'</var>
-     */
-    public Operation transform(Operation op1, Operation op2);
-    
+	/**
+	 * Include operation <var>op2</var> into the context of operation <var>op1</var>.
+	 * The transformed operation <var>op1'</var> is returned.
+	 * 
+	 * @param op1
+	 *            the operation into which another is to be contextually
+	 *            included.
+	 * @param op2
+	 *            the operation to be included.
+	 * @return the transformed operation <var>op1'</var>
+	 */
+	public Operation transform(Operation op1, Operation op2);
+
 }
