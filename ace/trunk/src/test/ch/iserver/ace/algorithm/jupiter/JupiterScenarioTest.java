@@ -37,13 +37,6 @@ public class JupiterScenarioTest extends NWayTestCase {
 	}
 	
 	/**
-	 * Tests some basic undo puzzle.
-	 */
-	public void testUndoPuzzle() throws Exception {
-		execute("/test/jupiter/undo.xml");
-	}
-
-	/**
 	 * Tests some basic redo puzzle.
 	 */
 	public void testRedoPuzzle() throws Exception {
