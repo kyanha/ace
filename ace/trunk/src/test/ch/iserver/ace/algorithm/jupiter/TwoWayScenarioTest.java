@@ -28,7 +28,7 @@ import ch.iserver.ace.test.jupiter.TwoWayTestCase;
  * Test class for testing the jupiter algorithm implementation
  * with the test framework.
  */
-public class JupiterTest extends TwoWayTestCase {
+public class TwoWayScenarioTest extends TwoWayTestCase {
 	
 	public void testPuzzleOne() throws Exception {
 		execute("/test/puzzle.xml");

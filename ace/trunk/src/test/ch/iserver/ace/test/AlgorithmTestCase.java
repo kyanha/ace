@@ -28,8 +28,9 @@ public abstract class AlgorithmTestCase extends TestCase
 		DefaultScenarioBuilder builder = new DefaultScenarioBuilder();
 		loader.loadScenario(builder, stream);
 		Scenario scenario = builder.getScenario();
-		NodeVisitor visitor = createExecuteVisitor(this);
+		ExecuteVisitor visitor = createExecuteVisitor(this);
 		scenario.accept(visitor);
+		visitor.getVerificationResult().verify();
 	}
 	
 	protected void execute(String resource) throws Exception {
@@ -42,6 +43,6 @@ public abstract class AlgorithmTestCase extends TestCase
 
 	protected abstract ScenarioLoader createScenarioLoader();
 
-	protected abstract NodeVisitor createExecuteVisitor(AlgorithmTestFactory factory);
+	protected abstract ExecuteVisitor createExecuteVisitor(AlgorithmTestFactory factory);
 		
 }

@@ -55,6 +55,9 @@ public class ExecuteVisitor implements NodeVisitor {
 
 	/** map from site ids to algorithms. */
 	private Map algorithms;
+	
+	/** verification results */
+	private VerificationResult verificationResult;
 
 	/**
 	 * Creates a new execute visitor using the given <var>factory</var>.
@@ -65,6 +68,37 @@ public class ExecuteVisitor implements NodeVisitor {
 	public ExecuteVisitor(AlgorithmTestFactory factory) {
 		this.factory = factory;
 		this.algorithms = new HashMap();
+		this.verificationResult = new VerificationResult();
+	}
+	
+	/**
+	 * Gets the verification result at the end of the execution.
+	 * 
+	 * @return the verification result
+	 */
+	public VerificationResult getVerificationResult() {
+		return verificationResult;
+	}
+	
+	/**
+	 * Adds a failure to the verification result.
+	 * 
+	 * @param siteId the site id of the failing verification
+	 * @param expected the expected document state
+	 * @param actual the actual document state
+	 */
+	protected void addFailure(String siteId, String expected, String actual) {
+		verificationResult.addFailure(siteId, expected, actual);
+	}
+	
+	/**
+	 * Adds a success to the verification result.
+	 * 
+	 * @param siteId the site id of the successful verification
+	 * @param state the state at the site
+	 */
+	protected void addSuccess(String siteId, String state) {
+		verificationResult.addSuccess(siteId, state);
 	}
 
 	/**
@@ -216,9 +250,9 @@ public class ExecuteVisitor implements NodeVisitor {
 		DocumentModel expected = getFactory().createDocument(state);
 		DocumentModel actual = algo.getDocument();
 		if (!expected.equals(actual)) {
-			throw new VerificationException(siteId, 
-					nullSafeToString(expected), 
-					nullSafeToString(actual));
+			addFailure(siteId, state, nullSafeToString(actual));
+		} else {
+			addSuccess(siteId, state);
 		}
 	}
 	

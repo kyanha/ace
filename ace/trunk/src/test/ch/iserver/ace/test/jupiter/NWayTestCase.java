@@ -21,7 +21,7 @@
 package ch.iserver.ace.test.jupiter;
 
 import ch.iserver.ace.test.AlgorithmTestFactory;
-import ch.iserver.ace.test.NodeVisitor;
+import ch.iserver.ace.test.ExecuteVisitor;
 import ch.iserver.ace.test.ScenarioLoader;
 
 
@@ -30,7 +30,7 @@ import ch.iserver.ace.test.ScenarioLoader;
  */
 public abstract class NWayTestCase extends JupiterTestCase {
 	
-	protected NodeVisitor createExecuteVisitor(AlgorithmTestFactory factory) {
+	protected ExecuteVisitor createExecuteVisitor(AlgorithmTestFactory factory) {
 		return new NWayExecuteVisitor(this);
 	}
 	

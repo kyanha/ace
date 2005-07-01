@@ -22,62 +22,28 @@
 package ch.iserver.ace.test;
 
 /**
- * Scenario exception thrown while verifying the final document state.
+ * Scenario exception thrown while verifying the document state.
  */
 public class VerificationException extends ScenarioException {
-	/** the site of failed verification. */
-	private String siteId;
-	/** the expected content. */
-	private String expected;
-	/** the effective content. */
-	private String was;
+	
+	/** the verification result. */
+	private final VerificationResult result;
 	
 	/**
-	 * Creates a new verification exception.
+	 * Creates a new VerificationException based on the given
+	 * VerificationResult.
 	 * 
-	 * @param siteId the site of failure
-	 * @param expected the expected content
-	 * @param was the actual content
+	 * @param result the verification result
 	 */
-	public VerificationException(String siteId, String expected, String was) {
-		this.siteId = siteId;
-		this.expected = expected;
-		this.was = was;
-	}
-
-	/**
-	 * Returns the site id.
-	 * 
-	 * @return the site id
-	 */
-	public String getSiteId() {
-		return siteId;
-	}
-	
-	/**
-	 * 
-	 * @return the expected state
-	 */
-	public String getExpected() {
-		return expected;
-	}
-
-	/**
-	 * 
-	 * @return the actual state
-	 */
-	public String getWas() {
-		return was;
+	public VerificationException(VerificationResult result) {
+		this.result = result;
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return getClass().getName() + "[siteId=" + siteId 
-				+ ",expected=" + expected 
-				+ ",was=" + was
-				+ "]";
+		return getClass().getName() + "\n" + result;
 	}
 	
 }

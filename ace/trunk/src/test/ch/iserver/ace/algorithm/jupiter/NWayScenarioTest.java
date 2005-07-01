@@ -27,7 +27,7 @@ import ch.iserver.ace.test.jupiter.NWayTestCase;
  * uses the extended testframework suitable for the jupiter
  * algorithm (using a central server).
  */
-public class JupiterScenarioTest extends NWayTestCase {
+public class NWayScenarioTest extends NWayTestCase {
 
 	/**
 	 * Tests a basic dOPT puzzle.

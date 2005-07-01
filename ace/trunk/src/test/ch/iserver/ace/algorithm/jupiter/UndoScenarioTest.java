@@ -26,7 +26,7 @@ import ch.iserver.ace.test.jupiter.NWayTestCase;
 /**
  *
  */
-public class JupiterUndoScenarioTest extends NWayTestCase {
+public class UndoScenarioTest extends NWayTestCase {
 
 	/**
 	 * Tests some basic undo puzzle.
