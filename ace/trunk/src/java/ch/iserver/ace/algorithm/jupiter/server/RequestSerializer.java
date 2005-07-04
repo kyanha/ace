@@ -210,8 +210,8 @@ public class RequestSerializer extends Thread {
 	 * Shuts down this RequestSerializer.
 	 */
 	public void shutdown() {
-		// TODO: is an interrupt() call necessary?
 		shutdown = true;
+		interrupt();
 	}
 
 	/**
