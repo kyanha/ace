@@ -37,11 +37,11 @@ public class JupiterStateSpace implements StateSpace {
 	public JupiterStateSpace() {
 	}
 	
-	public Operation insertRequest(Request request) {
+	public Operation insert(Request request) {
 		return null;
 	}
 	
-	public Request insertOperation(Operation op) {
+	public Request insert(Operation op) {
 		return null;
 	}
 

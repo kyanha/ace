@@ -21,8 +21,6 @@
 
 package ch.iserver.ace.algorithm;
 
-import org.apache.log4j.Logger;
-
 import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.Request;
 
@@ -34,15 +32,17 @@ public interface StateSpace {
 	/**
 	 * Inserts the operation of the request into the stace space and returns the transformed operation.
 	 * 
-	 * @return the transformed operation of the request.
+	 * @param  request 	the request to be added to the state space
+	 * @return 			the transformed operation of the request.
 	 */
-	public Operation insertRequest(Request request);
+	public Operation insert(Request request);
 
 	/**
 	 * Inserts the operation into the state space and returns the request with the transformed operation.
 	 * 
-	 * @return the request with the transformed operation.
+	 * @param op 	the operation to be added to the state space
+	 * @return 		the request with the transformed operation.
 	 */
-	public Request insertOperation(Operation op);
+	public Request insert(Operation op);
 
 }
