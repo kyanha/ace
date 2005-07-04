@@ -43,6 +43,13 @@ public class SplitOperation implements Operation {
 	private Operation op2;
 	
 	/**
+	 * this operation's original operation, i.e if an operation is transformed,
+	 * a new operation is created and the old one passed to it as the original
+	 * operation.
+	 */
+	private Operation original;
+
+	/**
 	 * Class constructor.
 	 * 
 	 * @param op1 	the first operation
@@ -107,14 +114,15 @@ public class SplitOperation implements Operation {
 	 * {@inheritDoc}
 	 */
 	public void setOriginalOperation(Operation op) {
-		throw new UnsupportedOperationException();
+		original = op;
+		LOG.info("setOriginalOperation(" + op + ")");
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
 	public Operation getOriginalOperation() {
-		return null;
+		return op;
 	}
 	
 	/**
