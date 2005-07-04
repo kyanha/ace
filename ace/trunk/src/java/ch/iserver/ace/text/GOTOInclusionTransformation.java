@@ -50,7 +50,17 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 	 */
     public Operation transform(Operation op1, Operation op2) {
         Operation transformedOp;
-        if (op1 instanceof InsertOperation && op2 instanceof InsertOperation) {
+        if (op1 instanceof NoOperation) {
+        		transformedOp = clone((NoOperation)op1);
+        		LOG.info("\ttransform("+op1+", "+op2+") = "+transformedOp);
+        } else if (op2 instanceof NoOperation) { 
+        		if (op1 instanceof InsertOperation) {
+        			transformedOp = clone((InsertOperation)op1);
+        		} else {
+        			transformedOp = clone((DeleteOperation)op1);
+        		}
+        		LOG.info("\ttransform("+op1+", "+op2+") = "+transformedOp);
+        } else if (op1 instanceof InsertOperation && op2 instanceof InsertOperation) {
         		transformedOp = transform((InsertOperation)op1, (InsertOperation)op2);
         		LOG.info("\ttransform("+op1+", "+isTransformOpPrivileged+", "+op2+") = "+transformedOp);
         } else if (op1 instanceof InsertOperation && op2 instanceof DeleteOperation) {
@@ -77,20 +87,13 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 		if (posA < posB || posA == posB && insA.getOrigin() < insB.getOrigin()
 				|| posA == posB && insA.getOrigin() == insB.getOrigin()
 				&& isTransformOpPrivileged) {
-			/* an alternative to isTransformOpPrivileged could be: 		*/
-			/* && insA.getText().charAt(0) < insB.getText().charAt(0))  */
-			
 			/*
 			 * Operation A starts before operation B.
 			 * (B):       "ABCD"
 			 * (A):      "12"
 			 * (A'):     "12"
 			 */
-			transformedOperation = new InsertOperation(posA, insA.getText(),
-					insA.getOrigin());
-			transformedOperation.setUndo(insA.isUndo());
-			//    		transformedOperation = insA;
-			transformedOperation.setOriginalOperation(insA);
+			transformedOperation = clone(insA);
 		} else {
 			/*
 			 * Operation A starts in or behind operation B. Index of operation A' must
@@ -121,10 +124,7 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 			 * (A):      "12"       |     "12"
 			 * (A'):     "12"       |     "12"
 			 */
-			transformedOperation = new InsertOperation(posA, insA.getText(),
-					insA.getOrigin());
-			transformedOperation.setUndo(insA.isUndo());
-			transformedOperation.setOriginalOperation(insA);
+			transformedOperation = clone(insA);
 		} else if (posA > (posB + lenB)) {
 			/*
 			 * Operation A starts after operation B. Index of operation A' must
@@ -167,9 +167,7 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 			 * (A):      "12"
 			 * (A'):     "12"
 			 */
-			transformedOperation = new DeleteOperation(posA, delA.getText());
-			((DeleteOperation) transformedOperation).setUndo(delA.isUndo());
-			transformedOperation.setOriginalOperation(delA);
+			transformedOperation = clone(delA);
 		} else if (posA >= posB) {
 			/*
 			 * Operation A starts before or at the same position like operation B.
@@ -216,9 +214,7 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 			 * (A):      "12"
 			 * (A'):     "12"
 			 */
-			transformedOperation = new DeleteOperation(posA, delA.getText());
-			transformedOperation.setUndo(delA.isUndo());
-			transformedOperation.setOriginalOperation(delA);
+			transformedOperation = clone(delA);
 		} else if (posA >= (posB + lenB)) {
 			/*
 			 * Operation A starts at the end or after operation B. Index of operation A'
@@ -245,7 +241,7 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 				 */
 				//TODO: abstract class JupiterOperation which encapsulates all Jupiter specific
 				//operations, so that we have an general super class for Jupiter. This would
-				//allow for fewer casts.
+				//allow for fewer casts and no special returns.
 				NoOperation noop = new NoOperation();
 				noop.setUndo(delA.isUndo());
 				noop.setOriginalOperation(delA);
@@ -289,6 +285,46 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 			}
 		}
 		return transformedOperation;
+	}
+	
+	/**
+	 * Clone an insert operation and update its transformation history.
+	 * 
+	 * @param insA
+	 * @return InsertOperation
+	 */
+	private InsertOperation clone(InsertOperation insA) {
+		InsertOperation cloneOp = new InsertOperation(insA.getPosition(), insA.getText(),
+				insA.getOrigin());
+		cloneOp.setUndo(insA.isUndo());
+		cloneOp.setOriginalOperation(insA);
+		return cloneOp;
+	}
+	
+	/**
+	 * Clone a delete operation and update its transformation history.
+	 * 
+	 * @param delA
+	 * @return DeleteOperation
+	 */
+	private DeleteOperation clone(DeleteOperation delA) {
+		DeleteOperation cloneOp = new DeleteOperation(delA.getPosition(), delA.getText());
+		cloneOp.setUndo(delA.isUndo());
+		cloneOp.setOriginalOperation(delA);
+		return cloneOp;
+	}
+	
+	/**
+	 * Clones a no-operation and updates its transformation history.
+	 * 
+	 * @param noop
+	 * @return DeleteOperation
+	 */
+	private NoOperation clone(NoOperation noop) {
+		NoOperation cloneOp = new NoOperation();
+		cloneOp.setUndo(noop.isUndo());
+		cloneOp.setOriginalOperation(noop);
+		return cloneOp;
 	}
 
 	/**

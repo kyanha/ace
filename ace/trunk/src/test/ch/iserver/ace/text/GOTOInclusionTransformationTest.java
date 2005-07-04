@@ -293,21 +293,21 @@ public class GOTOInclusionTransformationTest extends TestCase {
 	public void testDeleteDelete03() throws Exception {
 		// init
 		Operation delA, delB;
-		DeleteOperation result;
+		NoOperation result;
 		GOTOInclusionTransformation transform = new GOTOInclusionTransformation();
 
 		// Operation B starts before or at the same position like operation A
 		// and ends after or at the same position like operation A.
 		delA = new DeleteOperation(4, "12");
 		delB = new DeleteOperation(4, "ABCD");
-		result = (DeleteOperation)transform.transform(delA, delB);
-		assertEquals(4, result.getPosition());
+		result = (NoOperation)transform.transform(delA, delB);
+		assertEquals(0, result.getPosition());
 		assertEquals("", result.getText());
 
 		delA = new DeleteOperation(6, "12");
 		delB = new DeleteOperation(4, "ABCD");
-		result = (DeleteOperation)transform.transform(delA, delB);
-		assertEquals(6, result.getPosition());
+		result = (NoOperation)transform.transform(delA, delB);
+		assertEquals(0, result.getPosition());
 		assertEquals("", result.getText());
 	}
 

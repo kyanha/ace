@@ -144,7 +144,7 @@ public class NoOperation implements Operation {
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return "NoOp(0,''," + isUndo + ", "
+		return "Noop(0,''," + isUndo + ", "
 				+ original + ")";
 	}
 
