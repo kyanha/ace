@@ -30,7 +30,7 @@ import ch.iserver.ace.Operation;
  */
 public class NoOperation implements Operation {
 
-	private static final Logger LOG = Logger.getLogger(DeleteOperation.class);
+	private static final Logger LOG = Logger.getLogger(NoOperation.class);
 
 	/**
 	 * flag to indicate whether this operation is an undo.
