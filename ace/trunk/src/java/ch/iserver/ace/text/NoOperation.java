@@ -26,22 +26,11 @@ import org.apache.log4j.Logger;
 import ch.iserver.ace.Operation;
 
 /**
- * The NoOperation is used to hold a text together with its position that is
- * to be deleted in the document model.
+ * The NoOperation is used to hold a empty text together with the position zero.
  */
 public class NoOperation implements Operation {
 
 	private static final Logger LOG = Logger.getLogger(DeleteOperation.class);
-
-	/**
-	 * the text to be deleted.
-	 */
-	private String text;
-
-	/**
-	 * the position in the document where the text is to be deleted.
-	 */
-	private int position;
 
 	/**
 	 * flag to indicate whether this operation is an undo.
@@ -59,8 +48,6 @@ public class NoOperation implements Operation {
 	 * Class constructor.
 	 */
 	public NoOperation() {
-		position = 0;
-		text = "";
 		setUndo(false);
 	}
 
@@ -70,7 +57,7 @@ public class NoOperation implements Operation {
 	 * @return the position
 	 */
 	public int getPosition() {
-		return position;
+		return 0;
 	}
 
 	/**
@@ -89,7 +76,7 @@ public class NoOperation implements Operation {
 	 * @return the length of the text
 	 */
 	public int getTextLength() {
-		return text.length();
+		return 0;
 	}
 
 	/**
@@ -98,7 +85,7 @@ public class NoOperation implements Operation {
 	 * @return the text to be deleted
 	 */
 	public String getText() {
-		return text;
+		return "";
 	}
 
 	/**
@@ -154,7 +141,7 @@ public class NoOperation implements Operation {
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return "NoOp(" + position + ",'" + text + "'," + isUndo + ", "
+		return "NoOp(0,''," + isUndo + ", "
 				+ original + ")";
 	}
 
@@ -167,9 +154,8 @@ public class NoOperation implements Operation {
 		} else if (obj == null) {
 			return false;
 		} else if (obj.getClass().equals(getClass())) {
-			DeleteOperation op = (DeleteOperation) obj;
-			return op.position == position && op.text.equals(text)
-					&& op.isUndo == isUndo && op.original.equals(original);
+			NoOperation op = (NoOperation) obj;
+			return op.isUndo == isUndo && op.original.equals(original);
 		} else {
 			return false;
 		}
@@ -179,9 +165,7 @@ public class NoOperation implements Operation {
 	 * {@inheritDoc}
 	 */
 	public int hashCode() {
-		int hashcode = position;
-		hashcode += 13 * (Boolean.valueOf(isUndo)).hashCode();
-		hashcode += 13 * text.hashCode();
+		int hashcode = (Boolean.valueOf(isUndo)).hashCode();
 		hashcode += 13 * original.hashCode();
 		return hashcode;
 	}
