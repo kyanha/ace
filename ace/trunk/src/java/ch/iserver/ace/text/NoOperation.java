@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $id$
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
