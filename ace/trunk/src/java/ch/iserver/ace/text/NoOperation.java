@@ -102,7 +102,10 @@ public class NoOperation implements Operation {
 	 * {@inheritDoc}
 	 */
 	public Operation inverse() {
-		throw new UnsupportedOperationException();
+		NoOperation noop = new NoOperation();
+		noop.setUndo(isUndo);
+		noop.setOriginalOperation(original);
+		return noop;
 	}
 
 	/**
