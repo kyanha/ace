@@ -197,8 +197,7 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 					.substring(posB - posA, lenA));
 			del2.setUndo(delA.isUndo());
 			transformedOperation = new SplitOperation(del1, del2);
-			//TODO: how to add the original operation? assume now that it is not necessesary since
-			//these operations won't be transformed further.
+			transformedOperation.setOriginalOperation(delA);
 		}
 		return transformedOperation;
 	}
