@@ -243,10 +243,13 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 				 * (A):       "12"      |     "12"
 				 * (A'):     ""         |     ""
 				 */
-				//TODO? information gets lost. -> why not create a noop-operation?
-				transformedOperation = new DeleteOperation(posA, "");
-				transformedOperation.setUndo(delA.isUndo());
-				transformedOperation.setOriginalOperation(delA);
+				//TODO: abstract class JupiterOperation which encapsulates all Jupiter specific
+				//operations, so that we have an general super class for Jupiter. This would
+				//allow for fewer casts.
+				NoOperation noop = new NoOperation();
+				noop.setUndo(delA.isUndo());
+				noop.setOriginalOperation(delA);
+				return noop;
 			} else if ((posB <= posA) && ((posA + lenA) > (posB + lenB))) {
 				/*
 				 * Operation B starts before or at the same position like operation A
