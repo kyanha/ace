@@ -21,6 +21,8 @@
 package ch.iserver.ace.text;
 
 
+import org.apache.log4j.Logger;
+
 import ch.iserver.ace.Operation;
 
 /**
@@ -32,6 +34,8 @@ import ch.iserver.ace.Operation;
  */
 public class SplitOperation implements Operation {
 
+	private static final Logger LOG = Logger.getLogger(SplitOperation.class);
+	
 	/**
 	 * The first operation.
 	 */
@@ -122,7 +126,7 @@ public class SplitOperation implements Operation {
 	 * {@inheritDoc}
 	 */
 	public Operation getOriginalOperation() {
-		return op;
+		return original;
 	}
 	
 	/**
