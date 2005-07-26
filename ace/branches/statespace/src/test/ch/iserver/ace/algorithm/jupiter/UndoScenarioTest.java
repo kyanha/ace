@@ -68,7 +68,7 @@ public class UndoScenarioTest extends NWayTestCase {
 	}
 		
 	/**
-	 * This is the same test as {@link testUndo3()} but
+	 * This is the same test as {@link #testUndo3()} but
 	 * makes 2 concurrent undo's instead of one.
 	 * site 1: | del 0,b ; ins 0,a ; undo ; undo 	|
 	 * site 2: | del 0,b							|

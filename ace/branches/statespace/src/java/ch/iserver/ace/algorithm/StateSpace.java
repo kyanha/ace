@@ -44,5 +44,11 @@ public interface StateSpace {
 	 * @return 		the request with the transformed operation.
 	 */
 	public Request insert(Operation op);
+	
+	public Request undo();
+	public boolean canUndo();
+	
+	public Request redo();
+	public boolean canRedo();
 
 }

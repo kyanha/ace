@@ -46,9 +46,10 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 	private boolean isTransformOpPrivileged;
 
 	/**
-	 * {@inheritDoc}
+	 * @TODO: javadoc comment for param and possible classcastexception
 	 */
-    public Operation transform(Operation op1, Operation op2) {
+    public Operation transform(Operation op1, Operation op2, Object param) {
+    		isTransformOpPrivileged = ((Boolean)param).booleanValue();
         Operation transformedOp;
         if (op1 instanceof NoOperation) {
         		transformedOp = clone((NoOperation)op1);
@@ -327,15 +328,15 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 		return cloneOp;
 	}
 
-	/**
-	 * Marks the first operation in {@link GOTOInclusionTransformation#transform(Operation, Operation)}
-	 * as privileged. This flag is used when two insert operations are to be transformed against and 
-	 * both have the same position and origin index. If this flag is true, then the
-	 * first insert operation is privileged and remains unchanged.
-	 * 
-	 * @param value 	the privilege value for the first operation
-	 */
-	public void setTransformOpPrivileged(boolean value) {
-		isTransformOpPrivileged = value;
-	}
+//	/**
+//	 * Marks the first operation in {@link GOTOInclusionTransformation#transform(Operation, Operation)}
+//	 * as privileged. This flag is used when two insert operations are to be transformed against and 
+//	 * both have the same position and origin index. If this flag is true, then the
+//	 * first insert operation is privileged and remains unchanged.
+//	 * 
+//	 * @param value 	the privilege value for the first operation
+//	 */
+//	public void setTransformOpPrivileged(boolean value) {
+//		isTransformOpPrivileged = value;
+//	}
 }

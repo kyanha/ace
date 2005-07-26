@@ -46,7 +46,7 @@ public class GOTOInclusionTransformationTest extends TestCase {
 		// insert before
 		insA = new InsertOperation(0, "12");
 		insB = new InsertOperation(1, "ABCD");
-		result = (InsertOperation)transform.transform(insA, insB);
+		result = (InsertOperation)transform.transform(insA, insB, Boolean.FALSE);
 		assertEquals(0, result.getPosition());
 		assertEquals("12", result.getText());
 	}
@@ -62,24 +62,24 @@ public class GOTOInclusionTransformationTest extends TestCase {
 		GOTOInclusionTransformation transform = new GOTOInclusionTransformation();
 				
 		// insert at the same position (ascii order)
-		transform.setTransformOpPrivileged(true);
+//		transform.setTransformOpPrivileged(true);
 		insA = new InsertOperation(0, "12");
 		insB = new InsertOperation(0, "ABCD");
-		result = (InsertOperation)transform.transform(insA, insB);
+		result = (InsertOperation)transform.transform(insA, insB, Boolean.TRUE);
 		assertEquals(0, result.getPosition());
 		assertEquals("12", result.getText());
 
 		// insert at the same poition (origin order)
 		insA = new InsertOperation(1, "12", 0);
 		insB = new InsertOperation(1, "ABCD", 1);
-		result = (InsertOperation)transform.transform(insA, insB);
+		result = (InsertOperation)transform.transform(insA, insB, Boolean.TRUE);
 		assertEquals(1, result.getPosition());
 		assertEquals("12", result.getText());
 
 		// insert at the same poition (origin order2)
 		insA = new InsertOperation(1, "12", 1);
 		insB = new InsertOperation(1, "ABCD", 0);
-		result = (InsertOperation)transform.transform(insA, insB);
+		result = (InsertOperation)transform.transform(insA, insB, Boolean.TRUE);
 		assertEquals(5, result.getPosition());
 		assertEquals("12", result.getText());
 
@@ -98,14 +98,14 @@ public class GOTOInclusionTransformationTest extends TestCase {
 		// insert in the middle
 		insA = new InsertOperation(2, "12");
 		insB = new InsertOperation(0, "ABCD");
-		result = (InsertOperation)transform.transform(insA, insB);
+		result = (InsertOperation)transform.transform(insA, insB, Boolean.FALSE);
 		assertEquals(6, result.getPosition());
 		assertEquals("12", result.getText());
 
 		// insert at the end
 		insA = new InsertOperation(6, "12");
 		insB = new InsertOperation(0, "ABCD");
-		result = (InsertOperation)transform.transform(insA, insB);
+		result = (InsertOperation)transform.transform(insA, insB, Boolean.FALSE);
 		assertEquals(10, result.getPosition());
 		assertEquals("12", result.getText());
 	}
@@ -123,14 +123,14 @@ public class GOTOInclusionTransformationTest extends TestCase {
 		// insert before delete
 		insA = new InsertOperation(0, "12");
 		delB = new DeleteOperation(1, "ABCD");
-		result = (InsertOperation)transform.transform(insA, delB);
+		result = (InsertOperation)transform.transform(insA, delB, Boolean.FALSE);
 		assertEquals(0, result.getPosition());
 		assertEquals("12", result.getText());
 
 		// insert at the same position than delete
 		insA = new InsertOperation(0, "12");
 		delB = new DeleteOperation(0, "ABCD");
-		result = (InsertOperation)transform.transform(insA, delB);
+		result = (InsertOperation)transform.transform(insA, delB, Boolean.FALSE);
 		assertEquals(0, result.getPosition());
 		assertEquals("12", result.getText());
 	}
@@ -148,14 +148,14 @@ public class GOTOInclusionTransformationTest extends TestCase {
 		// insert after delete
 		insA = new InsertOperation(6, "12");
 		delB = new DeleteOperation(1, "ABCD");
-		result = (InsertOperation)transform.transform(insA, delB);
+		result = (InsertOperation)transform.transform(insA, delB, Boolean.FALSE);
 		assertEquals(2, result.getPosition());
 		assertEquals("12", result.getText());
 
 		// insert after delete
 		insA = new InsertOperation(4, "12");
 		delB = new DeleteOperation(0, "ABCD");
-		result = (InsertOperation)transform.transform(insA, delB);
+		result = (InsertOperation)transform.transform(insA, delB, Boolean.FALSE);
 		assertEquals(0, result.getPosition());
 		assertEquals("12", result.getText());
 	}
@@ -173,7 +173,7 @@ public class GOTOInclusionTransformationTest extends TestCase {
 		// insert after delete
 		insA = new InsertOperation(6, "12");
 		delB = new DeleteOperation(4, "ABCD");
-		result = (InsertOperation)transform.transform(insA, delB);
+		result = (InsertOperation)transform.transform(insA, delB, Boolean.FALSE);
 		assertEquals(4, result.getPosition());
 		assertEquals("12", result.getText());
 	}
@@ -191,7 +191,7 @@ public class GOTOInclusionTransformationTest extends TestCase {
 		// insert after delete
 		delA = new DeleteOperation(1, "12");
 		insB = new InsertOperation(4, "ABCD");
-		result = (DeleteOperation)transform.transform(delA, insB);
+		result = (DeleteOperation)transform.transform(delA, insB, Boolean.FALSE);
 		assertEquals(1, result.getPosition());
 		assertEquals("12", result.getText());
 	}
@@ -209,13 +209,13 @@ public class GOTOInclusionTransformationTest extends TestCase {
 		// insert starts before or at the same position like insert operation
 		delA = new DeleteOperation(1, "12");
 		insB = new InsertOperation(0, "ABCD");
-		result = (DeleteOperation)transform.transform(delA, insB);
+		result = (DeleteOperation)transform.transform(delA, insB, Boolean.FALSE);
 		assertEquals(5, result.getPosition());
 		assertEquals("12", result.getText());
 
 		delA = new DeleteOperation(1, "12");
 		insB = new InsertOperation(1, "ABCD");
-		result = (DeleteOperation)transform.transform(delA, insB);
+		result = (DeleteOperation)transform.transform(delA, insB, Boolean.FALSE);
 		assertEquals(5, result.getPosition());
 		assertEquals("12", result.getText());
 	}
@@ -234,7 +234,7 @@ public class GOTOInclusionTransformationTest extends TestCase {
 		// insert starts before or at the same position like insert operation
 		delA = new DeleteOperation(0, "1234567890");
 		insB = new InsertOperation(4, "ABCD");
-		result = (SplitOperation)transform.transform(delA, insB);
+		result = (SplitOperation)transform.transform(delA, insB, Boolean.FALSE);
 		delOp1 = (DeleteOperation)result.getFirst();
 		assertEquals(0, delOp1.getPosition());
 		assertEquals("1234", delOp1.getText());
@@ -256,7 +256,7 @@ public class GOTOInclusionTransformationTest extends TestCase {
 		// Operation A is completly before operation B.
 		delA = new DeleteOperation(1, "12");
 		delB = new DeleteOperation(4, "ABCD");
-		result = (DeleteOperation)transform.transform(delA, delB);
+		result = (DeleteOperation)transform.transform(delA, delB, Boolean.FALSE);
 		assertEquals(1, result.getPosition());
 		assertEquals("12", result.getText());
 	}
@@ -275,13 +275,13 @@ public class GOTOInclusionTransformationTest extends TestCase {
 		// must be reduced by the length of the text of operation B.
 		delA = new DeleteOperation(8, "12");
 		delB = new DeleteOperation(4, "ABCD");
-		result = (DeleteOperation)transform.transform(delA, delB);
+		result = (DeleteOperation)transform.transform(delA, delB, Boolean.FALSE);
 		assertEquals(4, result.getPosition());
 		assertEquals("12", result.getText());
 
 		delA = new DeleteOperation(10, "12");
 		delB = new DeleteOperation(4, "ABCD");
-		result = (DeleteOperation)transform.transform(delA, delB);
+		result = (DeleteOperation)transform.transform(delA, delB, Boolean.FALSE);
 		assertEquals(6, result.getPosition());
 		assertEquals("12", result.getText());
 	}
@@ -300,13 +300,13 @@ public class GOTOInclusionTransformationTest extends TestCase {
 		// and ends after or at the same position like operation A.
 		delA = new DeleteOperation(4, "12");
 		delB = new DeleteOperation(4, "ABCD");
-		result = (NoOperation)transform.transform(delA, delB);
+		result = (NoOperation)transform.transform(delA, delB, Boolean.FALSE);
 		assertEquals(0, result.getPosition());
 		assertEquals("", result.getText());
 
 		delA = new DeleteOperation(6, "12");
 		delB = new DeleteOperation(4, "ABCD");
-		result = (NoOperation)transform.transform(delA, delB);
+		result = (NoOperation)transform.transform(delA, delB, Boolean.FALSE);
 		assertEquals(0, result.getPosition());
 		assertEquals("", result.getText());
 	}
@@ -325,7 +325,7 @@ public class GOTOInclusionTransformationTest extends TestCase {
 		// and ends before operation A.
 		delA = new DeleteOperation(6, "12345");
 		delB = new DeleteOperation(4, "ABCD");
-		result = (DeleteOperation)transform.transform(delA, delB);
+		result = (DeleteOperation)transform.transform(delA, delB, Boolean.FALSE);
 		assertEquals(4, result.getPosition());
 		assertEquals("345", result.getText());
 	}
@@ -344,7 +344,7 @@ public class GOTOInclusionTransformationTest extends TestCase {
 		// same position like operation A.
 		delA = new DeleteOperation(2, "12345");
 		delB = new DeleteOperation(4, "ABCD");
-		result = (DeleteOperation)transform.transform(delA, delB);
+		result = (DeleteOperation)transform.transform(delA, delB, Boolean.FALSE);
 		assertEquals(2, result.getPosition());
 		assertEquals("12", result.getText());
 	}
@@ -362,7 +362,7 @@ public class GOTOInclusionTransformationTest extends TestCase {
 		// Operation B is fully in operation A.
 		delA = new DeleteOperation(2, "12345");
 		delB = new DeleteOperation(3, "ABC");
-		result = (DeleteOperation)transform.transform(delA, delB);
+		result = (DeleteOperation)transform.transform(delA, delB, Boolean.FALSE);
 		assertEquals(2, result.getPosition());
 		assertEquals("15", result.getText());
 	}

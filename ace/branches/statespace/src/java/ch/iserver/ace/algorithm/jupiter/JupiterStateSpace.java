@@ -45,4 +45,24 @@ public class JupiterStateSpace implements StateSpace {
 		return null;
 	}
 
+	public Request undo() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	public boolean canUndo() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public Request redo() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public boolean canRedo() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }
