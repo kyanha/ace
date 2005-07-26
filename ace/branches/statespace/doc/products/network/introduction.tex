@@ -1,0 +1,39 @@
+\section{Introduction}
+The goal of the semester project is to create a fully functional operational transformation algorithm. We are implementing the \emph{Jupiter} algorithm. In the diploma project we will (most likely) build a collaborative text editor that uses this algorithm. One of the most central things to implement will be a network layer. 
+
+The purpose of this document is to examine existing networking solutions and to gather information so that we can decide how to implement the network layer of \ace. It is not a goal to select a network technology for \ace yet. This decision is delayed further. 
+
+
+\subsection{Requirements}
+\label{sect:requirements}
+The network layer will need to provide the following two basic features:
+
+\begin{itemize}
+ \item discovery
+ \item communication
+\end{itemize}
+
+Let us explain these two basic points in greater detail.
+
+\subsubsection{Discovery}
+In \ace a user will be able to share a document so others can join him editing this document. Without a way of first advertising a shared document and then discovering it, the application is pretty useless. There are several technologies that allow automatic discovery of services, for instance \emph{Jini} (see section \ref{sect:jini}), \emph{Bonjour} (also known as zero-conf networking, see section \ref{sect:bonjour}) and diverse peer-to-peer frameworks (e.g. \emph{JXTA}, see section \ref{sect:jxta}).
+
+\subsubsection{Communication}
+When a user discovered a shared document and decided to join that document, there must be a way to communicate between the document publisher and the user that wants to join the document. There are different technologies ranging from plain socket communication over remote method invocation to complex peer-to-peer frameworks. They differ in several aspects such as ease of use and platfrom independence.
+
+The \emph{Jupiter} algorithm does not need a network layer that is capable of multicast. Each operation is sent to the server only. Clients must not be explicitely aware of other users editing the same document from the viewpoint of the algorithm. That is why some network technologies targeting multicast communication are most likely not an appropriate choice (although they would be for an algorithm that requires multicast messaging).
+
+
+\subsection{Overview}
+In the following sections we will discuss several network technologies:
+
+\begin{itemize}
+ \item JGroups (see section \ref{sect:jgroups})
+ \item Bonjour (see section \ref{sect:bonjour})
+ \item Jini/RMI (see section \ref{sect:jini})
+ \item JXTA (see section \ref{sect:jxta})
+ \item BEEP (see section \ref{sect:beep})
+\end{itemize}
+
+Each section will introduce the general details of the technology. If there is a prototype for this technology, it will be explained. Next an analysis of the technology and its suitability for \ace is given, containing good, bad and open points. The open points (if there are any) describe things we should investigate further before we decide to use that particular technology. Finally, there is a section with links to more information in the resources section.
+
