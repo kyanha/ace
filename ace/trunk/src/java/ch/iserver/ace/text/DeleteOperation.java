@@ -44,11 +44,6 @@ public class DeleteOperation implements Operation {
 	private int position;
 
 	/**
-	 * flag to indicate whether this operation is an undo.
-	 */
-	private boolean isUndo;
-
-	/**
 	 * this operation's original operation, i.e if an operation is transformed,
 	 * a new operation is created and the old one passed to it as the original
 	 * operation.
@@ -58,9 +53,7 @@ public class DeleteOperation implements Operation {
 	/**
 	 * Class constructor.
 	 */
-	public DeleteOperation() {
-		setUndo(false);
-	}
+	public DeleteOperation() {}
 
 	/**
 	 * Class constructor.
@@ -73,7 +66,6 @@ public class DeleteOperation implements Operation {
 	public DeleteOperation(int position, String text) {
 		setPosition(position);
 		setText(text);
-		setUndo(false);
 	}
 
 	/**
@@ -89,7 +81,6 @@ public class DeleteOperation implements Operation {
 	public DeleteOperation(int position, String text, boolean isUndo) {
 		setPosition(position);
 		setText(text);
-		setUndo(isUndo);
 	}
 
 	/**
@@ -148,30 +139,6 @@ public class DeleteOperation implements Operation {
 	/**
 	 * {@inheritDoc}
 	 */
-	public Operation inverse() {
-		return new InsertOperation(getPosition(), getText(), true);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean isUndo() {
-		return isUndo;
-	}
-
-	/**
-	 * Marks this operation as undo.
-	 * 
-	 * @param isUndo
-	 *            flag whether this operation is an undo
-	 */
-	public void setUndo(boolean isUndo) {
-		this.isUndo = isUndo;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public void setOriginalOperation(Operation op) {
 		original = op;
 		LOG.info("setOriginalOperation(" + op + ")");
@@ -188,8 +155,7 @@ public class DeleteOperation implements Operation {
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return "Delete(" + position + ",'" + text + "'," + isUndo + ", "
-				+ original + ")";
+		return "Delete(" + position + ",'" + text + "'," + original + ")";
 	}
 
 	/**
@@ -203,7 +169,7 @@ public class DeleteOperation implements Operation {
 		} else if (obj.getClass().equals(getClass())) {
 			DeleteOperation op = (DeleteOperation) obj;
 			return op.position == position && op.text.equals(text)
-					&& op.isUndo == isUndo && op.original.equals(original);
+					&& op.original.equals(original);
 		} else {
 			return false;
 		}
@@ -214,7 +180,6 @@ public class DeleteOperation implements Operation {
 	 */
 	public int hashCode() {
 		int hashcode = position;
-		hashcode += 13 * (Boolean.valueOf(isUndo)).hashCode();
 		hashcode += 13 * text.hashCode();
 		hashcode += 13 * original.hashCode();
 		return hashcode;

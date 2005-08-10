@@ -133,16 +133,7 @@ public class QueueHandler extends Thread {
 					// handle local request
 					Operation nextOp = (Operation) localOperationBuffer.get(0);
 					if (nextOp != null) {
-						Request req = null;
-						if (nextOp instanceof UndoOperation) {
-							// undo
-							req = algo.undo();
-						} else if (nextOp instanceof RedoOperation) {
-							// redo
-							req = algo.redo();
-						} else {
-							req = algo.generateRequest(nextOp);
-						}
+						Request req = algo.generateRequest(nextOp);
 						outgoingRequestBuffer.add(req);
 					} else {
 						LOG.warn("null from operation buffer");

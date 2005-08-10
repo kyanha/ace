@@ -33,11 +33,6 @@ public class NoOperation implements Operation {
 	private static final Logger LOG = Logger.getLogger(NoOperation.class);
 
 	/**
-	 * flag to indicate whether this operation is an undo.
-	 */
-	private boolean isUndo;
-
-	/**
 	 * this operation's original operation, i.e if an operation is transformed,
 	 * a new operation is created and the old one passed to it as the original
 	 * operation.
@@ -47,9 +42,7 @@ public class NoOperation implements Operation {
 	/**
 	 * Class constructor.
 	 */
-	public NoOperation() {
-		setUndo(false);
-	}
+	public NoOperation() {}
 
 	/**
 	 * Returns the position.
@@ -101,33 +94,6 @@ public class NoOperation implements Operation {
 	/**
 	 * {@inheritDoc}
 	 */
-	public Operation inverse() {
-		NoOperation noop = new NoOperation();
-		noop.setUndo(isUndo);
-		noop.setOriginalOperation(original);
-		return noop;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean isUndo() {
-		return isUndo;
-	}
-
-	/**
-	 * Marks this operation as undo.
-	 * 
-	 * @param isUndo
-	 *            flag whether this operation is an undo
-	 */
-	public void setUndo(boolean isUndo) {
-		this.isUndo = isUndo;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public void setOriginalOperation(Operation op) {
 		original = op;
 		LOG.info("setOriginalOperation(" + op + ")");
@@ -144,8 +110,7 @@ public class NoOperation implements Operation {
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return "Noop(0,''," + isUndo + ", "
-				+ original + ")";
+		return "Noop(0,''," + original + ")";
 	}
 
 	/**
@@ -158,7 +123,7 @@ public class NoOperation implements Operation {
 			return false;
 		} else if (obj.getClass().equals(getClass())) {
 			NoOperation op = (NoOperation) obj;
-			return op.isUndo == isUndo && op.original.equals(original);
+			return op.original.equals(original);
 		} else {
 			return false;
 		}
@@ -168,7 +133,7 @@ public class NoOperation implements Operation {
 	 * {@inheritDoc}
 	 */
 	public int hashCode() {
-		int hashcode = (Boolean.valueOf(isUndo)).hashCode();
+		int hashcode = 37;
 		hashcode += 13 * original.hashCode();
 		return hashcode;
 	}

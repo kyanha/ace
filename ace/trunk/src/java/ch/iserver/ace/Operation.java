@@ -31,20 +31,6 @@ import java.io.Serializable;
 public interface Operation extends Serializable {
 	
 	/**
-	 * Returns the inverse of this operation.
-	 * 
-	 * @return the inverse of this operation
-	 */
-	public Operation inverse();
-
-	/**
-	 * Returns true iff this operation is an undo request.
-	 * 
-	 * @return returns true iff this operation is an undo request
-	 */
-	public boolean isUndo();
-	
-	/**
 	 * Sets the original operation if this operation was
 	 * transformed.
 	 * 

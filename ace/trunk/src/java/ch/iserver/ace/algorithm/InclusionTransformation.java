@@ -37,8 +37,10 @@ public interface InclusionTransformation {
 	 *            included.
 	 * @param op2
 	 *            the operation to be included.
+	 * @param param
+	 * 			 an additional parameter depending on the implementation.            
 	 * @return the transformed operation <var>op1'</var>
 	 */
-	public Operation transform(Operation op1, Operation op2);
+	public Operation transform(Operation op1, Operation op2, Object param);
 
 }

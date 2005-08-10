@@ -18,55 +18,17 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+package ch.iserver.ace.algorithm.jupiter;
 
-package ch.iserver.ace.algorithm;
-
-import ch.iserver.ace.Operation;
+import ch.iserver.ace.test.jupiter.NWayTestCase;
 
 /**
- * An UndoOperation is simply used to indicate an undo request issued by the
- * user through the GUI.
+ *
  */
-public class UndoOperation implements Operation {
+public class SplitOperationTest extends NWayTestCase {
 
-	/**
-	 * Class constructor.
-	 */
-	public UndoOperation() {
-	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public Operation inverse() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean isUndo() {
-		return true;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setOriginalOperation(Operation op) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public Operation getOriginalOperation() {
-		return null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public String toString() {
-		return "Undo()";
+	public void testNestedSplitOperation() throws Exception {
+		execute("/test/jupiter/nested-split-operation.xml");
 	}
 }

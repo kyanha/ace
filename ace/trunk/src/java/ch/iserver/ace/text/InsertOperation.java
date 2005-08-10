@@ -49,11 +49,6 @@ public class InsertOperation implements Operation {
 	private int origin;
 
 	/**
-	 * flag to indicate whether this operation is an undo.
-	 */
-	private boolean isUndo;
-
-	/**
 	 * this operation's original operation, i.e if an operation is transformed,
 	 * a new operation is created and the old one passed to it as the original
 	 * operation.
@@ -79,7 +74,6 @@ public class InsertOperation implements Operation {
 		setPosition(position);
 		setText(text);
 		origin = getPosition();
-		setUndo(false);
 	}
 
 	/**
@@ -95,7 +89,6 @@ public class InsertOperation implements Operation {
 	public InsertOperation(int position, String text, boolean isUndo) {
 		this(position, text);
 		origin = getPosition();
-		setUndo(isUndo);
 	}
 
 	/**
@@ -111,7 +104,6 @@ public class InsertOperation implements Operation {
 	public InsertOperation(int position, String text, int origin) {
 		this(position, text);
 		this.origin = origin;
-		setUndo(false);
 	}
 
 	/**
@@ -127,7 +119,6 @@ public class InsertOperation implements Operation {
 	public InsertOperation(int position, String text, int origin, 
 			boolean isUndo) {
 		this(position, text, origin);
-		setUndo(isUndo);
 	}
 
 	/**
@@ -208,31 +199,6 @@ public class InsertOperation implements Operation {
 	/**
 	 * {@inheritDoc}
 	 */
-	public Operation inverse() {
-		// TODO: origin position gets lost.
-		return new DeleteOperation(getPosition(), getText(), true);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean isUndo() {
-		return isUndo;
-	}
-
-	/**
-	 * Marks this operation as undo.
-	 * 
-	 * @param isUndo
-	 *            flag whether this operation is an undo
-	 */
-	public void setUndo(boolean isUndo) {
-		this.isUndo = isUndo;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public void setOriginalOperation(Operation op) {
 		original = op;
 	}
@@ -248,8 +214,7 @@ public class InsertOperation implements Operation {
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return "Insert(" + position + ",'" + text + "'," + origin + ","
-				+ isUndo + ")";
+		return "Insert(" + position + ",'" + text + "'," + origin + ")";
 	}
 
 	/**
@@ -263,7 +228,7 @@ public class InsertOperation implements Operation {
 		} else if (obj.getClass().equals(getClass())) {
 			InsertOperation op = (InsertOperation) obj;
 			return op.position == position && op.text.equals(text)
-					&& op.origin == origin && op.isUndo == isUndo
+					&& op.origin == origin
 					&& op.original.equals(original);
 		} else {
 			return false;
@@ -276,7 +241,6 @@ public class InsertOperation implements Operation {
 	public int hashCode() {
 		int hashcode = position;
 		hashcode += 13 * origin;
-		hashcode += 13 * (Boolean.valueOf(isUndo)).hashCode();
 		hashcode += 13 * text.hashCode();
 		hashcode += 13 * original.hashCode();
 		return hashcode;

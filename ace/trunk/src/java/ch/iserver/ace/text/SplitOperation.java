@@ -99,20 +99,6 @@ public class SplitOperation implements Operation {
 	public void setSecond(Operation op2) {
 		this.op2 = op2;
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public Operation inverse() {
-		throw new UnsupportedOperationException();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean isUndo() {
-		return false;
-	}
 
 	/**
 	 * {@inheritDoc}

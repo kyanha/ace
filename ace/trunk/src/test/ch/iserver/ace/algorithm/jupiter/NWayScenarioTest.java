@@ -37,13 +37,6 @@ public class NWayScenarioTest extends NWayTestCase {
 	}
 	
 	/**
-	 * Tests some basic redo puzzle.
-	 */
-	public void testRedoPuzzle() throws Exception {
-		execute("/test/jupiter/redo.xml");
-	}
-	
-	/**
 	 * Tests some basic puzzle with 3 sites.
 	 */
 	public void test3Sites() throws Exception {

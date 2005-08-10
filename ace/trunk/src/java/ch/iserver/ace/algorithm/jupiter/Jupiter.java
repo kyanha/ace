@@ -21,7 +21,6 @@
 package ch.iserver.ace.algorithm.jupiter;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -33,7 +32,6 @@ import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.InclusionTransformation;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.Timestamp;
-import ch.iserver.ace.text.GOTOInclusionTransformation;
 import ch.iserver.ace.text.SplitOperation;
 
 /**
@@ -43,9 +41,7 @@ public class Jupiter implements Algorithm {
 
 	private static final Logger LOG = Logger.getLogger(Jupiter.class);
 
-	private List operationBuffer;
-
-	private GOTOInclusionTransformation inclusion;
+	private InclusionTransformation inclusion;
 
 	private DocumentModel document;
 
@@ -61,12 +57,7 @@ public class Jupiter implements Algorithm {
 	 * corresponds to the 'outgoing' list in the Jupiter pseudo code
 	 * description.
 	 */
-	private OutgoingQueue ackRequestList;
-
-	// TODO: limit size of undo candidates
-	private List remoteUndoCandidates;
-
-	private UndoManager undoManager;
+	private List ackRequestList;
 
 	/**
 	 * Class constructor that creates a new Jupiter algorithm. The parameters
@@ -83,14 +74,11 @@ public class Jupiter implements Algorithm {
 	 */
 	public Jupiter(InclusionTransformation it, DocumentModel document,
 			int siteId, boolean isClientSide) {
-		inclusion = (GOTOInclusionTransformation) it;
+		inclusion = it;
 		this.siteId = siteId;
 		init(document, new JupiterVectorTime(0, 0));
-		operationBuffer = new ArrayList();
-		ackRequestList = new OutgoingQueue();
-		remoteUndoCandidates = new ArrayList();
+		ackRequestList = new ArrayList();
 		this.isClientSide = isClientSide;
-		undoManager = new UndoManager();
 	}
 
 	/**
@@ -106,20 +94,13 @@ public class Jupiter implements Algorithm {
 	public Jupiter(int siteId, boolean isClientSide) {
 		this.siteId = siteId;
 		this.isClientSide = isClientSide;
-		operationBuffer = new ArrayList();
-		ackRequestList = new OutgoingQueue();
-		remoteUndoCandidates = new ArrayList();
-		undoManager = new UndoManager();
+		ackRequestList = new ArrayList();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public Request generateRequest(Operation op) {
-		return generateRequest(op, false);
-	}
-
-	private Request generateRequest(Operation op, boolean isUndoRedo) {
 		// apply op locally;
 		if (op instanceof SplitOperation) {
 			SplitOperation split = (SplitOperation) op;
@@ -148,11 +129,6 @@ public class Jupiter implements Algorithm {
 		// myMsgs = myMsgs + 1;
 		vectorTime.incrementLocalOperationCount();
 
-		// save request in history list (for local undo)
-		if (isClientSide && !isUndoRedo) {
-			undoManager.addUndo(req);
-		}
-		undoManager.addLocal(req);
 		return req;
 	}
 
@@ -178,60 +154,10 @@ public class Jupiter implements Algorithm {
 
 		LOG.info("dsc:" + ackRequestList);
 
-		Operation newOp = jupReq.getOperation();
-		if (newOp.isUndo()) {
-			LOG.info("undo: " + newOp);
-			// always the last operation in the remoteUndoCandidates list
-			// belongs
-			// to the current undo operation.
-			OperationWrapper wrap1 = (OperationWrapper) remoteUndoCandidates
-					.remove(remoteUndoCandidates.size() - 1);
-			LOG.info("undo opposite: " + wrap1);
-			newOp = wrap1.getOperation().inverse();
-			// transform newOp against remaining operations
-
-			List transformOps = undoManager.getLocalTransformationSet(wrap1
-					.getLocalOperationCount());
-			Iterator iter = transformOps.iterator();
-
-			inclusion.setTransformOpPrivileged(isClientSide());
-			while (iter.hasNext()) {
-				Object[] data = (Object[]) iter.next();
-				Request r = (Request) data[0];
-				Operation op = r.getOperation();
-				newOp = inclusion.transform(newOp, op);
-			}
-			LOG.info("transformed op: " + newOp);
-		} else {
-			newOp = transform(newOp);
-		}
-
-		// if server side, add newOp to undoBuffer
-		if (!jupReq.getOperation().isUndo()) {
-			// local operation count means, that this newOp was already
-			// transformed against
-			// localOperationCount operations. So when an undo operation
-			// arrives, we
-			// invert this operation (mirror) and transform it with the
-			// remaining operations
-			// in the outgoing queue, i.e. the operations, which have a
-			// localOperationCount greater or equals to the localOperationCount
-			// belonging to
-			// this newOp.
-			remoteUndoCandidates.add(new OperationWrapper(newOp, vectorTime
-					.getLocalOperationCount()));
-			// LOG.info("undo candidates: "+remoteUndoCandidates);
-		}
+		Operation newOp = transform(jupReq.getOperation());
 
 		apply(newOp);
 		LOG.info("tnf:" + ackRequestList);
-
-		// save remote request in history (for local undo)
-		if (isClientSide()) {
-			undoManager.addRemote(new JupiterRequest(jupReq.getSiteId(),
-					(JupiterVectorTime) jupReq.getJupiterVectorTime().clone(),
-					newOp));
-		}
 
 		vectorTime.incrementRemoteRequestCount();
 		LOG.info("<<< recv");
@@ -244,7 +170,7 @@ public class Jupiter implements Algorithm {
 	 *            the request to the remote operation count from
 	 */
 	private void discardOperations(JupiterRequest jupReq) {
-		Iterator iter = ackRequestList.getOperations().iterator();
+		Iterator iter = ackRequestList.iterator();
 		while (iter.hasNext()) {
 			OperationWrapper wrap = (OperationWrapper) iter.next();
 			if (wrap.getLocalOperationCount() < jupReq.getJupiterVectorTime()
@@ -257,7 +183,7 @@ public class Jupiter implements Algorithm {
 				== vectorTime.getRemoteOperationCount() 
 				: "msg.myMsgs != otherMsgs !!";
 	}
-
+	
 	/**
 	 * Applies an operation to the document model.
 	 * 
@@ -267,93 +193,67 @@ public class Jupiter implements Algorithm {
 	private void apply(Operation newOp) {
 		if (isClientSide && newOp instanceof SplitOperation) {
 			SplitOperation split = (SplitOperation) newOp;
-			document.apply(split.getSecond());
-			document.apply(split.getFirst());
+			if (split.getSecond() instanceof SplitOperation) {
+				apply(split.getSecond());	
+			} else {
+				document.apply(split.getSecond());
+			}
+			if (split.getFirst() instanceof SplitOperation) {
+				apply(split.getFirst());
+			} else {
+				document.apply(split.getFirst());
+			}
 		} else {
 			document.apply(newOp);
 		}
 	}
+	
+    /**
+     * Transforms an operation with the operations in the outgoing queue
+     * {@link #ackRequestList}.
+     * 
+     * @param newOp the operation to be transformed
+     * @return the transformed operation
+     * @see #ackRequestList
+     */
+    private Operation transform(Operation newOp) {
+    		for (int ackRequestListCnt = 0; 
+                   ackRequestListCnt < ackRequestList.size(); ackRequestListCnt++) {
+            OperationWrapper wrap = (OperationWrapper)ackRequestList.get(ackRequestListCnt);
+            Operation existingOp = wrap.getOperation();
 
-	/**
-	 * Transforms an operation with the operations in the outgoing queue
-	 * {@link #ackRequestList} that need to be transformed, i.e. undo operation
-	 * pairs are excluded (fold mechanism).
-	 * 
-	 * @param newOp
-	 *            the operation to be transformed
-	 * @return the transformed operation
-	 * @see #ackRequestList
-	 */
-	private Operation transform(Operation newOp) {
-		LOG.info("--> transform(" + newOp + ")");
-		List transformSet = ackRequestList.getTransformationSet();
-		// TODO: log transformSet
-		LOG.info("TF size: " + transformSet.size());
+            Operation transformedOp;
+            if (newOp instanceof SplitOperation) {
+                    SplitOperation split = (SplitOperation)newOp;
+                    if (isClientSide()) {
+                        split.setFirst( inclusion.transform(split.getFirst(), existingOp, Boolean.TRUE) );
+                        split.setSecond( inclusion.transform(split.getSecond(), existingOp, Boolean.TRUE) );
+                        existingOp = inclusion.transform(existingOp, split.getFirst(), Boolean.FALSE);
+                        existingOp = inclusion.transform(existingOp, split.getSecond(), Boolean.FALSE);
+                    } else {
+                        split.setFirst( inclusion.transform(split.getFirst(), existingOp, Boolean.FALSE) );
+                        split.setSecond( inclusion.transform(split.getSecond(), existingOp, Boolean.FALSE) );
+                        existingOp = inclusion.transform(existingOp, split.getFirst(), Boolean.TRUE);
+                        existingOp = inclusion.transform(existingOp, split.getSecond(), Boolean.TRUE);
+                    }
+                    transformedOp = split;
+            } else {
+                    if (isClientSide()) {
+                        transformedOp = inclusion.transform(newOp, existingOp, Boolean.TRUE);
+                        existingOp = inclusion.transform(existingOp, newOp, Boolean.FALSE);
+                    } else {
+                        transformedOp = inclusion.transform(newOp, existingOp, Boolean.FALSE);
+                        existingOp = inclusion.transform(existingOp, newOp, Boolean.TRUE);
+                    }
+            }
+            ackRequestList.set(ackRequestListCnt, new OperationWrapper(existingOp, wrap.getLocalOperationCount()));
 
-		for (int cnt = 0; cnt < transformSet.size(); cnt++) {
-			Object[] data = (Object[]) transformSet.get(cnt);
-			OperationWrapper wrap = (OperationWrapper) data[0];
-			Operation existingOp = wrap.getOperation();
-			int opIndex = ((Integer) data[1]).intValue();
+            newOp = transformedOp;
+    }
+            return newOp;
+    }
 
-			Operation transformedOp;
-			LOG.info("existingOp: " + existingOp + " && "
-					+ newOp.getOriginalOperation());
-			if (existingOp.isUndo() && newOp.getOriginalOperation() != null) {
-				Operation origin = newOp.getOriginalOperation();
-				LOG.info("use original operation: " + newOp + " ==> " + origin);
-				transformedOp = origin;
-			} else if (newOp instanceof SplitOperation) {
-				SplitOperation split = (SplitOperation) newOp;
-				if (isClientSide()) {
-					inclusion.setTransformOpPrivileged(true);
-					split.setFirst(inclusion.transform(split.getFirst(),
-							existingOp));
-					split.setSecond(inclusion.transform(split.getSecond(),
-							existingOp));
-					inclusion.setTransformOpPrivileged(false);
-					existingOp = inclusion.transform(existingOp, split
-							.getFirst());
-					existingOp = inclusion.transform(existingOp, split
-							.getSecond());
-				} else {
-					inclusion.setTransformOpPrivileged(false);
-					split.setFirst(inclusion.transform(split.getFirst(),
-							existingOp));
-					split.setSecond(inclusion.transform(split.getSecond(),
-							existingOp));
-					inclusion.setTransformOpPrivileged(true);
-					existingOp = inclusion.transform(existingOp, split
-							.getFirst());
-					existingOp = inclusion.transform(existingOp, split
-							.getSecond());
-				}
-				transformedOp = split;
-			} else {
-				if (isClientSide()) {
-					inclusion.setTransformOpPrivileged(true);
-					transformedOp = inclusion.transform(newOp, existingOp);
-					inclusion.setTransformOpPrivileged(false);
-					existingOp = inclusion.transform(existingOp, newOp);
-				} else {
-					inclusion.setTransformOpPrivileged(false);
-					transformedOp = inclusion.transform(newOp, existingOp);
-					inclusion.setTransformOpPrivileged(true);
-					existingOp = inclusion.transform(existingOp, newOp);
-				}
-			}
-			assert wrap.getLocalOperationCount() 
-					== ((OperationWrapper) ackRequestList
-					.getOperations().get(opIndex)).getLocalOperationCount() 
-					: "getTransformationSet failed";
-			ackRequestList.set(opIndex, new OperationWrapper(existingOp, wrap
-					.getLocalOperationCount()));
 
-			newOp = transformedOp;
-		}
-		LOG.info("<-- transform(" + newOp + ")");
-		return newOp;
-	}
 
 	/**
 	 * Test 3 preconditions that must be fulfilled before transforming. They are
@@ -363,9 +263,9 @@ public class Jupiter implements Algorithm {
 	 *            the request to be tested.
 	 */
 	private void checkPreconditions(JupiterRequest jupReq) {
-		if (!ackRequestList.getOperations().isEmpty()
+		if (!ackRequestList.isEmpty()
 				&& jupReq.getJupiterVectorTime().getRemoteOperationCount() 
-				< ((OperationWrapper) ackRequestList.getOperations().get(0))
+				< ((OperationWrapper) ackRequestList.get(0))
 				.getLocalOperationCount()) {
 			throw new JupiterException("precondition #1 violated.");
 		} else if (jupReq.getJupiterVectorTime().getRemoteOperationCount() 
@@ -413,129 +313,6 @@ public class Jupiter implements Algorithm {
 		}
 	}
 
-	private class OutgoingQueue {
-
-		/**
-		 * A list of operation wrappers.
-		 * 
-		 * @see OperationWrapper
-		 */
-		private List operations;
-
-		OutgoingQueue() {
-			operations = new ArrayList();
-		}
-
-		/**
-		 * Adds an operation wrapper to this queue.
-		 * 
-		 * @param wrap
-		 *            the wrap to add
-		 */
-		public void add(OperationWrapper wrap) {
-			operations.add(wrap);
-		}
-
-		/**
-		 * Sets an operation wrapper at a specified position.
-		 * 
-		 * @param index
-		 *            the index where the wrap is set
-		 * @param wrap
-		 *            the wrap to set
-		 */
-		public void set(int index, OperationWrapper wrap) {
-			operations.set(index, wrap);
-		}
-
-		/**
-		 * Returns all operations.
-		 * 
-		 * @return the list with all operations
-		 */
-		public List getOperations() {
-			return operations;
-		}
-
-		/**
-		 * Returns a list of OperationWrapper whose operations must be included
-		 * in the transformation of the received operation. All undo pairs in
-		 * the list are excluded (this represents the 'fold' mechanism described
-		 * in the Ressel Undo paper).
-		 * 
-		 * @return the list with the operations to transform against
-		 */
-		public List getTransformationSet() {
-			// TODO: test this method thorougly
-			List result;
-			if (operations.size() <= 1) {
-				result = new ArrayList();
-				if (!operations.isEmpty()) {
-					result.add(new Object[] {
-							(OperationWrapper) operations.get(0),
-							new Integer(0) });
-				}
-			} else {
-				int undos = 0, pairs = 0;
-				List tmp = new ArrayList(operations);
-				// reverse list so that undo pairs can be recognized
-				Collections.reverse(tmp);
-				Iterator iter = tmp.iterator();
-				// count the number of undo pairs
-				// operations list examples: {d,u,u,d,d} {d,d,u,u} {u,u,d};
-				// u=undo, d=do
-				while (iter.hasNext()) {
-					OperationWrapper wrap = (OperationWrapper) iter.next();
-					Operation op = wrap.getOperation();
-					if (op.isUndo()) {
-						undos++;
-					} else if (undos > 0) {
-						pairs++;
-						undos--;
-					}
-				}
-				LOG.info(pairs + " undo pairs in operation list, " + undos
-						+ " single undos.");
-				iter = tmp.iterator();
-				result = new ArrayList();
-				int undoCnt = 0, opIndex = 0;
-				while (iter.hasNext()) {
-					OperationWrapper wrap = (OperationWrapper) iter.next();
-					Operation op = wrap.getOperation();
-					if (op.isUndo() && pairs > 0 && undos == 0) {
-						undoCnt++;
-						pairs--;
-					} else if (undoCnt == 0) {
-						// TODO: this can be improved, but we need to remember
-						// the index of this wrap
-						// into the operation list, so that it can be updated
-						// later
-						// the list we iterate in is in reverse order, hence the
-						// position
-						// is calculated as follows: operations.size()-1-opIndex
-						result.add(new Object[] { wrap,
-								new Integer(operations.size() - 1 - opIndex) });
-						if (op.isUndo()) {
-							undos--;
-						}
-					} else {
-						undoCnt--;
-					}
-					++opIndex;
-				}
-			}
-			Collections.reverse(result);
-			return result;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		public String toString() {
-			return "OutgoingQueue(" + operations.toString() + ")";
-		}
-	}
-
 	/**
 	 * {@inheritDoc}
 	 */
@@ -544,6 +321,7 @@ public class Jupiter implements Algorithm {
 			throw new IllegalArgumentException("null parameter not allowed.");
 		}
 		document = doc;
+		//TODO: remove nasty cast
 		vectorTime = (JupiterVectorTime) timestamp;
 	}
 
@@ -572,60 +350,14 @@ public class Jupiter implements Algorithm {
 	 * {@inheritDoc}
 	 */
 	public Request undo() {
-		LOG.info("--> undo");
-		// get the users request that is to be undone
-		Request req = undoManager.nextUndo();
-		LOG.info("undo req: " + req);
-
-		// inverse the operation to be undone
-		// the mirror function from Ressel undo is done in two steps:
-		// 1. inverse() (-> invert operation) and
-		// 2. generateRequest() (-> update vector time) calls.
-		Operation op = req.getOperation().inverse();
-
-		// get list of remote operation the undo operation has to transform with
-		int baseOpCount = ((JupiterVectorTime) req.getTimestamp())
-				.getRemoteOperationCount();
-		List transformTargets = undoManager.getRemoteRequests(baseOpCount);
-		LOG.info("transform targets: " + transformTargets);
-
-		// transform op with all operations in the list
-		Iterator iter = transformTargets.iterator();
-		while (iter.hasNext()) {
-			op = inclusion
-					.transform(op, ((Request) iter.next()).getOperation());
-		}
-
-		LOG.info("<-- undo");
-		// generate request
-		return generateRequest(op, true);
+		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public Request redo() {
-		// get the users request that is to be redone
-		Request req = undoManager.nextRedo();
-
-		// get the redo operation
-		Operation op = req.getOperation();
-
-		// get list of remote operations the redo operation has to transform
-		// against
-		int baseOpCount = ((JupiterVectorTime) req.getTimestamp())
-				.getRemoteOperationCount();
-		List transformTargets = undoManager.getRemoteRequests(baseOpCount);
-
-		// transform op with all operations in the list
-		Iterator iter = transformTargets.iterator();
-		while (iter.hasNext()) {
-			Operation other = ((Request) iter.next()).getOperation();
-			op = inclusion.transform(op, other);
-		}
-
-		// generate request
-		return generateRequest(op, true);
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -635,7 +367,7 @@ public class Jupiter implements Algorithm {
 	 *            the inclusion transformation function to set.
 	 */
 	public void setInclusionTransformation(InclusionTransformation it) {
-		this.inclusion = (GOTOInclusionTransformation) it;
+		this.inclusion = it;
 	}
 
 	/**
@@ -685,7 +417,7 @@ public class Jupiter implements Algorithm {
 	 * @return true if this algorithm can undo operations
 	 */
 	public boolean canUndo() {
-		return (isClientSide()) ? undoManager.canUndo() : false;
+		return false;
 	}
 
 	/**
@@ -694,6 +426,6 @@ public class Jupiter implements Algorithm {
 	 * @return true if this algorithm can redo operations
 	 */
 	public boolean canRedo() {
-		return (isClientSide()) ? undoManager.canRedo() : false;
+		return false;
 	}
 }

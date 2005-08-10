@@ -21,8 +21,6 @@
 package ch.iserver.ace.text;
 
 
-import org.apache.log4j.Logger;
-
 import java.security.InvalidParameterException;
 
 import ch.iserver.ace.Operation;
@@ -35,58 +33,67 @@ import ch.iserver.ace.algorithm.InclusionTransformation;
  * Chengzheng Sun, Xiaohua Jia, Yanchun Zhang, Yun Yang, and David Chen.
  */
 public class GOTOInclusionTransformation implements InclusionTransformation {
-	
-	private static Logger LOG = Logger.getLogger(GOTOInclusionTransformation.class);
-	
-	/**
-	 * This flag is used when two insert operations are to be transformed against and 
-	 * both have the same position and origin index. If this flag is true, then the
-	 * first insert operation is privileged and remains unchanged.
-	 */
-	private boolean isTransformOpPrivileged;
 
 	/**
-	 * {@inheritDoc}
+	 * Include operation <var>op2</var> into the context of operation 
+	 * <var>op1</var>.
+	 * The transformed operation <var>op1'</var> is returned.
+	 * 
+	 * @param op1
+	 *            the operation into which another is to be contextually
+	 *            included.
+	 * @param op2
+	 *            the operation to be included.
+	 * @param param
+	 * 			 a boolean flag to privilege the first operation <code>op1</code> 
+	 * 			 (i.e. remains unchanged) when two insert operations are equivalent 
+	 * 			 i.e. they have the same position and origin index.        
+	 * @return the transformed operation <var>op1'</var>
 	 */
-    public Operation transform(Operation op1, Operation op2) {
-        Operation transformedOp;
-        if (op1 instanceof NoOperation) {
+    public Operation transform(Operation op1, Operation op2, Object param) {
+    		Operation transformedOp;
+    		if (op1 instanceof SplitOperation) {
+    			SplitOperation s = (SplitOperation)op1; 
+    			s.setFirst(transform(s.getFirst(), op2, param));
+    			s.setSecond(transform(s.getSecond(), op2, param));
+    			transformedOp = s;
+        } else if (op2 instanceof SplitOperation) {
+			SplitOperation s = (SplitOperation)op2; 
+			op1 = transform(op1, s.getSecond(), param);
+			op1 = transform(op1, s.getFirst(), param);
+			transformedOp = op1;
+        } else if (op1 instanceof NoOperation) {
         		transformedOp = clone((NoOperation)op1);
-        		LOG.info("\ttransform("+op1+", "+op2+") = "+transformedOp);
         } else if (op2 instanceof NoOperation) { 
         		if (op1 instanceof InsertOperation) {
         			transformedOp = clone((InsertOperation)op1);
         		} else {
         			transformedOp = clone((DeleteOperation)op1);
         		}
-        		LOG.info("\ttransform("+op1+", "+op2+") = "+transformedOp);
         } else if (op1 instanceof InsertOperation && op2 instanceof InsertOperation) {
-        		transformedOp = transform((InsertOperation)op1, (InsertOperation)op2);
-        		LOG.info("\ttransform("+op1+", "+isTransformOpPrivileged+", "+op2+") = "+transformedOp);
+        		transformedOp = transform((InsertOperation)op1, (InsertOperation)op2, 
+        				((Boolean)param).booleanValue());
         } else if (op1 instanceof InsertOperation && op2 instanceof DeleteOperation) {
         		transformedOp = transform((InsertOperation)op1, (DeleteOperation)op2);
-        		LOG.info("\ttransform("+op1+", "+op2+") = "+transformedOp);
         } else if (op1 instanceof DeleteOperation && op2 instanceof InsertOperation) {
         		transformedOp = transform((DeleteOperation)op1, (InsertOperation)op2);
-        		LOG.info("\ttransform("+op1+", "+op2+") = "+transformedOp);
         } else if (op1 instanceof DeleteOperation && op2 instanceof DeleteOperation) {
         		transformedOp = transform((DeleteOperation)op1, (DeleteOperation)op2);
-        		LOG.info("\ttransform("+op1+", "+op2+") = "+transformedOp);
         } else {
             throw new InvalidParameterException();
         }
         return transformedOp;
     }
     
-    private Operation transform(InsertOperation insA, InsertOperation insB) {
+    private Operation transform(InsertOperation insA, InsertOperation insB, 
+    						boolean isTransformPrivileged) {
 		InsertOperation transformedOperation = null;
 		int posA = insA.getPosition();
-		int lenA = insA.getTextLength();
 		int posB = insB.getPosition();
 		int lenB = insB.getTextLength();
 		if (posA < posB || posA == posB && insA.getOrigin() < insB.getOrigin()
 				|| posA == posB && insA.getOrigin() == insB.getOrigin()
-				&& isTransformOpPrivileged) {
+				&& isTransformPrivileged) {
 			/*
 			 * Operation A starts before operation B.
 			 * (B):       "ABCD"
@@ -104,7 +111,6 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 			 */
 			transformedOperation = new InsertOperation(posA + lenB, insA
 					.getText(), insA.getOrigin());
-			transformedOperation.setUndo(insA.isUndo());
 			transformedOperation.setOriginalOperation(insA);
 		}
 		return transformedOperation;
@@ -113,7 +119,6 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 	private Operation transform(InsertOperation insA, DeleteOperation delB) {
 		InsertOperation transformedOperation = null;
 		int posA = insA.getPosition();
-		int lenA = insA.getTextLength();
 		int posB = delB.getPosition();
 		int lenB = delB.getTextLength();
 
@@ -135,7 +140,6 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 			 */
 			transformedOperation = new InsertOperation(posA - lenB, insA
 					.getText(), insA.getOrigin());
-			transformedOperation.setUndo(insA.isUndo());
 			transformedOperation.setOriginalOperation(insA);
 		} else {
 			/*
@@ -147,7 +151,6 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 			 */
 			transformedOperation = new InsertOperation(posB, insA.getText(),
 					insA.getOrigin());
-			transformedOperation.setUndo(insA.isUndo());
 			transformedOperation.setOriginalOperation(insA);
 		}
 		return transformedOperation;
@@ -177,7 +180,6 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 			 */
 			transformedOperation = new DeleteOperation(posA + lenB, delA
 					.getText());
-			((DeleteOperation) transformedOperation).setUndo(delA.isUndo());
 			transformedOperation.setOriginalOperation(delA);
 		} else {
 			/*
@@ -189,11 +191,9 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 			 */
 			DeleteOperation del1 = new DeleteOperation(posA, delA.getText()
 					.substring(0, posB - posA));
-			del1.setUndo(delA.isUndo());
 			DeleteOperation del2 = new DeleteOperation(posA + lenB
 					+ (posB - posA), delA.getText()
 					.substring(posB - posA, lenA));
-			del2.setUndo(delA.isUndo());
 			transformedOperation = new SplitOperation(del1, del2);
 			transformedOperation.setOriginalOperation(delA);
 		}
@@ -201,7 +201,7 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 	}
 
 	private Operation transform(DeleteOperation delA, DeleteOperation delB) {
-		DeleteOperation transformedOperation;
+		Operation transformedOperation;
 		int posA = delA.getPosition();
 		int lenA = delA.getTextLength();
 		int posB = delB.getPosition();
@@ -225,7 +225,6 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 			 */
 			transformedOperation = new DeleteOperation(posA - lenB, delA
 					.getText());
-			transformedOperation.setUndo(delA.isUndo());
 			transformedOperation.setOriginalOperation(delA);
 		} else {
 			/*
@@ -239,13 +238,9 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 				 * (A):       "12"      |     "12"
 				 * (A'):     ""         |     ""
 				 */
-				//TODO: abstract class JupiterOperation which encapsulates all Jupiter specific
-				//operations, so that we have an general super class for Jupiter. This would
-				//allow for fewer casts and no special returns.
 				NoOperation noop = new NoOperation();
-				noop.setUndo(delA.isUndo());
 				noop.setOriginalOperation(delA);
-				return noop;
+				transformedOperation = noop;
 			} else if ((posB <= posA) && ((posA + lenA) > (posB + lenB))) {
 				/*
 				 * Operation B starts before or at the same position like operation A
@@ -256,7 +251,6 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 				 */
 				transformedOperation = new DeleteOperation(posB, delA.getText()
 						.substring(posB + lenB - posA, lenA));
-				transformedOperation.setUndo(delA.isUndo());
 				transformedOperation.setOriginalOperation(delA);
 			} else if ((posB > posA) && ((posB + lenB) >= (posA + lenA))) {
 				/*
@@ -268,7 +262,6 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 				 */
 				transformedOperation = new DeleteOperation(posA, delA.getText()
 						.substring(0, posB - posA));
-				transformedOperation.setUndo(delA.isUndo());
 				transformedOperation.setOriginalOperation(delA);
 			} else {
 				/*
@@ -280,7 +273,6 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 				transformedOperation = new DeleteOperation(posA, delA.getText()
 						.substring(0, posB - posA)
 						+ delA.getText().substring(posB + lenB - posA, lenA));
-				transformedOperation.setUndo(delA.isUndo());
 				transformedOperation.setOriginalOperation(delA);
 			}
 		}
@@ -296,7 +288,6 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 	private InsertOperation clone(InsertOperation insA) {
 		InsertOperation cloneOp = new InsertOperation(insA.getPosition(), insA.getText(),
 				insA.getOrigin());
-		cloneOp.setUndo(insA.isUndo());
 		cloneOp.setOriginalOperation(insA);
 		return cloneOp;
 	}
@@ -309,7 +300,6 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 	 */
 	private DeleteOperation clone(DeleteOperation delA) {
 		DeleteOperation cloneOp = new DeleteOperation(delA.getPosition(), delA.getText());
-		cloneOp.setUndo(delA.isUndo());
 		cloneOp.setOriginalOperation(delA);
 		return cloneOp;
 	}
@@ -322,20 +312,7 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 	 */
 	private NoOperation clone(NoOperation noop) {
 		NoOperation cloneOp = new NoOperation();
-		cloneOp.setUndo(noop.isUndo());
 		cloneOp.setOriginalOperation(noop);
 		return cloneOp;
-	}
-
-	/**
-	 * Marks the first operation in {@link GOTOInclusionTransformation#transform(Operation, Operation)}
-	 * as privileged. This flag is used when two insert operations are to be transformed against and 
-	 * both have the same position and origin index. If this flag is true, then the
-	 * first insert operation is privileged and remains unchanged.
-	 * 
-	 * @param value 	the privilege value for the first operation
-	 */
-	public void setTransformOpPrivileged(boolean value) {
-		isTransformOpPrivileged = value;
 	}
 }

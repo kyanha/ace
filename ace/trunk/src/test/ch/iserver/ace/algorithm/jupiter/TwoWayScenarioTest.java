@@ -70,12 +70,4 @@ public class TwoWayScenarioTest extends TwoWayTestCase {
 		execute("/test/splitoperation-1.xml");
 	}
 	
-	public void testUndo() throws Exception {
-		execute("/test/undo.xml");
-	}
-	
-	public void testRedo() throws Exception {
-		execute("/test/redo.xml");
-	}
-	
 }
