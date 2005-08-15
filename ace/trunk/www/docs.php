@@ -50,6 +50,7 @@ $docs[47] = "VirtTimeGlobStates.pdf";
 $docs[48] = "82890036.pdf";
 $docs[49] = "netedit_thesis.pdf";
 $docs[50] = "cscwtrends.pdf";
+$docs[51] = "tochi05sdt.pdf";
 
 if (isset($_GET["id"])) {
   $id = $_GET["id"];
