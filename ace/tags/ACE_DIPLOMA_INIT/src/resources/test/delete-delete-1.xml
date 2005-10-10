@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scenario initial="interrrnattionel" final="international">
+    
+    <site id="1">
+        <generate id="1">
+            <operation type="ch.iserver.ace.text.DeleteOperation">
+                <property name="position" value="10"/>
+                <property name="text" value="t"/>
+            </operation>
+        </generate>
+        <generate id="3">
+            <operation type="ch.iserver.ace.text.DeleteOperation">
+                <property name="position" value="5"/>
+                <property name="text" value="r"/>
+            </operation>
+        </generate>		
+        <receive ref="2"/>
+        <receive ref="4"/>		
+	    <generate id="5">
+	        <operation type="ch.iserver.ace.text.DeleteOperation">
+	            <property name="position" value="11"/>
+	            <property name="text" value="e"/>
+	        </operation>	
+	    </generate>
+        <receive ref="6"/>
+    </site>
+    
+    <site id="2">
+        <generate id="2">
+            <operation type="ch.iserver.ace.text.DeleteOperation">
+                <property name="position" value="10"/>
+                <property name="text" value="t"/>
+            </operation>
+        </generate>
+        <generate id="4">
+            <operation type="ch.iserver.ace.text.DeleteOperation">
+                <property name="position" value="6"/>
+                <property name="text" value="r"/>
+            </operation>
+        </generate>		
+        <receive ref="1"/>
+        <receive ref="3"/>		
+        <generate id="6">
+            <operation type="ch.iserver.ace.text.InsertOperation">
+                <property name="position" value="11"/>
+                <property name="text" value="a"/>
+            </operation>
+        </generate>		
+        <receive ref="5"/>
+    </site>
+    
+</scenario>
