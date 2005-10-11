@@ -141,14 +141,6 @@ public class Jupiter implements Algorithm {
 		checkPreconditions(jupReq);
 		LOG.info("ini:" + ackRequestList);
 
-		// TODO: it is possible for the traffic to one side (client/server) to
-		// be one-sided,
-		// e.g. only one client writes text and the other sites are idle.
-		// Therefore, each side must periodically generate explicit
-		// acknowledgments
-		// (i.e. no-op messages) to prevent the outgoing queues from growing
-		// forever.
-
 		// Discard acknowledged messages.
 		discardOperations(jupReq);
 
