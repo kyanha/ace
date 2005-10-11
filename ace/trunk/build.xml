@@ -113,7 +113,9 @@
 	</target>
 	
 	<target name="test" depends="compile-tests">
-		<junit showoutput="yes" printsummary="yes" fork="true">
+		<junit showoutput="yes" printsummary="yes" fork="true" 
+			haltonerror="true" 
+			haltonfailure="true">
 			<jvmarg value="-enableassertions"/>
 			<classpath refid="classpath.run"/>
 			<formatter type="plain"/>
