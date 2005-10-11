@@ -347,20 +347,6 @@ public class Jupiter implements Algorithm {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void siteAdded(int siteId) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void siteRemoved(int siteId) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public Request undo() {
 		throw new UnsupportedOperationException();
 	}

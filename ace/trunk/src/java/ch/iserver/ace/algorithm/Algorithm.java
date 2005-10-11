@@ -91,26 +91,6 @@ public interface Algorithm {
 	public void receiveRequest(Request req);
 
 	/**
-	 * Notifies the algorithm that a new site with id <var>siteId</var> has
-	 * been added. Depending on the algorithm, this method can be used to adjust
-	 * internal data structures to the change.
-	 * 
-	 * @param siteId
-	 *            the id of the added site
-	 */
-	public void siteAdded(int siteId);
-
-	/**
-	 * Notifies the algorithm that a site with id <var>siteId</var> has been
-	 * removed. Depending on the algorithm, this method can be used to adjust
-	 * internal data structures to the change.
-	 * 
-	 * @param siteId
-	 *            the id of the removed site
-	 */
-	public void siteRemoved(int siteId);
-
-	/**
 	 * Initialize the algorithm with the given document and initial timestamp.
 	 * 
 	 * @param doc
