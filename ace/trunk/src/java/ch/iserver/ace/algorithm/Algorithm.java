@@ -90,6 +90,8 @@ public interface Algorithm {
 	 */
 	public void receiveRequest(Request req);
 
+	public AwarenessInformation receiveAwarenessInformation(AwarenessInformation info);
+	
 	/**
 	 * Initialize the algorithm with the given document and initial timestamp.
 	 * 

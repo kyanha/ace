@@ -29,9 +29,12 @@ import org.apache.log4j.Logger;
 import ch.iserver.ace.DocumentModel;
 import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.Algorithm;
+import ch.iserver.ace.algorithm.AwarenessInformation;
 import ch.iserver.ace.algorithm.InclusionTransformation;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.Timestamp;
+import ch.iserver.ace.text.DeleteOperation;
+import ch.iserver.ace.text.InsertOperation;
 import ch.iserver.ace.text.SplitOperation;
 
 /**
@@ -138,11 +141,11 @@ public class Jupiter implements Algorithm {
 	public void receiveRequest(Request req) {
 		LOG.info(">>> recv");
 		JupiterRequest jupReq = (JupiterRequest) req;
-		checkPreconditions(jupReq);
+		checkPreconditions(jupReq.getJupiterVectorTime());
 		LOG.info("ini:" + ackRequestList);
 
 		// Discard acknowledged messages.
-		discardOperations(jupReq);
+		discardOperations(jupReq.getJupiterVectorTime());
 
 		LOG.info("dsc:" + ackRequestList);
 
@@ -154,6 +157,29 @@ public class Jupiter implements Algorithm {
 		vectorTime.incrementRemoteRequestCount();
 		LOG.info("<<< recv");
 	}
+	
+	public AwarenessInformation receiveAwarenessInformation(AwarenessInformation info) {
+		checkPreconditions((JupiterVectorTime) info.getTimestamp());
+		discardOperations((JupiterVectorTime) info.getTimestamp());
+		int[] indices = info.getIndices();
+		for (int i = 0; i < ackRequestList.size(); i++) {
+			OperationWrapper wrap = (OperationWrapper) ackRequestList.get(i);
+			Operation ack = wrap.getOperation();
+			for (int k = 0; k < indices.length; k++) {
+				indices[k] = transformIndex(indices[k], ack);
+			}
+		}
+		info.setTimestamp((Timestamp) vectorTime.clone());
+		return info;
+	}
+	
+	private int transformIndex(int index, Operation op) {
+		if (isClientSide()) {
+			return inclusion.transformIndex(index, op, Boolean.TRUE);
+		} else {
+			return inclusion.transformIndex(index, op, Boolean.FALSE);
+		}
+	}
 
 	/**
 	 * Discard from the other site (client/server) acknowledged operations.
@@ -161,17 +187,16 @@ public class Jupiter implements Algorithm {
 	 * @param jupReq
 	 *            the request to the remote operation count from
 	 */
-	private void discardOperations(JupiterRequest jupReq) {
+	private void discardOperations(JupiterVectorTime time) {
 		Iterator iter = ackRequestList.iterator();
 		while (iter.hasNext()) {
 			OperationWrapper wrap = (OperationWrapper) iter.next();
-			if (wrap.getLocalOperationCount() < jupReq.getJupiterVectorTime()
-							.getRemoteOperationCount()) {
+			if (wrap.getLocalOperationCount() < time.getRemoteOperationCount()) {
 				iter.remove();
 			}
 		}
 		// ASSERT msg.myMsgs == otherMsgs
-		assert jupReq.getJupiterVectorTime().getLocalOperationCount() == vectorTime
+		assert time.getLocalOperationCount() == vectorTime
 						.getRemoteOperationCount() : "msg.myMsgs != otherMsgs !!";
 	}
 
@@ -266,16 +291,15 @@ public class Jupiter implements Algorithm {
 	 * @param jupReq
 	 *            the request to be tested.
 	 */
-	private void checkPreconditions(JupiterRequest jupReq) {
+	private void checkPreconditions(JupiterVectorTime time) {
 		if (!ackRequestList.isEmpty()
-						&& jupReq.getJupiterVectorTime()
-										.getRemoteOperationCount() < ((OperationWrapper) ackRequestList
-										.get(0)).getLocalOperationCount()) {
+						&& time.getRemoteOperationCount() < ((OperationWrapper) ackRequestList
+							   .get(0)).getLocalOperationCount()) {
 			throw new JupiterException("precondition #1 violated.");
-		} else if (jupReq.getJupiterVectorTime().getRemoteOperationCount() > vectorTime
+		} else if (time.getRemoteOperationCount() > vectorTime
 						.getLocalOperationCount()) {
 			throw new JupiterException("precondition #2 violated.");
-		} else if (jupReq.getJupiterVectorTime().getLocalOperationCount() != vectorTime
+		} else if (time.getLocalOperationCount() != vectorTime
 						.getRemoteOperationCount()) {
 			throw new JupiterException("precondition #3 violated.");
 		}

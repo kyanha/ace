@@ -85,6 +85,34 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
         return transformedOp;
     }
     
+    public int transformIndex(int index, Operation op, Object param) {
+    	if (op instanceof SplitOperation) {
+    		SplitOperation s = (SplitOperation) op;
+    		index = transformIndex(index, s.getSecond(), param);
+    		index = transformIndex(index, s.getFirst(), param);
+    		return index;
+    	} else if (op instanceof NoOperation) {
+    		return index;
+    	} else if (op instanceof InsertOperation) {
+    		int pos = ((InsertOperation) op).getPosition();
+    		if (index < pos) {
+    			return index;
+    		} else {
+    			return index + ((InsertOperation) op).getTextLength();
+    		}
+    	} else if (op instanceof DeleteOperation) {
+    		int pos = ((DeleteOperation) op).getPosition();
+    		if (index <= pos) {
+    			return index;
+    		} else {
+    			return index - ((DeleteOperation) op).getTextLength();
+    		}
+    	} else {
+    		// TODO: use illegal argument exception instead
+    		throw new InvalidParameterException();
+    	}
+    }
+    
     private Operation transform(InsertOperation insA, InsertOperation insB, 
     						boolean isTransformPrivileged) {
 		InsertOperation transformedOperation = null;
