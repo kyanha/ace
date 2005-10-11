@@ -312,12 +312,9 @@ public class ExecuteVisitorTest extends TestCase {
 		control.replay();
 		
 		// execute test		
-		try {
-			v.accept(visitor);
-			fail("verification must fail - documents are not equal");
-		} catch (VerificationException ex) {
-			// this is expected
-		}
+		v.accept(visitor);
+		VerificationResult result = visitor.getVerificationResult();
+		assertEquals(1, result.getFailures().size());
 		
 		// verify method calls
 		control.verify();
@@ -392,13 +389,9 @@ public class ExecuteVisitorTest extends TestCase {
 		algoCtrl.replay();
 		control.replay();
 		
-		// execute test
-		try {
-			v.accept(visitor);
-			fail("verification must fail - documents are not equal");
-		} catch (VerificationException ex) {
-			// this is expected
-		}
+		v.accept(visitor);
+		VerificationResult result = visitor.getVerificationResult();
+		assertEquals(1, result.getFailures().size());
 		
 		// verify method calls
 		control.verify();
