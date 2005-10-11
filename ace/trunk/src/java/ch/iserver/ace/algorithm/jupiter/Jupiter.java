@@ -73,7 +73,7 @@ public class Jupiter implements Algorithm {
 	 *            true if the algorithm resides on the client side
 	 */
 	public Jupiter(InclusionTransformation it, DocumentModel document,
-			int siteId, boolean isClientSide) {
+					int siteId, boolean isClientSide) {
 		inclusion = it;
 		this.siteId = siteId;
 		init(document, new JupiterVectorTime(0, 0));
@@ -112,18 +112,18 @@ public class Jupiter implements Algorithm {
 
 		// send(op, myMsgs, otherMsgs);
 		Request req = new JupiterRequest(siteId, (JupiterVectorTime) vectorTime
-				.clone(), op);
+						.clone(), op);
 
 		// add(op, myMsgs) to outgoing;
 		if (op instanceof SplitOperation) {
 			SplitOperation split = (SplitOperation) op;
 			ackRequestList.add(new OperationWrapper(split.getFirst(),
-					vectorTime.getLocalOperationCount()));
+							vectorTime.getLocalOperationCount()));
 			ackRequestList.add(new OperationWrapper(split.getSecond(),
-					vectorTime.getLocalOperationCount()));
+							vectorTime.getLocalOperationCount()));
 		} else {
 			ackRequestList.add(new OperationWrapper(op, vectorTime
-					.getLocalOperationCount()));
+							.getLocalOperationCount()));
 		}
 
 		// myMsgs = myMsgs + 1;
@@ -174,16 +174,15 @@ public class Jupiter implements Algorithm {
 		while (iter.hasNext()) {
 			OperationWrapper wrap = (OperationWrapper) iter.next();
 			if (wrap.getLocalOperationCount() < jupReq.getJupiterVectorTime()
-					.getRemoteOperationCount()) {
+							.getRemoteOperationCount()) {
 				iter.remove();
 			}
 		}
 		// ASSERT msg.myMsgs == otherMsgs
-		assert jupReq.getJupiterVectorTime().getLocalOperationCount() 
-				== vectorTime.getRemoteOperationCount() 
-				: "msg.myMsgs != otherMsgs !!";
+		assert jupReq.getJupiterVectorTime().getLocalOperationCount() == vectorTime
+						.getRemoteOperationCount() : "msg.myMsgs != otherMsgs !!";
 	}
-	
+
 	/**
 	 * Applies an operation to the document model.
 	 * 
@@ -194,7 +193,7 @@ public class Jupiter implements Algorithm {
 		if (isClientSide && newOp instanceof SplitOperation) {
 			SplitOperation split = (SplitOperation) newOp;
 			if (split.getSecond() instanceof SplitOperation) {
-				apply(split.getSecond());	
+				apply(split.getSecond());
 			} else {
 				document.apply(split.getSecond());
 			}
@@ -207,53 +206,66 @@ public class Jupiter implements Algorithm {
 			document.apply(newOp);
 		}
 	}
-	
-    /**
-     * Transforms an operation with the operations in the outgoing queue
-     * {@link #ackRequestList}.
-     * 
-     * @param newOp the operation to be transformed
-     * @return the transformed operation
-     * @see #ackRequestList
-     */
-    private Operation transform(Operation newOp) {
-    		for (int ackRequestListCnt = 0; 
-                   ackRequestListCnt < ackRequestList.size(); ackRequestListCnt++) {
-            OperationWrapper wrap = (OperationWrapper)ackRequestList.get(ackRequestListCnt);
-            Operation existingOp = wrap.getOperation();
 
-            Operation transformedOp;
-            if (newOp instanceof SplitOperation) {
-                    SplitOperation split = (SplitOperation)newOp;
-                    if (isClientSide()) {
-                        split.setFirst( inclusion.transform(split.getFirst(), existingOp, Boolean.TRUE) );
-                        split.setSecond( inclusion.transform(split.getSecond(), existingOp, Boolean.TRUE) );
-                        existingOp = inclusion.transform(existingOp, split.getFirst(), Boolean.FALSE);
-                        existingOp = inclusion.transform(existingOp, split.getSecond(), Boolean.FALSE);
-                    } else {
-                        split.setFirst( inclusion.transform(split.getFirst(), existingOp, Boolean.FALSE) );
-                        split.setSecond( inclusion.transform(split.getSecond(), existingOp, Boolean.FALSE) );
-                        existingOp = inclusion.transform(existingOp, split.getFirst(), Boolean.TRUE);
-                        existingOp = inclusion.transform(existingOp, split.getSecond(), Boolean.TRUE);
-                    }
-                    transformedOp = split;
-            } else {
-                    if (isClientSide()) {
-                        transformedOp = inclusion.transform(newOp, existingOp, Boolean.TRUE);
-                        existingOp = inclusion.transform(existingOp, newOp, Boolean.FALSE);
-                    } else {
-                        transformedOp = inclusion.transform(newOp, existingOp, Boolean.FALSE);
-                        existingOp = inclusion.transform(existingOp, newOp, Boolean.TRUE);
-                    }
-            }
-            ackRequestList.set(ackRequestListCnt, new OperationWrapper(existingOp, wrap.getLocalOperationCount()));
+	/**
+	 * Transforms an operation with the operations in the outgoing queue
+	 * {@link #ackRequestList}.
+	 * 
+	 * @param newOp
+	 *            the operation to be transformed
+	 * @return the transformed operation
+	 * @see #ackRequestList
+	 */
+	private Operation transform(Operation newOp) {
+		for (int ackRequestListCnt = 0; ackRequestListCnt < ackRequestList
+						.size(); ackRequestListCnt++) {
+			OperationWrapper wrap = (OperationWrapper) ackRequestList
+							.get(ackRequestListCnt);
+			Operation existingOp = wrap.getOperation();
 
-            newOp = transformedOp;
-    }
-            return newOp;
-    }
+			Operation transformedOp;
+			if (newOp instanceof SplitOperation) {
+				SplitOperation split = (SplitOperation) newOp;
+				if (isClientSide()) {
+					split.setFirst(inclusion.transform(split.getFirst(),
+									existingOp, Boolean.TRUE));
+					split.setSecond(inclusion.transform(split.getSecond(),
+									existingOp, Boolean.TRUE));
+					existingOp = inclusion.transform(existingOp, split
+									.getFirst(), Boolean.FALSE);
+					existingOp = inclusion.transform(existingOp, split
+									.getSecond(), Boolean.FALSE);
+				} else {
+					split.setFirst(inclusion.transform(split.getFirst(),
+									existingOp, Boolean.FALSE));
+					split.setSecond(inclusion.transform(split.getSecond(),
+									existingOp, Boolean.FALSE));
+					existingOp = inclusion.transform(existingOp, split
+									.getFirst(), Boolean.TRUE);
+					existingOp = inclusion.transform(existingOp, split
+									.getSecond(), Boolean.TRUE);
+				}
+				transformedOp = split;
+			} else {
+				if (isClientSide()) {
+					transformedOp = inclusion.transform(newOp, existingOp,
+									Boolean.TRUE);
+					existingOp = inclusion.transform(existingOp, newOp,
+									Boolean.FALSE);
+				} else {
+					transformedOp = inclusion.transform(newOp, existingOp,
+									Boolean.FALSE);
+					existingOp = inclusion.transform(existingOp, newOp,
+									Boolean.TRUE);
+				}
+			}
+			ackRequestList.set(ackRequestListCnt, new OperationWrapper(
+							existingOp, wrap.getLocalOperationCount()));
 
-
+			newOp = transformedOp;
+		}
+		return newOp;
+	}
 
 	/**
 	 * Test 3 preconditions that must be fulfilled before transforming. They are
@@ -264,15 +276,15 @@ public class Jupiter implements Algorithm {
 	 */
 	private void checkPreconditions(JupiterRequest jupReq) {
 		if (!ackRequestList.isEmpty()
-				&& jupReq.getJupiterVectorTime().getRemoteOperationCount() 
-				< ((OperationWrapper) ackRequestList.get(0))
-				.getLocalOperationCount()) {
+						&& jupReq.getJupiterVectorTime()
+										.getRemoteOperationCount() < ((OperationWrapper) ackRequestList
+										.get(0)).getLocalOperationCount()) {
 			throw new JupiterException("precondition #1 violated.");
-		} else if (jupReq.getJupiterVectorTime().getRemoteOperationCount() 
-				> vectorTime.getLocalOperationCount()) {
+		} else if (jupReq.getJupiterVectorTime().getRemoteOperationCount() > vectorTime
+						.getLocalOperationCount()) {
 			throw new JupiterException("precondition #2 violated.");
-		} else if (jupReq.getJupiterVectorTime().getLocalOperationCount() 
-				!= vectorTime.getRemoteOperationCount()) {
+		} else if (jupReq.getJupiterVectorTime().getLocalOperationCount() != vectorTime
+						.getRemoteOperationCount()) {
 			throw new JupiterException("precondition #3 violated.");
 		}
 	}
@@ -321,7 +333,7 @@ public class Jupiter implements Algorithm {
 			throw new IllegalArgumentException("null parameter not allowed.");
 		}
 		document = doc;
-		//TODO: remove nasty cast
+		// TODO: remove nasty cast
 		vectorTime = (JupiterVectorTime) timestamp;
 	}
 
