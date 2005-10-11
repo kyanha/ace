@@ -26,6 +26,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import ch.iserver.ace.algorithm.Request;
+import ch.iserver.ace.util.SynchronizedQueue;
 
 /**
  * A NetService implementation for test purpose.
@@ -36,13 +37,15 @@ public class TestNetService implements NetService {
 
     private static Logger LOG = Logger.getLogger(TestNetService.class);
     
-    private List requests = new LinkedList();
+    //private List requests = new LinkedList();
+    private SynchronizedQueue queue = new SynchronizedQueue();
     
     /**
      * {@inheritDoc}
      */
     public void transmitRequest(Request req) {
-        requests.add(req);
+        //requests.add(req);
+        queue.add(req);
     }
     
     /**
@@ -51,11 +54,21 @@ public class TestNetService implements NetService {
      * @return a list with all received requests
      */
     public List getRequests() {
-    		//wait a short time for the requests
+    		List l = new LinkedList();
     		try {
-    			Thread.sleep(250);
-    		} catch (InterruptedException ie) {}
-        return requests;
+    			l.add(queue.get());
+    		} catch (InterruptedException ie) {}	
+    		return l;
+    		
+    		//wait a short time for the requests
+//    		try {
+//    			Thread.sleep(250);
+//    		} catch (InterruptedException ie) {}
+//        return requests;
+    }
+    
+    public int getRequestSize() {
+    		return queue.size();
     }
 
 }

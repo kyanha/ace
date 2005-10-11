@@ -43,8 +43,8 @@ public class DefaultRequestEngineTest extends TestCase {
 	private static final String TEXT = "a";
 	private static final int POSITION = 0;
 	
-	private static final int NUM_REQUESTS = 15;
-	private static final int NUM_OPERATIONS = 30;
+	private static final int NUM_REQUESTS = 5;
+	private static final int NUM_OPERATIONS = 10;
 	
 	private DummyDocumentModel doc;
 	private Algorithm algo;
@@ -76,11 +76,11 @@ public class DefaultRequestEngineTest extends TestCase {
 	public void testGenerateRequest() throws Exception {
 		Operation op = new InsertOperation(POSITION, TEXT);
 		//let the queue handler go into wait state on queues
-		Thread.sleep(1000);
+//		Thread.sleep(1000);
 		//pass the operation
 		engine.generateRequest(op);
 		//wait to let the execution finish
-		Thread.sleep(1000);
+//		Thread.sleep(1000);
 		Request req = (Request)outgoing.get();
 		assertNotNull(req);
 		assertEquals(SITE_ID, req.getSiteId());
@@ -94,7 +94,7 @@ public class DefaultRequestEngineTest extends TestCase {
 		
 		op = new DeleteOperation(POSITION, TEXT);
 		engine.generateRequest(op);
-		Thread.sleep(1000);
+//		Thread.sleep(1000);
 		req = (Request)outgoing.get();
 		assertNotNull(req);
 		assertEquals(SITE_ID, req.getSiteId());
@@ -115,11 +115,11 @@ public class DefaultRequestEngineTest extends TestCase {
 		Operation op = new InsertOperation(POSITION, TEXT);
 		Request req = new JupiterRequest(SITE_ID+1, new JupiterVectorTime(0,0), op);
 		//let the queue handler go into wait state on queues
-		Thread.sleep(1000);
+//		Thread.sleep(1000);
 		//receive the request
 		engine.receiveRequest(req);
 		//wait enough time to let the execution finish
-		Thread.sleep(1000);
+//		Thread.sleep(1000);
 		
 		InsertOperation ins = (InsertOperation)doc.getOperations().remove(0);
 		assertEquals(TEXT, ins.getText());

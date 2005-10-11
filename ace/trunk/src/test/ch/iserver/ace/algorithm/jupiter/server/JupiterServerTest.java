@@ -139,8 +139,6 @@ public class JupiterServerTest extends TestCase {
                 new JupiterVectorTime(VECTORTIME_LOCALOP_COUNT, VECTORTIME_REMOTEOP_COUNT), 
                 new InsertOperation(0, "a"));
         testClient.receiveRequest(req);
-
-        Thread.sleep(2000);
         
         RequestSerializer serializer = server.getRequestSerializer();
         Map outgoing = serializer.getOutgoingQueues();
@@ -177,13 +175,6 @@ public class JupiterServerTest extends TestCase {
     		for (int i=0; i < NUM_CLIENTS; i++) {
     			proxies[i].receiveRequest(requests[i]);
     		}
-    		
-    		//hold on for a short time
-    		Thread.sleep(1000);
-    		
-    		//at this point, assume that all requests have been processed and forwarded to all the
-    		//clients, hence the request forward queue must be empty
-    		assertTrue(server.getRequestSerializer().getRequestQueue().isEmpty());
     		
     		//check that each client (i.e. through the TestNetService class for each client) has
     		//received the correct set of operations, i.e. all operations execept the one it itself

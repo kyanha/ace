@@ -89,22 +89,22 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		proxies[2].receiveRequest(req1);
 		
 		//First of all, op2 is integrated on site 2
-		assertEquals(2, net[1].getRequests().size());
+		assertEquals(2, net[1].getRequestSize());
 		req2 = (Request)net[1].getRequests().remove(0); 	//get op from server
 		site2.receiveRequest(req2);  						//pass op to client
 		
 		//next, integrate op3 on site 1
-		assertEquals(2, net[0].getRequests().size());
+		assertEquals(2, net[0].getRequestSize());
 		req3 = (Request)net[0].getRequests().remove(0);
 		site1.receiveRequest(req3);
 		
 		//op1 is integrated on site 1
-		assertEquals(1, net[0].getRequests().size());
+		assertEquals(1, net[0].getRequestSize());
 		req1 = (Request)net[0].getRequests().remove(0);
 		site1.receiveRequest(req1);
 		
 		//finally, op1 is integrated on site 2
-		assertEquals(1, net[1].getRequests().size());
+		assertEquals(1, net[1].getRequestSize());
 		req1 = (Request)net[1].getRequests().remove(0);
 		site2.receiveRequest(req1);
 		
@@ -120,7 +120,7 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		
 		
 		//some additional tests
-		assertEquals(2, net[2].getRequests().size());
+		assertEquals(2, net[2].getRequestSize());
 		//here we apply op2 and op3 also to site 3 and compare
 		//the document content with the other sites. However, this is 
 		//not done in the original example.
@@ -312,12 +312,12 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		proxies[2].receiveRequest(req3);
 		
 		//First of all, op2 is integrated at site 3
-		assertEquals(1, net[2].getRequests().size());
+		assertEquals(1, net[2].getRequestSize());
 		req2 = (Request)net[2].getRequests().remove(0); 	//get op from server
 		site3.receiveRequest(req2);  						//pass op to client
 		
 		//next, integrate op3 on site 2
-		assertEquals(1, net[1].getRequests().size());
+		assertEquals(1, net[1].getRequestSize());
 		req3 = (Request)net[1].getRequests().remove(0);
 		site2.receiveRequest(req3);
 		
@@ -325,12 +325,12 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		proxies[0].receiveRequest(req1);
 		
 		//op1 is integrated on site 3
-		assertEquals(1, net[2].getRequests().size());
+		assertEquals(1, net[2].getRequestSize());
 		req1 = (Request)net[2].getRequests().remove(0);
 		site3.receiveRequest(req1);
 		
 		//finally, op1 is integrated at site 2
-		assertEquals(1, net[1].getRequests().size());
+		assertEquals(1, net[1].getRequestSize());
 		req1 = (Request)net[1].getRequests().remove(0);
 		site2.receiveRequest(req1);
 		
@@ -345,7 +345,7 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		assertEquals(FINAL, contentSite3);
 		
 		//some additional tests
-		assertEquals(2, net[0].getRequests().size());
+		assertEquals(2, net[0].getRequestSize());
 		//here we apply op2 and op3 also to site 1 and compare
 		//the document content with the other sites. However, this is 
 		//not done in the original example.
@@ -415,10 +415,10 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		proxies[0].receiveRequest(req2);
 		
 		//op1 is integrated at site 2 and 3
-		assertEquals(4, net[1].getRequests().size());
+		assertEquals(4, net[1].getRequestSize());
 		req1 = (Request)net[1].getRequests().remove(0); 	//get op from server
 		site2.receiveRequest(req1);  						//pass op to client
-		assertEquals(4, net[2].getRequests().size());
+		assertEquals(4, net[2].getRequestSize());
 		req1 = (Request)net[2].getRequests().remove(0);
 		site3.receiveRequest(req1);
 		
@@ -440,8 +440,8 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		req2 = (Request)net[2].getRequests().remove(0);
 		site3.receiveRequest(req2);
 		
-		assertEquals(0, net[1].getRequests().size());
-		assertEquals(0, net[2].getRequests().size());
+		assertEquals(0, net[1].getRequestSize());
+		assertEquals(0, net[2].getRequestSize());
 		
 		/** analyze results **/
 		//lets see if sites 2 and 3 converge and if their document
@@ -602,24 +602,17 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		 * site 3: op2 op1 
 		 */
 		
-		//let the server execute
-		Thread.sleep(1000);
-		
 		//process site 2
-		assertEquals(2, net[1].getRequests().size());
 		req3 = (Request)net[1].getRequests().remove(0);
 		site2.receiveRequest(req3);
 		req1 = (Request)net[1].getRequests().remove(0);
 		site2.receiveRequest(req1);
-		assertEquals(0, net[1].getRequests().size());
 		
 		//process site 3
-		assertEquals(2, net[2].getRequests().size());
 		req2 = (Request)net[2].getRequests().remove(0);
 		site3.receiveRequest(req2);
 		req1 = (Request)net[2].getRequests().remove(0);
 		site3.receiveRequest(req1);
-		assertEquals(0, net[2].getRequests().size());
 		
 		/** analyze results **/
 		//lets see if sites 2 and 3 converge and if their document
@@ -635,12 +628,10 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		/* Note that site 1 is not traced in the original example. 
 		 * Nonetheless, we do it to verify that all sites converge. 
 		 */
-		assertEquals(2, net[0].getRequests().size());
 		req2 = (Request)net[0].getRequests().remove(0); 	
 		site1.receiveRequest(req2);
 		req3 = (Request)net[0].getRequests().remove(0);
 		site1.receiveRequest(req3);
-		assertEquals(0, net[0].getRequests().size());
 		String contentSite1 = ((TestDocumentModel)site1.getDocument()).getText();
 		assertEquals(FINAL, contentSite1);
 	}
@@ -708,7 +699,6 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		// server-side processing of request req4
 		LOG.info("--> s4.pr recv r4: "+req4);
 		proxies[3].receiveRequest(req4);
-		Thread.sleep(500);
 		Request r4 = (Request)net[0].getRequests().remove(0);   
 		site1.receiveRequest(r4);
 		r4 = (Request)net[1].getRequests().remove(0);
@@ -807,7 +797,6 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		
 		// server-side processing of request req1
 		proxies[0].receiveRequest(req1);
-		Thread.sleep(500);
 		Request r1 = (Request)net[1].getRequests().remove(0);   
 		site2.receiveRequest(r1);
 		r1 = (Request)net[2].getRequests().remove(0);
@@ -879,7 +868,6 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		
 		// server-side processing of request req3
 		proxies[2].receiveRequest(req3);
-		Thread.sleep(500);
 		Request r3 = (Request)net[0].getRequests().remove(0);   
 		site1.receiveRequest(r3);
 		r3 = (Request)net[1].getRequests().remove(0);
@@ -964,6 +952,10 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		r3 = (Request)net[1].getRequests().remove(0);
 		eng2.receiveRequest(r3);
 		
+		//ensure that req3 is executed before op1 at site 1.
+		while (!eng1.getRemoteRequestBuffer().isEmpty()) {
+			Thread.sleep(50);
+		}
 		eng1.generateRequest(op1);
 		
 		// server-side processing of request req1
@@ -980,13 +972,20 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		r2 = (Request)net[2].getRequests().remove(0);
 		eng3.receiveRequest(r2);
 		
-		Thread.sleep(1000);
-		
 		/** analyze results **/
+		while (!eng1.getRemoteRequestBuffer().isEmpty()) {
+			Thread.sleep(50);
+		}
 		String contentSite1 = ((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
 				.getDocument()).getText();
+		while (!eng2.getRemoteRequestBuffer().isEmpty()) {
+			Thread.sleep(50);
+		}
 		String contentSite2 = ((TestDocumentModel)eng2.getQueueHandler().getAlgorithm()
 				.getDocument()).getText();
+		while (!eng3.getRemoteRequestBuffer().isEmpty()) {
+			Thread.sleep(50);
+		}
 		String contentSite3 = ((TestDocumentModel)eng3.getQueueHandler().getAlgorithm()
 				.getDocument()).getText();
 		LOG.info(contentSite1 + " == " + contentSite2 + " == " + contentSite3);
