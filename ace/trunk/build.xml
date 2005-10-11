@@ -118,7 +118,7 @@
 			haltonfailure="true">
 			<jvmarg value="-enableassertions"/>
 			<classpath refid="classpath.run"/>
-			<formatter type="plain"/>
+			<formatter type="xml"/>
 			<batchtest todir="${build.testreports}" unless="testcase">
 				<fileset dir="${src.test}">
 					<include name="**/*Test*.java"/>
