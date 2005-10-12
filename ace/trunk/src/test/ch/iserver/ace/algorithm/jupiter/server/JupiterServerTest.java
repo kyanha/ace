@@ -151,6 +151,9 @@ public class JupiterServerTest extends TestCase {
         		if ( id.intValue() == testClient.getSiteId() ) {
         			assertTrue( ((SynchronizedQueue)outgoing.get(id)).isEmpty() );
         		} else {
+        			while (((SynchronizedQueue)outgoing.get(id)).isEmpty()) {
+        				Thread.sleep(25);
+        			}
         			assertEquals(1, ((SynchronizedQueue)outgoing.get(id)).size());
         			JupiterRequest jupi = (JupiterRequest)
 								((SynchronizedQueue)outgoing.get(id)).get();
