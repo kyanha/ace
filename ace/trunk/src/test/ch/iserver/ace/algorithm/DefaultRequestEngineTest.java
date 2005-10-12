@@ -118,9 +118,9 @@ public class DefaultRequestEngineTest extends TestCase {
 //		Thread.sleep(1000);
 		//receive the request
 		engine.receiveRequest(req);
-		//wait enough time to let the execution finish
-//		Thread.sleep(1000);
-		
+		while (doc.getOperations().isEmpty()) {
+			Thread.sleep(25);
+		}
 		InsertOperation ins = (InsertOperation)doc.getOperations().remove(0);
 		assertEquals(TEXT, ins.getText());
 		assertEquals(otherMsgsBefore + 1, ((Jupiter)algo).getVectorTime().getRemoteOperationCount());

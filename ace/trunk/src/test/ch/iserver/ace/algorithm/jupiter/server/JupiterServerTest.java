@@ -112,9 +112,11 @@ public class JupiterServerTest extends TestCase {
     		assertNull(server.getRequestForwarders().get(new Integer(siteId)));
     		
     		RequestSerializer serializer = server.getRequestSerializer();
+    		while (serializer.getClientProxies().size() > NUM_CLIENTS-1) {
+    			Thread.sleep(50);
+    		}
     		assertNull(serializer.getClientProxies().get(new Integer(siteId)));
     		assertNull(serializer.getOutgoingQueues().get(new Integer(siteId)));
-    		assertEquals(NUM_CLIENTS - 1, serializer.getClientProxies().size());
     		assertEquals(NUM_CLIENTS - 1, serializer.getOutgoingQueues().size());
     }
     
