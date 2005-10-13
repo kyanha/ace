@@ -33,8 +33,6 @@ import ch.iserver.ace.algorithm.AwarenessInformation;
 import ch.iserver.ace.algorithm.InclusionTransformation;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.Timestamp;
-import ch.iserver.ace.text.DeleteOperation;
-import ch.iserver.ace.text.InsertOperation;
 import ch.iserver.ace.text.SplitOperation;
 
 /**
