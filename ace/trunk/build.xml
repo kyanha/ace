@@ -121,6 +121,7 @@
 			haltonerror="true" 
 			haltonfailure="true">
 			<jvmarg value="-enableassertions"/>
+			<jvmarg value="-Djava.awt.headless=true"/>
 			<classpath refid="classpath.run"/>
 			<formatter type="xml"/>
 			<batchtest todir="${build.testreports}" unless="testcase">
