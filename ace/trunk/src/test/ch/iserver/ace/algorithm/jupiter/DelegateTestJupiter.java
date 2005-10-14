@@ -17,7 +17,8 @@ public class DelegateTestJupiter implements Algorithm {
 
 	private Jupiter jupiter;
 	
-	private static Object synchObj = new Object(); 
+	private static Object synchObj = new Object();
+	private static Object synchObj2 = new Object();
 	private int expectedOps;
 	private int opCounter;
 	
@@ -58,10 +59,12 @@ public class DelegateTestJupiter implements Algorithm {
 
 	public Request generateRequest(Operation op) {
 		Request r = jupiter.generateRequest(op);
-		synchronized(synchObj) {
+		synchronized(synchObj2) {
 			++opCounter;
 			if (opCounter >= expectedOps) {
-				synchObj.notify();
+				synchronized(synchObj) {
+					synchObj.notify();
+				}
 			}
 		}
 		return r;
@@ -69,10 +72,12 @@ public class DelegateTestJupiter implements Algorithm {
 
 	public void receiveRequest(Request req) {
 		jupiter.receiveRequest(req);
-		synchronized(synchObj) {
+		synchronized(synchObj2) {
 			++opCounter;
 			if (opCounter >= expectedOps) {
-				synchObj.notify();
+				synchronized(synchObj) {
+					synchObj.notify();
+				}
 			}
 		}
 	}
@@ -84,13 +89,15 @@ public class DelegateTestJupiter implements Algorithm {
 	 * a number of processed operations.
 	 */
 	public DocumentModel getDocument() {
-		synchronized(synchObj) {
+		synchronized(synchObj2) {
 			System.out.println(opCounter+" <? "+expectedOps);
 			if (opCounter < expectedOps) {
 				//go to sleep
 				try {
 					System.out.println("DelegateTestJupiter.sleep: "+opCounter+" < "+expectedOps);
-					synchObj.wait();
+					synchronized(synchObj) {
+						synchObj.wait();
+					}
 					System.out.println("DelegateTestJupiter.awakened: "+opCounter+" >= "+expectedOps);
 				} catch (InterruptedException ie) {}
 			}
