@@ -89,11 +89,11 @@ public class JupiterCharScenarioTest extends TestCase {
 		proxies[3] = server.addClient(net[3]); //belongs to site 4
 		proxies[4] = server.addClient(net[4]); //belongs to site 5	
 		
-		DefaultRequestEngine eng1 = createClientEngine(proxies[0].getSiteId(), INITIAL);
-		DefaultRequestEngine eng2 = createClientEngine(proxies[1].getSiteId(), INITIAL);
-		DefaultRequestEngine eng3 = createClientEngine(proxies[2].getSiteId(), INITIAL);
-		DefaultRequestEngine eng4 = createClientEngine(proxies[3].getSiteId(), INITIAL);
-		DefaultRequestEngine eng5 = createClientEngine(proxies[4].getSiteId(), INITIAL);
+		DefaultRequestEngine eng1 = createClientEngine(18, proxies[0].getSiteId(), INITIAL);
+		DefaultRequestEngine eng2 = createClientEngine(18, proxies[1].getSiteId(), INITIAL);
+		DefaultRequestEngine eng3 = createClientEngine(18, proxies[2].getSiteId(), INITIAL);
+		DefaultRequestEngine eng4 = createClientEngine(18, proxies[3].getSiteId(), INITIAL);
+		DefaultRequestEngine eng5 = createClientEngine(18, proxies[4].getSiteId(), INITIAL);
 		SynchronizedQueue queue1 = eng1.getOutgoingRequestBuffer();
 		SynchronizedQueue queue2 = eng2.getOutgoingRequestBuffer();
 		SynchronizedQueue queue3 = eng3.getOutgoingRequestBuffer();
@@ -323,32 +323,24 @@ public class JupiterCharScenarioTest extends TestCase {
 		eng4.receiveRequest(r5);
 		
 		/** end of concurrent step 1 **/
-		while (!eng1.getRemoteRequestBuffer().isEmpty() || 
-				!eng2.getRemoteRequestBuffer().isEmpty()) {
-			Thread.sleep(50);
-		}
 		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
 				.getDocument()).getText().equals(((TestDocumentModel)eng2.getQueueHandler().getAlgorithm()
 				.getDocument()).getText()));
-		while (!eng3.getRemoteRequestBuffer().isEmpty()) {
-			Thread.sleep(50);
-		}
 		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
 				.getDocument()).getText().equals(((TestDocumentModel)eng3.getQueueHandler().getAlgorithm()
 				.getDocument()).getText()));
-		while (!eng4.getRemoteRequestBuffer().isEmpty()) {
-			Thread.sleep(50);
-		}
 		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
 				.getDocument()).getText().equals(((TestDocumentModel)eng4.getQueueHandler().getAlgorithm()
 				.getDocument()).getText()));
-		while (!eng5.getRemoteRequestBuffer().isEmpty()) {
-			Thread.sleep(50);
-		}
 		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
 				.getDocument()).getText().equals(((TestDocumentModel)eng5.getQueueHandler().getAlgorithm()
 				.getDocument()).getText()));
 		
+		((DelegateTestJupiter)eng1.getQueueHandler().getAlgorithm()).setExpectedOperations(7);
+		((DelegateTestJupiter)eng2.getQueueHandler().getAlgorithm()).setExpectedOperations(7);
+		((DelegateTestJupiter)eng3.getQueueHandler().getAlgorithm()).setExpectedOperations(7);
+		((DelegateTestJupiter)eng4.getQueueHandler().getAlgorithm()).setExpectedOperations(7);
+		((DelegateTestJupiter)eng5.getQueueHandler().getAlgorithm()).setExpectedOperations(7);
 		
 		/** concurrent step 2 **/
 		//generate requests at site 1
@@ -446,31 +438,24 @@ public class JupiterCharScenarioTest extends TestCase {
 		eng5.receiveRequest(r2);
 		
 		/** end of concurrent step 2 **/
-		while (!eng1.getRemoteRequestBuffer().isEmpty() || 
-				!eng2.getRemoteRequestBuffer().isEmpty()) {
-			Thread.sleep(50);
-		}
 		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
 				.getDocument()).getText().equals(((TestDocumentModel)eng2.getQueueHandler().getAlgorithm()
 				.getDocument()).getText()));
-		while (!eng3.getRemoteRequestBuffer().isEmpty()) {
-			Thread.sleep(50);
-		}
 		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
 				.getDocument()).getText().equals(((TestDocumentModel)eng3.getQueueHandler().getAlgorithm()
 				.getDocument()).getText()));
-		while (!eng4.getRemoteRequestBuffer().isEmpty()) {
-			Thread.sleep(50);
-		}
 		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
 				.getDocument()).getText().equals(((TestDocumentModel)eng4.getQueueHandler().getAlgorithm()
 				.getDocument()).getText()));
-		while (!eng5.getRemoteRequestBuffer().isEmpty()) {
-			Thread.sleep(50);
-		}
 		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
 				.getDocument()).getText().equals(((TestDocumentModel)eng5.getQueueHandler().getAlgorithm()
 				.getDocument()).getText()));
+		
+		((DelegateTestJupiter)eng1.getQueueHandler().getAlgorithm()).setExpectedOperations(2);
+		((DelegateTestJupiter)eng2.getQueueHandler().getAlgorithm()).setExpectedOperations(2);
+		((DelegateTestJupiter)eng3.getQueueHandler().getAlgorithm()).setExpectedOperations(2);
+		((DelegateTestJupiter)eng4.getQueueHandler().getAlgorithm()).setExpectedOperations(2);
+		((DelegateTestJupiter)eng5.getQueueHandler().getAlgorithm()).setExpectedOperations(2);
 		
 		/** concurrent step 3 **/
 		//generate requests at site 1
@@ -504,31 +489,24 @@ public class JupiterCharScenarioTest extends TestCase {
 		eng5.receiveRequest(r4);
 		
 		/** end of concurrent step 3 **/
-		while (!eng1.getRemoteRequestBuffer().isEmpty() || 
-				!eng2.getRemoteRequestBuffer().isEmpty()) {
-			Thread.sleep(50);
-		}
 		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
 				.getDocument()).getText().equals(((TestDocumentModel)eng2.getQueueHandler().getAlgorithm()
 				.getDocument()).getText()));
-		while (!eng3.getRemoteRequestBuffer().isEmpty()) {
-			Thread.sleep(50);
-		}
 		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
 				.getDocument()).getText().equals(((TestDocumentModel)eng3.getQueueHandler().getAlgorithm()
 				.getDocument()).getText()));
-		while (!eng4.getRemoteRequestBuffer().isEmpty()) {
-			Thread.sleep(50);
-		}
 		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
 				.getDocument()).getText().equals(((TestDocumentModel)eng4.getQueueHandler().getAlgorithm()
 				.getDocument()).getText()));
-		while (!eng5.getRemoteRequestBuffer().isEmpty()) {
-			Thread.sleep(50);
-		}
 		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
 				.getDocument()).getText().equals(((TestDocumentModel)eng5.getQueueHandler().getAlgorithm()
 				.getDocument()).getText()));
+		
+		((DelegateTestJupiter)eng1.getQueueHandler().getAlgorithm()).setExpectedOperations(1);
+		((DelegateTestJupiter)eng2.getQueueHandler().getAlgorithm()).setExpectedOperations(1);
+		((DelegateTestJupiter)eng3.getQueueHandler().getAlgorithm()).setExpectedOperations(1);
+		((DelegateTestJupiter)eng4.getQueueHandler().getAlgorithm()).setExpectedOperations(1);
+		((DelegateTestJupiter)eng5.getQueueHandler().getAlgorithm()).setExpectedOperations(1);
  		
 		/** concurrent step 4 **/
 //		generate requests at site 5
@@ -547,33 +525,6 @@ public class JupiterCharScenarioTest extends TestCase {
 		eng4.receiveRequest(r5);
  		
 		/** end of concurrent step 4 **/
-		while (!eng1.getRemoteRequestBuffer().isEmpty() || 
-				!eng2.getRemoteRequestBuffer().isEmpty()) {
-			Thread.sleep(50);
-		}
-		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
-				.getDocument()).getText().equals(((TestDocumentModel)eng2.getQueueHandler().getAlgorithm()
-				.getDocument()).getText()));
-		while (!eng3.getRemoteRequestBuffer().isEmpty()) {
-			Thread.sleep(50);
-		}
-		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
-				.getDocument()).getText().equals(((TestDocumentModel)eng3.getQueueHandler().getAlgorithm()
-				.getDocument()).getText()));
-		while (!eng4.getRemoteRequestBuffer().isEmpty()) {
-			Thread.sleep(50);
-		}
-		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
-				.getDocument()).getText().equals(((TestDocumentModel)eng4.getQueueHandler().getAlgorithm()
-				.getDocument()).getText()));
-		while (!eng5.getRemoteRequestBuffer().isEmpty()) {
-			Thread.sleep(50);
-		}
-		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
-				.getDocument()).getText().equals(((TestDocumentModel)eng5.getQueueHandler().getAlgorithm()
-				.getDocument()).getText()));
-		
-		/** analyze results **/
 		String contentSite1 = ((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
 				.getDocument()).getText();
 		String contentSite2 = ((TestDocumentModel)eng2.getQueueHandler().getAlgorithm()
@@ -584,6 +535,12 @@ public class JupiterCharScenarioTest extends TestCase {
 				.getDocument()).getText();
 		String contentSite5 = ((TestDocumentModel)eng5.getQueueHandler().getAlgorithm()
 				.getDocument()).getText();
+		assertTrue(	contentSite1.equals(contentSite2) );
+		assertTrue(	contentSite1.equals(contentSite3) );
+		assertTrue(	contentSite1.equals(contentSite4) );
+		assertTrue(	contentSite1.equals(contentSite5) );
+		
+		/** analyze results **/
 		LOG.info("'"+contentSite1+"'");
 		assertEquals(FINAL, contentSite1);
 		assertEquals(FINAL, contentSite2);
@@ -615,13 +572,9 @@ public class JupiterCharScenarioTest extends TestCase {
 		proxies[1] = server.addClient(net[1]); //belongs to site 2
 		proxies[2] = server.addClient(net[2]); //belongs to site 3
 		
-		
-		DefaultRequestEngine eng1 = new DefaultRequestEngine(
-				createClient(proxies[0].getSiteId(), INITIAL));
-		DefaultRequestEngine eng2 = new DefaultRequestEngine(
-				createClient(proxies[1].getSiteId(), INITIAL));
-		DefaultRequestEngine eng3 = new DefaultRequestEngine(
-				createClient(proxies[2].getSiteId(), INITIAL));
+		DefaultRequestEngine eng1 = createClientEngine(6, proxies[0].getSiteId(), INITIAL);
+		DefaultRequestEngine eng2 = createClientEngine(6, proxies[1].getSiteId(), INITIAL);
+		DefaultRequestEngine eng3 = createClientEngine(6, proxies[2].getSiteId(), INITIAL);
 		SynchronizedQueue queue1 = eng1.getOutgoingRequestBuffer();
 		SynchronizedQueue queue2 = eng2.getOutgoingRequestBuffer();
 		SynchronizedQueue queue3 = eng3.getOutgoingRequestBuffer();
@@ -680,23 +633,12 @@ public class JupiterCharScenarioTest extends TestCase {
 		eng1.receiveRequest(r2);
 		r2 = (Request)net[2].getRequests().remove(0);
 		eng3.receiveRequest(r2);
-		
-		//Thread.sleep(500);
 
 		/** analyze results **/
-		while (!eng1.getRemoteRequestBuffer().isEmpty()) {
-			Thread.sleep(50);
-		}
 		String contentSite1 = ((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
 				.getDocument()).getText();
-		while (!eng2.getRemoteRequestBuffer().isEmpty()) {
-			Thread.sleep(50);
-		}
 		String contentSite2 = ((TestDocumentModel)eng2.getQueueHandler().getAlgorithm()
 				.getDocument()).getText();
-		while (!eng3.getRemoteRequestBuffer().isEmpty()) {
-			Thread.sleep(50);
-		}
 		String contentSite3 = ((TestDocumentModel)eng3.getQueueHandler().getAlgorithm()
 				.getDocument()).getText();
 		LOG.info(contentSite1 + " == " + contentSite2 + " == " + contentSite3);
@@ -705,14 +647,16 @@ public class JupiterCharScenarioTest extends TestCase {
 		assertEquals(FINAL, contentSite3);
 	}
 	
-	private DefaultRequestEngine createClientEngine(int siteId, String content) {
-		return new DefaultRequestEngine(createClient(siteId, content));
+	private DefaultRequestEngine createClientEngine(int expectedOps, int siteId, String content) {
+		return new DefaultRequestEngine(createClient(expectedOps, siteId, content));
 	}
 	
-	private Jupiter createClient(int siteId, String initialDocContent) {
-		return new Jupiter(new GOTOInclusionTransformation(),
+	private DelegateTestJupiter createClient(int expectedOps, int siteId, String initialDocContent) {
+		DelegateTestJupiter j = new DelegateTestJupiter(new GOTOInclusionTransformation(),
 							new TestDocumentModel(siteId, initialDocContent), 
 							siteId, true);
+		j.setExpectedOperations(expectedOps);
+		return j;
 	}
 	
 	private JupiterServer createServer() {
