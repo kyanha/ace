@@ -89,22 +89,18 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		proxies[2].receiveRequest(req1);
 		
 		//First of all, op2 is integrated on site 2
-		assertEquals(2, net[1].getRequestSize());
 		req2 = (Request)net[1].getRequests().remove(0); 	//get op from server
 		site2.receiveRequest(req2);  						//pass op to client
 		
 		//next, integrate op3 on site 1
-		assertEquals(2, net[0].getRequestSize());
 		req3 = (Request)net[0].getRequests().remove(0);
 		site1.receiveRequest(req3);
 		
 		//op1 is integrated on site 1
-		assertEquals(1, net[0].getRequestSize());
 		req1 = (Request)net[0].getRequests().remove(0);
 		site1.receiveRequest(req1);
 		
 		//finally, op1 is integrated on site 2
-		assertEquals(1, net[1].getRequestSize());
 		req1 = (Request)net[1].getRequests().remove(0);
 		site2.receiveRequest(req1);
 		
@@ -312,12 +308,10 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		proxies[2].receiveRequest(req3);
 		
 		//First of all, op2 is integrated at site 3
-		assertEquals(1, net[2].getRequestSize());
 		req2 = (Request)net[2].getRequests().remove(0); 	//get op from server
 		site3.receiveRequest(req2);  						//pass op to client
 		
 		//next, integrate op3 on site 2
-		assertEquals(1, net[1].getRequestSize());
 		req3 = (Request)net[1].getRequests().remove(0);
 		site2.receiveRequest(req3);
 		
@@ -325,12 +319,10 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		proxies[0].receiveRequest(req1);
 		
 		//op1 is integrated on site 3
-		assertEquals(1, net[2].getRequestSize());
 		req1 = (Request)net[2].getRequests().remove(0);
 		site3.receiveRequest(req1);
 		
 		//finally, op1 is integrated at site 2
-		assertEquals(1, net[1].getRequestSize());
 		req1 = (Request)net[1].getRequests().remove(0);
 		site2.receiveRequest(req1);
 		
@@ -415,10 +407,8 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		proxies[0].receiveRequest(req2);
 		
 		//op1 is integrated at site 2 and 3
-		assertEquals(4, net[1].getRequestSize());
 		req1 = (Request)net[1].getRequests().remove(0); 	//get op from server
 		site2.receiveRequest(req1);  						//pass op to client
-		assertEquals(4, net[2].getRequestSize());
 		req1 = (Request)net[2].getRequests().remove(0);
 		site3.receiveRequest(req1);
 		

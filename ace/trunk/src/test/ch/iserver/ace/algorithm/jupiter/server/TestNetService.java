@@ -37,14 +37,12 @@ public class TestNetService implements NetService {
 
     private static Logger LOG = Logger.getLogger(TestNetService.class);
     
-    //private List requests = new LinkedList();
     private SynchronizedQueue queue = new SynchronizedQueue();
     
     /**
      * {@inheritDoc}
      */
     public void transmitRequest(Request req) {
-        //requests.add(req);
         queue.add(req);
     }
     
@@ -59,12 +57,6 @@ public class TestNetService implements NetService {
     			l.add(queue.get());
     		} catch (InterruptedException ie) {}	
     		return l;
-    		
-    		//wait a short time for the requests
-//    		try {
-//    			Thread.sleep(250);
-//    		} catch (InterruptedException ie) {}
-//        return requests;
     }
     
     public int getRequestSize() {
