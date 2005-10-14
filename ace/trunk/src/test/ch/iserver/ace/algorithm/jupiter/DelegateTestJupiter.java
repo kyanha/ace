@@ -58,9 +58,9 @@ public class DelegateTestJupiter implements Algorithm {
 
 	public Request generateRequest(Operation op) {
 		Request r = jupiter.generateRequest(op);
-		++opCounter;
-		if (opCounter >= expectedOps) {
-			synchronized(synchObj) {
+		synchronized(synchObj) {
+			++opCounter;
+			if (opCounter >= expectedOps) {
 				synchObj.notify();
 			}
 		}
@@ -69,9 +69,9 @@ public class DelegateTestJupiter implements Algorithm {
 
 	public void receiveRequest(Request req) {
 		jupiter.receiveRequest(req);
-		++opCounter;
-		if (opCounter >= expectedOps) {
-			synchronized(synchObj) {
+		synchronized(synchObj) {
+			++opCounter;
+			if (opCounter >= expectedOps) {
 				synchObj.notify();
 			}
 		}
@@ -83,16 +83,17 @@ public class DelegateTestJupiter implements Algorithm {
 	 * comparable document state throughout several algorithm instances after
 	 * a number of processed operations.
 	 */
-	public synchronized DocumentModel getDocument() {
-		if (opCounter < expectedOps) {
-			//go to sleep
-			try {
-				System.out.println("DelegateTestJupiter.sleep: "+opCounter+" < "+expectedOps);
-				synchronized(synchObj) {
+	public DocumentModel getDocument() {
+		synchronized(synchObj) {
+			System.out.println(opCounter+" <? "+expectedOps);
+			if (opCounter < expectedOps) {
+				//go to sleep
+				try {
+					System.out.println("DelegateTestJupiter.sleep: "+opCounter+" < "+expectedOps);
 					synchObj.wait();
-				}
-				System.out.println("DelegateTestJupiter.awakened: "+opCounter+" >= "+expectedOps);
-			} catch (InterruptedException ie) {}
+					System.out.println("DelegateTestJupiter.awakened: "+opCounter+" >= "+expectedOps);
+				} catch (InterruptedException ie) {}
+			}
 		}
 		return jupiter.getDocument();
 	}
