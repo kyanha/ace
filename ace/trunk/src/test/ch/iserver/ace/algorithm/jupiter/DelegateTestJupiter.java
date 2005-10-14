@@ -83,7 +83,7 @@ public class DelegateTestJupiter implements Algorithm {
 	 * comparable document state throughout several algorithm instances after
 	 * a number of processed operations.
 	 */
-	public DocumentModel getDocument() {
+	public synchronized DocumentModel getDocument() {
 		if (opCounter < expectedOps) {
 			//go to sleep
 			try {
