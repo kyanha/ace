@@ -60,16 +60,10 @@ public class DoNode extends AbstractGenerationNode {
 		return operation;
 	}
 	
-	/**
-	 * @inheritDoc
-	 */
 	public void accept(NodeVisitor visitor) {
 		visitor.visit(this);
 	}
 	
-	/**
-	 * @inheritDoc
-	 */
 	public String toString() {
 		return getClass().getName() 
 				+ "[siteId=" + getSiteId() 

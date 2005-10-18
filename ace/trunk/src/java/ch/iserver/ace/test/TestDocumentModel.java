@@ -70,9 +70,6 @@ public class TestDocumentModel extends PlainDocument implements DocumentModel {
 		siteId = id;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void apply(Operation operation) {
 		try {
 			if (operation instanceof InsertOperation) {
@@ -122,9 +119,6 @@ public class TestDocumentModel extends PlainDocument implements DocumentModel {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public boolean equals(Object obj) {
 		if (obj == this) {
 			return true;
@@ -138,16 +132,10 @@ public class TestDocumentModel extends PlainDocument implements DocumentModel {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public int hashCode() {
 		return getText().hashCode();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public String toString() {
 		return getText();
 	}

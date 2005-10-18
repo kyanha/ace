@@ -76,9 +76,6 @@ public abstract class AbstractGenerationNode extends AbstractNode
 		return remoteSuccessors;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	public List getSuccessors() {
 		List result = new ArrayList();
 		if (getLocalSuccessor() != null) {

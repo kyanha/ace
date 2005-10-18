@@ -45,9 +45,6 @@ public class TwoWayExecuteVisitor extends ExecuteVisitor {
 		super(factory);
 	}
 	
-	/**
-	 * @inheritDoc
-	 */
 	public void visit(StartNode node) {
 		String state = node.getState();
 		Boolean isClient = Boolean.valueOf(node.getSites() % 2 == 0);

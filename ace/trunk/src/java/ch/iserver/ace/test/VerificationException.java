@@ -39,9 +39,6 @@ public class VerificationException extends ScenarioException {
 		this.result = result;
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
 	public String toString() {
 		return getClass().getName() + "\n" + result;
 	}

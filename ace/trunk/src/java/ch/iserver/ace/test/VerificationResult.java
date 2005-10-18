@@ -94,9 +94,6 @@ public class VerificationResult {
 		}
 	}
 	
-	/**
-	 * @inheritDoc
-	 */
 	public String toString() {
 		StringBuffer buf = new StringBuffer();
 		buf.append(failure.size());

@@ -60,30 +60,18 @@ public class RelayNode extends AbstractNode implements ReceptionNode, Generation
 		this.remoteSuccessors = new HashSet();
 	}
 	
-	/**
-	 * @inheritDoc
-	 */
 	public String getEventId() {
 		return eventId;
 	}
 	
-	/**
-	 * @inheritDoc
-	 */
 	public String getReference() {
 		return reference;
 	}
 	
-	/**
-	 * @inheritDoc
-	 */
 	public Request getRequest() {
 		return request;
 	}
 	
-	/**
-	 * @inheritDoc
-	 */
 	public void setRequest(Request request) {
 		this.request = request;
 	}
@@ -106,23 +94,14 @@ public class RelayNode extends AbstractNode implements ReceptionNode, Generation
 		this.localPredecessor = predecessor;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	public void addRemoteSuccessor(ReceptionNode successor) {
 		remoteSuccessors.add(successor);
 	}
 	
-	/**
-	 * @inheritDoc
-	 */
 	public Set getRemoteSuccessors() {
 		return remoteSuccessors;
 	}
 	
-	/**
-	 * @inheritDoc
-	 */
 	public List getSuccessors() {
 		List result = new ArrayList();
 		if (getLocalSuccessor() != null) {
@@ -132,9 +111,6 @@ public class RelayNode extends AbstractNode implements ReceptionNode, Generation
 		return result;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	public void accept(NodeVisitor visitor) {
 		visitor.visit(this);
 	}

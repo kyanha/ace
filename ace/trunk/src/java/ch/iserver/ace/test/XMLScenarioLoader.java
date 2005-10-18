@@ -56,9 +56,6 @@ public class XMLScenarioLoader implements ScenarioLoader {
 	/** default implementation of scenario loader interface. */
 	public XMLScenarioLoader() { }
 
-	/**
-	 * @inheritDoc
-	 */
 	public void loadScenario(ScenarioBuilder builder, 
 			InputStream source)
 			throws IOException {

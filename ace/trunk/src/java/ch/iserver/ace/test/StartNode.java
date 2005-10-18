@@ -83,16 +83,10 @@ public class StartNode extends AbstractNode {
 		return result;
 	}
 		
-	/**
-	 * {@inheritDoc}
-	 */
 	public void accept(NodeVisitor visitor) {
 		visitor.visit(this);
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
 	public String toString() {
 		return getClass().getName() + "[site=" + getSiteId()
 				+ ",state=" + state 

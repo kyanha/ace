@@ -53,9 +53,6 @@ public class VerificationNode extends AbstractNode {
 		return state;
 	}
 	
-	/**
-	 * @inheritDoc
-	 */
 	public List getSuccessors() {
 		List result = new ArrayList();
 		if (getLocalSuccessor() != null) {
@@ -64,16 +61,10 @@ public class VerificationNode extends AbstractNode {
 		return result;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	public void accept(NodeVisitor visitor) {
 		visitor.visit(this);
 	}
 	
-	/**
-	 * @inheritDoc
-	 */
 	public String toString() {
 		return getClass().getName() + "["
 		        + "site=" + getSiteId()

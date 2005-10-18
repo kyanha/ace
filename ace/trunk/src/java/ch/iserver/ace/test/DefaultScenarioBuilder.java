@@ -70,9 +70,6 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 	/** the number of sites generated so far. */
 	private int siteCount;
 
-	/**
-	 * @inheritDoc
-	 */
 	public void init(String initialState, String finalState) {
 		this.initialState = initialState;
 		this.finalState = finalState;
@@ -123,9 +120,6 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 		addToSiteReception(node.getSiteId(), node.getReference());
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	public void startSite(String siteId) {
 		if (this.currentSiteId != null) {
 			throw new ScenarioException("sites cannot nest");
@@ -137,41 +131,26 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 		siteHelpers.put(siteId, new SiteHelper());
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	public void addDoGeneration(final String id, final Operation op) {
 		checkCurrentSite();
 		addGenerationNode(new DoNode(currentSiteId, id, op));
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	public void addUndoGeneration(String id) {
 		checkCurrentSite();
 		addGenerationNode(new UndoNode(currentSiteId, id));
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	public void addRedoGeneration(String id) {
 		checkCurrentSite();
 		addGenerationNode(new RedoNode(currentSiteId, id));
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	public void addReception(String ref) {
 		checkCurrentSite();
 		addReceptionNode(new SimpleReceptionNode(currentSiteId, ref));
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	public void addVerification(String expect) {
 		checkCurrentSite();
 		Node node = new VerificationNode(currentSiteId, expect);
@@ -181,9 +160,6 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 		setPredecessor(currentSiteId, node);
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	public void endSite() {
 		checkCurrentSite();
 		Node node = new EndNode(currentSiteId, finalState);
@@ -200,9 +176,6 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 		}
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	public void addRelay(String ref, String id) {
 		if (ref == null) {
 			throw new IllegalArgumentException(

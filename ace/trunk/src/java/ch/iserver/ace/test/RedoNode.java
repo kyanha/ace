@@ -40,9 +40,6 @@ public class RedoNode extends AbstractGenerationNode {
 		super(siteId, id);
 	}
 		
-	/**
-	 * @inheritDoc
-	 */
 	public void accept(NodeVisitor visitor) {
 		visitor.visit(this);
 	}

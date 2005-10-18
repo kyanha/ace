@@ -38,9 +38,6 @@ public class UndoNode extends AbstractGenerationNode {
 		super(siteId, eventId);
 	}
 	
-	/**
-	 * @inheritDoc
-	 */
 	public void accept(NodeVisitor visitor) {
 		visitor.visit(this);
 	}

@@ -79,9 +79,6 @@ public class SimpleReceptionNode extends AbstractNode implements ReceptionNode {
 		return request;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	public List getSuccessors() {
 		List result = new ArrayList();
 		if (getLocalSuccessor() != null) {
@@ -90,16 +87,10 @@ public class SimpleReceptionNode extends AbstractNode implements ReceptionNode {
 		return result;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	public void accept(NodeVisitor visitor) {
 		visitor.visit(this);
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	public String toString() {
 		return getClass().getName() + "[site=" + getSiteId() + ",ref=" + ref
 				+ "]";

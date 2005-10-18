@@ -44,23 +44,14 @@ public abstract class AbstractNode implements Node {
 		this.siteId = siteId;
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
 	public String getSiteId() {
 		return siteId;
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
 	public void setLocalSuccessor(Node successor) {
 		this.localSuccessor = successor;
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
 	public Node getLocalSuccessor() {
 		return localSuccessor;
 	}

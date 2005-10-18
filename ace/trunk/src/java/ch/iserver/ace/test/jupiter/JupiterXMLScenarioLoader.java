@@ -30,20 +30,15 @@ import ch.iserver.ace.test.XMLScenarioLoader;
 import ch.iserver.ace.test.ScenarioBuilder;
 
 /**
- *
+ * A ScenarioLoader for Jupiter scenarios, i.e. scenarios that communicate with
+ * a server and never directly among participants.
  */
 public class JupiterXMLScenarioLoader extends XMLScenarioLoader {
 
-	/**
-	 * @inheritDoc
-	 */
 	protected InputStream getSchema() {
 		return getClass().getResourceAsStream("/test/jupiter-scenario.xsd");
 	}
 	
-	/**
-	 * @inheritDoc
-	 */
 	protected void processRootChildren(ScenarioBuilder builder, Element root) {
 		super.processRootChildren(builder, root);
 		processServer(builder, root.getChild("server"));
