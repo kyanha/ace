@@ -20,28 +20,61 @@
  
 package ch.iserver.ace;
 
+/**
+ * A CaretUpdate encapsulates the details of an update to the caret. The
+ * caret consists of a dot (the position of the cursor) and a mark. If
+ * both are at the same position, there is no selection. Otherwise the
+ * selection starts at the mark and ends at the dot. 
+ */
 public class CaretUpdate  {
 
+	/**
+	 * The site id of the participant.
+	 */
 	private int siteId;
+	
+	/**
+	 * Int array keeping dot and mark values.
+	 */
 	private int[] indices = new int[2];
 	
-	public CaretUpdate(int dot, int mark) {
+	/**
+	 * Creates a new CaretUpdate.
+	 * 
+	 * @param siteId the site id of the generating site
+	 * @param dot the dot value
+	 * @param mark the mark value
+	 */
+	public CaretUpdate(int siteId, int dot, int mark) {
+		this.siteId = siteId;
 		this.indices[0] = dot;
 		this.indices[1] = mark;
 	}
 	
+	/**
+	 * @return the siteId of the generating site
+	 */
 	public int getSiteId() {
 		return siteId;
 	}
 	
+	/**
+	 * @return the dot value
+	 */
 	public int getDot() {
 		return indices[0];
 	}
 	
+	/**
+	 * @return the mark value
+	 */
 	public int getMark() {
 		return indices[1];
 	}
-
+	
+	/**
+	 * @return array consisting of dot and mark (index 0 and 1 respecitvely)
+	 */
 	public int[] getIndices() {
 		return indices;
 	}
