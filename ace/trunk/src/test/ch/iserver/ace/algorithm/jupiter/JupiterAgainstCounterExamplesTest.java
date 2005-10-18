@@ -70,9 +70,9 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		proxies[1] = server.addClient(net[1]); //belongs to site 2
 		proxies[2] = server.addClient(net[2]); //belongs to site 3
 		
-		Jupiter site1 = createClient(proxies[0].getSiteId(), INITIAL);
-		Jupiter site2 = createClient(proxies[1].getSiteId(), INITIAL);
-		Jupiter site3 = createClient(proxies[2].getSiteId(), INITIAL);
+		DelegateTestJupiter site1 = createClient(3, proxies[0].getSiteId(), INITIAL);
+		DelegateTestJupiter site2 = createClient(3, proxies[1].getSiteId(), INITIAL);
+		DelegateTestJupiter site3 = createClient(3, proxies[2].getSiteId(), INITIAL);
 		
 		InsertOperation op1 = new InsertOperation(1, "x");
 		DeleteOperation op2 = new DeleteOperation(1, "b");
@@ -115,8 +115,7 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		assertEquals(FINAL, contentSite2);
 		
 		
-		//some additional tests
-		assertEquals(2, net[2].getRequestSize());
+		//some additional tests:
 		//here we apply op2 and op3 also to site 3 and compare
 		//the document content with the other sites. However, this is 
 		//not done in the original example.
@@ -144,9 +143,9 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 
 		// sites
 		SiteConnection[] sites = new SiteConnection[] {
-				new SiteConnection(1, INITIAL),
-				new SiteConnection(2, INITIAL),
-				new SiteConnection(3, INITIAL)
+				new SiteConnection(3, 1, INITIAL),
+				new SiteConnection(3, 2, INITIAL),
+				new SiteConnection(3, 3, INITIAL)
 		};
 		
 		// operations
@@ -216,19 +215,23 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		assertEquals(FINAL, content);
 	}
 	
-	private Jupiter createProxy(DocumentModel model, int siteId) {
-		return new Jupiter(new GOTOInclusionTransformation(), model, siteId, false);
+	private DelegateTestJupiter createProxy(int expectedOps, DocumentModel model, int siteId) {
+		DelegateTestJupiter j = new DelegateTestJupiter(new GOTOInclusionTransformation(),
+				model, 
+				siteId, false);
+		j.setExpectedOperations(expectedOps);
+		return j;
 	}
 	
 	private class SiteConnection {
-		private Jupiter client;
-		private Jupiter proxy;
+		private DelegateTestJupiter client;
+		private DelegateTestJupiter proxy;
 		private DebugExtractDocumentModel model;
 		
-		private SiteConnection(int siteId, String initial) {
-			client = createClient(siteId, initial);
+		private SiteConnection(int expectedOps, int siteId, String initial) {
+			client = createClient(expectedOps, siteId, initial);
 			model  = new DebugExtractDocumentModel(siteId);
-			proxy  = createProxy(model, siteId);
+			proxy  = createProxy(expectedOps, model, siteId);
 		}
 	}
 	
@@ -290,9 +293,9 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		proxies[1] = server.addClient(net[1]); //belongs to site 2
 		proxies[2] = server.addClient(net[2]); //belongs to site 3
 		
-		Jupiter site1 = createClient(proxies[0].getSiteId(), INITIAL);
-		Jupiter site2 = createClient(proxies[1].getSiteId(), INITIAL);
-		Jupiter site3 = createClient(proxies[2].getSiteId(), INITIAL);
+		DelegateTestJupiter site1 = createClient(3, proxies[0].getSiteId(), INITIAL);
+		DelegateTestJupiter site2 = createClient(3, proxies[1].getSiteId(), INITIAL);
+		DelegateTestJupiter site3 = createClient(3, proxies[2].getSiteId(), INITIAL);
 		
 		InsertOperation op1 = new InsertOperation(3, "f");
 		DeleteOperation op2 = new DeleteOperation(2, "r");
@@ -337,7 +340,6 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		assertEquals(FINAL, contentSite3);
 		
 		//some additional tests
-		assertEquals(2, net[0].getRequestSize());
 		//here we apply op2 and op3 also to site 1 and compare
 		//the document content with the other sites. However, this is 
 		//not done in the original example.
@@ -383,11 +385,11 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		proxies[3] = server.addClient(net[3]); //belongs to site 4
 		proxies[4] = server.addClient(net[4]); //belongs to site 5
 		
-		Jupiter site1 = createClient(proxies[0].getSiteId(), INITIAL);
-		Jupiter site2 = createClient(proxies[1].getSiteId(), INITIAL);
-		Jupiter site3 = createClient(proxies[2].getSiteId(), INITIAL);
-		Jupiter site4 = createClient(proxies[3].getSiteId(), INITIAL);
-		Jupiter site5 = createClient(proxies[4].getSiteId(), INITIAL);
+		DelegateTestJupiter site1 = createClient(2, proxies[0].getSiteId(), INITIAL);
+		DelegateTestJupiter site2 = createClient(4, proxies[1].getSiteId(), INITIAL);
+		DelegateTestJupiter site3 = createClient(4, proxies[2].getSiteId(), INITIAL);
+		DelegateTestJupiter site4 = createClient(1, proxies[3].getSiteId(), INITIAL);
+		DelegateTestJupiter site5 = createClient(1, proxies[4].getSiteId(), INITIAL);
 		
 		DeleteOperation op1 = new DeleteOperation(1, "b");
 		InsertOperation op2 = new InsertOperation(3, "x");
@@ -459,11 +461,11 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 
 		// sites
 		SiteConnection[] sites = new SiteConnection[] {
-				new SiteConnection(1, INITIAL),
-				new SiteConnection(2, INITIAL),
-				new SiteConnection(3, INITIAL),
-				new SiteConnection(4, INITIAL),
-				new SiteConnection(5, INITIAL)
+				new SiteConnection(4, 1, INITIAL),
+				new SiteConnection(4, 2, INITIAL),
+				new SiteConnection(4, 3, INITIAL),
+				new SiteConnection(4, 4, INITIAL),
+				new SiteConnection(4, 5, INITIAL)
 		};
 		
 		DeleteOperation op1 = new DeleteOperation(1, "b");
@@ -567,9 +569,9 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		proxies[1] = server.addClient(net[1]); //belongs to site 2
 		proxies[2] = server.addClient(net[2]); //belongs to site 3
 		
-		Jupiter site1 = createClient(proxies[0].getSiteId(), INITIAL);
-		Jupiter site2 = createClient(proxies[1].getSiteId(), INITIAL);
-		Jupiter site3 = createClient(proxies[2].getSiteId(), INITIAL);
+		DelegateTestJupiter site1 = createClient(3, proxies[0].getSiteId(), INITIAL);
+		DelegateTestJupiter site2 = createClient(3, proxies[1].getSiteId(), INITIAL);
+		DelegateTestJupiter site3 = createClient(3, proxies[2].getSiteId(), INITIAL);
 		
 		InsertOperation op1 = new InsertOperation(2, "1");
 		InsertOperation op2 = new InsertOperation(1, "2");
@@ -664,10 +666,10 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		proxies[3] = server.addClient(net[3]); //belongs to site 4
 		
 		
-		Jupiter site1 = createClient(proxies[0].getSiteId(), INITIAL);
-		Jupiter site2 = createClient(proxies[1].getSiteId(), INITIAL);
-		Jupiter site3 = createClient(proxies[2].getSiteId(), INITIAL);
-		Jupiter site4 = createClient(proxies[3].getSiteId(), INITIAL);
+		DelegateTestJupiter site1 = createClient(4, proxies[0].getSiteId(), INITIAL);
+		DelegateTestJupiter site2 = createClient(4, proxies[1].getSiteId(), INITIAL);
+		DelegateTestJupiter site3 = createClient(4, proxies[2].getSiteId(), INITIAL);
+		DelegateTestJupiter site4 = createClient(4, proxies[3].getSiteId(), INITIAL);
 		
 		InsertOperation op1 = new InsertOperation(2, "b");
 		DeleteOperation op2 = new DeleteOperation(1, "1");
@@ -766,9 +768,9 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		proxies[1] = server.addClient(net[1]); //belongs to site 2
 		proxies[2] = server.addClient(net[2]); //belongs to site 3
 		
-		Jupiter site1 = createClient(proxies[0].getSiteId(), INITIAL);
-		Jupiter site2 = createClient(proxies[1].getSiteId(), INITIAL);
-		Jupiter site3 = createClient(proxies[2].getSiteId(), INITIAL);
+		DelegateTestJupiter site1 = createClient(3, proxies[0].getSiteId(), INITIAL);
+		DelegateTestJupiter site2 = createClient(3, proxies[1].getSiteId(), INITIAL);
+		DelegateTestJupiter site3 = createClient(3, proxies[2].getSiteId(), INITIAL);
 		
 		InsertOperation op1 = new InsertOperation(2, "f");
 		DeleteOperation op2 = new DeleteOperation(2, "v");
@@ -837,9 +839,9 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		proxies[1] = server.addClient(net[1]); //belongs to site 2
 		proxies[2] = server.addClient(net[2]); //belongs to site 3
 
-		Jupiter site1 = createClient(proxies[0].getSiteId(), INITIAL);
-		Jupiter site2 = createClient(proxies[1].getSiteId(), INITIAL);
-		Jupiter site3 = createClient(proxies[2].getSiteId(), INITIAL);
+		DelegateTestJupiter site1 = createClient(3, proxies[0].getSiteId(), INITIAL);
+		DelegateTestJupiter site2 = createClient(3, proxies[1].getSiteId(), INITIAL);
+		DelegateTestJupiter site3 = createClient(3, proxies[2].getSiteId(), INITIAL);
 		
 		InsertOperation op1 = new InsertOperation(0, "x");
 		InsertOperation op2 = new InsertOperation(0, "y");
@@ -914,11 +916,11 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		
 		
 		DefaultRequestEngine eng1 = new DefaultRequestEngine(
-				createClient(proxies[0].getSiteId(), INITIAL));
+				createClient(1, proxies[0].getSiteId(), INITIAL));
 		DefaultRequestEngine eng2 = new DefaultRequestEngine(
-				createClient(proxies[1].getSiteId(), INITIAL));
+				createClient(3, proxies[1].getSiteId(), INITIAL));
 		DefaultRequestEngine eng3 = new DefaultRequestEngine(
-				createClient(proxies[2].getSiteId(), INITIAL));
+				createClient(3, proxies[2].getSiteId(), INITIAL));
 		
 		InsertOperation op1 = new InsertOperation(0, "x");
 		InsertOperation op2 = new InsertOperation(0, "y");
@@ -943,9 +945,8 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		eng2.receiveRequest(r3);
 		
 		//ensure that req3 is executed before op1 at site 1.
-		while (!eng1.getRemoteRequestBuffer().isEmpty()) {
-			Thread.sleep(50);
-		}
+		eng1.getQueueHandler().getAlgorithm().getDocument();
+		((DelegateTestJupiter)eng1.getQueueHandler().getAlgorithm()).setExpectedOperations(2);
 		eng1.generateRequest(op1);
 		
 		// server-side processing of request req1
@@ -963,19 +964,10 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		eng3.receiveRequest(r2);
 		
 		/** analyze results **/
-		while (!eng1.getRemoteRequestBuffer().isEmpty()) {
-			Thread.sleep(50);
-		}
 		String contentSite1 = ((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
 				.getDocument()).getText();
-		while (!eng2.getRemoteRequestBuffer().isEmpty()) {
-			Thread.sleep(50);
-		}
 		String contentSite2 = ((TestDocumentModel)eng2.getQueueHandler().getAlgorithm()
 				.getDocument()).getText();
-		while (!eng3.getRemoteRequestBuffer().isEmpty()) {
-			Thread.sleep(50);
-		}
 		String contentSite3 = ((TestDocumentModel)eng3.getQueueHandler().getAlgorithm()
 				.getDocument()).getText();
 		LOG.info(contentSite1 + " == " + contentSite2 + " == " + contentSite3);
@@ -984,11 +976,19 @@ public class JupiterAgainstCounterExamplesTest extends TestCase {
 		assertEquals(FINAL, contentSite3);
 	}
 	
-	private Jupiter createClient(int siteId, String initialDocContent) {
-		return new Jupiter(new GOTOInclusionTransformation(),
+	private DelegateTestJupiter createClient(int expectedOps, int siteId, String initialDocContent) {
+		DelegateTestJupiter j = new DelegateTestJupiter(new GOTOInclusionTransformation(),
 							new TestDocumentModel(siteId, initialDocContent), 
 							siteId, true);
+		j.setExpectedOperations(expectedOps);
+		return j;
 	}
+	
+//	private Jupiter createClient(int siteId, String initialDocContent) {
+//		return new Jupiter(new GOTOInclusionTransformation(),
+//							new TestDocumentModel(siteId, initialDocContent), 
+//							siteId, true);
+//	}
 	
 	private JupiterServer createServer() {
 		return new JupiterServer();

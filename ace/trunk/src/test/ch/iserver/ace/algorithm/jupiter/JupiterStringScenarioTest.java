@@ -63,9 +63,9 @@ public class JupiterStringScenarioTest extends TestCase {
 		proxies[1] = server.addClient(net[1]); //belongs to site 2
 		
 		DefaultRequestEngine eng1 = new DefaultRequestEngine(
-				createClient(proxies[0].getSiteId(), INITIAL));
+				createClient(2, proxies[0].getSiteId(), INITIAL));
 		DefaultRequestEngine eng2 = new DefaultRequestEngine(
-				createClient(proxies[1].getSiteId(), INITIAL));
+				createClient(2, proxies[1].getSiteId(), INITIAL));
 		SynchronizedQueue queue1 = eng1.getOutgoingRequestBuffer();
 		SynchronizedQueue queue2 = eng2.getOutgoingRequestBuffer();
 		
@@ -88,16 +88,8 @@ public class JupiterStringScenarioTest extends TestCase {
 		eng1.receiveRequest(r2);
 
 		/** analyze results **/
-		while (!eng1.getRemoteRequestBuffer().isEmpty()
-				|| !eng1.getLocalOperationBuffer().isEmpty()) {
-			Thread.sleep(50);
-		}
 		String contentSite1 = ((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
 				.getDocument()).getText();
-		while (!eng2.getRemoteRequestBuffer().isEmpty()
-				|| !eng2.getLocalOperationBuffer().isEmpty()) {
-			Thread.sleep(50);
-		}
 		String contentSite2 = ((TestDocumentModel)eng2.getQueueHandler().getAlgorithm()
 				.getDocument()).getText();
 		LOG.info(contentSite1 + " == " + contentSite2);
@@ -139,11 +131,11 @@ public class JupiterStringScenarioTest extends TestCase {
 		proxies[3] = server.addClient(net[3]); //belongs to site 4
 		proxies[4] = server.addClient(net[4]); //belongs to site 5	
 		
-		DefaultRequestEngine eng1 = createClientEngine(proxies[0].getSiteId(), INITIAL);
-		DefaultRequestEngine eng2 = createClientEngine(proxies[1].getSiteId(), INITIAL);
-		DefaultRequestEngine eng3 = createClientEngine(proxies[2].getSiteId(), INITIAL);
-		DefaultRequestEngine eng4 = createClientEngine(proxies[3].getSiteId(), INITIAL);
-		DefaultRequestEngine eng5 = createClientEngine(proxies[4].getSiteId(), INITIAL);
+		DefaultRequestEngine eng1 = createClientEngine(5, proxies[0].getSiteId(), INITIAL);
+		DefaultRequestEngine eng2 = createClientEngine(5, proxies[1].getSiteId(), INITIAL);
+		DefaultRequestEngine eng3 = createClientEngine(5, proxies[2].getSiteId(), INITIAL);
+		DefaultRequestEngine eng4 = createClientEngine(5, proxies[3].getSiteId(), INITIAL);
+		DefaultRequestEngine eng5 = createClientEngine(5, proxies[4].getSiteId(), INITIAL);
 		SynchronizedQueue queue1 = eng1.getOutgoingRequestBuffer();
 		SynchronizedQueue queue2 = eng2.getOutgoingRequestBuffer();
 		SynchronizedQueue queue3 = eng3.getOutgoingRequestBuffer();
@@ -228,34 +220,14 @@ public class JupiterStringScenarioTest extends TestCase {
 		/** end of concurrent step 1 **/
 		
 		/** analyze results **/
-		while (!eng1.getRemoteRequestBuffer().isEmpty()
-				|| !eng1.getLocalOperationBuffer().isEmpty()) {
-			Thread.sleep(50);
-		}
 		String contentSite1 = ((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
 				.getDocument()).getText();
-		while (!eng2.getRemoteRequestBuffer().isEmpty()
-				|| !eng2.getLocalOperationBuffer().isEmpty()) {
-			Thread.sleep(50);
-		}
 		String contentSite2 = ((TestDocumentModel)eng2.getQueueHandler().getAlgorithm()
 				.getDocument()).getText();
-		while (!eng3.getRemoteRequestBuffer().isEmpty()
-				|| !eng3.getLocalOperationBuffer().isEmpty()) {
-			Thread.sleep(50);
-		}
 		String contentSite3 = ((TestDocumentModel)eng3.getQueueHandler().getAlgorithm()
 				.getDocument()).getText();
-		while (!eng4.getRemoteRequestBuffer().isEmpty()
-				|| !eng4.getLocalOperationBuffer().isEmpty()) {
-			Thread.sleep(50);
-		}
 		String contentSite4= ((TestDocumentModel)eng4.getQueueHandler().getAlgorithm()
 				.getDocument()).getText();
-		while (!eng5.getRemoteRequestBuffer().isEmpty()
-				|| !eng5.getLocalOperationBuffer().isEmpty()) {
-			Thread.sleep(50);
-		}
 		String contentSite5 = ((TestDocumentModel)eng5.getQueueHandler().getAlgorithm()
 				.getDocument()).getText();
 		//test the convergence preservation
@@ -316,11 +288,11 @@ public class JupiterStringScenarioTest extends TestCase {
 		proxies[3] = server.addClient(net[3]); //belongs to site 4
 		proxies[4] = server.addClient(net[4]); //belongs to site 5	
 		
-		DefaultRequestEngine eng1 = createClientEngine(proxies[0].getSiteId(), INITIAL);
-		DefaultRequestEngine eng2 = createClientEngine(proxies[1].getSiteId(), INITIAL);
-		DefaultRequestEngine eng3 = createClientEngine(proxies[2].getSiteId(), INITIAL);
-		DefaultRequestEngine eng4 = createClientEngine(proxies[3].getSiteId(), INITIAL);
-		DefaultRequestEngine eng5 = createClientEngine(proxies[4].getSiteId(), INITIAL);
+		DefaultRequestEngine eng1 = createClientEngine(6, proxies[0].getSiteId(), INITIAL);
+		DefaultRequestEngine eng2 = createClientEngine(6, proxies[1].getSiteId(), INITIAL);
+		DefaultRequestEngine eng3 = createClientEngine(6, proxies[2].getSiteId(), INITIAL);
+		DefaultRequestEngine eng4 = createClientEngine(6, proxies[3].getSiteId(), INITIAL);
+		DefaultRequestEngine eng5 = createClientEngine(6, proxies[4].getSiteId(), INITIAL);
 		SynchronizedQueue queue1 = eng1.getOutgoingRequestBuffer();
 		SynchronizedQueue queue2 = eng2.getOutgoingRequestBuffer();
 		SynchronizedQueue queue3 = eng3.getOutgoingRequestBuffer();
@@ -415,37 +387,24 @@ public class JupiterStringScenarioTest extends TestCase {
 		eng4.receiveRequest(r5);
 		
 		/** end of concurrent step 1 **/
-		while (!eng1.getRemoteRequestBuffer().isEmpty()
-				|| !eng1.getLocalOperationBuffer().isEmpty()
-				|| !eng2.getRemoteRequestBuffer().isEmpty()
-				|| !eng2.getLocalOperationBuffer().isEmpty()) {
-			Thread.sleep(50);
-		}
 		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
 				.getDocument()).getText().equals(((TestDocumentModel)eng2.getQueueHandler().getAlgorithm()
 				.getDocument()).getText()));
-		while (!eng3.getRemoteRequestBuffer().isEmpty()
-				|| !eng3.getLocalOperationBuffer().isEmpty()) {
-			Thread.sleep(50);
-		}
 		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
 				.getDocument()).getText().equals(((TestDocumentModel)eng3.getQueueHandler().getAlgorithm()
 				.getDocument()).getText()));
-		while (!eng4.getRemoteRequestBuffer().isEmpty()
-				|| !eng4.getLocalOperationBuffer().isEmpty()) {
-			Thread.sleep(50);
-		}
 		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
 				.getDocument()).getText().equals(((TestDocumentModel)eng4.getQueueHandler().getAlgorithm()
 				.getDocument()).getText()));
-		while (!eng5.getRemoteRequestBuffer().isEmpty()
-				|| !eng5.getLocalOperationBuffer().isEmpty()) {
-			Thread.sleep(50);
-		}
 		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
 				.getDocument()).getText().equals(((TestDocumentModel)eng5.getQueueHandler().getAlgorithm()
 				.getDocument()).getText()));
 		
+		((DelegateTestJupiter)eng1.getQueueHandler().getAlgorithm()).setExpectedOperations(4);
+		((DelegateTestJupiter)eng2.getQueueHandler().getAlgorithm()).setExpectedOperations(4);
+		((DelegateTestJupiter)eng3.getQueueHandler().getAlgorithm()).setExpectedOperations(4);
+		((DelegateTestJupiter)eng4.getQueueHandler().getAlgorithm()).setExpectedOperations(4);
+		((DelegateTestJupiter)eng5.getQueueHandler().getAlgorithm()).setExpectedOperations(4);
 		
 		/** concurrent step 2 **/
 		//generate requests at site 1
@@ -510,38 +469,25 @@ public class JupiterStringScenarioTest extends TestCase {
 		eng5.receiveRequest(r2);
 		
 		/** end of concurrent step 2 **/
-		while (!eng1.getRemoteRequestBuffer().isEmpty()
-				|| !eng1.getLocalOperationBuffer().isEmpty()
-				|| !eng2.getRemoteRequestBuffer().isEmpty()
-				|| !eng2.getLocalOperationBuffer().isEmpty()) {
-			Thread.sleep(50);
-		}
 		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
 				.getDocument()).getText().equals(((TestDocumentModel)eng2.getQueueHandler().getAlgorithm()
 				.getDocument()).getText()));
-		while (!eng3.getRemoteRequestBuffer().isEmpty()
-				|| !eng3.getLocalOperationBuffer().isEmpty()) {
-			Thread.sleep(50);
-		}
 		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
 				.getDocument()).getText().equals(((TestDocumentModel)eng3.getQueueHandler().getAlgorithm()
 				.getDocument()).getText()));
-		while (!eng4.getRemoteRequestBuffer().isEmpty()
-				|| !eng4.getLocalOperationBuffer().isEmpty()) {
-			Thread.sleep(50);
-		}
 		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
 				.getDocument()).getText().equals(((TestDocumentModel)eng4.getQueueHandler().getAlgorithm()
 				.getDocument()).getText()));
-		while (!eng5.getRemoteRequestBuffer().isEmpty()
-				|| !eng5.getLocalOperationBuffer().isEmpty()) {
-			Thread.sleep(50);
-		}
 		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
 				.getDocument()).getText().equals(((TestDocumentModel)eng5.getQueueHandler().getAlgorithm()
 				.getDocument()).getText()));	
 		
 		/** concurrent step 3 **/
+		((DelegateTestJupiter)eng1.getQueueHandler().getAlgorithm()).setExpectedOperations(2);
+		((DelegateTestJupiter)eng2.getQueueHandler().getAlgorithm()).setExpectedOperations(2);
+		((DelegateTestJupiter)eng3.getQueueHandler().getAlgorithm()).setExpectedOperations(2);
+		((DelegateTestJupiter)eng4.getQueueHandler().getAlgorithm()).setExpectedOperations(2);
+		((DelegateTestJupiter)eng5.getQueueHandler().getAlgorithm()).setExpectedOperations(2);
 		//generate requests at site 1
 		Operation op11 = new DeleteOperation(24, "I");
 		eng1.generateRequest(op11);
@@ -573,38 +519,25 @@ public class JupiterStringScenarioTest extends TestCase {
 		eng5.receiveRequest(r4);
 		
 		/** end of concurrent step 3 **/
-		while (!eng1.getRemoteRequestBuffer().isEmpty()
-				|| !eng1.getLocalOperationBuffer().isEmpty()
-				|| !eng2.getRemoteRequestBuffer().isEmpty()
-				|| !eng2.getLocalOperationBuffer().isEmpty()) {
-			Thread.sleep(50);
-		}
 		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
 				.getDocument()).getText().equals(((TestDocumentModel)eng2.getQueueHandler().getAlgorithm()
 				.getDocument()).getText()));
-		while (!eng3.getRemoteRequestBuffer().isEmpty()
-				|| !eng3.getLocalOperationBuffer().isEmpty()) {
-			Thread.sleep(50);
-		}
 		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
 				.getDocument()).getText().equals(((TestDocumentModel)eng3.getQueueHandler().getAlgorithm()
 				.getDocument()).getText()));
-		while (!eng4.getRemoteRequestBuffer().isEmpty()
-				|| !eng4.getLocalOperationBuffer().isEmpty()) {
-			Thread.sleep(50);
-		}
 		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
 				.getDocument()).getText().equals(((TestDocumentModel)eng4.getQueueHandler().getAlgorithm()
 				.getDocument()).getText()));
-		while (!eng5.getRemoteRequestBuffer().isEmpty()
-				|| !eng5.getLocalOperationBuffer().isEmpty()) {
-			Thread.sleep(50);
-		}
 		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
 				.getDocument()).getText().equals(((TestDocumentModel)eng5.getQueueHandler().getAlgorithm()
 				.getDocument()).getText()));
  		
 		/** concurrent step 4 **/
+		((DelegateTestJupiter)eng1.getQueueHandler().getAlgorithm()).setExpectedOperations(1);
+		((DelegateTestJupiter)eng2.getQueueHandler().getAlgorithm()).setExpectedOperations(1);
+		((DelegateTestJupiter)eng3.getQueueHandler().getAlgorithm()).setExpectedOperations(1);
+		((DelegateTestJupiter)eng4.getQueueHandler().getAlgorithm()).setExpectedOperations(1);
+		((DelegateTestJupiter)eng5.getQueueHandler().getAlgorithm()).setExpectedOperations(1);
 //		generate requests at site 5
 		Operation op13 = new InsertOperation(23, "!");
 		eng5.generateRequest(op13);
@@ -621,38 +554,6 @@ public class JupiterStringScenarioTest extends TestCase {
 		eng4.receiveRequest(r5);
  		
 		/** end of concurrent step 4 **/
-		while (!eng1.getRemoteRequestBuffer().isEmpty()
-				|| !eng1.getLocalOperationBuffer().isEmpty()
-				|| !eng2.getRemoteRequestBuffer().isEmpty()
-				|| !eng2.getLocalOperationBuffer().isEmpty()) {
-			Thread.sleep(50);
-		}
-		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
-				.getDocument()).getText().equals(((TestDocumentModel)eng2.getQueueHandler().getAlgorithm()
-				.getDocument()).getText()));
-		while (!eng3.getRemoteRequestBuffer().isEmpty()
-				|| !eng3.getLocalOperationBuffer().isEmpty()) {
-			Thread.sleep(50);
-		}
-		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
-				.getDocument()).getText().equals(((TestDocumentModel)eng3.getQueueHandler().getAlgorithm()
-				.getDocument()).getText()));
-		while (!eng4.getRemoteRequestBuffer().isEmpty()
-				|| !eng4.getLocalOperationBuffer().isEmpty()) {
-			Thread.sleep(50);
-		}
-		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
-				.getDocument()).getText().equals(((TestDocumentModel)eng4.getQueueHandler().getAlgorithm()
-				.getDocument()).getText()));
-		while (!eng5.getRemoteRequestBuffer().isEmpty()
-				|| !eng5.getLocalOperationBuffer().isEmpty()) {
-			Thread.sleep(50);
-		}
-		assertTrue(	((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
-				.getDocument()).getText().equals(((TestDocumentModel)eng5.getQueueHandler().getAlgorithm()
-				.getDocument()).getText()));
-		
-		/** analyze results **/
 		String contentSite1 = ((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
 				.getDocument()).getText();
 		String contentSite2 = ((TestDocumentModel)eng2.getQueueHandler().getAlgorithm()
@@ -663,6 +564,14 @@ public class JupiterStringScenarioTest extends TestCase {
 				.getDocument()).getText();
 		String contentSite5 = ((TestDocumentModel)eng5.getQueueHandler().getAlgorithm()
 				.getDocument()).getText();
+		
+		assertTrue(	contentSite1.equals(contentSite2) );
+		assertTrue(	contentSite1.equals(contentSite3) );
+		assertTrue(	contentSite1.equals(contentSite4) );
+		assertTrue(	contentSite1.equals(contentSite5) );
+		
+		/** analyze results **/
+
 		LOG.info("'"+contentSite1+"'");
 		assertEquals(FINAL, contentSite1);
 		assertEquals(FINAL, contentSite2);
@@ -694,11 +603,11 @@ public class JupiterStringScenarioTest extends TestCase {
 		
 		
 		DefaultRequestEngine eng1 = new DefaultRequestEngine(
-				createClient(proxies[0].getSiteId(), INITIAL));
+				createClient(3, proxies[0].getSiteId(), INITIAL));
 		DefaultRequestEngine eng2 = new DefaultRequestEngine(
-				createClient(proxies[1].getSiteId(), INITIAL));
+				createClient(3, proxies[1].getSiteId(), INITIAL));
 		DefaultRequestEngine eng3 = new DefaultRequestEngine(
-				createClient(proxies[2].getSiteId(), INITIAL));
+				createClient(3, proxies[2].getSiteId(), INITIAL));
 		SynchronizedQueue queue1 = eng1.getOutgoingRequestBuffer();
 		SynchronizedQueue queue2 = eng2.getOutgoingRequestBuffer();
 		SynchronizedQueue queue3 = eng3.getOutgoingRequestBuffer();
@@ -715,59 +624,38 @@ public class JupiterStringScenarioTest extends TestCase {
 		op = new InsertOperation(0, "I am");
 		eng3.generateRequest(op);
 
-		//TODO: if you change the order in which the operations are received at
+		//Note: if you change the order in which the operations are received at
 		//the server, the final string may look different:
 		//#1: site 3,2,1 results in string: "I amII"
 		//#2: site 1,2,3 results in string: "III am"
 		//#3: site 1,3,2 results in string: "II amI"
 		
 //		receive and distribute operations at proxy for site 1
-		LOG.info(">>> 1.pr recv");
 		proxies[0].receiveRequest((Request)queue1.get());
 		Request r1 = (Request)net[1].getRequests().remove(0);
-		LOG.info(">>> 2.cl recv");
 		eng2.receiveRequest(r1);
 		r1 = (Request)net[2].getRequests().remove(0);
-		LOG.info(">>> 3.cl recv");
 		eng3.receiveRequest(r1);
 		
 //		receive and distribute operations at proxy for site 3  
-		LOG.info(">>> 3.pr recv");
 		proxies[2].receiveRequest((Request)queue3.get());
 		Request r3 = (Request)net[0].getRequests().remove(0);
-		LOG.info(">>> 1.cl recv");
 		eng1.receiveRequest(r3);
 		r3 = (Request)net[1].getRequests().remove(0);
-		LOG.info(">>> 2.cl recv");
 		eng2.receiveRequest(r3);
 		
 //		receive and distribute operations at proxy for site 2
-		LOG.info(">>> 2.pr recv");
 		proxies[1].receiveRequest((Request)queue2.get());
 		Request r2 = (Request)net[0].getRequests().remove(0);
-		LOG.info(">>> 1.cl recv");
 		eng1.receiveRequest(r2);
 		r2 = (Request)net[2].getRequests().remove(0);
-		LOG.info(">>> 3.cl recv");
 		eng3.receiveRequest(r2);
 
 		/** analyze results **/
-		while (!eng1.getRemoteRequestBuffer().isEmpty() 
-				|| !eng1.getLocalOperationBuffer().isEmpty()) {
-			Thread.sleep(50);
-		}
 		String contentSite1 = ((TestDocumentModel)eng1.getQueueHandler().getAlgorithm()
 				.getDocument()).getText();
-		while (!eng2.getRemoteRequestBuffer().isEmpty()
-				|| !eng2.getLocalOperationBuffer().isEmpty()) {
-			Thread.sleep(50);
-		}
 		String contentSite2 = ((TestDocumentModel)eng2.getQueueHandler().getAlgorithm()
 				.getDocument()).getText();
-		while (!eng3.getRemoteRequestBuffer().isEmpty()
-				|| !eng3.getLocalOperationBuffer().isEmpty()) {
-			Thread.sleep(50);
-		}
 		String contentSite3 = ((TestDocumentModel)eng3.getQueueHandler().getAlgorithm()
 				.getDocument()).getText();
 		LOG.info(contentSite1 + " == " + contentSite2 + " == " + contentSite3);
@@ -776,14 +664,16 @@ public class JupiterStringScenarioTest extends TestCase {
 		assertEquals(FINAL, contentSite3);
 	}
 	
-	private DefaultRequestEngine createClientEngine(int siteId, String content) {
-		return new DefaultRequestEngine(createClient(siteId, content));
+	private DefaultRequestEngine createClientEngine(int expectedOps, int siteId, String content) {
+		return new DefaultRequestEngine(createClient(expectedOps, siteId, content));
 	}
 	
-	private Jupiter createClient(int siteId, String initialDocContent) {
-		return new Jupiter(new GOTOInclusionTransformation(),
+	private DelegateTestJupiter createClient(int expectedOps, int siteId, String initialDocContent) {
+		DelegateTestJupiter j = new DelegateTestJupiter(new GOTOInclusionTransformation(),
 							new TestDocumentModel(siteId, initialDocContent), 
 							siteId, true);
+		j.setExpectedOperations(expectedOps);
+		return j;
 	}
 	
 	private JupiterServer createServer() {

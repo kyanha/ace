@@ -1,14 +1,11 @@
 package ch.iserver.ace.algorithm.jupiter;
 
-import java.util.ArrayList;
-
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 
 import ch.iserver.ace.DocumentModel;
 import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.Algorithm;
-import ch.iserver.ace.algorithm.AwarenessInformation;
 import ch.iserver.ace.algorithm.InclusionTransformation;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.Timestamp;
@@ -17,8 +14,6 @@ public class DelegateTestJupiter implements Algorithm {
 
 	private Jupiter jupiter;
 	
-	private static Object synchObj = new Object();
-	private static Object synchObj2 = new Object();
 	private int expectedOps;
 	private int opCounter;
 	
@@ -80,9 +75,11 @@ public class DelegateTestJupiter implements Algorithm {
 	 * comparable document state throughout several algorithm instances after
 	 * a number of processed operations.
 	 */
+	//kommt ein thread bei einer synchronized methode, die er noch nicht aufrufen kann,
+	//auch in denselben wait state dieses objekts wie ein thread welcher wait() auf 
+	//dem objekt aufruft?
 	public synchronized DocumentModel getDocument() {
-		System.out.println(opCounter+" <? "+expectedOps);
-		if (opCounter < expectedOps) {
+		while (opCounter < expectedOps) {
 			//go to sleep
 			try {
 				System.out.println("DelegateTestJupiter.sleep: "+opCounter+" < "+expectedOps);
@@ -93,12 +90,12 @@ public class DelegateTestJupiter implements Algorithm {
 		return jupiter.getDocument();
 	}
 
-	public AwarenessInformation receiveAwarenessInformation(AwarenessInformation info) {
-		return jupiter.receiveAwarenessInformation(info);
-	}
-
 	public void init(DocumentModel doc, Timestamp timestamp) {
 		jupiter.init(doc, timestamp);		
+	}
+
+	public int[] transformIndices(Timestamp timestamp, int[] indices) {
+		return jupiter.transformIndices(timestamp, indices);
 	}
 
 
