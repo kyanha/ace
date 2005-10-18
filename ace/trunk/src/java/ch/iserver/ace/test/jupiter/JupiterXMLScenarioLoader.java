@@ -30,8 +30,8 @@ import ch.iserver.ace.test.XMLScenarioLoader;
 import ch.iserver.ace.test.ScenarioBuilder;
 
 /**
- * A ScenarioLoader for Jupiter scenarios, i.e. scenarios that communicate with
- * a server and never directly among participants.
+ * A ScenarioLoader for Jupiter scenarios, that is scenarios that communicate 
+ * with a server and never directly among participants.
  */
 public class JupiterXMLScenarioLoader extends XMLScenarioLoader {
 
