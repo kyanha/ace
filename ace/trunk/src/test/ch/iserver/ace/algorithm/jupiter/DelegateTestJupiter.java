@@ -82,9 +82,7 @@ public class DelegateTestJupiter implements Algorithm {
 		while (opCounter < expectedOps) {
 			//go to sleep
 			try {
-				System.out.println("DelegateTestJupiter.sleep: "+opCounter+" < "+expectedOps);
 				wait();
-				System.out.println("DelegateTestJupiter.awakened: "+opCounter+" >= "+expectedOps);
 			} catch (InterruptedException ie) {}
 		}
 		return jupiter.getDocument();
@@ -96,6 +94,10 @@ public class DelegateTestJupiter implements Algorithm {
 
 	public int[] transformIndices(Timestamp timestamp, int[] indices) {
 		return jupiter.transformIndices(timestamp, indices);
+	}
+	
+	public JupiterVectorTime getVectorTime() {
+		return jupiter.getVectorTime();
 	}
 
 
