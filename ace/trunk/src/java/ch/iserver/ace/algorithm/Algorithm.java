@@ -89,8 +89,17 @@ public interface Algorithm {
 	 * @see DocumentModel
 	 */
 	public void receiveRequest(Request req);
-
-	public AwarenessInformation receiveAwarenessInformation(AwarenessInformation info);
+	
+	/**
+	 * Transform the array of indices from the state indicated by the timestamp
+	 * to the current timestamp at the local site. The transformed indices
+	 * are returned to the client.
+	 * 
+	 * @param timestamp the timestamp at which the indices are valid
+	 * @param indices the array of integer indices
+	 * @return the transformed array of indices
+	 */
+	public int[] transformIndices(Timestamp timestamp, int[] indices);
 	
 	/**
 	 * Initialize the algorithm with the given document and initial timestamp.

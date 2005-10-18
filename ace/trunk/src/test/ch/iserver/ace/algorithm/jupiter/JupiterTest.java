@@ -20,12 +20,11 @@
  */
 package ch.iserver.ace.algorithm.jupiter;
 
-import ch.iserver.ace.algorithm.CursorUpdate;
+import junit.framework.TestCase;
 import ch.iserver.ace.test.TestDocumentModel;
 import ch.iserver.ace.text.DeleteOperation;
 import ch.iserver.ace.text.GOTOInclusionTransformation;
 import ch.iserver.ace.text.InsertOperation;
-import junit.framework.TestCase;
 
 public class JupiterTest extends TestCase {
 
@@ -37,9 +36,9 @@ public class JupiterTest extends TestCase {
 		jupiter.generateRequest(new InsertOperation(0, "a"));
 		jupiter.generateRequest(new InsertOperation(1, "b"));
 		jupiter.generateRequest(new DeleteOperation(0, "a"));
-		CursorUpdate update = (CursorUpdate) jupiter.receiveAwarenessInformation(new CursorUpdate(new JupiterVectorTime(0, 1), 0, 1));
-		assertEquals(0, update.getDot());
-		assertEquals(1, update.getMark());
+		int[] indices = (int[]) jupiter.transformIndices(new JupiterVectorTime(0, 1), new int[] { 0, 1 });
+		assertEquals(0, indices[0]);
+		assertEquals(1, indices[1]);
 	}
 
 }

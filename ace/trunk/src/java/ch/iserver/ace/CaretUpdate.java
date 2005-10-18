@@ -1,5 +1,4 @@
-/*
- * $Id$
+/* $Id$
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -18,18 +17,33 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+ 
+package ch.iserver.ace;
 
-package ch.iserver.ace.algorithm;
+public class CaretUpdate  {
 
+	private int siteId;
+	private int[] indices = new int[2];
+	
+	public CaretUpdate(int dot, int mark) {
+		this.indices[0] = dot;
+		this.indices[1] = mark;
+	}
+	
+	public int getSiteId() {
+		return siteId;
+	}
+	
+	public int getDot() {
+		return indices[0];
+	}
+	
+	public int getMark() {
+		return indices[1];
+	}
 
-public interface AwarenessInformation {
-	
-	Timestamp getTimestamp();
-	
-	void setTimestamp(Timestamp timestamp);
-	
-	int getSiteId();
-	
-	int[] getIndices();
-	
+	public int[] getIndices() {
+		return indices;
+	}
+
 }

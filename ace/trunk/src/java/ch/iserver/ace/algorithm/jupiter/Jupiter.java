@@ -29,7 +29,6 @@ import org.apache.log4j.Logger;
 import ch.iserver.ace.DocumentModel;
 import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.Algorithm;
-import ch.iserver.ace.algorithm.AwarenessInformation;
 import ch.iserver.ace.algorithm.InclusionTransformation;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.Timestamp;
@@ -156,19 +155,19 @@ public class Jupiter implements Algorithm {
 		LOG.info("<<< recv");
 	}
 	
-	public AwarenessInformation receiveAwarenessInformation(AwarenessInformation info) {
-		checkPreconditions((JupiterVectorTime) info.getTimestamp());
-		discardOperations((JupiterVectorTime) info.getTimestamp());
-		int[] indices = info.getIndices();
+	public int[] transformIndices(Timestamp timestamp, int[] indices) {
+		checkPreconditions((JupiterVectorTime) timestamp);
+		discardOperations((JupiterVectorTime) timestamp);
+		int[] result = new int[indices.length]; 
+		System.arraycopy(indices, 0, result, 0, indices.length);
 		for (int i = 0; i < ackRequestList.size(); i++) {
 			OperationWrapper wrap = (OperationWrapper) ackRequestList.get(i);
 			Operation ack = wrap.getOperation();
 			for (int k = 0; k < indices.length; k++) {
-				indices[k] = transformIndex(indices[k], ack);
+				result[k] = transformIndex(result[k], ack);
 			}
 		}
-		info.setTimestamp((Timestamp) vectorTime.clone());
-		return info;
+		return result;
 	}
 	
 	private int transformIndex(int index, Operation op) {
