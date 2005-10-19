@@ -45,6 +45,9 @@ public class CaretUpdate  {
 	}
 	
 	/**
+	 * Retrieves the dot value of this instance. The dot represents the current
+	 * position of the blinking cursor.
+	 * 
 	 * @return the dot value
 	 */
 	public int getDot() {
@@ -52,6 +55,9 @@ public class CaretUpdate  {
 	}
 	
 	/**
+	 * Retrieves the mark value of this instance. The mark represents the
+	 * current position of the other end of the selection.
+	 * 
 	 * @return the mark value
 	 */
 	public int getMark() {
@@ -59,16 +65,31 @@ public class CaretUpdate  {
 	}
 	
 	/**
+	 * Gets an array consisting of dot and mark. The dot value is in the
+	 * first position of the array, the mark value in the second.
+	 * 
 	 * @return array consisting of dot and mark (index 0 and 1 respecitvely)
 	 */
 	public int[] getIndices() {
 		return indices;
 	}
 	
+	/**
+	 * Returns a String representation of this object.
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
 	public String toString() {
 		return getClass().getName() + " [" + getDot() + "," + getMark() + "]";
 	}
 	
+	/**
+	 * Compares the passed in object <var>obj</var> to this instance. Two
+	 * CaretUpdate instances are equal if they have the same values for their
+	 * dot and mark properties.
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
@@ -81,6 +102,11 @@ public class CaretUpdate  {
 		}
 	}
 	
+	/**
+	 * Computes the hash code for a CaretUpdate.
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 */
 	public int hashCode() {
 		return getDot() + 13 * getMark();
 	}
