@@ -27,11 +27,6 @@ package ch.iserver.ace;
  * selection starts at the mark and ends at the dot. 
  */
 public class CaretUpdate  {
-
-	/**
-	 * The site id of the participant.
-	 */
-	private int siteId;
 	
 	/**
 	 * Int array keeping dot and mark values.
@@ -41,21 +36,12 @@ public class CaretUpdate  {
 	/**
 	 * Creates a new CaretUpdate.
 	 * 
-	 * @param siteId the site id of the generating site
 	 * @param dot the dot value
 	 * @param mark the mark value
 	 */
-	public CaretUpdate(int siteId, int dot, int mark) {
-		this.siteId = siteId;
+	public CaretUpdate(int dot, int mark) {
 		this.indices[0] = dot;
 		this.indices[1] = mark;
-	}
-	
-	/**
-	 * @return the siteId of the generating site
-	 */
-	public int getSiteId() {
-		return siteId;
 	}
 	
 	/**
@@ -78,5 +64,25 @@ public class CaretUpdate  {
 	public int[] getIndices() {
 		return indices;
 	}
-
+	
+	public String toString() {
+		return getClass().getName() + " [" + getDot() + "," + getMark() + "]";
+	}
+	
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		} else if (obj instanceof CaretUpdate) {
+			CaretUpdate cu = (CaretUpdate) obj;
+			return getDot() == cu.getDot() &&
+			       getMark() == cu.getMark();
+		} else {
+			return false;
+		}
+	}
+	
+	public int hashCode() {
+		return getDot() + 13 * getMark();
+	}
+	
 }
