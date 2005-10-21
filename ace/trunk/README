@@ -17,5 +17,3 @@ Once that the jar file is in the correct place, you can simply type
 $  ant compile
 
 to compile the project.
-
-
