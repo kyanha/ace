@@ -156,7 +156,15 @@
 			<property key="checkstyle.header.file" file="checkstyle-license.txt"/>
 		</checkstyle>
 	</target>
-
+	
+	<target name="publish-api" depends="javadoc">
+		<scp todir="${username}:${password}@ace.iserver.ch:/home/ace/ace.iserver.ch/www/api">
+			<fileset dir="${build.javadoc}">
+				<include name="**/*"/>
+			</fileset>
+		</scp>
+	</target>
+	
 	<target name="dist" depends="javadoc">
 	    <tstamp/>
 	    <property name="dist.dir.current" value="${dist.dir}/${DSTAMP}"/>
