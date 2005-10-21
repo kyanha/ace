@@ -19,22 +19,29 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.algorithm;
+package ch.iserver.ace.algorithm.jupiter;
+
+import ch.iserver.ace.algorithm.Timestamp;
+import ch.iserver.ace.algorithm.TimestampFactory;
 
 /**
- * TimestampFactory is a factory that can create Timestamp objects from
- * an external representation of timestamps in the form of an int array.
+ * TimestampFactory that creates Jupiter specific Timestamp objects. The
+ * encoding for Jupiter specific Timestamps is a component array of length 2
+ * whereby the first index of the array contains the local operation count
+ * and the second index of the array contains the remote operation count.
  */
-public interface TimestampFactory {
-	
+public class JupiterTimestampFactory implements TimestampFactory {
+
 	/**
-	 * Creates a Timestamp from the components in the int array. 
-	 * 
-	 * @param components the components of the timestamp as an int array
-	 * @return a Timestamp instance created from the component array
-	 * @throws IllegalArgumentException if the component array does not satisfy
-	 *         the expectations of the TimestampFactory
+	 * @see ch.iserver.ace.algorithm.TimestampFactory#createTimestamp(int[])
 	 */
-	Timestamp createTimestamp(int[] components);
-	
+	public Timestamp createTimestamp(int[] components) {
+		if (components.length != 2) {
+			throw new IllegalArgumentException(
+					"JupiterTimestampFactory expects a component array"
+					+ "of length 2");
+		}
+		return new JupiterVectorTime(components[0], components[1]);
+	}
+
 }
