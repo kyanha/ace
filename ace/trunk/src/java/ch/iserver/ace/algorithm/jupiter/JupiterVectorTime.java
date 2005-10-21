@@ -21,11 +21,12 @@
 package ch.iserver.ace.algorithm.jupiter;
 
 import ch.iserver.ace.algorithm.Timestamp;
+import ch.iserver.ace.algorithm.VectorTime;
 
 /**
  * This class models the vector time for the Jupiter control algorithm.
  */
-public class JupiterVectorTime implements Timestamp, Cloneable {
+public class JupiterVectorTime implements VectorTime, Cloneable {
 
 	/**
 	 * Counter for the number of local operations.
@@ -50,6 +51,13 @@ public class JupiterVectorTime implements Timestamp, Cloneable {
 		assert remoteCnt >= 0 : "remote operation count must be >= 0";
 		localOperationCnt = localCnt;
 		remoteOperationCnt = remoteCnt;
+	}
+	
+	/**
+	 * @see Timestamp#getComponents()
+	 */
+	public int[] getComponents() {
+		return new int[] { getLocalOperationCount(), getRemoteOperationCount() };
 	}
 
 	/**

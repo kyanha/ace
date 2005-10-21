@@ -22,9 +22,17 @@
 package ch.iserver.ace.algorithm;
 
 /**
- * Vector time is a concept used in almost all OT algorithms to determine
- * causality relations of operations.
+ * TimestampFactory is a factory that can create Timestamp objects from
+ * an external representation of timestamps in the form of an int array.
  */
-public interface VectorTime extends Timestamp {
-
+public interface TimestampFactory {
+	
+	/**
+	 * Creates a Timestamp from the components in the int array. 
+	 * 
+	 * @param components the components of the timestamp as an int array
+	 * @return a Timestamp instance created from the component array
+	 */
+	Timestamp createTimestamp(int[] components);
+	
 }
