@@ -61,12 +61,13 @@ public class DelegateTestJupiter implements Algorithm {
 		return r;
 	}
 
-	public synchronized void receiveRequest(Request req) {
-		jupiter.receiveRequest(req);
+	public synchronized Operation receiveRequest(Request req) {
+		Operation op = jupiter.receiveRequest(req);
 		++opCounter;
 		if (opCounter >= expectedOps) {
 			notify();
 		}
+		return op;
 	}
 	
 	/**

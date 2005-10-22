@@ -73,8 +73,7 @@ public interface Algorithm {
 	 * generated operation. The returned request must be sent to the other
 	 * sites.
 	 * 
-	 * @param op
-	 *            the operation for which a request should be generated
+	 * @param op the operation for which a request should be generated
 	 * @return the generated request
 	 * @see Request
 	 */
@@ -82,13 +81,12 @@ public interface Algorithm {
 
 	/**
 	 * Receives a request from a remote site. The request must be transformed
-	 * and the resulting operation must be applied to the document model.
+	 * and the resulting operation is returned.
 	 * 
-	 * @param req
-	 *            the request to transform and apply
-	 * @see DocumentModel
+	 * @param req the request to transform and apply
+	 * @return the transformed Operation
 	 */
-	public void receiveRequest(Request req);
+	public Operation receiveRequest(Request req);
 	
 	/**
 	 * Transform the array of indices from the state indicated by the timestamp

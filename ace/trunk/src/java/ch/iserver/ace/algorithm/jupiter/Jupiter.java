@@ -135,7 +135,7 @@ public class Jupiter implements Algorithm {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void receiveRequest(Request req) {
+	public Operation receiveRequest(Request req) {
 		LOG.info(">>> recv");
 		JupiterRequest jupReq = (JupiterRequest) req;
 		checkPreconditions(jupReq.getJupiterVectorTime());
@@ -153,6 +153,7 @@ public class Jupiter implements Algorithm {
 
 		vectorTime.incrementRemoteRequestCount();
 		LOG.info("<<< recv");
+		return newOp;
 	}
 	
 	public int[] transformIndices(Timestamp timestamp, int[] indices) {
