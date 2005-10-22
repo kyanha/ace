@@ -27,7 +27,6 @@ import org.apache.log4j.Logger;
 import ch.iserver.ace.DocumentModel;
 import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.jupiter.DelegateTestJupiter;
-import ch.iserver.ace.algorithm.jupiter.Jupiter;
 import ch.iserver.ace.algorithm.jupiter.JupiterRequest;
 import ch.iserver.ace.algorithm.jupiter.JupiterVectorTime;
 import ch.iserver.ace.text.DeleteOperation;
