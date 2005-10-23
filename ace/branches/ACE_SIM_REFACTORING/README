@@ -1,0 +1,19 @@
+== How to Build the Project ==
+
+There is a build.xml file that can be used to build the project. Before the
+build can succeed the following steps must be followed.
+
+1. download maven 2.0 ant tasks from http://maven.apache.org/maven2/ant-tasks.html
+   note: you have to get the jar archive from the maven2 download page
+2. place the jar file inside the lib directory of your ant installation (ANT_HOME/lib)
+   note: the version of ant must be at least 1.6
+
+The jar file contains an ant library that allows maven style dependency download. All
+the dependencies are declared inside the build.xml. They are downloaded as soon as
+they are needed for the first time and placed in a local repository (${user.home}/.m2).
+
+Once that the jar file is in the correct place, you can simply type
+
+$  ant compile
+
+to compile the project.
