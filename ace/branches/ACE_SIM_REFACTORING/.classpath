@@ -11,5 +11,6 @@
 	<classpathentry kind="var" path="MAVEN2/xerces/xercesImpl/2.6.2/xercesImpl-2.6.2.jar"/>
 	<classpathentry kind="var" path="MAVEN2/commons-logging/commons-logging/1.0.4/commons-logging-1.0.4.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/opt/eclipse/plugins/org.eclipse.swt.gtk.linux.x86_3.1.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

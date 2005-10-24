@@ -7,6 +7,7 @@
         <li><a href="index.php?page=3">Links</a></li>
         <li><a href="index.php?page=4">Team</a></li>
         <li><a href="index.php?page=5">Development</a></li>
+        <li><a href="index.php?page=6">Testing</a></li>
       </ul>
     </div>
     <div align="center">

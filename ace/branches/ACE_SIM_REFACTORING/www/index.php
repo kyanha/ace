@@ -10,7 +10,7 @@
  
    <?php
      $page = $_GET['page'];
-     if ($page < 0 || $page > 5) {
+     if ($page < 0 || $page > 6) {
        $page = 0;
      }
      $contact = "feedback@ace.iserver.ch";
@@ -27,7 +27,6 @@
        <div id="content">
 
        <?php
-       
        switch ($page) {
        case 1:
          require('inc/vision.inc.php');
@@ -43,6 +42,9 @@
          break;
        case 5:
          require('inc/development.inc.php');
+         break;
+       case 6:
+         require('inc/testing.inc.php');
          break;
        default:
          require('inc/index.inc.php');

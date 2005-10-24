@@ -249,22 +249,6 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 		return receptionNodes;
 	}
 
-	private List getReceptionNodes(String id) {
-		List result = new ArrayList();
-		Iterator it = receptionNodes.iterator();
-		while (it.hasNext()) {
-			ReceptionNode node = (ReceptionNode) it.next();
-			if (id.equals(node.getReference())) {
-				result.add(node);
-			}
-		}
-		return result;
-	}
-
-	private Collection getGenerationNodes() {
-		return generationNodes.values();
-	}
-
 	private GenerationNode getGenerationNode(String id) {
 		return (GenerationNode) generationNodes.get(id);
 	}
