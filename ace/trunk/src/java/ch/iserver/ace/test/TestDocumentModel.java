@@ -40,8 +40,6 @@ public class TestDocumentModel extends PlainDocument implements DocumentModel {
 
 	private static final Logger LOG = Logger.getLogger(TestDocumentModel.class);
 
-	private int siteId;
-
 	/**
 	 * Class constructor.
 	 * 
@@ -67,7 +65,6 @@ public class TestDocumentModel extends PlainDocument implements DocumentModel {
 	 */
 	public TestDocumentModel(int id, String content) {
 		this(content);
-		siteId = id;
 	}
 
 	public void apply(Operation operation) {
