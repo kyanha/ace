@@ -78,9 +78,7 @@ public class Jupiter implements Algorithm {
 	}
 
 	/**
-	 * Class constructor that creates a new Jupiter algorithm. Afterwards, the
-	 * method {@link #init(DocumentModel, Timestamp)}needs to be called to
-	 * initialize the algorithm.
+	 * Class constructor that creates a new Jupiter algorithm. A
 	 * 
 	 * @param siteId
 	 *            the site Id of this algorithm.
