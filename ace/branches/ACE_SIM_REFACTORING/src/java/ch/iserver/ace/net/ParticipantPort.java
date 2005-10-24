@@ -21,9 +21,8 @@
 
 package ch.iserver.ace.net;
 
-import ch.iserver.ace.CaretUpdate;
+import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
-import ch.iserver.ace.algorithm.Timestamp;
 
 /**
  * The ParticipantPort is the interface for the network layer to speak to
@@ -48,10 +47,8 @@ public interface ParticipantPort {
 	/**
 	 * Receives a caret update from the network layer.
 	 * 
-	 * @param timestamp  the timestamp specifying the document state on which
-	 *                   the cursor update is based
-	 * @param update the caret update information
+	 * @param message the CaretUpdateMessage to receive
 	 */
-	void receiveCaretUpdate(Timestamp timestamp, CaretUpdate update);
+	void receiveCaretUpdate(CaretUpdateMessage message);
 	
 }

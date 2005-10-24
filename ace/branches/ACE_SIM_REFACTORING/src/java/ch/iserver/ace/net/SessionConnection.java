@@ -21,9 +21,8 @@
 
 package ch.iserver.ace.net;
 
-import ch.iserver.ace.CaretUpdate;
+import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
-import ch.iserver.ace.algorithm.Timestamp;
 
 /**
  * A SessionConnection is a network layer interface abstracting the concept of
@@ -63,9 +62,8 @@ public interface SessionConnection {
 	/**
 	 * Sends the given caret update to the session.
 	 *
-	 * @param timestamp the timestamp corresponding to the caret update
-	 * @param update the caret update of this user
+	 * @param message the CaretUpdateMessage to be sent
 	 */
-	void sendCaretUpdate(Timestamp timestamp, CaretUpdate update);
+	void sendCaretUpdate(CaretUpdateMessage message);
 			
 }

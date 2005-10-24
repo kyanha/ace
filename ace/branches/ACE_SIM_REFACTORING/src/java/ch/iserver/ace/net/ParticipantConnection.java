@@ -21,9 +21,8 @@
 
 package ch.iserver.ace.net;
 
-import ch.iserver.ace.CaretUpdate;
+import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
-import ch.iserver.ace.algorithm.Timestamp;
 import ch.iserver.ace.collaboration.Participant;
 
 /**
@@ -45,20 +44,19 @@ public interface ParticipantConnection {
 	/**
 	 * Sends a request to the participant this connection represents.
 	 * 
+	 * @param participantId the participant that created the operation
 	 * @param request the request to be sent to the participant
 	 */
-	void sendRequest(Request request);
+	void sendRequest(int participantId, Request request);
 	
 	/**
 	 * Sends a caret update message to the participant this connection
 	 * represents.
 	 * 
-	 * @param timestamp the timestamp specifying the document state the cursor
-	 *                  update is based on
-	 * @param participantId the participant id of the generator of the CaretUpdate
-	 * @param update the caret update information
+	 * @param participantId the participant that created the caret update
+	 * @param message the CaretUpdateMessage to send
 	 */
-	void sendCaretUpdate(Timestamp timestamp, int participantId, CaretUpdate update);
+	void sendCaretUpdate(int participantId, CaretUpdateMessage message);
 	
 	/**
 	 * Sends a participant joined message to the participant represented by

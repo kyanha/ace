@@ -21,9 +21,8 @@
 
 package ch.iserver.ace.net;
 
-import ch.iserver.ace.CaretUpdate;
+import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
-import ch.iserver.ace.algorithm.Timestamp;
 
 /**
  * The SessionConnectionCallback interface is used by the network layer to communicate
@@ -46,18 +45,18 @@ public interface SessionConnectionCallback {
 	/**
 	 * Receives a request from the network layer and processes it.
 	 * 
+	 * @param participantId the participant id of the creator
 	 * @param request the request to be received
 	 */
-	void receiveRequest(Request request);
+	void receiveRequest(int participantId, Request request);
 	
 	/**
 	 * Receives a caret update from the network and processes it.
 	 * 
-	 * @param timestamp the timestamp on which the caret update is based
-	 * @param participantId the participant id of the generating participant
-	 * @param update the caret update information
+	 * @param participantId the participant id of the creator
+	 * @param message the message to be received
 	 */
-	void receiveCaretUpdate(Timestamp timestamp, int participantId, CaretUpdate update);
+	void receiveCaretUpdate(int participantId, CaretUpdateMessage message);
 	
 	/**
 	 * This method is called by the network layer to notify this participant
