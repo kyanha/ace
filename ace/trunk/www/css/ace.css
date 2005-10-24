@@ -180,7 +180,7 @@ blockquote.breakout div {
  background: #ffd;
 }
 
-#date {
+.date {
  font-size: 10px;
  color: #aaa;
 }
