@@ -29,10 +29,24 @@ package ch.iserver.ace.collaboration;
 public interface RemoteDocument {
 	
 	/**
+	 * Gets the unique identifier of the document.
+	 * 
+	 * @return the unique identifier of the document
+	 */
+	String getId();
+	
+	/**
 	 * Gets the title of the document. The title should be used in the user
 	 * interface wherever a title for the document is necessary.
 	 */
 	String getTitle();
+	
+	/**
+	 * Gets the RemoteUser object for the publisher of the document.
+	 * 
+	 * @return the RemoteUser for the publisher
+	 */
+	RemoteUser getPublisher();
 	
 	/**
 	 * Joins this remote document.

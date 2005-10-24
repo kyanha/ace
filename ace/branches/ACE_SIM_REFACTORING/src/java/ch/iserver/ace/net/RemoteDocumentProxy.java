@@ -31,11 +31,25 @@ package ch.iserver.ace.net;
 public interface RemoteDocumentProxy {
 	
 	/**
+	 * Gets the unique identifier of the document.
+	 * 
+	 * @return the unique identifier
+	 */
+	String getId();
+	
+	/**
 	 * Gets the title of the remote document.
 	 * 
 	 * @return the title of the remote document
 	 */
 	String getTitle();
+	
+	/**
+	 * Gets the RemoteUserProxy of the publisher of the document.
+	 * 
+	 * @return the RemoteUserProxy of the publisher
+	 */
+	RemoteUserProxy getPublisher();
 	
 	/**
 	 * Tries to join the editing session of this remote document. The returned

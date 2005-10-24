@@ -31,6 +31,13 @@ import java.util.Collection;
 public interface RemoteUser {
 	
 	/**
+	 * Gets the unique identifier of the user.
+	 * 
+	 * @return the unique identifier of the user
+	 */
+	String getId();
+	
+	/**
 	 * Retrieves a collection of all remote documents published by this
 	 * remote user.
 	 *

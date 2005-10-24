@@ -31,6 +31,13 @@ import java.util.Collection;
 public interface RemoteUserProxy {
 	
 	/**
+	 * Gets the unique identifier of the user.
+	 * 
+	 * @return the unique identifier
+	 */
+	String getId();
+	
+	/**
 	 * Gets the display name of this remote user.
 	 *
 	 * @return the display name of this user
