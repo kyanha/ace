@@ -31,7 +31,7 @@ import ch.iserver.ace.net.PortableDocument;
  *
  * @todo possibly rename to SessionConnectionCallback
  */
-public interface DocumentController {
+public interface SessionCallback {
 	
 	/**
 	 * Sets the document content to the given <var>doc</var>.

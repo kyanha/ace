@@ -40,6 +40,6 @@ public interface RemoteDocument {
 	 * @param controller the document controller for the document
 	 * @return the Session object
 	 */
-	Session join(DocumentController controller);
+	Session join(SessionCallback controller);
 
 }

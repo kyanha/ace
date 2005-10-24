@@ -40,10 +40,10 @@ public interface Invitation {
 	/**
 	 * Accepts the invitation and gets the corresponding session info object.
 	 *
-	 * @param controller the DocumentController for the session
+	 * @param controller the SessionCallback for the session
 	 * @return the Session object
 	 */
-	Session accept(DocumentController controller);
+	Session accept(SessionCallback controller);
 	
 	/**
 	 * Rejects the invitation.

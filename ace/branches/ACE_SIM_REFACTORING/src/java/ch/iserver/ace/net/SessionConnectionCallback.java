@@ -28,7 +28,7 @@ import ch.iserver.ace.algorithm.Request;
  * The SessionConnectionCallback interface is used by the network layer to communicate
  * with the logic layer in session scope. The session controller itself will
  * process the received information and forward the relevant (transformed)
- * parts to the DocumentController for consumption.
+ * parts to the SessionCallback for consumption.
  * <p>The SessionConnectionCallback is the place were the operational transformation
  * aspects fit in. It is used in case of a joined session. For published
  * sessions the mechanisms are totally different.</p>

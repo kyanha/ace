@@ -58,8 +58,9 @@ public interface CollaborationService {
 	 * over the network.
 	 *
 	 * @param document the document to publish
+	 * @param controller the SessionCallback used for callbacks
 	 * @return a session for the publisher itself
 	 */
-	PublishedSession publish(PortableDocument document);
+	PublishedSession publish(PortableDocument document, SessionCallback controller);
 
 }
