@@ -28,8 +28,6 @@ import ch.iserver.ace.net.PortableDocument;
 /**
  * This interface describes the interface between the logic layer and
  * the application layer.
- *
- * @todo possibly rename to SessionConnectionCallback
  */
 public interface SessionCallback {
 	
