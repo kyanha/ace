@@ -47,7 +47,6 @@ public class TwoWayExecuteVisitor extends ExecuteVisitor {
 	public void visit(StartNode node) {
 		setDocument(node.getSiteId(), new DefaultDocument(node.getState()));
 		Boolean isClient = Boolean.valueOf(node.getSites() % 2 == 0);
-		System.out.println("visit " + node.getSiteId());
 		Algorithm algorithm = getFactory().createAlgorithm(
 				Integer.parseInt(node.getSiteId()), isClient);
 		setAlgorithm(node.getSiteId(), algorithm);
