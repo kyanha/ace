@@ -8,7 +8,6 @@ import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.Timestamp;
-import ch.iserver.ace.algorithm.jupiter.server.OperationExtractDocumentModel;
 import ch.iserver.ace.test.AlgorithmTestFactory;
 import ch.iserver.ace.test.ReceptionNode;
 import ch.iserver.ace.test.RelayNode;
@@ -37,17 +36,9 @@ public class NWayExecuteVisitorTest extends TestCase {
 		// define mock behavior
 		factory.createAlgorithm(0, Boolean.TRUE);
 		control.setReturnValue(algo1);
-		factory.createDocument("abc");
-		control.setReturnValue(null);
-		factory.createTimestamp();
-		control.setReturnValue(null);
-		algo1.init(null, null);
 		
 		factory.createAlgorithm(0, Boolean.FALSE);
 		control.setReturnValue(algo2);
-		factory.createTimestamp();
-		control.setReturnValue(null);
-		algo2.init(new OperationExtractDocumentModel(), null);
 						
 		// create test object
 		NWayExecuteVisitor visitor = new NWayExecuteVisitor(factory);
@@ -101,12 +92,10 @@ public class NWayExecuteVisitorTest extends TestCase {
 		relay.setRequest(req);
 		relay.addRemoteSuccessor(node[0]);
 		relay.addRemoteSuccessor(node[1]);
-		VerifyDocumentModel doc = new VerifyDocumentModel();
 		
 		// define mock behavior
 		algo[0].receiveRequest(req);
-		algo[0].getDocument();
-		algoCtrl[0].setReturnValue(doc);
+		algoCtrl[0].setReturnValue(null);
 		
 		algo[1].generateRequest(null);
 		algoCtrl[1].setReturnValue(null);
@@ -139,7 +128,6 @@ public class NWayExecuteVisitorTest extends TestCase {
 		relay.accept(visitor);
 		
 		// verify
-		assertTrue("expected 1 call to DocumentModel.getOperation", doc.verify(1));
 		algoCtrl[0].verify();
 		algoCtrl[1].verify();
 		algoCtrl[2].verify();
@@ -167,22 +155,5 @@ public class NWayExecuteVisitorTest extends TestCase {
 			return null;
 		}
 	}
-	
-	/**
-	 * Private helper class to verify that getOperation is called exactly once.
-	 * This cannot be a mock object, because OperationExtractDocumentModel
-	 * is expected by the code and it is not an interface...
-	 */
-	private static class VerifyDocumentModel extends OperationExtractDocumentModel {
-		private int count = 0;
-		public void apply(Operation operation) { }
-		public Operation getOperation() {
-			count++;
-			return null;
-		}
-		public boolean verify(int expected) {
-			return count == expected;
-		}
-	}
-	
+		
 }

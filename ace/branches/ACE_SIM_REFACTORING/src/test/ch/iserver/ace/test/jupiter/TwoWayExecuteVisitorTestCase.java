@@ -23,6 +23,7 @@ public class TwoWayExecuteVisitorTestCase extends TestCase {
 		MockControl algoCtrl2 = MockControl.createControl(Algorithm.class);
 		MockControl algoCtrl3 = MockControl.createControl(Algorithm.class);
 		MockControl algoCtrl4 = MockControl.createControl(Algorithm.class);
+		
 		AlgorithmTestFactory factory = (AlgorithmTestFactory) control.getMock();
 		Algorithm algo1 = (Algorithm) algoCtrl1.getMock();
 		Algorithm algo2 = (Algorithm) algoCtrl2.getMock();
@@ -38,36 +39,15 @@ public class TwoWayExecuteVisitorTestCase extends TestCase {
 		// define mock behavior
 		factory.createAlgorithm(0, Boolean.TRUE);
 		control.setReturnValue(algo1);
-		factory.createDocument("abc");
-		control.setReturnValue(null);
-		factory.createTimestamp();
-		control.setReturnValue(null);
 		
 		factory.createAlgorithm(1, Boolean.FALSE);
 		control.setReturnValue(algo2);
-		factory.createDocument("abc");
-		control.setReturnValue(null);
-		factory.createTimestamp();
-		control.setReturnValue(null);
 
 		factory.createAlgorithm(2, Boolean.TRUE);
 		control.setReturnValue(algo3);
-		factory.createDocument("abc");
-		control.setReturnValue(null);
-		factory.createTimestamp();
-		control.setReturnValue(null);
 
 		factory.createAlgorithm(3, Boolean.FALSE);
 		control.setReturnValue(algo4);
-		factory.createDocument("abc");
-		control.setReturnValue(null);
-		factory.createTimestamp();
-		control.setReturnValue(null);
-
-		algo1.init(null, null);
-		algo2.init(null, null);
-		algo3.init(null, null);
-		algo4.init(null, null);
 						
 		// create test object
 		TwoWayExecuteVisitor visitor = new TwoWayExecuteVisitor(factory);

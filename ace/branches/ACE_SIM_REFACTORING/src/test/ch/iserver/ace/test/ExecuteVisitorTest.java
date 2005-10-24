@@ -25,7 +25,6 @@ import junit.framework.TestCase;
 
 import org.easymock.MockControl;
 
-import ch.iserver.ace.DocumentModel;
 import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.Request;
@@ -52,13 +51,7 @@ public class ExecuteVisitorTest extends TestCase {
 		// define mock behavior
 		factory.createAlgorithm(0, null);
 		control.setReturnValue(algo);
-		factory.createDocument("abc");
-		control.setReturnValue(null);
-		factory.createTimestamp();
-		control.setReturnValue(null);
 				
-		algo.init(null, null);
-						
 		// create test object
 		ExecuteVisitor visitor = new ExecuteVisitor(factory);
 		
@@ -79,12 +72,15 @@ public class ExecuteVisitorTest extends TestCase {
 	 */
 	public void testVisitDoNode() {
 		// setup mock objects
+		MockControl control = MockControl.createControl(AlgorithmTestFactory.class);
 		MockControl rcptCtrl1 = MockControl.createControl(ReceptionNode.class);
 		MockControl rcptCtrl2 = MockControl.createControl(ReceptionNode.class);
 		MockControl algoCtrl = MockControl.createControl(Algorithm.class);
 		Algorithm algo = (Algorithm) algoCtrl.getMock();
+		AlgorithmTestFactory factory = (AlgorithmTestFactory) control.getMock();
 		
 		// create scenario
+		StartNode start = new StartNode("0", "abc", 2);
 		DoNode d = new DoNode("0", "0", null);
 		ReceptionNode r1 = (ReceptionNode) rcptCtrl1.getMock();
 		ReceptionNode r2 = (ReceptionNode) rcptCtrl2.getMock();
@@ -94,7 +90,9 @@ public class ExecuteVisitorTest extends TestCase {
 		// helper objects
 		Request req = new TestRequest(0, null);
 		
-		// define mock behavior				
+		// define mock behavior
+		factory.createAlgorithm(0, null);
+		control.setReturnValue(algo);
 		algo.generateRequest(null);
 		algoCtrl.setReturnValue(req);
 				
@@ -102,15 +100,17 @@ public class ExecuteVisitorTest extends TestCase {
 		r2.setRequest(req);
 		
 		// create test object
-		ExecuteVisitor visitor = new ExecuteVisitor(null);
+		ExecuteVisitor visitor = new ExecuteVisitor(factory);
 		visitor.setAlgorithm("0", algo);
 		
 		// replay
+		control.replay();
 		algoCtrl.replay();
 		rcptCtrl1.replay();
 		rcptCtrl2.replay();
 		
 		// execute scenario
+		start.accept(visitor);
 		d.accept(visitor);
 		
 		// verify
@@ -124,12 +124,15 @@ public class ExecuteVisitorTest extends TestCase {
 	 */
 	public void testVisitUndoNode() {
 		// setup mock objects
+		MockControl control = MockControl.createControl(AlgorithmTestFactory.class);
 		MockControl rcptCtrl1 = MockControl.createControl(ReceptionNode.class);
 		MockControl rcptCtrl2 = MockControl.createControl(ReceptionNode.class);
 		MockControl algoCtrl = MockControl.createControl(Algorithm.class);
 		Algorithm algo = (Algorithm) algoCtrl.getMock();
+		AlgorithmTestFactory factory = (AlgorithmTestFactory) control.getMock();
 		
-		// create scenario
+		// create scenari
+		StartNode start = new StartNode("0", "", 2);
 		UndoNode g = new UndoNode("0", "0");
 		ReceptionNode r1 = (ReceptionNode) rcptCtrl1.getMock();
 		ReceptionNode r2 = (ReceptionNode) rcptCtrl2.getMock();
@@ -139,7 +142,10 @@ public class ExecuteVisitorTest extends TestCase {
 		// helper objects
 		Request req = new TestRequest(0, null);
 		
-		// define mock behavior				
+		// define mock behavior
+		factory.createAlgorithm(0, null);
+		control.setReturnValue(algo);
+		
 		algo.undo();
 		algoCtrl.setReturnValue(req);
 				
@@ -147,18 +153,21 @@ public class ExecuteVisitorTest extends TestCase {
 		r2.setRequest(req);
 		
 		// create test object
-		ExecuteVisitor visitor = new ExecuteVisitor(null);
+		ExecuteVisitor visitor = new ExecuteVisitor(factory);
 		visitor.setAlgorithm("0", algo);
 		
 		// replay
+		control.replay();
 		algoCtrl.replay();
 		rcptCtrl1.replay();
 		rcptCtrl2.replay();
 		
 		// execute scenario
+		start.accept(visitor);
 		g.accept(visitor);
 		
 		// verify
+		control.verify();
 		algoCtrl.verify();
 		rcptCtrl1.verify();
 		rcptCtrl2.verify();
@@ -169,12 +178,15 @@ public class ExecuteVisitorTest extends TestCase {
 	 */
 	public void testVisitRedoNode() {
 		// setup mock objects
+		MockControl control = MockControl.createControl(AlgorithmTestFactory.class);
 		MockControl rcptCtrl1 = MockControl.createControl(ReceptionNode.class);
 		MockControl rcptCtrl2 = MockControl.createControl(ReceptionNode.class);
 		MockControl algoCtrl = MockControl.createControl(Algorithm.class);
 		Algorithm algo = (Algorithm) algoCtrl.getMock();
+		AlgorithmTestFactory factory = (AlgorithmTestFactory) control.getMock();
 		
 		// create scenario
+		StartNode start = new StartNode("0", "abc", 2);
 		RedoNode g = new RedoNode("0", "0");
 		ReceptionNode r1 = (ReceptionNode) rcptCtrl1.getMock();
 		ReceptionNode r2 = (ReceptionNode) rcptCtrl2.getMock();
@@ -184,7 +196,10 @@ public class ExecuteVisitorTest extends TestCase {
 		// helper objects
 		Request req = new TestRequest(0, null);
 		
-		// define mock behavior				
+		// define mock behavior
+		factory.createAlgorithm(0, null);
+		control.setReturnValue(algo);
+		
 		algo.redo();
 		algoCtrl.setReturnValue(req);
 				
@@ -192,18 +207,21 @@ public class ExecuteVisitorTest extends TestCase {
 		r2.setRequest(req);
 		
 		// create test object
-		ExecuteVisitor visitor = new ExecuteVisitor(null);
+		ExecuteVisitor visitor = new ExecuteVisitor(factory);
 		visitor.setAlgorithm("0", algo);
 		
 		// replay
+		control.replay();
 		algoCtrl.replay();
 		rcptCtrl1.replay();
 		rcptCtrl2.replay();
 		
 		// execute scenario
+		start.accept(visitor);
 		g.accept(visitor);
 		
 		// verify
+		control.verify();
 		algoCtrl.verify();
 		rcptCtrl1.verify();
 		rcptCtrl2.verify();
@@ -216,31 +234,40 @@ public class ExecuteVisitorTest extends TestCase {
 	 */
 	public void testVisitReceptionNode() {
 		// setup mock objects
+		MockControl factoryCtrl = MockControl.createControl(AlgorithmTestFactory.class);
 		MockControl algoCtrl = MockControl.createControl(Algorithm.class);
+		AlgorithmTestFactory factory = (AlgorithmTestFactory) factoryCtrl.getMock();
 		Algorithm algo = (Algorithm) algoCtrl.getMock();
 
 		// create test object
-		ExecuteVisitor visitor = new ExecuteVisitor(null);
+		ExecuteVisitor visitor = new ExecuteVisitor(factory);
 		visitor.setAlgorithm("0", algo);
 		
 		// create nodes
+		StartNode start = new StartNode("0", "abc", 2);
 		ReceptionNode r = new SimpleReceptionNode("0", "2");
 		
 		// helper object
 		TestRequest req = new TestRequest(1, null);
 		
-		// define mock behavior		
+		// define mock behavior
 		algo.receiveRequest(req);
+		algoCtrl.setReturnValue(null);
+		factory.createAlgorithm(0, null);
+		factoryCtrl.setReturnValue(algo);
 		
 		// replay behavior
 		algoCtrl.replay();
+		factoryCtrl.replay();
 		
 		// execute test
+		start.accept(visitor);
 		r.setRequest(req);
 		r.accept(visitor);
 		
 		// verify method calls
 		algoCtrl.verify();
+		factoryCtrl.verify();
 	}
 	
 	/**
@@ -250,35 +277,29 @@ public class ExecuteVisitorTest extends TestCase {
 	public void testVerificationNode() {
 		// setup mock objects
 		MockControl control = MockControl.createControl(AlgorithmTestFactory.class);
-		MockControl algoCtrl = MockControl.createControl(Algorithm.class);
 		AlgorithmTestFactory factory = (AlgorithmTestFactory) control.getMock();
-		Algorithm algo = (Algorithm) algoCtrl.getMock();
-		DocumentModel document = new TestDocument(true);
 
 		// create test object
 		ExecuteVisitor visitor = new ExecuteVisitor(factory);
-		visitor.setAlgorithm("0", algo);
+		visitor.setAlgorithm("0", null);
 		
 		// create nodes
+		StartNode start = new StartNode("0", "abc", 2);
 		VerificationNode v = new VerificationNode("0", "abc");
 		
 		// define mock behavior
-		factory.createDocument("abc");
-		control.setReturnValue(document);
-
-		algo.getDocument();
-		algoCtrl.setReturnValue(null);
-				
+		factory.createAlgorithm(0, null);
+		control.setReturnValue(null);
+		
 		// replay behavior
-		algoCtrl.replay();
 		control.replay();
 		
 		// execute test
+		start.accept(visitor);
 		v.accept(visitor);
 		
 		// verify method calls
 		control.verify();
-		algoCtrl.verify();
 	}
 
 	/**
@@ -288,37 +309,31 @@ public class ExecuteVisitorTest extends TestCase {
 	public void testVerificationNodeFail() {
 		// setup mock objects
 		MockControl control = MockControl.createControl(AlgorithmTestFactory.class);
-		MockControl algoCtrl = MockControl.createControl(Algorithm.class);
 		AlgorithmTestFactory factory = (AlgorithmTestFactory) control.getMock();
-		Algorithm algo = (Algorithm) algoCtrl.getMock();
-		DocumentModel document = new TestDocument(false);
 
 		// create test object
 		ExecuteVisitor visitor = new ExecuteVisitor(factory);
-		visitor.setAlgorithm("0", algo);
+		visitor.setAlgorithm("0", null);
 		
 		// create nodes
+		StartNode start = new StartNode("0", "", 2);
 		VerificationNode v = new VerificationNode("0", "abc");
 		
 		// define mock behavior
-		factory.createDocument("abc");
-		control.setReturnValue(document);
+		factory.createAlgorithm(0, null);
+		control.setReturnValue(null);
 		
-		algo.getDocument();
-		algoCtrl.setReturnValue(null);
-				
 		// replay behavior
-		algoCtrl.replay();
 		control.replay();
 		
-		// execute test		
+		// execute test
+		start.accept(visitor);
 		v.accept(visitor);
 		VerificationResult result = visitor.getVerificationResult();
 		assertEquals(1, result.getFailures().size());
 		
 		// verify method calls
 		control.verify();
-		algoCtrl.verify();
 	}
 	
 	/**
@@ -328,35 +343,29 @@ public class ExecuteVisitorTest extends TestCase {
 	public void testEndNode() {
 		// setup mock objects
 		MockControl control = MockControl.createControl(AlgorithmTestFactory.class);
-		MockControl algoCtrl = MockControl.createControl(Algorithm.class);
 		AlgorithmTestFactory factory = (AlgorithmTestFactory) control.getMock();
-		Algorithm algo = (Algorithm) algoCtrl.getMock();
-		DocumentModel document = new TestDocument(true);
 
 		// create test object
 		ExecuteVisitor visitor = new ExecuteVisitor(factory);
-		visitor.setAlgorithm("0", algo);
+		visitor.setAlgorithm("0", null);
 		
 		// create nodes
+		StartNode start = new StartNode("0", "abc", 2);
 		EndNode e = new EndNode("0", "abc");
-		
+
 		// define mock behavior
-		factory.createDocument("abc");
-		control.setReturnValue(document);
+		factory.createAlgorithm(0, null);
+		control.setReturnValue(null);
 		
-		algo.getDocument();
-		algoCtrl.setReturnValue(null);
-				
 		// replay behavior
-		algoCtrl.replay();
 		control.replay();
 		
 		// execute test
+		start.accept(visitor);
 		e.accept(visitor);
 		
 		// verify method calls
 		control.verify();
-		algoCtrl.verify();
 	}
 
 	/**
@@ -366,36 +375,30 @@ public class ExecuteVisitorTest extends TestCase {
 	public void testEndNodeFail() {
 		// setup mock objects
 		MockControl control = MockControl.createControl(AlgorithmTestFactory.class);
-		MockControl algoCtrl = MockControl.createControl(Algorithm.class);
 		AlgorithmTestFactory factory = (AlgorithmTestFactory) control.getMock();
-		Algorithm algo = (Algorithm) algoCtrl.getMock();
-		DocumentModel document = new TestDocument(false);
 
 		// create test object
 		ExecuteVisitor visitor = new ExecuteVisitor(factory);
-		visitor.setAlgorithm("0", algo);
+		visitor.setAlgorithm("0", null);
 		
 		// create nodes
+		StartNode start = new StartNode("0", "", 2);
 		EndNode v = new EndNode("0", "abc");
 		
 		// define mock behavior
-		factory.createDocument("abc");
-		control.setReturnValue(document);
+		factory.createAlgorithm(0, null);
+		control.setReturnValue(null);
 		
-		algo.getDocument();
-		algoCtrl.setReturnValue(null);
-				
 		// replay behavior
-		algoCtrl.replay();
 		control.replay();
 		
+		start.accept(visitor);
 		v.accept(visitor);
 		VerificationResult result = visitor.getVerificationResult();
 		assertEquals(1, result.getFailures().size());
 		
 		// verify method calls
 		control.verify();
-		algoCtrl.verify();
 	}
 	
 	private static class TestRequest implements Request {
@@ -415,18 +418,5 @@ public class ExecuteVisitorTest extends TestCase {
 			return null;
 		}
 	}
-	
-	private static class TestDocument implements DocumentModel {
-		private boolean result;
-		public TestDocument(boolean result) {
-			this.result = result;
-		}
-		public void apply(Operation operation) {
-			// do nothing
-		}
-		public boolean equals(Object o) {
-			return result;
-		}
-	}
-			
+				
 }

@@ -18,21 +18,22 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package ch.iserver.ace.algorithm.jupiter.server;
 
-import ch.iserver.ace.algorithm.Request;
+package ch.iserver.ace.test;
 
-/**
- * Interface for the concrete network implementation.
- */
-public interface NetService {
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
-    /**
-     * Transmits a request from the client proxy at the server 
-     * to its remote at the client side.
-     * 
-     * @param req the request to be transmitted.
-     */
-    public void transmitRequest(Request req);
-    
+public class AllTests {
+
+	public static Test suite() {
+		TestSuite suite = new TestSuite("Test for ch.iserver.ace.test");
+		//$JUnit-BEGIN$
+		suite.addTestSuite(ExecuteVisitorTest.class);
+		suite.addTestSuite(GraphUtilTest.class);
+		suite.addTestSuite(DefaultScenarioBuilderTest.class);
+		//$JUnit-END$
+		return suite;
+	}
+
 }

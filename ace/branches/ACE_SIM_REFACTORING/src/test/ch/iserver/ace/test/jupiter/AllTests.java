@@ -18,33 +18,21 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package ch.iserver.ace.algorithm;
 
-import ch.iserver.ace.Operation;
+package ch.iserver.ace.test.jupiter;
 
-/**
- * The RequestEngine is the front-end component for the queue handler and
- * algorithm.
- * 
- * @see ch.iserver.ace.algorithm.QueueHandler
- * @see ch.iserver.ace.algorithm.Algorithm
- */
-public interface RequestEngine {
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
-	/**
-	 * Generates a request from a given operation.
-	 * 
-	 * @param op
-	 *            the generated operation passed from the GUI
-	 */
-	public void generateRequest(Operation op);
+public class AllTests {
 
-	/**
-	 * Receive a request sent over the network.
-	 * 
-	 * @param req
-	 *            the request to be received
-	 */
-	public void receiveRequest(Request req);
-	
+	public static Test suite() {
+		TestSuite suite = new TestSuite("Test for ch.iserver.ace.test.jupiter");
+		//$JUnit-BEGIN$
+		suite.addTestSuite(TwoWayExecuteVisitorTestCase.class);
+		suite.addTestSuite(NWayExecuteVisitorTest.class);
+		//$JUnit-END$
+		return suite;
+	}
+
 }

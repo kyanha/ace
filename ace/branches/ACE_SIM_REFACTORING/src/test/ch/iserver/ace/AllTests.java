@@ -21,27 +21,19 @@
 
 package ch.iserver.ace;
 
-/**
- * An exception thrown by <code>DocumentModel</code>s apply method.
- */
-public class DocumentModelException extends RuntimeException {
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
-	/**
-	 * Constructor.
-	 * 
-	 * @param msg the message
-	 */
-	public DocumentModelException(String msg) {
-		super(msg);
+public class AllTests {
+
+	public static Test suite() {
+		TestSuite suite = new TestSuite("Test for ch.iserver.ace");
+		//$JUnit-BEGIN$
+		suite.addTest(ch.iserver.ace.algorithm.jupiter.AllTests.suite());
+		suite.addTest(ch.iserver.ace.test.AllTests.suite());
+		suite.addTest(ch.iserver.ace.text.AllTests.suite());
+		//$JUnit-END$
+		return suite;
 	}
-	
-	/**
-	 * Constructor.
-	 * 
-	 * @param t a nested throwable
-	 */
-	public DocumentModelException(Throwable t) {
-		super(t);
-	}
-	
+
 }

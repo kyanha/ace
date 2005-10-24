@@ -19,22 +19,22 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace;
+package ch.iserver.ace.algorithm.jupiter;
 
-/**
- * This interface represents an abstraction of a document independent of whether
- * it is a text document, a whiteboard document or any other document.
- */
-public interface DocumentModel {
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
-	/**
-	 * Applies an operation to this document model.
-	 * 
-	 * @param operation
-	 *            the operation to be applied
-	 * @throws ch.iserver.ace.DocumentModelException
-	 *             if an error occurs while applying operation
-	 */
-	public void apply(Operation operation) throws DocumentModelException;
+public class AllTests {
+
+	public static Test suite() {
+		TestSuite suite = new TestSuite("Test for ch.iserver.ace.algorithm.jupiter");
+		//$JUnit-BEGIN$
+		suite.addTestSuite(NWayScenarioTest.class);
+		suite.addTestSuite(SplitOperationTest.class);
+		suite.addTestSuite(JupiterTest.class);
+		suite.addTestSuite(TwoWayScenarioTest.class);
+		//$JUnit-END$
+		return suite;
+	}
 
 }

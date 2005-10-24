@@ -19,24 +19,19 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.test;
+package ch.iserver.ace.text;
 
-import ch.iserver.ace.algorithm.Algorithm;
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
-/**
- * Factory for creating all the test relevant classes. There are
- * methods for creating algorithms, timestamps and documents.
- */
-public interface AlgorithmTestFactory {
+public class AllTests {
 
-	/**
-	 * Creates a new algorithm. The new fully configured algorithm object
-	 * to test should be returned.
-	 * 
-	 * @param siteId		the site id
-	 * @param parameter  an optional factory dependent parameter
-	 * @return 			a new algorithm instance
-	 */
-	public Algorithm createAlgorithm(int siteId, Object parameter);
-			
+	public static Test suite() {
+		TestSuite suite = new TestSuite("Test for ch.iserver.ace.text");
+		//$JUnit-BEGIN$
+		suite.addTestSuite(GOTOInclusionTransformationTest.class);
+		//$JUnit-END$
+		return suite;
+	}
+
 }

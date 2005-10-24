@@ -23,8 +23,6 @@ package ch.iserver.ace.util;
 
 import java.util.LinkedList;
 
-import org.apache.log4j.Logger;
-
 /**
  * A queue class that contains objects. Use the {@link #add(Object)} method to
  * add <code>obj</code> and the {@link #get()} method to get <code>obj</code>.
@@ -37,8 +35,6 @@ import org.apache.log4j.Logger;
  * </p>
  */
 public class SynchronizedQueue {
-
-	private static final Logger LOG = Logger.getLogger(SynchronizedQueue.class);
 
 	/**
 	 * the list used to implement the queue.
@@ -96,7 +92,6 @@ public class SynchronizedQueue {
 	 */
 	public synchronized Object get() throws InterruptedException {
 		while (queue.isEmpty()) {
-			// LOG.info("going to wait...");
 			wait();
 		}
 		return (Object) queue.removeFirst();
