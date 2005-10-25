@@ -21,6 +21,8 @@
 
 package ch.iserver.ace.collaboration;
 
+import ch.iserver.ace.DocumentDetails;
+
 /**
  * The RemoteDocument interface provides methods applicable to
  * remote documents that were discovered, most notable is the join method
@@ -36,10 +38,11 @@ public interface RemoteDocument {
 	String getId();
 	
 	/**
-	 * Gets the title of the document. The title should be used in the user
-	 * interface wherever a title for the document is necessary.
+	 * Gets display information about the remote document.
+	 * 
+	 * @return a DocumentDetails object
 	 */
-	String getTitle();
+	DocumentDetails getDocumentDetails();
 	
 	/**
 	 * Gets the RemoteUser object for the publisher of the document.

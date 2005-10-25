@@ -21,6 +21,8 @@
 
 package ch.iserver.ace.collaboration;
 
+import ch.iserver.ace.DocumentDetails;
+
 
 /**
  * A PublishedSession extends a Session with methods that are only
@@ -31,6 +33,13 @@ package ch.iserver.ace.collaboration;
  * {@link CollaborationService} instance.</p>
  */
 public interface PublishedSession extends Session {
+	
+	/**
+	 * Sets the document detail information.
+	 * 
+	 * @param details the new DocumentDetails
+	 */
+	void setDocumentDetails(DocumentDetails details);
 	
 	/**
 	 * Kicks the given participant from the session.

@@ -21,15 +21,34 @@
 
 package ch.iserver.ace.collaboration;
 
+import java.util.EventListener;
 
-public interface DiscoveryListener {
+/**
+ *
+ */
+public interface UserListener extends EventListener {
 	
+	/**
+	 * 
+	 * @param user
+	 */
 	void userDiscovered(RemoteUser user);
 	
+	/**
+	 * 
+	 * @param user
+	 * @param details
+	 */
+	void userDetailsChanged(RemoteUser user);
+	
+	/**
+	 * Notifies the listener that the given remote user is no longer available.
+	 * Do not call any methods on this object that make network calls (see
+	 * documentation of RemoteUser for information, which methods make network
+	 * calls).
+	 * 
+	 * @param user the discarded RemoteUser
+	 */	
 	void userDiscarded(RemoteUser user);
-	
-	void documentDiscovered(RemoteDocument doc);
-	
-	void documentDiscarded(RemoteDocument doc);
 	
 }

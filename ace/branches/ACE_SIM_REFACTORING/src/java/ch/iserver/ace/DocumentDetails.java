@@ -19,29 +19,32 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.net;
-
-import ch.iserver.ace.DocumentDetails;
+package ch.iserver.ace;
 
 /**
- * This interface represents the network layer server object for a document.
- * DocumentServer instances can be obtained from the NetworkService by 
- * publishing a document.
- *
- * @see ch.iserver.ace.net.NetworkService#publish(DocumentServerLogic)
+ * The DocumentDetails contains information about a document.
  */
-public interface DocumentServer {
+public class DocumentDetails {
+	
+	/** 
+	 * The title of the document. 
+	 */
+	private final String title;
 	
 	/**
-	 * Sets the DocumentDetails for the published document.
+	 * Creates a new DocumentDetails object.
 	 * 
-	 * @param details the DocumentDetails object
+	 * @param title the title of the document
 	 */
-	void setDocumentDetails(DocumentDetails details);
+	public DocumentDetails(String title) {
+		this.title = title;
+	}
 	
 	/**
-	 * Conceals the published document and shuts down the server.
+	 * @return gets the title of the document
 	 */
-	void conceal();
+	public String getTitle() {
+		return title;
+	}
 	
 }

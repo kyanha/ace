@@ -19,29 +19,19 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.net;
+package ch.iserver.ace.collaboration;
 
-import ch.iserver.ace.DocumentDetails;
+import java.util.EventListener;
 
 /**
- * This interface represents the network layer server object for a document.
- * DocumentServer instances can be obtained from the NetworkService by 
- * publishing a document.
  *
- * @see ch.iserver.ace.net.NetworkService#publish(DocumentServerLogic)
  */
-public interface DocumentServer {
+public interface DocumentListener extends EventListener {
 	
-	/**
-	 * Sets the DocumentDetails for the published document.
-	 * 
-	 * @param details the DocumentDetails object
-	 */
-	void setDocumentDetails(DocumentDetails details);
+	void documentDiscovered(RemoteDocument document);
 	
-	/**
-	 * Conceals the published document and shuts down the server.
-	 */
-	void conceal();
+	void documentDetailsChanged(RemoteDocument document);
+	
+	void documentDiscarded(RemoteDocument document);
 	
 }

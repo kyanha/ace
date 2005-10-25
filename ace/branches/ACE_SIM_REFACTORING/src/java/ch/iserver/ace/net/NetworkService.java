@@ -21,6 +21,7 @@
 
 package ch.iserver.ace.net;
 
+import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.algorithm.TimestampFactory;
 
 
@@ -33,6 +34,13 @@ import ch.iserver.ace.algorithm.TimestampFactory;
  * layer and the application should only access that layer.</p>
  */
 public interface NetworkService {
+	
+	/**
+	 * Sets the UserDetails for the local user.
+	 * 
+	 * @param details the UserDetails for the local user
+	 */
+	void setUserDetails(UserDetails details);
 	
 	/**
 	 * Sets the TimestampFactory used by the network layer to create Timestamp

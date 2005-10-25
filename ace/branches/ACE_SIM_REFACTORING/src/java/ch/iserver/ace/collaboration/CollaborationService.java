@@ -21,6 +21,7 @@
 
 package ch.iserver.ace.collaboration;
 
+import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.net.PortableDocument;
 
 /**
@@ -30,20 +31,42 @@ import ch.iserver.ace.net.PortableDocument;
  * local documents.
  */
 public interface CollaborationService {
-
+	
 	/**
-	 * Adds a discovery listener to the list of registered listeners.
+	 * Sets the UserDetails for the local user.
+	 * 
+	 * @param details the new UserDetails
+	 */
+	void setUserDetails(UserDetails details);
+	
+	/**
+	 * Adds a user discovery listener to the list of registered listeners.
 	 *
 	 * @param l the listener to add
 	 */
-	void addDiscoveryListener(DiscoveryListener l);
+	void addUserListener(UserListener l);
 	
 	/**
-	 * Removes a discovery listener from the list of registered listeners.
+	 * Removes a user discovery listener from the list of registered listeners.
 	 *
 	 * @param l the listener to remove
 	 */
-	void removeDiscoveryListener(DiscoveryListener l);
+	void removeDiscoveryListener(UserListener l);
+	
+	/**
+	 * Adds a document listener to the list of registered listeners.
+	 * 
+	 * @param l the listener to add
+	 */
+	void addDocumentListener(DocumentListener l);
+	
+	/**
+	 * Removes a document discovery listener from the list of registered 
+	 * listeners.
+	 * 
+	 * @param l the listener to remove
+	 */
+	void removeDocumentListener(DocumentListener l);
 	
 	/**
 	 * Sets the InvitationCallback for the service. The InvitationCallback

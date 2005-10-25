@@ -23,6 +23,8 @@ package ch.iserver.ace.collaboration;
 
 import java.util.Collection;
 
+import ch.iserver.ace.UserDetails;
+
 
 /**
  * A RemoteUser is a local representation of a remote user. It is a proxy
@@ -46,12 +48,12 @@ public interface RemoteUser {
 	Collection getSharedDocuments();
 	
 	/**
-	 * Gets the display name of this remote user.
-	 *
-	 * @return the display name of this user
-	 */
-	String getDisplayName();
-		
+	 * Gets the display information about the user.
+	 * 
+	 * @return the UserDetails information
+	 */	
+	UserDetails getUserDetails();
+			
 	/**
 	 * Invites the user represented by this instance to a given published
 	 * session.
