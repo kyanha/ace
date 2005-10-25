@@ -49,7 +49,7 @@ public class RedoNode extends AbstractGenerationNode {
 	 */
 	public String toString() {
 		return getClass().getName() + "["
-				+ "siteId=" + getSiteId()
+				+ "siteId=" + getParticipantId()
 				+ ",eventId=" + getEventId()
 				+ "]";
 	}

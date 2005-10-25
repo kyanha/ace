@@ -89,7 +89,7 @@ public class NWayExecuteVisitorTest extends TestCase {
 		// helper objects
 		RelayNode relay = new RelayNode("server", "1", "10");
 		Request req = new TestRequest(0, null);
-		relay.setRequest(req);
+		relay.setRequest("0", req);
 		relay.addRemoteSuccessor(node[0]);
 		relay.addRemoteSuccessor(node[1]);
 		
@@ -103,13 +103,13 @@ public class NWayExecuteVisitorTest extends TestCase {
 		algo[2].generateRequest(null);
 		algoCtrl[2].setReturnValue(null);
 
-		node[0].getSiteId();
+		node[0].getParticipantId();
 		nodeCtrl[0].setReturnValue("1");
-		node[0].setRequest(null);
+		node[0].setRequest("0", null);
 		
-		node[1].getSiteId();
+		node[1].getParticipantId();
 		nodeCtrl[1].setReturnValue("2");
-		node[1].setRequest(null);
+		node[1].setRequest("0", null);
 		
 		// create test object
 		NWayExecuteVisitor visitor = new NWayExecuteVisitor(null);

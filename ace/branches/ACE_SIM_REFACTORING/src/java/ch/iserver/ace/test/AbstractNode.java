@@ -28,24 +28,24 @@ package ch.iserver.ace.test;
  */
 public abstract class AbstractNode implements Node {
 	/** the site this node belongs to. */
-	private final String siteId;
+	private final String participantId;
 	/** the local successor of this node. */
 	private Node localSuccessor;
 	
 	/**
 	 * Creates a new abstract node belonging to the given site.
 	 * 
-	 * @param siteId the site this node belongs to
+	 * @param participantId the site this node belongs to
 	 */
-	protected AbstractNode(String siteId) {
-		if (siteId == null) {
-			throw new IllegalArgumentException("siteId cannot be null");
+	protected AbstractNode(String participantId) {
+		if (participantId == null) {
+			throw new IllegalArgumentException("participantId cannot be null");
 		}
-		this.siteId = siteId;
+		this.participantId = participantId;
 	}
 	
-	public String getSiteId() {
-		return siteId;
+	public String getParticipantId() {
+		return participantId;
 	}
 	
 	public void setLocalSuccessor(Node successor) {

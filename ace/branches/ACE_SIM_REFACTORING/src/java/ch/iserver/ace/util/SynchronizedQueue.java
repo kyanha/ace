@@ -98,37 +98,6 @@ public class SynchronizedQueue {
 	}
 
 	/**
-	 * Removes obj from the beginning of this queue if there is obj or blocks
-	 * for the specified amount <var>millis</var> of milliseconds. Calling this
-	 * method with a value 0 is basically an atomic command for:
-	 * 
-	 * <pre>
-	 * 
-	 *    SynchronizedQueue queue = ...;
-	 *    Object obj = null;
-	 *    if (!queue.isEmpty()) {
-	 *      obj = queue.removeFirst();
-	 *    }
-	 *  
-	 * </pre>
-	 * 
-	 * If there is no obj in the queue within the specified amount of time, this
-	 * method returns 0.
-	 * 
-	 * @param millis
-	 *            the amount of milliseconds to wait
-	 * @return a obj object or null if there is no obj within the specified
-	 *         amount of time in the queue
-	 * @throws InterruptedException in case of an interrupt
-	 */
-	public synchronized Object get(int millis) throws InterruptedException {
-		if (queue.isEmpty() && millis > 0) {
-			wait(millis);
-		}
-		return queue.isEmpty() ? null : (Object) queue.removeFirst();
-	}
-
-	/**
 	 * @return the size of the obj queue
 	 */
 	public synchronized int size() {
@@ -177,4 +146,5 @@ public class SynchronizedQueue {
 				+ ((synchObj != null) ? synchObj.hashCode() : 0);
 		return hashcode;
 	}
+	
 }

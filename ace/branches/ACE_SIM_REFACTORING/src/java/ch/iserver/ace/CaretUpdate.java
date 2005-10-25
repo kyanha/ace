@@ -71,7 +71,7 @@ public class CaretUpdate  {
 	 * @return array consisting of dot and mark (index 0 and 1 respecitvely)
 	 */
 	public int[] getIndices() {
-		return indices;
+		return new int[] { getDot(), getMark() };
 	}
 	
 	/**

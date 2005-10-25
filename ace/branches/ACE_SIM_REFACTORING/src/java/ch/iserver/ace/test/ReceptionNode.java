@@ -31,9 +31,10 @@ public interface ReceptionNode extends Node {
 	/**
 	 * Sets the request to be received by this node.
 	 * 
+	 * @param participantId the id of the participant
 	 * @param request the request to be received
 	 */
-	public void setRequest(Request request);
+	public void setRequest(String participantId, Request request);
 
 	/**
 	 * Gets the request to be received by this node.

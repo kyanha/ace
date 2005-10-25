@@ -66,7 +66,7 @@ public class DoNode extends AbstractGenerationNode {
 	
 	public String toString() {
 		return getClass().getName() 
-				+ "[siteId=" + getSiteId() 
+				+ "[siteId=" + getParticipantId() 
 				+ ",eventId=" + getEventId()
 				+ ",operation=" + getOperation()
 				+ "]";

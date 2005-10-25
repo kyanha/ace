@@ -45,11 +45,11 @@ public class TwoWayExecuteVisitor extends ExecuteVisitor {
 	}
 	
 	public void visit(StartNode node) {
-		setDocument(node.getSiteId(), new DefaultDocument(node.getState()));
+		setDocument(node.getParticipantId(), new DefaultDocument(node.getState()));
 		Boolean isClient = Boolean.valueOf(node.getSites() % 2 == 0);
 		Algorithm algorithm = getFactory().createAlgorithm(
-				Integer.parseInt(node.getSiteId()), isClient);
-		setAlgorithm(node.getSiteId(), algorithm);
+				Integer.parseInt(node.getParticipantId()), isClient);
+		setAlgorithm(node.getParticipantId(), algorithm);
 	}
 	
 }

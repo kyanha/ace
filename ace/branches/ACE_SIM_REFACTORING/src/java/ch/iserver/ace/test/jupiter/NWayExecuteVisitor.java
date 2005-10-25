@@ -70,14 +70,14 @@ public class NWayExecuteVisitor extends ExecuteVisitor {
 	 */
 	public void visit(StartNode node) {
 		LOG.info("visit: " + node);
-		setDocument(node.getSiteId(), new DefaultDocument(node.getState()));
+		setDocument(node.getParticipantId(), new DefaultDocument(node.getState()));
 		Algorithm algorithm = getFactory().createAlgorithm(
-				Integer.parseInt(node.getSiteId()), Boolean.TRUE);
-		setAlgorithm(node.getSiteId(), algorithm);
+				Integer.parseInt(node.getParticipantId()), Boolean.FALSE);
+		setAlgorithm(node.getParticipantId(), algorithm);
 
 		algorithm = getFactory().createAlgorithm(
-				Integer.parseInt(node.getSiteId()), Boolean.FALSE);
-		setServerAlgorithm(node.getSiteId(), algorithm);
+				Integer.parseInt(node.getParticipantId()), Boolean.TRUE);
+		setServerAlgorithm(node.getParticipantId(), algorithm);
 	}
 
 	/**
@@ -90,16 +90,16 @@ public class NWayExecuteVisitor extends ExecuteVisitor {
 	 */
 	public void visit(RelayNode node) {
 		LOG.info("visit: " + node);
-		String siteId = "" + node.getRequest().getSiteId();
-		Algorithm algo = getServerAlgorithm(siteId);
+		String participantId = "" + node.getSenderParticipantId();
+		Algorithm algo = getServerAlgorithm(participantId);
 		Operation op = algo.receiveRequest(node.getRequest());
-		LOG.info("receive from " + siteId + ": " + op);
+		LOG.info("receive from " + participantId + ": " + op);
 		Iterator succ = node.getRemoteSuccessors().iterator();
 		while (succ.hasNext()) {
 			ReceptionNode remote = (ReceptionNode) succ.next();
-			algo = getServerAlgorithm(remote.getSiteId());
+			algo = getServerAlgorithm(remote.getParticipantId());
 			Request request = algo.generateRequest(op);
-			remote.setRequest(request);
+			remote.setRequest(participantId, request);
 		}
 	}
 

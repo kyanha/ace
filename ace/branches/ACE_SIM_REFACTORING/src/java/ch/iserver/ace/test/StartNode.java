@@ -88,7 +88,7 @@ public class StartNode extends AbstractNode {
 	}
 	
 	public String toString() {
-		return getClass().getName() + "[site=" + getSiteId()
+		return getClass().getName() + "[site=" + getParticipantId()
 				+ ",state=" + state 
 				+ "]";
 	}

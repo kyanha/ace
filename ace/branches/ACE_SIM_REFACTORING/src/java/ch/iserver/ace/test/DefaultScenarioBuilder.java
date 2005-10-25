@@ -101,11 +101,11 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 	 */
 	protected void addGenerationNode(GenerationNode node) {
 		addNode(node);
-		Node pred = getPredecessor(node.getSiteId());
+		Node pred = getPredecessor(node.getParticipantId());
 		pred.setLocalSuccessor(node);
 		addGeneratedOperation(node.getEventId(), node);
-		setPredecessor(node.getSiteId(), node);
-		addToSiteGeneration(node.getSiteId(), node.getEventId());
+		setPredecessor(node.getParticipantId(), node);
+		addToSiteGeneration(node.getParticipantId(), node.getEventId());
 	}
 
 	/**
@@ -113,11 +113,11 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 	 */
 	protected void addReceptionNode(ReceptionNode node) {
 		addNode(node);
-		Node pred = getPredecessor(node.getSiteId());
+		Node pred = getPredecessor(node.getParticipantId());
 		pred.setLocalSuccessor(node);
 		receptionNodes.add(node);
-		setPredecessor(node.getSiteId(), node);
-		addToSiteReception(node.getSiteId(), node.getReference());
+		setPredecessor(node.getParticipantId(), node);
+		addToSiteReception(node.getParticipantId(), node.getReference());
 	}
 
 	public void startSite(String siteId) {
@@ -190,12 +190,12 @@ public class DefaultScenarioBuilder implements ScenarioBuilder {
 		receptionNodes.add(node);
 		serverHelper.addReception(node.getReference());
 		// 2) local successors
-		Node pred = getPredecessor(node.getSiteId());
+		Node pred = getPredecessor(node.getParticipantId());
 		if (pred != null) {
 			pred.setLocalSuccessor(node);
 			node.setLocalPredecessor(pred);
 		}
-		setPredecessor(node.getSiteId(), node);
+		setPredecessor(node.getParticipantId(), node);
 		// 3) generation
 		addGeneratedOperation(id, node);
 		serverHelper.addGeneration(node.getEventId());

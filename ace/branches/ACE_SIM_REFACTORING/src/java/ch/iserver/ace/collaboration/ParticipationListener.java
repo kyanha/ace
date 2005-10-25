@@ -37,12 +37,12 @@ public interface ParticipationListener extends EventListener {
 	void userJoined(ParticipationEvent event);
 	
 	/**
-	 * Notifies the listener that a Participant leaved the session. Checking
+	 * Notifies the listener that a Participant left the session. Checking
 	 * the code of the ParticipationEvent reveals the reason why the 
 	 * Participant left the session.
 	 * 
 	 * @param event the event object containing all the relevant information
 	 */
-	void userLeaved(ParticipationEvent event);
+	void userLeft(ParticipationEvent event);
 	
 }

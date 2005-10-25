@@ -24,6 +24,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.swing.undo.CannotRedoException;
+import javax.swing.undo.CannotUndoException;
+
 import org.apache.log4j.Logger;
 
 import ch.iserver.ace.Operation;
@@ -31,6 +34,7 @@ import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.InclusionTransformation;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.Timestamp;
+import ch.iserver.ace.text.GOTOInclusionTransformation;
 import ch.iserver.ace.text.SplitOperation;
 
 /**
@@ -44,8 +48,6 @@ public class Jupiter implements Algorithm {
 
 	private JupiterVectorTime vectorTime;
 
-	private int siteId;
-
 	private boolean isClientSide;
 
 	/**
@@ -57,48 +59,26 @@ public class Jupiter implements Algorithm {
 	private List ackRequestList;
 
 	/**
-	 * Class constructor that creates a new Jupiter algorithm. The parameters
-	 * fully initialize the algorithm.
-	 * 
-	 * @param it
-	 *            the inclusion transformation to be used
-	 * @param siteId
-	 *            the site id
+	 * Class constructor that creates a new Jupiter algorithm.
 	 * @param isClientSide
 	 *            true if the algorithm resides on the client side
 	 */
-	public Jupiter(InclusionTransformation it,
-					int siteId, 
-					boolean isClientSide) {
-		inclusion = it;
-		this.siteId = siteId;
-		this.vectorTime = new JupiterVectorTime(0, 0);
-		ackRequestList = new ArrayList();
-		this.isClientSide = isClientSide;
-	}
-
-	/**
-	 * Class constructor that creates a new Jupiter algorithm. A
-	 * 
-	 * @param siteId
-	 *            the site Id of this algorithm.
-	 * @param isClientSide
-	 *            true if the algorithm resides on the client side
-	 */
-	public Jupiter(int siteId, boolean isClientSide) {
-		this.siteId = siteId;
+	public Jupiter(boolean isClientSide) {
+		this.inclusion = new GOTOInclusionTransformation();
 		this.vectorTime = new JupiterVectorTime(0, 0);
 		this.isClientSide = isClientSide;
 		ackRequestList = new ArrayList();
 	}
-
+	
 	/**
 	 * {@inheritDoc}
 	 */
 	public Request generateRequest(Operation op) {
 		// send(op, myMsgs, otherMsgs);
-		Request req = new JupiterRequest(siteId, (JupiterVectorTime) vectorTime
-						.clone(), op);
+		Request req = new JupiterRequest(
+						getSiteId(), 
+						(JupiterVectorTime) vectorTime.clone(), 
+						op);
 
 		// add(op, myMsgs) to outgoing;
 		if (op instanceof SplitOperation) {
@@ -260,7 +240,7 @@ public class Jupiter implements Algorithm {
 			throw new JupiterException("precondition #2 violated.");
 		} else if (time.getLocalOperationCount() != vectorTime
 						.getRemoteOperationCount()) {
-			throw new JupiterException("precondition #3 violated.");
+			throw new JupiterException("precondition #3 violated: " + time + " , " + vectorTime);
 		}
 	}
 
@@ -304,14 +284,14 @@ public class Jupiter implements Algorithm {
 	 * {@inheritDoc}
 	 */
 	public Request undo() {
-		throw new UnsupportedOperationException();
+		throw new CannotUndoException();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public Request redo() {
-		throw new UnsupportedOperationException();
+		throw new CannotRedoException();
 	}
 
 	/**
@@ -336,15 +316,7 @@ public class Jupiter implements Algorithm {
 	 * @return Returns the siteId.
 	 */
 	public int getSiteId() {
-		return siteId;
-	}
-
-	/**
-	 * @param siteId
-	 *            The siteId to set.
-	 */
-	public void setSiteId(int siteId) {
-		this.siteId = siteId;
+		return isClientSide() ? 1 : 0;
 	}
 
 	/**
@@ -382,4 +354,5 @@ public class Jupiter implements Algorithm {
 	public boolean canRedo() {
 		return false;
 	}
+	
 }

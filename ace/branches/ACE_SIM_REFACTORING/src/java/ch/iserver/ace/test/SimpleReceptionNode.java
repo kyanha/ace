@@ -35,6 +35,10 @@ import ch.iserver.ace.algorithm.Request;
  * </ul>
  */
 public class SimpleReceptionNode extends AbstractNode implements ReceptionNode {
+	
+	/** the request's participant. */
+	private String senderParticipantId;
+	
 	/** the request to process. */
 	private Request request;
 
@@ -45,16 +49,20 @@ public class SimpleReceptionNode extends AbstractNode implements ReceptionNode {
 	 * Creates a new reception node belonging to the given site and referencing
 	 * the given operation.
 	 * 
-	 * @param siteId
+	 * @param participantId
 	 *            the id of the site this node belongs to
 	 * @param ref
 	 *            the reference to the received operation
 	 */
-	public SimpleReceptionNode(String siteId, String ref) {
-		super(siteId);
+	public SimpleReceptionNode(String participantId, String ref) {
+		super(participantId);
 		this.ref = ref;
 	}
-
+	
+	public String getSenderParticipantId() {
+		return senderParticipantId;
+	}
+	
 	/**
 	 * Gets the reference to the operation that is to be received by this node.
 	 * 
@@ -68,7 +76,8 @@ public class SimpleReceptionNode extends AbstractNode implements ReceptionNode {
 	 * @see ch.iserver.ace.test.ReceptionNode#setRequest(
 	 *              ch.iserver.ace.algorithm.Request)
 	 */
-	public void setRequest(Request request) {
+	public void setRequest(String participantId, Request request) {
+		this.senderParticipantId = participantId;
 		this.request = request;
 	}
 
@@ -92,7 +101,7 @@ public class SimpleReceptionNode extends AbstractNode implements ReceptionNode {
 	}
 
 	public String toString() {
-		return getClass().getName() + "[site=" + getSiteId() + ",ref=" + ref
+		return getClass().getName() + "[site=" + getParticipantId() + ",ref=" + ref
 				+ "]";
 	}
 

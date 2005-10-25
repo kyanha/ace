@@ -42,11 +42,11 @@ public abstract class AbstractGenerationNode extends AbstractNode
 	/**
 	 * Creates a new node.
 	 * 
-	 * @param siteId the site id
+	 * @param participantId the site id
 	 * @param eventId the generation event id
 	 */
-	protected AbstractGenerationNode(String siteId, String eventId) {
-		super(siteId);
+	protected AbstractGenerationNode(String participantId, String eventId) {
+		super(participantId);
 		this.eventId = eventId;
 	}
 	

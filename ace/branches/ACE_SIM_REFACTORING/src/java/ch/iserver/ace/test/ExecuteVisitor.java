@@ -128,10 +128,10 @@ public class ExecuteVisitor implements NodeVisitor {
 	public void visit(StartNode node) {
 		LOG.info("visit: " + node);
 		String state = node.getState();
-		setDocument(node.getSiteId(), new DefaultDocument(state));
+		setDocument(node.getParticipantId(), new DefaultDocument(state));
 		Algorithm algorithm = getFactory().createAlgorithm(
-				Integer.parseInt(node.getSiteId()), null);
-		setAlgorithm(node.getSiteId(), algorithm);
+				Integer.parseInt(node.getParticipantId()), null);
+		setAlgorithm(node.getParticipantId(), algorithm);
 	}
 	
 	/**
@@ -145,13 +145,13 @@ public class ExecuteVisitor implements NodeVisitor {
 	public void visit(DoNode node) {
 		LOG.info("visit: " + node);
 		Operation op = node.getOperation();		
-		apply(node.getSiteId(), op);
-		Algorithm algo = getAlgorithm(node.getSiteId());
+		apply(node.getParticipantId(), op);
+		Algorithm algo = getAlgorithm(node.getParticipantId());
 		Request request = algo.generateRequest(op);
 		Iterator it = node.getRemoteSuccessors().iterator();
 		while (it.hasNext()) {
 			ReceptionNode remote = (ReceptionNode) it.next();
-			remote.setRequest(request);
+			remote.setRequest(node.getParticipantId(), request);
 		}
 	}
 
@@ -163,13 +163,13 @@ public class ExecuteVisitor implements NodeVisitor {
 	 */
 	public void visit(UndoNode node) {
 		LOG.info("visit: " + node);
-		Algorithm algo = getAlgorithm(node.getSiteId());
+		Algorithm algo = getAlgorithm(node.getParticipantId());
 		Request request = algo.undo();
-		apply(node.getSiteId(), request.getOperation());
+		apply(node.getParticipantId(), request.getOperation());
 		Iterator it = node.getRemoteSuccessors().iterator();
 		while (it.hasNext()) {
 			ReceptionNode remote = (ReceptionNode) it.next();
-			remote.setRequest(request);
+			remote.setRequest(node.getParticipantId(), request);
 		}
 	}
 
@@ -181,13 +181,13 @@ public class ExecuteVisitor implements NodeVisitor {
 	 */
 	public void visit(RedoNode node) {
 		LOG.info("visit: " + node);
-		Algorithm algo = getAlgorithm(node.getSiteId());
+		Algorithm algo = getAlgorithm(node.getParticipantId());
 		Request request = algo.redo();
-		apply(node.getSiteId(), request.getOperation());
+		apply(node.getParticipantId(), request.getOperation());
 		Iterator it = node.getRemoteSuccessors().iterator();
 		while (it.hasNext()) {
 			ReceptionNode remote = (ReceptionNode) it.next();
-			remote.setRequest(request);
+			remote.setRequest(node.getParticipantId(), request);
 		}
 	}
 
@@ -201,9 +201,9 @@ public class ExecuteVisitor implements NodeVisitor {
 	public void visit(ReceptionNode node) {
 		LOG.info("visit: " + node);
 		Request request = node.getRequest();
-		Algorithm algo = getAlgorithm(node.getSiteId());
+		Algorithm algo = getAlgorithm(node.getParticipantId());
 		Operation op = algo.receiveRequest(request);
-		apply(node.getSiteId(), op);
+		apply(node.getParticipantId(), op);
 	}
 
 	/**
@@ -224,7 +224,7 @@ public class ExecuteVisitor implements NodeVisitor {
 	 */
 	public void visit(VerificationNode node) {
 		LOG.info("visit: " + node);
-		verify(node.getSiteId(), node.getState());
+		verify(node.getParticipantId(), node.getState());
 	}
 
 	/**
@@ -240,7 +240,7 @@ public class ExecuteVisitor implements NodeVisitor {
 	 */
 	public void visit(EndNode node) {
 		LOG.info("visit: " + node);
-		verify(node.getSiteId(), node.getState());
+		verify(node.getParticipantId(), node.getState());
 	}
 
 	/**
@@ -277,6 +277,10 @@ public class ExecuteVisitor implements NodeVisitor {
 	}
 	
 	public void setDocument(String siteId, Document doc) {
+		if (documents.containsKey(siteId)) {
+			throw new IllegalStateException("document for site " + siteId
+							+ " already set");
+		}
 		documents.put(siteId, doc);
 	}
 	
@@ -305,6 +309,10 @@ public class ExecuteVisitor implements NodeVisitor {
 	 * @param algorithm the algorithm
 	 */
 	protected void setAlgorithm(String siteId, Algorithm algorithm) {
+		if (algorithms.containsKey(siteId)) {
+			throw new IllegalStateException("algorithm for site " + siteId
+							+ " already set");
+		}
 		algorithms.put(siteId, algorithm);
 	}
 

@@ -96,12 +96,11 @@ public class ExecuteVisitorTest extends TestCase {
 		algo.generateRequest(null);
 		algoCtrl.setReturnValue(req);
 				
-		r1.setRequest(req);
-		r2.setRequest(req);
+		r1.setRequest("0", req);
+		r2.setRequest("0", req);
 		
 		// create test object
 		ExecuteVisitor visitor = new ExecuteVisitor(factory);
-		visitor.setAlgorithm("0", algo);
 		
 		// replay
 		control.replay();
@@ -149,12 +148,11 @@ public class ExecuteVisitorTest extends TestCase {
 		algo.undo();
 		algoCtrl.setReturnValue(req);
 				
-		r1.setRequest(req);
-		r2.setRequest(req);
+		r1.setRequest("0", req);
+		r2.setRequest("0", req);
 		
 		// create test object
 		ExecuteVisitor visitor = new ExecuteVisitor(factory);
-		visitor.setAlgorithm("0", algo);
 		
 		// replay
 		control.replay();
@@ -203,12 +201,11 @@ public class ExecuteVisitorTest extends TestCase {
 		algo.redo();
 		algoCtrl.setReturnValue(req);
 				
-		r1.setRequest(req);
-		r2.setRequest(req);
+		r1.setRequest("0", req);
+		r2.setRequest("0", req);
 		
 		// create test object
 		ExecuteVisitor visitor = new ExecuteVisitor(factory);
-		visitor.setAlgorithm("0", algo);
 		
 		// replay
 		control.replay();
@@ -241,7 +238,6 @@ public class ExecuteVisitorTest extends TestCase {
 
 		// create test object
 		ExecuteVisitor visitor = new ExecuteVisitor(factory);
-		visitor.setAlgorithm("0", algo);
 		
 		// create nodes
 		StartNode start = new StartNode("0", "abc", 2);
@@ -262,7 +258,7 @@ public class ExecuteVisitorTest extends TestCase {
 		
 		// execute test
 		start.accept(visitor);
-		r.setRequest(req);
+		r.setRequest("0", req);
 		r.accept(visitor);
 		
 		// verify method calls
@@ -281,7 +277,6 @@ public class ExecuteVisitorTest extends TestCase {
 
 		// create test object
 		ExecuteVisitor visitor = new ExecuteVisitor(factory);
-		visitor.setAlgorithm("0", null);
 		
 		// create nodes
 		StartNode start = new StartNode("0", "abc", 2);
@@ -313,7 +308,6 @@ public class ExecuteVisitorTest extends TestCase {
 
 		// create test object
 		ExecuteVisitor visitor = new ExecuteVisitor(factory);
-		visitor.setAlgorithm("0", null);
 		
 		// create nodes
 		StartNode start = new StartNode("0", "", 2);
@@ -347,7 +341,6 @@ public class ExecuteVisitorTest extends TestCase {
 
 		// create test object
 		ExecuteVisitor visitor = new ExecuteVisitor(factory);
-		visitor.setAlgorithm("0", null);
 		
 		// create nodes
 		StartNode start = new StartNode("0", "abc", 2);
@@ -379,7 +372,6 @@ public class ExecuteVisitorTest extends TestCase {
 
 		// create test object
 		ExecuteVisitor visitor = new ExecuteVisitor(factory);
-		visitor.setAlgorithm("0", null);
 		
 		// create nodes
 		StartNode start = new StartNode("0", "", 2);

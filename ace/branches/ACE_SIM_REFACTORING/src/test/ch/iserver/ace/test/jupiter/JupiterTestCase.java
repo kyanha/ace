@@ -39,7 +39,7 @@ public abstract class JupiterTestCase extends AlgorithmTestCase implements
 	 */
 	public Algorithm createAlgorithm(int siteId, Object parameter) {
 		boolean isClient = ((Boolean) parameter).booleanValue();
-		Jupiter jupiter = new Jupiter(siteId, isClient);
+		Jupiter jupiter = new Jupiter(isClient);
 		jupiter.setInclusionTransformation(new GOTOInclusionTransformation());
 		return jupiter;
 	}

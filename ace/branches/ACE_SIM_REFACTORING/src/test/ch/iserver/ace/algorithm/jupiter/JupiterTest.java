@@ -22,7 +22,6 @@ package ch.iserver.ace.algorithm.jupiter;
 
 import junit.framework.TestCase;
 import ch.iserver.ace.text.DeleteOperation;
-import ch.iserver.ace.text.GOTOInclusionTransformation;
 import ch.iserver.ace.text.InsertOperation;
 
 public class JupiterTest extends TestCase {
@@ -31,7 +30,7 @@ public class JupiterTest extends TestCase {
 	 * Test method for 'ch.iserver.ace.algorithm.jupiter.Jupiter.receiveAwarenessInformation(AwarenessInformation)'
 	 */
 	public void testReceiveAwarenessInformation() {
-		Jupiter jupiter = new Jupiter(new GOTOInclusionTransformation(), 0, false);
+		Jupiter jupiter = new Jupiter(false);
 		jupiter.generateRequest(new InsertOperation(0, "a"));
 		jupiter.generateRequest(new InsertOperation(1, "b"));
 		jupiter.generateRequest(new DeleteOperation(0, "a"));
