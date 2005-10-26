@@ -103,7 +103,44 @@ public class JupiterRequest implements Request {
 	public JupiterVectorTime getJupiterVectorTime() {
 		return vectorTime;
 	}
-
+	
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		} else if (obj instanceof JupiterRequest) {
+			JupiterRequest request = (JupiterRequest) obj;
+			return siteId == request.siteId
+			       && nullSafeEquals(vectorTime, request.vectorTime)
+			       && nullSafeEquals(operation, request.operation);
+		} else {
+			return false;
+		}
+	}
+	
+	private boolean nullSafeEquals(Object a, Object b) {
+		System.out.println(a + " equals " + b);
+		if (a == b) {
+			return true;
+		} else if (a == null || b == null) {
+			return false;
+		} else {
+			return a.equals(b);
+		}
+	}
+	
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	public int hashCode() {
+		int hashCode = 13 * siteId;
+		hashCode += (vectorTime != null) ? 17 * vectorTime.hashCode() : 0;
+		hashCode += (operation != null) ? 29 * operation.hashCode() : 0;
+		return hashCode;
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 */
