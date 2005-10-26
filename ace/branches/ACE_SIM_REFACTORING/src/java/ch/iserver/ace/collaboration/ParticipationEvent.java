@@ -36,9 +36,9 @@ public class ParticipationEvent extends EventObject {
 	public static final int JOINED = 1;
 	
 	/**
-	 * Code specifying that the user leaved the session.
+	 * Code specifying that the user left the session.
 	 */
-	public static final int LEAVED = 2;
+	public static final int LEFT = 2;
 	
 	/**
 	 * Code specifying that the user was kicked from the session.
@@ -70,7 +70,7 @@ public class ParticipationEvent extends EventObject {
 			throw new IllegalArgumentException("participant cannot be null");
 		}
 		if (reason < 1 || reason > 3) {
-			throw new IllegalArgumentException("reason must be one of JOINED, LEAVED, or KICKED");
+			throw new IllegalArgumentException("reason must be one of JOINED, LEFT, or KICKED");
 		}
 		this.session = source;
 		this.participant = participant;
