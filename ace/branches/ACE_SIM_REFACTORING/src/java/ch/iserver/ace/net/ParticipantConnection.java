@@ -32,6 +32,10 @@ import ch.iserver.ace.collaboration.Participant;
  */
 public interface ParticipantConnection {
 	
+	void setParticipantId(int participantId);
+	
+	RemoteUserProxy getUser();
+		
 	/**
 	 * Sends the given <var>document</var> to the participant. This method
 	 * is typically called after a user joins a session to send the
@@ -67,14 +71,14 @@ public interface ParticipantConnection {
 	void sendParticipantJoined(Participant participant);
 	
 	/**
-	 * Sends a participant leaved message to the participant represented by
+	 * Sends a participant left message to the participant represented by
 	 * this ParticipantConnection.
 	 * 
 	 * @param participantId the participant id of the participant that left 
 	 *                      the session
 	 * @param reason the reason code why the participant left
 	 */
-	void sendParticipantLeaved(int participantId, int reason);
+	void sendParticipantLeft(int participantId, int reason);
 	
 	/**
 	 * Closes the connection to the participant.

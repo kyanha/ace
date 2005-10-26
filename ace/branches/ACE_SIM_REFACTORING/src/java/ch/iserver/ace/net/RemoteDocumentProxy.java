@@ -21,6 +21,8 @@
 
 package ch.iserver.ace.net;
 
+import ch.iserver.ace.DocumentDetails;
+
 /**
  * A RemoteDocumentProxy is a network layer object that represents a document
  * shared by another user. The {@link #join(SessionConnectionCallback)} method
@@ -38,11 +40,11 @@ public interface RemoteDocumentProxy {
 	String getId();
 	
 	/**
-	 * Gets the title of the remote document.
+	 * Gets display information about the remote document.
 	 * 
-	 * @return the title of the remote document
+	 * @return a DocumentDetails object
 	 */
-	String getTitle();
+	DocumentDetails getDocumentDetails();
 	
 	/**
 	 * Gets the RemoteUserProxy of the publisher of the document.

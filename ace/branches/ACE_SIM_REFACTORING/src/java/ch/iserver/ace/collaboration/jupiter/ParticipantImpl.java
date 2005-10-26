@@ -19,40 +19,44 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.collaboration.jupiter.server;
+package ch.iserver.ace.collaboration.jupiter;
+
+import ch.iserver.ace.collaboration.Participant;
+import ch.iserver.ace.collaboration.RemoteUser;
+import ch.iserver.ace.util.ParameterValidator;
 
 /**
  *
  */
-abstract class Worker extends Thread {
+public class ParticipantImpl implements Participant {
+
+	private final RemoteUser user;
 	
-	private boolean stop;
+	private final int participantId;
 	
-	protected Worker(String name) {
-		super(name);
+	public ParticipantImpl(int participantId, RemoteUser user) {
+		ParameterValidator.notNull("user", user);
+		this.user = user;
+		this.participantId = participantId;
 	}
 	
-	public void kill() {
-		stop = true;
-		interrupt();
+	/**
+	 * @see ch.iserver.ace.collaboration.Participant#getUser()
+	 */
+	public RemoteUser getUser() {
+		return user;
 	}
-		
-	public void run() {
-		try {
-			while (!stop) {
-				try {
-					doWork();
-				} catch (InterruptedException e) {
-					throw e;
-				} catch (Exception e) {
-					System.err.println(e.getMessage());
-				}
-			}
-		} catch (InterruptedException e) {
-			// TODO: log interruption?
-		}
+
+	/**
+	 * @see ch.iserver.ace.collaboration.Participant#getParticipantId()
+	 */
+	public int getParticipantId() {
+		return participantId;
 	}
 	
-	protected abstract void doWork() throws InterruptedException;
-	
+	public String toString() {
+		return "[" + participantId
+		        + ",user=" + user + "]";
+	}
+
 }

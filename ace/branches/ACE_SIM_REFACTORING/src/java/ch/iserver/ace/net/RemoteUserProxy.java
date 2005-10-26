@@ -23,6 +23,8 @@ package ch.iserver.ace.net;
 
 import java.util.Collection;
 
+import ch.iserver.ace.UserDetails;
+
 
 /**
  * A RemoteUserProxy is a network layer representation of a remote user. It
@@ -38,11 +40,11 @@ public interface RemoteUserProxy {
 	String getId();
 	
 	/**
-	 * Gets the display name of this remote user.
-	 *
-	 * @return the display name of this user
+	 * Gets the display information about the user.
+	 * 
+	 * @return the UserDetails information
 	 */
-	String getDisplayName();
+	UserDetails getUserDetails();
 	
 	/**
 	 * Retrieves a collection of documents shared by the represented remote

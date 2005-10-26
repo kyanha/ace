@@ -21,16 +21,20 @@
 
 package ch.iserver.ace.collaboration.jupiter.server;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.jupiter.Jupiter;
+import ch.iserver.ace.collaboration.Participant;
+import ch.iserver.ace.collaboration.ParticipationEvent;
+import ch.iserver.ace.collaboration.jupiter.ParticipantImpl;
+import ch.iserver.ace.collaboration.jupiter.RemoteUserImpl;
 import ch.iserver.ace.net.DocumentServerLogic;
 import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.net.ParticipantPort;
+import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.util.BlockingQueue;
 import ch.iserver.ace.util.LinkedBlockingQueue;
 import ch.iserver.ace.util.Lock;
@@ -48,16 +52,16 @@ class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 	
 	private final BlockingQueue serializerQueue;
 	
-	private final Map ports = new HashMap();
+	private final HashMap ports = new HashMap();
 	
-	private final Map proxies = new HashMap();
+	private final HashMap proxies = new HashMap();
 	
-	private final Map connections = new HashMap();
+	private final HashMap connections = new HashMap();
 	
 	private final BlockingQueue dispatcherQueue;
 	
 	private final Dispatcher dispatcher;
-	
+		
 	public ServerLogicImpl(Lock lock) {
 		this.nextParticipantId = 0;
 		this.forwarder = new ForwarderImpl(this);
@@ -74,6 +78,11 @@ class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 		dispatcher.start();
 	}
 	
+	public void dispose() throws InterruptedException {
+		serializer.kill();
+		dispatcher.kill();
+	}
+	
 	private synchronized int nextParticipantId() {
 		return ++nextParticipantId;
 	}
@@ -82,39 +91,80 @@ class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 		return serializerQueue;
 	}
 	
-	protected void addParticipant(ParticipantPort port, ParticipantProxy proxy, ParticipantConnection connection) {
+	protected synchronized void addParticipant(ParticipantPort port, ParticipantProxy proxy, ParticipantConnection connection) {
 		Integer key = new Integer(port.getParticipantId());
 		ports.put(key, port);
 		proxies.put(key, proxy);
 		connections.put(key, connection);
 	}
 	
-	public Iterator getParticipantProxies() {
-		Collection result;
-		synchronized (proxies) {
-			Map clone = new HashMap(proxies);
-			result = clone.values();
-		}
-		return result.iterator();
+	public synchronized Iterator getParticipantProxies() {
+		Map clone = (Map) proxies.clone();
+		return clone.values().iterator();
+	}
+	
+	protected synchronized Map getParticipantConnections() {
+		return (Map) connections.clone();
+	}
+	
+	private synchronized ParticipantConnection getParticipantConnection(int id) {
+		return (ParticipantConnection) connections.get(new Integer(id));
 	}
 	
 	/**
 	 * @see ch.iserver.ace.net.DocumentServerLogic#join(ch.iserver.ace.net.ParticipantConnection)
 	 */
-	public ParticipantPort join(ParticipantConnection connection) {
+	public synchronized ParticipantPort join(ParticipantConnection connection) {
+		System.err.println("join " + connection);
 		Algorithm algorithm = new Jupiter(false);
 		int participantId = nextParticipantId();
+		connection.setParticipantId(participantId);
 		ParticipantPort port = new ParticipantPortImpl(participantId, algorithm, getSerializerQueue());
 		ParticipantProxy proxy = new ParticipantProxyImpl(participantId, dispatcherQueue, algorithm, connection);
+		notifyOthersAboutJoin(createParticipant(participantId, connection.getUser()));
 		addParticipant(port, proxy, connection);
 		return port;
+	}
+	
+	protected Participant createParticipant(int participantId, RemoteUserProxy user) {
+		return new ParticipantImpl(participantId, new RemoteUserImpl(user));
+	}
+	
+	protected void notifyOthersAboutJoin(Participant participant) {
+		Map map = getParticipantConnections();
+		Iterator it = map.keySet().iterator();
+		while (it.hasNext()) {
+			Integer key = (Integer) it.next();
+			ParticipantConnection connection = (ParticipantConnection) map.get(key);
+			if (key.intValue() != participant.getParticipantId()) {
+				connection.sendParticipantJoined(participant);
+			}
+		}
+	}
+
+	protected synchronized void notifyOthersAboutLeave(int participantId) {
+		Iterator it = connections.keySet().iterator();
+		while (it.hasNext()) {
+			Integer key = (Integer) it.next();
+			ParticipantConnection connection = (ParticipantConnection) connections.get(key);
+			if (key.intValue() != participantId) {
+				connection.sendParticipantLeft(participantId, ParticipationEvent.LEFT);
+			}
+		}
 	}
 
 	/**
 	 * @see ch.iserver.ace.net.DocumentServerLogic#leave(int)
 	 */
-	public void leave(int participantId) {
-		// TODO: implement leave
+	public synchronized void leave(int participantId) {
+		System.err.println("leave " + participantId);
+		Integer key = new Integer(participantId);
+		ParticipantConnection connection = getParticipantConnection(participantId);
+		connection.close();
+		notifyOthersAboutLeave(participantId);
+		connections.remove(key);
+		proxies.remove(key);
+		ports.remove(key);
 	}
 
 }
