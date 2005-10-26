@@ -21,6 +21,8 @@
 
 package ch.iserver.ace.collaboration;
 
+import java.net.InetAddress;
+
 import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.net.PortableDocument;
 
@@ -85,5 +87,16 @@ public interface CollaborationService {
 	 * @return a session for the publisher itself
 	 */
 	PublishedSession publish(PortableDocument document, SessionCallback controller);
-
+	
+	/**
+	 * Initiates an explicit discovery of a user. The network layer tries to 
+	 * contact the given host on the given port. The result is communicated 
+	 * to the DiscoveryCallback objects.
+	 * 
+	 * @param callback the DiscoveryCallback to be notified
+	 * @param addr the target address
+	 * @param port the target port
+	 */	
+	void discoverUser(DiscoveryCallback callback, InetAddress addr, int port);
+	
 }

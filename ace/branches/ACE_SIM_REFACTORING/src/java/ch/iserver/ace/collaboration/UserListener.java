@@ -56,5 +56,5 @@ public interface UserListener extends EventListener {
 	 * @param user the discarded RemoteUser
 	 */	
 	void userDiscarded(RemoteUser user);
-	
+		
 }
