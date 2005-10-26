@@ -29,8 +29,10 @@ import javax.swing.undo.CannotUndoException;
 
 import org.apache.log4j.Logger;
 
+import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.Algorithm;
+import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.InclusionTransformation;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.Timestamp;
@@ -96,6 +98,14 @@ public class Jupiter implements Algorithm {
 		vectorTime.incrementLocalOperationCount();
 
 		return req;
+	}
+	
+	public CaretUpdateMessage generateCaretUpdateMessage(CaretUpdate update) {
+		CaretUpdateMessage msg = new CaretUpdateMessage(
+						getSiteId(),
+						(JupiterVectorTime) vectorTime.clone(),
+						update);
+		return msg;
 	}
 
 	/**
