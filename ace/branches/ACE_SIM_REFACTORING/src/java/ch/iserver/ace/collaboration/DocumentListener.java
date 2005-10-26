@@ -48,7 +48,7 @@ public interface DocumentListener extends EventListener {
 	void documentDetailsChanged(RemoteDocument document);
 	
 	/**
-	 * Notifies the listener that a RemoteDocument was discarded, i.e. it is
+	 * Notifies the listener that a RemoteDocument was discarded, that is it is
 	 * no longer available.
  	 * Do not call any methods on this object that make network calls (see
 	 * documentation of RemoteDocument for information, which methods make network
