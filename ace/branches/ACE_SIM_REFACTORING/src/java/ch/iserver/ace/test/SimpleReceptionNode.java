@@ -73,8 +73,7 @@ public class SimpleReceptionNode extends AbstractNode implements ReceptionNode {
 	}
 
 	/**
-	 * @see ch.iserver.ace.test.ReceptionNode#setRequest(
-	 *              ch.iserver.ace.algorithm.Request)
+	 * @see ch.iserver.ace.test.ReceptionNode#setRequest(String, Request)
 	 */
 	public void setRequest(String participantId, Request request) {
 		this.senderParticipantId = participantId;

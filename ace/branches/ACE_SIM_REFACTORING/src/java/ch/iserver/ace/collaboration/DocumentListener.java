@@ -24,14 +24,38 @@ package ch.iserver.ace.collaboration;
 import java.util.EventListener;
 
 /**
- *
+ * Discovery listener interface for documents. A registered DocumentListener
+ * is notified about document related discoveries. To receive notifications,
+ * the DocumentListener must be registered with the
+ * {@link ch.iserver.ace.collaboration.CollaborationService#publish(PortableDocument, SessionCallback)}
+ * method.
  */
 public interface DocumentListener extends EventListener {
 	
+	/**
+	 * Notifies the listener that a new RemoteDocument was discovered.
+	 * 
+	 * @param document the discovered document
+	 */
 	void documentDiscovered(RemoteDocument document);
 	
+	/**
+	 * Notifies the listener that the details of a RemoteDocument have been
+	 * changed.
+	 * 
+	 * @param document the document whose details changed
+	 */
 	void documentDetailsChanged(RemoteDocument document);
 	
+	/**
+	 * Notifies the listener that a RemoteDocument was discarded, i.e. it is
+	 * no longer available.
+ 	 * Do not call any methods on this object that make network calls (see
+	 * documentation of RemoteDocument for information, which methods make network
+	 * calls).
+	 * 
+	 * @param document the discarded document
+	 */
 	void documentDiscarded(RemoteDocument document);
 	
 }

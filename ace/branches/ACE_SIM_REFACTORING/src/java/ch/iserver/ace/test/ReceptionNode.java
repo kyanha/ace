@@ -24,7 +24,7 @@ import ch.iserver.ace.algorithm.Request;
 
 /**
  * This interface represents a node that receives requests. The
- * requests are received by a call to {@link #setRequest(Request)}.
+ * requests are received by a call to {@link #setRequest(String, Request)}.
  */
 public interface ReceptionNode extends Node {
 

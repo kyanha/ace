@@ -24,20 +24,26 @@ package ch.iserver.ace.collaboration;
 import java.util.EventListener;
 
 /**
- *
+ * Discovery listener interface for users. Registered UserListener objects
+ * are notified about user related discoveries. UserListener objects must
+ * be registered with the 
+ * {@link ch.iserver.ace.collaboration.CollaborationService#addUserListener(UserListener)}
+ * method.
  */
 public interface UserListener extends EventListener {
 	
 	/**
-	 * 
-	 * @param user
+	 * Notifies the listener that a new RemoteUser is discovered.
+	 *  
+	 * @param user the discovered user
 	 */
 	void userDiscovered(RemoteUser user);
 	
 	/**
+	 * Notifies the listener that the given RemoteUser's user details
+	 * changed.
 	 * 
-	 * @param user
-	 * @param details
+	 * @param user the user whose user details changed
 	 */
 	void userDetailsChanged(RemoteUser user);
 	
