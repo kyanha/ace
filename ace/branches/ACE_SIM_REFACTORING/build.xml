@@ -11,6 +11,9 @@
 	<property name="src.dir" value="src"/>
 	<property name="src.test" value="${src.dir}/test"/>
 	
+	<artifact:remoteRepository id="remote.repository.ace" url="http://ace.iserver.ch/maven2/" />
+	<artifact:remoteRepository id="remote.repository.maven" url="http://repo1.maven.org/maven2"/>
+	
 	<artifact:dependencies pathId="dependency.classpath">
 		<dependency groupId="jdom" 
 		            artifactId="jdom" 
@@ -22,6 +25,9 @@
 		            artifactId="commons-logging" 
 		            version="1.0.4"
 		            scope="runtime"/>
+		<dependency groupId="glazedlists"
+		            artifactId="glazedlists"
+		            version="1.0.0"/>
 		<dependency groupId="junit" 
 		            artifactId="junit" 
 		            version="3.8.1"/>
@@ -37,6 +43,8 @@
 		            artifactId="xercesImpl" 
 		            version="2.6.2"
 		            scope="runtime"/>
+		<remoteRepository refid="remote.repository.maven" />
+		<remoteRepository refid="remote.repository.ace" />
 	</artifact:dependencies>
 	
 	<artifact:dependencies pathId="dependency.checkstyle">
