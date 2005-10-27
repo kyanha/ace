@@ -24,7 +24,6 @@ package ch.iserver.ace.algorithm;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 
-import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.Operation;
 
 /**
@@ -34,6 +33,10 @@ import ch.iserver.ace.Operation;
  */
 public interface Algorithm {
 
+	int getSiteId();
+	
+	Timestamp getTimestamp();
+	
 	/**
 	 * Checks whether an undo is possible at the moment. If this method returns
 	 * true, a subsequent call to undo must succeed.
@@ -78,9 +81,7 @@ public interface Algorithm {
 	 * @see Request
 	 */
 	public Request generateRequest(Operation op);
-	
-	public CaretUpdateMessage generateCaretUpdateMessage(CaretUpdate update);
-	
+		
 	/**
 	 * Receives a request from a remote site. The request must be transformed
 	 * and the resulting operation is returned.

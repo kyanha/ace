@@ -23,10 +23,20 @@ package ch.iserver.ace.collaboration.jupiter.server;
 
 import java.util.Iterator;
 
+import ch.iserver.ace.DocumentDetails;
+import ch.iserver.ace.collaboration.Participant;
+import ch.iserver.ace.net.DocumentServerLogic;
+
 /**
  *
  */
-interface ServerLogic {
+public interface ServerLogic extends DocumentServerLogic {
+		
+	void setDocumentDetails(DocumentDetails details);
+	
+	void kick(Participant participant);
+	
+	void shutdown();
 	
 	Iterator getParticipantProxies();
 	

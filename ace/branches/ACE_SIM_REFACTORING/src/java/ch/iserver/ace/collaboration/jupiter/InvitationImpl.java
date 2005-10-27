@@ -21,61 +21,57 @@
 
 package ch.iserver.ace.collaboration.jupiter;
 
-import ch.iserver.ace.DocumentDetails;
-import ch.iserver.ace.collaboration.RemoteDocument;
+import ch.iserver.ace.collaboration.Invitation;
 import ch.iserver.ace.collaboration.RemoteUser;
 import ch.iserver.ace.collaboration.Session;
 import ch.iserver.ace.collaboration.SessionCallback;
-import ch.iserver.ace.net.RemoteDocumentProxy;
+import ch.iserver.ace.net.InvitationProxy;
 import ch.iserver.ace.net.SessionConnection;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
  *
  */
-public class RemoteDocumentImpl implements RemoteDocument {
+class InvitationImpl implements Invitation {
 	
-	private final RemoteDocumentProxy proxy;
+	private final InvitationProxy proxy;
 	
-	private RemoteUser publisher;
+	private RemoteUser inviter;
 	
-	public RemoteDocumentImpl(RemoteDocumentProxy proxy) {
+	InvitationImpl(InvitationProxy proxy) {
 		ParameterValidator.notNull("proxy", proxy);
 		this.proxy = proxy;
 	}
 	
-	/**
-	 * @see ch.iserver.ace.collaboration.RemoteDocument#getId()
-	 */
-	public String getId() {
-		return proxy.getId();
+	protected InvitationProxy getProxy() {
+		return proxy;
 	}
-
+	
 	/**
-	 * @see ch.iserver.ace.collaboration.RemoteDocument#getDocumentDetails()
+	 * @see ch.iserver.ace.collaboration.Invitation#getInviter()
 	 */
-	public DocumentDetails getDocumentDetails() {
-		return proxy.getDocumentDetails();
-	}
-
-	/**
-	 * @see ch.iserver.ace.collaboration.RemoteDocument#getPublisher()
-	 */
-	public RemoteUser getPublisher() {
-		if (publisher == null) {
-			publisher = new RemoteUserImpl(proxy.getPublisher());
+	public RemoteUser getInviter() {
+		if (inviter == null) {
+			inviter = new RemoteUserImpl(getProxy().getInviter());
 		}
-		return publisher;
+		return inviter;
 	}
 
 	/**
-	 * @see ch.iserver.ace.collaboration.RemoteDocument#join(ch.iserver.ace.collaboration.SessionCallback)
+	 * @see ch.iserver.ace.collaboration.Invitation#accept(ch.iserver.ace.collaboration.SessionCallback)
 	 */
-	public Session join(SessionCallback callback) {
+	public Session accept(SessionCallback callback) {
 		SessionImpl session = new SessionImpl(callback);
-		SessionConnection connection = proxy.join(session);
+		SessionConnection connection = getProxy().accept(session);
 		session.setConnection(connection);
 		return session;
+	}
+
+	/**
+	 * @see ch.iserver.ace.collaboration.Invitation#reject()
+	 */
+	public void reject() {
+		getProxy().reject();
 	}
 
 }

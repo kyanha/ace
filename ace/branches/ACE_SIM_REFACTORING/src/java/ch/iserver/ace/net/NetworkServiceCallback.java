@@ -38,14 +38,21 @@ public interface NetworkServiceCallback {
 	void userDiscovered(RemoteUserProxy proxy);
 	
 	/**
+	 * Notifies the callback that the user details of the given 
+	 * RemoteUserProxy changed.
+	 * 
+	 * @param proxy the proxy for the user
+	 */
+	void userDetailsChanged(RemoteUserProxy proxy);
+	
+	/**
 	 * Notifies the callback that a previously present user disappeared from
 	 * the network.
 	 * 
-	 * @param proxy 
-	 * @todo passed in proxy is useless (i.e. we cannot communicate with it)
+	 * @param proxy the proxy for the user
 	 */
 	void userDiscarded(RemoteUserProxy proxy);
-	
+		
 	/**
 	 * Notifies the callback that a new document was discovered on the network.
 	 * The passed in <var>proxy</var> can be used to communicate with that
@@ -56,11 +63,18 @@ public interface NetworkServiceCallback {
 	void documentDiscovered(RemoteDocumentProxy proxy);
 	
 	/**
+	 * Notifies the callback that the document details of the given
+	 * document changed.
+	 * 
+	 * @param proxy the proxy for the document
+	 */
+	void documentDetailsChanged(RemoteDocumentProxy proxy);
+	
+	/**
 	 * Notifies the callback that a previously present document disappeared
 	 * from the network.
 	 * 
-	 * @param proxy
-	 * @todo passed in proxy is useless (i.e. we cannot communicate with it)
+	 * @param proxy the proxy for the document
 	 */
 	void documentDiscarded(RemoteDocumentProxy proxy);
 	

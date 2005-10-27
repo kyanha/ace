@@ -22,31 +22,12 @@
 package ch.iserver.ace.net;
 
 /**
- * This interface represents the view of the network layer on the object that
- * implements the logic functionality of a document server.
+ *
  */
-public interface DocumentServerLogic {
+public interface DiscoveryNetworkCallback {
+
+	void userDiscoveryFailed(int reason, String message);
 	
-	/**
-	 * 
-	 * @return
-	 */
-	ParticipantPort getPublisherPort();
+	void userDiscoverySucceeded(RemoteUserProxy proxy);
 	
-	/**
-	 * Join this editing session. The passed in proxy is used by the server
-	 * to communicate with the joining user.
-	 *
-	 * @param connection a connection for communicating with the joining user
-	 * @return the port for the network layer to communicate with the logic
-	 */
-	ParticipantPort join(ParticipantConnection connection);
-	
-	/**
-	 * Notifies the server that the specified user leaves the editing session.
-	 *
-	 * @param participantId the participant id of the leaving user
-	 */
-	void leave(int participantId);
-		
 }

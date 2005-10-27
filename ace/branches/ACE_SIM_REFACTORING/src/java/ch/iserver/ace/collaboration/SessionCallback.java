@@ -39,6 +39,14 @@ public interface SessionCallback {
 	void setDocument(PortableDocument doc);
 	
 	/**
+	 * Retrieves the document content. This method is only called on
+	 * published sessions.
+	 * 
+	 * @return the document content
+	 */	
+	PortableDocument getDocument();
+	
+	/**
 	 * Receives an operation from the given participant.
 	 * 
 	 * @param participant the participant that sent the operation

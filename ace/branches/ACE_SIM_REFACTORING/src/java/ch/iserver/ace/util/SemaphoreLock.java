@@ -27,23 +27,31 @@ package ch.iserver.ace.util;
 public class SemaphoreLock implements Lock {
 	
 	private final Semaphore semaphore;
+
+	private Thread owner;
 	
 	public SemaphoreLock() {
 		this.semaphore = new CountingSemaphore(1);
 	}
 	
+	public boolean isOwner(Thread thread) {
+		return thread == owner;
+	}
+	
 	/**
 	 * @see ch.iserver.ace.util.Lock#lock()
 	 */
-	public void lock() throws InterruptedException {
+	public synchronized void lock() throws InterruptedException {
 		semaphore.acquire();
+		owner = Thread.currentThread();
 	}
 
 	/**
 	 * @see ch.iserver.ace.util.Lock#unlock()
 	 */
-	public void unlock() {
+	public synchronized void unlock() {
 		semaphore.release();
+		owner = null;
 	}
 
 }

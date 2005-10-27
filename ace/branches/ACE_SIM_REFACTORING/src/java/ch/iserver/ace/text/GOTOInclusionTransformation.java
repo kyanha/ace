@@ -108,8 +108,7 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
     			return index - ((DeleteOperation) op).getTextLength();
     		}
     	} else {
-    		// TODO: use illegal argument exception instead
-    		throw new InvalidParameterException();
+    		throw new IllegalArgumentException("Unsupported Operation type: " + op);
     	}
     }
     

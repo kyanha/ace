@@ -26,6 +26,8 @@ import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
+import ch.iserver.ace.collaboration.jupiter.AlgorithmWrapper;
+import ch.iserver.ace.collaboration.jupiter.AlgorithmWrapperImpl;
 import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.util.BlockingQueue;
 import ch.iserver.ace.util.ParameterValidator;
@@ -36,7 +38,7 @@ class ParticipantProxyImpl implements ParticipantProxy {
 	
 	private final BlockingQueue queue;
 	
-	private final Algorithm algorithm;
+	private final AlgorithmWrapper algorithm;
 	
 	private final ParticipantConnection connection;
 	
@@ -48,11 +50,11 @@ class ParticipantProxyImpl implements ParticipantProxy {
 		ParameterValidator.notNull("connection", connection);
 		this.participantId = participantId;
 		this.queue = queue;
-		this.algorithm = algorithm;
+		this.algorithm = new AlgorithmWrapperImpl(algorithm);
 		this.connection = connection;
 	}
 	
-	protected Algorithm getAlgorithm() {
+	protected AlgorithmWrapper getAlgorithm() {
 		return algorithm;
 	}
 	
@@ -62,7 +64,7 @@ class ParticipantProxyImpl implements ParticipantProxy {
 	
 	public void sendCaretUpdate(int participantId, CaretUpdate update) {
 		if (this.participantId != participantId) {
-			Algorithm algorithm = getAlgorithm();
+			AlgorithmWrapper algorithm = getAlgorithm();
 			CaretUpdateMessage message = algorithm.generateCaretUpdateMessage(update);
 			ParticipantConnection connection = getConnection();
 			DispatcherCommand command = new CaretUpdateDispatcherCommand(connection, participantId, message);
@@ -72,7 +74,7 @@ class ParticipantProxyImpl implements ParticipantProxy {
 	
 	public void sendOperation(int participantId, Operation operation) {
 		if (this.participantId != participantId) {
-			Algorithm algorithm = getAlgorithm();
+			AlgorithmWrapper algorithm = getAlgorithm();
 			Request request = algorithm.generateRequest(operation);
 			ParticipantConnection connection = getConnection();
 			DispatcherCommand command = new RequestDispatcherCommand(connection, participantId, request);

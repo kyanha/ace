@@ -78,11 +78,15 @@ public final class SessionTemplate {
 	 * @param callback the SessionTemplateCallback to execute
 	 */
 	public void execute(SessionTemplateCallback callback) {
-		session.lock();
 		try {
-			callback.execute(session);
-		} finally {
-			session.unlock();
+			session.lock();
+			try {
+				callback.execute(session);
+			} finally {
+				session.unlock();
+			}
+		} catch (InterruptedException e) {
+			// TODO: correct exception
 		}
 	}
 	

@@ -28,6 +28,10 @@ package ch.iserver.ace;
  */
 public class CaretUpdate  {
 	
+	public static final int DOT = 0;
+	
+	public static final int MARK = 1;
+	
 	/**
 	 * Int array keeping dot and mark values.
 	 */

@@ -53,7 +53,7 @@ public interface CollaborationService {
 	 *
 	 * @param l the listener to remove
 	 */
-	void removeDiscoveryListener(UserListener l);
+	void removeUserListener(UserListener l);
 	
 	/**
 	 * Adds a document listener to the list of registered listeners.

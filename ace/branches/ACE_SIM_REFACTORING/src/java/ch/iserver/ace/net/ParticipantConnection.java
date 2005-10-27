@@ -81,6 +81,12 @@ public interface ParticipantConnection {
 	void sendParticipantLeft(int participantId, int reason);
 	
 	/**
+	 * Sends a kicked message to the participant represented by this
+	 * ParticipatantConnection.
+	 */
+	void sendKicked();
+	
+	/**
 	 * Closes the connection to the participant.
 	 */
 	void close();

@@ -19,34 +19,34 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.net;
+package ch.iserver.ace.collaboration.jupiter;
+
+import ch.iserver.ace.collaboration.Invitation;
+import ch.iserver.ace.collaboration.InvitationCallback;
 
 /**
- * This interface represents the view of the network layer on the object that
- * implements the logic functionality of a document server.
+ * Null object pattern implementation of an InvitationCallback.
  */
-public interface DocumentServerLogic {
+final class NullInvitationCallback implements InvitationCallback {
+	
+	private static InvitationCallback instance;
+	
+	private NullInvitationCallback() {
+		// hidden constructor
+	}
+	
+	public static synchronized InvitationCallback getInstance() {
+		if (instance == null) {
+			instance = new NullInvitationCallback();
+		}
+		return instance;
+	}
 	
 	/**
-	 * 
-	 * @return
+	 * @see ch.iserver.ace.collaboration.InvitationCallback#invitationReceived(ch.iserver.ace.collaboration.Invitation)
 	 */
-	ParticipantPort getPublisherPort();
-	
-	/**
-	 * Join this editing session. The passed in proxy is used by the server
-	 * to communicate with the joining user.
-	 *
-	 * @param connection a connection for communicating with the joining user
-	 * @return the port for the network layer to communicate with the logic
-	 */
-	ParticipantPort join(ParticipantConnection connection);
-	
-	/**
-	 * Notifies the server that the specified user leaves the editing session.
-	 *
-	 * @param participantId the participant id of the leaving user
-	 */
-	void leave(int participantId);
-		
+	public void invitationReceived(Invitation event) {
+		// ignore invitations
+	}
+
 }

@@ -328,16 +328,11 @@ public class Jupiter implements Algorithm {
 	public int getSiteId() {
 		return isClientSide() ? 1 : 0;
 	}
-
-	/**
-	 * Originally intended for test purpose.
-	 * 
-	 * @return the algo's vector time.
-	 */
-	public JupiterVectorTime getVectorTime() {
-		return vectorTime;
+	
+	public synchronized Timestamp getTimestamp() {
+		return (Timestamp) vectorTime.clone();
 	}
-
+	
 	/**
 	 * Checks if this algorithm locates client side.
 	 * 

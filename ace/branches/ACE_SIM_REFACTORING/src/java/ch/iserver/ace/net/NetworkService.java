@@ -21,6 +21,8 @@
 
 package ch.iserver.ace.net;
 
+import java.net.InetAddress;
+
 import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.algorithm.TimestampFactory;
 
@@ -70,5 +72,16 @@ public interface NetworkService {
 	 *         the network layer server functionality
 	 */
 	DocumentServer publish(DocumentServerLogic logic);
+	
+	/**
+	 * Initiates an explicit discovery of a user. The network layer tries to 
+	 * contact the given host on the given port. The result is communicated 
+	 * to the DiscoveryNetworkCallback objects.
+	 * 
+	 * @param callback the DiscoveryNetworkCallback to be notified
+	 * @param addr the target address
+	 * @param port the target port
+	 */	
+	void discoverUser(DiscoveryNetworkCallback callback, InetAddress addr, int port);
 	
 }

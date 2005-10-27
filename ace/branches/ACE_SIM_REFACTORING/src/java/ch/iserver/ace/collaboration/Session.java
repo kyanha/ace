@@ -41,8 +41,10 @@ public interface Session {
 	 * Locks the session's logic so that only the calling thread can access
 	 * the concurrency sensitive parts of the logic. This method must be
 	 * called before any send call is invoked.
+	 * 
+	 * @throws InterruptedException
 	 */
-	void lock();
+	void lock() throws InterruptedException;
 	
 	/**
 	 * Unlocks the session's logic so that other threads may gain access
@@ -89,6 +91,8 @@ public interface Session {
 	 * @return a read-only set of participants
 	 */
 	Set getParticipants();
+	
+	Participant getParticipant(int participantId);
 	
 	/**
 	 * Registers <var>listener</var> to receive ParticipationEvents. They

@@ -25,24 +25,29 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.jupiter.Jupiter;
 import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.collaboration.ParticipationEvent;
 import ch.iserver.ace.collaboration.jupiter.ParticipantImpl;
 import ch.iserver.ace.collaboration.jupiter.RemoteUserImpl;
+import ch.iserver.ace.net.DocumentServer;
 import ch.iserver.ace.net.DocumentServerLogic;
 import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.net.ParticipantPort;
+import ch.iserver.ace.net.PortableDocument;
+import ch.iserver.ace.net.PublisherConnection;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.util.BlockingQueue;
 import ch.iserver.ace.util.LinkedBlockingQueue;
 import ch.iserver.ace.util.Lock;
+import ch.iserver.ace.util.ParameterValidator;
 
 /**
  *
  */
-class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
+public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 	
 	private int nextParticipantId;
 	
@@ -61,16 +66,51 @@ class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 	private final BlockingQueue dispatcherQueue;
 	
 	private final Dispatcher dispatcher;
+	
+	private DocumentServer server;
+	
+	private final Lock lock;
+	
+	private final ParticipantPort publisherPort;
+	
+	private final PublisherConnection publisherConnection;
 		
-	public ServerLogicImpl(Lock lock) {
+	public ServerLogicImpl(Lock lock, PublisherConnection connection) {
+		ParameterValidator.notNull("lock", lock);
+		ParameterValidator.notNull("connection", connection);
+		
 		this.nextParticipantId = 0;
 		this.forwarder = new ForwarderImpl(this);
+		
+		this.lock = lock;
 		
 		this.serializerQueue = new LinkedBlockingQueue();
 		this.serializer = new Serializer(serializerQueue, lock, forwarder);
 		
 		this.dispatcherQueue = new LinkedBlockingQueue();
 		this.dispatcher = new Dispatcher(dispatcherQueue);
+		
+		this.publisherPort = createPublisherPort(connection);
+		this.publisherConnection = connection;
+	}
+	
+	protected ParticipantPort createPublisherPort(PublisherConnection connection) {
+		Algorithm algorithm = new Jupiter(false);
+		int participantId = nextParticipantId();
+		connection.setParticipantId(participantId);
+		ParticipantPort port = new ParticipantPortImpl(participantId, algorithm, getSerializerQueue());
+		ParticipantProxy proxy = new ParticipantProxyImpl(participantId, dispatcherQueue, algorithm, connection);
+		addParticipant(port, proxy, connection);
+		return port;
+	}
+	
+	protected DocumentServer getDocumentServer() {
+		return server;
+	}
+	
+	public void setDocumentServer(DocumentServer server) {
+		ParameterValidator.notNull("server", server);
+		this.server = server;
 	}
 	
 	public void start() {
@@ -97,18 +137,35 @@ class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 		proxies.put(key, proxy);
 		connections.put(key, connection);
 	}
-	
-	public synchronized Iterator getParticipantProxies() {
-		Map clone = (Map) proxies.clone();
-		return clone.values().iterator();
-	}
-	
+		
 	protected synchronized Map getParticipantConnections() {
 		return (Map) connections.clone();
 	}
 	
 	private synchronized ParticipantConnection getParticipantConnection(int id) {
 		return (ParticipantConnection) connections.get(new Integer(id));
+	}
+	
+	public ParticipantPort getPublisherPort() {
+		return publisherPort;
+	}
+	
+	protected PublisherConnection getPublisherConnection() {
+		return publisherConnection;
+	}
+	
+	protected PortableDocument retrieveDocument() {
+		try {
+			lock.lock();
+			try {
+				return getPublisherConnection().retrieveDocument();
+			} finally {
+				lock.unlock();
+			}
+		} catch (InterruptedException e) {
+			// TODO: exception handling
+			throw new RuntimeException(e);
+		}
 	}
 	
 	/**
@@ -119,6 +176,7 @@ class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 		Algorithm algorithm = new Jupiter(false);
 		int participantId = nextParticipantId();
 		connection.setParticipantId(participantId);
+		connection.sendDocument(retrieveDocument());
 		ParticipantPort port = new ParticipantPortImpl(participantId, algorithm, getSerializerQueue());
 		ParticipantProxy proxy = new ParticipantProxyImpl(participantId, dispatcherQueue, algorithm, connection);
 		notifyOthersAboutJoin(createParticipant(participantId, connection.getUser()));
@@ -142,29 +200,58 @@ class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 		}
 	}
 
-	protected synchronized void notifyOthersAboutLeave(int participantId) {
+	protected synchronized void notifyOthersAboutLeave(int participantId, int reason) {
 		Iterator it = connections.keySet().iterator();
 		while (it.hasNext()) {
 			Integer key = (Integer) it.next();
 			ParticipantConnection connection = (ParticipantConnection) connections.get(key);
 			if (key.intValue() != participantId) {
-				connection.sendParticipantLeft(participantId, ParticipationEvent.LEFT);
+				connection.sendParticipantLeft(participantId, reason);
 			}
 		}
 	}
 
+	protected synchronized void removeParticipant(int participantId) {
+		Integer key = new Integer(participantId);
+		connections.remove(key);
+		proxies.remove(key);
+		ports.remove(key);
+	}
+	
 	/**
 	 * @see ch.iserver.ace.net.DocumentServerLogic#leave(int)
 	 */
 	public synchronized void leave(int participantId) {
 		System.err.println("leave " + participantId);
-		Integer key = new Integer(participantId);
 		ParticipantConnection connection = getParticipantConnection(participantId);
 		connection.close();
-		notifyOthersAboutLeave(participantId);
-		connections.remove(key);
-		proxies.remove(key);
-		ports.remove(key);
+		removeParticipant(participantId);
+		notifyOthersAboutLeave(participantId, ParticipationEvent.LEFT);
+	}
+		
+	// --> session logic methods <--
+	
+	public void setDocumentDetails(DocumentDetails details) {
+		getDocumentServer().setDocumentDetails(details);
+	}
+	
+	public void shutdown() {
+		getDocumentServer().conceal();
+	}
+	
+	public synchronized Iterator getParticipantProxies() {
+		Map clone = (Map) proxies.clone();
+		return clone.values().iterator();
+	}
+	
+	public synchronized void kick(Participant participant) {
+		System.err.println("kick " + participant);
+		int participantId = participant.getParticipantId();
+		ParticipantConnection connection = getParticipantConnection(participantId);
+		connection.sendKicked();
+		connection.close();
+		removeParticipant(participantId);
+		notifyOthersAboutLeave(participantId, ParticipationEvent.KICKED);
 	}
 
 }

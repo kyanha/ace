@@ -26,6 +26,8 @@ package ch.iserver.ace.util;
  */
 public interface Lock {
 	
+	boolean isOwner(Thread thread);
+	
 	void lock() throws InterruptedException;
 	
 	void unlock();
