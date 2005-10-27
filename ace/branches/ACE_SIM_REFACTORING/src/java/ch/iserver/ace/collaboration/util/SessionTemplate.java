@@ -22,6 +22,7 @@
 package ch.iserver.ace.collaboration.util;
 
 import ch.iserver.ace.collaboration.Session;
+import ch.iserver.ace.util.InterruptedRuntimeException;
 
 /**
  * The SessionTemplate provides a save way to use sessions. It takes care of
@@ -86,7 +87,8 @@ public final class SessionTemplate {
 				session.unlock();
 			}
 		} catch (InterruptedException e) {
-			// TODO: correct exception
+			// TODO: interrupted runtime exception
+			throw new InterruptedRuntimeException("interrupted template", e);
 		}
 	}
 	

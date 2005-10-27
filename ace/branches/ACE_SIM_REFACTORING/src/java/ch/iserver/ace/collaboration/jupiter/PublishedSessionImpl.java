@@ -35,6 +35,7 @@ import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.PortableDocument;
 import ch.iserver.ace.net.PublisherConnection;
 import ch.iserver.ace.net.RemoteUserProxy;
+import ch.iserver.ace.util.InterruptedRuntimeException;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
@@ -150,10 +151,8 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 				unlock();				
 			}
 		} catch (InterruptedException e) {
-			// TODO: log interrupted exception
-			// TODO: notify callback?
-			// TODO: correct excpetion
-			throw new RuntimeException("interrupted reception");
+			// TODO: interrupted runtime exception
+			throw new InterruptedRuntimeException("interrupted reception", e);
 		}
 	}
 		
@@ -167,10 +166,8 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 				unlock();
 			}
 		} catch (InterruptedException e) {
-			// TODO: log interrupted exception
-			// TODO: notify callback?
-			// TODO: correct excpetion
-			throw new RuntimeException("interrupted reception");
+			// TODO: interrupted runtime exception
+			throw new InterruptedRuntimeException("interrupted reception", e);
 		}
 	}
 		

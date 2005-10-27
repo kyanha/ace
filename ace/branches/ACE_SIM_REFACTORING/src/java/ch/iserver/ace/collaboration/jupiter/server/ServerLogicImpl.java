@@ -40,6 +40,7 @@ import ch.iserver.ace.net.PortableDocument;
 import ch.iserver.ace.net.PublisherConnection;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.util.BlockingQueue;
+import ch.iserver.ace.util.InterruptedRuntimeException;
 import ch.iserver.ace.util.LinkedBlockingQueue;
 import ch.iserver.ace.util.Lock;
 import ch.iserver.ace.util.ParameterValidator;
@@ -163,8 +164,8 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 				lock.unlock();
 			}
 		} catch (InterruptedException e) {
-			// TODO: exception handling
-			throw new RuntimeException(e);
+			// TODO: interrupted runtime exception
+			throw new InterruptedRuntimeException("interrupted document retrieval", e);
 		}
 	}
 	
