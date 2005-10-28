@@ -32,6 +32,10 @@ import ch.iserver.ace.algorithm.Request;
  * <p>The SessionConnectionCallback is the place were the operational transformation
  * aspects fit in. It is used in case of a joined session. For published
  * sessions the mechanisms are totally different.</p>
+ * 
+ * <h3>Thread Safety</h3>
+ * The SessionConnectionCallback is not thread safe. Use proper synchronization
+ * when accessing the SessionConnectionCallback from multiple threads.
  */
 public interface SessionConnectionCallback {
 	
