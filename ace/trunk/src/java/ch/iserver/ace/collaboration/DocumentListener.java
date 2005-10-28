@@ -27,7 +27,7 @@ import java.util.EventListener;
  * Discovery listener interface for documents. A registered DocumentListener
  * is notified about document related discoveries. To receive notifications,
  * the DocumentListener must be registered with the
- * {@link ch.iserver.ace.collaboration.CollaborationService#publish(PortableDocument, SessionCallback)}
+ * {@link ch.iserver.ace.collaboration.CollaborationService#addDocumentListener(DocumentListener)}
  * method.
  */
 public interface DocumentListener extends EventListener {
