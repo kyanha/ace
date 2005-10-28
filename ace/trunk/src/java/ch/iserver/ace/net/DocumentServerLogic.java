@@ -26,13 +26,7 @@ package ch.iserver.ace.net;
  * implements the logic functionality of a document server.
  */
 public interface DocumentServerLogic {
-	
-	/**
-	 * 
-	 * @return
-	 */
-	ParticipantPort getPublisherPort();
-	
+		
 	/**
 	 * Join this editing session. The passed in proxy is used by the server
 	 * to communicate with the joining user.
