@@ -26,6 +26,7 @@ import java.net.InetAddress;
 import javax.swing.event.EventListenerList;
 
 import ch.iserver.ace.UserDetails;
+import ch.iserver.ace.algorithm.jupiter.JupiterTimestampFactory;
 import ch.iserver.ace.collaboration.CollaborationService;
 import ch.iserver.ace.collaboration.DiscoveryCallback;
 import ch.iserver.ace.collaboration.DocumentListener;
@@ -61,6 +62,7 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 		ParameterValidator.notNull("service", service);
 		this.service = service;
 		this.service.setCallback(this);
+		this.service.setTimestampFactory(new JupiterTimestampFactory());
 	}
 	
 	protected NetworkService getNetworkService() {
