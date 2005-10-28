@@ -22,10 +22,11 @@
 package ch.iserver.ace.collaboration.jupiter;
 
 import ch.iserver.ace.DocumentDetails;
+import ch.iserver.ace.collaboration.JoinCallback;
 import ch.iserver.ace.collaboration.RemoteDocument;
 import ch.iserver.ace.collaboration.RemoteUser;
-import ch.iserver.ace.collaboration.Session;
 import ch.iserver.ace.collaboration.SessionCallback;
+import ch.iserver.ace.net.JoinNetworkCallback;
 import ch.iserver.ace.net.RemoteDocumentProxy;
 import ch.iserver.ace.net.SessionConnection;
 import ch.iserver.ace.util.ParameterValidator;
@@ -68,14 +69,17 @@ public class RemoteDocumentImpl implements RemoteDocument {
 		return publisher;
 	}
 
-	/**
-	 * @see ch.iserver.ace.collaboration.RemoteDocument#join(ch.iserver.ace.collaboration.SessionCallback)
-	 */
-	public Session join(SessionCallback callback) {
-		SessionImpl session = new SessionImpl(callback);
-		SessionConnection connection = proxy.join(session);
-		session.setConnection(connection);
-		return session;
+	public void join(final JoinCallback joinCallback, final SessionCallback callback) {
+		proxy.join(new JoinNetworkCallback() {
+			public void accepted(SessionConnection connection) {
+				SessionImpl session = new SessionImpl(callback);
+				session.setConnection(connection);
+				joinCallback.accepted(session);
+			}	
+			public void rejected() {
+				joinCallback.rejected();
+			}
+		});
 	}
 	
 	/**

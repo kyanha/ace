@@ -23,8 +23,8 @@ package ch.iserver.ace.collaboration;
 
 import java.net.InetAddress;
 
+import ch.iserver.ace.DocumentModel;
 import ch.iserver.ace.UserDetails;
-import ch.iserver.ace.net.PortableDocument;
 
 /**
  * The CollaborationService is the entry point for all collaboration operations.
@@ -82,11 +82,11 @@ public interface CollaborationService {
 	 * Publishes a document so that other users can join editing it
 	 * over the network.
 	 *
-	 * @param document the document to publish
 	 * @param controller the SessionCallback used for callbacks
+	 * @param document the document to publish
 	 * @return a session for the publisher itself
 	 */
-	PublishedSession publish(PortableDocument document, PublishedSessionCallback callback);
+	PublishedSession publish(PublishedSessionCallback callback, DocumentModel document);
 	
 	/**
 	 * Initiates an explicit discovery of a user. The network layer tries to 

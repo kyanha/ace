@@ -57,6 +57,6 @@ public interface RemoteDocument {
 	 * @param controller the document controller for the document
 	 * @return the Session object
 	 */
-	Session join(SessionCallback controller);
+	void join(JoinCallback joinCallback, SessionCallback callback);
 
 }

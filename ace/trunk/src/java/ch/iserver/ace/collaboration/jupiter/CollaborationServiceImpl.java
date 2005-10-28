@@ -25,6 +25,7 @@ import java.net.InetAddress;
 
 import javax.swing.event.EventListenerList;
 
+import ch.iserver.ace.DocumentModel;
 import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.algorithm.jupiter.JupiterTimestampFactory;
 import ch.iserver.ace.collaboration.CollaborationService;
@@ -41,7 +42,6 @@ import ch.iserver.ace.net.DocumentServer;
 import ch.iserver.ace.net.InvitationProxy;
 import ch.iserver.ace.net.NetworkService;
 import ch.iserver.ace.net.NetworkServiceCallback;
-import ch.iserver.ace.net.PortableDocument;
 import ch.iserver.ace.net.RemoteDocumentProxy;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.util.ParameterValidator;
@@ -118,12 +118,11 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	}
 
 	/**
-	 * @see ch.iserver.ace.collaboration.CollaborationService#publish(ch.iserver.ace.net.PortableDocument, ch.iserver.ace.collaboration.SessionCallback)
+	 * @see ch.iserver.ace.collaboration.CollaborationService#publish(ch.iserver.ace.collaboration.PublishedSessionCallback, ch.iserver.ace.DocumentModel)
 	 */
-	public PublishedSession publish(PortableDocument document,
-					PublishedSessionCallback callback) {
+	public PublishedSession publish(PublishedSessionCallback callback, DocumentModel document) {
 		PublishedSessionImpl session = new PublishedSessionImpl(callback);
-		ServerLogicImpl logic = new ServerLogicImpl(new SemaphoreLock(), session);
+		ServerLogicImpl logic = new ServerLogicImpl(new SemaphoreLock(), session, document);
 		session.setServerLogic(logic);
 		DocumentServer server = getNetworkService().publish(logic);
 		logic.setDocumentServer(server);

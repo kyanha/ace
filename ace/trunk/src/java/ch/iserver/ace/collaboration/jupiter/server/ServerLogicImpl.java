@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import ch.iserver.ace.DocumentDetails;
+import ch.iserver.ace.DocumentModel;
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.jupiter.Jupiter;
 import ch.iserver.ace.collaboration.Participant;
@@ -73,9 +74,10 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 	
 	private final ParticipantPort publisherPort;
 	
-	public ServerLogicImpl(Lock lock, ParticipantConnection connection) {
+	public ServerLogicImpl(Lock lock, ParticipantConnection connection, DocumentModel document) {
 		ParameterValidator.notNull("lock", lock);
 		ParameterValidator.notNull("connection", connection);
+		ParameterValidator.notNull("document", document);
 		
 		this.nextParticipantId = 0;
 		this.forwarder = new ForwarderImpl(this);
@@ -89,6 +91,8 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 		this.dispatcher = new Dispatcher(dispatcherQueue);
 		
 		this.publisherPort = createPublisherPort(connection);
+		
+		// TODO: convert document
 	}
 	
 	protected ParticipantPort createPublisherPort(ParticipantConnection connection) {

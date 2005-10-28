@@ -54,13 +54,11 @@ public interface RemoteDocumentProxy {
 	RemoteUserProxy getPublisher();
 	
 	/**
-	 * Tries to join the editing session of this remote document. The returned
-	 * SessionConnectionIngo allows to communicate with the session.
+	 * Tries to join the editing session of this remote document.
 	 * 
-	 * @param callback the SessionConnectionCallback for callbacks to the logic
+	 * @param callback the JoinNetworkCallback for callbacks to the logic
 	 *                 layer
-	 * @return a SessionConnectionInfo representing a connection to the session
 	 */
-	SessionConnection join(SessionConnectionCallback callback);
+	void join(JoinNetworkCallback callback);
 	
 }
