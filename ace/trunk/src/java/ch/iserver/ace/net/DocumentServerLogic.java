@@ -35,12 +35,5 @@ public interface DocumentServerLogic {
 	 * @return the port for the network layer to communicate with the logic
 	 */
 	ParticipantPort join(ParticipantConnection connection);
-	
-	/**
-	 * Notifies the server that the specified user leaves the editing session.
-	 *
-	 * @param participantId the participant id of the leaving user
-	 */
-	void leave(int participantId);
-		
+			
 }

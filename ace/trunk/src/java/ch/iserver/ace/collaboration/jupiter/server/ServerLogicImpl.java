@@ -99,7 +99,7 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 		Algorithm algorithm = new Jupiter(false);
 		int participantId = nextParticipantId();
 		connection.setParticipantId(participantId);
-		ParticipantPort port = new ParticipantPortImpl(participantId, algorithm, getSerializerQueue());
+		ParticipantPort port = new ParticipantPortImpl(this, participantId, algorithm, getSerializerQueue());
 		ParticipantProxy proxy = new ParticipantProxyImpl(participantId, dispatcherQueue, algorithm, connection);
 		addParticipant(port, proxy, connection);
 		return port;
@@ -178,7 +178,7 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 		int participantId = nextParticipantId();
 		connection.setParticipantId(participantId);
 		connection.sendDocument(retrieveDocument());
-		ParticipantPort port = new ParticipantPortImpl(participantId, algorithm, getSerializerQueue());
+		ParticipantPort port = new ParticipantPortImpl(this, participantId, algorithm, getSerializerQueue());
 		ParticipantProxy proxy = new ParticipantProxyImpl(participantId, dispatcherQueue, algorithm, connection);
 		notifyOthersAboutJoin(createParticipant(participantId, connection.getUser()));
 		addParticipant(port, proxy, connection);

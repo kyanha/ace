@@ -33,18 +33,25 @@ import ch.iserver.ace.util.ParameterValidator;
  */
 class ParticipantPortImpl implements ParticipantPort {
 	
+	private final ServerLogic logic;
+	
 	private final int participantId;
 	
 	private final Algorithm algorithm;
 	
 	private final BlockingQueue queue;
 	
-	public ParticipantPortImpl(int participantId, Algorithm algorithm, BlockingQueue queue) {
+	public ParticipantPortImpl(ServerLogic logic, int participantId, Algorithm algorithm, BlockingQueue queue) {
 		ParameterValidator.notNull("algorithm", algorithm);
 		ParameterValidator.notNull("queue", queue);
+		this.logic = logic;
 		this.participantId = participantId;
 		this.algorithm = algorithm;
 		this.queue = queue;
+	}
+	
+	protected ServerLogic getLogic() {
+		return logic;
 	}
 	
 	public int getParticipantId() {
@@ -69,7 +76,10 @@ class ParticipantPortImpl implements ParticipantPort {
 						getAlgorithm(),
 						request);
 		queue.add(cmd);
-		
+	}
+	
+	public void leave() {
+		getLogic().leave(getParticipantId());
 	}
 	
 }

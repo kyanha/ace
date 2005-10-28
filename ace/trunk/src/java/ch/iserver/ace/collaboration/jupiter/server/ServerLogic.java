@@ -43,4 +43,11 @@ public interface ServerLogic extends DocumentServerLogic {
 	
 	Iterator getParticipantProxies();
 	
+	/**
+	 * Notifies the server that the specified user leaves the editing session.
+	 *
+	 * @param participantId the participant id of the leaving user
+	 */
+	void leave(int participantId);
+
 }
