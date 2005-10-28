@@ -77,7 +77,28 @@ public class RemoteUserImpl implements RemoteUser {
 	 */
 	public void invite(PublishedSession session) {
 		// TODO: implement mapping from PublishedSession to DocumentServerLogic
-
+		
 	}
 
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		} else if (obj instanceof RemoteUser) {
+			RemoteUser user = (RemoteUser) obj;
+			return getId().equals(user.getId());
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	public int hashCode() {
+		return getId().hashCode();
+	}
+	
 }

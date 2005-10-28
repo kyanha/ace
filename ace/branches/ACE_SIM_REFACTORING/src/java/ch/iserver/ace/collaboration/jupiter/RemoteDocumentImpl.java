@@ -77,5 +77,26 @@ public class RemoteDocumentImpl implements RemoteDocument {
 		session.setConnection(connection);
 		return session;
 	}
+	
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		} else if (obj instanceof RemoteDocument) {
+			RemoteDocument document = (RemoteDocument) obj;
+			return getId().equals(document.getId());
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	public int hashCode() {
+		return getId().hashCode();
+	}
 
 }
