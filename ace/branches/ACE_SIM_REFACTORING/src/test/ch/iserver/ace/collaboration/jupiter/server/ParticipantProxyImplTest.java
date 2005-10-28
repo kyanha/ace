@@ -25,8 +25,10 @@ import junit.framework.TestCase;
 
 import org.easymock.MockControl;
 
+import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.Algorithm;
+import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.jupiter.JupiterRequest;
 import ch.iserver.ace.net.ParticipantConnection;
@@ -39,8 +41,7 @@ public class ParticipantProxyImplTest extends TestCase {
 	 * Test method for 'ch.iserver.ace.collaboration.jupiter.server.ParticipantProxyImpl.sendCaretUpdate(int, CaretUpdate)'
 	 */
 	public void testSendCaretUpdate() {
-		// TODO: fix testSendCaretUpdate method (compiler error)
-		/*MockControl queueCtrl = MockControl.createControl(BlockingQueue.class);
+		MockControl queueCtrl = MockControl.createControl(BlockingQueue.class);
 		queueCtrl.setDefaultMatcher(MockControl.ALWAYS_MATCHER);
 		BlockingQueue queue = (BlockingQueue) queueCtrl.getMock();
 		MockControl algorithmCtrl = MockControl.createControl(Algorithm.class);
@@ -54,8 +55,10 @@ public class ParticipantProxyImplTest extends TestCase {
 		CaretUpdateMessage message = new CaretUpdateMessage(0, null, update);
 		queue.add(new CaretUpdateDispatcherCommand(connection, 0, message));
 		
-		algorithm.generateCaretUpdateMessage(update);
-		algorithmCtrl.setReturnValue(message);
+		algorithm.getSiteId();
+		algorithmCtrl.setReturnValue(1);
+		algorithm.getTimestamp();
+		algorithmCtrl.setReturnValue(null);
 		
 		// replay
 		queueCtrl.replay();
@@ -66,7 +69,7 @@ public class ParticipantProxyImplTest extends TestCase {
 		
 		// verify
 		queueCtrl.verify();
-		algorithmCtrl.verify();*/
+		algorithmCtrl.verify();
 	}
 
 	/**

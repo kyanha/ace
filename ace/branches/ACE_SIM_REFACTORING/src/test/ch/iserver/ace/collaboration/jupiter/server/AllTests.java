@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace;
+package ch.iserver.ace.collaboration.jupiter.server;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -27,12 +27,18 @@ import junit.framework.TestSuite;
 public class AllTests {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for ch.iserver.ace");
+		TestSuite suite = new TestSuite(
+						"Test for ch.iserver.ace.collaboration.jupiter.server");
 		//$JUnit-BEGIN$
-		suite.addTest(ch.iserver.ace.algorithm.jupiter.AllTests.suite());
-		suite.addTest(ch.iserver.ace.collaboration.jupiter.server.AllTests.suite());
-		suite.addTest(ch.iserver.ace.test.AllTests.suite());
-		suite.addTest(ch.iserver.ace.text.AllTests.suite());
+		suite.addTestSuite(RequestSerializerCommandTest.class);
+		suite.addTestSuite(ParticipantPortImplTest.class);
+		suite.addTestSuite(CaretUpdateDispatcherCommandTest.class);
+		suite.addTestSuite(CaretUpdateSerializerCommandTest.class);
+		suite.addTestSuite(DispatcherTest.class);
+		suite.addTestSuite(ParticipantProxyImplTest.class);
+		suite.addTestSuite(RequestDispatcherCommandTest.class);
+		suite.addTestSuite(ForwarderImplTest.class);
+		suite.addTestSuite(SerializerTest.class);
 		//$JUnit-END$
 		return suite;
 	}
