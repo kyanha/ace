@@ -19,36 +19,40 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.collaboration.jupiter.server;
-
-import ch.iserver.ace.util.BlockingQueue;
-import ch.iserver.ace.util.ParameterValidator;
-import ch.iserver.ace.util.Worker;
+package ch.iserver.ace.util;
 
 /**
  *
  */
-class Dispatcher extends Worker {
+public abstract class Worker extends Thread {
 	
-	private final BlockingQueue queue;
+	private boolean stop;
 	
-	public Dispatcher(BlockingQueue queue) {
-		super("Dispatcher");
-		ParameterValidator.notNull("queue", queue);
-		this.queue = queue;
+	protected Worker(String name) {
+		super(name);
 	}
 	
-	protected DispatcherCommand nextCommand() throws InterruptedException {
-		return (DispatcherCommand) queue.get();
+	public void kill() {
+		stop = true;
+		interrupt();
 	}
-	
-	protected void doWork() {
+		
+	public void run() {
 		try {
-			DispatcherCommand command = nextCommand();
-			command.execute();
-		} catch (Exception e) {
-			// TODO: exception handling
+			while (!stop) {
+				try {
+					doWork();
+				} catch (InterruptedException e) {
+					throw e;
+				} catch (Exception e) {
+					System.err.println(e.getMessage());
+				}
+			}
+		} catch (InterruptedException e) {
+			// TODO: log interruption?
 		}
 	}
+	
+	protected abstract void doWork() throws InterruptedException;
 	
 }
