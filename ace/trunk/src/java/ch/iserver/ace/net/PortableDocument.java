@@ -24,8 +24,6 @@ package ch.iserver.ace.net;
 import java.util.Iterator;
 import java.util.Set;
 
-import ch.iserver.ace.collaboration.Participant;
-
 /**
  * A PortableDocument is a representation of a document in a portable way.
  * PortableDocuments can be serialized in an implementation independent
@@ -34,19 +32,27 @@ import ch.iserver.ace.collaboration.Participant;
 public interface PortableDocument {
 	
 	/**
-	 * Gets the set of participants. The type is Set&lt;Participant&gt;.
+	 * Gets the set of participants. The type is Set&lt;Integer&gt;.
 	 * 
 	 * @return the set of participants
 	 */
 	Set getParticipants();
 	
 	/**
+	 * Gets the RemoteUserProxy for the given <var>participantId</var>.
+	 * 
+	 * @param participantId the participant id
+	 * @return the RemoteUserProxy for the participantId
+	 */
+	RemoteUserProxy getUserProxy(int participantId);
+	
+	/**
 	 * Gets the caret of the specified <var>participant</var>.
 	 * 
-	 * @param participant the participant for which to retrieve the caret
+	 * @param participantId the participant for which to retrieve the caret
 	 * @return the Caret of the given Participant
 	 */
-	Caret getSelection(Participant participant);
+	Caret getSelection(int participantId);
 	
 	/**
 	 * Gets an iterator over all the fragments of the document.
@@ -62,13 +68,12 @@ public interface PortableDocument {
 	interface Fragment {
 		
 		/**
-		 * Gets the owner of this fragment, that is the participant that last
-		 * edited this particular section of text.
+		 * Gets the participant id of the owner.
 		 * 
-		 * @return the owner of this fragment
+		 * @return the participant id of the owner
 		 */
-		Participant getOwner();
-		
+		int getParticipantId();
+				
 		/**
 		 * Gets the textual content of the fragment.
 		 * 
