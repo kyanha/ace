@@ -37,7 +37,6 @@ import ch.iserver.ace.net.DocumentServerLogic;
 import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.PortableDocument;
-import ch.iserver.ace.net.PublisherConnection;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.util.BlockingQueue;
 import ch.iserver.ace.util.InterruptedRuntimeException;
@@ -74,9 +73,7 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 	
 	private final ParticipantPort publisherPort;
 	
-	private final PublisherConnection publisherConnection;
-		
-	public ServerLogicImpl(Lock lock, PublisherConnection connection) {
+	public ServerLogicImpl(Lock lock, ParticipantConnection connection) {
 		ParameterValidator.notNull("lock", lock);
 		ParameterValidator.notNull("connection", connection);
 		
@@ -92,10 +89,9 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 		this.dispatcher = new Dispatcher(dispatcherQueue);
 		
 		this.publisherPort = createPublisherPort(connection);
-		this.publisherConnection = connection;
 	}
 	
-	protected ParticipantPort createPublisherPort(PublisherConnection connection) {
+	protected ParticipantPort createPublisherPort(ParticipantConnection connection) {
 		Algorithm algorithm = new Jupiter(false);
 		int participantId = nextParticipantId();
 		connection.setParticipantId(participantId);
@@ -150,16 +146,13 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 	public ParticipantPort getPublisherPort() {
 		return publisherPort;
 	}
-	
-	protected PublisherConnection getPublisherConnection() {
-		return publisherConnection;
-	}
-	
+		
 	protected PortableDocument retrieveDocument() {
 		try {
 			lock.lock();
 			try {
-				return getPublisherConnection().retrieveDocument();
+				// TODO: implement retrieveDocument
+				return null;
 			} finally {
 				lock.unlock();
 			}
@@ -173,7 +166,6 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 	 * @see ch.iserver.ace.net.DocumentServerLogic#join(ch.iserver.ace.net.ParticipantConnection)
 	 */
 	public synchronized ParticipantPort join(ParticipantConnection connection) {
-		System.err.println("join " + connection);
 		Algorithm algorithm = new Jupiter(false);
 		int participantId = nextParticipantId();
 		connection.setParticipantId(participantId);
@@ -223,7 +215,6 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 	 * @see ch.iserver.ace.net.DocumentServerLogic#leave(int)
 	 */
 	public synchronized void leave(int participantId) {
-		System.err.println("leave " + participantId);
 		ParticipantConnection connection = getParticipantConnection(participantId);
 		connection.close();
 		removeParticipant(participantId);
@@ -246,7 +237,6 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 	}
 	
 	public synchronized void kick(Participant participant) {
-		System.err.println("kick " + participant);
 		int participantId = participant.getParticipantId();
 		ParticipantConnection connection = getParticipantConnection(participantId);
 		connection.sendKicked();

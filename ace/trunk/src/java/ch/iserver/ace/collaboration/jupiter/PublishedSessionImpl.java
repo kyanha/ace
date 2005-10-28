@@ -31,9 +31,9 @@ import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.collaboration.PublishedSession;
 import ch.iserver.ace.collaboration.PublishedSessionCallback;
 import ch.iserver.ace.collaboration.jupiter.server.ServerLogic;
+import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.PortableDocument;
-import ch.iserver.ace.net.PublisherConnection;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.util.BlockingQueue;
 import ch.iserver.ace.util.LinkedBlockingQueue;
@@ -43,7 +43,7 @@ import ch.iserver.ace.util.Worker;
 /**
  *
  */
-public class PublishedSessionImpl extends AbstractSession implements PublishedSession, PublisherConnection {
+public class PublishedSessionImpl extends AbstractSession implements PublishedSession, ParticipantConnection {
 	
 	private ServerLogic logic;
 	
@@ -145,14 +145,14 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 		return callback;
 	}
 		
-	/* (non-Javadoc)
+	/**
 	 * @see ch.iserver.ace.net.ParticipantConnection#setParticipantId(int)
 	 */
 	public void setParticipantId(int participantId) {
 		// ignore, participant id can be retrieved form port...
 	}
 				
-	/* (non-Javadoc)
+	/**
 	 * @see ch.iserver.ace.net.ParticipantConnection#getUser()
 	 */
 	public RemoteUserProxy getUser() {
@@ -160,7 +160,7 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 		return null;
 	}
 
-	/* (non-Javadoc)
+	/**
 	 * @see ch.iserver.ace.net.ParticipantConnection#close()
 	 */
 	public void close() {
@@ -216,11 +216,4 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 		throw new UnsupportedOperationException("publisher cannot be kicked");
 	}
 		
-	/* (non-Javadoc)
-	 * @see ch.iserver.ace.net.PublisherConnection#retrieveDocument()
-	 */
-	public PortableDocument retrieveDocument() {
-		return getCallback().getDocument();
-	}
-	
 }
