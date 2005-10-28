@@ -74,21 +74,21 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 	 * @see ch.iserver.ace.collaboration.PublishedSession#setDocumentDetails(ch.iserver.ace.DocumentDetails)
 	 */
 	public void setDocumentDetails(DocumentDetails details) {
-		logic.setDocumentDetails(details);
+		getLogic().setDocumentDetails(details);
 	}
 
 	/**
 	 * @see ch.iserver.ace.collaboration.PublishedSession#kick(ch.iserver.ace.collaboration.Participant)
 	 */
 	public void kick(Participant participant) {
-		logic.kick(participant);
+		getLogic().kick(participant);
 	}
 
 	/**
 	 * @see ch.iserver.ace.collaboration.PublishedSession#conceal()
 	 */
 	public void conceal() {
-		logic.shutdown();
+		getLogic().shutdown();
 	}
 
 	/**
@@ -128,19 +128,31 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 		return callback;
 	}
 		
+	/* (non-Javadoc)
+	 * @see ch.iserver.ace.net.ParticipantConnection#setParticipantId(int)
+	 */
 	public void setParticipantId(int participantId) {
 		// ignore, participant id can be retrieved form port...
 	}
 				
+	/* (non-Javadoc)
+	 * @see ch.iserver.ace.net.ParticipantConnection#getUser()
+	 */
 	public RemoteUserProxy getUser() {
 		// TODO: is this a problem?
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see ch.iserver.ace.net.ParticipantConnection#close()
+	 */
 	public void close() {
 		// ignore, PublishedSession is the owner			
 	}
 		
+	/* (non-Javadoc)
+	 * @see ch.iserver.ace.net.ParticipantConnection#sendCaretUpdate(int, ch.iserver.ace.algorithm.CaretUpdateMessage)
+	 */
 	public void sendCaretUpdate(int participantId, CaretUpdateMessage message) {
 		try {
 			lock();
@@ -156,6 +168,9 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 		}
 	}
 		
+	/* (non-Javadoc)
+	 * @see ch.iserver.ace.net.ParticipantConnection#sendRequest(int, ch.iserver.ace.algorithm.Request)
+	 */
 	public void sendRequest(int participantId, Request request) {
 		try {
 			lock();
@@ -171,25 +186,40 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 		}
 	}
 		
+	/**
+	 * @see ch.iserver.ace.net.ParticipantConnection#sendDocument(ch.iserver.ace.net.PortableDocument)
+	 */
 	public void sendDocument(PortableDocument document) {
 		throw new UnsupportedOperationException("sendDocument is not supported for PublisherConnection objects");	
 	}
 		
+	/* (non-Javadoc)
+	 * @see ch.iserver.ace.net.ParticipantConnection#sendParticipantJoined(ch.iserver.ace.collaboration.Participant)
+	 */
 	public void sendParticipantJoined(Participant participant) {
 		addParticipant(participant);
 		fireParticipantJoined(participant);			
 	}
 		
+	/* (non-Javadoc)
+	 * @see ch.iserver.ace.net.ParticipantConnection#sendParticipantLeft(int, int)
+	 */
 	public void sendParticipantLeft(int participantId, int reason) {
 		Participant participant = getParticipant(participantId);
 		removeParticipant(participant);
 		fireParticipantLeft(participant, reason);
 	}
 		
+	/**
+	 * @see ch.iserver.ace.net.ParticipantConnection#sendKicked()
+	 */
 	public void sendKicked() {
-		// hey, don't kick the owner of the session! ;)
+		throw new UnsupportedOperationException("publisher cannot be kicked");
 	}
 		
+	/* (non-Javadoc)
+	 * @see ch.iserver.ace.net.PublisherConnection#retrieveDocument()
+	 */
 	public PortableDocument retrieveDocument() {
 		return getCallback().getDocument();
 	}
