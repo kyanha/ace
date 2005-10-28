@@ -29,6 +29,7 @@ import java.util.List;
 import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.collaboration.PublishedSession;
 import ch.iserver.ace.collaboration.RemoteUser;
+import ch.iserver.ace.net.DocumentServerLogic;
 import ch.iserver.ace.net.RemoteDocumentProxy;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.util.ParameterValidator;
@@ -45,11 +46,15 @@ public class RemoteUserImpl implements RemoteUser {
 		this.proxy = proxy;
 	}
 	
+	protected RemoteUserProxy getProxy() {
+		return proxy;
+	}
+		
 	/**
 	 * @see ch.iserver.ace.collaboration.RemoteUser#getId()
 	 */
 	public String getId() {
-		return proxy.getId();
+		return getProxy().getId();
 	}
 
 	/**
@@ -57,7 +62,7 @@ public class RemoteUserImpl implements RemoteUser {
 	 */
 	public Collection getSharedDocuments() {
 		List result = new LinkedList();
-		Iterator it = proxy.getSharedDocuments().iterator();
+		Iterator it = getProxy().getSharedDocuments().iterator();
 		while (it.hasNext()) {
 			RemoteDocumentProxy document = (RemoteDocumentProxy) it.next();
 			result.add(new RemoteDocumentImpl(document));
@@ -69,15 +74,16 @@ public class RemoteUserImpl implements RemoteUser {
 	 * @see ch.iserver.ace.collaboration.RemoteUser#getUserDetails()
 	 */
 	public UserDetails getUserDetails() {
-		return proxy.getUserDetails();
+		return getProxy().getUserDetails();
 	}
 
 	/**
 	 * @see ch.iserver.ace.collaboration.RemoteUser#invite(ch.iserver.ace.collaboration.PublishedSession)
 	 */
-	public void invite(PublishedSession session) {
-		// TODO: implement mapping from PublishedSession to DocumentServerLogic
-		
+	public void invite(PublishedSession s) {
+		PublishedSessionImpl session = (PublishedSessionImpl) s;
+		DocumentServerLogic logic = session.getLogic();
+		getProxy().invite(logic);
 	}
 
 	/**
