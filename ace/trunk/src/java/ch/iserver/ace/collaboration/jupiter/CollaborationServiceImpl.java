@@ -31,9 +31,9 @@ import ch.iserver.ace.collaboration.DiscoveryCallback;
 import ch.iserver.ace.collaboration.DocumentListener;
 import ch.iserver.ace.collaboration.InvitationCallback;
 import ch.iserver.ace.collaboration.PublishedSession;
+import ch.iserver.ace.collaboration.PublishedSessionCallback;
 import ch.iserver.ace.collaboration.RemoteDocument;
 import ch.iserver.ace.collaboration.RemoteUser;
-import ch.iserver.ace.collaboration.SessionCallback;
 import ch.iserver.ace.collaboration.UserListener;
 import ch.iserver.ace.collaboration.jupiter.server.ServerLogicImpl;
 import ch.iserver.ace.net.DocumentServer;
@@ -119,7 +119,7 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	 * @see ch.iserver.ace.collaboration.CollaborationService#publish(ch.iserver.ace.net.PortableDocument, ch.iserver.ace.collaboration.SessionCallback)
 	 */
 	public PublishedSession publish(PortableDocument document,
-					SessionCallback callback) {
+					PublishedSessionCallback callback) {
 		PublishedSessionImpl session = new PublishedSessionImpl(callback);
 		ServerLogicImpl logic = new ServerLogicImpl(new SemaphoreLock(), session);
 		session.setServerLogic(logic);

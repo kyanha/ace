@@ -21,15 +21,13 @@
 
 package ch.iserver.ace.collaboration;
 
-import ch.iserver.ace.CaretUpdate;
-import ch.iserver.ace.Operation;
 import ch.iserver.ace.net.PortableDocument;
 
 /**
  * This interface describes the interface between the logic layer and
  * the application layer.
  */
-public interface SessionCallback {
+public interface SessionCallback extends PublishedSessionCallback {
 	
 	/**
 	 * Sets the document content to the given <var>doc</var>.
@@ -37,30 +35,6 @@ public interface SessionCallback {
 	 * @param doc the new document content
 	 */
 	void setDocument(PortableDocument doc);
-	
-	/**
-	 * Retrieves the document content. This method is only called on
-	 * published sessions.
-	 * 
-	 * @return the document content
-	 */	
-	PortableDocument getDocument();
-	
-	/**
-	 * Receives an operation from the given participant.
-	 * 
-	 * @param participant the participant that sent the operation
-	 * @param operation the operation to be applied to the document
-	 */
-	void receiveOperation(Participant participant, Operation operation);
-	
-	/**
-	 * Receives a caret update from the given participant.
-	 * 
-	 * @param participant the participant that sent the CaretUpdate
-	 * @param update the caret update specification
-	 */
-	void receiveCaretUpdate(Participant participant, CaretUpdate update);
 	
 	/**
 	 * Called to notify the document controller that the session was

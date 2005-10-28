@@ -86,7 +86,7 @@ public interface CollaborationService {
 	 * @param controller the SessionCallback used for callbacks
 	 * @return a session for the publisher itself
 	 */
-	PublishedSession publish(PortableDocument document, SessionCallback controller);
+	PublishedSession publish(PortableDocument document, PublishedSessionCallback callback);
 	
 	/**
 	 * Initiates an explicit discovery of a user. The network layer tries to 

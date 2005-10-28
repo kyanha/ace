@@ -29,7 +29,7 @@ import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.jupiter.Jupiter;
 import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.collaboration.PublishedSession;
-import ch.iserver.ace.collaboration.SessionCallback;
+import ch.iserver.ace.collaboration.PublishedSessionCallback;
 import ch.iserver.ace.collaboration.jupiter.server.ServerLogic;
 import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.PortableDocument;
@@ -47,9 +47,9 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 	
 	private ParticipantPort port;
 	
-	private final SessionCallback callback;
+	private final PublishedSessionCallback callback;
 	
-	public PublishedSessionImpl(SessionCallback callback) {
+	public PublishedSessionImpl(PublishedSessionCallback callback) {
 		super(new Jupiter(true));
 		ParameterValidator.notNull("callback", callback);
 		this.callback = callback;
@@ -124,7 +124,7 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 	}
 					
 		
-	protected SessionCallback getCallback() {
+	protected PublishedSessionCallback getCallback() {
 		return callback;
 	}
 		
