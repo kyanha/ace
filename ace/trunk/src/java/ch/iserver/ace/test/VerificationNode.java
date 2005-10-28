@@ -67,7 +67,7 @@ public class VerificationNode extends AbstractNode {
 	
 	public String toString() {
 		return getClass().getName() + "["
-		        + "site=" + getSiteId()
+		        + "site=" + getParticipantId()
 		        + "state='" + state + "'"
 		        + "]";
 	}

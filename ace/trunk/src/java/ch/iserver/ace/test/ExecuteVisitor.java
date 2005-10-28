@@ -27,11 +27,9 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import ch.iserver.ace.DocumentModel;
 import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.Request;
-import ch.iserver.ace.algorithm.Timestamp;
 
 /**
  * An ExecuteVisitor is a special node visitor implementation that executes a
@@ -56,6 +54,9 @@ public class ExecuteVisitor implements NodeVisitor {
 	/** map from site ids to algorithms. */
 	private Map algorithms;
 	
+	/** map from site ids to documents. */
+	private Map documents;
+	
 	/** verification results */
 	private VerificationResult verificationResult;
 
@@ -68,6 +69,7 @@ public class ExecuteVisitor implements NodeVisitor {
 	public ExecuteVisitor(AlgorithmTestFactory factory) {
 		this.factory = factory;
 		this.algorithms = new HashMap();
+		this.documents = new HashMap();
 		this.verificationResult = new VerificationResult();
 	}
 	
@@ -100,6 +102,11 @@ public class ExecuteVisitor implements NodeVisitor {
 	protected void addSuccess(String siteId, String state) {
 		verificationResult.addSuccess(siteId, state);
 	}
+	
+	protected void apply(String siteId, Operation op) {
+		Document doc = getDocument(siteId);
+		doc.apply(op);
+	}
 
 	/**
 	 * Gets the algorithm test factory, which is needed to create algorithms,
@@ -121,12 +128,10 @@ public class ExecuteVisitor implements NodeVisitor {
 	public void visit(StartNode node) {
 		LOG.info("visit: " + node);
 		String state = node.getState();
+		setDocument(node.getParticipantId(), new DefaultDocument(state));
 		Algorithm algorithm = getFactory().createAlgorithm(
-				Integer.parseInt(node.getSiteId()), null);
-		DocumentModel document = getFactory().createDocument(state);
-		Timestamp timestamp = getFactory().createTimestamp();
-		algorithm.init(document, timestamp);
-		setAlgorithm(node.getSiteId(), algorithm);
+				Integer.parseInt(node.getParticipantId()), null);
+		setAlgorithm(node.getParticipantId(), algorithm);
 	}
 	
 	/**
@@ -139,13 +144,14 @@ public class ExecuteVisitor implements NodeVisitor {
 	 */
 	public void visit(DoNode node) {
 		LOG.info("visit: " + node);
-		Operation op = node.getOperation();
-		Algorithm algo = getAlgorithm(node.getSiteId());
+		Operation op = node.getOperation();		
+		apply(node.getParticipantId(), op);
+		Algorithm algo = getAlgorithm(node.getParticipantId());
 		Request request = algo.generateRequest(op);
 		Iterator it = node.getRemoteSuccessors().iterator();
 		while (it.hasNext()) {
 			ReceptionNode remote = (ReceptionNode) it.next();
-			remote.setRequest(request);
+			remote.setRequest(node.getParticipantId(), request);
 		}
 	}
 
@@ -157,12 +163,13 @@ public class ExecuteVisitor implements NodeVisitor {
 	 */
 	public void visit(UndoNode node) {
 		LOG.info("visit: " + node);
-		Algorithm algo = getAlgorithm(node.getSiteId());
+		Algorithm algo = getAlgorithm(node.getParticipantId());
 		Request request = algo.undo();
+		apply(node.getParticipantId(), request.getOperation());
 		Iterator it = node.getRemoteSuccessors().iterator();
 		while (it.hasNext()) {
 			ReceptionNode remote = (ReceptionNode) it.next();
-			remote.setRequest(request);
+			remote.setRequest(node.getParticipantId(), request);
 		}
 	}
 
@@ -174,12 +181,13 @@ public class ExecuteVisitor implements NodeVisitor {
 	 */
 	public void visit(RedoNode node) {
 		LOG.info("visit: " + node);
-		Algorithm algo = getAlgorithm(node.getSiteId());
+		Algorithm algo = getAlgorithm(node.getParticipantId());
 		Request request = algo.redo();
+		apply(node.getParticipantId(), request.getOperation());
 		Iterator it = node.getRemoteSuccessors().iterator();
 		while (it.hasNext()) {
 			ReceptionNode remote = (ReceptionNode) it.next();
-			remote.setRequest(request);
+			remote.setRequest(node.getParticipantId(), request);
 		}
 	}
 
@@ -193,8 +201,9 @@ public class ExecuteVisitor implements NodeVisitor {
 	public void visit(ReceptionNode node) {
 		LOG.info("visit: " + node);
 		Request request = node.getRequest();
-		Algorithm algo = getAlgorithm(node.getSiteId());
-		algo.receiveRequest(request);
+		Algorithm algo = getAlgorithm(node.getParticipantId());
+		Operation op = algo.receiveRequest(request);
+		apply(node.getParticipantId(), op);
 	}
 
 	/**
@@ -215,7 +224,7 @@ public class ExecuteVisitor implements NodeVisitor {
 	 */
 	public void visit(VerificationNode node) {
 		LOG.info("visit: " + node);
-		verify(node.getSiteId(), node.getState());
+		verify(node.getParticipantId(), node.getState());
 	}
 
 	/**
@@ -231,7 +240,7 @@ public class ExecuteVisitor implements NodeVisitor {
 	 */
 	public void visit(EndNode node) {
 		LOG.info("visit: " + node);
-		verify(node.getSiteId(), node.getState());
+		verify(node.getParticipantId(), node.getState());
 	}
 
 	/**
@@ -240,19 +249,18 @@ public class ExecuteVisitor implements NodeVisitor {
 	 * 
 	 * @param siteId
 	 *            the site to verify
-	 * @param state
+	 * @param expected
 	 *            the expected state
 	 * @throws VerificationException
 	 *             if the document state does not match the expected state
 	 */
-	protected void verify(final String siteId, final String state) {
-		Algorithm algo = getAlgorithm(siteId);
-		DocumentModel expected = getFactory().createDocument(state);
-		DocumentModel actual = algo.getDocument();
+	protected void verify(final String siteId, final String expected) {
+		Document doc = getDocument(siteId);
+		String actual = doc.getContent();
 		if (!expected.equals(actual)) {
-			addFailure(siteId, state, nullSafeToString(actual));
+			addFailure(siteId, expected, nullSafeToString(actual));
 		} else {
-			addSuccess(siteId, state);
+			addSuccess(siteId, expected);
 		}
 	}
 	
@@ -260,6 +268,22 @@ public class ExecuteVisitor implements NodeVisitor {
 		return o == null ? "" : o.toString();
 	}
 
+	public Document getDocument(String siteId) {
+		Document doc = (Document) documents.get(siteId);
+		if (doc == null) {
+			throw new ScenarioException("unknown site: " + siteId);
+		}
+		return doc;
+	}
+	
+	public void setDocument(String siteId, Document doc) {
+		if (documents.containsKey(siteId)) {
+			throw new IllegalStateException("document for site " + siteId
+							+ " already set");
+		}
+		documents.put(siteId, doc);
+	}
+	
 	/**
 	 * Gets the algorithm for the given site. Throws a ScenarioException if an
 	 * algorithm for the given site does not exist.
@@ -285,6 +309,10 @@ public class ExecuteVisitor implements NodeVisitor {
 	 * @param algorithm the algorithm
 	 */
 	protected void setAlgorithm(String siteId, Algorithm algorithm) {
+		if (algorithms.containsKey(siteId)) {
+			throw new IllegalStateException("algorithm for site " + siteId
+							+ " already set");
+		}
 		algorithms.put(siteId, algorithm);
 	}
 

@@ -36,6 +36,8 @@ import ch.iserver.ace.algorithm.Request;
 public class RelayNode extends AbstractNode implements ReceptionNode, GenerationNode {
 	/** the incoming request */
 	private Request request;
+	/** the incoming request's participant */
+	private String senderParticipantId;
 	/** the referenced operation */
 	private String reference;
 	/** the id of this generation event */
@@ -60,6 +62,10 @@ public class RelayNode extends AbstractNode implements ReceptionNode, Generation
 		this.remoteSuccessors = new HashSet();
 	}
 	
+	public String getSenderParticipantId() {
+		return senderParticipantId;
+	}
+	
 	public String getEventId() {
 		return eventId;
 	}
@@ -72,7 +78,8 @@ public class RelayNode extends AbstractNode implements ReceptionNode, Generation
 		return request;
 	}
 	
-	public void setRequest(Request request) {
+	public void setRequest(String participantId, Request request) {
+		this.senderParticipantId = participantId;
 		this.request = request;
 	}
 	
@@ -120,7 +127,7 @@ public class RelayNode extends AbstractNode implements ReceptionNode, Generation
 	 */
 	public String toString() {
 		return getClass().getName() + "["
-				+ "siteId=" + getSiteId()
+				+ "siteId=" + getParticipantId()
 				+ ",eventId=" + getEventId()
 				+ ",ref=" + getReference()
 				+ "]";

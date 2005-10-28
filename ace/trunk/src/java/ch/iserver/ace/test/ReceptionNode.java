@@ -24,16 +24,17 @@ import ch.iserver.ace.algorithm.Request;
 
 /**
  * This interface represents a node that receives requests. The
- * requests are received by a call to {@link #setRequest(Request)}.
+ * requests are received by a call to {@link #setRequest(String, Request)}.
  */
 public interface ReceptionNode extends Node {
 
 	/**
 	 * Sets the request to be received by this node.
 	 * 
+	 * @param participantId the id of the participant
 	 * @param request the request to be received
 	 */
-	public void setRequest(Request request);
+	public void setRequest(String participantId, Request request);
 
 	/**
 	 * Gets the request to be received by this node.

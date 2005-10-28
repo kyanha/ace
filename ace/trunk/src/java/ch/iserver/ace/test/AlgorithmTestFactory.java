@@ -21,9 +21,7 @@
 
 package ch.iserver.ace.test;
 
-import ch.iserver.ace.DocumentModel;
 import ch.iserver.ace.algorithm.Algorithm;
-import ch.iserver.ace.algorithm.Timestamp;
 
 /**
  * Factory for creating all the test relevant classes. There are
@@ -40,22 +38,5 @@ public interface AlgorithmTestFactory {
 	 * @return 			a new algorithm instance
 	 */
 	public Algorithm createAlgorithm(int siteId, Object parameter);
-	
-	/**
-	 * Creates a new timestamp. This must be an initial timestamp that
-	 * is understood by the algorithm.
-	 * 
-	 * @return a new (initial) timestamp instance
-	 */
-	public Timestamp createTimestamp();
-	
-	/**
-	 * Creates a new document model for use in the test. The document
-	 * state is given as argument.
-	 * 
-	 * @param state the document state
-	 * @return a new document model instance
-	 */
-	public DocumentModel createDocument(String state);
-	
+			
 }

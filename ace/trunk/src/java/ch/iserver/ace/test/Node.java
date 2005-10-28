@@ -33,11 +33,11 @@ import java.util.List;
 public interface Node {
 	
 	/**
-	 * Gets the id of the site this node belongs to.
+	 * Gets the id of the participant this node belongs to.
 	 * 
-	 * @return the site id
+	 * @return the participant id
 	 */
-	public String getSiteId();
+	public String getParticipantId();
 	
 	/**
 	 * Gets a list of successors of this node. This includes local

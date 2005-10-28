@@ -21,10 +21,9 @@
 
 package ch.iserver.ace.test.jupiter;
 
-import ch.iserver.ace.DocumentModel;
 import ch.iserver.ace.algorithm.Algorithm;
-import ch.iserver.ace.algorithm.Timestamp;
 import ch.iserver.ace.test.AlgorithmTestFactory;
+import ch.iserver.ace.test.DefaultDocument;
 import ch.iserver.ace.test.ExecuteVisitor;
 import ch.iserver.ace.test.StartNode;
 
@@ -46,14 +45,11 @@ public class TwoWayExecuteVisitor extends ExecuteVisitor {
 	}
 	
 	public void visit(StartNode node) {
-		String state = node.getState();
+		setDocument(node.getParticipantId(), new DefaultDocument(node.getState()));
 		Boolean isClient = Boolean.valueOf(node.getSites() % 2 == 0);
 		Algorithm algorithm = getFactory().createAlgorithm(
-				Integer.parseInt(node.getSiteId()), isClient);
-		DocumentModel document = getFactory().createDocument(state);
-		Timestamp timestamp = getFactory().createTimestamp();
-		algorithm.init(document, timestamp);
-		setAlgorithm(node.getSiteId(), algorithm);
+				Integer.parseInt(node.getParticipantId()), isClient);
+		setAlgorithm(node.getParticipantId(), algorithm);
 	}
 	
 }

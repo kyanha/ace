@@ -24,14 +24,19 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.swing.undo.CannotRedoException;
+import javax.swing.undo.CannotUndoException;
+
 import org.apache.log4j.Logger;
 
-import ch.iserver.ace.DocumentModel;
+import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.Algorithm;
+import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.InclusionTransformation;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.Timestamp;
+import ch.iserver.ace.text.GOTOInclusionTransformation;
 import ch.iserver.ace.text.SplitOperation;
 
 /**
@@ -43,11 +48,7 @@ public class Jupiter implements Algorithm {
 
 	private InclusionTransformation inclusion;
 
-	private DocumentModel document;
-
 	private JupiterVectorTime vectorTime;
-
-	private int siteId;
 
 	private boolean isClientSide;
 
@@ -60,59 +61,26 @@ public class Jupiter implements Algorithm {
 	private List ackRequestList;
 
 	/**
-	 * Class constructor that creates a new Jupiter algorithm. The parameters
-	 * fully initialize the algorithm.
-	 * 
-	 * @param it
-	 *            the inclusion transformation to be used
-	 * @param document
-	 *            the inital document model
-	 * @param siteId
-	 *            the site id
+	 * Class constructor that creates a new Jupiter algorithm.
 	 * @param isClientSide
 	 *            true if the algorithm resides on the client side
 	 */
-	public Jupiter(InclusionTransformation it, DocumentModel document,
-					int siteId, boolean isClientSide) {
-		inclusion = it;
-		this.siteId = siteId;
-		init(document, new JupiterVectorTime(0, 0));
-		ackRequestList = new ArrayList();
-		this.isClientSide = isClientSide;
-	}
-
-	/**
-	 * Class constructor that creates a new Jupiter algorithm. Afterwards, the
-	 * method {@link #init(DocumentModel, Timestamp)}needs to be called to
-	 * initialize the algorithm.
-	 * 
-	 * @param siteId
-	 *            the site Id of this algorithm.
-	 * @param isClientSide
-	 *            true if the algorithm resides on the client side
-	 */
-	public Jupiter(int siteId, boolean isClientSide) {
-		this.siteId = siteId;
+	public Jupiter(boolean isClientSide) {
+		this.inclusion = new GOTOInclusionTransformation();
+		this.vectorTime = new JupiterVectorTime(0, 0);
 		this.isClientSide = isClientSide;
 		ackRequestList = new ArrayList();
 	}
-
+	
 	/**
 	 * {@inheritDoc}
 	 */
 	public Request generateRequest(Operation op) {
-		// apply op locally;
-		if (op instanceof SplitOperation) {
-			SplitOperation split = (SplitOperation) op;
-			document.apply(split.getFirst());
-			document.apply(split.getSecond());
-		} else {
-			document.apply(op);
-		}
-
 		// send(op, myMsgs, otherMsgs);
-		Request req = new JupiterRequest(siteId, (JupiterVectorTime) vectorTime
-						.clone(), op);
+		Request req = new JupiterRequest(
+						getSiteId(), 
+						(JupiterVectorTime) vectorTime.clone(), 
+						op);
 
 		// add(op, myMsgs) to outgoing;
 		if (op instanceof SplitOperation) {
@@ -131,6 +99,14 @@ public class Jupiter implements Algorithm {
 
 		return req;
 	}
+	
+	public CaretUpdateMessage generateCaretUpdateMessage(CaretUpdate update) {
+		CaretUpdateMessage msg = new CaretUpdateMessage(
+						getSiteId(),
+						(JupiterVectorTime) vectorTime.clone(),
+						update);
+		return msg;
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -148,7 +124,6 @@ public class Jupiter implements Algorithm {
 
 		Operation newOp = transform(jupReq.getOperation());
 
-		apply(newOp);
 		LOG.info("tnf:" + ackRequestList);
 
 		vectorTime.incrementRemoteRequestCount();
@@ -196,30 +171,6 @@ public class Jupiter implements Algorithm {
 		// ASSERT msg.myMsgs == otherMsgs
 		assert time.getLocalOperationCount() == vectorTime
 						.getRemoteOperationCount() : "msg.myMsgs != otherMsgs !!";
-	}
-
-	/**
-	 * Applies an operation to the document model.
-	 * 
-	 * @param newOp
-	 *            the operation to be applied
-	 */
-	private void apply(Operation newOp) {
-		if (isClientSide && newOp instanceof SplitOperation) {
-			SplitOperation split = (SplitOperation) newOp;
-			if (split.getSecond() instanceof SplitOperation) {
-				apply(split.getSecond());
-			} else {
-				document.apply(split.getSecond());
-			}
-			if (split.getFirst() instanceof SplitOperation) {
-				apply(split.getFirst());
-			} else {
-				document.apply(split.getFirst());
-			}
-		} else {
-			document.apply(newOp);
-		}
 	}
 
 	/**
@@ -299,7 +250,7 @@ public class Jupiter implements Algorithm {
 			throw new JupiterException("precondition #2 violated.");
 		} else if (time.getLocalOperationCount() != vectorTime
 						.getRemoteOperationCount()) {
-			throw new JupiterException("precondition #3 violated.");
+			throw new JupiterException("precondition #3 violated: " + time + " , " + vectorTime);
 		}
 	}
 
@@ -342,34 +293,15 @@ public class Jupiter implements Algorithm {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void init(DocumentModel doc, Timestamp timestamp) {
-		if (doc == null || timestamp == null) {
-			throw new IllegalArgumentException("null parameter not allowed.");
-		}
-		document = doc;
-		// TODO: remove nasty cast
-		vectorTime = (JupiterVectorTime) timestamp;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public DocumentModel getDocument() {
-		return document;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public Request undo() {
-		throw new UnsupportedOperationException();
+		throw new CannotUndoException();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public Request redo() {
-		throw new UnsupportedOperationException();
+		throw new CannotRedoException();
 	}
 
 	/**
@@ -394,26 +326,13 @@ public class Jupiter implements Algorithm {
 	 * @return Returns the siteId.
 	 */
 	public int getSiteId() {
-		return siteId;
+		return isClientSide() ? 1 : 0;
 	}
-
-	/**
-	 * @param siteId
-	 *            The siteId to set.
-	 */
-	public void setSiteId(int siteId) {
-		this.siteId = siteId;
+	
+	public synchronized Timestamp getTimestamp() {
+		return (Timestamp) vectorTime.clone();
 	}
-
-	/**
-	 * Originally intended for test purpose.
-	 * 
-	 * @return the algo's vector time.
-	 */
-	public JupiterVectorTime getVectorTime() {
-		return vectorTime;
-	}
-
+	
 	/**
 	 * Checks if this algorithm locates client side.
 	 * 
@@ -440,4 +359,5 @@ public class Jupiter implements Algorithm {
 	public boolean canRedo() {
 		return false;
 	}
+	
 }

@@ -26,13 +26,11 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import ch.iserver.ace.DocumentModel;
 import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.Request;
-import ch.iserver.ace.algorithm.Timestamp;
-import ch.iserver.ace.algorithm.jupiter.server.OperationExtractDocumentModel;
 import ch.iserver.ace.test.AlgorithmTestFactory;
+import ch.iserver.ace.test.DefaultDocument;
 import ch.iserver.ace.test.ExecuteVisitor;
 import ch.iserver.ace.test.ReceptionNode;
 import ch.iserver.ace.test.RelayNode;
@@ -72,20 +70,14 @@ public class NWayExecuteVisitor extends ExecuteVisitor {
 	 */
 	public void visit(StartNode node) {
 		LOG.info("visit: " + node);
-		String state = node.getState();
+		setDocument(node.getParticipantId(), new DefaultDocument(node.getState()));
 		Algorithm algorithm = getFactory().createAlgorithm(
-				Integer.parseInt(node.getSiteId()), Boolean.TRUE);
-		DocumentModel document = getFactory().createDocument(state);
-		Timestamp timestamp = getFactory().createTimestamp();
-		algorithm.init(document, timestamp);
-		setAlgorithm(node.getSiteId(), algorithm);
+				Integer.parseInt(node.getParticipantId()), Boolean.FALSE);
+		setAlgorithm(node.getParticipantId(), algorithm);
 
 		algorithm = getFactory().createAlgorithm(
-				Integer.parseInt(node.getSiteId()), Boolean.FALSE);
-		timestamp = getFactory().createTimestamp();
-		document = new OperationExtractDocumentModel();
-		algorithm.init(document, timestamp);
-		setServerAlgorithm(node.getSiteId(), algorithm);
+				Integer.parseInt(node.getParticipantId()), Boolean.TRUE);
+		setServerAlgorithm(node.getParticipantId(), algorithm);
 	}
 
 	/**
@@ -98,20 +90,16 @@ public class NWayExecuteVisitor extends ExecuteVisitor {
 	 */
 	public void visit(RelayNode node) {
 		LOG.info("visit: " + node);
-		String siteId = "" + node.getRequest().getSiteId();
-		Algorithm algo = getServerAlgorithm(siteId);
-		algo.receiveRequest(node.getRequest());
-		// TODO: remove dependency on OperationExtractDocumentModel
-		OperationExtractDocumentModel doc = (OperationExtractDocumentModel) 
-				algo.getDocument();
-		Operation op = doc.getOperation();
-		LOG.info("receive from " + siteId + ": " + op);
+		String participantId = "" + node.getSenderParticipantId();
+		Algorithm algo = getServerAlgorithm(participantId);
+		Operation op = algo.receiveRequest(node.getRequest());
+		LOG.info("receive from " + participantId + ": " + op);
 		Iterator succ = node.getRemoteSuccessors().iterator();
 		while (succ.hasNext()) {
 			ReceptionNode remote = (ReceptionNode) succ.next();
-			algo = getServerAlgorithm(remote.getSiteId());
+			algo = getServerAlgorithm(remote.getParticipantId());
 			Request request = algo.generateRequest(op);
-			remote.setRequest(request);
+			remote.setRequest(participantId, request);
 		}
 	}
 

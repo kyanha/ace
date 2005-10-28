@@ -24,7 +24,6 @@ package ch.iserver.ace.algorithm;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 
-import ch.iserver.ace.DocumentModel;
 import ch.iserver.ace.Operation;
 
 /**
@@ -34,6 +33,10 @@ import ch.iserver.ace.Operation;
  */
 public interface Algorithm {
 
+	int getSiteId();
+	
+	Timestamp getTimestamp();
+	
 	/**
 	 * Checks whether an undo is possible at the moment. If this method returns
 	 * true, a subsequent call to undo must succeed.
@@ -78,7 +81,7 @@ public interface Algorithm {
 	 * @see Request
 	 */
 	public Request generateRequest(Operation op);
-
+		
 	/**
 	 * Receives a request from a remote site. The request must be transformed
 	 * and the resulting operation is returned.
@@ -99,21 +102,4 @@ public interface Algorithm {
 	 */
 	public int[] transformIndices(Timestamp timestamp, int[] indices);
 	
-	/**
-	 * Initialize the algorithm with the given document and initial timestamp.
-	 * 
-	 * @param doc
-	 *            the document model to which operations are applied
-	 * @param timestamp
-	 *            the initial timestamp associated with the document
-	 */
-	public void init(DocumentModel doc, Timestamp timestamp);
-
-	/**
-	 * Gets the document model used by the algorithm at the current time.
-	 * 
-	 * @return the document model
-	 */
-	public DocumentModel getDocument();
-
 }

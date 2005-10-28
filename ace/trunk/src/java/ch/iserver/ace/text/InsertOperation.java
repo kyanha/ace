@@ -229,9 +229,19 @@ public class InsertOperation implements Operation {
 			InsertOperation op = (InsertOperation) obj;
 			return op.position == position && op.text.equals(text)
 					&& op.origin == origin
-					&& op.original.equals(original);
+					&& nullSafeEquals(op.original, original);
 		} else {
 			return false;
+		}
+	}
+	
+	private boolean nullSafeEquals(Object a, Object b) {
+		if (a == b) {
+			return true;
+		} else if (a == null || b == null) {
+			return false;
+		} else {
+			return a.equals(b);
 		}
 	}
 
