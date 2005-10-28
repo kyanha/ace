@@ -38,6 +38,14 @@ public interface Invitation {
 	RemoteUser getInviter();
 	
 	/**
+	 * Retrieves the remote document for which the local user is 
+	 * invited.
+	 * 
+	 * @return the remote document to which the local user is invited
+	 */
+	RemoteDocument getDocument();
+	
+	/**
 	 * Accepts the invitation and gets the corresponding session info object.
 	 *
 	 * @param controller the SessionCallback for the session

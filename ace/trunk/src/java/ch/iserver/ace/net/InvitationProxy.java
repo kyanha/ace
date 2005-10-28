@@ -21,6 +21,7 @@
 
 package ch.iserver.ace.net;
 
+
 /**
  * The InvitationProxy interface represents an invitation as represented by the
  * network layer. 
@@ -34,7 +35,15 @@ public interface InvitationProxy {
 	 * @return the RemoteUserProxy object of the inviting user
 	 */
 	RemoteUserProxy getInviter();
-	
+
+	/**
+	 * Retrieves the remote document for which the local user is 
+	 * invited.
+	 * 
+	 * @return the remote document to which the local user is invited
+	 */
+	RemoteDocumentProxy getDocument();
+
 	/**
 	 * Accepts the invitation. The returned SessionConnectionInfo is ready to
 	 * be used for any communication with the joined session.
