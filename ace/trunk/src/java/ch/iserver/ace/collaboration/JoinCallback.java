@@ -22,12 +22,27 @@
 package ch.iserver.ace.collaboration;
 
 /**
- * 
+ * Callback interface for join requests. The callback is notified
+ * about the outcome of the join request. A join request can either
+ * be rejected or accepted. Do not expect that a join request
+ * results in a response. The owner of the document might never respond
+ * to the request.
  */
 public interface JoinCallback {
 	
+	/**
+	 * Notifies the callback that the request was rejected by the owner of 
+	 * the document.
+	 */
 	void rejected();
 	
+	/**
+	 * Notifies the callback that the request was accepted by the owner of
+	 * the document. The session to communicate with the joined shared
+	 * document.
+	 * 
+	 * @param session the Session object
+	 */
 	void accepted(Session session);
 	
 }

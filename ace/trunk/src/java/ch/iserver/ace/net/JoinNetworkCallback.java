@@ -22,12 +22,23 @@
 package ch.iserver.ace.net;
 
 /**
- *
+ * Callback interface for join requests on the network layer.
  */
 public interface JoinNetworkCallback {
 	
+	/**
+	 * Notifies the callback that the join request was rejected by the owner
+	 * of the document.
+	 */
 	void rejected();
 	
+	/**
+	 * Notifies the callback that the join request was accepted by the owner
+	 * of the document. The passed in SessionConnection can be used to
+	 * communicate with the joined shared document.
+	 * 
+	 * @param connection the SessionConnection
+	 */
 	void accepted(SessionConnection connection);
 	
 }
