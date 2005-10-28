@@ -135,6 +135,7 @@
 			<batchtest todir="${build.testreports}" unless="testcase">
 				<fileset dir="${src.test}">
 					<include name="**/*Test*.java"/>
+					<exclude name="**/AllTests.java"/>
 					<exclude name="ch/iserver/ace/test/AlgorithmTestCase.java"/>
 					<exclude name="ch/iserver/ace/test/jupiter/JupiterTestCase.java"/>
 					<exclude name="ch/iserver/ace/test/jupiter/TwoWayTestCase.java"/>
