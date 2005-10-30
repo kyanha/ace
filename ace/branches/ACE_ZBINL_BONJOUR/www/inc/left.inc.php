@@ -2,6 +2,7 @@
     <div class="block">
       <ul>
         <li><a href="index.php">Home</a></li>
+	<li><a href="index.php?page=0">Introduction</a></li>
         <li><a href="index.php?page=1">Vision</a></li>
         <li><a href="index.php?page=2">Documents</a></li>
         <li><a href="index.php?page=3">Links</a></li>
