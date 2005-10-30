@@ -10,7 +10,7 @@
  
    <?php
      $page = $_GET['page'];
-     if ($page < 0 || $page > 6) {
+     if ($page < 0 || $page > 7) {
        $page = 0;
      }
      $contact = "feedback@ace.iserver.ch";
