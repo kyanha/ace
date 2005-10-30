@@ -47,8 +47,12 @@ public class JupiterVectorTime implements VectorTime, Cloneable {
 	 *            the remote operation count.
 	 */
 	public JupiterVectorTime(int localCnt, int remoteCnt) {
-		assert localCnt >= 0 : "local operation count must be >= 0";
-		assert remoteCnt >= 0 : "remote operation count must be >= 0";
+		if (localCnt < 0) {
+			throw new IllegalArgumentException("local operation count cannot be negative");
+		}
+		if (remoteCnt < 0) {
+			throw new IllegalArgumentException("remote operation count cannot be negative");
+		}
 		localOperationCnt = localCnt;
 		remoteOperationCnt = remoteCnt;
 	}
