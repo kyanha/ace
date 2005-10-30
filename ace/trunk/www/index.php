@@ -28,6 +28,9 @@
 
        <?php
        switch ($page) {
+	case 0:
+	  require('inc/introduction.inc.php');
+	  break;
        case 1:
          require('inc/vision.inc.php');
          break;

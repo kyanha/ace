@@ -15,8 +15,3 @@
 </ul>
 
 
-<h2>PM Coaching</h2>
-
-<ul>
- <li>Frank Helbling</li>
-</ul>
