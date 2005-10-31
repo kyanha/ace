@@ -43,6 +43,6 @@ public interface JoinCallback {
 	 * 
 	 * @param session the Session object
 	 */
-	void accepted(Session session);
+	SessionCallback accepted(Session session);
 	
 }

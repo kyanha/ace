@@ -39,6 +39,6 @@ public interface JoinNetworkCallback {
 	 * 
 	 * @param connection the SessionConnection
 	 */
-	void accepted(SessionConnection connection);
+	SessionConnectionCallback accepted(SessionConnection connection);
 	
 }

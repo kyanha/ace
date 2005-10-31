@@ -56,10 +56,9 @@ public interface RemoteDocumentProxy {
 	/**
 	 * Tries to join the editing session of this remote document.
 	 * 
-	 * @param joinCallback the JoinNetworkCallback for callbacks to the logic
-	 *                     layer
-	 * @param callback the SessionConnectionCallback for the SessionConnection
+	 * @param callback the JoinNetworkCallback for callbacks to the logic
+	 *                 layer
 	 */
-	void join(JoinNetworkCallback joinCallback, SessionConnectionCallback callback);
+	void join(JoinNetworkCallback callback);
 	
 }

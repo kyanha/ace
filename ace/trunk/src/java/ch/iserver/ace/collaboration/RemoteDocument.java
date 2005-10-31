@@ -54,9 +54,8 @@ public interface RemoteDocument {
 	/**
 	 * Joins this remote document.
 	 * 
-	 * @param joinCallback the JoinCallback for join related callbacks
-	 * @param callback the SessionCallback for the Session
+	 * @param callback the JoinCallback for join related callbacks
 	 */
-	void join(JoinCallback joinCallback, SessionCallback callback);
+	void join(JoinCallback callback);
 
 }

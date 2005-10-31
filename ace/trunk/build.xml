@@ -43,6 +43,9 @@
 		            artifactId="xercesImpl" 
 		            version="2.6.2"
 		            scope="runtime"/>
+		<dependency groupId="log4j"
+			        artifactId="log4j"
+		            version="1.2.12"/>
 		<remoteRepository refid="remote.repository.maven" />
 		<remoteRepository refid="remote.repository.ace" />
 	</artifact:dependencies>

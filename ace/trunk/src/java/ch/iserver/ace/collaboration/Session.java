@@ -36,7 +36,7 @@ import ch.iserver.ace.Operation;
  * by accepting an invitation of another user.</p>
  */
 public interface Session {
-	
+		
 	/**
 	 * Locks the session's logic so that only the calling thread can access
 	 * the concurrency sensitive parts of the logic. This method must be
@@ -92,6 +92,13 @@ public interface Session {
 	 */
 	Set getParticipants();
 	
+	/**
+	 * Gets the participant with the given id. If there is no participant
+	 * with the given id in the session, null is returned.
+	 * 
+	 * @param participantId the participant id of the participant to retrieve
+	 * @return the Participant with the given id or null if there is none
+	 */
 	Participant getParticipant(int participantId);
 	
 	/**
