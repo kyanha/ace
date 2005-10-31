@@ -2,6 +2,8 @@ package ch.iserver.ace.net.impl.discovery;
 
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
+
 import com.apple.dnssd.DNSSD;
 import com.apple.dnssd.DNSSDRegistration;
 import com.apple.dnssd.DNSSDService;
@@ -13,53 +15,51 @@ import com.apple.dnssd.TXTRecord;
  *
  */
 public class BonjourUserRegistration implements RegisterListener {
+	
+	private static Logger LOG = Logger.getLogger(BonjourUserRegistration.class);
 
 	private DNSSDRegistration registration;
+	private String actualServiceName;
 		
-	public BonjourUserRegistration() {
-	}
+	public BonjourUserRegistration() {}
 	
 	
 	/**
 	 * Registers this service.
 	 */
 	public void register(final Properties props) {
-		String systemUsername = System.getProperty("user.name");
-		String username = (String)props.get(Bonjour.USER_KEY);
-		username = (username == null) ? systemUsername : username;
+		String serviceName = System.getProperty("user.name");
+		String username = (String)props.get(Bonjour.KEY_USER);
+		username = (username == null) ? serviceName : username;
 		
 		try {
 			registration = DNSSD.register(0, 0, 
-				systemUsername, 
-				(String)props.get(Bonjour.REGISTRATION_TYPE_KEY), 
+				serviceName, 
+				(String)props.get(Bonjour.KEY_REGISTRATION_TYPE), 
 				"",
 				"", 
-				((Integer)props.get(Bonjour.DISCOVERY_PORT_KEY)).intValue(), 
-				createTXTRecord(props), 
+				((Integer)props.get(Bonjour.KEY_DISCOVERY_PORT)).intValue(), 
+				TXTRecordProxy.create(props), 
 				this);
 		} catch (Exception e) {
 			//TODO:
+			LOG.error("Registration failed ["+e.getMessage()+"]");
 		}
 	}	
 	
-	private TXTRecord createTXTRecord(final Properties props) {
-		TXTRecord r = new TXTRecord();
-		r.set(Bonjour.TXT_VERSION_KEY, (String)props.get(Bonjour.TXT_VERSION_KEY));
-		r.set(Bonjour.USER_KEY, (String)props.get(Bonjour.USER_KEY));
-		r.set(Bonjour.USERID_KEY, (String)props.get(Bonjour.USERID_KEY));
-		r.set(Bonjour.PROTOCOL_VERSION_KEY, (String)props.get(Bonjour.PROTOCOL_VERSION_KEY));
-		return r;
-	}
-	
 	public void serviceRegistered(DNSSDRegistration registration, int flags,
 			String serviceName, String regType, String domain) {
-		// TODO Auto-generated method stub
-		
+		this.registration = registration;
+		this.actualServiceName = serviceName;
 	}
 	
 	public void operationFailed(DNSSDService service, int errorCode) {
-		// TODO Auto-generated method stub
-		
+		//TODO: error handling
+		LOG.error("operationFailed ["+errorCode+"]");
+	}
+	
+	public String getServiceName() {
+		return actualServiceName;
 	}
 	
 	public void stop() {

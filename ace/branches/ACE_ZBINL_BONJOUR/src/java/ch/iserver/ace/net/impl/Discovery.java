@@ -20,51 +20,37 @@
  */
 package ch.iserver.ace.net.impl;
 
-import java.net.InetAddress;
-import java.util.Collection;
-
 import ch.iserver.ace.UserDetails;
-import ch.iserver.ace.net.DocumentServerLogic;
-import ch.iserver.ace.net.RemoteUserProxy;
 
-public class RemoteUserProxyImpl implements RemoteUserProxy {
+/**
+ * 
+ *
+ */
+public interface Discovery {
 	
-	private String id;
-	private UserDetails details;
-	private String hostName;
-	private int port;
+	public static final String KEY_DISCOVERY_PORT = "port";
+
 	
-	public RemoteUserProxyImpl(String id, UserDetails details, String hostName, int port) {
-		this.id = id;
-		this.details = details;
-		this.hostName = hostName
-		this.port = port;
-	}
-
-	public String getId() {
-		return id;
-	}
+	void setDiscoveryCallback(DiscoveryCallback callback);
 	
-	public String getHostName() {
-		return hostName;
-	}
+	/**
+	 * Sets the UUID for the local user.
+	 * 
+	 * @param uuid
+	 */
+	void setUserId(String uuid);
 	
-	public int getPort() {
-		return port;
-	}
-
-	public UserDetails getUserDetails() {
-		return details;
-	}
-
-	public Collection getSharedDocuments() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public void invite(DocumentServerLogic logic) {
-		// TODO Auto-generated method stub
-
-	}
-
+	void setUserDetails(UserDetails details);
+	
+	/**
+	 * Executes the Bonjour zeroconf discovery process.
+	 * First, the user is registered. Afterwards, the network
+	 * is searched for other users.
+	 * 
+	 * @see DiscoveryCallback
+	 */
+	void execute();
+	
+	void abort();
+	
 }

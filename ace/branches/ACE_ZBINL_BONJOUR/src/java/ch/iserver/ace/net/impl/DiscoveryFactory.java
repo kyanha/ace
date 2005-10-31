@@ -20,18 +20,28 @@
  */
 package ch.iserver.ace.net.impl;
 
-import ch.iserver.ace.net.RemoteUserProxy;
+import ch.iserver.ace.net.impl.discovery.BonjourFactory;
 
-public class DiscoveryCallbackImpl implements DiscoveryCallback {
+/**
+ * 
+ *
+ */
+public abstract class DiscoveryFactory {
 
-	public void userDiscovered(RemoteUserProxy user) {
-		// TODO Auto-generated method stub
-		
+	private static DiscoveryFactory instance;
+	
+	/**
+	 * 
+	 * @return a discovery implementation
+	 */
+	public static DiscoveryFactory getInstance() {
+		if (instance == null) {
+			//TODO: load class via Spring framework
+			instance = new BonjourFactory();
+		}
+		return instance;
 	}
-
-	public void userDiscarded(String id) {
-		// TODO Auto-generated method stub
-
-	}
+	
+	public abstract Discovery createDiscovery();
 
 }

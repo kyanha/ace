@@ -18,20 +18,27 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+
 package ch.iserver.ace.net.impl;
 
 import ch.iserver.ace.net.RemoteUserProxy;
 
-public class DiscoveryCallbackImpl implements DiscoveryCallback {
+/**
+ * 
+ *
+ */
+public interface DiscoveryCallback {
 
-	public void userDiscovered(RemoteUserProxy user) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void userDiscarded(String id) {
-		// TODO Auto-generated method stub
-
-	}
-
+	/**
+	 * 
+	 * @param user
+	 */
+	public void userDiscovered(RemoteUserProxy user);
+	
+	/**
+	 * 
+	 * @param id
+	 */
+	public void userDiscarded(String id);
+	
 }

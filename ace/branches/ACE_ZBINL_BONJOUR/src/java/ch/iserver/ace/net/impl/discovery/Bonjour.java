@@ -23,39 +23,25 @@ package ch.iserver.ace.net.impl.discovery;
 import java.util.Properties;
 
 import ch.iserver.ace.UserDetails;
-import ch.iserver.ace.util.UUID;
+import ch.iserver.ace.net.impl.Discovery;
+import ch.iserver.ace.net.impl.DiscoveryCallback;
 
 public class Bonjour implements Discovery {
 	
-	public static final String REGISTRATION_TYPE_KEY = "regType";
-	public static final String TXT_VERSION_KEY = "txtvers";
-	public static final String PROTOCOL_VERSION_KEY = "version";
-	public static final String USER_KEY = "name";
-	public static final String USERID_KEY = "id";
+	public static final String KEY_REGISTRATION_TYPE = "regType";
+	public static final String KEY_TXT_VERSION = "txtvers";
+	public static final String KEY_PROTOCOL_VERSION = "version";
+	public static final String KEY_USER = "name";
+	public static final String KEY_USERID = "id";
 
 	private Properties props;
-	private DiscoveryCallback callback;
 	private BonjourUserRegistration registration;
 	private BonjourPeerDiscovery discovery;
 	
-	public Bonjour() {
-		loadConfig();
+	public Bonjour(Properties props) {
+		this.props = props;
 		registration = new BonjourUserRegistration();
-		discovery = new BonjourPeerDiscovery(callback);
-	}
-	
-	/**
-	 * Load the properties for Bonjour zeroconf.
-	 * TODO: load properties from text config file
-	 */
-	private void loadConfig() {
-		props.put(REGISTRATION_TYPE_KEY, "_ace._tcp");
-		props.put(TXT_VERSION_KEY, "1");
-		props.put(PROTOCOL_VERSION_KEY, "0.1");
-		
-		props.put(Discovery.DISCOVERY_PORT_KEY, new Integer(4123));
-		//TODO: where is the best place to set the userid?
-		props.put(USERID_KEY, UUID.nextUUID());
+		discovery = new BonjourPeerDiscovery();
 	}
 	
 	/**
@@ -66,22 +52,31 @@ public class Bonjour implements Discovery {
 		discovery.browse(props);
 	}
 	
+	public void abort() {
+		registration.stop();
+		discovery.stop();
+	}
+	
 	/**
 	 * @inheritDoc
 	 */
 	public void setDiscoveryCallback(DiscoveryCallback callback) {
-		this.callback = callback;
+		discovery.setDiscoveryCallback(callback);
 	}
 	
 	/**
-	 * 
+	 * @inheritDoc
 	 */
-	public void setUserDetails(UserDetails details) {
-		props.put(USER_KEY, details.getUsername());
+	public void setUserId(String uuid) {
+		props.put(KEY_USERID, uuid);
 	}
 	
-	
-	
+	/**
+	 * @inheritDoc
+	 */
+	public void setUserDetails(UserDetails details) {
+		props.put(KEY_USER, details.getUsername());
+	}
 	
 
 }
