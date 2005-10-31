@@ -11,5 +11,9 @@
 	<classpathentry kind="var" path="MAVEN2/commons-logging/commons-logging/1.0.4/commons-logging-1.0.4.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="var" path="MAVEN2/log4j/log4j/1.2.12/log4j-1.2.12.jar"/>
+	<classpathentry kind="var" path="MAVEN2/springframework/spring-context/1.2.5/spring-context-1.2.5.jar"/>
+	<classpathentry kind="var" path="MAVEN2/springframework/spring-beans/spring-beans-1.2.5.jar"/>
+	<classpathentry kind="var" path="MAVEN2/springframework/spring-core/spring-core-1.2.5.jar"/>
+	<classpathentry kind="var" path="MAVEN2/xml-apis/xml-apis/2.0.2/xml-apis-2.0.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
