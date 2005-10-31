@@ -13,7 +13,6 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Element;
 import javax.swing.text.GapContent;
-import javax.swing.text.Position;
 import javax.swing.text.SimpleAttributeSet;
 
 public class DefaultDocumentModel extends AbstractDocument implements
@@ -70,13 +69,8 @@ public class DefaultDocumentModel extends AbstractDocument implements
 	public void updateCaret(int participantId, int dot, int mark) {
 		CaretInfo info = getCaretInfo(participantId);
 		if (info == null) {
-			try {
-				info = new CaretInfo(createPosition(dot), 
-								   createPosition(mark));
-				setCaretInfo(participantId, info);
-			} catch (BadLocationException e) {
-				e.printStackTrace();
-			}
+			info = new CaretInfo(dot, mark);
+			setCaretInfo(participantId, info);
 		} else {
 			
 		}
@@ -100,6 +94,10 @@ public class DefaultDocumentModel extends AbstractDocument implements
 			// TODO: fix RuntimeException
 			throw new RuntimeException(e);
 		}
+	}
+	
+	public PortableDocument toPortableDocument() {
+		return this;
 	}
 	
 	protected int getParticipantId(AttributeSet attr) {
@@ -253,19 +251,19 @@ public class DefaultDocumentModel extends AbstractDocument implements
 	private Map carets = new HashMap();
 	
 	private static class CaretInfo {
-		private Position dot;
-		private Position mark;
+		private int dot;
+		private int mark;
 		
-		public CaretInfo(Position dot, Position mark) {
+		public CaretInfo(int dot, int mark) {
 			this.dot = dot;
 			this.mark = mark;
 		}
 		
-		public Position getDot() {
+		public int getDot() {
 			return dot;
 		}
 		
-		public Position getMark() {
+		public int getMark() {
 			return mark;
 		}
 	}

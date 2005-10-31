@@ -10,4 +10,6 @@ public interface DocumentModel {
 	
 	String getText();
 	
+	PortableDocument toPortableDocument();
+	
 }
