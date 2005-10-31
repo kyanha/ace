@@ -21,30 +21,15 @@
 
 package ch.iserver.ace;
 
-import ch.iserver.ace.util.ParameterValidator;
 
 
 /**
  *
  */
-public class Fragment {
+public interface Fragment {
 	
-	private final int participantId;
-	private final String text;
-	
-	public Fragment(int participantId, String text) {
-		ParameterValidator.notNegative("participantId", participantId);
-		ParameterValidator.notNull("text", text);
-		this.participantId = participantId;
-		this.text = text;
-	}
+	public int getParticipantId();
 
-	public int getParticipantId() {
-		return participantId;
-	}
-
-	public String getText() {
-		return text;
-	}
+	public String getText();
 	
 }

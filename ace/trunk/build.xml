@@ -46,6 +46,15 @@
 		<dependency groupId="log4j"
 			        artifactId="log4j"
 		            version="1.2.12"/>
+		<dependency groupId="springframework"
+			        artifactId="spring-core"
+		            version="1.2.5"/>
+		<dependency groupId="springframework"
+		            artifactId="spring-beans"
+		            version="1.2.5"/>
+		<dependency groupId="springframework"
+		            artifactId="spring-context"
+		            version="1.2.5"/>
 		<remoteRepository refid="remote.repository.maven" />
 		<remoteRepository refid="remote.repository.ace" />
 	</artifact:dependencies>
