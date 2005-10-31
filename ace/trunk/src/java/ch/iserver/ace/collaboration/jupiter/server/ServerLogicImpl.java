@@ -216,7 +216,7 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 	}
 	
 	/**
-	 * @see ch.iserver.ace.net.DocumentServerLogic#leave(int)
+	 * @see ServerLogic#leave(int)
 	 */
 	public synchronized void leave(int participantId) {
 		ParticipantConnection connection = getParticipantConnection(participantId);

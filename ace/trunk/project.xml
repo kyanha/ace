@@ -1,0 +1,84 @@
+<project>
+  <groupId>ace</groupId>
+  <artifactId>ace</artifactId>
+  <currentVersion>1.0-SNAPSHOT</currentVersion>
+  <description>
+    ACE is a collaborative editor. See http://ace.iserver.ch/ for details. This
+    is only the development site.
+  </description>
+  <siteAddress>ace.iserver.ch</siteAddress>
+  <siteDirectory>/home/ace/ace.iserver.ch/www/maven</siteDirectory>
+  <developers>
+    <developer>
+      <id>sim</id>
+      <name>Simon Raess</name>
+    </developer>
+    <developer>
+      <id>pyron</id>
+      <name>Mark Bigler</name>
+    </developer>
+    <developer>
+      <id>zbinl</id>
+      <name>Lukas Zbinden</name>
+    </developer>
+  </developers>
+  <build>
+    <sourceDirectory>src/java</sourceDirectory>
+  </build>
+  <reports>
+    <report>maven-changes-plugin</report>
+    <report>maven-checkstyle-plugin</report>
+    <report>maven-javadoc-plugin</report>
+    <report>maven-jdepend-plugin</report>
+    <report>maven-jxr-plugin</report>
+    <report>maven-license-plugin</report>
+    <report>maven-tasklist-plugin</report>
+  </reports>
+  <dependencies>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.8</version>
+    </dependency>
+    <dependency>
+      <groupId>jdom</groupId>
+      <artifactId>jdom</artifactId>
+      <version>1.0</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-beanutils</groupId>
+      <artifactId>commons-beanutils</artifactId>
+      <version>1.7.0</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>1.0.4</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency> 
+      <groupId>easymock</groupId>
+      <artifactId>easymock</artifactId>
+      <version>1.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>xml-apis</groupId>
+      <artifactId>xml-apis</artifactId>
+      <version>2.0.2</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>xerces</groupId>
+      <artifactId>xercesImpl</artifactId>
+      <version>2.6.2</version>
+      <scope>runtime</scope>
+    </dependency>
+  </dependencies>
+</project>

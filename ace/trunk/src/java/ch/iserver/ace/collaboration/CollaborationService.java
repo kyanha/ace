@@ -82,7 +82,7 @@ public interface CollaborationService {
 	 * Publishes a document so that other users can join editing it
 	 * over the network.
 	 *
-	 * @param controller the SessionCallback used for callbacks
+	 * @param callback the SessionCallback used for callbacks
 	 * @param document the document to publish
 	 * @return a session for the publisher itself
 	 */
