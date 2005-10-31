@@ -53,7 +53,6 @@ class BonjourPeerDiscovery implements BrowseListener, ResolveListener, QueryList
 	private DiscoveryCallback callback = NullDiscoveryCallback.getInstance();
 	
 	private DNSSDService browser;
-	private DNSSDService query;
 	
 	private Map services;
 	
@@ -131,9 +130,18 @@ class BonjourPeerDiscovery implements BrowseListener, ResolveListener, QueryList
 		resolver.stop();
 		
 		//monitor TXT record of remote user
+		monitorTXTRecord(flags, ifIndex, fullName);
+	}
+
+	/**
+	 * @param flags
+	 * @param ifIndex
+	 * @param fullName
+	 */
+	private void monitorTXTRecord(int flags, int ifIndex, String fullName) {
 		try {
 			//16=txt record, 1 = ns_c_in, cf. nameser.h
-			query = DNSSD.queryRecord(flags, ifIndex, fullName, 16, 1, this);
+			DNSSD.queryRecord(flags, ifIndex, fullName, 16, 1, this);
 		} catch (Exception e) {
 			//TODO:
 			LOG.error("Query record failed ["+e.getMessage()+"]");
@@ -179,7 +187,6 @@ class BonjourPeerDiscovery implements BrowseListener, ResolveListener, QueryList
 	 */
 	public void stop() {
 		browser.stop();
-		query.stop();
 	}
 	
 	/**
