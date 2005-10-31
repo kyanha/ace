@@ -22,7 +22,8 @@
 package ch.iserver.ace.net;
 
 import java.util.Iterator;
-import java.util.Set;
+
+import ch.iserver.ace.CaretUpdate;
 
 /**
  * A PortableDocument is a representation of a document in a portable way.
@@ -32,11 +33,11 @@ import java.util.Set;
 public interface PortableDocument {
 	
 	/**
-	 * Gets the set of participants. The type is Set&lt;Integer&gt;.
+	 * Gets the set of participant ids.
 	 * 
-	 * @return the set of participants
+	 * @return the set of participant ids
 	 */
-	Set getParticipants();
+	int[] getParticipantIds();
 	
 	/**
 	 * Gets the RemoteUserProxy for the given <var>participantId</var>.
@@ -50,9 +51,9 @@ public interface PortableDocument {
 	 * Gets the caret of the specified <var>participant</var>.
 	 * 
 	 * @param participantId the participant for which to retrieve the caret
-	 * @return the Caret of the given Participant
+	 * @return the CaretUpdate of the given Participant
 	 */
-	Caret getSelection(int participantId);
+	CaretUpdate getSelection(int participantId);
 	
 	/**
 	 * Gets an iterator over all the fragments of the document.
@@ -60,48 +61,5 @@ public interface PortableDocument {
 	 * @return an iterator over all the fragments
 	 */
 	Iterator getFragments();
-	
-	/**
-	 * A Fragment is continous part of text edited last by one particular
-	 * participant, the owner of the fragment.
-	 */
-	interface Fragment {
 		
-		/**
-		 * Gets the participant id of the owner.
-		 * 
-		 * @return the participant id of the owner
-		 */
-		int getParticipantId();
-				
-		/**
-		 * Gets the textual content of the fragment.
-		 * 
-		 * @return the textual content
-		 */
-		String getText();
-		
-	}
-	
-	/**
-	 * A Caret specifies the cursor position and selection of a participant.
-	 */
-	interface Caret {
-		
-		/**
-		 * Gets the current position of the cursor.
-		 * 
-		 * @return the cursor position
-		 */
-		int getDot();
-		
-		/**
-		 * Gets the position of the mark (other end of selection).
-		 * 
-		 * @return the mark position
-		 */
-		int getMark();
-		
-	}
-	
 }

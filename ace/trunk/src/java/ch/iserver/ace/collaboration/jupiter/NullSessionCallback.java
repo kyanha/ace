@@ -26,8 +26,8 @@ import org.apache.log4j.Logger;
 import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.Operation;
 import ch.iserver.ace.collaboration.Participant;
+import ch.iserver.ace.collaboration.PortableDocument;
 import ch.iserver.ace.collaboration.SessionCallback;
-import ch.iserver.ace.net.PortableDocument;
 
 /**
  *
@@ -50,7 +50,7 @@ final class NullSessionCallback implements SessionCallback {
 	}
 	
 	/**
-	 * @see ch.iserver.ace.collaboration.SessionCallback#setDocument(ch.iserver.ace.net.PortableDocument)
+	 * @see ch.iserver.ace.collaboration.SessionCallback#setDocument(PortableDocument)
 	 */
 	public void setDocument(PortableDocument doc) {
 		LOG.warn("SessionCallback not set on Session (setDocument called)");

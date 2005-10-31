@@ -19,27 +19,32 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.util;
+package ch.iserver.ace;
+
+import ch.iserver.ace.util.ParameterValidator;
+
 
 /**
  *
  */
-public final class ParameterValidator {
+public class Fragment {
 	
-	private ParameterValidator() {
-		// do nothing
+	private final int participantId;
+	private final String text;
+	
+	public Fragment(int participantId, String text) {
+		ParameterValidator.notNegative("participantId", participantId);
+		ParameterValidator.notNull("text", text);
+		this.participantId = participantId;
+		this.text = text;
 	}
-	
-	public static void notNull(String name, Object value) {
-		if (value == null) {
-			throw new IllegalArgumentException(name + " cannot be null");
-		}
+
+	public int getParticipantId() {
+		return participantId;
 	}
-	
-	public static void notNegative(String name, int value) {
-		if (value < 0) {
-			throw new IllegalArgumentException(name + " cannot be negative");
-		}
+
+	public String getText() {
+		return text;
 	}
 	
 }

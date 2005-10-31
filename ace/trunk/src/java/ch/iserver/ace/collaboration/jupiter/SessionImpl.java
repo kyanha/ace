@@ -149,7 +149,7 @@ public class SessionImpl extends AbstractSession implements SessionConnectionCal
 	}
 	
 	public void setDocument(PortableDocument document) {
-		getCallback().setDocument(document);		
+		getCallback().setDocument(new PortableDocumentWrapper(document));		
 	}
 	
 	public void userJoined(int participantId, RemoteUserProxy proxy) {

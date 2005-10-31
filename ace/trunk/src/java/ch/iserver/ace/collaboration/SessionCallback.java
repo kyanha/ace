@@ -21,7 +21,6 @@
 
 package ch.iserver.ace.collaboration;
 
-import ch.iserver.ace.net.PortableDocument;
 
 /**
  * This interface describes the interface between the logic layer and
