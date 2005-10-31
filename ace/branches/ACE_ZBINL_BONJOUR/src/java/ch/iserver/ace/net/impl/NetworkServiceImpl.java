@@ -29,35 +29,72 @@ import ch.iserver.ace.net.DocumentServer;
 import ch.iserver.ace.net.DocumentServerLogic;
 import ch.iserver.ace.net.NetworkService;
 import ch.iserver.ace.net.NetworkServiceCallback;
+import ch.iserver.ace.net.RemoteUserProxy;
+import ch.iserver.ace.util.UUID;
 
 /**
  *
  */
 public class NetworkServiceImpl implements NetworkService {
+	
+	private TimestampFactory timestampFactory;
+	private NetworkServiceCallback networkCallback;
+	
+	private Discovery discovery;
+	private String userId;
+	
+	public NetworkServiceImpl() {
+		userId = UUID.nextUUID();
+		initDiscovery();
+		initCommunication();
+	}
+	
+	private void initDiscovery() {
+		DiscoveryFactory factory = DiscoveryFactory.getInstance();
+		discovery = factory.createDiscovery();
+		DiscoveryCallback callback = new DiscoveryCallbackImpl(this);
+		discovery.setDiscoveryCallback(callback);
+		discovery.setUserId(userId);
+	}
+	
+	private void initCommunication() { /*TODO: */ }
 
 	public void setUserDetails(UserDetails details) {
-		// TODO Auto-generated method stub
-		
+		discovery.setUserDetails(details);
 	}
 
 	public void setTimestampFactory(TimestampFactory factory) {
-		// TODO Auto-generated method stub
-		
+		this.timestampFactory = factory;
 	}
 
 	public void setCallback(NetworkServiceCallback callback) {
-		// TODO Auto-generated method stub
-		
+		this.networkCallback = callback;
+	}
+	
+	public NetworkServiceCallback getCallback() {
+		return networkCallback;
 	}
 
 	public DocumentServer publish(DocumentServerLogic logic) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	public void discoverUser(DiscoveryNetworkCallback callback, InetAddress addr, int port) {
-		// TODO Auto-generated method stub
 		
+		
+	}
+	
+	void userDiscovered(RemoteUserProxy proxy) {
+		getCallback().userDiscovered(proxy);
+	}
+	
+	void userDiscarded(RemoteUserProxy proxy) {
+		getCallback().userDiscarded(proxy);
+	}
+	
+	void userDetailsChanged(RemoteUserProxy proxy) {
+		getCallback().userDetailsChanged(proxy);
 	}
 
 }

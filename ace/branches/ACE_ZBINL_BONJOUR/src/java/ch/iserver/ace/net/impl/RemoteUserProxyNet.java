@@ -18,34 +18,19 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-
 package ch.iserver.ace.net.impl;
 
 import ch.iserver.ace.UserDetails;
+import ch.iserver.ace.net.RemoteUserProxy;
 
 /**
- * 
+ * Package protected interface extension of <code>RemoteUserProxy</code>
+ * for the network layer.
  *
+ * @see ch.iserver.ace.net.RemoteUserProxy
  */
-public interface DiscoveryCallback {
+interface RemoteUserProxyNet extends RemoteUserProxy {
 
-	/**
-	 * 
-	 * @param user
-	 */
-	void userDiscovered(RemoteUserProxyNet user);
-	
-	/**
-	 * 
-	 * @param id
-	 */
-	void userDiscarded(String id);
-	
-	/**
-	 * 
-	 * @param id
-	 * @param details
-	 */
-	void userDetailsChanged(String id, UserDetails details);
+	void setUserDetails(UserDetails details);
 	
 }

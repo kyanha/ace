@@ -20,53 +20,37 @@
  */
 package ch.iserver.ace.net.impl;
 
-import java.util.Collection;
+import org.apache.log4j.Logger;
 
 import ch.iserver.ace.UserDetails;
-import ch.iserver.ace.net.DocumentServerLogic;
 
-public class RemoteUserProxyImpl implements RemoteUserProxyNet {
+/**
+ * Null object pattern.
+ *
+ */
+public class NullDiscoveryCallback implements DiscoveryCallback {
 	
-	private String id;
-	private UserDetails details;
-	private String hostName;
-	private int port;
+	private static Logger LOG = Logger.getLogger(NullDiscoveryCallback.class);
 	
-	public RemoteUserProxyImpl(String id, UserDetails details, String hostName, int port) {
-		this.id = id;
-		this.details = details;
-		this.hostName = hostName;
-		this.port = port;
-	}
-
-	public String getId() {
-		return id;
-	}
+	private static NullDiscoveryCallback instance;
 	
-	public String getHostName() {
-		return hostName;
-	}
-	
-	public int getPort() {
-		return port;
-	}
-
-	public UserDetails getUserDetails() {
-		return details;
+	public static NullDiscoveryCallback getInstance() {
+		if (instance == null) {
+			instance = new NullDiscoveryCallback();
+		}
+		return instance;
 	}
 
-	public Collection getSharedDocuments() {
-		// TODO Auto-generated method stub
-		return null;
+	public void userDiscovered(RemoteUserProxyNet user) {
+		LOG.warn("called for "+user.getUserDetails().getUsername());
 	}
 
-	public void invite(DocumentServerLogic logic) {
-		// TODO Auto-generated method stub
-
+	public void userDiscarded(String id) {
+		LOG.warn("called for [id="+id+"]");
 	}
 
-	public void setUserDetails(UserDetails details) {
-		// TODO Auto-generated method stub
+	public void userDetailsChanged(String id, UserDetails details) {
+		LOG.warn("called for [id="+id+", username="+details.getUsername()+"]");
 		
 	}
 

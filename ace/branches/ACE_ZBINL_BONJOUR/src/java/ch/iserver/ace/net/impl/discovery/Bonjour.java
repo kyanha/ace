@@ -36,12 +36,12 @@ public class Bonjour implements Discovery {
 
 	private Properties props;
 	private BonjourUserRegistration registration;
-	private BonjourPeerDiscovery discovery;
+	private BonjourPeerDiscovery peerDiscovery;
 	
 	public Bonjour(Properties props) {
 		this.props = props;
 		registration = new BonjourUserRegistration();
-		discovery = new BonjourPeerDiscovery();
+		peerDiscovery = new BonjourPeerDiscovery();
 	}
 	
 	/**
@@ -49,19 +49,19 @@ public class Bonjour implements Discovery {
 	 */
 	public void execute() {
 		registration.register(props);
-		discovery.browse(props);
+		peerDiscovery.browse(props);
 	}
 	
 	public void abort() {
 		registration.stop();
-		discovery.stop();
+		peerDiscovery.stop();
 	}
 	
 	/**
 	 * @inheritDoc
 	 */
 	public void setDiscoveryCallback(DiscoveryCallback callback) {
-		discovery.setDiscoveryCallback(callback);
+		peerDiscovery.setDiscoveryCallback(callback);
 	}
 	
 	/**
@@ -76,6 +76,9 @@ public class Bonjour implements Discovery {
 	 */
 	public void setUserDetails(UserDetails details) {
 		props.put(KEY_USER, details.getUsername());
+		if (registration.isRegistered()) {
+			registration.update(details);
+		}
 	}
 	
 

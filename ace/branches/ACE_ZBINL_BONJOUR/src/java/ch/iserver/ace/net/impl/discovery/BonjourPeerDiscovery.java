@@ -29,13 +29,14 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 
 import ch.iserver.ace.UserDetails;
-import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.net.impl.DiscoveryCallback;
+import ch.iserver.ace.net.impl.NullDiscoveryCallback;
 import ch.iserver.ace.net.impl.RemoteUserProxyImpl;
 
 import com.apple.dnssd.BrowseListener;
 import com.apple.dnssd.DNSSD;
 import com.apple.dnssd.DNSSDService;
+import com.apple.dnssd.QueryListener;
 import com.apple.dnssd.ResolveListener;
 import com.apple.dnssd.TXTRecord;
 
@@ -43,25 +44,40 @@ import com.apple.dnssd.TXTRecord;
  * 
  *
  */
-class BonjourPeerDiscovery implements BrowseListener, ResolveListener {
+class BonjourPeerDiscovery implements BrowseListener, ResolveListener, QueryListener {
 	
 	private static Logger LOG = Logger.getLogger(BonjourPeerDiscovery.class);
 	
 	private static final String SERVICE_NAME_SEPARATOR = "._";
 
 	private DiscoveryCallback callback = NullDiscoveryCallback.getInstance();
+	
 	private DNSSDService browser;
+	private DNSSDService query;
 	
 	private Map services;
 	
+	/**
+	 * 
+	 *
+	 */
 	public BonjourPeerDiscovery() {
 		services = new HashMap();
 	}
 	
+	/**
+	 * 
+	 * @param callback
+	 */
 	public BonjourPeerDiscovery(DiscoveryCallback callback) {
 		this.callback = callback;
 	}
 
+	/**
+	 * Browses the local network for other services and users, respectively.
+	 * 
+	 * @param props the properties for the DNSSD call.
+	 */
 	public void browse(final Properties props) {
 		try {
 			browser = DNSSD.browse(0, 0, 
@@ -74,10 +90,10 @@ class BonjourPeerDiscovery implements BrowseListener, ResolveListener {
 		}
 	}
 	
-	
-	
-	public void serviceFound(DNSSDService browser, int flags, int ifIndex,
-			String serviceName, String regType, String domain) {
+	/**
+	 * @inheritDoc
+	 */
+	public void serviceFound(DNSSDService browser, int flags, int ifIndex, String serviceName, String regType, String domain) {
 		try {
 			DNSSD.resolve(flags, ifIndex, serviceName, regType, domain, this);
 		} catch (Exception e) {
@@ -86,39 +102,99 @@ class BonjourPeerDiscovery implements BrowseListener, ResolveListener {
 		}
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public void serviceLost(DNSSDService browser, int flags, int ifIndex,
 			String serviceName, String regType, String domain) {
 		String userId = (String)services.remove(serviceName);
-		callback.userDiscarded(userId);
+		if (userId != null)
+			callback.userDiscarded(userId);
+		else 
+			LOG.warn("userid for service ["+serviceName+"] not found");
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public void serviceResolved(DNSSDService resolver, int flags, int ifIndex,
 			String fullName, String hostName, int port, TXTRecord txtRecord) {
 		String userId = TXTRecordProxy.get(Bonjour.KEY_USERID, txtRecord);
-		RemoteUserProxy user = new RemoteUserProxyImpl(
+		RemoteUserProxyImpl user = new RemoteUserProxyImpl(
 						userId,
 						new UserDetails(TXTRecordProxy.get(Bonjour.KEY_USER, txtRecord)),
 						hostName, 
 						port);
-		String serviceName = fullName.substring(0, fullName.indexOf(SERVICE_NAME_SEPARATOR));
+		String serviceName = getServiceName(fullName);
 		services.put(serviceName, userId);
 		callback.userDiscovered(user);
 		resolver.stop();
+		
+		//monitor TXT record of remote user
+		try {
+			//16=txt record, 1 = ns_c_in, cf. nameser.h
+			query = DNSSD.queryRecord(flags, ifIndex, fullName, 16, 1, this);
+		} catch (Exception e) {
+			//TODO:
+			LOG.error("Query record failed ["+e.getMessage()+"]");
+		}
 	}
 	
+	private String getServiceName(String fullName) {
+		return fullName.substring(0, fullName.indexOf(SERVICE_NAME_SEPARATOR));
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public void queryAnswered(DNSSDService query, int flags, int ifIndex,
+			String fullName, int rrtype, int rrclass, byte[] rdata, int ttl) {
+		//TXT record updates have a TTL value > 0, ignore others 
+		if (ttl > 0) {
+			String serviceName = getServiceName(fullName);
+			String userId = (String)services.get(serviceName);
+			if (userId != null) {
+				TXTRecord t = new TXTRecord(rdata);
+				String userName = TXTRecordProxy.get(Bonjour.KEY_USER, t);
+				UserDetails detail = new UserDetails(userName);
+				callback.userDetailsChanged(userId, detail);
+			} else {
+				LOG.warn("TXT record received for unknown user ["+serviceName+"]");
+			}
+		} else {
+			LOG.warn("TXT record update ignored.");
+		}
+	}
+	
+	/**
+	 * @inheritDoc
+	 */
 	public void operationFailed(DNSSDService service, int errorCode) {
 		// TODO:
 		LOG.error("operationFailed ["+errorCode+"]");
 	}
 	
+	/**
+	 * Stops the Bonjour peer discovery process.
+	 */
 	public void stop() {
 		browser.stop();
+		query.stop();
 	}
 	
+	/**
+	 * Sets the discovery callback.
+	 * @param callback
+	 * @see DiscoveryCallback
+	 */
 	public void setDiscoveryCallback(DiscoveryCallback callback) {
 		this.callback = (callback == null) ? NullDiscoveryCallback.getInstance() : callback;
 	}
 	
+	/**
+	 * Gets the discovery callback.
+	 * @return DiscoveryCallback
+	 */
 	public DiscoveryCallback getDiscoveryCallback() {
 		return callback;
 	}
@@ -132,5 +208,6 @@ class BonjourPeerDiscovery implements BrowseListener, ResolveListener {
 		}
 		return address;
 	}
+
 
 }

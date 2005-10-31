@@ -29,7 +29,7 @@ import ch.iserver.ace.net.impl.NetworkConstants;
 
 import com.apple.dnssd.TXTRecord;
 
-public class TXTRecordProxy {
+class TXTRecordProxy {
 
 	private static Logger LOG = Logger.getLogger(TXTRecordProxy.class);
 	
@@ -57,6 +57,16 @@ public class TXTRecordProxy {
 			LOG.warn("data in TXT record not found.");
 		}
 		return result;
+	}
+	
+	public static void set(String key, String value, TXTRecord txt) {
+		try {
+			txt.set(key, value.getBytes(NetworkConstants.DEFAULT_CHARSET));
+		} catch (UnsupportedEncodingException uee) {
+			//should not happen, since  every implementation of the Java platform 
+			//is required to support the default charset
+			LOG.error(uee);
+		}
 	}
 	
 }
