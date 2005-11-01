@@ -21,21 +21,20 @@
 
 package ch.iserver.ace.collaboration.jupiter;
 
+import junit.framework.TestCase;
+
 import org.easymock.MockControl;
 
-import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.net.SessionConnection;
-
-import junit.framework.TestCase;
 
 /**
  *
  */
-public class SessionLockUsageTest extends TestCase {
+public class SessionImplTest extends TestCase {
 	
 	public void testSendOperation() throws Exception {
-		MockControl algorithmCtrl = MockControl.createControl(Algorithm.class);
-		Algorithm algorithm = (Algorithm) algorithmCtrl.getMock();
+		MockControl algorithmCtrl = MockControl.createControl(AlgorithmWrapper.class);
+		AlgorithmWrapper algorithm = (AlgorithmWrapper) algorithmCtrl.getMock();
 		MockControl connectionCtrl = MockControl.createControl(SessionConnection.class);
 		SessionConnection connection = (SessionConnection) connectionCtrl.getMock();
 		
@@ -61,8 +60,8 @@ public class SessionLockUsageTest extends TestCase {
 	}
 
 	public void testSendOperationNoLocking() throws Exception {
-		MockControl algorithmCtrl = MockControl.createControl(Algorithm.class);
-		Algorithm algorithm = (Algorithm) algorithmCtrl.getMock();
+		MockControl algorithmCtrl = MockControl.createControl(AlgorithmWrapper.class);
+		AlgorithmWrapper algorithm = (AlgorithmWrapper) algorithmCtrl.getMock();
 		MockControl connectionCtrl = MockControl.createControl(SessionConnection.class);
 		SessionConnection connection = (SessionConnection) connectionCtrl.getMock();
 		
@@ -76,6 +75,58 @@ public class SessionLockUsageTest extends TestCase {
 		try {
 			impl.sendOperation(null);
 			fail("sending operations without locking must fail");
+		} catch (IllegalMonitorStateException e) {
+			// expected
+		}
+		
+		// verify
+		algorithmCtrl.verify();
+		connectionCtrl.verify();
+	}
+	
+	public void testSendCaretUpdate() throws Exception {
+		MockControl algorithmCtrl = MockControl.createControl(AlgorithmWrapper.class);
+		AlgorithmWrapper algorithm = (AlgorithmWrapper) algorithmCtrl.getMock();
+		MockControl connectionCtrl = MockControl.createControl(SessionConnection.class);
+		SessionConnection connection = (SessionConnection) connectionCtrl.getMock();
+		
+		SessionImpl impl = new SessionImpl(algorithm);
+		impl.setConnection(connection);
+		
+		// define mock behavior
+		algorithm.generateCaretUpdateMessage(null);
+		algorithmCtrl.setReturnValue(null);
+		connection.sendCaretUpdate(null);
+		
+		// replay
+		algorithmCtrl.replay();
+		connectionCtrl.replay();
+		
+		impl.lock();
+		impl.sendCaretUpdate(null);
+		impl.unlock();
+		
+		// verify
+		algorithmCtrl.verify();
+		connectionCtrl.verify();
+	}
+
+	public void testSendCaretUpdateNoLocking() throws Exception {
+		MockControl algorithmCtrl = MockControl.createControl(AlgorithmWrapper.class);
+		AlgorithmWrapper algorithm = (AlgorithmWrapper) algorithmCtrl.getMock();
+		MockControl connectionCtrl = MockControl.createControl(SessionConnection.class);
+		SessionConnection connection = (SessionConnection) connectionCtrl.getMock();
+		
+		SessionImpl impl = new SessionImpl(algorithm);
+		impl.setConnection(connection);
+		
+		// replay
+		algorithmCtrl.replay();
+		connectionCtrl.replay();
+		
+		try {
+			impl.sendCaretUpdate(null);
+			fail("sending caret updates without locking must fail");
 		} catch (IllegalMonitorStateException e) {
 			// expected
 		}

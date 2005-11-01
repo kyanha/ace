@@ -56,7 +56,7 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 	private final CallbackWorker callbackWorker;
 	
 	public PublishedSessionImpl(PublishedSessionCallback callback) {
-		super(new Jupiter(true));
+		super(new AlgorithmWrapperImpl(new Jupiter(true)));
 		ParameterValidator.notNull("callback", callback);
 		this.callback = callback;
 		this.callbackQueue = new LinkedBlockingQueue();

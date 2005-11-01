@@ -24,7 +24,6 @@ package ch.iserver.ace.collaboration.jupiter;
 
 import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.Operation;
-import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.jupiter.Jupiter;
@@ -48,18 +47,18 @@ public class SessionImpl extends AbstractSession implements SessionConnectionCal
 	private SessionConnection connection;
 	
 	public SessionImpl() {
-		this(new Jupiter(true));
+		this(new AlgorithmWrapperImpl(new Jupiter(true)));
 	}
 	
 	public SessionImpl(SessionCallback callback) {
-		this(new Jupiter(true), callback);
+		this(new AlgorithmWrapperImpl(new Jupiter(true)), callback);
 	}
-	
-	public SessionImpl(Algorithm algorithm) {
+		
+	public SessionImpl(AlgorithmWrapper algorithm) {
 		this(algorithm, null);
 	}
 	
-	protected SessionImpl(Algorithm algorithm, SessionCallback callback) {
+	protected SessionImpl(AlgorithmWrapper algorithm, SessionCallback callback) {
 		super(algorithm);
 		setSessionCallback(callback);
 	}
@@ -113,10 +112,18 @@ public class SessionImpl extends AbstractSession implements SessionConnectionCal
 		getConnection().sendCaretUpdate(message);
 	}
 
+	// --> SessionConnectionCallback methods <--
+	
+	/**
+	 * @see ch.iserver.ace.net.SessionConnectionCallback#kicked()
+	 */
 	public void kicked() {
 		getCallback().kicked();
 	}
 	
+	/**
+	 * @see ch.iserver.ace.net.SessionConnectionCallback#sessionTerminated()
+	 */
 	public void sessionTerminated() {
 		getCallback().sessionTerminated();
 	}
@@ -161,19 +168,12 @@ public class SessionImpl extends AbstractSession implements SessionConnectionCal
 	 * @see ch.iserver.ace.net.SessionConnectionCallback#setDocument(ch.iserver.ace.net.PortableDocument)
 	 */
 	public void setDocument(PortableDocument document) {
-		try {
-			lock();
-			try {
-				getCallback().setDocument(new PortableDocumentWrapper(document));
-			} finally {
-				unlock();
-			}
-		} catch (InterruptedException e) {
-			// 
-			throw new InterruptedRuntimeException(e);
-		}
+		getCallback().setDocument(new PortableDocumentWrapper(document));
 	}
 	
+	/**
+	 * @see ch.iserver.ace.net.SessionConnectionCallback#userJoined(int, ch.iserver.ace.net.RemoteUserProxy)
+	 */
 	public void userJoined(int participantId, RemoteUserProxy proxy) {
 		RemoteUser user = new RemoteUserImpl(proxy);
 		Participant participant = new ParticipantImpl(participantId, user);
@@ -181,7 +181,10 @@ public class SessionImpl extends AbstractSession implements SessionConnectionCal
 		getCallback().participantJoined(participant);
 	}
 	
-	public void userLeaved(int participantId, int reason) {
+	/**
+	 * @see ch.iserver.ace.net.SessionConnectionCallback#userLeft(int, int)
+	 */
+	public void userLeft(int participantId, int reason) {
 		Participant participant = getParticipant(participantId);
 		removeParticipant(participant);
 		getCallback().participantLeft(participant, reason);

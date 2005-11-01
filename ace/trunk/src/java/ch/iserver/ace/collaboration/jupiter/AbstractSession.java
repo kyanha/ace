@@ -27,7 +27,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.collaboration.Session;
 import ch.iserver.ace.util.Lock;
@@ -65,10 +64,10 @@ abstract class AbstractSession implements Session {
 	 * 
 	 * @param algorithm the Algorithm used by the Session
 	 */
-	protected AbstractSession(Algorithm algorithm) {
+	protected AbstractSession(AlgorithmWrapper algorithm) {
 		ParameterValidator.notNull("algorithm", algorithm);
 		this.lock = new SemaphoreLock();
-		this.algorithm = new AlgorithmWrapperImpl(algorithm);
+		this.algorithm = algorithm;
 	}
 	
 	/**

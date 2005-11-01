@@ -90,6 +90,6 @@ public interface SessionConnectionCallback {
 	 * @param participantId the participant id of the participant that left
 	 * @param reason the reason why the participant left
 	 */
-	void userLeaved(int participantId, int reason);
+	void userLeft(int participantId, int reason);
 	
 }
