@@ -40,10 +40,10 @@ public interface PublishedSessionCallback {
 	/**
 	 * Notifies the session callback that a user left the Session.
 	 * 
-	 * @param participantId the id of the participant that left the Session
+	 * @param participant the participant that left the Session
 	 * @param code the reason why the participant left
 	 */
-	void participantLeft(int participantId, int code);
+	void participantLeft(Participant participant, int code);
 	
 	/**
 	 * Receives an operation from the given participant.

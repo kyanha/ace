@@ -53,7 +53,7 @@ final class NullSessionCallback implements SessionCallback {
 		LOG.warn("SessionCallback not set on Session (participantJoined called)");
 	}
 	
-	public void participantLeft(int participantId, int code) {
+	public void participantLeft(Participant participant, int code) {
 		LOG.warn("SessionCallback not set on Session (participantLeft called)");
 	}
 	

@@ -161,7 +161,7 @@ public class SessionImpl extends AbstractSession implements SessionConnectionCal
 	public void userLeaved(int participantId, int reason) {
 		Participant participant = getParticipant(participantId);
 		removeParticipant(participant);
-		getCallback().participantLeft(participant.getParticipantId(), reason);
+		getCallback().participantLeft(participant, reason);
 	}
 	
 }
