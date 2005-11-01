@@ -20,13 +20,37 @@ public class DefaultDocumentModel extends AbstractDocument implements
 
 	public static final String PARTICIPANT_ATTR = "participant";
 
+	private final Map carets = new HashMap();
+
 	private BranchElement defaultRoot;
 
 	public DefaultDocumentModel() {
 		super(new GapContent());
 		defaultRoot = (BranchElement) createDefaultRoot();
 	}
-
+	
+	// --> utility methods <--
+	
+	private CaretHandler getCaretHandler(int participantId) {
+		return (CaretHandler) carets.get(new Integer(participantId));
+	}
+	
+	private void setCaretHandler(int participantId, CaretHandler handler) {
+		carets.put(new Integer(participantId), handler);
+		addDocumentListener(handler);
+	}
+	
+	protected int getParticipantId(AttributeSet attr) {
+		int participantId = 0;
+		Integer pid = (Integer) attr.getAttribute(DefaultDocumentModel.PARTICIPANT_ATTR);
+		if (pid != null) {
+			participantId = pid.intValue();
+		}
+		return participantId;
+	}
+	
+	// --> AbstractDocument methods <--
+	
 	protected AbstractElement createDefaultRoot() {
 		BranchElement map = (BranchElement) createBranchElement(null, null);
 		Element line = createLeafElement(map, null, 0, 1);
@@ -46,67 +70,6 @@ public class DefaultDocumentModel extends AbstractDocument implements
 
 	public Element getParagraphElement(int pos) {
 		return defaultRoot;
-	}
-	
-	protected CaretInfo getCaretInfo(int participantId) {
-		return (CaretInfo) carets.get(new Integer(participantId));
-	}
-	
-	protected void setCaretInfo(int participantId, CaretInfo info) {
-		carets.put(new Integer(participantId), info);
-	}
-	
-	// --> DocumentModel methods <--
-	
-	public String getText() {
-		try {
-			return getText(0, getLength());
-		} catch (BadLocationException e) {
-			throw new RuntimeException("internal error");
-		}
-	}
-	
-	public void updateCaret(int participantId, int dot, int mark) {
-		CaretInfo info = getCaretInfo(participantId);
-		if (info == null) {
-			info = new CaretInfo(dot, mark);
-			setCaretInfo(participantId, info);
-		} else {
-			
-		}
-	}
-
-	public void insertString(int offset, String text, int participantId) {
-		SimpleAttributeSet attr = new SimpleAttributeSet();
-		attr.addAttribute(PARTICIPANT_ATTR, new Integer(participantId));
-		try {
-			super.insertString(offset, text, attr);
-		} catch (BadLocationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	public void removeString(int offset, int length) {
-		try {
-			super.remove(offset, length);
-		} catch (BadLocationException e) {
-			// TODO: fix RuntimeException
-			throw new RuntimeException(e);
-		}
-	}
-	
-	public PortableDocument toPortableDocument() {
-		return this;
-	}
-	
-	protected int getParticipantId(AttributeSet attr) {
-		int participantId = 0;
-		Integer pid = (Integer) attr.getAttribute(DefaultDocumentModel.PARTICIPANT_ATTR);
-		if (pid != null) {
-			participantId = pid.intValue();
-		}
-		return participantId;
 	}
 	
 	protected void insertUpdate(DefaultDocumentEvent chng, AttributeSet attr) {
@@ -185,7 +148,62 @@ public class DefaultDocumentModel extends AbstractDocument implements
 		}
 		super.removeUpdate(chng);
 	}
+		
+	// --> DocumentModel methods <--
 	
+	public void participantJoined(int participantId) {
+		setCaretHandler(participantId, new CaretHandler(-1, -1));
+	}
+	
+	public void participantLeft(int participantId) {
+		CaretHandler handler = getCaretHandler(participantId);
+		removeDocumentListener(handler);
+		setCaretHandler(participantId, null);
+	}
+	
+	public String getText() {
+		try {
+			return getText(0, getLength());
+		} catch (BadLocationException e) {
+			throw new RuntimeException("internal error");
+		}
+	}
+	
+	public void updateCaret(int participantId, int dot, int mark) {
+		CaretHandler handler = getCaretHandler(participantId);
+		if (handler == null) {
+			handler = new CaretHandler(dot, mark);
+			setCaretHandler(participantId, handler);
+		} else {
+			handler.setDot(dot);
+			handler.setMark(mark);
+		}
+	}
+
+	public void insertString(int offset, String text, int participantId) {
+		SimpleAttributeSet attr = new SimpleAttributeSet();
+		attr.addAttribute(PARTICIPANT_ATTR, new Integer(participantId));
+		try {
+			super.insertString(offset, text, attr);
+		} catch (BadLocationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void removeString(int offset, int length) {
+		try {
+			super.remove(offset, length);
+		} catch (BadLocationException e) {
+			// TODO: fix RuntimeException
+			throw new RuntimeException(e);
+		}
+	}
+	
+	public PortableDocument toPortableDocument() {
+		return this;
+	}
+			
 	// --> PortableDocument methods <--
 	
 	public Iterator getFragments() {
@@ -212,11 +230,21 @@ public class DefaultDocumentModel extends AbstractDocument implements
 	}
 	
 	public int getDot(int participantId) {
-		return -1;
+		CaretHandler handler = getCaretHandler(participantId);
+		if (handler != null) {
+			return handler.getDot();
+		} else {
+			return -1;
+		}
 	}
 	
 	public int getMark(int participantId) {
-		return -1;
+		CaretHandler handler = getCaretHandler(participantId);
+		if (handler != null) {
+			return handler.getMark();
+		} else {
+			return -1;
+		}
 	}
 	
 	// --> Fragment Element <--
@@ -245,27 +273,5 @@ public class DefaultDocumentModel extends AbstractDocument implements
 		}
 		
 	}
-	
-	// --> Caret Info <--
-	
-	private Map carets = new HashMap();
-	
-	private static class CaretInfo {
-		private int dot;
-		private int mark;
 		
-		public CaretInfo(int dot, int mark) {
-			this.dot = dot;
-			this.mark = mark;
-		}
-		
-		public int getDot() {
-			return dot;
-		}
-		
-		public int getMark() {
-			return mark;
-		}
-	}
-
 }

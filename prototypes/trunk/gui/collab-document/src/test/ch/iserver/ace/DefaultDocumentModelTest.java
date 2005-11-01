@@ -149,5 +149,15 @@ public class DefaultDocumentModelTest extends TestCase {
 		assertEquals(1, "blub", (Fragment) it.next());
 		assertFalse(it.hasNext());
 	}
+	
+	public void testUpdateCaret() throws Exception {
+		DefaultDocumentModel doc = new DefaultDocumentModel();
+		doc.participantJoined(1);
+		doc.insertString(0, "hello world", 1);
+		doc.updateCaret(1, 1, 2);
+		assertEquals(1, doc.getDot(1));
+		assertEquals(2, doc.getMark(1));
+		doc.participantLeft(1);
+	}
 
 }
