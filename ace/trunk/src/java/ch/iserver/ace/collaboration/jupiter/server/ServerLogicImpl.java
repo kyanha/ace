@@ -74,6 +74,8 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 	
 	private final ParticipantPort publisherPort;
 	
+	private final ServerDocument document;
+	
 	public ServerLogicImpl(Lock lock, ParticipantConnection connection, DocumentModel document) {
 		ParameterValidator.notNull("lock", lock);
 		ParameterValidator.notNull("connection", connection);
@@ -92,7 +94,9 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 		
 		this.publisherPort = createPublisherPort(connection);
 		
-		// TODO: convert document
+		this.document = new ServerDocumentImpl();
+		this.document.insertString(0, 0, document.getContent());
+		this.document.updateCaret(0, document.getDot(), document.getMark());
 	}
 	
 	protected ParticipantPort createPublisherPort(ParticipantConnection connection) {
@@ -103,6 +107,10 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 		ParticipantProxy proxy = new ParticipantProxyImpl(participantId, dispatcherQueue, algorithm, connection);
 		addParticipant(port, proxy, connection);
 		return port;
+	}
+	
+	protected ServerDocument getDocument() {
+		return document;
 	}
 	
 	protected DocumentServer getDocumentServer() {
@@ -155,8 +163,7 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 		try {
 			lock.lock();
 			try {
-				// TODO: implement retrieveDocument
-				return null;
+				return new PortableServerDocument(getDocument().toPortableDocument());
 			} finally {
 				lock.unlock();
 			}

@@ -219,14 +219,14 @@ public class ServerDocumentImpl extends AbstractDocument implements
 		}
 	}
 
-	public void insertString(int offset, String text, int participantId) {
+	public void insertString(int participantId, int offset, String text) {
 		SimpleAttributeSet attr = new SimpleAttributeSet();
 		attr.addAttribute(PARTICIPANT_ATTR, new Integer(participantId));
 		try {
 			super.insertString(offset, text, attr);
 		} catch (BadLocationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// TODO: fix RuntimeException
+			throw new RuntimeException(e);
 		}
 	}
 	

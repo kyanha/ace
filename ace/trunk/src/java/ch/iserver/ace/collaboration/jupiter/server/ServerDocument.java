@@ -32,7 +32,7 @@ public interface ServerDocument {
 	
 	void updateCaret(int participantId, int dot, int mark);
 	
-	void insertString(int offset, String text, int participantId);
+	void insertString(int participantId, int offset, String text);
 	
 	void removeString(int offset, int length);
 	
