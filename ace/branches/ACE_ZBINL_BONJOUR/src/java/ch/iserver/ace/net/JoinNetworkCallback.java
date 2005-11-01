@@ -19,27 +19,26 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.util;
+package ch.iserver.ace.net;
 
 /**
- *
+ * Callback interface for join requests on the network layer.
  */
-public final class ParameterValidator {
+public interface JoinNetworkCallback {
 	
-	private ParameterValidator() {
-		// do nothing
-	}
+	/**
+	 * Notifies the callback that the join request was rejected by the owner
+	 * of the document.
+	 */
+	void rejected();
 	
-	public static void notNull(String name, Object value) {
-		if (value == null) {
-			throw new IllegalArgumentException(name + " cannot be null");
-		}
-	}
-	
-	public static void notNegative(String name, int value) {
-		if (value < 0) {
-			throw new IllegalArgumentException(name + " cannot be negative");
-		}
-	}
+	/**
+	 * Notifies the callback that the join request was accepted by the owner
+	 * of the document. The passed in SessionConnection can be used to
+	 * communicate with the joined shared document.
+	 * 
+	 * @param connection the SessionConnection
+	 */
+	SessionConnectionCallback accepted(SessionConnection connection);
 	
 }

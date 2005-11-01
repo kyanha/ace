@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import ch.iserver.ace.DocumentDetails;
+import ch.iserver.ace.DocumentModel;
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.jupiter.Jupiter;
 import ch.iserver.ace.collaboration.Participant;
@@ -37,7 +38,6 @@ import ch.iserver.ace.net.DocumentServerLogic;
 import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.PortableDocument;
-import ch.iserver.ace.net.PublisherConnection;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.util.BlockingQueue;
 import ch.iserver.ace.util.InterruptedRuntimeException;
@@ -74,11 +74,10 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 	
 	private final ParticipantPort publisherPort;
 	
-	private final PublisherConnection publisherConnection;
-		
-	public ServerLogicImpl(Lock lock, PublisherConnection connection) {
+	public ServerLogicImpl(Lock lock, ParticipantConnection connection, DocumentModel document) {
 		ParameterValidator.notNull("lock", lock);
 		ParameterValidator.notNull("connection", connection);
+		ParameterValidator.notNull("document", document);
 		
 		this.nextParticipantId = 0;
 		this.forwarder = new ForwarderImpl(this);
@@ -92,14 +91,15 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 		this.dispatcher = new Dispatcher(dispatcherQueue);
 		
 		this.publisherPort = createPublisherPort(connection);
-		this.publisherConnection = connection;
+		
+		// TODO: convert document
 	}
 	
-	protected ParticipantPort createPublisherPort(PublisherConnection connection) {
+	protected ParticipantPort createPublisherPort(ParticipantConnection connection) {
 		Algorithm algorithm = new Jupiter(false);
 		int participantId = nextParticipantId();
 		connection.setParticipantId(participantId);
-		ParticipantPort port = new ParticipantPortImpl(participantId, algorithm, getSerializerQueue());
+		ParticipantPort port = new ParticipantPortImpl(this, participantId, algorithm, getSerializerQueue());
 		ParticipantProxy proxy = new ParticipantProxyImpl(participantId, dispatcherQueue, algorithm, connection);
 		addParticipant(port, proxy, connection);
 		return port;
@@ -150,16 +150,13 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 	public ParticipantPort getPublisherPort() {
 		return publisherPort;
 	}
-	
-	protected PublisherConnection getPublisherConnection() {
-		return publisherConnection;
-	}
-	
+		
 	protected PortableDocument retrieveDocument() {
 		try {
 			lock.lock();
 			try {
-				return getPublisherConnection().retrieveDocument();
+				// TODO: implement retrieveDocument
+				return null;
 			} finally {
 				lock.unlock();
 			}
@@ -173,12 +170,11 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 	 * @see ch.iserver.ace.net.DocumentServerLogic#join(ch.iserver.ace.net.ParticipantConnection)
 	 */
 	public synchronized ParticipantPort join(ParticipantConnection connection) {
-		System.err.println("join " + connection);
 		Algorithm algorithm = new Jupiter(false);
 		int participantId = nextParticipantId();
 		connection.setParticipantId(participantId);
 		connection.sendDocument(retrieveDocument());
-		ParticipantPort port = new ParticipantPortImpl(participantId, algorithm, getSerializerQueue());
+		ParticipantPort port = new ParticipantPortImpl(this, participantId, algorithm, getSerializerQueue());
 		ParticipantProxy proxy = new ParticipantProxyImpl(participantId, dispatcherQueue, algorithm, connection);
 		notifyOthersAboutJoin(createParticipant(participantId, connection.getUser()));
 		addParticipant(port, proxy, connection);
@@ -220,10 +216,9 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 	}
 	
 	/**
-	 * @see ch.iserver.ace.net.DocumentServerLogic#leave(int)
+	 * @see ServerLogic#leave(int)
 	 */
 	public synchronized void leave(int participantId) {
-		System.err.println("leave " + participantId);
 		ParticipantConnection connection = getParticipantConnection(participantId);
 		connection.close();
 		removeParticipant(participantId);
@@ -246,7 +241,6 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 	}
 	
 	public synchronized void kick(Participant participant) {
-		System.err.println("kick " + participant);
 		int participantId = participant.getParticipantId();
 		ParticipantConnection connection = getParticipantConnection(participantId);
 		connection.sendKicked();

@@ -19,27 +19,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.util;
+package ch.iserver.ace.collaboration.jupiter;
+
+import ch.iserver.ace.collaboration.PublishedSessionCallback;
 
 /**
  *
  */
-public final class ParameterValidator {
-	
-	private ParameterValidator() {
-		// do nothing
-	}
-	
-	public static void notNull(String name, Object value) {
-		if (value == null) {
-			throw new IllegalArgumentException(name + " cannot be null");
-		}
-	}
-	
-	public static void notNegative(String name, int value) {
-		if (value < 0) {
-			throw new IllegalArgumentException(name + " cannot be negative");
-		}
-	}
+interface Command {
+
+	void execute(PublishedSessionCallback callback);
 	
 }

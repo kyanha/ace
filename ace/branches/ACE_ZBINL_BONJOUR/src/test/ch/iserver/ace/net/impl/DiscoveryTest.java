@@ -18,41 +18,26 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+package ch.iserver.ace.net.impl;
 
-package ch.iserver.ace.collaboration.jupiter.server;
+import junit.framework.TestCase;
+import ch.iserver.ace.UserDetails;
+import ch.iserver.ace.util.UUID;
 
-/**
- *
- */
-abstract class Worker extends Thread {
+public class DiscoveryTest extends TestCase {
 	
-	private boolean stop;
+	Discovery discovery;
 	
-	protected Worker(String name) {
-		super(name);
+	public void tearDown() {
+		discovery.abort();
 	}
-	
-	public void kill() {
-		stop = true;
-		interrupt();
+
+	public void testDiscovery() throws Exception {
+		DiscoveryFactory factory = DiscoveryFactory.getInstance();
+		discovery = factory.createDiscovery();
+		discovery.setDiscoveryCallback(new NullDiscoveryCallback());
+		discovery.setUserId(UUID.nextUUID());
+		discovery.setUserDetails(new UserDetails("John Cucumber"));
+		discovery.execute();
 	}
-		
-	public void run() {
-		try {
-			while (!stop) {
-				try {
-					doWork();
-				} catch (InterruptedException e) {
-					throw e;
-				} catch (Exception e) {
-					System.err.println(e.getMessage());
-				}
-			}
-		} catch (InterruptedException e) {
-			// TODO: log interruption?
-		}
-	}
-	
-	protected abstract void doWork() throws InterruptedException;
-	
 }

@@ -19,13 +19,17 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.net;
+package ch.iserver.ace;
+
+
 
 /**
  *
  */
-public interface PublisherConnection extends ParticipantConnection {
+public interface Fragment {
 	
-	PortableDocument retrieveDocument();
+	public int getParticipantId();
+
+	public String getText();
 	
 }

@@ -24,6 +24,7 @@ package ch.iserver.ace.collaboration.jupiter;
 
 import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.Operation;
+import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.jupiter.Jupiter;
@@ -42,12 +43,24 @@ import ch.iserver.ace.util.ParameterValidator;
  */
 public class SessionImpl extends AbstractSession implements SessionConnectionCallback {
 	
-	private final SessionCallback callback;
+	private SessionCallback callback = NullSessionCallback.getInstance();
 	
 	private SessionConnection connection;
 	
+	public SessionImpl() {
+		this(new Jupiter(true), null);
+	}
+	
 	public SessionImpl(SessionCallback callback) {
-		super(new Jupiter(true));
+		this(new Jupiter(true), callback);
+	}
+	
+	protected SessionImpl(Algorithm algorithm, SessionCallback callback) {
+		super(algorithm);
+		setSessionCallback(callback);
+	}
+	
+	public void setSessionCallback(SessionCallback callback) {
 		ParameterValidator.notNull("callback", callback);
 		this.callback = callback;
 	}
@@ -136,7 +149,7 @@ public class SessionImpl extends AbstractSession implements SessionConnectionCal
 	}
 	
 	public void setDocument(PortableDocument document) {
-		getCallback().setDocument(document);		
+		getCallback().setDocument(new PortableDocumentWrapper(document));		
 	}
 	
 	public void userJoined(int participantId, RemoteUserProxy proxy) {

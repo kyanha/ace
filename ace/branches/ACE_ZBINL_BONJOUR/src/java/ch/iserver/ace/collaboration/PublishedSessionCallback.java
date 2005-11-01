@@ -23,21 +23,12 @@ package ch.iserver.ace.collaboration;
 
 import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.Operation;
-import ch.iserver.ace.net.PortableDocument;
 
 /**
  * This interface describes the contract between the logic layer and
  * the application layer for PublishedSession callbacks.
  */
 public interface PublishedSessionCallback {
-
-	/**
-	 * Retrieves the document content. This method is only called on
-	 * published sessions.
-	 * 
-	 * @return the document content
-	 */
-	PortableDocument getDocument();
 
 	/**
 	 * Receives an operation from the given participant.

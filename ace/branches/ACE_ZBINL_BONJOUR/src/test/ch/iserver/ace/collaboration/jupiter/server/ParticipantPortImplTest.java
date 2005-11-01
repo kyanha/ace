@@ -47,7 +47,7 @@ public class ParticipantPortImplTest extends TestCase {
 		MockControl control = MockControl.createNiceControl(Algorithm.class);
 		algorithm = (Algorithm) control.getMock();
 		queue = new LinkedBlockingQueue();
-		port = new ParticipantPortImpl(1, algorithm, queue);
+		port = new ParticipantPortImpl(null, 1, algorithm, queue);
 	}
 	
 	/**

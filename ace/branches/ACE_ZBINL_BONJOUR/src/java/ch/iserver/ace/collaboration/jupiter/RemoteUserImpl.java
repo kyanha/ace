@@ -46,7 +46,7 @@ public class RemoteUserImpl implements RemoteUser {
 		this.proxy = proxy;
 	}
 	
-	protected RemoteUserProxy getProxy() {
+	public RemoteUserProxy getProxy() {
 		return proxy;
 	}
 		

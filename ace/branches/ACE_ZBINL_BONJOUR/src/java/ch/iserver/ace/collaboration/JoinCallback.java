@@ -19,27 +19,30 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.util;
+package ch.iserver.ace.collaboration;
 
 /**
- *
+ * Callback interface for join requests. The callback is notified
+ * about the outcome of the join request. A join request can either
+ * be rejected or accepted. Do not expect that a join request
+ * results in a response. The owner of the document might never respond
+ * to the request.
  */
-public final class ParameterValidator {
+public interface JoinCallback {
 	
-	private ParameterValidator() {
-		// do nothing
-	}
+	/**
+	 * Notifies the callback that the request was rejected by the owner of 
+	 * the document.
+	 */
+	void rejected();
 	
-	public static void notNull(String name, Object value) {
-		if (value == null) {
-			throw new IllegalArgumentException(name + " cannot be null");
-		}
-	}
-	
-	public static void notNegative(String name, int value) {
-		if (value < 0) {
-			throw new IllegalArgumentException(name + " cannot be negative");
-		}
-	}
+	/**
+	 * Notifies the callback that the request was accepted by the owner of
+	 * the document. The session to communicate with the joined shared
+	 * document.
+	 * 
+	 * @param session the Session object
+	 */
+	SessionCallback accepted(Session session);
 	
 }

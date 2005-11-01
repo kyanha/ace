@@ -51,4 +51,10 @@ public interface ParticipantPort {
 	 */
 	void receiveCaretUpdate(CaretUpdateMessage message);
 	
+	/**
+	 * Notifies the implementation that the participant left the
+	 * session.
+	 */
+	void leave();
+	
 }

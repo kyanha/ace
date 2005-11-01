@@ -22,9 +22,8 @@
 package ch.iserver.ace.net;
 
 import java.util.Iterator;
-import java.util.Set;
 
-import ch.iserver.ace.collaboration.Participant;
+import ch.iserver.ace.CaretUpdate;
 
 /**
  * A PortableDocument is a representation of a document in a portable way.
@@ -34,19 +33,27 @@ import ch.iserver.ace.collaboration.Participant;
 public interface PortableDocument {
 	
 	/**
-	 * Gets the set of participants. The type is Set&lt;Participant&gt;.
+	 * Gets the set of participant ids.
 	 * 
-	 * @return the set of participants
+	 * @return the set of participant ids
 	 */
-	Set getParticipants();
+	int[] getParticipantIds();
+	
+	/**
+	 * Gets the RemoteUserProxy for the given <var>participantId</var>.
+	 * 
+	 * @param participantId the participant id
+	 * @return the RemoteUserProxy for the participantId
+	 */
+	RemoteUserProxy getUserProxy(int participantId);
 	
 	/**
 	 * Gets the caret of the specified <var>participant</var>.
 	 * 
-	 * @param participant the participant for which to retrieve the caret
-	 * @return the Caret of the given Participant
+	 * @param participantId the participant for which to retrieve the caret
+	 * @return the CaretUpdate of the given Participant
 	 */
-	Caret getSelection(Participant participant);
+	CaretUpdate getSelection(int participantId);
 	
 	/**
 	 * Gets an iterator over all the fragments of the document.
@@ -54,49 +61,5 @@ public interface PortableDocument {
 	 * @return an iterator over all the fragments
 	 */
 	Iterator getFragments();
-	
-	/**
-	 * A Fragment is continous part of text edited last by one particular
-	 * participant, the owner of the fragment.
-	 */
-	interface Fragment {
 		
-		/**
-		 * Gets the owner of this fragment, that is the participant that last
-		 * edited this particular section of text.
-		 * 
-		 * @return the owner of this fragment
-		 */
-		Participant getOwner();
-		
-		/**
-		 * Gets the textual content of the fragment.
-		 * 
-		 * @return the textual content
-		 */
-		String getText();
-		
-	}
-	
-	/**
-	 * A Caret specifies the cursor position and selection of a participant.
-	 */
-	interface Caret {
-		
-		/**
-		 * Gets the current position of the cursor.
-		 * 
-		 * @return the cursor position
-		 */
-		int getDot();
-		
-		/**
-		 * Gets the position of the mark (other end of selection).
-		 * 
-		 * @return the mark position
-		 */
-		int getMark();
-		
-	}
-	
 }

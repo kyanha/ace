@@ -43,8 +43,20 @@
 		            artifactId="xercesImpl" 
 		            version="2.6.2"
 		            scope="runtime"/>
-		<remoteRepository refid="remote.repository.maven" />
+		<dependency groupId="log4j"
+			        artifactId="log4j"
+		            version="1.2.12"/>
+		<dependency groupId="springframework"
+			        artifactId="spring-core"
+		            version="1.2.5"/>
+		<dependency groupId="springframework"
+		            artifactId="spring-beans"
+		            version="1.2.5"/>
+		<dependency groupId="springframework"
+		            artifactId="spring-context"
+		            version="1.2.5"/>
 		<remoteRepository refid="remote.repository.ace" />
+		<remoteRepository refid="remote.repository.maven" />
 	</artifact:dependencies>
 	
 	<artifact:dependencies pathId="dependency.checkstyle">
@@ -118,7 +130,7 @@
 		    <tag name="todo" scope="all" description="To do:" />
 			<packageset dir="${src.dir}/java" defaultexcludes="yes">
 				<include name="**/*"/>
-				<!--<exclude name="ch/iserver/ace/net/**"/>-->
+				<exclude name="ch/iserver/ace/collaboration/jupiter/**"/>
 			</packageset>
 			<link href="http://java.sun.com/j2se/1.4.2/docs/api/"/>
 		</javadoc>
@@ -135,6 +147,7 @@
 			<batchtest todir="${build.testreports}" unless="testcase">
 				<fileset dir="${src.test}">
 					<include name="**/*Test*.java"/>
+					<exclude name="**/AllTests.java"/>
 					<exclude name="ch/iserver/ace/test/AlgorithmTestCase.java"/>
 					<exclude name="ch/iserver/ace/test/jupiter/JupiterTestCase.java"/>
 					<exclude name="ch/iserver/ace/test/jupiter/TwoWayTestCase.java"/>

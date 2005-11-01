@@ -19,27 +19,25 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.util;
+package ch.iserver.ace.collaboration.jupiter.server;
 
-/**
- *
- */
-public final class ParameterValidator {
+import ch.iserver.ace.collaboration.Participant;
+import ch.iserver.ace.collaboration.PortableDocument;
+
+public interface ServerDocument {
 	
-	private ParameterValidator() {
-		// do nothing
-	}
+	void participantJoined(Participant participant);
 	
-	public static void notNull(String name, Object value) {
-		if (value == null) {
-			throw new IllegalArgumentException(name + " cannot be null");
-		}
-	}
+	void participantLeft(int participantId);
 	
-	public static void notNegative(String name, int value) {
-		if (value < 0) {
-			throw new IllegalArgumentException(name + " cannot be negative");
-		}
-	}
+	void updateCaret(int participantId, int dot, int mark);
+	
+	void insertString(int offset, String text, int participantId);
+	
+	void removeString(int offset, int length);
+	
+	String getText();
+	
+	PortableDocument toPortableDocument();
 	
 }

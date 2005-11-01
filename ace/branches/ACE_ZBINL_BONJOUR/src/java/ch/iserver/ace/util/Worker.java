@@ -24,22 +24,35 @@ package ch.iserver.ace.util;
 /**
  *
  */
-public final class ParameterValidator {
+public abstract class Worker extends Thread {
 	
-	private ParameterValidator() {
-		// do nothing
+	private boolean stop;
+	
+	protected Worker(String name) {
+		super(name);
 	}
 	
-	public static void notNull(String name, Object value) {
-		if (value == null) {
-			throw new IllegalArgumentException(name + " cannot be null");
+	public void kill() {
+		stop = true;
+		interrupt();
+	}
+		
+	public void run() {
+		try {
+			while (!stop) {
+				try {
+					doWork();
+				} catch (InterruptedException e) {
+					throw e;
+				} catch (Exception e) {
+					System.err.println(e.getMessage());
+				}
+			}
+		} catch (InterruptedException e) {
+			// TODO: log interruption?
 		}
 	}
 	
-	public static void notNegative(String name, int value) {
-		if (value < 0) {
-			throw new IllegalArgumentException(name + " cannot be negative");
-		}
-	}
+	protected abstract void doWork() throws InterruptedException;
 	
 }

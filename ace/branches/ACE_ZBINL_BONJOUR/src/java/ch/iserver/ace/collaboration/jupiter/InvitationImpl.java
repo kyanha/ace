@@ -22,6 +22,7 @@
 package ch.iserver.ace.collaboration.jupiter;
 
 import ch.iserver.ace.collaboration.Invitation;
+import ch.iserver.ace.collaboration.RemoteDocument;
 import ch.iserver.ace.collaboration.RemoteUser;
 import ch.iserver.ace.collaboration.Session;
 import ch.iserver.ace.collaboration.SessionCallback;
@@ -37,6 +38,8 @@ class InvitationImpl implements Invitation {
 	private final InvitationProxy proxy;
 	
 	private RemoteUser inviter;
+	
+	private RemoteDocument document;
 	
 	InvitationImpl(InvitationProxy proxy) {
 		ParameterValidator.notNull("proxy", proxy);
@@ -55,6 +58,13 @@ class InvitationImpl implements Invitation {
 			inviter = new RemoteUserImpl(getProxy().getInviter());
 		}
 		return inviter;
+	}
+	
+	public RemoteDocument getDocument() {
+		if (document == null) {
+			document = new RemoteDocumentImpl(getProxy().getDocument());
+		}
+		return document;
 	}
 
 	/**

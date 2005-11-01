@@ -19,27 +19,40 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.util;
+package ch.iserver.ace;
 
 /**
  *
  */
-public final class ParameterValidator {
-	
-	private ParameterValidator() {
-		// do nothing
+public class ApplicationError extends Error {
+
+	/**
+	 * 
+	 */
+	public ApplicationError() {
+		super();
 	}
-	
-	public static void notNull(String name, Object value) {
-		if (value == null) {
-			throw new IllegalArgumentException(name + " cannot be null");
-		}
+
+	/**
+	 * @param message
+	 */
+	public ApplicationError(String message) {
+		super(message);
 	}
-	
-	public static void notNegative(String name, int value) {
-		if (value < 0) {
-			throw new IllegalArgumentException(name + " cannot be negative");
-		}
+
+	/**
+	 * @param cause
+	 */
+	public ApplicationError(Throwable cause) {
+		super(cause);
 	}
-	
+
+	/**
+	 * @param message
+	 * @param cause
+	 */
+	public ApplicationError(String message, Throwable cause) {
+		super(message, cause);
+	}
+
 }

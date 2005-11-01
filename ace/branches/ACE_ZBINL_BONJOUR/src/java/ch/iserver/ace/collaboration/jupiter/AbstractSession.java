@@ -27,6 +27,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.swing.SwingUtilities;
 import javax.swing.event.EventListenerList;
 
 import ch.iserver.ace.algorithm.Algorithm;
@@ -84,28 +85,36 @@ public abstract class AbstractSession implements Session {
 		listeners.remove(ParticipationListener.class, listener);
 	}
 
-	protected void fireParticipantJoined(Participant participant) {
-		ParticipationListener[] lists = (ParticipationListener[]) listeners.getListeners(ParticipationListener.class);
-		ParticipationEvent event = null;
-		for (int i = 0; i < lists.length; i++) {
-			ParticipationListener listener = lists[i];
-			if (event == null) {
-				event = new ParticipationEvent(this, participant, ParticipationEvent.JOINED);
+	protected void fireParticipantJoined(final Participant participant) {
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				ParticipationListener[] lists = (ParticipationListener[]) listeners.getListeners(ParticipationListener.class);
+				ParticipationEvent event = null;
+				for (int i = 0; i < lists.length; i++) {
+					ParticipationListener listener = lists[i];
+					if (event == null) {
+						event = new ParticipationEvent(AbstractSession.this, participant, ParticipationEvent.JOINED);
+					}
+					listener.userJoined(event);
+				}
 			}
-			listener.userJoined(event);
-		}
+		});
 	}
 
-	protected void fireParticipantLeft(Participant participant, int reason) {
-		ParticipationListener[] lists = (ParticipationListener[]) listeners.getListeners(ParticipationListener.class);
-		ParticipationEvent event = null;
-		for (int i = 0; i < lists.length; i++) {
-			ParticipationListener listener = lists[i];
-			if (event == null) {
-				event = new ParticipationEvent(this, participant, reason);
+	protected void fireParticipantLeft(final Participant participant, final int reason) {
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				ParticipationListener[] lists = (ParticipationListener[]) listeners.getListeners(ParticipationListener.class);
+				ParticipationEvent event = null;
+				for (int i = 0; i < lists.length; i++) {
+					ParticipationListener listener = lists[i];
+					if (event == null) {
+						event = new ParticipationEvent(AbstractSession.this, participant, reason);
+					}
+					listener.userLeft(event);
+				}
 			}
-			listener.userLeft(event);
-		}
+		});
 	}
 
 	/**

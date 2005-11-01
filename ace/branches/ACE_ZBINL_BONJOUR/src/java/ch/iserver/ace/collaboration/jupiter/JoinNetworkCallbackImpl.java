@@ -19,36 +19,40 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.collaboration.jupiter.server;
+package ch.iserver.ace.collaboration.jupiter;
 
-import ch.iserver.ace.util.BlockingQueue;
+import ch.iserver.ace.collaboration.JoinCallback;
+import ch.iserver.ace.net.JoinNetworkCallback;
+import ch.iserver.ace.net.SessionConnection;
+import ch.iserver.ace.net.SessionConnectionCallback;
 import ch.iserver.ace.util.ParameterValidator;
-import ch.iserver.ace.util.Worker;
 
 /**
+ * 
  *
  */
-class Dispatcher extends Worker {
+class JoinNetworkCallbackImpl implements JoinNetworkCallback {
 	
-	private final BlockingQueue queue;
+	private final JoinCallback callback;
 	
-	public Dispatcher(BlockingQueue queue) {
-		super("Dispatcher");
-		ParameterValidator.notNull("queue", queue);
-		this.queue = queue;
+	public JoinNetworkCallbackImpl(JoinCallback joinCallback) {
+		ParameterValidator.notNull("joinCallback", joinCallback);
+		this.callback = joinCallback;
+	}
+
+	protected JoinCallback getCallback() {
+		return callback;
+	}
+
+	public SessionConnectionCallback accepted(SessionConnection connection) {
+		SessionImpl session = new SessionImpl();
+		session.setConnection(connection);
+		session.setSessionCallback(getCallback().accepted(session));
+		return session;
 	}
 	
-	protected DispatcherCommand nextCommand() throws InterruptedException {
-		return (DispatcherCommand) queue.get();
-	}
-	
-	protected void doWork() {
-		try {
-			DispatcherCommand command = nextCommand();
-			command.execute();
-		} catch (Exception e) {
-			// TODO: exception handling
-		}
+	public void rejected() {
+		getCallback().rejected();			
 	}
 	
 }

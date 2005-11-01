@@ -10,7 +10,7 @@
  
    <?php
      $page = $_GET['page'];
-     if ($page < 0 || $page > 6) {
+     if ($page < 0 || $page > 7) {
        $page = 0;
      }
      $contact = "feedback@ace.iserver.ch";
@@ -46,6 +46,9 @@
        case 6:
          require('inc/testing.inc.php');
          break;
+	case 7:
+          require('inc/introduction.inc.php');
+          break;
        default:
          require('inc/index.inc.php');
        }

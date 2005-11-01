@@ -26,12 +26,15 @@ import java.util.Iterator;
 import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.net.DocumentServerLogic;
+import ch.iserver.ace.net.ParticipantPort;
 
 /**
  *
  */
 public interface ServerLogic extends DocumentServerLogic {
-		
+	
+	ParticipantPort getPublisherPort();
+	
 	void setDocumentDetails(DocumentDetails details);
 	
 	void kick(Participant participant);
@@ -40,4 +43,11 @@ public interface ServerLogic extends DocumentServerLogic {
 	
 	Iterator getParticipantProxies();
 	
+	/**
+	 * Notifies the server that the specified user leaves the editing session.
+	 *
+	 * @param participantId the participant id of the leaving user
+	 */
+	void leave(int participantId);
+
 }

@@ -7,9 +7,13 @@
 	<classpathentry kind="var" path="MAVEN2/commons-beanutils/commons-beanutils/1.7.0/commons-beanutils-1.7.0.jar"/>
 	<classpathentry kind="var" path="MAVEN2/junit/junit/3.8.1/junit-3.8.1.jar"/>
 	<classpathentry kind="var" path="MAVEN2/easymock/easymock/1.1/easymock-1.1.jar"/>
-	<classpathentry kind="var" path="MAVEN2/log4j/log4j/1.2.6/log4j-1.2.6.jar"/>
 	<classpathentry kind="var" path="MAVEN2/xerces/xercesImpl/2.6.2/xercesImpl-2.6.2.jar"/>
 	<classpathentry kind="var" path="MAVEN2/commons-logging/commons-logging/1.0.4/commons-logging-1.0.4.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="var" path="MAVEN2/log4j/log4j/1.2.12/log4j-1.2.12.jar"/>
+	<classpathentry kind="var" path="MAVEN2/springframework/spring-context/1.2.5/spring-context-1.2.5.jar"/>
+	<classpathentry kind="var" path="MAVEN2/springframework/spring-beans/1.2.5/spring-beans-1.2.5.jar"/>
+	<classpathentry kind="var" path="MAVEN2/springframework/spring-core/1.2.5/spring-core-1.2.5.jar"/>
+	<classpathentry kind="var" path="MAVEN2/xml-apis/xml-apis/2.0.2/xml-apis-2.0.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

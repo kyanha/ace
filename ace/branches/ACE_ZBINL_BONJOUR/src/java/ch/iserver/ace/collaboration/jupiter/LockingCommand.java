@@ -19,50 +19,50 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.collaboration.jupiter.server;
+package ch.iserver.ace.collaboration.jupiter;
 
-import ch.iserver.ace.util.BlockingQueue;
+import ch.iserver.ace.collaboration.PublishedSessionCallback;
+import ch.iserver.ace.util.InterruptedRuntimeException;
 import ch.iserver.ace.util.Lock;
 import ch.iserver.ace.util.ParameterValidator;
-import ch.iserver.ace.util.Worker;
 
 /**
  *
  */
-class Serializer extends Worker {
-	
-	private final BlockingQueue queue;
+abstract class LockingCommand implements Command {
+
+	private final AlgorithmWrapper algorithm;
 	
 	private final Lock lock;
 	
-	private final Forwarder forwarder;
-	
-	public Serializer(BlockingQueue queue, Lock lock, Forwarder forwarder) {
-		super("Serializer");
-		ParameterValidator.notNull("queue", queue);
+	protected LockingCommand(Lock lock, AlgorithmWrapper algorithm) {
 		ParameterValidator.notNull("lock", lock);
-		ParameterValidator.notNull("forwarder", forwarder);
-		this.queue = queue;
+		ParameterValidator.notNull("algorithm", algorithm);
 		this.lock = lock;
-		this.forwarder = forwarder;
+		this.algorithm = algorithm;
 	}
-
-	protected Forwarder getForwarder() {
-		return forwarder;
+	
+	protected AlgorithmWrapper getAlgorithm() {
+		return algorithm;
 	}
 	
 	protected Lock getLock() {
 		return lock;
 	}
 	
-	protected void doWork() throws InterruptedException {
+	public void execute(PublishedSessionCallback callback) {
 		try {
-			SerializerCommand cmd = (SerializerCommand) queue.get();
-			getLock().lock();
-			cmd.execute(getForwarder());
-		} finally {
-			getLock().unlock();
+			lock.lock();
+			try {
+				doWork(callback);
+			} finally {
+				lock.unlock();
+			}
+		} catch (InterruptedException e) {
+			throw new InterruptedRuntimeException("locking interrupted", e);
 		}
 	}
-		
+	
+	protected abstract void doWork(PublishedSessionCallback callback);
+
 }

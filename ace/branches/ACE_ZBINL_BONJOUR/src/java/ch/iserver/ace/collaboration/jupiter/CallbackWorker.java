@@ -19,8 +19,9 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.collaboration.jupiter.server;
+package ch.iserver.ace.collaboration.jupiter;
 
+import ch.iserver.ace.collaboration.PublishedSessionCallback;
 import ch.iserver.ace.util.BlockingQueue;
 import ch.iserver.ace.util.ParameterValidator;
 import ch.iserver.ace.util.Worker;
@@ -28,27 +29,31 @@ import ch.iserver.ace.util.Worker;
 /**
  *
  */
-class Dispatcher extends Worker {
+public class CallbackWorker extends Worker {
+
+	private final PublishedSessionCallback callback;
 	
 	private final BlockingQueue queue;
 	
-	public Dispatcher(BlockingQueue queue) {
-		super("Dispatcher");
+	public CallbackWorker(PublishedSessionCallback callback, BlockingQueue queue) {
+		super("CallbackWorker");
+		ParameterValidator.notNull("callback", callback);
 		ParameterValidator.notNull("queue", queue);
+		this.callback = callback;
 		this.queue = queue;
 	}
 	
-	protected DispatcherCommand nextCommand() throws InterruptedException {
-		return (DispatcherCommand) queue.get();
+	protected PublishedSessionCallback getCallback() {
+		return callback;
 	}
 	
-	protected void doWork() {
-		try {
-			DispatcherCommand command = nextCommand();
-			command.execute();
-		} catch (Exception e) {
-			// TODO: exception handling
-		}
+	protected BlockingQueue getQueue() {
+		return queue;
+	}
+	
+	protected void doWork() throws InterruptedException {
+		Command command = (Command) getQueue().get();
+		command.execute(getCallback());
 	}
 	
 }
