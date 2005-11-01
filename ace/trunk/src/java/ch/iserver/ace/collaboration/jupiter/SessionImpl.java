@@ -48,11 +48,15 @@ public class SessionImpl extends AbstractSession implements SessionConnectionCal
 	private SessionConnection connection;
 	
 	public SessionImpl() {
-		this(new Jupiter(true), null);
+		this(new Jupiter(true));
 	}
 	
 	public SessionImpl(SessionCallback callback) {
 		this(new Jupiter(true), callback);
+	}
+	
+	public SessionImpl(Algorithm algorithm) {
+		this(algorithm, null);
 	}
 	
 	protected SessionImpl(Algorithm algorithm, SessionCallback callback) {
@@ -117,6 +121,9 @@ public class SessionImpl extends AbstractSession implements SessionConnectionCal
 		getCallback().sessionTerminated();
 	}
 	
+	/**
+	 * @see ch.iserver.ace.net.SessionConnectionCallback#receiveCaretUpdate(int, ch.iserver.ace.algorithm.CaretUpdateMessage)
+	 */
 	public void receiveCaretUpdate(int participantId, CaretUpdateMessage message) {
 		try {
 			lock();
@@ -132,6 +139,9 @@ public class SessionImpl extends AbstractSession implements SessionConnectionCal
 		}
 	}
 	
+	/**
+	 * @see ch.iserver.ace.net.SessionConnectionCallback#receiveRequest(int, ch.iserver.ace.algorithm.Request)
+	 */
 	public void receiveRequest(int participantId, Request request) {
 		try {
 			lock();
@@ -147,8 +157,21 @@ public class SessionImpl extends AbstractSession implements SessionConnectionCal
 		}
 	}
 	
+	/**
+	 * @see ch.iserver.ace.net.SessionConnectionCallback#setDocument(ch.iserver.ace.net.PortableDocument)
+	 */
 	public void setDocument(PortableDocument document) {
-		getCallback().setDocument(new PortableDocumentWrapper(document));		
+		try {
+			lock();
+			try {
+				getCallback().setDocument(new PortableDocumentWrapper(document));
+			} finally {
+				unlock();
+			}
+		} catch (InterruptedException e) {
+			// 
+			throw new InterruptedRuntimeException(e);
+		}
 	}
 	
 	public void userJoined(int participantId, RemoteUserProxy proxy) {
