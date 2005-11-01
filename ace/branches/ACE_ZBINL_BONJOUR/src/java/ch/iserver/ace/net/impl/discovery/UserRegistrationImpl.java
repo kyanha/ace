@@ -10,8 +10,6 @@ import com.apple.dnssd.DNSRecord;
 import com.apple.dnssd.DNSSD;
 import com.apple.dnssd.DNSSDRegistration;
 import com.apple.dnssd.DNSSDService;
-import com.apple.dnssd.RegisterListener;
-import com.apple.dnssd.ResolveListener;
 import com.apple.dnssd.TXTRecord;
 
 /**

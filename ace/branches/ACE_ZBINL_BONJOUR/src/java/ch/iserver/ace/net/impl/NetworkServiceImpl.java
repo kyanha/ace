@@ -29,7 +29,6 @@ import ch.iserver.ace.net.DocumentServer;
 import ch.iserver.ace.net.DocumentServerLogic;
 import ch.iserver.ace.net.NetworkService;
 import ch.iserver.ace.net.NetworkServiceCallback;
-import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.util.UUID;
 
 /**
@@ -45,19 +44,7 @@ public class NetworkServiceImpl implements NetworkService {
 	
 	public NetworkServiceImpl() {
 		userId = UUID.nextUUID();
-		initDiscovery();
-		initCommunication();
 	}
-	
-	private void initDiscovery() {
-		DiscoveryFactory factory = DiscoveryFactory.getInstance();
-		discovery = factory.createDiscovery();
-		DiscoveryCallback callback = new DiscoveryCallbackImpl(this);
-		discovery.setDiscoveryCallback(callback);
-		discovery.setUserId(userId);
-	}
-	
-	private void initCommunication() { /*TODO: */ }
 
 	public void setUserDetails(UserDetails details) {
 		discovery.setUserDetails(details);
@@ -69,6 +56,21 @@ public class NetworkServiceImpl implements NetworkService {
 
 	public void setCallback(NetworkServiceCallback callback) {
 		this.networkCallback = callback;
+		//since the callback to the upper layer is available now, 
+		//start discovery process
+		launchDiscovery();
+	}
+
+	/**
+	 * Launches the discovery process.
+	 */
+	private void launchDiscovery() {
+		DiscoveryFactory factory = DiscoveryFactory.getInstance();
+		discovery = factory.createDiscovery();
+		discovery.setUserId(userId);
+		DiscoveryCallback dc = new DiscoveryCallbackImpl(getCallback());
+		discovery.setDiscoveryCallback(dc);
+		discovery.execute();
 	}
 	
 	public NetworkServiceCallback getCallback() {
@@ -83,18 +85,6 @@ public class NetworkServiceImpl implements NetworkService {
 	public void discoverUser(DiscoveryNetworkCallback callback, InetAddress addr, int port) {
 		
 		
-	}
-	
-	void userDiscovered(RemoteUserProxy proxy) {
-		getCallback().userDiscovered(proxy);
-	}
-	
-	void userDiscarded(RemoteUserProxy proxy) {
-		getCallback().userDiscarded(proxy);
-	}
-	
-	void userDetailsChanged(RemoteUserProxy proxy) {
-		getCallback().userDetailsChanged(proxy);
 	}
 
 }

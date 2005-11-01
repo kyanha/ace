@@ -28,7 +28,7 @@ import ch.iserver.ace.UserDetails;
  */
 public interface Discovery {
 	
-	public static final String KEY_DISCOVERY_PORT = "port";
+	public static final String KEY_DISCOVERY_PORT = "discovery.port";
 
 	
 	void setDiscoveryCallback(DiscoveryCallback callback);

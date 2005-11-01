@@ -31,14 +31,20 @@ import com.apple.dnssd.TXTRecord;
 
 class TXTRecordProxy {
 
+	//TXT record keys
+	static final String TXT_VERSION = "txtvers";
+	static final String TXT_USER = "name";
+	static final String TXT_USERID = "userid";
+	static final String TXT_PROTOCOL_VERSION = "version";
+	
 	private static Logger LOG = Logger.getLogger(TXTRecordProxy.class);
 	
 	public static TXTRecord create(final Properties props) {
 		TXTRecord r = new TXTRecord();
-		r.set(Bonjour.KEY_TXT_VERSION, (String)props.get(Bonjour.KEY_TXT_VERSION));
-		r.set(Bonjour.KEY_USER, (String)props.get(Bonjour.KEY_USER));
-		r.set(Bonjour.KEY_USERID, (String)props.get(Bonjour.KEY_USERID));
-		r.set(Bonjour.KEY_PROTOCOL_VERSION, (String)props.get(Bonjour.KEY_PROTOCOL_VERSION));
+		r.set(TXT_VERSION, (String)props.get(Bonjour.KEY_TXT_VERSION));
+		r.set(TXT_USER, (String)props.get(Bonjour.KEY_USER));
+		r.set(TXT_USERID, (String)props.get(Bonjour.KEY_USERID));
+		r.set(TXT_PROTOCOL_VERSION, (String)props.get(Bonjour.KEY_PROTOCOL_VERSION));
 		return r;
 	}
 	

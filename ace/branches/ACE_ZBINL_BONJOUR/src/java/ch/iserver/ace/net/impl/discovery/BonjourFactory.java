@@ -20,13 +20,19 @@
  */
 package ch.iserver.ace.net.impl.discovery;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Properties;
+
+import org.apache.log4j.Logger;
 
 import ch.iserver.ace.net.impl.Discovery;
 import ch.iserver.ace.net.impl.DiscoveryFactory;
 
 public class BonjourFactory extends DiscoveryFactory {
 
+	private static Logger LOG = Logger.getLogger(BonjourFactory.class);
+	
 	public Discovery createDiscovery() {
 		Properties props = loadConfig();
 		Bonjour b = new Bonjour(props);
@@ -34,17 +40,16 @@ public class BonjourFactory extends DiscoveryFactory {
 	}
 	
 	/**
-	 * Load the properties for Bonjour zeroconf.
-	 * TODO: load properties from text config file
+	 * Loads the properties for Bonjour zeroconf.
 	 */
 	private Properties loadConfig() {
-		Properties props = new Properties();
-		props.put(Bonjour.KEY_REGISTRATION_TYPE, "_ace._tcp");
-		props.put(Bonjour.KEY_TXT_VERSION, "1");
-		props.put(Bonjour.KEY_PROTOCOL_VERSION, "0.1");
-		
-		props.put(Discovery.KEY_DISCOVERY_PORT, new Integer(4123));
-		return props;
+	    Properties properties = new Properties();
+	    try {
+	        properties.load(new FileInputStream("zeroconf.properties"));
+	    } catch (IOException e) {
+	    		LOG.fatal("could not load zeroconf properties: "+e.getLocalizedMessage());
+	    }
+		return properties;
 	}
 
 }

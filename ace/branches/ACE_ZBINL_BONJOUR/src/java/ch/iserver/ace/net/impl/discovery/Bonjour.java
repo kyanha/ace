@@ -28,20 +28,20 @@ import ch.iserver.ace.net.impl.DiscoveryCallback;
 
 public class Bonjour implements Discovery {
 	
-	public static final String KEY_REGISTRATION_TYPE = "regType";
-	public static final String KEY_TXT_VERSION = "txtvers";
-	public static final String KEY_PROTOCOL_VERSION = "version";
-	public static final String KEY_USER = "name";
-	public static final String KEY_USERID = "id";
+	public static final String KEY_REGISTRATION_TYPE = "registration.type";
+	public static final String KEY_TXT_VERSION = "txt.version";
+	public static final String KEY_PROTOCOL_VERSION = "protocol.version";
+	public static final String KEY_USER = "user.name";
+	public static final String KEY_USERID = "user.id";
 
 	private Properties props;
-	private BonjourUserRegistration registration;
-	private BonjourPeerDiscovery peerDiscovery;
+	private UserRegistrationImpl registration;
+	private PeerDiscoveryImpl peerDiscovery;
 	
 	public Bonjour(Properties props) {
 		this.props = props;
-		registration = new BonjourUserRegistration();
-		peerDiscovery = new BonjourPeerDiscovery();
+		registration  = new UserRegistrationImpl();
+		peerDiscovery = new PeerDiscoveryImpl();
 	}
 	
 	/**
