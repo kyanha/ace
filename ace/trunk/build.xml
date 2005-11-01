@@ -55,8 +55,8 @@
 		<dependency groupId="springframework"
 		            artifactId="spring-context"
 		            version="1.2.5"/>
-		<remoteRepository refid="remote.repository.maven" />
 		<remoteRepository refid="remote.repository.ace" />
+		<remoteRepository refid="remote.repository.maven" />
 	</artifact:dependencies>
 	
 	<artifact:dependencies pathId="dependency.checkstyle">
