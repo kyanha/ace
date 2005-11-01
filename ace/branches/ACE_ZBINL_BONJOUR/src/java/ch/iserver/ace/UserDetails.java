@@ -31,17 +31,17 @@ public class UserDetails {
 	/**
 	 * The username of the user.
 	 */
-	private final String username;
+	protected String username;
 	
 	/**
 	 * The address of the user.
 	 */
-	private InetAddress address;
+	protected InetAddress address;
 	
 	/**
 	 * The port of the user.
 	 */
-	private int port;
+	protected int port;
 	
 	/**
 	 * Creates a new UserDetails object.
@@ -71,21 +71,20 @@ public class UserDetails {
 	}
 	
 	/**
+	 * 
+	 * @param username
+	 */
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	
+	/**
 	 * Gets the address of this user.
 	 * 
 	 * @return the address
 	 */
 	public InetAddress getAddress() {
 		return address;
-	}
-	
-	/**
-	 * Sets the address of the user.
-	 * 
-	 * @param address the address of the user
-	 */
-	public void setAddress(InetAddress address) {
-		this.address = address;
 	}
 	
 	/**
@@ -96,14 +95,4 @@ public class UserDetails {
 	public int getPort() {
 		return port;
 	}
-	
-	/**
-	 * Sets the port for the user.
-	 * 
-	 * @param port the port of the user
-	 */
-	public void setPort(int port) {
-		this.port = port;
-	}
-	
 }
