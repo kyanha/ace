@@ -20,6 +20,8 @@
  */
 package ch.iserver.ace.net.impl;
 
+import java.net.InetAddress;
+
 import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.net.RemoteUserProxy;
 
@@ -32,5 +34,19 @@ import ch.iserver.ace.net.RemoteUserProxy;
 interface RemoteUserProxyNet extends RemoteUserProxy {
 
 	void setUserDetails(UserDetails details);
+	
+	/**
+	 * Gets the physical address of the user.
+	 * 
+	 * @return the physical address
+	 */
+	InetAddress getAddress();
+	
+	/**
+	 * Gets the port of the user's machine.
+	 * 
+	 * @return the port
+	 */
+	int getPort();
 	
 }

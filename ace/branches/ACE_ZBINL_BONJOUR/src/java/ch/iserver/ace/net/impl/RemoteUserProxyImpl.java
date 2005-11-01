@@ -20,6 +20,7 @@
  */
 package ch.iserver.ace.net.impl;
 
+import java.net.InetAddress;
 import java.util.Collection;
 
 import ch.iserver.ace.UserDetails;
@@ -29,13 +30,13 @@ public class RemoteUserProxyImpl implements RemoteUserProxyNet {
 	
 	private String id;
 	private UserDetails details;
-	private String hostName;
+	private InetAddress address;
 	private int port;
 	
-	public RemoteUserProxyImpl(String id, UserDetails details, String hostName, int port) {
+	public RemoteUserProxyImpl(String id, UserDetails details, InetAddress address, int port) {
 		this.id = id;
 		this.details = details;
-		this.hostName = hostName;
+		this.address = address;
 		this.port = port;
 	}
 
@@ -43,8 +44,8 @@ public class RemoteUserProxyImpl implements RemoteUserProxyNet {
 		return id;
 	}
 	
-	public String getHostName() {
-		return hostName;
+	public InetAddress getAddress() {
+		return address;
 	}
 	
 	public int getPort() {
@@ -69,5 +70,4 @@ public class RemoteUserProxyImpl implements RemoteUserProxyNet {
 		// TODO Auto-generated method stub
 		
 	}
-
 }
