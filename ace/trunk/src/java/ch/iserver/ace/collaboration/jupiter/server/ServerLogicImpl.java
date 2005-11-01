@@ -97,6 +97,8 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 		this.document = new ServerDocumentImpl();
 		this.document.insertString(0, 0, document.getContent());
 		this.document.updateCaret(0, document.getDot(), document.getMark());
+		
+		this.proxies.put(new Integer(-1), new DocumentUpdateProxy(this.document));
 	}
 	
 	protected ParticipantPort createPublisherPort(ParticipantConnection connection) {
@@ -193,6 +195,7 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 	}
 	
 	protected void notifyOthersAboutJoin(Participant participant) {
+		getDocument().participantJoined(participant);
 		Map map = getParticipantConnections();
 		Iterator it = map.keySet().iterator();
 		while (it.hasNext()) {
@@ -205,6 +208,7 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 	}
 
 	protected synchronized void notifyOthersAboutLeave(int participantId, int reason) {
+		getDocument().participantLeft(participantId);
 		Iterator it = connections.keySet().iterator();
 		while (it.hasNext()) {
 			Integer key = (Integer) it.next();

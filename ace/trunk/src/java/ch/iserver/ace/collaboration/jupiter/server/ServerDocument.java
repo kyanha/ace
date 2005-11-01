@@ -24,20 +24,49 @@ package ch.iserver.ace.collaboration.jupiter.server;
 import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.collaboration.PortableDocument;
 
+/**
+ *
+ */
 public interface ServerDocument {
 	
+	/**
+	 * @param participant
+	 */
 	void participantJoined(Participant participant);
 	
+	/**
+	 * @param participantId
+	 */
 	void participantLeft(int participantId);
 	
+	/**
+	 * @param participantId
+	 * @param dot
+	 * @param mark
+	 */
 	void updateCaret(int participantId, int dot, int mark);
 	
+	/**
+	 * @param participantId
+	 * @param offset
+	 * @param text
+	 */
 	void insertString(int participantId, int offset, String text);
 	
+	/**
+	 * @param offset
+	 * @param length
+	 */
 	void removeString(int offset, int length);
 	
+	/**
+	 * @return
+	 */
 	String getText();
 	
+	/**
+	 * @return
+	 */
 	PortableDocument toPortableDocument();
 	
 }

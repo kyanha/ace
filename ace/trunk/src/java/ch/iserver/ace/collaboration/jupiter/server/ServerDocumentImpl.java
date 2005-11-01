@@ -145,6 +145,9 @@ public class ServerDocumentImpl extends AbstractDocument implements
 		super.insertUpdate(chng, attr);
 	}
 
+	/** (non-Javadoc)
+	 * @see javax.swing.text.AbstractDocument#removeUpdate(javax.swing.text.AbstractDocument.DefaultDocumentEvent)
+	 */
 	protected void removeUpdate(DefaultDocumentEvent chng) {
 		List removed = new ArrayList();		
 		BranchElement map = (BranchElement) getDefaultRootElement();
@@ -188,11 +191,17 @@ public class ServerDocumentImpl extends AbstractDocument implements
 		
 	// --> DocumentModel methods <--
 	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerDocument#participantJoined(ch.iserver.ace.collaboration.Participant)
+	 */
 	public void participantJoined(Participant participant) {
 		setCaretHandler(participant.getParticipantId(), new CaretHandler(-1, -1));
 		addParticipant(participant);
 	}
 	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerDocument#participantLeft(int)
+	 */
 	public void participantLeft(int participantId) {
 		CaretHandler handler = getCaretHandler(participantId);
 		removeDocumentListener(handler);
@@ -200,6 +209,9 @@ public class ServerDocumentImpl extends AbstractDocument implements
 		removeParticipant(participantId);
 	}
 	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerDocument#getText()
+	 */
 	public String getText() {
 		try {
 			return getText(0, getLength());
@@ -208,6 +220,9 @@ public class ServerDocumentImpl extends AbstractDocument implements
 		}
 	}
 	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerDocument#updateCaret(int, int, int)
+	 */
 	public void updateCaret(int participantId, int dot, int mark) {
 		CaretHandler handler = getCaretHandler(participantId);
 		if (handler == null) {
@@ -219,6 +234,9 @@ public class ServerDocumentImpl extends AbstractDocument implements
 		}
 	}
 
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerDocument#insertString(int, int, java.lang.String)
+	 */
 	public void insertString(int participantId, int offset, String text) {
 		SimpleAttributeSet attr = new SimpleAttributeSet();
 		attr.addAttribute(PARTICIPANT_ATTR, new Integer(participantId));
@@ -230,6 +248,9 @@ public class ServerDocumentImpl extends AbstractDocument implements
 		}
 	}
 	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerDocument#removeString(int, int)
+	 */
 	public void removeString(int offset, int length) {
 		try {
 			super.remove(offset, length);
@@ -239,12 +260,18 @@ public class ServerDocumentImpl extends AbstractDocument implements
 		}
 	}
 	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerDocument#toPortableDocument()
+	 */
 	public PortableDocument toPortableDocument() {
 		return this;
 	}
 			
 	// --> PortableDocument methods <--
 	
+	/**
+	 * @see ch.iserver.ace.collaboration.PortableDocument#getFragments()
+	 */
 	public Iterator getFragments() {
 		final BranchElement root = (BranchElement) getDefaultRootElement();
 		return new Iterator() {
@@ -264,14 +291,23 @@ public class ServerDocumentImpl extends AbstractDocument implements
 		};
 	}
 	
+	/**
+	 * @see ch.iserver.ace.collaboration.PortableDocument#getParticipant(int)
+	 */
 	public Participant getParticipant(int participantId) {
 		return (Participant) participants.get(new Integer(participantId));
 	}
 	
+	/**
+	 * @see ch.iserver.ace.collaboration.PortableDocument#getParticipants()
+	 */
 	public Collection getParticipants() {
 		return Collections.unmodifiableCollection(participants.values());
 	}
 	
+	/**
+	 * @see ch.iserver.ace.collaboration.PortableDocument#getSelection(int)
+	 */
 	public CaretUpdate getSelection(int participantId) {
 		CaretHandler handler = getCaretHandler(participantId);
 		if (handler != null) {
@@ -298,6 +334,7 @@ public class ServerDocumentImpl extends AbstractDocument implements
 			try {
 				return getDocument().getText(getStartOffset(), length);
 			} catch (BadLocationException e) {
+				// TODO: fix RuntimeException
 				throw new RuntimeException(e);
 			}
 		}
