@@ -35,17 +35,29 @@ import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
- *
+ * Default implementation of the RemoteUser interface. The RemoteUserImpl
+ * passes most requests directly to a wrapped RemoteUserProxy instance.
  */
 public class RemoteUserImpl implements RemoteUser {
-
+	
+	/**
+	 * The wrapped target RemoteUserProxy instance.
+	 */
 	private final RemoteUserProxy proxy;
 	
+	/**
+	 * Creates a new RemoteUserImpl object.
+	 * 
+	 * @param proxy the wrapped RemoteUserProxy instance
+	 */
 	public RemoteUserImpl(RemoteUserProxy proxy) {
 		ParameterValidator.notNull("proxy", proxy);
 		this.proxy = proxy;
 	}
 	
+	/**
+	 * @return the wrapped RemoteUserProxy instance
+	 */
 	public RemoteUserProxy getProxy() {
 		return proxy;
 	}

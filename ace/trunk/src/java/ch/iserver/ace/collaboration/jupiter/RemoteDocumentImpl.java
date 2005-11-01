@@ -30,15 +30,27 @@ import ch.iserver.ace.net.RemoteDocumentProxy;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
- *
+ * Default implementation of the RemoteDocument interface.
  */
-public class RemoteDocumentImpl implements RemoteDocument {
+class RemoteDocumentImpl implements RemoteDocument {
 	
+	/**
+	 * The wrapped RemoteDocumentProxy instance.
+	 */
 	private final RemoteDocumentProxy proxy;
 	
+	/**
+	 * The publisher of the document.
+	 */
 	private RemoteUser publisher;
 	
-	public RemoteDocumentImpl(RemoteDocumentProxy proxy) {
+	/**
+	 * Creates a new RemoteDocumentImpl passing most requests directly to
+	 * the passed in RemoteDocumentProxy.
+	 * 
+	 * @param proxy the wrapped RemoteDocumentProxy
+	 */
+	RemoteDocumentImpl(RemoteDocumentProxy proxy) {
 		ParameterValidator.notNull("proxy", proxy);
 		this.proxy = proxy;
 	}
@@ -67,6 +79,9 @@ public class RemoteDocumentImpl implements RemoteDocument {
 		return publisher;
 	}
 
+	/**
+	 * @see ch.iserver.ace.collaboration.RemoteDocument#join(ch.iserver.ace.collaboration.JoinCallback)
+	 */
 	public void join(final JoinCallback callback) {
 		JoinNetworkCallback networkCallback = new JoinNetworkCallbackImpl(callback);
 		proxy.join(networkCallback);
