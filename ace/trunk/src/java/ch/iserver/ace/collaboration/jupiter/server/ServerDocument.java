@@ -19,24 +19,25 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.collaboration;
+package ch.iserver.ace.collaboration.jupiter.server;
 
-import java.util.Collection;
-import java.util.Iterator;
+import ch.iserver.ace.collaboration.Participant;
+import ch.iserver.ace.collaboration.PortableDocument;
 
-import ch.iserver.ace.CaretUpdate;
-
-/**
- *
- */
-public interface PortableDocument {
-
-	Collection getParticipants();
+public interface ServerDocument {
 	
-	Participant getParticipant(int participantId);
+	void participantJoined(Participant participant);
 	
-	CaretUpdate getSelection(int participantId);
+	void participantLeft(int participantId);
 	
-	Iterator getFragments();
+	void updateCaret(int participantId, int dot, int mark);
+	
+	void insertString(int offset, String text, int participantId);
+	
+	void removeString(int offset, int length);
+	
+	String getText();
+	
+	PortableDocument toPortableDocument();
 	
 }

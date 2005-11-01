@@ -22,11 +22,13 @@
 package ch.iserver.ace.collaboration.jupiter;
 
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Set;
+import java.util.Map;
 
 import ch.iserver.ace.CaretUpdate;
+import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.collaboration.PortableDocument;
 import ch.iserver.ace.collaboration.RemoteUser;
 import ch.iserver.ace.util.ParameterValidator;
@@ -38,27 +40,32 @@ public class PortableDocumentWrapper implements PortableDocument {
 	
 	private final ch.iserver.ace.net.PortableDocument document;
 	
-	private Set participants;
+	private final Map participants;
 	
 	public PortableDocumentWrapper(ch.iserver.ace.net.PortableDocument doc) {
 		ParameterValidator.notNull("doc", doc);
 		this.document = doc;
+		participants = new HashMap();
+		int[] ids = document.getParticipantIds();
+		for (int i = 0; i < ids.length; i++) {
+			int id = ids[i];
+			RemoteUser user = new RemoteUserImpl(document.getUserProxy(id));
+			participants.put(new Integer(id), new ParticipantImpl(id, user));
+		}
+	}
+	
+	/**
+	 * @see ch.iserver.ace.collaboration.PortableDocument#getParticipant(int)
+	 */
+	public Participant getParticipant(int participantId) {
+		return (Participant) participants.get(new Integer(participantId));
 	}
 	
 	/**
 	 * @see ch.iserver.ace.collaboration.PortableDocument#getParticipants()
 	 */
 	public Collection getParticipants() {
-		if (participants == null) {
-			participants = new HashSet();
-			int[] ids = document.getParticipantIds();
-			for (int i = 0; i < ids.length; i++) {
-				int id = ids[i];
-				RemoteUser user = new RemoteUserImpl(document.getUserProxy(id));
-				participants.add(new ParticipantImpl(id, user));
-			}
-		}
-		return participants;
+		return Collections.unmodifiableCollection(participants.values());
 	}
 
 	/**
