@@ -21,8 +21,8 @@
 
 package ch.iserver.ace.collaboration;
 
+import java.util.Collection;
 import java.util.Iterator;
-import java.util.Set;
 
 import ch.iserver.ace.CaretUpdate;
 
@@ -31,7 +31,7 @@ import ch.iserver.ace.CaretUpdate;
  */
 public interface PortableDocument {
 
-	Set getParticipants();
+	Collection getParticipants();
 	
 	CaretUpdate getSelection(int participantId);
 	

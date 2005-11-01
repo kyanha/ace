@@ -21,6 +21,7 @@
 
 package ch.iserver.ace.collaboration.jupiter;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -47,7 +48,7 @@ public class PortableDocumentWrapper implements PortableDocument {
 	/**
 	 * @see ch.iserver.ace.collaboration.PortableDocument#getParticipants()
 	 */
-	public Set getParticipants() {
+	public Collection getParticipants() {
 		if (participants == null) {
 			participants = new HashSet();
 			int[] ids = document.getParticipantIds();
