@@ -61,8 +61,7 @@ public class SessionImpl extends AbstractSession implements SessionConnectionCal
 	}
 	
 	public void setSessionCallback(SessionCallback callback) {
-		ParameterValidator.notNull("callback", callback);
-		this.callback = callback;
+		this.callback = callback == null ? NullSessionCallback.getInstance() : callback;
 	}
 	
 	protected SessionCallback getCallback() {
