@@ -84,19 +84,4 @@ public interface NetworkService {
 	 * @param port the target port
 	 */	
 	void discoverUser(DiscoveryNetworkCallback callback, InetAddress addr, int port);
-	
-	/**
-	 * Gets the local address.
-	 * 
-	 * @return the local address
-	 */
-	InetAddress getLocalAddress();
-	
-	/**
-	 * Gets the local port.
-	 * 
-	 * @return the local port
-	 */
-	int getLocalPort();
-	
 }

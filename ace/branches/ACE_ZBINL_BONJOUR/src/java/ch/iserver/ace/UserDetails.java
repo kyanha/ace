@@ -21,6 +21,8 @@
 
 package ch.iserver.ace;
 
+import java.net.InetAddress;
+
 /**
  * The UserDetails object contains information about a user.
  */
@@ -32,6 +34,16 @@ public class UserDetails {
 	private final String username;
 	
 	/**
+	 * The address of the user.
+	 */
+	private InetAddress address;
+	
+	/**
+	 * The port of the user.
+	 */
+	private int port;
+	
+	/**
 	 * Creates a new UserDetails object.
 	 * 
 	 * @param username the username of the user
@@ -41,10 +53,57 @@ public class UserDetails {
 	}
 	
 	/**
+	 * Creates a new UserDetails object.
+	 * 
+	 * @param username the username of the user
+	 */
+	public UserDetails(String username, InetAddress address, int port) {
+		this.username = username;
+		this.address = address;
+		this.port = port;
+	}
+	
+	/**
 	 * @return gets the username of the user
 	 */
 	public String getUsername() {
 		return username;
+	}
+	
+	/**
+	 * Gets the address of this user.
+	 * 
+	 * @return the address
+	 */
+	public InetAddress getAddress() {
+		return address;
+	}
+	
+	/**
+	 * Sets the address of the user.
+	 * 
+	 * @param address the address of the user
+	 */
+	public void setAddress(InetAddress address) {
+		this.address = address;
+	}
+	
+	/**
+	 * Gets the port.
+	 * 
+	 * @return the port of the user
+	 */
+	public int getPort() {
+		return port;
+	}
+	
+	/**
+	 * Sets the port for the user.
+	 * 
+	 * @param port the port of the user
+	 */
+	public void setPort(int port) {
+		this.port = port;
 	}
 	
 }
