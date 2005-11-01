@@ -25,6 +25,8 @@ package ch.iserver.ace.collaboration;
 /**
  * A Participant is a contributor to an editing session. He has a session
  * wide unique id identifying him.
+ * 
+ * @todo add session property
  */
 public interface Participant {
 	

@@ -54,9 +54,36 @@ public class ParticipantImpl implements Participant {
 		return participantId;
 	}
 	
+	/**
+	 * @see java.lang.Object#toString()
+	 */
 	public String toString() {
 		return "[" + participantId
 		        + ",user=" + user + "]";
+	}
+	
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		} else if (obj instanceof Participant) {
+			Participant p = (Participant) obj;
+			return getParticipantId() == p.getParticipantId()
+					&& getUser().equals(p.getUser());
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	public int hashCode() {
+		int hashCode = getParticipantId();
+		hashCode += 17 * getUser().hashCode();
+		return hashCode;
 	}
 
 }
