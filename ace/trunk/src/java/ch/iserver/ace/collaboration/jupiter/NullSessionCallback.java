@@ -49,6 +49,14 @@ final class NullSessionCallback implements SessionCallback {
 		return instance;
 	}
 	
+	public void participantJoined(Participant participant) {
+		LOG.warn("SessionCallback not set on Session (participantJoined called)");
+	}
+	
+	public void participantLeft(int participantId, int code) {
+		LOG.warn("SessionCallback not set on Session (participantLeft called)");
+	}
+	
 	/**
 	 * @see ch.iserver.ace.collaboration.SessionCallback#setDocument(PortableDocument)
 	 */

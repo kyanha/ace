@@ -100,20 +100,5 @@ public interface Session {
 	 * @return the Participant with the given id or null if there is none
 	 */
 	Participant getParticipant(int participantId);
-	
-	/**
-	 * Registers <var>listener</var> to receive ParticipationEvents. They
-	 * allow the application to track who is participating in the session.
-	 * 
-	 * @param listener the listener to be registered
-	 */
-	void addParticipationListener(ParticipationListener listener);
-	
-	/**
-	 * Unregisters <var>listener</var> from the list of registered listeners.
-	 * 
-	 * @param listener the listener to be removed
-	 */
-	void removeParticipationListener(ParticipationListener listener);
-	
+		
 }

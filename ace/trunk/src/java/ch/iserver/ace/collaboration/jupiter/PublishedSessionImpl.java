@@ -197,7 +197,7 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 	 */
 	public void sendParticipantJoined(Participant participant) {
 		addParticipant(participant);
-		fireParticipantJoined(participant);			
+		getCallback().participantJoined(participant);			
 	}
 		
 	/**
@@ -206,7 +206,7 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 	public void sendParticipantLeft(int participantId, int reason) {
 		Participant participant = getParticipant(participantId);
 		removeParticipant(participant);
-		fireParticipantLeft(participant, reason);
+		getCallback().participantLeft(participant.getParticipantId(), reason);
 	}
 		
 	/**

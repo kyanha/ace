@@ -155,13 +155,13 @@ public class SessionImpl extends AbstractSession implements SessionConnectionCal
 		RemoteUser user = new RemoteUserImpl(proxy);
 		Participant participant = new ParticipantImpl(participantId, user);
 		addParticipant(participant);
-		fireParticipantJoined(participant);
+		getCallback().participantJoined(participant);
 	}
 	
 	public void userLeaved(int participantId, int reason) {
 		Participant participant = getParticipant(participantId);
 		removeParticipant(participant);
-		fireParticipantLeft(participant, reason);
+		getCallback().participantLeft(participant.getParticipantId(), reason);
 	}
 	
 }

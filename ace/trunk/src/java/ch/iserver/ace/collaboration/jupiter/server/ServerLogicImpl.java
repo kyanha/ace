@@ -30,7 +30,6 @@ import ch.iserver.ace.DocumentModel;
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.jupiter.Jupiter;
 import ch.iserver.ace.collaboration.Participant;
-import ch.iserver.ace.collaboration.ParticipationEvent;
 import ch.iserver.ace.collaboration.jupiter.ParticipantImpl;
 import ch.iserver.ace.collaboration.jupiter.RemoteUserImpl;
 import ch.iserver.ace.net.DocumentServer;
@@ -233,7 +232,7 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 		ParticipantConnection connection = getParticipantConnection(participantId);
 		connection.close();
 		removeParticipant(participantId);
-		notifyOthersAboutLeave(participantId, ParticipationEvent.LEFT);
+		notifyOthersAboutLeave(participantId, Participant.LEFT);
 	}
 		
 	// --> session logic methods <--
@@ -257,7 +256,7 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 		connection.sendKicked();
 		connection.close();
 		removeParticipant(participantId);
-		notifyOthersAboutLeave(participantId, ParticipationEvent.KICKED);
+		notifyOthersAboutLeave(participantId, Participant.KICKED);
 	}
 
 }

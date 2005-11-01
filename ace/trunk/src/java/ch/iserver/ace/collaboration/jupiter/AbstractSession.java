@@ -27,13 +27,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import javax.swing.SwingUtilities;
-import javax.swing.event.EventListenerList;
-
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.collaboration.Participant;
-import ch.iserver.ace.collaboration.ParticipationEvent;
-import ch.iserver.ace.collaboration.ParticipationListener;
 import ch.iserver.ace.collaboration.Session;
 import ch.iserver.ace.util.Lock;
 import ch.iserver.ace.util.ParameterValidator;
@@ -44,7 +39,6 @@ import ch.iserver.ace.util.SemaphoreLock;
  */
 public abstract class AbstractSession implements Session {
 
-	private final EventListenerList listeners = new EventListenerList();
 	private final Lock lock;
 	private final AlgorithmWrapper algorithm;
 	private final Set participants = new HashSet();
@@ -68,53 +62,6 @@ public abstract class AbstractSession implements Session {
 		if (!lock.isOwner(Thread.currentThread())) {
 			throw new IllegalMonitorStateException("Lock the Session before sending.");
 		}
-	}
-
-	/**
-	 * @see ch.iserver.ace.collaboration.Session#addParticipationListener(ch.iserver.ace.collaboration.ParticipationListener)
-	 */
-	public void addParticipationListener(ParticipationListener listener) {
-		ParameterValidator.notNull("listener", listener);
-		listeners.add(ParticipationListener.class, listener);
-	}
-
-	/**
-	 * @see ch.iserver.ace.collaboration.Session#removeParticipationListener(ch.iserver.ace.collaboration.ParticipationListener)
-	 */
-	public void removeParticipationListener(ParticipationListener listener) {
-		listeners.remove(ParticipationListener.class, listener);
-	}
-
-	protected void fireParticipantJoined(final Participant participant) {
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				ParticipationListener[] lists = (ParticipationListener[]) listeners.getListeners(ParticipationListener.class);
-				ParticipationEvent event = null;
-				for (int i = 0; i < lists.length; i++) {
-					ParticipationListener listener = lists[i];
-					if (event == null) {
-						event = new ParticipationEvent(AbstractSession.this, participant, ParticipationEvent.JOINED);
-					}
-					listener.userJoined(event);
-				}
-			}
-		});
-	}
-
-	protected void fireParticipantLeft(final Participant participant, final int reason) {
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				ParticipationListener[] lists = (ParticipationListener[]) listeners.getListeners(ParticipationListener.class);
-				ParticipationEvent event = null;
-				for (int i = 0; i < lists.length; i++) {
-					ParticipationListener listener = lists[i];
-					if (event == null) {
-						event = new ParticipationEvent(AbstractSession.this, participant, reason);
-					}
-					listener.userLeft(event);
-				}
-			}
-		});
 	}
 
 	/**
