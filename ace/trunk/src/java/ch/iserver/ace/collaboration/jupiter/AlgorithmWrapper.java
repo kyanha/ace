@@ -28,18 +28,48 @@ import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
 
 /**
- *
+ * Wrapper interface for algorithm instances. Adds methods for receiving
+ * and generating CaretUpdate and the corresponding CaretUpdateMessage.
  */
 public interface AlgorithmWrapper {
 	
+	/**
+	 * Retrieves the wrapped algorithm instance.
+	 * 
+	 * @return the wrapped Algorithm instance
+	 */
 	Algorithm getAlgorithm();
 	
+	/**
+	 * Receives a Request and returns the transformed Operation.
+	 * 
+	 * @param request the Request to receive
+	 * @return the transformed Operation
+	 */
 	Operation receiveRequest(Request request);
 	
+	/**
+	 * Receives a CaretUpdateMessage and returns the transformed CaretUpdate.
+	 * 
+	 * @param message the CaretUpdateMessage to receive
+	 * @return the transformed CaretUpdate
+	 */
 	CaretUpdate receiveCaretUpdateMessage(CaretUpdateMessage message);
 	
+	/**
+	 * Generates a Request for a locally generated Operation.
+	 * 
+	 * @param operation the locally generated Operation
+	 * @return the Request to be sent
+	 */
 	Request generateRequest(Operation operation);
 	
+	/**
+	 * Generates a CaretUpdateMessage for a locally generated CaretUpdate.
+	 * 
+	 * @param update the locally generated CaretUpdate
+	 * @return the CaretUpdateMessage to be sent
+	 */
 	CaretUpdateMessage generateCaretUpdateMessage(CaretUpdate update);
 	
 }

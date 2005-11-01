@@ -29,18 +29,31 @@ import ch.iserver.ace.util.Lock;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
- *
+ * The CaretUpdateCommand is used by the the CallbackWorker to transform
+ * a CaretUpdateMessage and receive the resulting CaretUpdate in the
+ * PublishedSessionCallback.
  */
 class CaretUpdateCommand extends LockingCommand {
 	
+	/**
+	 * The message to be received.
+	 */
 	private final CaretUpdateMessage message;
 	
+	/**
+	 * The Participant that generated the message.
+	 */
 	private final Participant participant;
 	
 	/**
+	 * Creates a new CaretUpdateCommand.
 	 * 
+	 * @param lock the Lock used to lock the algorithm
+	 * @param algorithm the AlgorithmWrapper to transform the message
+	 * @param participant the Participant that generated the message
+	 * @param message the CaretUpdateMessage to be received
 	 */
-	public CaretUpdateCommand(Lock lock, 
+	CaretUpdateCommand(Lock lock, 
 					AlgorithmWrapper algorithm, 
 					Participant participant, 
 					CaretUpdateMessage message) {
@@ -51,16 +64,22 @@ class CaretUpdateCommand extends LockingCommand {
 		this.message = message;
 	}
 		
-	protected CaretUpdateMessage getMessage() {
+	/**
+	 * @return the CaretUpdateMessage to be received
+	 */
+	private CaretUpdateMessage getMessage() {
 		return message;
 	}
 	
-	protected Participant getParticipant() {
+	/**
+	 * @return the Participant that generated the message 
+	 */
+	private Participant getParticipant() {
 		return participant;
 	}
 		
 	protected void doWork(PublishedSessionCallback callback) {
-		CaretUpdate update = getAlgorithm().receiveCaretUpdateMessage(message);
+		CaretUpdate update = getAlgorithm().receiveCaretUpdateMessage(getMessage());
 		callback.receiveCaretUpdate(getParticipant(), update);
 	}
 	

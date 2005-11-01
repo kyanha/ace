@@ -30,7 +30,8 @@ import ch.iserver.ace.collaboration.PortableDocument;
 import ch.iserver.ace.collaboration.SessionCallback;
 
 /**
- *
+ * Null object of a SessionCallback. Logs a warning if methods are called on
+ * this object.
  */
 final class NullSessionCallback implements SessionCallback {
 	

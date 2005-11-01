@@ -28,7 +28,8 @@ import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
- *
+ * Default implementation of the DiscoveryNetworkCallback interface. This interface
+ * is used in the case of explicit discovery requests.
  */
 class DiscoveryNetworkCallbackImpl implements DiscoveryNetworkCallback {
 	
@@ -39,7 +40,7 @@ class DiscoveryNetworkCallbackImpl implements DiscoveryNetworkCallback {
 		this.callback = callback;
 	}
 	
-	DiscoveryCallback getCallback() {
+	private DiscoveryCallback getCallback() {
 		return callback;
 	}
 	

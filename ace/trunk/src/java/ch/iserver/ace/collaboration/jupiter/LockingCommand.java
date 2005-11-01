@@ -27,14 +27,31 @@ import ch.iserver.ace.util.Lock;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
- *
+ * Abstract base class for all command implementations that must lock a passed
+ * in lock before the real work is done. Subclasses must implement the abstract
+ * {@link #doWork(PublishedSessionCallback)} method. The 
+ * {@link #execute(PublishedSessionCallback)} method takes care of proper
+ * locking/unlocking of the lock even in case of exceptions.
  */
 abstract class LockingCommand implements Command {
-
+	
+	/**
+	 * The algorithm wrapper to be used inside the doWork method.
+	 */
 	private final AlgorithmWrapper algorithm;
 	
+	/**
+	 * The lock used by the LockingCommand to lock/unlock.
+	 */
 	private final Lock lock;
 	
+	/**
+	 * Creates a new LockingCommand using the given lock and
+	 * algorithm wrapper.
+	 * 
+	 * @param lock the Lock object
+	 * @param algorithm the AlgorithmWrapper instance
+	 */
 	protected LockingCommand(Lock lock, AlgorithmWrapper algorithm) {
 		ParameterValidator.notNull("lock", lock);
 		ParameterValidator.notNull("algorithm", algorithm);
@@ -42,15 +59,17 @@ abstract class LockingCommand implements Command {
 		this.algorithm = algorithm;
 	}
 	
+	/**
+	 * @return the AlgorithmWrapper to be used inside the locked section
+	 */
 	protected AlgorithmWrapper getAlgorithm() {
 		return algorithm;
 	}
-	
-	protected Lock getLock() {
-		return lock;
-	}
-	
-	public void execute(PublishedSessionCallback callback) {
+		
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.Command#execute(ch.iserver.ace.collaboration.PublishedSessionCallback)
+	 */
+	public final void execute(PublishedSessionCallback callback) {
 		try {
 			lock.lock();
 			try {
@@ -63,6 +82,16 @@ abstract class LockingCommand implements Command {
 		}
 	}
 	
+	/**
+	 * Does the real work of the command. Subclasses implement this method and
+	 * are assured that this method executes within the safety of a lock.
+	 * As long as this method executes, the lock is locked. It is also
+	 * properly unlocked, even in case of exceptions thrown from this
+	 * method.
+	 * 
+	 * @param callback the PublishedSessionCallback to receive the result of 
+	 *                 this command
+	 */
 	protected abstract void doWork(PublishedSessionCallback callback);
 
 }

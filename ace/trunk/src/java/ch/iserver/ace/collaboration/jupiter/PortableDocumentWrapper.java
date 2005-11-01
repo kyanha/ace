@@ -34,15 +34,28 @@ import ch.iserver.ace.collaboration.RemoteUser;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
- *
+ * ch.iserver.ace.collaboration.PortableDocument implementation that wraps a 
+ * ch.iserver.ace.net.PortableDocument.
  */
-public class PortableDocumentWrapper implements PortableDocument {
+class PortableDocumentWrapper implements PortableDocument {
 	
+	/**
+	 * The wrapped PortableDocument object from the network layer.
+	 */
 	private final ch.iserver.ace.net.PortableDocument document;
 	
+	/**
+	 * The mapping from participant id to Participant objects.
+	 */
 	private final Map participants;
 	
-	public PortableDocumentWrapper(ch.iserver.ace.net.PortableDocument doc) {
+	/**
+	 * Creates a new PortableDocumentWrapper instance wrapping the given
+	 * document from the network layer.
+	 * 
+	 * @param doc the PortableDocument from the network layer to be wrapped.
+	 */
+	PortableDocumentWrapper(ch.iserver.ace.net.PortableDocument doc) {
 		ParameterValidator.notNull("doc", doc);
 		this.document = doc;
 		participants = new HashMap();

@@ -35,29 +35,63 @@ import ch.iserver.ace.util.ParameterValidator;
 import ch.iserver.ace.util.SemaphoreLock;
 
 /**
- *
+ * Abstract base class for Session implementations. Implements the common methods
+ * of both PublishedSessionImpl and SessionImpl.
  */
-public abstract class AbstractSession implements Session {
-
+abstract class AbstractSession implements Session {
+	
+	/**
+	 * The Lock used to guard the access to the Algorithm.
+	 */
 	private final Lock lock;
+	
+	/**
+	 * The AlgorithmWrapper wrapping the Algorithm.
+	 */
 	private final AlgorithmWrapper algorithm;
+	
+	/**
+	 * The current Set of Participant objects.
+	 */
 	private final Set participants = new HashSet();
+	
+	/**
+	 * A mapping from participant id to Participant objects.
+	 */
 	private final Map participantMap = new HashMap();
-
+	
+	/**
+	 * Creates a new AbstractSession that uses the given Algorithm.
+	 * 
+	 * @param algorithm the Algorithm used by the Session
+	 */
 	protected AbstractSession(Algorithm algorithm) {
 		ParameterValidator.notNull("algorithm", algorithm);
 		this.lock = new SemaphoreLock();
 		this.algorithm = new AlgorithmWrapperImpl(algorithm);
 	}
 	
+	/**
+	 * @return the AlgorithmWrapper
+	 */
 	protected AlgorithmWrapper getAlgorithm() {
 		return algorithm;
 	}
 	
+	/**
+	 * @return the Lock guarding the access to the Algorithm
+	 */
 	protected Lock getLock() {
 		return lock;
 	}
 	
+	/**
+	 * Checks whether calls to the send methods are properly wrapped in 
+	 * lock/unlock calls.
+	 * 
+	 * @throws IllegalMonitorStateException if the Session is not properly locked
+	 *                       before sending operations and caret updates
+	 */
 	protected synchronized void checkLockUsage() {
 		if (!lock.isOwner(Thread.currentThread())) {
 			throw new IllegalMonitorStateException("Lock the Session before sending.");
@@ -92,11 +126,22 @@ public abstract class AbstractSession implements Session {
 		return (Participant) participantMap.get(new Integer(participantId));
 	}
 
+	/**
+	 * Adds a Participant to the current set of participants in this Session.
+	 * 
+	 * @param participant the Participant to be added
+	 */
 	protected void addParticipant(Participant participant) {
 		participants.add(participant);
 		participantMap.put(new Integer(participant.getParticipantId()), participant);
 	}
 
+	/**
+	 * Removes a Participant from the current set of participants in the
+	 * Session.
+	 * 
+	 * @param participant the Participant to be removed
+	 */
 	protected void removeParticipant(Participant participant) {
 		participants.remove(participant);
 		participantMap.remove(new Integer(participant.getParticipantId()));
