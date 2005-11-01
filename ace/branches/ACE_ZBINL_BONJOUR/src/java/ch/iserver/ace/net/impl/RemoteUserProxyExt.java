@@ -20,42 +20,17 @@
  */
 package ch.iserver.ace.net.impl;
 
-import java.net.InetAddress;
-import java.util.Collection;
-
 import ch.iserver.ace.UserDetails;
-import ch.iserver.ace.net.DocumentServerLogic;
+import ch.iserver.ace.net.RemoteUserProxy;
 
-public class RemoteUserProxyImpl implements RemoteUserProxyExt {
+/**
+ * Package protected interface extension of <code>RemoteUserProxy</code>
+ * for the network layer.
+ *
+ * @see ch.iserver.ace.net.RemoteUserProxy
+ */
+interface RemoteUserProxyExt extends RemoteUserProxy {
+
+	void setUserDetails(UserDetails details);
 	
-	private String id;
-	private UserDetails details;
-	
-	public RemoteUserProxyImpl(String id, UserDetails details) {
-		this.id = id;
-		this.details = details;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public UserDetails getUserDetails() {
-		return details;
-	}
-
-	public Collection getSharedDocuments() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public void invite(DocumentServerLogic logic) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void setUserDetails(UserDetails details) {
-		// TODO Auto-generated method stub
-		
-	}
 }

@@ -41,7 +41,7 @@ public class DiscoveryCallbackImpl implements DiscoveryCallback {
 		remoteUserProxies = new HashMap();
 	}
 	
-	public void userDiscovered(RemoteUserProxyNet user) {
+	public void userDiscovered(RemoteUserProxyExt user) {
 		remoteUserProxies.put(user.getId(), user);
 		//notify upper layer of discovery
 		callback.userDiscovered(user);
@@ -56,7 +56,7 @@ public class DiscoveryCallbackImpl implements DiscoveryCallback {
 	}
 
 	public void userDetailsChanged(String id, UserDetails details) {
-		RemoteUserProxyNet proxy = (RemoteUserProxyNet)remoteUserProxies.get(id);
+		RemoteUserProxyExt proxy = (RemoteUserProxyExt)remoteUserProxies.get(id);
 		proxy.setUserDetails(details);
 		callback.userDetailsChanged(proxy);
 	}

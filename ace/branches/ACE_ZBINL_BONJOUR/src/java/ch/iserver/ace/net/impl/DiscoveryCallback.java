@@ -33,7 +33,7 @@ public interface DiscoveryCallback {
 	 * 
 	 * @param user
 	 */
-	void userDiscovered(RemoteUserProxyNet user);
+	void userDiscovered(RemoteUserProxyExt user);
 	
 	/**
 	 * 

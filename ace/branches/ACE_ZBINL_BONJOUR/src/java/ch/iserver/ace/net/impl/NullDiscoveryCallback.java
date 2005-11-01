@@ -41,7 +41,7 @@ public class NullDiscoveryCallback implements DiscoveryCallback {
 		return instance;
 	}
 
-	public void userDiscovered(RemoteUserProxyNet user) {
+	public void userDiscovered(RemoteUserProxyExt user) {
 		LOG.warn("called for "+user.getUserDetails().getUsername());
 	}
 

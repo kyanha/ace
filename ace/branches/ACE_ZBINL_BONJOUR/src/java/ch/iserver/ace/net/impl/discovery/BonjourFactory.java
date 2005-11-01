@@ -26,6 +26,7 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
+import ch.iserver.ace.ApplicationError;
 import ch.iserver.ace.net.impl.Discovery;
 import ch.iserver.ace.net.impl.DiscoveryFactory;
 
@@ -47,7 +48,8 @@ public class BonjourFactory extends DiscoveryFactory {
 	    try {
 	        properties.load(new FileInputStream("zeroconf.properties"));
 	    } catch (IOException e) {
-	    		LOG.fatal("could not load zeroconf properties: "+e.getLocalizedMessage());
+	    		LOG.fatal("could not load zeroconf properties: "+e.getMessage());
+	    		throw new ApplicationError(e);
 	    }
 		return properties;
 	}
