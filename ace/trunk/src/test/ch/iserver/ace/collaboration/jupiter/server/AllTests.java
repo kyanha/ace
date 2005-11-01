@@ -30,17 +30,18 @@ public class AllTests {
 		TestSuite suite = new TestSuite(
 						"Test for ch.iserver.ace.collaboration.jupiter.server");
 		//$JUnit-BEGIN$
-		suite.addTestSuite(CaretHandlerTest.class);
 		suite.addTestSuite(RequestSerializerCommandTest.class);
-		suite.addTestSuite(ParticipantPortImplTest.class);
 		suite.addTestSuite(CaretUpdateDispatcherCommandTest.class);
-		suite.addTestSuite(CaretUpdateSerializerCommandTest.class);
 		suite.addTestSuite(DispatcherTest.class);
-		suite.addTestSuite(ParticipantProxyImplTest.class);
-		suite.addTestSuite(RequestDispatcherCommandTest.class);
 		suite.addTestSuite(ForwarderImplTest.class);
 		suite.addTestSuite(SerializerTest.class);
 		suite.addTestSuite(ServerDocumentImplTest.class);
+		suite.addTestSuite(ParticipantPortImplTest.class);
+		suite.addTestSuite(CaretUpdateSerializerCommandTest.class);
+		suite.addTestSuite(ParticipantProxyImplTest.class);
+		suite.addTestSuite(CaretHandlerTest.class);
+		suite.addTestSuite(RequestDispatcherCommandTest.class);
+		suite.addTestSuite(DocumentUpdateProxyTest.class);
 		//$JUnit-END$
 		return suite;
 	}
