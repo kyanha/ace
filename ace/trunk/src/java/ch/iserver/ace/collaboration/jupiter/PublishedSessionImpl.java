@@ -66,7 +66,14 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 		this.callback = callback;
 		this.callbackQueue = new LinkedBlockingQueue();
 		this.callbackWorker = new CallbackWorker(callback, callbackQueue);
-		// TODO: start CallbackWorker
+	}
+	
+	/**
+	 * Starts the PublishedSession. Before calling this method, the 
+	 * PublishedSessionCallback is never notified.
+	 */
+	public void start() {
+		getCallbackWorker().start();
 	}
 	
 	public void setServerLogic(ServerLogic logic) {

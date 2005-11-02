@@ -126,6 +126,7 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 		session.setServerLogic(logic);
 		DocumentServer server = getNetworkService().publish(logic);
 		logic.setDocumentServer(server);
+		session.start();
 		return session;
 	}
 
