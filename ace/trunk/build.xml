@@ -46,6 +46,9 @@
 		<dependency groupId="log4j"
 			        artifactId="log4j"
 		            version="1.2.12"/>
+		<dependency groupId="jgoodies"
+			        artifactId="looks"
+		            version="1.3.2"/>
 		<dependency groupId="springframework"
 			        artifactId="spring-core"
 		            version="1.2.5"/>
