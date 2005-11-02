@@ -21,17 +21,11 @@
 package ch.iserver.ace.net.impl.discovery;
 
 import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
-import ch.iserver.ace.UserDetails;
-import ch.iserver.ace.net.impl.DiscoveryCallback;
-import ch.iserver.ace.net.impl.NullDiscoveryCallback;
-import ch.iserver.ace.net.impl.RemoteUserProxyImpl;
+import ch.iserver.ace.util.ParameterValidator;
 
 import com.apple.dnssd.DNSSD;
 import com.apple.dnssd.DNSSDService;
@@ -47,41 +41,37 @@ class PeerDiscoveryImpl implements PeerDiscovery {
 	
 	private static final String SERVICE_NAME_SEPARATOR = "._";
 
-	private DiscoveryCallback callback = NullDiscoveryCallback.getInstance();
+	private DiscoveryCallbackAdapter adapter = NullDiscoveryCallbackAdapter.getInstance();
 	
 	private DNSSDService browser;
-	
-	private Map services;
 	
 	/**
 	 * 
 	 *
 	 */
-	public PeerDiscoveryImpl() {
-		services = new HashMap();
-	}
+	public PeerDiscoveryImpl() {}
 	
 	/**
 	 * 
-	 * @param callback
+	 * @param adapter
 	 */
-	public PeerDiscoveryImpl(DiscoveryCallback callback) {
-		this.callback = callback;
+	public PeerDiscoveryImpl(DiscoveryCallbackAdapter adapter) {
+		ParameterValidator.notNull("adapter", adapter);
+		this.adapter = adapter;
 	}
 
 	/**
-	 * Browses the local network for other services and users, respectively.
-	 * 
-	 * @param props the properties for the DNSSD call.
+	 * @inheritDoc
 	 */
 	public void browse(final Properties props) {
+		ParameterValidator.notNull("properties", props);
 		try {
 			browser = DNSSD.browse(0, 0, 
 					(String)props.get(Bonjour.KEY_REGISTRATION_TYPE), 
 					"", 
 					this);
 		} catch (Exception e) {
-			//TODO:
+			//TODO: retry strategy
 			LOG.error("Browsing failed ["+e.getMessage()+"]");
 		}
 	}
@@ -93,7 +83,7 @@ class PeerDiscoveryImpl implements PeerDiscovery {
 		try {
 			DNSSD.resolve(flags, ifIndex, serviceName, regType, domain, this);
 		} catch (Exception e) {
-			//TODO:
+			//TODO: retry strategy
 			LOG.error("Resolve failed ["+e.getMessage()+"]");
 		}
 	}
@@ -103,11 +93,7 @@ class PeerDiscoveryImpl implements PeerDiscovery {
 	 */
 	public void serviceLost(DNSSDService browser, int flags, int ifIndex,
 			String serviceName, String regType, String domain) {
-		String userId = (String)services.remove(serviceName);
-		if (userId != null)
-			callback.userDiscarded(userId);
-		else 
-			LOG.warn("userid for service ["+serviceName+"] not found");
+		adapter.userDiscarded(serviceName);
 	}
 
 	/**
@@ -115,19 +101,34 @@ class PeerDiscoveryImpl implements PeerDiscovery {
 	 */
 	public void serviceResolved(DNSSDService resolver, int flags, int ifIndex,
 			String fullName, String hostName, int port, TXTRecord txtRecord) {
-		String userId = TXTRecordProxy.get(Bonjour.KEY_USERID, txtRecord);
-		RemoteUserProxyImpl user = new RemoteUserProxyImpl(
-						userId,
-						new UserDetails(TXTRecordProxy.get(Bonjour.KEY_USER, txtRecord)),
-						hostName, 
-						port);
+		
+		//TODO: get address by call to InetAddress or by a queryRecord call?
+		queryRecordForIP(flags, ifIndex, hostName);
+		
 		String serviceName = getServiceName(fullName);
-		services.put(serviceName, userId);
-		callback.userDiscovered(user);
+		String userName = TXTRecordProxy.get(Bonjour.KEY_USER, txtRecord);
+		String userId = TXTRecordProxy.get(Bonjour.KEY_USERID, txtRecord);
+		adapter.userDiscovered(serviceName, userName, userId, port);
+		
 		resolver.stop();
 		
 		//monitor TXT record of remote user
 		monitorTXTRecord(flags, ifIndex, fullName);
+	}
+	
+	private String getServiceName(String fullName) {
+		return fullName.substring(0, fullName.indexOf(SERVICE_NAME_SEPARATOR));
+	}
+
+	private void queryRecordForIP(int flags, int ifIndex, String hostName) {
+		try {
+			// Start a record query to obtain IP address from hostname
+			DNSSD.queryRecord(0, ifIndex, hostName, Bonjour.T_HOST_ADDRESS, 1 /* ns_c_in */, this);
+		} catch (Exception e) {
+			//TODO: retry strategy
+			LOG.error("Query record failed ["+e.getMessage()+"]");
+		}
+		
 	}
 
 	/**
@@ -137,32 +138,39 @@ class PeerDiscoveryImpl implements PeerDiscovery {
 	 */
 	private void monitorTXTRecord(int flags, int ifIndex, String fullName) {
 		try {
-			//16=txt record, 1 = ns_c_in, cf. nameser.h
-			DNSSD.queryRecord(flags, ifIndex, fullName, 16, 1, this);
+			//16=txt record, 1 = ns_c_in; cf. nameser.h
+			DNSSD.queryRecord(flags, ifIndex, fullName, Bonjour.T_TXT, 1, this);
 		} catch (Exception e) {
-			//TODO:
+			//TODO: retry strategy
 			LOG.error("Query record failed ["+e.getMessage()+"]");
 		}
 	}
-	
-	private String getServiceName(String fullName) {
-		return fullName.substring(0, fullName.indexOf(SERVICE_NAME_SEPARATOR));
-	}
+
 
 	/**
 	 * @inheritDoc
 	 */
 	public void queryAnswered(DNSSDService query, int flags, int ifIndex,
 			String fullName, int rrtype, int rrclass, byte[] rdata, int ttl) {
-		//TXT record updates have a TTL value > 0, ignore others 
+		if (rrtype == Bonjour.T_TXT) {
+			handleTXTQuery(fullName, rdata, ttl);
+		} else if (rrtype == Bonjour.T_HOST_ADDRESS) {
+			handleHostAddressQuery(query, fullName, rdata);
+		}
+	}
+	
+	/**
+	 * @param fullName
+	 * @param rdata
+	 * @param ttl
+	 */
+	private void handleTXTQuery(String fullName, byte[] rdata, int ttl) {
 		if (ttl > 0) {
 			String serviceName = getServiceName(fullName);
-			String userId = (String)services.get(serviceName);
-			if (userId != null) {
+			if (adapter.isServiceKnown(serviceName)) {
 				TXTRecord t = new TXTRecord(rdata);
 				String userName = TXTRecordProxy.get(Bonjour.KEY_USER, t);
-				UserDetails detail = new UserDetails(userName);
-				callback.userDetailsChanged(userId, detail);
+				adapter.userNameChanged(serviceName, userName);
 			} else {
 				LOG.warn("TXT record received for unknown user ["+serviceName+"]");
 			}
@@ -170,48 +178,43 @@ class PeerDiscoveryImpl implements PeerDiscovery {
 			LOG.warn("TXT record update ignored.");
 		}
 	}
+
+	/**
+	 * 
+	 * @param query
+	 * @param rdata
+	 */
+	private void handleHostAddressQuery(DNSSDService query, String fullName, byte[] rdata) {
+		InetAddress address = null;
+		try {
+			address = InetAddress.getByAddress(rdata);
+		} catch (Exception e) {
+			LOG.error("Could not resolve address ["+e.getMessage()+"]");
+		}
+		String serviceName = getServiceName(fullName);
+		adapter.userAddressResolved(serviceName, address);
+		query.stop();
+	}
 	
 	/**
 	 * @inheritDoc
 	 */
 	public void operationFailed(DNSSDService service, int errorCode) {
-		// TODO:
+		// TODO: retry strategy
 		LOG.error("operationFailed ["+errorCode+"]");
 	}
 	
 	/**
-	 * Stops the Bonjour peer discovery process.
+	 * @inheritDoc
 	 */
 	public void stop() {
 		browser.stop();
 	}
 	
 	/**
-	 * Sets the discovery callback.
-	 * @param callback
-	 * @see DiscoveryCallback
+	 * @inheritDoc
 	 */
-	public void setDiscoveryCallback(DiscoveryCallback callback) {
-		this.callback = (callback == null) ? NullDiscoveryCallback.getInstance() : callback;
+	public void setDiscoveryCallbackAdapter(DiscoveryCallbackAdapter callback) {
+		this.adapter = (callback == null) ? NullDiscoveryCallbackAdapter.getInstance() : callback;
 	}
-	
-	/**
-	 * Gets the discovery callback.
-	 * @return DiscoveryCallback
-	 */
-	public DiscoveryCallback getDiscoveryCallback() {
-		return callback;
-	}
-	
-	private InetAddress getInetAddress(String hostName) {
-		InetAddress address = null;
-		try {
-			address = InetAddress.getByName(hostName);
-		} catch (UnknownHostException uhe) {
-			LOG.error(uhe);
-		}
-		return address;
-	}
-
-
 }

@@ -20,11 +20,40 @@
  */
 package ch.iserver.ace.net.impl.discovery;
 
+import java.util.Properties;
+
+import ch.iserver.ace.net.impl.DiscoveryCallback;
+
 import com.apple.dnssd.BrowseListener;
 import com.apple.dnssd.QueryListener;
 import com.apple.dnssd.ResolveListener;
 
+/**
+ * 
+ *
+ */
 public interface PeerDiscovery extends BrowseListener, ResolveListener,
 		QueryListener {
 
+	/**
+	 * Browses the local network for other services of the same type, i.e.
+	 * other users.
+	 * 
+	 * @param properties the properties for the DNSSD call.
+	 * @see com.apple.dnssd.DNSSD
+	 */
+	void browse(Properties properties);
+	
+	/**
+	 * Sets the discovery callback adapter.
+	 * 
+	 * @param adapter the discovery callback adapter to set
+	 * @see DiscoveryCallback
+	 */
+	void setDiscoveryCallbackAdapter(DiscoveryCallbackAdapter adapter);
+	
+	/**
+	 * Stops the Bonjour peer discovery process.
+	 */
+	void stop();
 }
