@@ -22,13 +22,15 @@
 package ch.iserver.ace.collaboration.jupiter;
 
 
+import java.util.HashMap;
+import java.util.Map;
+
 import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.jupiter.Jupiter;
 import ch.iserver.ace.collaboration.Participant;
-import ch.iserver.ace.collaboration.RemoteUser;
 import ch.iserver.ace.collaboration.SessionCallback;
 import ch.iserver.ace.net.PortableDocument;
 import ch.iserver.ace.net.RemoteUserProxy;
@@ -198,15 +200,21 @@ public class SessionImpl extends AbstractSession implements SessionConnectionCal
 	 * @see ch.iserver.ace.net.SessionConnectionCallback#setDocument(ch.iserver.ace.net.PortableDocument)
 	 */
 	public void setDocument(PortableDocument document) {
-		getCallback().setDocument(new PortableDocumentWrapper(document));
+		Map participants = new HashMap();
+		int[] ids = document.getParticipantIds();
+		for (int i = 0; i < ids.length; i++) {
+			int id = ids[i];
+			participants.put(new Integer(id), createParticipant(id, document.getUserProxy(id)));
+		}
+		PortableDocumentWrapper wrapper = new PortableDocumentWrapper(document, participants);
+		getCallback().setDocument(wrapper);
 	}
 	
 	/**
 	 * @see ch.iserver.ace.net.SessionConnectionCallback#participantJoined(int, ch.iserver.ace.net.RemoteUserProxy)
 	 */
 	public void participantJoined(int participantId, RemoteUserProxy proxy) {
-		RemoteUser user = new RemoteUserImpl(proxy);
-		Participant participant = new ParticipantImpl(participantId, user);
+		Participant participant = createParticipant(participantId, proxy);
 		addParticipant(participant);
 		getCallback().participantJoined(participant);
 	}

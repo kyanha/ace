@@ -197,8 +197,8 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 	 * @see ch.iserver.ace.net.ParticipantConnection#sendParticipantJoined(int, ch.iserver.ace.net.RemoteUserProxy)
 	 */
 	public void sendParticipantJoined(int participantId, RemoteUserProxy proxy) {
-		Participant participant = new ParticipantImpl(participantId, null);
-		addParticipant(new ParticipantImpl(participantId, new RemoteUserImpl(proxy)));
+		Participant participant = createParticipant(participantId, proxy);
+		addParticipant(createParticipant(participantId, proxy));
 		getCallback().participantJoined(participant);			
 	}
 			

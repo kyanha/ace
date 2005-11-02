@@ -29,6 +29,7 @@ import java.util.Set;
 
 import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.collaboration.Session;
+import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.util.Lock;
 import ch.iserver.ace.util.ParameterValidator;
 
@@ -144,6 +145,17 @@ abstract class AbstractSession implements Session {
 	protected void removeParticipant(Participant participant) {
 		participants.remove(participant);
 		participantMap.remove(new Integer(participant.getParticipantId()));
+	}
+
+	/**
+	 * Factory method to create Participant objects.
+	 * 
+	 * @param participantId the id of the participant
+	 * @param proxy the RemoteUserProxy for the user
+	 * @return a Participant instance
+	 */
+	protected Participant createParticipant(int participantId, RemoteUserProxy proxy) {
+		return new ParticipantImpl(participantId, new RemoteUserImpl(proxy));
 	}
 
 }
