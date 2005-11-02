@@ -25,7 +25,7 @@ package ch.iserver.ace.application;
 
 public class ParticipantView extends DefaultView {
 
-	public ParticipantView(LocalMessageSource source) {
+	public ParticipantView(LocaleMessageSource source) {
 		super(source);
 	}
 
