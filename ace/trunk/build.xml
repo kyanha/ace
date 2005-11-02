@@ -58,6 +58,9 @@
 		<dependency groupId="springframework"
 		            artifactId="spring-context"
 		            version="1.2.5"/>
+        <dependency groupId="backport-util-concurrent"
+                    artifactId="backport-util-concurrent"
+                    version="1.1_01"/>
 		<remoteRepository refid="remote.repository.ace" />
 		<remoteRepository refid="remote.repository.maven" />
 	</artifact:dependencies>
