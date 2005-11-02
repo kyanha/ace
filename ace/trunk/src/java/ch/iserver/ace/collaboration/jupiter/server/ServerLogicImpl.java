@@ -100,7 +100,7 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 	
 	protected ParticipantPort createPublisherPort(ParticipantConnection connection) {
 		Algorithm algorithm = new Jupiter(false);
-		int participantId = nextParticipantId();
+		int participantId = 0;
 		connection.setParticipantId(participantId);
 		ParticipantPort port = new ParticipantPortImpl(this, participantId, algorithm, getSerializerQueue());
 		ParticipantProxy proxy = new ParticipantProxyImpl(participantId, dispatcherQueue, algorithm, connection);
