@@ -20,7 +20,6 @@
  */
 package ch.iserver.ace.net.impl.discovery;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -41,10 +40,10 @@ public class BonjourFactory extends DiscoveryFactory {
 	/**
 	 * Loads the properties for Bonjour zeroconf.
 	 */
-	private Properties loadConfig() {
+	protected Properties loadConfig() {
 	    Properties properties = new Properties();
 	    try {
-	        properties.load(new FileInputStream("zeroconf.properties"));
+	        properties.load(getClass().getResourceAsStream("zeroconf.properties"));
 	    } catch (IOException e) {
 	    		throw new ApplicationError(e);
 	    }

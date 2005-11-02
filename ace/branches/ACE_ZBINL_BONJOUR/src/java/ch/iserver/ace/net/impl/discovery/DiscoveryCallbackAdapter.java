@@ -73,18 +73,6 @@ class DiscoveryCallbackAdapter {
 	
 	/**
 	 * 
-	 * @param proxy
-	 */
-	public void userDiscovered(RemoteUserProxyExt proxy) {
-		ParameterValidator.notNull("proxy", proxy);
-		
-		remoteUserProxies.put(proxy.getId(), proxy);
-		
-		forward.userDiscovered(proxy);
-	}
-	
-	/**
-	 * 
 	 * @param serviceName
 	 * @param username
 	 * @param userId
@@ -133,9 +121,7 @@ class DiscoveryCallbackAdapter {
 		String userId = (String)services.get(serviceName);
 		if (userId != null) {
 			RemoteUserProxyExt proxy = (RemoteUserProxyExt)remoteUserProxies.get(userId);
-			MutableUserDetails details = (MutableUserDetails)proxy.getUserDetails();
-			details.setUsername(userName);
-			proxy.setUserDetails(details);
+			proxy.getUserDetails().setUsername(userName);
 			forward.userDetailsChanged(proxy);
 		} else {
 			LOG.warn("username change received for unknown user ["+serviceName+"]");

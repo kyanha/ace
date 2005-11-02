@@ -25,17 +25,28 @@ import org.apache.log4j.Logger;
 import ch.iserver.ace.net.NetworkServiceCallback;
 import ch.iserver.ace.util.ParameterValidator;
 
+/**
+ * 
+ *
+ */
 public class DiscoveryCallbackImpl implements DiscoveryCallback {
 
 	private static Logger LOG = Logger.getLogger(DiscoveryCallbackImpl.class);
 	
 	private NetworkServiceCallback callback;
 	
+	/**
+	 * 
+	 * @param callback
+	 */
 	public DiscoveryCallbackImpl(NetworkServiceCallback callback) {
 		ParameterValidator.notNull("callback", callback);
 		this.callback = callback;
 	}
 	
+	/**
+	 * 
+	 */
 	public void userDiscovered(RemoteUserProxyExt proxy) {
 		//notify upper layer of discovery
 		callback.userDiscovered(proxy);
@@ -44,10 +55,16 @@ public class DiscoveryCallbackImpl implements DiscoveryCallback {
 		
 	}
 
+	/**
+	 * 
+	 */
 	public void userDiscarded(RemoteUserProxyExt proxy) {
 		callback.userDiscarded(proxy);
 	}
 
+	/**
+	 * 
+	 */
 	public void userDetailsChanged(RemoteUserProxyExt proxy) {
 		callback.userDetailsChanged(proxy);
 	}

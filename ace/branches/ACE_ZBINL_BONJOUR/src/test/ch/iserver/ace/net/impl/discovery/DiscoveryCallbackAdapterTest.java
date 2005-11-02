@@ -14,6 +14,10 @@ import ch.iserver.ace.net.impl.MutableUserDetails;
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;
 import ch.iserver.ace.net.impl.RemoteUserProxyImpl;
 
+/**
+ * 
+ *
+ */
 public class DiscoveryCallbackAdapterTest extends TestCase {
 
 	private MockControl callbackCtrl;
@@ -27,6 +31,11 @@ public class DiscoveryCallbackAdapterTest extends TestCase {
 		adapter = new DiscoveryCallbackAdapter(callback);
 	}
 	
+	/**
+	 * Tests the DiscoveryCallbackAdapter.
+	 * 
+	 * @throws Exception
+	 */
 	public void testAll() throws Exception {
 		//define mock behavior
 		MutableUserDetails details = new MutableUserDetails("testuser");
@@ -44,6 +53,8 @@ public class DiscoveryCallbackAdapterTest extends TestCase {
 	}
 
 	/**
+	 * Test method for 'ch.iserver.ace.net.impl.discovery.DiscoveryCallbackAdapter.userDiscovered(..)'
+	 *
 	 * @param port
 	 * @param proxy
 	 */
@@ -61,6 +72,8 @@ public class DiscoveryCallbackAdapterTest extends TestCase {
 	}
 
 	/**
+	 * Test method for 'ch.iserver.ace.net.impl.discovery.DiscoveryCallbackAdapter.userAddressResolved(..)'
+	 * 
 	 * @param details
 	 * @param proxy
 	 * @throws UnknownHostException
@@ -82,6 +95,8 @@ public class DiscoveryCallbackAdapterTest extends TestCase {
 	}
 
 	/**
+	 * Test method for 'ch.iserver.ace.net.impl.discovery.DiscoveryCallbackAdapter.userDetailsChanged(..)'
+	 * 
 	 * @param proxy
 	 */
 	private void testUserNameChanged(RemoteUserProxyExt proxy) {
@@ -99,6 +114,8 @@ public class DiscoveryCallbackAdapterTest extends TestCase {
 	}
 
 	/**
+	 * Test method for 'ch.iserver.ace.net.impl.discovery.DiscoveryCallbackAdapter.userDiscarded(..)'
+	 * 
 	 * @param proxy
 	 */
 	private void testUserDiscarded(RemoteUserProxyExt proxy) {

@@ -79,6 +79,7 @@ public class Bonjour implements Discovery {
 	/**
 	 * @inheritDoc
 	 */
+	//TODO: integration test with userId (from Bonjour client to UserRegistrationImpl)
 	public void setUserId(String uuid) {
 		ParameterValidator.notNull("uuid", uuid);
 		props.put(KEY_USERID, uuid);

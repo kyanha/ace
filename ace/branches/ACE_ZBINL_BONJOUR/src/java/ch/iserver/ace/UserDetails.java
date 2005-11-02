@@ -23,6 +23,9 @@ package ch.iserver.ace;
 
 import java.net.InetAddress;
 
+import ch.iserver.ace.collaboration.RemoteUser;
+import ch.iserver.ace.util.ParameterValidator;
+
 /**
  * The UserDetails object contains information about a user.
  */
@@ -49,6 +52,7 @@ public class UserDetails {
 	 * @param username the username of the user
 	 */
 	public UserDetails(String username) {
+		ParameterValidator.notNull("username", username);
 		this.username = username;
 	}
 	
@@ -58,7 +62,7 @@ public class UserDetails {
 	 * @param username the username of the user
 	 */
 	public UserDetails(String username, InetAddress address, int port) {
-		this.username = username;
+		this(username);
 		this.address = address;
 		this.port = port;
 	}
@@ -94,5 +98,38 @@ public class UserDetails {
 	 */
 	public int getPort() {
 		return port;
+	}
+	
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		} else if (obj instanceof UserDetails) {
+			UserDetails details = (UserDetails) obj;
+			boolean result = getUsername().equals(details.getUsername()) &&
+					getPort() == details.getPort();
+			InetAddress a1 = getAddress();
+			InetAddress a2 = details.getAddress();
+			return result && ( (a1 != null && a2 != null) && a1.equals(a2) || a1 == null && a2 == null );
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	public int hashCode() {
+		int val = 13;
+		val += getUsername().hashCode();
+		val += getPort();
+		val += getAddress().hashCode();
+		return val;
+	}
+	
+	public String toString() {
+		return "UserDetails("+getUsername()+", "+getAddress()+", "+getPort()+")";
 	}
 }

@@ -1,13 +1,11 @@
 package ch.iserver.ace.net.impl.discovery;
 
-import java.io.IOException;
 import java.util.Properties;
 
 import junit.framework.TestCase;
 
 import org.easymock.MockControl;
 
-import ch.iserver.ace.ApplicationError;
 import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.net.impl.DiscoveryCallback;
 
