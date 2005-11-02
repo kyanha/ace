@@ -35,15 +35,25 @@ import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.net.SessionConnection;
 import ch.iserver.ace.net.SessionConnectionCallback;
 import ch.iserver.ace.util.InterruptedRuntimeException;
+import ch.iserver.ace.util.Lock;
 import ch.iserver.ace.util.ParameterValidator;
+import ch.iserver.ace.util.SemaphoreLock;
 
 /**
- *
+ * Default implementation of the Session interface. This class further implements
+ * the SessionConnectionCallback interface and can thus be set as callback
+ * on SessionConnections.
  */
 public class SessionImpl extends AbstractSession implements SessionConnectionCallback {
 	
+	/**
+	 * The SessionCallback from the application layer.
+	 */
 	private SessionCallback callback = NullSessionCallback.getInstance();
 	
+	/**
+	 * The SessionConnection from the network layer.
+	 */
 	private SessionConnection connection;
 	
 	public SessionImpl() {
@@ -55,27 +65,47 @@ public class SessionImpl extends AbstractSession implements SessionConnectionCal
 	}
 		
 	public SessionImpl(AlgorithmWrapper algorithm) {
-		this(algorithm, null);
+		this(algorithm, (SessionCallback) null);
+	}
+	
+	public SessionImpl(AlgorithmWrapper wrapper, Lock lock) {
+		super(wrapper, lock);
 	}
 	
 	protected SessionImpl(AlgorithmWrapper algorithm, SessionCallback callback) {
-		super(algorithm);
+		super(algorithm, new SemaphoreLock());
 		setSessionCallback(callback);
 	}
 	
+	/**
+	 * Sets the callback to be notified from the application layer.
+	 * 
+	 * @param callback the new callback
+	 */
 	public void setSessionCallback(SessionCallback callback) {
 		this.callback = callback == null ? NullSessionCallback.getInstance() : callback;
 	}
 	
+	/**
+	 * @return the callback to be notified from the application layer
+	 */
 	protected SessionCallback getCallback() {
 		return callback;
 	}
 	
+	/**
+	 * Sets the connection to the network layer.
+	 * 
+	 * @param connection the new connection
+	 */
 	protected void setConnection(SessionConnection connection) {
 		ParameterValidator.notNull("connection", connection);
 		this.connection = connection;
 	}
 	
+	/**
+	 * @return the connection to the network layer
+	 */
 	protected SessionConnection getConnection() {
 		return connection;
 	}

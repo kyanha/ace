@@ -38,6 +38,7 @@ import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.util.BlockingQueue;
 import ch.iserver.ace.util.LinkedBlockingQueue;
 import ch.iserver.ace.util.ParameterValidator;
+import ch.iserver.ace.util.SemaphoreLock;
 import ch.iserver.ace.util.Worker;
 
 /**
@@ -56,7 +57,7 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 	private final CallbackWorker callbackWorker;
 	
 	public PublishedSessionImpl(PublishedSessionCallback callback) {
-		super(new AlgorithmWrapperImpl(new Jupiter(true)));
+		super(new AlgorithmWrapperImpl(new Jupiter(true)), new SemaphoreLock());
 		ParameterValidator.notNull("callback", callback);
 		this.callback = callback;
 		this.callbackQueue = new LinkedBlockingQueue();

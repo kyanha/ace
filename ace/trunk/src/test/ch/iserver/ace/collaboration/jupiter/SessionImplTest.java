@@ -21,16 +21,52 @@
 
 package ch.iserver.ace.collaboration.jupiter;
 
+import java.util.Collection;
+
 import junit.framework.TestCase;
 
 import org.easymock.MockControl;
 
+import ch.iserver.ace.CaretUpdate;
+import ch.iserver.ace.Operation;
+import ch.iserver.ace.UserDetails;
+import ch.iserver.ace.algorithm.CaretUpdateMessage;
+import ch.iserver.ace.algorithm.Request;
+import ch.iserver.ace.algorithm.jupiter.JupiterRequest;
+import ch.iserver.ace.collaboration.Participant;
+import ch.iserver.ace.collaboration.PublishedSession;
+import ch.iserver.ace.collaboration.RemoteUser;
+import ch.iserver.ace.collaboration.SessionCallback;
+import ch.iserver.ace.net.DocumentServerLogic;
+import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.net.SessionConnection;
+import ch.iserver.ace.text.InsertOperation;
+import ch.iserver.ace.util.Lock;
 
 /**
  *
  */
 public class SessionImplTest extends TestCase {
+	
+	public void testLeave() throws Exception {
+		MockControl connectionCtrl = MockControl.createControl(SessionConnection.class);
+		SessionConnection connection = (SessionConnection) connectionCtrl.getMock();
+		
+		SessionImpl impl = new SessionImpl();
+		impl.setConnection(connection);
+		
+		// define mock behavior
+		connection.leave();
+		
+		// replay
+		connectionCtrl.replay();
+		
+		// test
+		impl.leave();
+		
+		// verify
+		connectionCtrl.verify();
+	}
 	
 	public void testSendOperation() throws Exception {
 		MockControl algorithmCtrl = MockControl.createControl(AlgorithmWrapper.class);
@@ -134,6 +170,200 @@ public class SessionImplTest extends TestCase {
 		// verify
 		algorithmCtrl.verify();
 		connectionCtrl.verify();
+	}
+	
+	public void testKicked() throws Exception {
+		MockControl callbackCtrl = MockControl.createControl(SessionCallback.class);
+		SessionCallback callback = (SessionCallback) callbackCtrl.getMock();
+		
+		SessionImpl impl = new SessionImpl();
+		impl.setSessionCallback(callback);
+		
+		// define mock behavior
+		callback.kicked();
+		
+		// replay
+		callbackCtrl.replay();
+		
+		// test
+		impl.kicked();
+		
+		// verify
+		callbackCtrl.verify();
+	}
+
+	public void testSessionTerminated() throws Exception {
+		MockControl callbackCtrl = MockControl.createControl(SessionCallback.class);
+		SessionCallback callback = (SessionCallback) callbackCtrl.getMock();
+		
+		SessionImpl impl = new SessionImpl();
+		impl.setSessionCallback(callback);
+		
+		// define mock behavior
+		callback.sessionTerminated();
+		
+		// replay
+		callbackCtrl.replay();
+		
+		// test
+		impl.sessionTerminated();
+		
+		// verify
+		callbackCtrl.verify();
+	}
+
+	public void testReceiveRequest() throws Exception {
+		MockControl lockCtrl = MockControl.createControl(Lock.class);
+		Lock lock = (Lock) lockCtrl.getMock();
+		MockControl algorithmCtrl = MockControl.createControl(AlgorithmWrapper.class);
+		AlgorithmWrapper algorithm = (AlgorithmWrapper) algorithmCtrl.getMock();
+		MockControl callbackCtrl = MockControl.createControl(SessionCallback.class);
+		SessionCallback callback = (SessionCallback) callbackCtrl.getMock();
+		
+		Operation operation = new InsertOperation(0, "x");
+		Request request = new JupiterRequest(0, null, operation);
+		Participant participant = new ParticipantImpl(1, new RemoteUserStub("1"));
+		SessionImpl impl = new SessionImpl(algorithm, lock);
+		impl.setSessionCallback(callback);
+		impl.addParticipant(participant);
+		
+		// define mock behavior
+		lock.lock();
+		algorithm.receiveRequest(request);
+		algorithmCtrl.setReturnValue(operation);
+		callback.receiveOperation(participant, operation);
+		lock.unlock();
+		
+		// replay
+		lockCtrl.replay();
+		algorithmCtrl.replay();
+		callbackCtrl.replay();
+		
+		// test
+		impl.receiveRequest(1, request);
+		
+		// verify
+		lockCtrl.verify();
+		algorithmCtrl.verify();
+		callbackCtrl.verify();		
+	}
+
+	public void testReceiveCaretUpdateMessage() throws Exception {
+		MockControl lockCtrl = MockControl.createControl(Lock.class);
+		Lock lock = (Lock) lockCtrl.getMock();
+		MockControl algorithmCtrl = MockControl.createControl(AlgorithmWrapper.class);
+		AlgorithmWrapper algorithm = (AlgorithmWrapper) algorithmCtrl.getMock();
+		MockControl callbackCtrl = MockControl.createControl(SessionCallback.class);
+		SessionCallback callback = (SessionCallback) callbackCtrl.getMock();
+		
+		CaretUpdate update = new CaretUpdate(0, 1);
+		CaretUpdateMessage message = new CaretUpdateMessage(0, null, update);
+		Participant participant = new ParticipantImpl(1, new RemoteUserStub("1"));
+		SessionImpl impl = new SessionImpl(algorithm, lock);
+		impl.setSessionCallback(callback);
+		impl.addParticipant(participant);
+		
+		// define mock behavior
+		lock.lock();
+		algorithm.receiveCaretUpdateMessage(message);
+		algorithmCtrl.setReturnValue(update);
+		callback.receiveCaretUpdate(participant, update);
+		lock.unlock();
+		
+		// replay
+		lockCtrl.replay();
+		algorithmCtrl.replay();
+		callbackCtrl.replay();
+		
+		// test
+		impl.receiveCaretUpdate(1, message);
+		
+		// verify
+		lockCtrl.verify();
+		algorithmCtrl.verify();
+		callbackCtrl.verify();		
+	}	
+
+	public void testJoinLeave() throws Exception {
+		MockControl callbackCtrl = MockControl.createControl(SessionCallback.class);
+		SessionCallback callback = (SessionCallback) callbackCtrl.getMock();
+
+		SessionImpl impl = new SessionImpl();
+		impl.setSessionCallback(callback);
+		
+		// define mock behavior
+		callback.participantJoined(new ParticipantImpl(1, new RemoteUserStub("1")));
+		callback.participantLeft(new ParticipantImpl(1, new RemoteUserStub("1")), Participant.LEFT);
+		
+		// replay
+		callbackCtrl.replay();
+		
+		// test
+		impl.userJoined(1, new RemoteUserProxyStub("1"));
+		assertEquals(1, impl.getParticipants().size());
+		assertEquals(new ParticipantImpl(1, new RemoteUserStub("1")), impl.getParticipant(1));
+		impl.userLeft(1, Participant.LEFT);
+		assertEquals(0, impl.getParticipants().size());
+		
+		// verify
+		callbackCtrl.verify();
+	}
+	
+	
+	private static class RemoteUserStub implements RemoteUser {
+		private final String id;
+		public RemoteUserStub(String id) {
+			this.id = id;
+		}
+		public String getId() {
+			return id;
+		}
+		public Collection getSharedDocuments() {
+			return null;
+		}
+		public UserDetails getUserDetails() {
+			return null;
+		}
+		public void invite(PublishedSession session) {
+			// ignore
+		}
+		public boolean equals(Object obj) {
+			if (this == obj) {
+				return true;
+			} else if (obj instanceof RemoteUser) {
+				RemoteUser user = (RemoteUser) obj;
+				return id.equals(user.getId());
+			}
+			return super.equals(obj);
+		}
+	}
+
+	private static class RemoteUserProxyStub implements RemoteUserProxy {
+		private final String id;
+		public RemoteUserProxyStub(String id) {
+			this.id = id;
+		}
+		public String getId() {
+			return id;
+		}
+		public Collection getSharedDocuments() {
+			return null;
+		}
+		public UserDetails getUserDetails() {
+			return null;
+		}
+		public void invite(DocumentServerLogic logic) {
+			// ignore
+		}
+		public boolean equals(Object obj) {
+			if (this == obj) {
+				return true;
+			} else if (obj instanceof RemoteUserProxy) {
+				RemoteUserProxy user = (RemoteUserProxy) obj;
+				return id.equals(user.getId());
+			}
+			return super.equals(obj);
+		}
 	}
 
 }

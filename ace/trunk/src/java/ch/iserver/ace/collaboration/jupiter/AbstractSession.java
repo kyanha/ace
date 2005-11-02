@@ -31,7 +31,6 @@ import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.collaboration.Session;
 import ch.iserver.ace.util.Lock;
 import ch.iserver.ace.util.ParameterValidator;
-import ch.iserver.ace.util.SemaphoreLock;
 
 /**
  * Abstract base class for Session implementations. Implements the common methods
@@ -64,9 +63,10 @@ abstract class AbstractSession implements Session {
 	 * 
 	 * @param algorithm the Algorithm used by the Session
 	 */
-	protected AbstractSession(AlgorithmWrapper algorithm) {
+	protected AbstractSession(AlgorithmWrapper algorithm, Lock lock) {
 		ParameterValidator.notNull("algorithm", algorithm);
-		this.lock = new SemaphoreLock();
+		ParameterValidator.notNull("lock", lock);
+		this.lock = lock;
 		this.algorithm = algorithm;
 	}
 	
