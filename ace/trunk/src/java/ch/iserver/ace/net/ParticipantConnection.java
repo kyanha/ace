@@ -66,7 +66,7 @@ public interface ParticipantConnection {
 	 * @param participantId the participant that created the caret update
 	 * @param message the CaretUpdateMessage to send
 	 */
-	void sendCaretUpdate(int participantId, CaretUpdateMessage message);
+	void sendCaretUpdateMessage(int participantId, CaretUpdateMessage message);
 	
 	/**
 	 * Sends a participant joined message to the participant represented by

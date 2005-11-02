@@ -173,9 +173,9 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 	}
 		
 	/**
-	 * @see ch.iserver.ace.net.ParticipantConnection#sendCaretUpdate(int, ch.iserver.ace.algorithm.CaretUpdateMessage)
+	 * @see ch.iserver.ace.net.ParticipantConnection#sendCaretUpdateMessage(int, ch.iserver.ace.algorithm.CaretUpdateMessage)
 	 */
-	public void sendCaretUpdate(int participantId, CaretUpdateMessage message) {
+	public void sendCaretUpdateMessage(int participantId, CaretUpdateMessage message) {
 		Participant participant = getParticipant(participantId);
 		Command command = new CaretUpdateCommand(getLock(), getAlgorithm(), participant, message);
 		getCallbackQueue().add(command);

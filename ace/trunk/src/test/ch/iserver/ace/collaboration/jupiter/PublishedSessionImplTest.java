@@ -326,7 +326,7 @@ public class PublishedSessionImplTest extends TestCase {
 		
 		// test
 		impl.addParticipant(new ParticipantImpl(1, new RemoteUserStub("X")));
-		impl.sendCaretUpdate(1, message);
+		impl.sendCaretUpdateMessage(1, message);
 		
 		// verify
 		queueCtrl.verify();
