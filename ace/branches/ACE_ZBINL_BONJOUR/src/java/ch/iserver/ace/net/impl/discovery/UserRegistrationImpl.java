@@ -4,6 +4,7 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
+import ch.iserver.ace.ApplicationError;
 import ch.iserver.ace.UserDetails;
 
 import com.apple.dnssd.DNSRecord;
@@ -48,7 +49,7 @@ class UserRegistrationImpl implements UserRegistration {
 				(String)props.get(Bonjour.KEY_REGISTRATION_TYPE), 
 				"",
 				"", 
-				((Integer)props.get(Bonjour.KEY_DISCOVERY_PORT)).intValue(), 
+				getPort(props),
 				TXTRecordProxy.create(props), 
 				this);
 		} catch (Exception e) {
@@ -57,6 +58,20 @@ class UserRegistrationImpl implements UserRegistration {
 		}
 	}	
 	
+	private int getPort(Properties props) {
+		String portStr = (String)props.get(Bonjour.KEY_DISCOVERY_PORT);
+		int port = 0;
+		try {
+			port = Integer.parseInt(portStr);
+		} catch (NumberFormatException nfe) {
+			LOG.error("port is not a number.");
+		}
+		return port;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
 	public void serviceRegistered(DNSSDRegistration registration, int flags,
 			String serviceName, String regType, String domain) {
 		isRegistered = true;
@@ -72,12 +87,18 @@ class UserRegistrationImpl implements UserRegistration {
 		}
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public void serviceResolved(DNSSDService resolver, int flags, int ifIndex,
 			String fullName, String hostName, int port, TXTRecord txtRecord) {
 		this.txtRecord = txtRecord;
 		resolver.stop();
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public void operationFailed(DNSSDService service, int errorCode) {
 		//TODO: error handling
 		LOG.error("operationFailed ["+errorCode+"]");
@@ -98,9 +119,8 @@ class UserRegistrationImpl implements UserRegistration {
 	 */
 	public void updateUserDetails(UserDetails details) {
 		try {
-			TXTRecordProxy.set(Bonjour.KEY_USER, details.getUsername(), txtRecord);
-			DNSRecord record = null;
-			record = registration.getTXTRecord();
+			TXTRecordProxy.set(TXTRecordProxy.TXT_USER, details.getUsername(), txtRecord);
+			DNSRecord record = registration.getTXTRecord();
 			record.update(0, txtRecord.getRawBytes(), 0);
 		} catch (Exception e) {
 			LOG.warn("could not modify TXT record: "+e);
