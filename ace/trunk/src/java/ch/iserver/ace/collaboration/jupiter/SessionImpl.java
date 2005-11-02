@@ -75,7 +75,7 @@ public class SessionImpl extends AbstractSession implements SessionConnectionCal
 	}
 	
 	protected SessionImpl(AlgorithmWrapper algorithm, SessionCallback callback) {
-		super(algorithm, new SemaphoreLock());
+		super(algorithm, new SemaphoreLock("client-lock"));
 		setSessionCallback(callback);
 	}
 	

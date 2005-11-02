@@ -22,7 +22,6 @@
 package ch.iserver.ace.collaboration.jupiter;
 
 import ch.iserver.ace.collaboration.PublishedSessionCallback;
-import ch.iserver.ace.util.InterruptedRuntimeException;
 import ch.iserver.ace.util.Lock;
 import ch.iserver.ace.util.ParameterValidator;
 
@@ -70,15 +69,11 @@ abstract class LockingCommand implements Command {
 	 * @see ch.iserver.ace.collaboration.jupiter.Command#execute(ch.iserver.ace.collaboration.PublishedSessionCallback)
 	 */
 	public final void execute(PublishedSessionCallback callback) {
+		lock.lock();
 		try {
-			lock.lock();
-			try {
-				doWork(callback);
-			} finally {
-				lock.unlock();
-			}
-		} catch (InterruptedException e) {
-			throw new InterruptedRuntimeException("locking interrupted", e);
+			doWork(callback);
+		} finally {
+			lock.unlock();
 		}
 	}
 	

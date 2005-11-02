@@ -28,7 +28,7 @@ public interface Lock {
 	
 	boolean isOwner(Thread thread);
 	
-	void lock() throws InterruptedException;
+	void lock() throws InterruptedRuntimeException;
 	
 	void unlock();
 	

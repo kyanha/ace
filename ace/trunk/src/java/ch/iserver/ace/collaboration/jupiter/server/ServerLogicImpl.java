@@ -38,7 +38,6 @@ import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.PortableDocument;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.util.BlockingQueue;
-import ch.iserver.ace.util.InterruptedRuntimeException;
 import ch.iserver.ace.util.LinkedBlockingQueue;
 import ch.iserver.ace.util.Lock;
 import ch.iserver.ace.util.ParameterValidator;
@@ -146,12 +145,19 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 		proxies.put(key, proxy);
 		connections.put(key, connection);
 	}
+	
+	protected synchronized void removeParticipant(int participantId) {
+		Integer key = new Integer(participantId);
+		connections.remove(key);
+		proxies.remove(key);
+		ports.remove(key);
+	}
 		
 	protected synchronized Map getParticipantConnections() {
 		return (Map) connections.clone();
 	}
 	
-	private synchronized ParticipantConnection getParticipantConnection(int id) {
+	private ParticipantConnection getParticipantConnection(int id) {
 		return (ParticipantConnection) connections.get(new Integer(id));
 	}
 	
@@ -160,23 +166,18 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 	}
 		
 	protected PortableDocument retrieveDocument() {
+		lock.lock();
 		try {
-			lock.lock();
-			try {
-				return getDocument().toPortableDocument();
-			} finally {
-				lock.unlock();
-			}
-		} catch (InterruptedException e) {
-			// TODO: interrupted runtime exception
-			throw new InterruptedRuntimeException("interrupted document retrieval", e);
+			return getDocument().toPortableDocument();
+		} finally {
+			lock.unlock();
 		}
 	}
 	
 	/**
 	 * @see ch.iserver.ace.net.DocumentServerLogic#join(ch.iserver.ace.net.ParticipantConnection)
 	 */
-	public synchronized ParticipantPort join(ParticipantConnection connection) {
+	public ParticipantPort join(ParticipantConnection connection) {
 		Algorithm algorithm = new Jupiter(false);
 		int participantId = nextParticipantId();
 		connection.setParticipantId(participantId);
@@ -201,29 +202,23 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 		}
 	}
 
-	protected synchronized void notifyOthersAboutLeave(int participantId, int reason) {
+	protected void notifyOthersAboutLeave(int participantId, int reason) {
 		getDocument().participantLeft(participantId);
-		Iterator it = connections.keySet().iterator();
+		Map map = getParticipantConnections();
+		Iterator it = map.keySet().iterator();
 		while (it.hasNext()) {
 			Integer key = (Integer) it.next();
-			ParticipantConnection connection = (ParticipantConnection) connections.get(key);
+			ParticipantConnection connection = (ParticipantConnection) map.get(key);
 			if (key.intValue() != participantId) {
 				connection.sendParticipantLeft(participantId, reason);
 			}
 		}
 	}
 
-	protected synchronized void removeParticipant(int participantId) {
-		Integer key = new Integer(participantId);
-		connections.remove(key);
-		proxies.remove(key);
-		ports.remove(key);
-	}
-	
 	/**
 	 * @see ServerLogic#leave(int)
 	 */
-	public synchronized void leave(int participantId) {
+	public void leave(int participantId) {
 		ParticipantConnection connection = getParticipantConnection(participantId);
 		connection.close();
 		removeParticipant(participantId);
@@ -245,7 +240,7 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 		return clone.values().iterator();
 	}
 	
-	public synchronized void kick(Participant participant) {
+	public void kick(Participant participant) {
 		int participantId = participant.getParticipantId();
 		ParticipantConnection connection = getParticipantConnection(participantId);
 		connection.sendKicked();

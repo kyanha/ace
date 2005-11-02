@@ -28,10 +28,17 @@ public class SemaphoreLock implements Lock {
 	
 	private final Semaphore semaphore;
 
+	private final String name;
+	
 	private Thread owner;
 	
-	public SemaphoreLock() {
+	public SemaphoreLock(String name) {
 		this.semaphore = new CountingSemaphore(1);
+		this.name = name;
+	}
+	
+	public String getName() {
+		return name;
 	}
 	
 	public boolean isOwner(Thread thread) {
@@ -41,9 +48,13 @@ public class SemaphoreLock implements Lock {
 	/**
 	 * @see ch.iserver.ace.util.Lock#lock()
 	 */
-	public synchronized void lock() throws InterruptedException {
-		semaphore.acquire();
-		owner = Thread.currentThread();
+	public void lock() throws InterruptedRuntimeException {
+		try {
+			semaphore.acquire();
+			owner = Thread.currentThread();
+		} catch (InterruptedException e) {
+			throw new InterruptedRuntimeException(e);
+		}
 	}
 
 	/**

@@ -56,7 +56,7 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 	}
 	
 	public PublishedSessionImpl(PublishedSessionCallback callback, AlgorithmWrapper wrapper) {
-		super(wrapper, new SemaphoreLock());
+		super(wrapper, new SemaphoreLock("client-lock"));
 		ParameterValidator.notNull("callback", callback);
 		this.callback = callback;
 		this.publisherConnection = new PublisherConnectionImpl(getCallback(), getLock(), getAlgorithm());

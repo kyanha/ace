@@ -43,7 +43,7 @@ public class ServerTest extends TestCase {
 	public static final int PARTICIPANTS = 3;
 	
 	public void testBasics() throws Exception {
-		Lock lock = new SemaphoreLock();
+		Lock lock = new SemaphoreLock("serializer-lock");
 		MockControl[] controls = new MockControl[PARTICIPANTS];
 		ParticipantConnection[] connections = new ParticipantConnection[PARTICIPANTS];
 		ParticipantPort[] ports = new ParticipantPort[PARTICIPANTS];
