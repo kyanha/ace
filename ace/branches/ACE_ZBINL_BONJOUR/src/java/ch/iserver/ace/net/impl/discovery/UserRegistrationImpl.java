@@ -49,7 +49,7 @@ class UserRegistrationImpl implements UserRegistration {
 				TXTRecordProxy.create(props), 
 				this);
 		} catch (Exception e) {
-			//TODO:
+			//TODO: retry strategy
 			LOG.error("Registration failed ["+e.getMessage()+"]");
 		}
 	}	
@@ -64,7 +64,7 @@ class UserRegistrationImpl implements UserRegistration {
 		try {
 			DNSSD.resolve(flags, 0, serviceName, regType, domain, this);
 		} catch (Exception e) {
-			//TODO:
+			//TODO: retry strategy
 			LOG.error("Resolve failed ["+e.getMessage()+"]");
 		}
 	}
@@ -93,7 +93,7 @@ class UserRegistrationImpl implements UserRegistration {
 	 * 
 	 * @param details
 	 */
-	public void update(UserDetails details) {
+	public void updateUserDetails(UserDetails details) {
 		try {
 			TXTRecordProxy.set(Bonjour.KEY_USER, details.getUsername(), txtRecord);
 			DNSRecord record = null;

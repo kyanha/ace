@@ -20,9 +20,44 @@
  */
 package ch.iserver.ace.net.impl.discovery;
 
+import java.util.Properties;
+
+import ch.iserver.ace.UserDetails;
+
 import com.apple.dnssd.RegisterListener;
 import com.apple.dnssd.ResolveListener;
 
+/**
+ * 
+ *
+ */
 public interface UserRegistration extends RegisterListener, ResolveListener {
+	
+	/**
+	 * Registers the user for dynamic discovery.
+	 * 
+	 * @param properties the properties used for a successful registration
+	 */
+	void register(Properties properties);
+	
+	/**
+	 * Determines if the user has been successfully
+	 * registered.
+	 * 
+	 * @return true iff the user is registered
+	 */
+	boolean isRegistered();
+	
+	/**
+	 * Updates the user's details in the TXT record of this service.
+	 * 
+	 * @param details the updated UserDetails
+	 */
+	void updateUserDetails(UserDetails details);
+	
+	/**
+	 * Stops the user's registration.
+	 */
+	void stop();
 
 }
