@@ -128,6 +128,11 @@
 		<java classname="${class}" fork="true" classpathref="classpath.run"/>
 	</target>
 	
+	<target name="run-gui" depends="resources">
+		<echo>running GUI</echo>
+		<java classname="ch.iserver.ace.application.Main" fork="true" classpathref="classpath.run"/>
+	</target>
+
 	<target name="javadoc" depends="compile">
 		<javadoc destdir="${build.javadoc}" windowtitle="ACE API" source="1.4" classpathref="classpath">
 		    <tag name="todo" scope="all" description="To do:" />
