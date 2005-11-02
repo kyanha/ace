@@ -299,10 +299,10 @@ public class SessionImplTest extends TestCase {
 		callbackCtrl.replay();
 		
 		// test
-		impl.userJoined(1, new RemoteUserProxyStub("1"));
+		impl.participantJoined(1, new RemoteUserProxyStub("1"));
 		assertEquals(1, impl.getParticipants().size());
 		assertEquals(new ParticipantImpl(1, new RemoteUserStub("1")), impl.getParticipant(1));
-		impl.userLeft(1, Participant.LEFT);
+		impl.participantLeft(1, Participant.LEFT);
 		assertEquals(0, impl.getParticipants().size());
 		
 		// verify

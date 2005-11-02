@@ -202,9 +202,9 @@ public class SessionImpl extends AbstractSession implements SessionConnectionCal
 	}
 	
 	/**
-	 * @see ch.iserver.ace.net.SessionConnectionCallback#userJoined(int, ch.iserver.ace.net.RemoteUserProxy)
+	 * @see ch.iserver.ace.net.SessionConnectionCallback#participantJoined(int, ch.iserver.ace.net.RemoteUserProxy)
 	 */
-	public void userJoined(int participantId, RemoteUserProxy proxy) {
+	public void participantJoined(int participantId, RemoteUserProxy proxy) {
 		RemoteUser user = new RemoteUserImpl(proxy);
 		Participant participant = new ParticipantImpl(participantId, user);
 		addParticipant(participant);
@@ -212,9 +212,9 @@ public class SessionImpl extends AbstractSession implements SessionConnectionCal
 	}
 	
 	/**
-	 * @see ch.iserver.ace.net.SessionConnectionCallback#userLeft(int, int)
+	 * @see ch.iserver.ace.net.SessionConnectionCallback#participantLeft(int, int)
 	 */
-	public void userLeft(int participantId, int reason) {
+	public void participantLeft(int participantId, int reason) {
 		Participant participant = getParticipant(participantId);
 		removeParticipant(participant);
 		getCallback().participantLeft(participant, reason);
