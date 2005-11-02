@@ -53,36 +53,45 @@ public class ServerTest extends TestCase {
 			connections[i] = (ParticipantConnection) controls[i].getMock();
 		}
 		
-		DocumentModel document = new DocumentModel("", 0, 0, new DocumentDetails("collab.txt"));
-		ServerLogicImpl server = new ServerLogicImpl(lock, connections[0], document);
-		ports[0] = server.getPublisherPort();
-		server.start();
-		
 		// define mock behavior
+		connections[0].setParticipantId(0);
+		
+		for (int i = 0; i < PARTICIPANTS; i++) {
+			connections[i].getUser();
+			controls[i].setDefaultReturnValue(null);
+		}
+		
 		for (int i = 1; i < PARTICIPANTS; i++) {
 			connections[i].setParticipantId(i);
 			connections[i].sendDocument(null);
 			controls[i].setMatcher(MockControl.ALWAYS_MATCHER);
-			connections[i].getUser();
-			controls[i].setDefaultReturnValue(null);
 			for (int j = 0; j < i; j++) {
 				connections[j].sendParticipantJoined(i, null);
 				controls[j].setMatcher(MockControl.ALWAYS_MATCHER);
 			}
 			connections[i].sendRequest(0, new JupiterRequest(0, new JupiterVectorTime(0, 0), new InsertOperation(0, "x")));
 		}
-		
-		for (int i = 1; i < PARTICIPANTS; i++) {
-			ports[i] = server.join(connections[i]);
-		}
 				
 		// replay
 		for (int i = 0; i < PARTICIPANTS; i++) {
 			controls[i].replay();
 		}
+
+		// test
+		DocumentModel document = new DocumentModel("", 0, 0, new DocumentDetails("collab.txt"));
+		ServerLogicImpl server = new ServerLogicImpl(lock, connections[0], document);
+		ports[0] = server.getPublisherPort();
+		server.start();
 		
+		for (int i = 1; i < PARTICIPANTS; i++) {
+			ports[i] = server.join(connections[i]);
+		}
+				
 		// test
 		ports[0].receiveRequest(new JupiterRequest(1, new JupiterVectorTime(0, 0), new InsertOperation(0, "x")));
+		
+		// sleeep
+		Thread.sleep(2000);
 		
 		// verify
 		for (int i = 0; i < PARTICIPANTS; i++) {

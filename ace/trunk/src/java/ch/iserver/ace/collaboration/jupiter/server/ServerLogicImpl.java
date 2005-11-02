@@ -24,6 +24,7 @@ package ch.iserver.ace.collaboration.jupiter.server;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.TreeMap;
 
 import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.DocumentModel;
@@ -59,7 +60,7 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 	
 	private final HashMap proxies = new HashMap();
 	
-	private final HashMap connections = new HashMap();
+	private final TreeMap connections = new TreeMap();
 	
 	private final BlockingQueue dispatcherQueue;
 	
