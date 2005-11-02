@@ -34,9 +34,9 @@ public class BasicDocumentListItemCellRenderer extends JPanel implements ListCel
 
 	public BasicDocumentListItemCellRenderer(LocaleMessageSource source) {
 		this.source = source;
-		iconLocalPrivate = new ImageIcon(source.getIcon("iViewFileLocalPrivate"));
-		iconLocalPublished = new ImageIcon(source.getIcon("iViewFileLocalPublished"));
-		iconRemote = new ImageIcon(source.getIcon("iViewFileRemote"));
+		iconLocalPrivate = source.getIcon("iViewFileLocalPrivate");
+		iconLocalPublished = source.getIcon("iViewFileLocalPublished");
+		iconRemote = source.getIcon("iViewFileRemote");
 	}
 
 	public Component getListCellRendererComponent(JList list,
