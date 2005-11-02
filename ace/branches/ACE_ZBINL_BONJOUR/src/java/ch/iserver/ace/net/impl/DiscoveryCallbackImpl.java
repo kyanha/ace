@@ -20,44 +20,33 @@
  */
 package ch.iserver.ace.net.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.log4j.Logger;
 
-import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.net.NetworkServiceCallback;
-import ch.iserver.ace.net.RemoteUserProxy;
 
 public class DiscoveryCallbackImpl implements DiscoveryCallback {
 
 	private static Logger LOG = Logger.getLogger(DiscoveryCallbackImpl.class);
 	
 	private NetworkServiceCallback callback;
-	private Map remoteUserProxies;
 	
 	public DiscoveryCallbackImpl(NetworkServiceCallback callback) {
 		this.callback = callback;
-		remoteUserProxies = new HashMap();
 	}
 	
-	public void userDiscovered(RemoteUserProxyExt user) {
-		remoteUserProxies.put(user.getId(), user);
+	public void userDiscovered(RemoteUserProxyExt proxy) {
 		//notify upper layer of discovery
-		callback.userDiscovered(user);
+		callback.userDiscovered(proxy);
 		
 		//TODO: initiate process of getting published documents for this remote user
 		
 	}
 
-	public void userDiscarded(String id) {
-		RemoteUserProxy user = (RemoteUserProxy)remoteUserProxies.remove(id);
-		callback.userDiscarded(user);
+	public void userDiscarded(RemoteUserProxyExt proxy) {
+		callback.userDiscarded(proxy);
 	}
 
-	public void userDetailsChanged(String id, UserDetails details) {
-		RemoteUserProxyExt proxy = (RemoteUserProxyExt)remoteUserProxies.get(id);
-		proxy.setUserDetails(details);
+	public void userDetailsChanged(RemoteUserProxyExt proxy) {
 		callback.userDetailsChanged(proxy);
 	}
 

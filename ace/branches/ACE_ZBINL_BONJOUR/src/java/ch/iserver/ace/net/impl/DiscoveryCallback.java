@@ -21,7 +21,6 @@
 
 package ch.iserver.ace.net.impl;
 
-import ch.iserver.ace.UserDetails;
 
 /**
  * 
@@ -31,21 +30,20 @@ public interface DiscoveryCallback {
 
 	/**
 	 * 
-	 * @param user
+	 * @param proxy
 	 */
-	void userDiscovered(RemoteUserProxyExt user);
+	void userDiscovered(RemoteUserProxyExt proxy);
 	
 	/**
 	 * 
-	 * @param id
+	 * @param proxy
 	 */
-	void userDiscarded(String id);
+	void userDiscarded(RemoteUserProxyExt proxy);
 	
 	/**
 	 * 
-	 * @param id
-	 * @param details
+	 * @param proxy
 	 */
-	void userDetailsChanged(String id, UserDetails details);
+	void userDetailsChanged(RemoteUserProxyExt proxy);
 	
 }
