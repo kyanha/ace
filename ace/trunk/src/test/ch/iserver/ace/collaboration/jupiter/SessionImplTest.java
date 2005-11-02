@@ -21,24 +21,17 @@
 
 package ch.iserver.ace.collaboration.jupiter;
 
-import java.util.Collection;
-
 import junit.framework.TestCase;
 
 import org.easymock.MockControl;
 
 import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.Operation;
-import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.jupiter.JupiterRequest;
 import ch.iserver.ace.collaboration.Participant;
-import ch.iserver.ace.collaboration.PublishedSession;
-import ch.iserver.ace.collaboration.RemoteUser;
 import ch.iserver.ace.collaboration.SessionCallback;
-import ch.iserver.ace.net.DocumentServerLogic;
-import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.net.SessionConnection;
 import ch.iserver.ace.text.InsertOperation;
 import ch.iserver.ace.util.Lock;
@@ -307,63 +300,6 @@ public class SessionImplTest extends TestCase {
 		
 		// verify
 		callbackCtrl.verify();
-	}
-	
-	
-	private static class RemoteUserStub implements RemoteUser {
-		private final String id;
-		public RemoteUserStub(String id) {
-			this.id = id;
-		}
-		public String getId() {
-			return id;
-		}
-		public Collection getSharedDocuments() {
-			return null;
-		}
-		public UserDetails getUserDetails() {
-			return null;
-		}
-		public void invite(PublishedSession session) {
-			// ignore
-		}
-		public boolean equals(Object obj) {
-			if (this == obj) {
-				return true;
-			} else if (obj instanceof RemoteUser) {
-				RemoteUser user = (RemoteUser) obj;
-				return id.equals(user.getId());
-			}
-			return super.equals(obj);
-		}
-	}
-
-	private static class RemoteUserProxyStub implements RemoteUserProxy {
-		private final String id;
-		public RemoteUserProxyStub(String id) {
-			this.id = id;
-		}
-		public String getId() {
-			return id;
-		}
-		public Collection getSharedDocuments() {
-			return null;
-		}
-		public UserDetails getUserDetails() {
-			return null;
-		}
-		public void invite(DocumentServerLogic logic) {
-			// ignore
-		}
-		public boolean equals(Object obj) {
-			if (this == obj) {
-				return true;
-			} else if (obj instanceof RemoteUserProxy) {
-				RemoteUserProxy user = (RemoteUserProxy) obj;
-				return id.equals(user.getId());
-			}
-			return super.equals(obj);
-		}
 	}
 
 }

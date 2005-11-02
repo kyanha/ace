@@ -57,11 +57,16 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 	private final CallbackWorker callbackWorker;
 	
 	public PublishedSessionImpl(PublishedSessionCallback callback) {
-		super(new AlgorithmWrapperImpl(new Jupiter(true)), new SemaphoreLock());
+		this(callback, new AlgorithmWrapperImpl(new Jupiter(true)));
+	}
+	
+	public PublishedSessionImpl(PublishedSessionCallback callback, AlgorithmWrapper wrapper) {
+		super(wrapper, new SemaphoreLock());
 		ParameterValidator.notNull("callback", callback);
 		this.callback = callback;
 		this.callbackQueue = new LinkedBlockingQueue();
 		this.callbackWorker = new CallbackWorker(callback, callbackQueue);
+		// TODO: start CallbackWorker
 	}
 	
 	public void setServerLogic(ServerLogic logic) {
@@ -85,6 +90,10 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 	
 	protected Worker getCallbackWorker() {
 		return callbackWorker;
+	}
+	
+	protected PublishedSessionCallback getCallback() {
+		return callback;
 	}
 	
 	/**
@@ -140,12 +149,7 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 		CaretUpdateMessage message = getAlgorithm().generateCaretUpdateMessage(update);
 		getPort().receiveCaretUpdate(message);
 	}
-					
-		
-	protected PublishedSessionCallback getCallback() {
-		return callback;
-	}
-		
+			
 	/**
 	 * @see ch.iserver.ace.net.ParticipantConnection#setParticipantId(int)
 	 */

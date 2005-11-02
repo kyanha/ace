@@ -21,24 +21,36 @@
 
 package ch.iserver.ace.collaboration.jupiter;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import java.util.Collection;
 
-public class AllTests {
+import ch.iserver.ace.UserDetails;
+import ch.iserver.ace.collaboration.PublishedSession;
+import ch.iserver.ace.collaboration.RemoteUser;
 
-	public static Test suite() {
-		TestSuite suite = new TestSuite(
-						"Test for ch.iserver.ace.collaboration.jupiter");
-		//$JUnit-BEGIN$
-		suite.addTestSuite(RemoteUserTest.class);
-		suite.addTestSuite(CaretUpdateCommandTest.class);
-		suite.addTestSuite(PublishedSessionImplTest.class);
-		suite.addTestSuite(SessionImplTest.class);
-		suite.addTestSuite(RequestCommandTest.class);
-		suite.addTestSuite(RemoteDocumentImplTest.class);
-		suite.addTestSuite(AlgorithmWrapperImplTest.class);
-		//$JUnit-END$
-		return suite;
+class RemoteUserStub implements RemoteUser {
+	final String id;
+	public RemoteUserStub(String id) {
+		this.id = id;
 	}
-
+	public String getId() {
+		return id;
+	}
+	public Collection getSharedDocuments() {
+		return null;
+	}
+	public UserDetails getUserDetails() {
+		return null;
+	}
+	public void invite(PublishedSession session) {
+		// ignore
+	}
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		} else if (obj instanceof RemoteUser) {
+			RemoteUser user = (RemoteUser) obj;
+			return id.equals(user.getId());
+		}
+		return super.equals(obj);
+	}
 }

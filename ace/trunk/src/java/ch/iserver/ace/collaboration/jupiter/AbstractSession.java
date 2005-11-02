@@ -123,7 +123,11 @@ abstract class AbstractSession implements Session {
 	 * @see ch.iserver.ace.collaboration.Session#getParticipant(int)
 	 */
 	public Participant getParticipant(int participantId) {
-		return (Participant) participantMap.get(new Integer(participantId));
+		Participant p = (Participant) participantMap.get(new Integer(participantId));
+		if (p == null) {
+			// TODO: throw new UnknownParticipantException();
+		}
+		return p;
 	}
 
 	/**

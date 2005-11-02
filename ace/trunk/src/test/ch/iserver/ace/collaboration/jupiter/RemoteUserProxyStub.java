@@ -21,24 +21,36 @@
 
 package ch.iserver.ace.collaboration.jupiter;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import java.util.Collection;
 
-public class AllTests {
+import ch.iserver.ace.UserDetails;
+import ch.iserver.ace.net.DocumentServerLogic;
+import ch.iserver.ace.net.RemoteUserProxy;
 
-	public static Test suite() {
-		TestSuite suite = new TestSuite(
-						"Test for ch.iserver.ace.collaboration.jupiter");
-		//$JUnit-BEGIN$
-		suite.addTestSuite(RemoteUserTest.class);
-		suite.addTestSuite(CaretUpdateCommandTest.class);
-		suite.addTestSuite(PublishedSessionImplTest.class);
-		suite.addTestSuite(SessionImplTest.class);
-		suite.addTestSuite(RequestCommandTest.class);
-		suite.addTestSuite(RemoteDocumentImplTest.class);
-		suite.addTestSuite(AlgorithmWrapperImplTest.class);
-		//$JUnit-END$
-		return suite;
+class RemoteUserProxyStub implements RemoteUserProxy {
+	final String id;
+	public RemoteUserProxyStub(String id) {
+		this.id = id;
 	}
-
+	public String getId() {
+		return id;
+	}
+	public Collection getSharedDocuments() {
+		return null;
+	}
+	public UserDetails getUserDetails() {
+		return null;
+	}
+	public void invite(DocumentServerLogic logic) {
+		// ignore
+	}
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		} else if (obj instanceof RemoteUserProxy) {
+			RemoteUserProxy user = (RemoteUserProxy) obj;
+			return id.equals(user.getId());
+		}
+		return super.equals(obj);
+	}
 }
