@@ -23,7 +23,6 @@ package ch.iserver.ace.net;
 
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
-import ch.iserver.ace.collaboration.Participant;
 
 /**
  * A ParticipantConnection provides a logical connection to a participant in
@@ -32,8 +31,15 @@ import ch.iserver.ace.collaboration.Participant;
  */
 public interface ParticipantConnection {
 	
+	/**
+	 * @param participantId the participant id of the participant
+	 */
 	void setParticipantId(int participantId);
 	
+	/**
+	 * @return the remote user proxy of the participant represented by the
+	 *         connection
+	 */
 	RemoteUserProxy getUser();
 		
 	/**
@@ -66,9 +72,10 @@ public interface ParticipantConnection {
 	 * Sends a participant joined message to the participant represented by
 	 * this ParticipantConnection.
 	 * 
-	 * @param participant the joined participant
+	 * @param participantId the id of the joined participant
+	 * @param proxy the user proxy of the joined participant
 	 */
-	void sendParticipantJoined(Participant participant);
+	void sendParticipantJoined(int participantId, RemoteUserProxy proxy);
 	
 	/**
 	 * Sends a participant left message to the participant represented by

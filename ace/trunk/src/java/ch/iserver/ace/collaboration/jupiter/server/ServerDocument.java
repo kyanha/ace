@@ -21,8 +21,8 @@
 
 package ch.iserver.ace.collaboration.jupiter.server;
 
-import ch.iserver.ace.collaboration.Participant;
-import ch.iserver.ace.collaboration.PortableDocument;
+import ch.iserver.ace.net.PortableDocument;
+import ch.iserver.ace.net.RemoteUserProxy;
 
 /**
  *
@@ -30,9 +30,10 @@ import ch.iserver.ace.collaboration.PortableDocument;
 public interface ServerDocument {
 	
 	/**
-	 * @param participant
+	 * @param participantId
+	 * @param proxy
 	 */
-	void participantJoined(Participant participant);
+	void participantJoined(int participantId, RemoteUserProxy proxy);
 	
 	/**
 	 * @param participantId

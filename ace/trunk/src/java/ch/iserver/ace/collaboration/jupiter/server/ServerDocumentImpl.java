@@ -22,13 +22,12 @@
 package ch.iserver.ace.collaboration.jupiter.server;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
@@ -39,11 +38,11 @@ import javax.swing.text.SimpleAttributeSet;
 
 import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.Fragment;
-import ch.iserver.ace.collaboration.Participant;
-import ch.iserver.ace.collaboration.PortableDocument;
+import ch.iserver.ace.net.PortableDocument;
+import ch.iserver.ace.net.RemoteUserProxy;
 
 public class ServerDocumentImpl extends AbstractDocument implements
-				ServerDocument, PortableDocument {
+				ServerDocument, ch.iserver.ace.net.PortableDocument {
 
 	public static final String PARTICIPANT_ATTR = "participant";
 
@@ -78,8 +77,8 @@ public class ServerDocumentImpl extends AbstractDocument implements
 		return participantId;
 	}
 	
-	private void addParticipant(Participant participant) {
-		participants.put(new Integer(participant.getParticipantId()), participant);
+	private void addParticipant(int participantId, RemoteUserProxy proxy) {
+		participants.put(new Integer(participantId), proxy);
 	}
 	
 	private void removeParticipant(int participantId) {
@@ -191,12 +190,9 @@ public class ServerDocumentImpl extends AbstractDocument implements
 		
 	// --> DocumentModel methods <--
 	
-	/**
-	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerDocument#participantJoined(ch.iserver.ace.collaboration.Participant)
-	 */
-	public void participantJoined(Participant participant) {
-		setCaretHandler(participant.getParticipantId(), new CaretHandler(-1, -1));
-		addParticipant(participant);
+	public void participantJoined(int participantId, RemoteUserProxy proxy) {
+		setCaretHandler(participantId, new CaretHandler(-1, -1));
+		addParticipant(participantId, proxy);
 	}
 	
 	/**
@@ -291,18 +287,20 @@ public class ServerDocumentImpl extends AbstractDocument implements
 		};
 	}
 	
-	/**
-	 * @see ch.iserver.ace.collaboration.PortableDocument#getParticipant(int)
-	 */
-	public Participant getParticipant(int participantId) {
-		return (Participant) participants.get(new Integer(participantId));
+	public int[] getParticipantIds() {
+		Set ids = participants.keySet();
+		int[] result = new int[ids.size()];
+		int idx = 0;
+		Iterator it = ids.iterator();
+		while (it.hasNext()) {
+			Integer id = (Integer) it.next();
+			result[idx++] = id.intValue(); 
+		}
+		return result;
 	}
 	
-	/**
-	 * @see ch.iserver.ace.collaboration.PortableDocument#getParticipants()
-	 */
-	public Collection getParticipants() {
-		return Collections.unmodifiableCollection(participants.values());
+	public RemoteUserProxy getUserProxy(int participantId) {
+		return (RemoteUserProxy) participants.get(new Integer(participantId));
 	}
 	
 	/**

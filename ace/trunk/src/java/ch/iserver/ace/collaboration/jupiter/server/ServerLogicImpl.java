@@ -30,8 +30,6 @@ import ch.iserver.ace.DocumentModel;
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.jupiter.Jupiter;
 import ch.iserver.ace.collaboration.Participant;
-import ch.iserver.ace.collaboration.jupiter.ParticipantImpl;
-import ch.iserver.ace.collaboration.jupiter.RemoteUserImpl;
 import ch.iserver.ace.net.DocumentServer;
 import ch.iserver.ace.net.DocumentServerLogic;
 import ch.iserver.ace.net.ParticipantConnection;
@@ -164,7 +162,7 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 		try {
 			lock.lock();
 			try {
-				return new PortableServerDocument(getDocument().toPortableDocument());
+				return getDocument().toPortableDocument();
 			} finally {
 				lock.unlock();
 			}
@@ -184,24 +182,20 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 		connection.sendDocument(retrieveDocument());
 		ParticipantPort port = new ParticipantPortImpl(this, participantId, algorithm, getSerializerQueue());
 		ParticipantProxy proxy = new ParticipantProxyImpl(participantId, dispatcherQueue, algorithm, connection);
-		notifyOthersAboutJoin(createParticipant(participantId, connection.getUser()));
+		notifyOthersAboutJoin(participantId, connection.getUser());
 		addParticipant(port, proxy, connection);
 		return port;
 	}
 	
-	protected Participant createParticipant(int participantId, RemoteUserProxy user) {
-		return new ParticipantImpl(participantId, new RemoteUserImpl(user));
-	}
-	
-	protected void notifyOthersAboutJoin(Participant participant) {
-		getDocument().participantJoined(participant);
+	protected void notifyOthersAboutJoin(int participantId, RemoteUserProxy proxy) {
+		getDocument().participantJoined(participantId, proxy);
 		Map map = getParticipantConnections();
 		Iterator it = map.keySet().iterator();
 		while (it.hasNext()) {
 			Integer key = (Integer) it.next();
 			ParticipantConnection connection = (ParticipantConnection) map.get(key);
-			if (key.intValue() != participant.getParticipantId()) {
-				connection.sendParticipantJoined(participant);
+			if (key.intValue() != participantId) {
+				connection.sendParticipantJoined(participantId, proxy);
 			}
 		}
 	}

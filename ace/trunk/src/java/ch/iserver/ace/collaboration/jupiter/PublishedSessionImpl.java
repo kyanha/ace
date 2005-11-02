@@ -192,15 +192,16 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 	public void sendDocument(PortableDocument document) {
 		throw new UnsupportedOperationException("sendDocument is not supported for PublisherConnection objects");	
 	}
-		
+
 	/**
-	 * @see ch.iserver.ace.net.ParticipantConnection#sendParticipantJoined(ch.iserver.ace.collaboration.Participant)
+	 * @see ch.iserver.ace.net.ParticipantConnection#sendParticipantJoined(int, ch.iserver.ace.net.RemoteUserProxy)
 	 */
-	public void sendParticipantJoined(Participant participant) {
-		addParticipant(participant);
+	public void sendParticipantJoined(int participantId, RemoteUserProxy proxy) {
+		Participant participant = new ParticipantImpl(participantId, null);
+		addParticipant(new ParticipantImpl(participantId, new RemoteUserImpl(proxy)));
 		getCallback().participantJoined(participant);			
 	}
-		
+			
 	/**
 	 * @see ch.iserver.ace.net.ParticipantConnection#sendParticipantLeft(int, int)
 	 */
