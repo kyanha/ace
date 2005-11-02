@@ -38,7 +38,6 @@ import ch.iserver.ace.collaboration.jupiter.server.ServerLogic;
 import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.text.InsertOperation;
-import ch.iserver.ace.util.BlockingQueue;
 
 /**
  *
@@ -280,56 +279,6 @@ public class PublishedSessionImplTest extends TestCase {
 		logicCtrl.verify();
 		portCtrl.verify();
 		callbackCtrl.verify();
-	}
-
-	public void testSendRequest() throws Exception {
-		MockControl queueCtrl = MockControl.createControl(BlockingQueue.class);
-		queueCtrl.setDefaultMatcher(MockControl.ALWAYS_MATCHER);
-		final BlockingQueue queue = (BlockingQueue) queueCtrl.getMock();
-		PublishedSessionImpl impl = new PublishedSessionImpl(callback) {
-			protected BlockingQueue getCallbackQueue() {
-				return queue;
-			}
-		};
-		Request request = new JupiterRequest(0, null, null);
-		
-		// define mock behavior
-		queue.add(null);
-		
-		// replay
-		queueCtrl.replay();
-		
-		// test
-		impl.addParticipant(new ParticipantImpl(1, new RemoteUserStub("X")));
-		impl.sendRequest(1, request);
-		
-		// verify
-		queueCtrl.verify();
-	}
-	
-	public void testSendCaretUpdateMessage() throws Exception {
-		MockControl queueCtrl = MockControl.createControl(BlockingQueue.class);
-		queueCtrl.setDefaultMatcher(MockControl.ALWAYS_MATCHER);
-		final BlockingQueue queue = (BlockingQueue) queueCtrl.getMock();
-		PublishedSessionImpl impl = new PublishedSessionImpl(callback) {
-			protected BlockingQueue getCallbackQueue() {
-				return queue;
-			}
-		};
-		CaretUpdateMessage message = new CaretUpdateMessage(0, null, null);
-		
-		// define mock behavior
-		queue.add(null);
-		
-		// replay
-		queueCtrl.replay();
-		
-		// test
-		impl.addParticipant(new ParticipantImpl(1, new RemoteUserStub("X")));
-		impl.sendCaretUpdateMessage(1, message);
-		
-		// verify
-		queueCtrl.verify();
 	}
 	
 	public void testSendJoinedLeft() throws Exception {
