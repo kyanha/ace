@@ -31,13 +31,13 @@ public class NWayExecuteVisitorTest extends TestCase {
 		Algorithm algo2 = (Algorithm) algoCtrl2.getMock();
 		
 		// create scenario
-		StartNode s = new StartNode("0", "abc", 0);
+		StartNode s = new StartNode("0", "abc", 1);
 		
 		// define mock behavior
-		factory.createAlgorithm(0, Boolean.TRUE);
+		factory.createAlgorithm(0, Boolean.FALSE);
 		control.setReturnValue(algo1);
 		
-		factory.createAlgorithm(0, Boolean.FALSE);
+		factory.createAlgorithm(0, Boolean.TRUE);
 		control.setReturnValue(algo2);
 						
 		// create test object
