@@ -30,7 +30,11 @@ import ch.iserver.ace.net.impl.DiscoveryCallback;
 import ch.iserver.ace.net.impl.MutableUserDetails;
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;
 import ch.iserver.ace.net.impl.RemoteUserProxyImpl;
+import ch.iserver.ace.util.ParameterValidator;
 
+/**
+ * 
+ */
 class DiscoveryCallbackAdapter {
 	
 	private static Logger LOG = Logger.getLogger(DiscoveryCallbackAdapter.class);
@@ -40,27 +44,57 @@ class DiscoveryCallbackAdapter {
 	private Map services;				//service name to id
 	//TODO: service to proxy??
 	
+	/**
+	 * 
+	 */
 	public DiscoveryCallbackAdapter(DiscoveryCallback forward) {
 		this();
+		ParameterValidator.notNull("forward", forward);
 		this.forward = forward;
 	}
 	
+	/**
+	 * 
+	 *
+	 */
 	public DiscoveryCallbackAdapter() {
 		remoteUserProxies = new HashMap();
 		services = new HashMap();
 	}
 	
-	public void setDiscoveryCallback(DiscoveryCallback callback) {
-		this.forward = callback;
+	/**
+	 * 
+	 * @param forward
+	 */
+	public void setDiscoveryCallback(DiscoveryCallback forward) {
+		ParameterValidator.notNull("forward", forward);
+		this.forward = forward;
 	}
 	
+	/**
+	 * 
+	 * @param proxy
+	 */
 	public void userDiscovered(RemoteUserProxyExt proxy) {
+		ParameterValidator.notNull("proxy", proxy);
+		
 		remoteUserProxies.put(proxy.getId(), proxy);
 		
 		forward.userDiscovered(proxy);
 	}
 	
+	/**
+	 * 
+	 * @param serviceName
+	 * @param username
+	 * @param userId
+	 * @param port
+	 */
 	public void userDiscovered(String serviceName, String username, String userId, int port) {
+		ParameterValidator.notNull("serviceName", serviceName);
+		ParameterValidator.notNull("username", username);
+		ParameterValidator.notNull("userId", userId);
+		
 		MutableUserDetails details = new MutableUserDetails(username);
 		details.setPort(port);
 		
@@ -71,7 +105,13 @@ class DiscoveryCallbackAdapter {
 		forward.userDiscovered(proxy);
 	}
 
+	/**
+	 * 
+	 * @param serviceName
+	 */
 	public void userDiscarded(String serviceName) {
+		ParameterValidator.notNull("serviceName", serviceName);
+		
 		String userId = (String)services.remove(serviceName);
 		if (userId != null) {
 			RemoteUserProxyExt user = (RemoteUserProxyExt)remoteUserProxies.remove(userId);
@@ -81,7 +121,15 @@ class DiscoveryCallbackAdapter {
 		}
 	}
 
+	/**
+	 * 
+	 * @param serviceName
+	 * @param userName
+	 */
 	public void userNameChanged(String serviceName, String userName) {
+		ParameterValidator.notNull("serviceName", serviceName);
+		ParameterValidator.notNull("userName", userName);
+		
 		String userId = (String)services.get(serviceName);
 		if (userId != null) {
 			RemoteUserProxyExt proxy = (RemoteUserProxyExt)remoteUserProxies.get(userId);
@@ -90,11 +138,19 @@ class DiscoveryCallbackAdapter {
 			proxy.setUserDetails(details);
 			forward.userDetailsChanged(proxy);
 		} else {
-			LOG.warn("Username change received for unknown user ["+serviceName+"]");
+			LOG.warn("username change received for unknown user ["+serviceName+"]");
 		}
 	}
 	
+	/**
+	 * 
+	 * @param serviceName
+	 * @param address
+	 */
 	public void userAddressResolved(String serviceName, InetAddress address) {
+		ParameterValidator.notNull("serviceName", serviceName);
+		ParameterValidator.notNull("address", address);
+		
 		String userId = (String)services.get(serviceName);
 		if (userId != null) {
 			RemoteUserProxyExt proxy = (RemoteUserProxyExt)remoteUserProxies.get(userId);
@@ -106,6 +162,11 @@ class DiscoveryCallbackAdapter {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param serviceName
+	 * @return boolean true iff 
+	 */
 	public boolean isServiceKnown(String serviceName) {
 		return services.containsKey(serviceName);
 	}

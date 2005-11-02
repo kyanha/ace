@@ -25,6 +25,7 @@ import org.apache.log4j.Logger;
 import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.net.impl.DiscoveryCallback;
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;
+import ch.iserver.ace.util.ParameterValidator;
 
 /**
  * Null object pattern.
@@ -46,14 +47,18 @@ class NullDiscoveryCallbackAdapter extends DiscoveryCallbackAdapter {
 	}
 
 	public void userDiscovered(RemoteUserProxyExt user) {
+		ParameterValidator.notNull("user", user);
 		LOG.warn("called for "+user.getUserDetails().getUsername());
 	}
 
 	public void userDiscarded(String id) {
+		ParameterValidator.notNull("id", id);
 		LOG.warn("called for [id="+id+"]");
 	}
 
 	public void userDetailsChanged(String id, UserDetails details) {
+		ParameterValidator.notNull("userId", id);
+		ParameterValidator.notNull("details", details);
 		LOG.warn("called for [id="+id+", username="+details.getUsername()+"]");
 		
 	}

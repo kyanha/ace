@@ -26,13 +26,16 @@ class UserRegistrationImpl implements UserRegistration {
 	
 	private TXTRecord txtRecord;
 		
+	/**
+	 * Creates a UserRegistrationImpl.
+	 */
 	public UserRegistrationImpl() {
 		isRegistered = false;
 	}
 	
 	
 	/**
-	 * Registers this service.
+	 * @inheritDoc
 	 */
 	public void register(final Properties props) {
 		String serviceName = System.getProperty("user.name");

@@ -37,6 +37,7 @@ public interface UserRegistration extends RegisterListener, ResolveListener {
 	 * Registers the user for dynamic discovery.
 	 * 
 	 * @param properties the properties used for a successful registration
+	 * @see com.apple.dnssd.DNSSD
 	 */
 	void register(Properties properties);
 	

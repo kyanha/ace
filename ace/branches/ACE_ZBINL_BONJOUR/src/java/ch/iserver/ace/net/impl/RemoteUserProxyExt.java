@@ -24,12 +24,12 @@ import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.net.RemoteUserProxy;
 
 /**
- * Package protected interface extension of <code>RemoteUserProxy</code>
+ * Interface extension of <code>RemoteUserProxy</code>
  * for the network layer.
  *
  * @see ch.iserver.ace.net.RemoteUserProxy
  */
-interface RemoteUserProxyExt extends RemoteUserProxy {
+public interface RemoteUserProxyExt extends RemoteUserProxy {
 
 	void setUserDetails(UserDetails details);
 	

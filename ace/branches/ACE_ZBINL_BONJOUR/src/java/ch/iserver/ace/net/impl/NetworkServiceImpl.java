@@ -29,6 +29,7 @@ import ch.iserver.ace.net.DocumentServer;
 import ch.iserver.ace.net.DocumentServerLogic;
 import ch.iserver.ace.net.NetworkService;
 import ch.iserver.ace.net.NetworkServiceCallback;
+import ch.iserver.ace.util.ParameterValidator;
 import ch.iserver.ace.util.UUID;
 
 /**
@@ -55,6 +56,7 @@ public class NetworkServiceImpl implements NetworkService {
 	}
 
 	public void setCallback(NetworkServiceCallback callback) {
+		ParameterValidator.notNull("callback", callback);
 		this.networkCallback = callback;
 		//since the callback to the upper layer is available now, 
 		//start discovery process

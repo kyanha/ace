@@ -23,6 +23,7 @@ package ch.iserver.ace.net.impl;
 import org.apache.log4j.Logger;
 
 import ch.iserver.ace.net.NetworkServiceCallback;
+import ch.iserver.ace.util.ParameterValidator;
 
 public class DiscoveryCallbackImpl implements DiscoveryCallback {
 
@@ -31,6 +32,7 @@ public class DiscoveryCallbackImpl implements DiscoveryCallback {
 	private NetworkServiceCallback callback;
 	
 	public DiscoveryCallbackImpl(NetworkServiceCallback callback) {
+		ParameterValidator.notNull("callback", callback);
 		this.callback = callback;
 	}
 	

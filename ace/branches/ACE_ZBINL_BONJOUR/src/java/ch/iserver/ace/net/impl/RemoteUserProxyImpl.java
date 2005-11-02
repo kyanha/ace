@@ -20,11 +20,11 @@
  */
 package ch.iserver.ace.net.impl;
 
-import java.net.InetAddress;
 import java.util.Collection;
 
 import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.net.DocumentServerLogic;
+import ch.iserver.ace.util.ParameterValidator;
 
 public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 	
@@ -32,6 +32,8 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 	private UserDetails details;
 	
 	public RemoteUserProxyImpl(String id, UserDetails details) {
+		ParameterValidator.notNull("id", id);
+		ParameterValidator.notNull("details", details);
 		this.id = id;
 		this.details = details;
 	}
@@ -55,7 +57,7 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 	}
 
 	public void setUserDetails(UserDetails details) {
-		// TODO Auto-generated method stub
-		
+		ParameterValidator.notNull("details", details);
+		this.details = details;
 	}
 }

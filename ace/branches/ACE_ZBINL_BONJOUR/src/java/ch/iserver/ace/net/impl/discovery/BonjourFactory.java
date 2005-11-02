@@ -24,19 +24,17 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-import org.apache.log4j.Logger;
-
 import ch.iserver.ace.ApplicationError;
 import ch.iserver.ace.net.impl.Discovery;
 import ch.iserver.ace.net.impl.DiscoveryFactory;
 
 public class BonjourFactory extends DiscoveryFactory {
-
-	private static Logger LOG = Logger.getLogger(BonjourFactory.class);
 	
 	public Discovery createDiscovery() {
 		Properties props = loadConfig();
-		Bonjour b = new Bonjour(props);
+		UserRegistration registration = new UserRegistrationImpl();
+		PeerDiscovery discovery = new PeerDiscoveryImpl();
+		Bonjour b = new Bonjour(registration, discovery, props);
 		return b;
 	}
 	
@@ -48,7 +46,6 @@ public class BonjourFactory extends DiscoveryFactory {
 	    try {
 	        properties.load(new FileInputStream("zeroconf.properties"));
 	    } catch (IOException e) {
-	    		LOG.fatal("could not load zeroconf properties: "+e.getMessage());
 	    		throw new ApplicationError(e);
 	    }
 		return properties;

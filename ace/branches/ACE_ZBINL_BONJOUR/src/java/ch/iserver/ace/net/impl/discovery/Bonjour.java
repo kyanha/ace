@@ -25,7 +25,11 @@ import java.util.Properties;
 import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.net.impl.Discovery;
 import ch.iserver.ace.net.impl.DiscoveryCallback;
+import ch.iserver.ace.util.ParameterValidator;
 
+/**
+ *
+ */
 public class Bonjour implements Discovery {
 	
 	public static final String KEY_REGISTRATION_TYPE = "registration.type";
@@ -33,15 +37,23 @@ public class Bonjour implements Discovery {
 	public static final String KEY_PROTOCOL_VERSION = "protocol.version";
 	public static final String KEY_USER = "user.name";
 	public static final String KEY_USERID = "user.id";
+	
+	//type values for resources and queries
+	//constants defined as in nameser.h
+	public static final int T_HOST_ADDRESS = 1;
+	public static final int T_TXT = 16;
 
 	private Properties props;
-	private UserRegistrationImpl registration;
-	private PeerDiscoveryImpl peerDiscovery;
+	private UserRegistration registration;
+	private PeerDiscovery peerDiscovery;
 	
-	public Bonjour(Properties props) {
+	public Bonjour(UserRegistration registration, PeerDiscovery discovery, Properties props) {
+		ParameterValidator.notNull("props", props);
+		ParameterValidator.notNull("registration", registration);
+		ParameterValidator.notNull("discovery", discovery);
 		this.props = props;
-		registration  = new UserRegistrationImpl();
-		peerDiscovery = new PeerDiscoveryImpl();
+		this.registration  = registration;
+		this.peerDiscovery = discovery;
 	}
 	
 	/**
@@ -61,13 +73,14 @@ public class Bonjour implements Discovery {
 	 * @inheritDoc
 	 */
 	public void setDiscoveryCallback(DiscoveryCallback callback) {
-		peerDiscovery.setDiscoveryCallback(callback);
+		peerDiscovery.setDiscoveryCallbackAdapter(new DiscoveryCallbackAdapter(callback));
 	}
 	
 	/**
 	 * @inheritDoc
 	 */
 	public void setUserId(String uuid) {
+		ParameterValidator.notNull("uuid", uuid);
 		props.put(KEY_USERID, uuid);
 	}
 	
@@ -75,9 +88,10 @@ public class Bonjour implements Discovery {
 	 * @inheritDoc
 	 */
 	public void setUserDetails(UserDetails details) {
+		ParameterValidator.notNull("details", details);
 		props.put(KEY_USER, details.getUsername());
 		if (registration.isRegistered()) {
-			registration.update(details);
+			registration.updateUserDetails(details);
 		}
 	}
 	
