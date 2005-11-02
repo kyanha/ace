@@ -43,7 +43,7 @@ public class LocaleMessageSourceImpl implements LocaleMessageSource {
 	}
 
 	public String getMessage(String code) {
-		return source.getMessage(code, locale);
+		return source.getMessage(code, null, locale);
 	}
 	
 	public ImageIcon getIcon(String code) {
