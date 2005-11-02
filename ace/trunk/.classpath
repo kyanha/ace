@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry excluding="**/.svn/**" kind="src" path="src/java"/>
+	<classpathentry kind="src" path="src/integration-test"/>
 	<classpathentry excluding="**/.svn/**" kind="src" path="src/resources"/>
 	<classpathentry excluding="**/.svn/**" kind="src" path="src/test"/>
 	<classpathentry kind="var" path="MAVEN2/jdom/jdom/1.0/jdom-1.0.jar"/>
