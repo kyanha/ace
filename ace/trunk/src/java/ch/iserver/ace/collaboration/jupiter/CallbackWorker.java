@@ -76,7 +76,7 @@ class CallbackWorker extends Worker {
 	 * @see ch.iserver.ace.util.Worker#doWork()
 	 */
 	protected void doWork() throws InterruptedException {
-		Command command = (Command) getQueue().get();
+		Command command = (Command) getQueue().take();
 		command.execute(getCallback());
 	}
 	

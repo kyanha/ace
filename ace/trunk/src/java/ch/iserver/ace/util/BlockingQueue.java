@@ -28,7 +28,7 @@ public interface BlockingQueue {
 	
 	void add(Object o);
 	
-	Object get() throws InterruptedException;
+	Object take() throws InterruptedException;
 	
 	int size();
 	

@@ -57,7 +57,7 @@ public class ParticipantPortImplTest extends TestCase {
 		CaretUpdateMessage message = new CaretUpdateMessage(0, null, null);
 		port.receiveCaretUpdate(message);
 		assertEquals(1, queue.size());
-		CaretUpdateSerializerCommand command = (CaretUpdateSerializerCommand) queue.get();
+		CaretUpdateSerializerCommand command = (CaretUpdateSerializerCommand) queue.take();
 		assertEquals(1, command.getParticipantId());
 		assertSame(algorithm, command.getAlgorithm());
 		assertSame(message, command.getMessage());
@@ -71,7 +71,7 @@ public class ParticipantPortImplTest extends TestCase {
 		Request request = new JupiterRequest(0, null, null);
 		port.receiveRequest(request);
 		assertEquals(1, queue.size());
-		RequestSerializerCommand command = (RequestSerializerCommand) queue.get();
+		RequestSerializerCommand command = (RequestSerializerCommand) queue.take();
 		assertEquals(1, command.getParticipantId());
 		assertSame(algorithm, command.getAlgorithm());
 		assertSame(request, command.getRequest());

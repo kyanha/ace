@@ -43,7 +43,7 @@ class Dispatcher extends Worker {
 	}
 	
 	protected DispatcherCommand nextCommand() throws InterruptedException {
-		return (DispatcherCommand) queue.get();
+		return (DispatcherCommand) queue.take();
 	}
 	
 	protected void doWork() {

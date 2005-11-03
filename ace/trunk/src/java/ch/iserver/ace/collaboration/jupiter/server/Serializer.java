@@ -89,7 +89,7 @@ class Serializer extends Worker {
 	 */
 	protected void doWork() throws InterruptedException {
 		try {
-			SerializerCommand cmd = (SerializerCommand) queue.get();
+			SerializerCommand cmd = (SerializerCommand) queue.take();
 			LOG.info("SERIALIZER: serializing next command ...");
 			getLock().lock();
 			cmd.execute(getForwarder());

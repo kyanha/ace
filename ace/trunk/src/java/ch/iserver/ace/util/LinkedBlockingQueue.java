@@ -43,9 +43,9 @@ public class LinkedBlockingQueue implements BlockingQueue {
 	}
 
 	/**
-	 * @see ch.iserver.ace.util.BlockingQueue#get()
+	 * @see ch.iserver.ace.util.BlockingQueue#take()
 	 */
-	public synchronized Object get() throws InterruptedException {
+	public synchronized Object take() throws InterruptedException {
 		while (queue.isEmpty()) {
 			wait();
 		}
