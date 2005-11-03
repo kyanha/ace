@@ -27,7 +27,7 @@ import java.util.Collection;
 import ch.iserver.ace.collaboration.PublishedSession;
 import ch.iserver.ace.collaboration.RemoteUser;
 
-class RemoteUserStub implements MutableRemoteUser {
+public class RemoteUserStub implements MutableRemoteUser {
 	final String id;
 	public RemoteUserStub(String id) {
 		this.id = id;

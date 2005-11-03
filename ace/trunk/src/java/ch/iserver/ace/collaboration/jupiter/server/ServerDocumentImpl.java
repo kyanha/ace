@@ -40,6 +40,7 @@ import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.Fragment;
 import ch.iserver.ace.net.PortableDocument;
 import ch.iserver.ace.net.RemoteUserProxy;
+import ch.iserver.ace.util.CompareUtil;
 
 public class ServerDocumentImpl extends AbstractDocument implements
 				ServerDocument, ch.iserver.ace.net.PortableDocument {
@@ -191,6 +192,7 @@ public class ServerDocumentImpl extends AbstractDocument implements
 	// --> DocumentModel methods <--
 	
 	public void participantJoined(int participantId, RemoteUserProxy proxy) {
+		System.out.println("J " + participantId);
 		setCaretHandler(participantId, new CaretHandler(-1, -1));
 		addParticipant(participantId, proxy);
 	}
@@ -234,6 +236,7 @@ public class ServerDocumentImpl extends AbstractDocument implements
 	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerDocument#insertString(int, int, java.lang.String)
 	 */
 	public void insertString(int participantId, int offset, String text) {
+		System.out.println(participantId + " " + offset + "  " + text);
 		SimpleAttributeSet attr = new SimpleAttributeSet();
 		attr.addAttribute(PARTICIPANT_ATTR, new Integer(participantId));
 		try {
@@ -314,6 +317,29 @@ public class ServerDocumentImpl extends AbstractDocument implements
 			return null;
 		}
 	}
+	
+	// --> java.lang.Object methods <--
+	
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		} else if (obj instanceof PortableDocument) {
+			PortableDocument doc = (PortableDocument) obj;
+			if (!CompareUtil.arrayEquals(getParticipantIds(), doc.getParticipantIds())) {
+				return false;
+			}
+			int[] ids = getParticipantIds();
+			for (int i = 0; i < ids.length; i++) {
+				int id = ids[i];
+				if (!CompareUtil.nullSafeEquals(getSelection(id), doc.getSelection(id))) {
+					return false;
+				}
+			}
+			return CompareUtil.iteratorEquals(getFragments(), doc.getFragments());
+		} else {
+			return false;
+		}
+	}
 		
 	// --> Fragment Element <--
 	
@@ -339,6 +365,18 @@ public class ServerDocumentImpl extends AbstractDocument implements
 		
 		public String toString() {
 			return "Fragment [pid=" + getParticipantId() + "] " + getText();
+		}
+		
+		public boolean equals(Object obj) {
+			if (this == obj) {
+				return true;
+			} else if (obj instanceof Fragment) {
+				Fragment f = (Fragment) obj;
+				return getText().equals(f.getText())
+				        && getParticipantId() == f.getParticipantId();
+			} else {
+				return false;
+			}
 		}
 		
 	}

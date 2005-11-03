@@ -92,6 +92,7 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 		this.publisherPort = createPublisherPort(connection);
 		
 		this.document = new ServerDocumentImpl();
+		this.document.participantJoined(0, null);
 		this.document.insertString(0, 0, document.getContent());
 		this.document.updateCaret(0, document.getDot(), document.getMark());
 		

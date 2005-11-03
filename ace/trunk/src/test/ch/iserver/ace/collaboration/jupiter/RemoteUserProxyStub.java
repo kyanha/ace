@@ -27,10 +27,16 @@ import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.net.DocumentServerLogic;
 import ch.iserver.ace.net.RemoteUserProxy;
 
-class RemoteUserProxyStub implements RemoteUserProxy {
+public class RemoteUserProxyStub implements RemoteUserProxy {
 	final String id;
+	final String name;
 	public RemoteUserProxyStub(String id) {
 		this.id = id;
+		this.name = "";
+	}
+	public RemoteUserProxyStub(String id, String name) {
+		this.id = id;
+		this.name = name;
 	}
 	public String getId() {
 		return id;
@@ -39,7 +45,7 @@ class RemoteUserProxyStub implements RemoteUserProxy {
 		return null;
 	}
 	public UserDetails getUserDetails() {
-		return null;
+		return new UserDetails(name);
 	}
 	public void invite(DocumentServerLogic logic) {
 		// ignore
