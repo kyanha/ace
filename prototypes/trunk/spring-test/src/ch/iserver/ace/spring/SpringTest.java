@@ -1,4 +1,4 @@
-package dummy;
+package ch.iserver.ace.spring;
 
 import javax.swing.JFrame;
 
