@@ -1,5 +1,5 @@
 /*
- * $Id: SessionCallback.java 788 2005-10-28 11:29:49 +0200 (Fri, 28 Oct 2005) sim $
+ * $Id$
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
