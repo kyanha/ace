@@ -23,6 +23,7 @@ package ch.iserver.ace.collaboration.jupiter;
 
 import ch.iserver.ace.collaboration.DiscoveryCallback;
 import ch.iserver.ace.collaboration.DiscoveryResult;
+import ch.iserver.ace.collaboration.RemoteUser;
 import ch.iserver.ace.net.DiscoveryNetworkCallback;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.util.ParameterValidator;
@@ -33,15 +34,23 @@ import ch.iserver.ace.util.ParameterValidator;
  */
 class DiscoveryNetworkCallbackImpl implements DiscoveryNetworkCallback {
 	
+	private final UserRegistry registry;
+	
 	private final DiscoveryCallback callback;
 	
-	DiscoveryNetworkCallbackImpl(DiscoveryCallback callback) {
+	DiscoveryNetworkCallbackImpl(DiscoveryCallback callback, UserRegistry registry) {
 		ParameterValidator.notNull("callback", callback);
+		ParameterValidator.notNull("registry", registry);
 		this.callback = callback;
+		this.registry = registry;
 	}
 	
 	private DiscoveryCallback getCallback() {
 		return callback;
+	}
+	
+	private UserRegistry getUserRegistry() {
+		return registry;
 	}
 	
 	/**
@@ -55,7 +64,8 @@ class DiscoveryNetworkCallbackImpl implements DiscoveryNetworkCallback {
 	 * @see ch.iserver.ace.net.DiscoveryNetworkCallback#userDiscoverySucceeded(ch.iserver.ace.net.RemoteUserProxy)
 	 */
 	public void userDiscoverySucceeded(RemoteUserProxy proxy) {
-		getCallback().discovered(new DiscoveryResult(new RemoteUserImpl(proxy)));
+		RemoteUser user = getUserRegistry().addUser(proxy);
+		getCallback().discovered(new DiscoveryResult(user));
 	}
 
 }

@@ -43,24 +43,36 @@ class InvitationImpl implements Invitation {
 	private final InvitationProxy proxy;
 	
 	/**
+	 * 
+	 */
+	private final UserRegistry registry;
+	
+	/**
 	 * The RemoteUser that invited the local user.
 	 */
-	private RemoteUser inviter;
+	private final RemoteUser inviter;
 	
 	/**
 	 * The RemoteDocument for which the user is invited.
 	 */
-	private RemoteDocument document;
+	private final RemoteDocument document;
 	
 	/**
 	 * Creates a new InvitationImpl object delegating most of the work
 	 * to the passed in InvitationProxy.
 	 * 
 	 * @param proxy the InvitationProxy wrapped by this instance
+	 * @param inviter the inviter
+	 * @param document the RemoteDocument to which the user is invited
 	 */
-	InvitationImpl(InvitationProxy proxy) {
+	InvitationImpl(InvitationProxy proxy, UserRegistry registry, RemoteDocument document) {
 		ParameterValidator.notNull("proxy", proxy);
+		ParameterValidator.notNull("registry", registry);
+		ParameterValidator.notNull("document", document);
 		this.proxy = proxy;
+		this.registry = registry;
+		this.inviter = registry.getUser(proxy.getInviter().getId());
+		this.document = document;
 	}
 	
 	/**
@@ -70,13 +82,14 @@ class InvitationImpl implements Invitation {
 		return proxy;
 	}
 	
+	private UserRegistry getUserRegistry() {
+		return registry;
+	}
+	
 	/**
 	 * @see ch.iserver.ace.collaboration.Invitation#getInviter()
 	 */
 	public RemoteUser getInviter() {
-		if (inviter == null) {
-			inviter = new RemoteUserImpl(getProxy().getInviter());
-		}
 		return inviter;
 	}
 	
@@ -84,9 +97,6 @@ class InvitationImpl implements Invitation {
 	 * @see ch.iserver.ace.collaboration.Invitation#getDocument()
 	 */
 	public RemoteDocument getDocument() {
-		if (document == null) {
-			document = new RemoteDocumentImpl(getProxy().getDocument());
-		}
 		return document;
 	}
 
@@ -95,6 +105,7 @@ class InvitationImpl implements Invitation {
 	 */
 	public Session accept(SessionCallback callback) {
 		SessionImpl session = new SessionImpl(callback);
+		session.setUserRegistry(getUserRegistry());
 		SessionConnection connection = getProxy().accept(session);
 		session.setConnection(connection);
 		return session;

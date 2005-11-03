@@ -23,6 +23,7 @@ package ch.iserver.ace.collaboration.jupiter;
 
 import org.easymock.MockControl;
 
+import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.net.RemoteDocumentProxy;
 
 import junit.framework.TestCase;
@@ -30,31 +31,54 @@ import junit.framework.TestCase;
 public class RemoteDocumentImplTest extends TestCase {
 		
 	public void testEquals() throws Exception {
+		MockControl registryCtrl = MockControl.createControl(UserRegistry.class);
+		UserRegistry registry = (UserRegistry) registryCtrl.getMock();
+		
 		MockControl proxy1Ctrl = MockControl.createControl(RemoteDocumentProxy.class);
 		RemoteDocumentProxy proxy1 = (RemoteDocumentProxy) proxy1Ctrl.getMock();
 		MockControl proxy2Ctrl = MockControl.createControl(RemoteDocumentProxy.class);
 		RemoteDocumentProxy proxy2 = (RemoteDocumentProxy) proxy2Ctrl.getMock();
 		MockControl proxy3Ctrl = MockControl.createControl(RemoteDocumentProxy.class);
 		RemoteDocumentProxy proxy3 = (RemoteDocumentProxy) proxy3Ctrl.getMock();
-
-		RemoteDocumentImpl doc1 = new RemoteDocumentImpl(proxy1);
-		RemoteDocumentImpl doc2 = new RemoteDocumentImpl(proxy2);
-		RemoteDocumentImpl doc3 = new RemoteDocumentImpl(proxy2);
 		
 		// define mock behavior
+		registry.getUser("ABCDEFG");
+		registryCtrl.setDefaultReturnValue(new RemoteUserStub("ABCDEFG"));
+		registry.getUser("ABCDE");
+		registryCtrl.setDefaultReturnValue(new RemoteUserStub("ABCDE"));
+		registry.getUser("ABCDE");
+		registryCtrl.setDefaultReturnValue(new RemoteUserStub("ABCDE"));
+		
 		proxy1.getId();
 		proxy1Ctrl.setDefaultReturnValue("ABCDEFG");
+		proxy1.getPublisher();
+		proxy1Ctrl.setReturnValue(new RemoteUserProxyStub("ABCDEFG"));
+		proxy1.getDocumentDetails();
+		proxy1Ctrl.setDefaultReturnValue(new DocumentDetails("X"));
 		proxy2.getId();
 		proxy2Ctrl.setDefaultReturnValue("ABCDE");
+		proxy2.getPublisher();
+		proxy2Ctrl.setReturnValue(new RemoteUserProxyStub("ABCDE"));
+		proxy2.getDocumentDetails();
+		proxy2Ctrl.setDefaultReturnValue(new DocumentDetails("Y"));
 		proxy3.getId();
 		proxy3Ctrl.setDefaultReturnValue("ABCDE");
+		proxy3.getPublisher();
+		proxy3Ctrl.setReturnValue(new RemoteUserProxyStub("ABCDE"));
+		proxy3.getDocumentDetails();
+		proxy3Ctrl.setDefaultReturnValue(new DocumentDetails("Z"));
 		
 		// replay
+		registryCtrl.replay();
 		proxy1Ctrl.replay();
 		proxy2Ctrl.replay();
 		proxy3Ctrl.replay();
 		
 		// test
+		RemoteDocumentImpl doc1 = new RemoteDocumentImpl(proxy1, registry);
+		RemoteDocumentImpl doc2 = new RemoteDocumentImpl(proxy2, registry);
+		RemoteDocumentImpl doc3 = new RemoteDocumentImpl(proxy3, registry);
+
 		assertFalse(doc1.equals(doc2));
 		assertFalse(doc3.equals(doc1));
 		assertTrue(doc2.equals(doc3));
@@ -63,6 +87,7 @@ public class RemoteDocumentImplTest extends TestCase {
 		assertFalse(doc3.equals(doc1));
 		
 		// verify
+		registryCtrl.verify();
 		proxy1Ctrl.verify();
 		proxy2Ctrl.verify();
 		proxy3Ctrl.verify();

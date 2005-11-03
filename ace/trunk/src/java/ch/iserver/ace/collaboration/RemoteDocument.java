@@ -21,7 +21,8 @@
 
 package ch.iserver.ace.collaboration;
 
-import ch.iserver.ace.DocumentDetails;
+import java.beans.PropertyChangeListener;
+
 
 /**
  * The RemoteDocument interface provides methods applicable to
@@ -29,7 +30,7 @@ import ch.iserver.ace.DocumentDetails;
  * which allows to send a join request to the document.
  */
 public interface RemoteDocument {
-	
+		
 	/**
 	 * Gets the unique identifier of the document.
 	 * 
@@ -37,12 +38,7 @@ public interface RemoteDocument {
 	 */
 	String getId();
 	
-	/**
-	 * Gets display information about the remote document.
-	 * 
-	 * @return a DocumentDetails object
-	 */
-	DocumentDetails getDocumentDetails();
+	String getTitle();
 	
 	/**
 	 * Gets the RemoteUser object for the publisher of the document.
@@ -57,5 +53,15 @@ public interface RemoteDocument {
 	 * @param callback the JoinCallback for join related callbacks
 	 */
 	void join(JoinCallback callback);
+
+	/**
+	 * @param listener
+	 */
+	void addPropertyChangeListener(PropertyChangeListener listener);
+	
+	/**
+	 * @param listener
+	 */
+	void removePropertyChangeListener(PropertyChangeListener listener);
 
 }

@@ -38,15 +38,7 @@ public interface DocumentListener extends EventListener {
 	 * @param document the discovered document
 	 */
 	void documentDiscovered(RemoteDocument document);
-	
-	/**
-	 * Notifies the listener that the details of a RemoteDocument have been
-	 * changed.
-	 * 
-	 * @param document the document whose details changed
-	 */
-	void documentDetailsChanged(RemoteDocument document);
-	
+		
 	/**
 	 * Notifies the listener that a RemoteDocument was discarded, that is it is
 	 * no longer available.

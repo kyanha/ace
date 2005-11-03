@@ -38,15 +38,7 @@ public interface UserListener extends EventListener {
 	 * @param user the discovered user
 	 */
 	void userDiscovered(RemoteUser user);
-	
-	/**
-	 * Notifies the listener that the given RemoteUser's user details
-	 * changed.
-	 * 
-	 * @param user the user whose user details changed
-	 */
-	void userDetailsChanged(RemoteUser user);
-	
+		
 	/**
 	 * Notifies the listener that the given remote user is no longer available.
 	 * Do not call any methods on this object that make network calls (see

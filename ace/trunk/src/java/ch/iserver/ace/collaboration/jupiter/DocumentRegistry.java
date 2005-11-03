@@ -21,39 +21,17 @@
 
 package ch.iserver.ace.collaboration.jupiter;
 
-import java.util.Collection;
+import ch.iserver.ace.net.RemoteDocumentProxy;
 
-import ch.iserver.ace.UserDetails;
-import ch.iserver.ace.net.DocumentServerLogic;
-import ch.iserver.ace.net.RemoteUserProxy;
-
-class RemoteUserProxyStub implements RemoteUserProxy {
-	final String id;
-	public RemoteUserProxyStub(String id) {
-		this.id = id;
-	}
-	public String getId() {
-		return id;
-	}
-	public Collection getSharedDocuments() {
-		return null;
-	}
-	public UserDetails getUserDetails() {
-		return null;
-	}
-	public void invite(DocumentServerLogic logic) {
-		// ignore
-	}
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		} else if (obj instanceof RemoteUserProxy) {
-			RemoteUserProxy user = (RemoteUserProxy) obj;
-			return id.equals(user.getId());
-		}
-		return super.equals(obj);
-	}
-	public String toString() {
-		return getClass().getName() + "[id=" + id + "]";
-	}
+/**
+ *
+ */
+public interface DocumentRegistry {
+		
+	MutableRemoteDocument addDocument(RemoteDocumentProxy proxy);
+	
+	MutableRemoteDocument getDocument(String id);
+	
+	MutableRemoteDocument removeDocument(RemoteDocumentProxy proxy);
+	
 }

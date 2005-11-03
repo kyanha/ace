@@ -282,16 +282,24 @@ public class PublishedSessionImplTest extends TestCase {
 	}
 	
 	public void testSendJoinedLeft() throws Exception {
+		MockControl registryCtrl = MockControl.createControl(UserRegistry.class);
+		UserRegistry registry = (UserRegistry) registryCtrl.getMock();
+		
 		MockControl logicCtrl = MockControl.createControl(ServerLogic.class);
 		ServerLogic logic = (ServerLogic) logicCtrl.getMock();
 		
 		PublishedSessionImpl impl = new PublishedSessionImpl(callback);
+		impl.setUserRegistry(registry);
 		RemoteUserProxy proxy1 = new RemoteUserProxyStub("X");
 		RemoteUserProxy proxy2 = new RemoteUserProxyStub("Y");
 		Participant participant1 = new ParticipantImpl(1, new RemoteUserStub("X"));
 		Participant participant2 = new ParticipantImpl(2, new RemoteUserStub("Y"));
 
 		// define mock behavior
+		registry.addUser(new RemoteUserProxyStub("X"));
+		registryCtrl.setReturnValue(new RemoteUserStub("X"));
+		registry.addUser(new RemoteUserProxyStub("Y"));
+		registryCtrl.setReturnValue(new RemoteUserStub("Y"));
 		logic.getPublisherPort();
 		logicCtrl.setReturnValue(null);
 		callback.participantJoined(participant1);
@@ -300,6 +308,7 @@ public class PublishedSessionImplTest extends TestCase {
 		callback.participantLeft(participant2, Participant.KICKED);
 		
 		// replay
+		registryCtrl.replay();
 		logicCtrl.replay();
 		callbackCtrl.replay();
 		
@@ -320,6 +329,7 @@ public class PublishedSessionImplTest extends TestCase {
 		assertNull(impl.getParticipant(0));
 		
 		// verify
+		registryCtrl.verify();
 		logicCtrl.verify();
 		callbackCtrl.verify();
 	}

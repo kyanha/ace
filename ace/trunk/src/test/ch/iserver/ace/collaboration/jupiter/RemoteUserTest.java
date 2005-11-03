@@ -25,6 +25,7 @@ import junit.framework.TestCase;
 
 import org.easymock.MockControl;
 
+import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.net.RemoteUserProxy;
 
 public class RemoteUserTest extends TestCase {
@@ -36,18 +37,20 @@ public class RemoteUserTest extends TestCase {
 		RemoteUserProxy proxy2 = (RemoteUserProxy) proxy2Ctrl.getMock();
 		MockControl proxy3Ctrl = MockControl.createControl(RemoteUserProxy.class);
 		RemoteUserProxy proxy3 = (RemoteUserProxy) proxy3Ctrl.getMock();
-
-		RemoteUserImpl user1 = new RemoteUserImpl(proxy1);
-		RemoteUserImpl user2 = new RemoteUserImpl(proxy2);
-		RemoteUserImpl user3 = new RemoteUserImpl(proxy2);
 		
 		// define mock behavior
 		proxy1.getId();
 		proxy1Ctrl.setDefaultReturnValue("ABCDEFG");
+		proxy1.getUserDetails();
+		proxy1Ctrl.setDefaultReturnValue(new UserDetails("X"));
 		proxy2.getId();
 		proxy2Ctrl.setDefaultReturnValue("ABCDE");
+		proxy2.getUserDetails();
+		proxy2Ctrl.setDefaultReturnValue(new UserDetails("Y"));
 		proxy3.getId();
 		proxy3Ctrl.setDefaultReturnValue("ABCDE");
+		proxy3.getUserDetails();
+		proxy3Ctrl.setDefaultReturnValue(new UserDetails("Z"));
 		
 		// replay
 		proxy1Ctrl.replay();
@@ -55,6 +58,10 @@ public class RemoteUserTest extends TestCase {
 		proxy3Ctrl.replay();
 		
 		// test
+		RemoteUserImpl user1 = new RemoteUserImpl(proxy1);
+		RemoteUserImpl user2 = new RemoteUserImpl(proxy2);
+		RemoteUserImpl user3 = new RemoteUserImpl(proxy2);
+
 		assertFalse(user1.equals(user2));
 		assertFalse(user3.equals(user1));
 		assertTrue(user2.equals(user3));

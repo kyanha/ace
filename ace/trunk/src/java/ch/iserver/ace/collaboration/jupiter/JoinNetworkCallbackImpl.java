@@ -40,15 +40,22 @@ class JoinNetworkCallbackImpl implements JoinNetworkCallback {
 	private final JoinCallback callback;
 	
 	/**
+	 * 
+	 */
+	private final UserRegistry registry;
+	
+	/**
 	 * Creates a new JoinNetworkCallbackImpl wrapping the given JoinCallback
 	 * from the application layer.
 	 * 
 	 * @param joinCallback the JoinCallback passed in from the application
 	 *                     layer
 	 */
-	JoinNetworkCallbackImpl(JoinCallback joinCallback) {
+	JoinNetworkCallbackImpl(JoinCallback joinCallback, UserRegistry registry) {
 		ParameterValidator.notNull("joinCallback", joinCallback);
+		ParameterValidator.notNull("registry", registry);
 		this.callback = joinCallback;
+		this.registry = registry;
 	}
 
 	/**
@@ -57,12 +64,20 @@ class JoinNetworkCallbackImpl implements JoinNetworkCallback {
 	private JoinCallback getCallback() {
 		return callback;
 	}
+	
+	/**
+	 * @return
+	 */
+	private UserRegistry getUserRegistry() {
+		return registry;
+	}
 
 	/**
 	 * @see ch.iserver.ace.net.JoinNetworkCallback#accepted(ch.iserver.ace.net.SessionConnection)
 	 */
 	public SessionConnectionCallback accepted(SessionConnection connection) {
 		SessionImpl session = new SessionImpl();
+		session.setUserRegistry(getUserRegistry());
 		session.setConnection(connection);
 		session.setSessionCallback(getCallback().accepted(session));
 		return session;

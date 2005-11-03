@@ -21,45 +21,13 @@
 
 package ch.iserver.ace.collaboration.jupiter;
 
-import java.beans.PropertyChangeListener;
-import java.util.Collection;
-
-import ch.iserver.ace.collaboration.PublishedSession;
 import ch.iserver.ace.collaboration.RemoteUser;
 
-class RemoteUserStub implements MutableRemoteUser {
-	final String id;
-	public RemoteUserStub(String id) {
-		this.id = id;
-	}
-	public String getId() {
-		return id;
-	}
-	public Collection getSharedDocuments() {
-		return null;
-	}
-	public void setName(String userName) {
-		// ignore
-	}
-	public String getName() {
-		return null;
-	}
-	public void invite(PublishedSession session) {
-		// ignore
-	}
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		} else if (obj instanceof RemoteUser) {
-			RemoteUser user = (RemoteUser) obj;
-			return id.equals(user.getId());
-		}
-		return super.equals(obj);
-	}
-	public void addPropertyChangeListener(PropertyChangeListener listener) {
-		
-	}
-	public void removePropertyChangeListener(PropertyChangeListener listener) {
-		
-	}
+/**
+ *
+ */
+public interface MutableRemoteUser extends RemoteUser {
+	
+	void setName(String userName);
+	
 }

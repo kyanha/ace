@@ -60,15 +60,29 @@ abstract class AbstractSession implements Session {
 	private final Map participantMap = new HashMap();
 	
 	/**
+	 * 
+	 */
+	private UserRegistry userRegistry;
+	
+	/**
 	 * Creates a new AbstractSession that uses the given Algorithm.
 	 * 
 	 * @param algorithm the Algorithm used by the Session
+	 * @param lock the Lock used to protect sensitive sections
 	 */
 	protected AbstractSession(AlgorithmWrapper algorithm, Lock lock) {
 		ParameterValidator.notNull("algorithm", algorithm);
 		ParameterValidator.notNull("lock", lock);
 		this.lock = lock;
 		this.algorithm = algorithm;
+	}
+	
+	public void setUserRegistry(UserRegistry registry) {
+		this.userRegistry = registry;
+	}
+	
+	protected UserRegistry getUserRegistry() {
+		return userRegistry;
 	}
 	
 	/**
@@ -159,7 +173,7 @@ abstract class AbstractSession implements Session {
 	 * @return a Participant instance
 	 */
 	protected Participant createParticipant(int participantId, RemoteUserProxy proxy) {
-		return new ParticipantImpl(participantId, new RemoteUserImpl(proxy));
+		return new ParticipantImpl(participantId, getUserRegistry().addUser(proxy));
 	}
 
 }

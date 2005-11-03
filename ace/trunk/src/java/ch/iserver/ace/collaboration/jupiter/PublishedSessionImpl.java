@@ -182,7 +182,7 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 	 */
 	public void sendParticipantJoined(int participantId, RemoteUserProxy proxy) {
 		Participant participant = createParticipant(participantId, proxy);
-		addParticipant(createParticipant(participantId, proxy));
+		addParticipant(participant);
 		getPublisherConnection().participantJoined(participant);
 	}
 			

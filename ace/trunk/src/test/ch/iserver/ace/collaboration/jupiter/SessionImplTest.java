@@ -280,16 +280,24 @@ public class SessionImplTest extends TestCase {
 	public void testJoinLeave() throws Exception {
 		MockControl callbackCtrl = MockControl.createControl(SessionCallback.class);
 		SessionCallback callback = (SessionCallback) callbackCtrl.getMock();
-
+		
+		MockControl registryCtrl = MockControl.createControl(UserRegistry.class);
+		UserRegistry registry = (UserRegistry) registryCtrl.getMock();
+		
 		SessionImpl impl = new SessionImpl();
 		impl.setSessionCallback(callback);
+		impl.setUserRegistry(registry);
 		
 		// define mock behavior
 		callback.participantJoined(new ParticipantImpl(1, new RemoteUserStub("1")));
 		callback.participantLeft(new ParticipantImpl(1, new RemoteUserStub("1")), Participant.LEFT);
 		
+		registry.addUser(new RemoteUserProxyStub("1"));
+		registryCtrl.setDefaultReturnValue(new RemoteUserStub("1"));
+		
 		// replay
 		callbackCtrl.replay();
+		registryCtrl.replay();
 		
 		// test
 		impl.participantJoined(1, new RemoteUserProxyStub("1"));
@@ -300,6 +308,7 @@ public class SessionImplTest extends TestCase {
 		
 		// verify
 		callbackCtrl.verify();
+		registryCtrl.verify();
 	}
 
 }
