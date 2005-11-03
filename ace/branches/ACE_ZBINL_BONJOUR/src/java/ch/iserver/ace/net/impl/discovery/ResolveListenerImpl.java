@@ -31,7 +31,7 @@ import com.apple.dnssd.TXTRecord;
 /**
  *
  */
-public class ResolveListenerImpl extends BaseListenerImpl implements ResolveListener {
+class ResolveListenerImpl extends BaseListenerImpl implements ResolveListener {
 
 	private static Logger LOG = Logger.getLogger(ResolveListenerImpl.class);
 	

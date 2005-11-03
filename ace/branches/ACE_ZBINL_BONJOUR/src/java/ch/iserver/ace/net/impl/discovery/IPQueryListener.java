@@ -30,7 +30,7 @@ import com.apple.dnssd.DNSSDService;
 /**
  *
  */
-public class IPQueryListener extends AbstractQueryListener {
+class IPQueryListener extends AbstractQueryListener {
 
 	private static Logger LOG = Logger.getLogger(IPQueryListener.class);
 	

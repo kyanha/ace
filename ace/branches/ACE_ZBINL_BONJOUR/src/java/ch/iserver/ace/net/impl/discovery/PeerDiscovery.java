@@ -26,7 +26,7 @@ import java.util.Properties;
  * 
  *
  */
-public interface PeerDiscovery {
+interface PeerDiscovery {
 
 	/**
 	 * Browses the local network for other services of the same type, i.e.
