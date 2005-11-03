@@ -46,7 +46,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import ch.iserver.ace.collaboration.RemoteUser;
 import ch.iserver.ace.net.RemoteDocumentProxy;
 import ch.iserver.ace.util.ParameterValidator;
 
@@ -74,6 +73,9 @@ class DocumentRegistryImpl implements DocumentRegistry {
 		this.registry = registry;
 	}
 	
+	/**
+	 * @return
+	 */
 	protected UserRegistry getUserRegistry() {
 		return registry;
 	}
