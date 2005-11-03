@@ -35,6 +35,7 @@ public class JoinCallbackImpl implements JoinCallback {
 	public SessionCallback accepted(Session session) {
 		//session.addParticipantListener(new ParticipantController());
 		//return new SessionCallbackImpl();
+		return null;
 	}
 	
 	public void rejected() {
