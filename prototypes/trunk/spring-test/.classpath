@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="var" path="MAVEN2/springframework/spring-context/1.2.5/spring-context-1.2.5.jar"/>
+	<classpathentry kind="var" path="MAVEN2/springframework/spring-beans/1.2.5/spring-beans-1.2.5.jar"/>
+	<classpathentry kind="var" path="MAVEN2/springframework/spring-core/1.2.5/spring-core-1.2.5.jar"/>
+	<classpathentry kind="var" path="MAVEN2/commons-logging/commons-logging/1.0.4/commons-logging-1.0.4.jar"/>
+	<classpathentry kind="var" path="MAVEN2/springframework/spring-aop/1.2.5/spring-aop-1.2.5.jar"/>
+	<classpathentry kind="var" path="MAVEN2/backport-util-concurrent/backport-util-concurrent/1.1_01/backport-util-concurrent-1.1_01.jar"/>
+	<classpathentry kind="var" path="MAVEN2/oro/oro/2.0.8/oro-2.0.8.jar"/>
+	<classpathentry kind="var" path="MAVEN2/log4j/log4j/1.2.12/log4j-1.2.12.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
