@@ -29,9 +29,6 @@ import ch.iserver.ace.UserDetails;
 public interface Discovery {
 	
 	public static final String KEY_DISCOVERY_PORT = "discovery.port";
-
-	
-	void setDiscoveryCallback(DiscoveryCallback callback);
 	
 	/**
 	 * Sets the UUID for the local user.
@@ -40,6 +37,10 @@ public interface Discovery {
 	 */
 	void setUserId(String uuid);
 	
+	/**
+	 * 
+	 * @param details
+	 */
 	void setUserDetails(UserDetails details);
 	
 	/**
@@ -51,6 +52,9 @@ public interface Discovery {
 	 */
 	void execute();
 	
+	/**
+	 *
+	 */
 	void abort();
 	
 }

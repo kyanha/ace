@@ -68,10 +68,9 @@ public class NetworkServiceImpl implements NetworkService {
 	 */
 	private void launchDiscovery() {
 		DiscoveryFactory factory = DiscoveryFactory.getInstance();
-		discovery = factory.createDiscovery();
+		DiscoveryCallback callback = new DiscoveryCallbackImpl(getCallback());
+		discovery = factory.createDiscovery(callback);
 		discovery.setUserId(userId);
-		DiscoveryCallback dc = new DiscoveryCallbackImpl(getCallback());
-		discovery.setDiscoveryCallback(dc);
 		discovery.execute();
 	}
 	

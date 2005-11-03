@@ -18,57 +18,48 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+
 package ch.iserver.ace.net.impl.discovery;
 
-import java.util.Properties;
-
 import org.apache.log4j.Logger;
-
-import ch.iserver.ace.util.ParameterValidator;
 
 import com.apple.dnssd.BrowseListener;
 import com.apple.dnssd.DNSSD;
 import com.apple.dnssd.DNSSDService;
+import com.apple.dnssd.ResolveListener;
 
 /**
- * 
  *
  */
-class PeerDiscoveryImpl implements PeerDiscovery {
-	
-	private static Logger LOG = Logger.getLogger(PeerDiscoveryImpl.class);
-	
-	private DNSSDService browser;
-	private BrowseListener listener;
-	
-	/**
-	 * 
-	 */
-	public PeerDiscoveryImpl(BrowseListener listener) {
-		ParameterValidator.notNull("listener", listener);
-		this.listener = listener;
-	}
+class BrowseListenerImpl extends BaseListenerImpl implements BrowseListener {
 
+	private static Logger LOG = Logger.getLogger(BrowseListenerImpl.class);
+	
+	private ResolveListener resolver;
+	
+	public BrowseListenerImpl(DiscoveryCallbackAdapter adapter, ResolveListener resolver) {
+		super(adapter);
+		this.resolver = resolver;
+	}
+	
 	/**
 	 * @inheritDoc
 	 */
-	public void browse(final Properties props) {
-		ParameterValidator.notNull("properties", props);
+	public void serviceFound(DNSSDService browser, int flags, int ifIndex, String serviceName, String regType, String domain) {
 		try {
-			browser = DNSSD.browse(0, 0, 
-					(String)props.get(Bonjour.KEY_REGISTRATION_TYPE), 
-					"", 
-					listener);
+			DNSSD.resolve(flags, ifIndex, serviceName, regType, domain, resolver);
 		} catch (Exception e) {
 			//TODO: retry strategy
-			LOG.error("Browsing failed ["+e.getMessage()+"]");
+			LOG.error("Resolve failed ["+e.getMessage()+"]");
 		}
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public void stop() {
-		browser.stop();
+	public void serviceLost(DNSSDService browser, int flags, int ifIndex,
+			String serviceName, String regType, String domain) {
+		adapter.userDiscarded(serviceName);
 	}
+
 }

@@ -18,27 +18,43 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+
 package ch.iserver.ace.net.impl.discovery;
 
-import java.util.Properties;
+import java.net.InetAddress;
+
+import org.apache.log4j.Logger;
+
+import com.apple.dnssd.DNSSDService;
 
 /**
- * 
  *
  */
-public interface PeerDiscovery {
+public class IPQueryListener extends AbstractQueryListener {
 
-	/**
-	 * Browses the local network for other services of the same type, i.e.
-	 * other users.
-	 * 
-	 * @param properties the properties for the DNSSD call.
-	 * @see com.apple.dnssd.DNSSD
-	 */
-	void browse(Properties properties);
+	private static Logger LOG = Logger.getLogger(IPQueryListener.class);
 	
 	/**
-	 * Stops the Bonjour peer discovery process.
+	 * 
+	 * @param adapter
 	 */
-	void stop();
+	public IPQueryListener(DiscoveryCallbackAdapter adapter) {
+		super(adapter);
+	}
+	
+	/**
+	 * @inherit
+	 */
+	protected void processQuery(DNSSDService query, int flags, int ifIndex,
+			String fullName, int rrtype, int rrclass, byte[] rdata, int ttl) {
+		InetAddress address = null;
+		try {
+			address = InetAddress.getByAddress(rdata);
+		} catch (Exception e) {
+			LOG.error("Could not resolve address ["+e.getMessage()+"]");
+		}
+		String serviceName = Bonjour.getServiceName(fullName);
+		adapter.userAddressResolved(serviceName, address);
+		query.stop();
+	}
 }

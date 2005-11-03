@@ -42,6 +42,6 @@ public abstract class DiscoveryFactory {
 		return instance;
 	}
 	
-	public abstract Discovery createDiscovery();
+	public abstract Discovery createDiscovery(DiscoveryCallback callback);
 
 }

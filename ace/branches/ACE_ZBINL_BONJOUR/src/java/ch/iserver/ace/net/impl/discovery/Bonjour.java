@@ -24,7 +24,6 @@ import java.util.Properties;
 
 import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.net.impl.Discovery;
-import ch.iserver.ace.net.impl.DiscoveryCallback;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
@@ -37,6 +36,8 @@ public class Bonjour implements Discovery {
 	public static final String KEY_PROTOCOL_VERSION = "protocol.version";
 	public static final String KEY_USER = "user.name";
 	public static final String KEY_USERID = "user.id";
+	
+	public static final String SERVICE_NAME_SEPARATOR = "._";
 	
 	//type values for resources and queries
 	//constants defined as in nameser.h
@@ -72,13 +73,6 @@ public class Bonjour implements Discovery {
 	/**
 	 * @inheritDoc
 	 */
-	public void setDiscoveryCallback(DiscoveryCallback callback) {
-		peerDiscovery.setDiscoveryCallbackAdapter(new DiscoveryCallbackAdapter(callback));
-	}
-	
-	/**
-	 * @inheritDoc
-	 */
 	//TODO: integration test with userId (from Bonjour client to UserRegistrationImpl)
 	public void setUserId(String uuid) {
 		ParameterValidator.notNull("uuid", uuid);
@@ -94,6 +88,15 @@ public class Bonjour implements Discovery {
 		if (registration.isRegistered()) {
 			registration.updateUserDetails(details);
 		}
+	}
+	
+	/**
+	 * 
+	 * @param fullName
+	 * @return
+	 */
+	public static String getServiceName(String fullName) {
+		return fullName.substring(0, fullName.indexOf(SERVICE_NAME_SEPARATOR));
 	}
 	
 

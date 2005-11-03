@@ -18,57 +18,43 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package ch.iserver.ace.net.impl.discovery;
 
-import java.util.Properties;
+package ch.iserver.ace.net.impl.discovery;
 
 import org.apache.log4j.Logger;
 
-import ch.iserver.ace.util.ParameterValidator;
-
-import com.apple.dnssd.BrowseListener;
-import com.apple.dnssd.DNSSD;
 import com.apple.dnssd.DNSSDService;
+import com.apple.dnssd.TXTRecord;
 
 /**
- * 
  *
  */
-class PeerDiscoveryImpl implements PeerDiscovery {
-	
-	private static Logger LOG = Logger.getLogger(PeerDiscoveryImpl.class);
-	
-	private DNSSDService browser;
-	private BrowseListener listener;
-	
-	/**
-	 * 
-	 */
-	public PeerDiscoveryImpl(BrowseListener listener) {
-		ParameterValidator.notNull("listener", listener);
-		this.listener = listener;
-	}
+class TXTQueryListener extends AbstractQueryListener {
 
+	private static Logger LOG = Logger.getLogger(TXTQueryListener.class);
+	
+	public TXTQueryListener(DiscoveryCallbackAdapter adapter) {
+		super(adapter);
+	}
+	
 	/**
 	 * @inheritDoc
 	 */
-	public void browse(final Properties props) {
-		ParameterValidator.notNull("properties", props);
-		try {
-			browser = DNSSD.browse(0, 0, 
-					(String)props.get(Bonjour.KEY_REGISTRATION_TYPE), 
-					"", 
-					listener);
-		} catch (Exception e) {
-			//TODO: retry strategy
-			LOG.error("Browsing failed ["+e.getMessage()+"]");
+	protected void processQuery(DNSSDService query, int flags, int ifIndex,
+			String fullName, int rrtype, int rrclass, byte[] rdata, int ttl) {
+		if (ttl > 0) {
+			String serviceName = Bonjour.getServiceName(fullName);
+			if (adapter.isServiceKnown(serviceName)) {
+				TXTRecord t = new TXTRecord(rdata);
+				String userName = TXTRecordProxy.get(Bonjour.KEY_USER, t);
+				adapter.userNameChanged(serviceName, userName);
+			} else {
+				LOG.warn("TXT record received for unknown user ["+serviceName+"]");
+			}
+		} else {
+			LOG.warn("TXT record update ignored.");
 		}
+
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	public void stop() {
-		browser.stop();
-	}
 }

@@ -18,27 +18,29 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+
 package ch.iserver.ace.net.impl.discovery;
 
-import java.util.Properties;
+import com.apple.dnssd.BaseListener;
+import com.apple.dnssd.DNSSDService;
 
 /**
- * 
  *
  */
-public interface PeerDiscovery {
+abstract class BaseListenerImpl implements BaseListener {
 
-	/**
-	 * Browses the local network for other services of the same type, i.e.
-	 * other users.
-	 * 
-	 * @param properties the properties for the DNSSD call.
-	 * @see com.apple.dnssd.DNSSD
-	 */
-	void browse(Properties properties);
+	protected DiscoveryCallbackAdapter adapter;
+	
+	public BaseListenerImpl(DiscoveryCallbackAdapter adapter) {
+		this.adapter = adapter;
+	}
 	
 	/**
-	 * Stops the Bonjour peer discovery process.
+	 * @see com.apple.dnssd.BaseListener#operationFailed(com.apple.dnssd.DNSSDService, int)
 	 */
-	void stop();
+	public void operationFailed(DNSSDService arg0, int arg1) {
+		// TODO: error handling
+
+	}
+
 }

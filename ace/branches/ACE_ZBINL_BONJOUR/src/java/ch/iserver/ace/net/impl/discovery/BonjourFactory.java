@@ -25,18 +25,33 @@ import java.util.Properties;
 
 import ch.iserver.ace.ApplicationError;
 import ch.iserver.ace.net.impl.Discovery;
+import ch.iserver.ace.net.impl.DiscoveryCallback;
 import ch.iserver.ace.net.impl.DiscoveryFactory;
+
+import com.apple.dnssd.BrowseListener;
+import com.apple.dnssd.ResolveListener;
 
 public class BonjourFactory extends DiscoveryFactory {
 	
-	public Discovery createDiscovery() {
+	public Discovery createDiscovery(DiscoveryCallback callback) {
 		Properties props = loadConfig();
 		UserRegistration registration = new UserRegistrationImpl();
-		PeerDiscovery discovery = new PeerDiscoveryImpl();
+		PeerDiscovery discovery = createPeerDiscovery(callback);
 		Bonjour b = new Bonjour(registration, discovery, props);
 		return b;
 	}
 	
+	private PeerDiscovery createPeerDiscovery(DiscoveryCallback callback) {
+		//TODO: load classes via spring framework?
+		DiscoveryCallbackAdapter adapter = new DiscoveryCallbackAdapter(callback);
+		AbstractQueryListener ipListener = new IPQueryListener(adapter);
+		AbstractQueryListener txtListener = new TXTQueryListener(adapter);
+		ResolveListener resolveListener = new ResolveListenerImpl(adapter, ipListener, txtListener);
+		BrowseListener browseListener = new BrowseListenerImpl(adapter, resolveListener);
+		PeerDiscovery discovery = new PeerDiscoveryImpl(browseListener);
+		return discovery;
+	}
+
 	/**
 	 * Loads the properties for Bonjour zeroconf.
 	 */
