@@ -26,9 +26,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import ch.iserver.ace.collaboration.Participant;
 
 
-public class ParticipationColorManager implements ParticipationListener {
+
+public class ParticipationColorManager {
 
 	private Map participantColor;
 	private int participantCount = 0;
@@ -40,28 +42,28 @@ public class ParticipationColorManager implements ParticipationListener {
 	};
 
 	public ParticipationColorManager() {
-		Map participantColor = Collections.synchronizedMap(new HashMap());
+		Map participantColor = new HashMap();//Collections.synchronizedMap(new HashMap());
 	}
 	
 	public void addParticipant(Participant participant) {
-		participantColor.put(participant.getParticipantId(), defaultColors[participantCount++%8]);
+		participantColor.put("" + participant.getParticipantId(), defaultColors[participantCount++%8]);
 	}
 	
 	public void removeParticipant(Participant participant) {
-		participantColor.remove(participant.getParticipantId());
+		participantColor.remove("" + participant.getParticipantId());
 	}
 	
-	public void userJoined(ParticipationEvent event) {
+	/*public void userJoined(ParticipationEvent event) {
 		addParticipant(event.getParticipant());
 	}
 	
 	public void userLeft(ParticipationEvent event) {
 		removeParticipant(event.getParticipant());
-	}
+	}*/
 	
 	public Color getHighlightColor(Participant participant) {
-		if(participantColor.containsKey(participant.getParticipantId())) {
-			return (Color)participantColor.get(participant.getParticipantId());
+		if(participantColor.containsKey("" + participant.getParticipantId())) {
+			return (Color)participantColor.get("" + participant.getParticipantId());
 		}
 		return new Color(0xFF, 0xFF, 0xFF);
 	}
