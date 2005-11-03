@@ -29,8 +29,8 @@ import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.collaboration.jupiter.AlgorithmWrapper;
 import ch.iserver.ace.collaboration.jupiter.AlgorithmWrapperImpl;
 import ch.iserver.ace.net.ParticipantConnection;
-import ch.iserver.ace.util.BlockingQueue;
 import ch.iserver.ace.util.ParameterValidator;
+import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
 
 class ParticipantProxyImpl implements ParticipantProxy {
 	

@@ -23,10 +23,10 @@ package ch.iserver.ace.collaboration.jupiter.server;
 
 import org.apache.log4j.Logger;
 
-import ch.iserver.ace.util.BlockingQueue;
 import ch.iserver.ace.util.Lock;
 import ch.iserver.ace.util.ParameterValidator;
 import ch.iserver.ace.util.Worker;
+import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
 
 /**
  * Worker thread that serializes processing of incoming requests. This is

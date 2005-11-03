@@ -21,11 +21,12 @@
 
 package ch.iserver.ace.collaboration.jupiter.server;
 
+import junit.framework.TestCase;
+
 import org.easymock.MockControl;
 
-import ch.iserver.ace.util.BlockingQueue;
-import ch.iserver.ace.util.LinkedBlockingQueue;
-import junit.framework.TestCase;
+import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
+import edu.emory.mathcs.backport.java.util.concurrent.LinkedBlockingQueue;
 
 public class DispatcherTest extends TestCase {
 	

@@ -25,8 +25,8 @@ import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.net.ParticipantPort;
-import ch.iserver.ace.util.BlockingQueue;
 import ch.iserver.ace.util.ParameterValidator;
+import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
 
 /**
  * 

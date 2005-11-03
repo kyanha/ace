@@ -33,7 +33,7 @@ import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.jupiter.JupiterRequest;
 import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.text.InsertOperation;
-import ch.iserver.ace.util.BlockingQueue;
+import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
 
 public class ParticipantProxyImplTest extends TestCase {
 
@@ -54,6 +54,7 @@ public class ParticipantProxyImplTest extends TestCase {
 		CaretUpdate update = new CaretUpdate(1, 2);
 		CaretUpdateMessage message = new CaretUpdateMessage(0, null, update);
 		queue.add(new CaretUpdateDispatcherCommand(connection, 0, message));
+		queueCtrl.setReturnValue(true);
 		
 		algorithm.getSiteId();
 		algorithmCtrl.setReturnValue(1);
@@ -89,6 +90,7 @@ public class ParticipantProxyImplTest extends TestCase {
 		Operation operation = new InsertOperation(0, "x");
 		Request request = new JupiterRequest(0, null, operation);
 		queue.add(new RequestDispatcherCommand(connection, 0, request));
+		queueCtrl.setReturnValue(true);
 		
 		algorithm.generateRequest(operation);
 		algorithmCtrl.setReturnValue(request);

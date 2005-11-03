@@ -22,9 +22,9 @@
 package ch.iserver.ace.collaboration.jupiter;
 
 import ch.iserver.ace.collaboration.PublishedSessionCallback;
-import ch.iserver.ace.util.BlockingQueue;
 import ch.iserver.ace.util.ParameterValidator;
 import ch.iserver.ace.util.Worker;
+import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
 
 /**
  * Worker thread that is used to decouple the server part of a published
