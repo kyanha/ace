@@ -42,7 +42,7 @@ public class ParticipationColorManager {
 	};
 
 	public ParticipationColorManager() {
-		Map participantColor = new HashMap();//Collections.synchronizedMap(new HashMap());
+		participantColor = new HashMap();//Collections.synchronizedMap(new HashMap());
 	}
 	
 	public void addParticipant(Participant participant) {
