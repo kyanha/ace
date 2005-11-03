@@ -81,7 +81,7 @@ public interface SessionConnectionCallback {
 	 * @param participantId the participant id of the joined participant
 	 * @param proxy  the RemoteUserProxy for accesing the joined participant
 	 */
-	void userJoined(int participantId, RemoteUserProxy proxy);
+	void participantJoined(int participantId, RemoteUserProxy proxy);
 	
 	/**
 	 * This method is called by the network layer to notify that the specified
@@ -90,6 +90,6 @@ public interface SessionConnectionCallback {
 	 * @param participantId the participant id of the participant that left
 	 * @param reason the reason why the participant left
 	 */
-	void userLeaved(int participantId, int reason);
+	void participantLeft(int participantId, int reason);
 	
 }

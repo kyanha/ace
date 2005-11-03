@@ -121,7 +121,6 @@ public class JupiterRequest implements Request {
 	}
 	
 	private boolean nullSafeEquals(Object a, Object b) {
-		System.out.println(a + " equals " + b);
 		if (a == b) {
 			return true;
 		} else if (a == null || b == null) {

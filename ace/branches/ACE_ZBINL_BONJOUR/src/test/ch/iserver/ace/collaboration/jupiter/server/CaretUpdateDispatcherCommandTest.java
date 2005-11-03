@@ -40,7 +40,7 @@ public class CaretUpdateDispatcherCommandTest extends TestCase {
 						connection, 1, message);
 		
 		// define mock behavior
-		connection.sendCaretUpdate(1, message);
+		connection.sendCaretUpdateMessage(1, message);
 		
 		// replay
 		connectionCtrl.replay();

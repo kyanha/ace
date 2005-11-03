@@ -21,6 +21,8 @@
 
 package ch.iserver.ace.collaboration.jupiter.server;
 
+import org.apache.log4j.Logger;
+
 import ch.iserver.ace.util.BlockingQueue;
 import ch.iserver.ace.util.ParameterValidator;
 import ch.iserver.ace.util.Worker;
@@ -29,6 +31,8 @@ import ch.iserver.ace.util.Worker;
  *
  */
 class Dispatcher extends Worker {
+	
+	private static final Logger LOG = Logger.getLogger(Dispatcher.class);
 	
 	private final BlockingQueue queue;
 	
@@ -45,7 +49,9 @@ class Dispatcher extends Worker {
 	protected void doWork() {
 		try {
 			DispatcherCommand command = nextCommand();
+			LOG.info("Dispatcher: got command ...");
 			command.execute();
+			LOG.info("Dispatcher: executed command ...");
 		} catch (Exception e) {
 			// TODO: exception handling
 		}

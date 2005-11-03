@@ -29,15 +29,32 @@ import ch.iserver.ace.util.Lock;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
- *
+ * Command object that receives a request and passes the resulting operation
+ * to a PublishedSessionCallback. This command object is used by the 
+ * CallbackWorker to decouple the server part of a published document from
+ * the local client.
  */
-public class RequestCommand extends LockingCommand {
-
+class RequestCommand extends LockingCommand {
+	
+	/**
+	 * The Participant that generated the Request.
+	 */
 	private final Participant participant;
 	
+	/**
+	 * The generated Request.
+	 */
 	private final Request request;
 	
-	public RequestCommand(Lock lock, AlgorithmWrapper algorithm, Participant participant, Request request) {
+	/**
+	 * Creates a new RequestCommand object.
+	 * 
+	 * @param lock the Lock instance used for locking
+	 * @param algorithm the AlgorithmWrapper used to transform the Request
+	 * @param participant the Participant that generated the Request
+	 * @param request the Request to be received
+	 */
+	RequestCommand(Lock lock, AlgorithmWrapper algorithm, Participant participant, Request request) {
 		super(lock, algorithm);
 		ParameterValidator.notNull("participant", participant);
 		ParameterValidator.notNull("request", request);
@@ -45,14 +62,23 @@ public class RequestCommand extends LockingCommand {
 		this.request = request;
 	}
 
+	/**
+	 * @return the Participant that generated the Request
+	 */
 	protected Participant getParticipant() {
 		return participant;
 	}
 	
+	/**
+	 * @return the Request to be received
+	 */
 	protected Request getRequest() {
 		return request;
 	}
 	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.LockingCommand#doWork(ch.iserver.ace.collaboration.PublishedSessionCallback)
+	 */
 	protected void doWork(PublishedSessionCallback callback) {
 		Operation op = getAlgorithm().receiveRequest(getRequest());
 		callback.receiveOperation(getParticipant(), op);

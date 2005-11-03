@@ -18,26 +18,15 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package ch.iserver.ace.net.impl;
 
-import junit.framework.TestCase;
-import ch.iserver.ace.UserDetails;
-import ch.iserver.ace.util.UUID;
+package ch.iserver.ace.application;
 
-public class DiscoveryTest extends TestCase {
-	
-	Discovery discovery;
-	
-	public void tearDown() {
-		discovery.abort();
+
+
+public class BrowseView extends DefaultView {
+
+	public BrowseView(LocaleMessageSource source) {
+		super(source);
 	}
 
-	public void testDiscovery() throws Exception {
-		DiscoveryFactory factory = DiscoveryFactory.getInstance();
-		discovery = factory.createDiscovery();
-		discovery.setDiscoveryCallback(new NullDiscoveryCallback());
-		discovery.setUserId(UUID.nextUUID());
-		discovery.setUserDetails(new UserDetails("John Cucumber"));
-		discovery.execute();
-	}
 }

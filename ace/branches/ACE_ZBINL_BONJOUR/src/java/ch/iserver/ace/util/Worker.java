@@ -21,10 +21,14 @@
 
 package ch.iserver.ace.util;
 
+import org.apache.log4j.Logger;
+
 /**
  *
  */
 public abstract class Worker extends Thread {
+	
+	private static final Logger LOG = Logger.getLogger(Worker.class);
 	
 	private boolean stop;
 	
@@ -38,6 +42,7 @@ public abstract class Worker extends Thread {
 	}
 		
 	public void run() {
+		LOG.info(getName() + " started");
 		try {
 			while (!stop) {
 				try {
@@ -50,6 +55,8 @@ public abstract class Worker extends Thread {
 			}
 		} catch (InterruptedException e) {
 			// TODO: log interruption?
+		} finally {
+			LOG.info(getName() + " terminated");
 		}
 	}
 	

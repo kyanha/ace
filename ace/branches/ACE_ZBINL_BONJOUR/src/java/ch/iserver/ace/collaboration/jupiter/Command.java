@@ -24,10 +24,16 @@ package ch.iserver.ace.collaboration.jupiter;
 import ch.iserver.ace.collaboration.PublishedSessionCallback;
 
 /**
- *
+ * Command object for the CallbackWorker worker thread.
  */
 interface Command {
-
+	
+	/**
+	 * Executes the command object. The passed in PublishedSessionCallback
+	 * receives the results of the execution.
+	 * 
+	 * @param callback the PublishedSessionCallback receiving the result
+	 */
 	void execute(PublishedSessionCallback callback);
 	
 }

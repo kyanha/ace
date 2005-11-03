@@ -21,23 +21,46 @@
 
 package ch.iserver.ace.collaboration.jupiter.server;
 
+import org.apache.log4j.Logger;
+
 import ch.iserver.ace.util.BlockingQueue;
 import ch.iserver.ace.util.Lock;
 import ch.iserver.ace.util.ParameterValidator;
 import ch.iserver.ace.util.Worker;
 
 /**
- *
+ * Worker thread that serializes processing of incoming requests. This is
+ * a fundamental requirement of the Jupiter algorithm server-side
+ * component.
  */
 class Serializer extends Worker {
 	
+	private static final Logger LOG = Logger.getLogger(Serializer.class);
+	
+	/**
+	 * The BlockingQueue from which to retrieve commands.
+	 */
 	private final BlockingQueue queue;
 	
+	/**
+	 * The Lock that guards the transformation on the server.
+	 */
 	private final Lock lock;
 	
+	/**
+	 * The Forwarder that forwards the results of the transformation to
+	 * all other participants.
+	 */
 	private final Forwarder forwarder;
 	
-	public Serializer(BlockingQueue queue, Lock lock, Forwarder forwarder) {
+	/**
+	 * Creates a new Serializer worker thread.
+	 * 
+	 * @param queue the queue from which to retrieve commands
+	 * @param lock the lock that guards the critical sections
+	 * @param forwarder the forwarder that forwards the results
+	 */
+	Serializer(BlockingQueue queue, Lock lock, Forwarder forwarder) {
 		super("Serializer");
 		ParameterValidator.notNull("queue", queue);
 		ParameterValidator.notNull("lock", lock);
@@ -47,19 +70,30 @@ class Serializer extends Worker {
 		this.forwarder = forwarder;
 	}
 
+	/**
+	 * @return the forwarder that forwards the results
+	 */
 	protected Forwarder getForwarder() {
 		return forwarder;
 	}
 	
+	/**
+	 * @return the lock that guards the critical sections
+	 */
 	protected Lock getLock() {
 		return lock;
 	}
 	
+	/**
+	 * @see ch.iserver.ace.util.Worker#doWork()
+	 */
 	protected void doWork() throws InterruptedException {
 		try {
 			SerializerCommand cmd = (SerializerCommand) queue.get();
+			LOG.info("SERIALIZER: serializing next command ...");
 			getLock().lock();
 			cmd.execute(getForwarder());
+			LOG.info("SERIALIZER: command executed ...");
 		} finally {
 			getLock().unlock();
 		}

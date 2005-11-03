@@ -31,22 +31,42 @@ import ch.iserver.ace.net.SessionConnection;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
- *
+ * Default implementation of the Invitation interface. This class wraps a
+ * InvitationProxy from the network layer and delegates most method calls
+ * to it.
  */
 class InvitationImpl implements Invitation {
 	
+	/**
+	 * The wrapped InvitationProxy from the network layer.
+	 */
 	private final InvitationProxy proxy;
 	
+	/**
+	 * The RemoteUser that invited the local user.
+	 */
 	private RemoteUser inviter;
 	
+	/**
+	 * The RemoteDocument for which the user is invited.
+	 */
 	private RemoteDocument document;
 	
+	/**
+	 * Creates a new InvitationImpl object delegating most of the work
+	 * to the passed in InvitationProxy.
+	 * 
+	 * @param proxy the InvitationProxy wrapped by this instance
+	 */
 	InvitationImpl(InvitationProxy proxy) {
 		ParameterValidator.notNull("proxy", proxy);
 		this.proxy = proxy;
 	}
 	
-	protected InvitationProxy getProxy() {
+	/**
+	 * @return the wrapped InvitationProxy instance
+	 */
+	private InvitationProxy getProxy() {
 		return proxy;
 	}
 	
@@ -60,6 +80,9 @@ class InvitationImpl implements Invitation {
 		return inviter;
 	}
 	
+	/**
+	 * @see ch.iserver.ace.collaboration.Invitation#getDocument()
+	 */
 	public RemoteDocument getDocument() {
 		if (document == null) {
 			document = new RemoteDocumentImpl(getProxy().getDocument());

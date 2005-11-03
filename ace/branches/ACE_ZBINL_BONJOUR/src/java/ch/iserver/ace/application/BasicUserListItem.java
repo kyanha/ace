@@ -18,35 +18,26 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package ch.iserver.ace.net.impl;
 
-import java.net.InetAddress;
+package ch.iserver.ace.application;
 
-import ch.iserver.ace.UserDetails;
-import ch.iserver.ace.net.RemoteUserProxy;
 
-/**
- * Package protected interface extension of <code>RemoteUserProxy</code>
- * for the network layer.
- *
- * @see ch.iserver.ace.net.RemoteUserProxy
- */
-interface RemoteUserProxyNet extends RemoteUserProxy {
 
-	void setUserDetails(UserDetails details);
-	
-	/**
-	 * Gets the physical address of the user.
-	 * 
-	 * @return the physical address
-	 */
-	InetAddress getAddress();
-	
-	/**
-	 * Gets the port of the user's machine.
-	 * 
-	 * @return the port
-	 */
-	int getPort();
-	
+public class BasicUserListItem implements Comparable {
+
+	private String username;
+
+	public BasicUserListItem(String username) {
+		this.username = username;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public int compareTo(Object o) {
+		return -((BasicUserListItem)o).getUsername().compareTo(username);
+	}
+
 }
+

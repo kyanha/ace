@@ -29,12 +29,23 @@ import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
- *
+ * AlgorithmWrapper wraps an Algorithm and adds certain useful methods.
+ * The Algorithm class itself stays agnostic of CaretUpdate objects. All it
+ * does is transform indices and operations. 
  */
 public class AlgorithmWrapperImpl implements AlgorithmWrapper {
 	
+	/**
+	 * The wrapped Algorithm instance.
+	 */
 	private final Algorithm algorithm;
 	
+	/**
+	 * Creates a new AlgorithmWrapperImpl object wrapping the given Algorithm
+	 * object.
+	 * 
+	 * @param algorithm the wrapped Algorithm instance
+	 */
 	public AlgorithmWrapperImpl(Algorithm algorithm) {
 		ParameterValidator.notNull("algorithm", algorithm);
 		this.algorithm = algorithm;

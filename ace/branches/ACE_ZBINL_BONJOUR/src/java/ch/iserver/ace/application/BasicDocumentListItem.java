@@ -19,30 +19,25 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.collaboration;
+package ch.iserver.ace.application;
 
-import java.util.EventListener;
 
-/**
- * A ParticipationListener is registered with a Session to receive notifications
- * whenever a Participant joines or leaves the Session.
- */
-public interface ParticipationListener extends EventListener {
-	
-	/**
-	 * Notifies the listener that a new Participant joined the session.
-	 * 
-	 * @param event the event object containing all the relevant information
-	 */
-	void userJoined(ParticipationEvent event);
-	
-	/**
-	 * Notifies the listener that a Participant left the session. Checking
-	 * the code of the ParticipationEvent reveals the reason why the 
-	 * Participant left the session.
-	 * 
-	 * @param event the event object containing all the relevant information
-	 */
-	void userLeft(ParticipationEvent event);
-	
+
+public class BasicDocumentListItem implements Comparable {
+
+	private String documentName;
+
+	public BasicDocumentListItem(String documentName) {
+		this.documentName = documentName;
+	}
+
+	public String getDocumentName() {
+		return documentName;
+	}
+
+	public int compareTo(Object o) {
+		return -((BasicDocumentListItem)o).getDocumentName().compareTo(documentName);
+	}
+
 }
+

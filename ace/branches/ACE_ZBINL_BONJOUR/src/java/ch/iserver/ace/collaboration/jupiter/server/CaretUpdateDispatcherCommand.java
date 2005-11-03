@@ -47,7 +47,7 @@ class CaretUpdateDispatcherCommand extends
 	 * @see ch.iserver.ace.collaboration.jupiter.server.DispatcherCommand#execute()
 	 */
 	public void execute() {
-		getConnection().sendCaretUpdate(getParticipantId(), getMessage());
+		getConnection().sendCaretUpdateMessage(getParticipantId(), getMessage());
 	}
 
 }

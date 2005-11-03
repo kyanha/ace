@@ -1,5 +1,5 @@
 /*
- * $Id: SessionCallback.java 788 2005-10-28 11:29:49 +0200 (Fri, 28 Oct 2005) sim $
+ * $Id$
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -29,7 +29,22 @@ import ch.iserver.ace.Operation;
  * the application layer for PublishedSession callbacks.
  */
 public interface PublishedSessionCallback {
-
+	
+	/**
+	 * Notifies the session callback that a new user joined the Session.
+	 * 
+	 * @param participant the participant that joined
+	 */
+	void participantJoined(Participant participant);
+	
+	/**
+	 * Notifies the session callback that a user left the Session.
+	 * 
+	 * @param participant the participant that left the Session
+	 * @param code the reason why the participant left
+	 */
+	void participantLeft(Participant participant, int code);
+	
 	/**
 	 * Receives an operation from the given participant.
 	 * 

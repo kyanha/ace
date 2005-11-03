@@ -18,40 +18,39 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package ch.iserver.ace.net.impl;
 
-import org.apache.log4j.Logger;
+package ch.iserver.ace.collaboration.jupiter;
+
+import java.util.Collection;
 
 import ch.iserver.ace.UserDetails;
+import ch.iserver.ace.collaboration.PublishedSession;
+import ch.iserver.ace.collaboration.RemoteUser;
 
-/**
- * Null object pattern.
- *
- */
-public class NullDiscoveryCallback implements DiscoveryCallback {
-	
-	private static Logger LOG = Logger.getLogger(NullDiscoveryCallback.class);
-	
-	private static NullDiscoveryCallback instance;
-	
-	public static NullDiscoveryCallback getInstance() {
-		if (instance == null) {
-			instance = new NullDiscoveryCallback();
+class RemoteUserStub implements RemoteUser {
+	final String id;
+	public RemoteUserStub(String id) {
+		this.id = id;
+	}
+	public String getId() {
+		return id;
+	}
+	public Collection getSharedDocuments() {
+		return null;
+	}
+	public UserDetails getUserDetails() {
+		return null;
+	}
+	public void invite(PublishedSession session) {
+		// ignore
+	}
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		} else if (obj instanceof RemoteUser) {
+			RemoteUser user = (RemoteUser) obj;
+			return id.equals(user.getId());
 		}
-		return instance;
+		return super.equals(obj);
 	}
-
-	public void userDiscovered(RemoteUserProxyExt user) {
-		LOG.warn("called for "+user.getUserDetails().getUsername());
-	}
-
-	public void userDiscarded(String id) {
-		LOG.warn("called for [id="+id+"]");
-	}
-
-	public void userDetailsChanged(String id, UserDetails details) {
-		LOG.warn("called for [id="+id+", username="+details.getUsername()+"]");
-		
-	}
-
 }

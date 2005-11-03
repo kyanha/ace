@@ -30,28 +30,36 @@ import java.util.Map;
 import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.collaboration.PortableDocument;
-import ch.iserver.ace.collaboration.RemoteUser;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
- *
+ * ch.iserver.ace.collaboration.PortableDocument implementation that wraps a 
+ * ch.iserver.ace.net.PortableDocument.
  */
-public class PortableDocumentWrapper implements PortableDocument {
+class PortableDocumentWrapper implements PortableDocument {
 	
+	/**
+	 * The wrapped PortableDocument object from the network layer.
+	 */
 	private final ch.iserver.ace.net.PortableDocument document;
 	
+	/**
+	 * The mapping from participant id to Participant objects.
+	 */
 	private final Map participants;
 	
-	public PortableDocumentWrapper(ch.iserver.ace.net.PortableDocument doc) {
+	/**
+	 * Creates a new PortableDocumentWrapper instance wrapping the given
+	 * document from the network layer.
+	 * 
+	 * @param doc the PortableDocument from the network layer to be wrapped.
+	 * @param participants mapping of participants
+	 */
+	PortableDocumentWrapper(ch.iserver.ace.net.PortableDocument doc, Map participants) {
 		ParameterValidator.notNull("doc", doc);
+		ParameterValidator.notNull("participants", participants);
 		this.document = doc;
-		participants = new HashMap();
-		int[] ids = document.getParticipantIds();
-		for (int i = 0; i < ids.length; i++) {
-			int id = ids[i];
-			RemoteUser user = new RemoteUserImpl(document.getUserProxy(id));
-			participants.put(new Integer(id), new ParticipantImpl(id, user));
-		}
+		this.participants = new HashMap(participants);
 	}
 	
 	/**

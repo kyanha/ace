@@ -30,7 +30,8 @@ import ch.iserver.ace.collaboration.PortableDocument;
 import ch.iserver.ace.collaboration.SessionCallback;
 
 /**
- *
+ * Null object of a SessionCallback. Logs a warning if methods are called on
+ * this object.
  */
 final class NullSessionCallback implements SessionCallback {
 	
@@ -47,6 +48,14 @@ final class NullSessionCallback implements SessionCallback {
 			instance = new NullSessionCallback();
 		}
 		return instance;
+	}
+	
+	public void participantJoined(Participant participant) {
+		LOG.warn("SessionCallback not set on Session (participantJoined called)");
+	}
+	
+	public void participantLeft(Participant participant, int code) {
+		LOG.warn("SessionCallback not set on Session (participantLeft called)");
 	}
 	
 	/**

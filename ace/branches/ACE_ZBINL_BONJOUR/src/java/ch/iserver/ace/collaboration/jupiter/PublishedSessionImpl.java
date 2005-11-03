@@ -35,10 +35,8 @@ import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.PortableDocument;
 import ch.iserver.ace.net.RemoteUserProxy;
-import ch.iserver.ace.util.BlockingQueue;
-import ch.iserver.ace.util.LinkedBlockingQueue;
 import ch.iserver.ace.util.ParameterValidator;
-import ch.iserver.ace.util.Worker;
+import ch.iserver.ace.util.SemaphoreLock;
 
 /**
  *
@@ -51,18 +49,19 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 	
 	private final PublishedSessionCallback callback;
 	
-	private final BlockingQueue callbackQueue;
-	
-	private final CallbackWorker callbackWorker;
-	
+	private final PublisherConnection publisherConnection;
+		
 	public PublishedSessionImpl(PublishedSessionCallback callback) {
-		super(new Jupiter(true));
-		ParameterValidator.notNull("callback", callback);
-		this.callback = callback;
-		this.callbackQueue = new LinkedBlockingQueue();
-		this.callbackWorker = new CallbackWorker(callback, callbackQueue);
+		this(callback, new AlgorithmWrapperImpl(new Jupiter(true)));
 	}
 	
+	public PublishedSessionImpl(PublishedSessionCallback callback, AlgorithmWrapper wrapper) {
+		super(wrapper, new SemaphoreLock("client-lock"));
+		ParameterValidator.notNull("callback", callback);
+		this.callback = callback;
+		this.publisherConnection = new PublisherConnectionImpl(getCallback(), getLock(), getAlgorithm());
+	}
+		
 	public void setServerLogic(ServerLogic logic) {
 		ParameterValidator.notNull("logic", logic);
 		this.logic = logic;
@@ -78,12 +77,8 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 		return port;
 	}
 	
-	protected BlockingQueue getCallbackQueue() {
-		return callbackQueue;
-	}
-	
-	protected Worker getCallbackWorker() {
-		return callbackWorker;
+	protected PublishedSessionCallback getCallback() {
+		return callback;
 	}
 	
 	/**
@@ -104,7 +99,7 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 	 * @see ch.iserver.ace.collaboration.PublishedSession#conceal()
 	 */
 	public void conceal() {
-		getCallbackWorker().kill();
+		getPublisherConnection().close();
 		getLogic().shutdown();
 	}
 
@@ -139,12 +134,7 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 		CaretUpdateMessage message = getAlgorithm().generateCaretUpdateMessage(update);
 		getPort().receiveCaretUpdate(message);
 	}
-					
-		
-	protected PublishedSessionCallback getCallback() {
-		return callback;
-	}
-		
+			
 	/**
 	 * @see ch.iserver.ace.net.ParticipantConnection#setParticipantId(int)
 	 */
@@ -166,14 +156,17 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 	public void close() {
 		// ignore, PublishedSession is the owner			
 	}
-		
+	
+	protected PublisherConnection getPublisherConnection() {
+		return publisherConnection;
+	}
+	
 	/**
-	 * @see ch.iserver.ace.net.ParticipantConnection#sendCaretUpdate(int, ch.iserver.ace.algorithm.CaretUpdateMessage)
+	 * @see ch.iserver.ace.net.ParticipantConnection#sendCaretUpdateMessage(int, ch.iserver.ace.algorithm.CaretUpdateMessage)
 	 */
-	public void sendCaretUpdate(int participantId, CaretUpdateMessage message) {
+	public void sendCaretUpdateMessage(int participantId, CaretUpdateMessage message) {
 		Participant participant = getParticipant(participantId);
-		Command command = new CaretUpdateCommand(getLock(), getAlgorithm(), participant, message);
-		getCallbackQueue().add(command);
+		getPublisherConnection().receiveCaretUpdateMessage(participant, message);
 	}
 		
 	/**
@@ -181,32 +174,32 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 	 */
 	public void sendRequest(int participantId, Request request) {
 		Participant participant = getParticipant(participantId);
-		Command command = new RequestCommand(getLock(), getAlgorithm(), participant, request);
-		getCallbackQueue().add(command);
+		getPublisherConnection().receiveRequest(participant, request);
 	}
-		
+
 	/**
-	 * @see ch.iserver.ace.net.ParticipantConnection#sendDocument(ch.iserver.ace.net.PortableDocument)
+	 * @see ch.iserver.ace.net.ParticipantConnection#sendParticipantJoined(int, ch.iserver.ace.net.RemoteUserProxy)
 	 */
-	public void sendDocument(PortableDocument document) {
-		throw new UnsupportedOperationException("sendDocument is not supported for PublisherConnection objects");	
+	public void sendParticipantJoined(int participantId, RemoteUserProxy proxy) {
+		Participant participant = createParticipant(participantId, proxy);
+		addParticipant(createParticipant(participantId, proxy));
+		getPublisherConnection().participantJoined(participant);
 	}
-		
-	/**
-	 * @see ch.iserver.ace.net.ParticipantConnection#sendParticipantJoined(ch.iserver.ace.collaboration.Participant)
-	 */
-	public void sendParticipantJoined(Participant participant) {
-		addParticipant(participant);
-		fireParticipantJoined(participant);			
-	}
-		
+			
 	/**
 	 * @see ch.iserver.ace.net.ParticipantConnection#sendParticipantLeft(int, int)
 	 */
 	public void sendParticipantLeft(int participantId, int reason) {
 		Participant participant = getParticipant(participantId);
 		removeParticipant(participant);
-		fireParticipantLeft(participant, reason);
+		getPublisherConnection().participantLeft(participant, reason);
+	}
+
+	/**
+	 * @see ch.iserver.ace.net.ParticipantConnection#sendDocument(ch.iserver.ace.net.PortableDocument)
+	 */
+	public void sendDocument(PortableDocument document) {
+		throw new UnsupportedOperationException("sendDocument is not supported for PublisherConnection objects");	
 	}
 		
 	/**

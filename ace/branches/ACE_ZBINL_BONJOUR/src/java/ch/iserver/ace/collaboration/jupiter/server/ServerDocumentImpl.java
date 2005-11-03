@@ -22,13 +22,12 @@
 package ch.iserver.ace.collaboration.jupiter.server;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
@@ -39,11 +38,11 @@ import javax.swing.text.SimpleAttributeSet;
 
 import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.Fragment;
-import ch.iserver.ace.collaboration.Participant;
-import ch.iserver.ace.collaboration.PortableDocument;
+import ch.iserver.ace.net.PortableDocument;
+import ch.iserver.ace.net.RemoteUserProxy;
 
 public class ServerDocumentImpl extends AbstractDocument implements
-				ServerDocument, PortableDocument {
+				ServerDocument, ch.iserver.ace.net.PortableDocument {
 
 	public static final String PARTICIPANT_ATTR = "participant";
 
@@ -78,8 +77,8 @@ public class ServerDocumentImpl extends AbstractDocument implements
 		return participantId;
 	}
 	
-	private void addParticipant(Participant participant) {
-		participants.put(new Integer(participant.getParticipantId()), participant);
+	private void addParticipant(int participantId, RemoteUserProxy proxy) {
+		participants.put(new Integer(participantId), proxy);
 	}
 	
 	private void removeParticipant(int participantId) {
@@ -145,6 +144,9 @@ public class ServerDocumentImpl extends AbstractDocument implements
 		super.insertUpdate(chng, attr);
 	}
 
+	/** (non-Javadoc)
+	 * @see javax.swing.text.AbstractDocument#removeUpdate(javax.swing.text.AbstractDocument.DefaultDocumentEvent)
+	 */
 	protected void removeUpdate(DefaultDocumentEvent chng) {
 		List removed = new ArrayList();		
 		BranchElement map = (BranchElement) getDefaultRootElement();
@@ -188,11 +190,14 @@ public class ServerDocumentImpl extends AbstractDocument implements
 		
 	// --> DocumentModel methods <--
 	
-	public void participantJoined(Participant participant) {
-		setCaretHandler(participant.getParticipantId(), new CaretHandler(-1, -1));
-		addParticipant(participant);
+	public void participantJoined(int participantId, RemoteUserProxy proxy) {
+		setCaretHandler(participantId, new CaretHandler(-1, -1));
+		addParticipant(participantId, proxy);
 	}
 	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerDocument#participantLeft(int)
+	 */
 	public void participantLeft(int participantId) {
 		CaretHandler handler = getCaretHandler(participantId);
 		removeDocumentListener(handler);
@@ -200,6 +205,9 @@ public class ServerDocumentImpl extends AbstractDocument implements
 		removeParticipant(participantId);
 	}
 	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerDocument#getText()
+	 */
 	public String getText() {
 		try {
 			return getText(0, getLength());
@@ -208,6 +216,9 @@ public class ServerDocumentImpl extends AbstractDocument implements
 		}
 	}
 	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerDocument#updateCaret(int, int, int)
+	 */
 	public void updateCaret(int participantId, int dot, int mark) {
 		CaretHandler handler = getCaretHandler(participantId);
 		if (handler == null) {
@@ -219,17 +230,23 @@ public class ServerDocumentImpl extends AbstractDocument implements
 		}
 	}
 
-	public void insertString(int offset, String text, int participantId) {
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerDocument#insertString(int, int, java.lang.String)
+	 */
+	public void insertString(int participantId, int offset, String text) {
 		SimpleAttributeSet attr = new SimpleAttributeSet();
 		attr.addAttribute(PARTICIPANT_ATTR, new Integer(participantId));
 		try {
 			super.insertString(offset, text, attr);
 		} catch (BadLocationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// TODO: fix RuntimeException
+			throw new RuntimeException(e);
 		}
 	}
 	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerDocument#removeString(int, int)
+	 */
 	public void removeString(int offset, int length) {
 		try {
 			super.remove(offset, length);
@@ -239,12 +256,18 @@ public class ServerDocumentImpl extends AbstractDocument implements
 		}
 	}
 	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerDocument#toPortableDocument()
+	 */
 	public PortableDocument toPortableDocument() {
 		return this;
 	}
 			
 	// --> PortableDocument methods <--
 	
+	/**
+	 * @see ch.iserver.ace.collaboration.PortableDocument#getFragments()
+	 */
 	public Iterator getFragments() {
 		final BranchElement root = (BranchElement) getDefaultRootElement();
 		return new Iterator() {
@@ -264,14 +287,25 @@ public class ServerDocumentImpl extends AbstractDocument implements
 		};
 	}
 	
-	public Participant getParticipant(int participantId) {
-		return (Participant) participants.get(new Integer(participantId));
+	public int[] getParticipantIds() {
+		Set ids = participants.keySet();
+		int[] result = new int[ids.size()];
+		int idx = 0;
+		Iterator it = ids.iterator();
+		while (it.hasNext()) {
+			Integer id = (Integer) it.next();
+			result[idx++] = id.intValue(); 
+		}
+		return result;
 	}
 	
-	public Collection getParticipants() {
-		return Collections.unmodifiableCollection(participants.values());
+	public RemoteUserProxy getUserProxy(int participantId) {
+		return (RemoteUserProxy) participants.get(new Integer(participantId));
 	}
 	
+	/**
+	 * @see ch.iserver.ace.collaboration.PortableDocument#getSelection(int)
+	 */
 	public CaretUpdate getSelection(int participantId) {
 		CaretHandler handler = getCaretHandler(participantId);
 		if (handler != null) {
@@ -298,6 +332,7 @@ public class ServerDocumentImpl extends AbstractDocument implements
 			try {
 				return getDocument().getText(getStartOffset(), length);
 			} catch (BadLocationException e) {
+				// TODO: fix RuntimeException
 				throw new RuntimeException(e);
 			}
 		}

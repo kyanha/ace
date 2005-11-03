@@ -78,4 +78,36 @@ public class CaretUpdateMessage {
 		return update;
 	}
 	
+	// --> java.lang.Object methods <--
+	
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		} else if (obj instanceof CaretUpdateMessage) {
+			CaretUpdateMessage msg = (CaretUpdateMessage) obj;
+			return siteId == msg.siteId 
+					&& nullSafeEquals(timestamp, msg.timestamp)
+					&& nullSafeEquals(update, msg.update);
+		} else {
+			return false;
+		}
+	}
+	
+	private boolean nullSafeEquals(Object o1, Object o2) {
+		if (o1 == o2) {
+			return true;
+		} else if (o1 == null || o2 == null) {
+			return false;
+		} else {
+			return o1.equals(o2);
+		}
+	}
+	
+	public int hashCode() {
+		int hashCode = 7 * siteId;
+		hashCode += timestamp == null ? 0 : 13 * timestamp.hashCode();
+		hashCode += update == null ? 0 : 17 * update.hashCode();
+		return hashCode;
+	}
+	
 }

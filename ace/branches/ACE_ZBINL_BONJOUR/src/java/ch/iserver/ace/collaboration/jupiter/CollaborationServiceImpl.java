@@ -122,7 +122,7 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	 */
 	public PublishedSession publish(PublishedSessionCallback callback, DocumentModel document) {
 		PublishedSessionImpl session = new PublishedSessionImpl(callback);
-		ServerLogicImpl logic = new ServerLogicImpl(new SemaphoreLock(), session, document);
+		ServerLogicImpl logic = new ServerLogicImpl(new SemaphoreLock("server-lock"), session, document);
 		session.setServerLogic(logic);
 		DocumentServer server = getNetworkService().publish(logic);
 		logic.setDocumentServer(server);

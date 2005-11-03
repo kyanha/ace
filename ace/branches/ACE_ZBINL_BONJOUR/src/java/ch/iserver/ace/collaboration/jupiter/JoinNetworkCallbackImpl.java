@@ -28,22 +28,39 @@ import ch.iserver.ace.net.SessionConnectionCallback;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
- * 
- *
+ * Default implementation of the JoinNetworkCallback interface. It wraps
+ * a JoinCallback from the application layer and passes the callbacks
+ * (after some wrapping) back to the application layer.
  */
 class JoinNetworkCallbackImpl implements JoinNetworkCallback {
 	
+	/**
+	 * The JoinCallback to be notified about in the application layer.
+	 */
 	private final JoinCallback callback;
 	
-	public JoinNetworkCallbackImpl(JoinCallback joinCallback) {
+	/**
+	 * Creates a new JoinNetworkCallbackImpl wrapping the given JoinCallback
+	 * from the application layer.
+	 * 
+	 * @param joinCallback the JoinCallback passed in from the application
+	 *                     layer
+	 */
+	JoinNetworkCallbackImpl(JoinCallback joinCallback) {
 		ParameterValidator.notNull("joinCallback", joinCallback);
 		this.callback = joinCallback;
 	}
 
-	protected JoinCallback getCallback() {
+	/**
+	 * @return the JoinCallback wrapped by this instance
+	 */
+	private JoinCallback getCallback() {
 		return callback;
 	}
 
+	/**
+	 * @see ch.iserver.ace.net.JoinNetworkCallback#accepted(ch.iserver.ace.net.SessionConnection)
+	 */
 	public SessionConnectionCallback accepted(SessionConnection connection) {
 		SessionImpl session = new SessionImpl();
 		session.setConnection(connection);
@@ -51,6 +68,9 @@ class JoinNetworkCallbackImpl implements JoinNetworkCallback {
 		return session;
 	}
 	
+	/**
+	 * @see ch.iserver.ace.net.JoinNetworkCallback#rejected()
+	 */
 	public void rejected() {
 		getCallback().rejected();			
 	}

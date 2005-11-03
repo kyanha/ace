@@ -27,15 +27,30 @@ import ch.iserver.ace.util.ParameterValidator;
 import ch.iserver.ace.util.Worker;
 
 /**
- *
+ * Worker thread that is used to decouple the server part of a published
+ * document from the local client part.
  */
-public class CallbackWorker extends Worker {
-
+class CallbackWorker extends Worker {
+	
+	/**
+	 * The PublishedSessionCallback that receives the result of the executed
+	 * Command objects.
+	 */
 	private final PublishedSessionCallback callback;
 	
+	/**
+	 * The BlockingQueue from which the Command objects are retrieved.
+	 */
 	private final BlockingQueue queue;
 	
-	public CallbackWorker(PublishedSessionCallback callback, BlockingQueue queue) {
+	/**
+	 * Creates a new CallbackWorker instance that uses the given BlockingQueue
+	 * to receive Command objects and the callback to receive the results.
+	 * 
+	 * @param callback the PublishedSessionCallback to receive the results
+	 * @param queue the BlockingQueue from which to get the Command objects
+	 */
+	CallbackWorker(PublishedSessionCallback callback, BlockingQueue queue) {
 		super("CallbackWorker");
 		ParameterValidator.notNull("callback", callback);
 		ParameterValidator.notNull("queue", queue);
@@ -43,14 +58,23 @@ public class CallbackWorker extends Worker {
 		this.queue = queue;
 	}
 	
-	protected PublishedSessionCallback getCallback() {
+	/**
+	 * @return the PublishedSessionCallback which receives the results
+	 */
+	private PublishedSessionCallback getCallback() {
 		return callback;
 	}
 	
-	protected BlockingQueue getQueue() {
+	/**
+	 * @return the BlockingQueue from which to read the Command objects
+	 */
+	private BlockingQueue getQueue() {
 		return queue;
 	}
 	
+	/**
+	 * @see ch.iserver.ace.util.Worker#doWork()
+	 */
 	protected void doWork() throws InterruptedException {
 		Command command = (Command) getQueue().get();
 		command.execute(getCallback());

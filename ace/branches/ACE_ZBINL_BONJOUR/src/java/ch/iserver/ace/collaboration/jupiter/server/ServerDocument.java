@@ -21,23 +21,53 @@
 
 package ch.iserver.ace.collaboration.jupiter.server;
 
-import ch.iserver.ace.collaboration.Participant;
-import ch.iserver.ace.collaboration.PortableDocument;
+import ch.iserver.ace.net.PortableDocument;
+import ch.iserver.ace.net.RemoteUserProxy;
 
+/**
+ *
+ */
 public interface ServerDocument {
 	
-	void participantJoined(Participant participant);
+	/**
+	 * @param participantId
+	 * @param proxy
+	 */
+	void participantJoined(int participantId, RemoteUserProxy proxy);
 	
+	/**
+	 * @param participantId
+	 */
 	void participantLeft(int participantId);
 	
+	/**
+	 * @param participantId
+	 * @param dot
+	 * @param mark
+	 */
 	void updateCaret(int participantId, int dot, int mark);
 	
-	void insertString(int offset, String text, int participantId);
+	/**
+	 * @param participantId
+	 * @param offset
+	 * @param text
+	 */
+	void insertString(int participantId, int offset, String text);
 	
+	/**
+	 * @param offset
+	 * @param length
+	 */
 	void removeString(int offset, int length);
 	
+	/**
+	 * @return
+	 */
 	String getText();
 	
+	/**
+	 * @return
+	 */
 	PortableDocument toPortableDocument();
 	
 }

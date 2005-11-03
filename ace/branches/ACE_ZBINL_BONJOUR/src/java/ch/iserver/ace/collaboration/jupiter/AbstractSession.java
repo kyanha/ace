@@ -27,94 +27,75 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import javax.swing.SwingUtilities;
-import javax.swing.event.EventListenerList;
-
-import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.collaboration.Participant;
-import ch.iserver.ace.collaboration.ParticipationEvent;
-import ch.iserver.ace.collaboration.ParticipationListener;
 import ch.iserver.ace.collaboration.Session;
+import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.util.Lock;
 import ch.iserver.ace.util.ParameterValidator;
-import ch.iserver.ace.util.SemaphoreLock;
 
 /**
- *
+ * Abstract base class for Session implementations. Implements the common methods
+ * of both PublishedSessionImpl and SessionImpl.
  */
-public abstract class AbstractSession implements Session {
-
-	private final EventListenerList listeners = new EventListenerList();
+abstract class AbstractSession implements Session {
+	
+	/**
+	 * The Lock used to guard the access to the Algorithm.
+	 */
 	private final Lock lock;
+	
+	/**
+	 * The AlgorithmWrapper wrapping the Algorithm.
+	 */
 	private final AlgorithmWrapper algorithm;
+	
+	/**
+	 * The current Set of Participant objects.
+	 */
 	private final Set participants = new HashSet();
+	
+	/**
+	 * A mapping from participant id to Participant objects.
+	 */
 	private final Map participantMap = new HashMap();
-
-	protected AbstractSession(Algorithm algorithm) {
+	
+	/**
+	 * Creates a new AbstractSession that uses the given Algorithm.
+	 * 
+	 * @param algorithm the Algorithm used by the Session
+	 */
+	protected AbstractSession(AlgorithmWrapper algorithm, Lock lock) {
 		ParameterValidator.notNull("algorithm", algorithm);
-		this.lock = new SemaphoreLock();
-		this.algorithm = new AlgorithmWrapperImpl(algorithm);
+		ParameterValidator.notNull("lock", lock);
+		this.lock = lock;
+		this.algorithm = algorithm;
 	}
 	
+	/**
+	 * @return the AlgorithmWrapper
+	 */
 	protected AlgorithmWrapper getAlgorithm() {
 		return algorithm;
 	}
 	
+	/**
+	 * @return the Lock guarding the access to the Algorithm
+	 */
 	protected Lock getLock() {
 		return lock;
 	}
 	
+	/**
+	 * Checks whether calls to the send methods are properly wrapped in 
+	 * lock/unlock calls.
+	 * 
+	 * @throws IllegalMonitorStateException if the Session is not properly locked
+	 *                       before sending operations and caret updates
+	 */
 	protected synchronized void checkLockUsage() {
 		if (!lock.isOwner(Thread.currentThread())) {
 			throw new IllegalMonitorStateException("Lock the Session before sending.");
 		}
-	}
-
-	/**
-	 * @see ch.iserver.ace.collaboration.Session#addParticipationListener(ch.iserver.ace.collaboration.ParticipationListener)
-	 */
-	public void addParticipationListener(ParticipationListener listener) {
-		ParameterValidator.notNull("listener", listener);
-		listeners.add(ParticipationListener.class, listener);
-	}
-
-	/**
-	 * @see ch.iserver.ace.collaboration.Session#removeParticipationListener(ch.iserver.ace.collaboration.ParticipationListener)
-	 */
-	public void removeParticipationListener(ParticipationListener listener) {
-		listeners.remove(ParticipationListener.class, listener);
-	}
-
-	protected void fireParticipantJoined(final Participant participant) {
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				ParticipationListener[] lists = (ParticipationListener[]) listeners.getListeners(ParticipationListener.class);
-				ParticipationEvent event = null;
-				for (int i = 0; i < lists.length; i++) {
-					ParticipationListener listener = lists[i];
-					if (event == null) {
-						event = new ParticipationEvent(AbstractSession.this, participant, ParticipationEvent.JOINED);
-					}
-					listener.userJoined(event);
-				}
-			}
-		});
-	}
-
-	protected void fireParticipantLeft(final Participant participant, final int reason) {
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				ParticipationListener[] lists = (ParticipationListener[]) listeners.getListeners(ParticipationListener.class);
-				ParticipationEvent event = null;
-				for (int i = 0; i < lists.length; i++) {
-					ParticipationListener listener = lists[i];
-					if (event == null) {
-						event = new ParticipationEvent(AbstractSession.this, participant, reason);
-					}
-					listener.userLeft(event);
-				}
-			}
-		});
 	}
 
 	/**
@@ -142,17 +123,43 @@ public abstract class AbstractSession implements Session {
 	 * @see ch.iserver.ace.collaboration.Session#getParticipant(int)
 	 */
 	public Participant getParticipant(int participantId) {
-		return (Participant) participantMap.get(new Integer(participantId));
+		Participant p = (Participant) participantMap.get(new Integer(participantId));
+		if (p == null) {
+			// TODO: throw new UnknownParticipantException();
+		}
+		return p;
 	}
 
+	/**
+	 * Adds a Participant to the current set of participants in this Session.
+	 * 
+	 * @param participant the Participant to be added
+	 */
 	protected void addParticipant(Participant participant) {
 		participants.add(participant);
 		participantMap.put(new Integer(participant.getParticipantId()), participant);
 	}
 
+	/**
+	 * Removes a Participant from the current set of participants in the
+	 * Session.
+	 * 
+	 * @param participant the Participant to be removed
+	 */
 	protected void removeParticipant(Participant participant) {
 		participants.remove(participant);
 		participantMap.remove(new Integer(participant.getParticipantId()));
+	}
+
+	/**
+	 * Factory method to create Participant objects.
+	 * 
+	 * @param participantId the id of the participant
+	 * @param proxy the RemoteUserProxy for the user
+	 * @return a Participant instance
+	 */
+	protected Participant createParticipant(int participantId, RemoteUserProxy proxy) {
+		return new ParticipantImpl(participantId, new RemoteUserImpl(proxy));
 	}
 
 }

@@ -4,4 +4,13 @@
 
   <!--<bean id="collaborationService" class="ch.iserver.ace.collaboration.jupiter.CollaborationServiceImpl"/>-->
 
+  <bean id="messageSource" 
+        class="org.springframework.context.support.ResourceBundleMessageSource">
+    <property name="basenames">
+      <list>
+        <value>ch/iserver/ace/application/resources/locale</value>
+      </list>
+    </property>
+  </bean>
+  
 </beans>

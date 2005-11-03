@@ -22,58 +22,92 @@
 package ch.iserver.ace.collaboration.jupiter;
 
 
+import java.util.HashMap;
+import java.util.Map;
+
 import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.Operation;
-import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.jupiter.Jupiter;
 import ch.iserver.ace.collaboration.Participant;
-import ch.iserver.ace.collaboration.RemoteUser;
 import ch.iserver.ace.collaboration.SessionCallback;
 import ch.iserver.ace.net.PortableDocument;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.net.SessionConnection;
 import ch.iserver.ace.net.SessionConnectionCallback;
 import ch.iserver.ace.util.InterruptedRuntimeException;
+import ch.iserver.ace.util.Lock;
 import ch.iserver.ace.util.ParameterValidator;
+import ch.iserver.ace.util.SemaphoreLock;
 
 /**
- *
+ * Default implementation of the Session interface. This class further implements
+ * the SessionConnectionCallback interface and can thus be set as callback
+ * on SessionConnections.
  */
 public class SessionImpl extends AbstractSession implements SessionConnectionCallback {
 	
+	/**
+	 * The SessionCallback from the application layer.
+	 */
 	private SessionCallback callback = NullSessionCallback.getInstance();
 	
+	/**
+	 * The SessionConnection from the network layer.
+	 */
 	private SessionConnection connection;
 	
 	public SessionImpl() {
-		this(new Jupiter(true), null);
+		this(new AlgorithmWrapperImpl(new Jupiter(true)));
 	}
 	
 	public SessionImpl(SessionCallback callback) {
-		this(new Jupiter(true), callback);
+		this(new AlgorithmWrapperImpl(new Jupiter(true)), callback);
+	}
+		
+	public SessionImpl(AlgorithmWrapper algorithm) {
+		this(algorithm, (SessionCallback) null);
 	}
 	
-	protected SessionImpl(Algorithm algorithm, SessionCallback callback) {
-		super(algorithm);
+	public SessionImpl(AlgorithmWrapper wrapper, Lock lock) {
+		super(wrapper, lock);
+	}
+	
+	protected SessionImpl(AlgorithmWrapper algorithm, SessionCallback callback) {
+		super(algorithm, new SemaphoreLock("client-lock"));
 		setSessionCallback(callback);
 	}
 	
+	/**
+	 * Sets the callback to be notified from the application layer.
+	 * 
+	 * @param callback the new callback
+	 */
 	public void setSessionCallback(SessionCallback callback) {
-		ParameterValidator.notNull("callback", callback);
-		this.callback = callback;
+		this.callback = callback == null ? NullSessionCallback.getInstance() : callback;
 	}
 	
+	/**
+	 * @return the callback to be notified from the application layer
+	 */
 	protected SessionCallback getCallback() {
 		return callback;
 	}
 	
+	/**
+	 * Sets the connection to the network layer.
+	 * 
+	 * @param connection the new connection
+	 */
 	protected void setConnection(SessionConnection connection) {
 		ParameterValidator.notNull("connection", connection);
 		this.connection = connection;
 	}
 	
+	/**
+	 * @return the connection to the network layer
+	 */
 	protected SessionConnection getConnection() {
 		return connection;
 	}
@@ -110,14 +144,25 @@ public class SessionImpl extends AbstractSession implements SessionConnectionCal
 		getConnection().sendCaretUpdate(message);
 	}
 
+	// --> SessionConnectionCallback methods <--
+	
+	/**
+	 * @see ch.iserver.ace.net.SessionConnectionCallback#kicked()
+	 */
 	public void kicked() {
 		getCallback().kicked();
 	}
 	
+	/**
+	 * @see ch.iserver.ace.net.SessionConnectionCallback#sessionTerminated()
+	 */
 	public void sessionTerminated() {
 		getCallback().sessionTerminated();
 	}
 	
+	/**
+	 * @see ch.iserver.ace.net.SessionConnectionCallback#receiveCaretUpdate(int, ch.iserver.ace.algorithm.CaretUpdateMessage)
+	 */
 	public void receiveCaretUpdate(int participantId, CaretUpdateMessage message) {
 		try {
 			lock();
@@ -133,6 +178,9 @@ public class SessionImpl extends AbstractSession implements SessionConnectionCal
 		}
 	}
 	
+	/**
+	 * @see ch.iserver.ace.net.SessionConnectionCallback#receiveRequest(int, ch.iserver.ace.algorithm.Request)
+	 */
 	public void receiveRequest(int participantId, Request request) {
 		try {
 			lock();
@@ -148,21 +196,36 @@ public class SessionImpl extends AbstractSession implements SessionConnectionCal
 		}
 	}
 	
+	/**
+	 * @see ch.iserver.ace.net.SessionConnectionCallback#setDocument(ch.iserver.ace.net.PortableDocument)
+	 */
 	public void setDocument(PortableDocument document) {
-		getCallback().setDocument(new PortableDocumentWrapper(document));		
+		Map participants = new HashMap();
+		int[] ids = document.getParticipantIds();
+		for (int i = 0; i < ids.length; i++) {
+			int id = ids[i];
+			participants.put(new Integer(id), createParticipant(id, document.getUserProxy(id)));
+		}
+		PortableDocumentWrapper wrapper = new PortableDocumentWrapper(document, participants);
+		getCallback().setDocument(wrapper);
 	}
 	
-	public void userJoined(int participantId, RemoteUserProxy proxy) {
-		RemoteUser user = new RemoteUserImpl(proxy);
-		Participant participant = new ParticipantImpl(participantId, user);
+	/**
+	 * @see ch.iserver.ace.net.SessionConnectionCallback#participantJoined(int, ch.iserver.ace.net.RemoteUserProxy)
+	 */
+	public void participantJoined(int participantId, RemoteUserProxy proxy) {
+		Participant participant = createParticipant(participantId, proxy);
 		addParticipant(participant);
-		fireParticipantJoined(participant);
+		getCallback().participantJoined(participant);
 	}
 	
-	public void userLeaved(int participantId, int reason) {
+	/**
+	 * @see ch.iserver.ace.net.SessionConnectionCallback#participantLeft(int, int)
+	 */
+	public void participantLeft(int participantId, int reason) {
 		Participant participant = getParticipant(participantId);
 		removeParticipant(participant);
-		fireParticipantLeft(participant, reason);
+		getCallback().participantLeft(participant, reason);
 	}
 	
 }
