@@ -67,24 +67,6 @@ public class BonjourTest extends TestCase {
 	}
 	
 	/**
-	 * Test method for 'ch.iserver.ace.net.impl.discovery.Bonjour.setDiscoveryCallback(DiscoveryCallback callback)'
-	 */
-	public void testSetDiscoveryCallback() {
-		MockControl callbackCtrl = MockControl.createControl(DiscoveryCallback.class);
-		DiscoveryCallback callback = (DiscoveryCallback)callbackCtrl.getMock();
-		
-		discovery.setDiscoveryCallbackAdapter(new DiscoveryCallbackAdapter(callback));
-		discoveryCtrl.setDefaultMatcher(MockControl.ALWAYS_MATCHER);
-		
-		discoveryCtrl.replay();
-		callbackCtrl.replay();
-		
-		bonjour.setDiscoveryCallback(callback);
-		
-		discoveryCtrl.verify();
-	}
-	
-	/**
 	 * Test method for 'ch.iserver.ace.net.impl.discovery.Bonjour.setUserDetails(UserDetails details)'
 	 */
 	public void testSetUserDetails() {
