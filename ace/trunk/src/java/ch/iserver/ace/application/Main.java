@@ -21,6 +21,10 @@
 
 package ch.iserver.ace.application;
 
+import java.util.Locale;
+
+import javax.swing.*;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -35,6 +39,18 @@ public class Main {
 	
 	public static void main(String[] args) {
 		ApplicationContext context = new ClassPathXmlApplicationContext(CONTEXT_FILES);
+		LocaleMessageSource ms = new LocaleMessageSourceImpl(context);
+		
+		System.out.println(ms.getIcon("iViewUser"));
+
+		/*
+		JFrame frame = new JFrame();
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setSize(640, 480);
+		UserView uv = new UserView(new LocaleMessageSourceImpl(context));
+		frame.getContentPane().add(uv);
+		uv.getUserViewSource().add(new BasicUserListItem("huhu"));		
+		frame.show();*/
 	}
 	
 }
