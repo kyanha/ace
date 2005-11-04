@@ -24,10 +24,11 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
+import ch.iserver.ace.net.impl.discovery.dnssd.Browse;
+import ch.iserver.ace.net.impl.discovery.dnssd.DNSSDUnavailable;
 import ch.iserver.ace.util.ParameterValidator;
 
 import com.apple.dnssd.BrowseListener;
-import com.apple.dnssd.DNSSD;
 import com.apple.dnssd.DNSSDService;
 
 /**
@@ -54,15 +55,23 @@ class PeerDiscoveryImpl implements PeerDiscovery {
 	 */
 	public void browse(final Properties props) {
 		ParameterValidator.notNull("properties", props);
+
+		String regType = (String)props.get(Bonjour.KEY_REGISTRATION_TYPE);
+		Browse call = new Browse(regType, listener);
 		try {
-			browser = DNSSD.browse(0, 0, 
-					(String)props.get(Bonjour.KEY_REGISTRATION_TYPE), 
-					"", 
-					listener);
-		} catch (Exception e) {
-			//TODO: retry strategy
-			LOG.error("Browsing failed ["+e.getMessage()+"]");
+			browser = (DNSSDService)call.execute();
+		} catch (DNSSDUnavailable du) {
+			Bonjour.writeErrorLog(du);
 		}
+		//		try {
+//			browser = DNSSD.browse(0, 0, 
+//					(String)props.get(Bonjour.KEY_REGISTRATION_TYPE), 
+//					"", 
+//					listener);
+//		} catch (Exception e) {
+//			//TODO: retry strategy
+//			LOG.error("Browsing failed ["+e.getMessage()+"]");
+//		}
 	}
 
 	/**

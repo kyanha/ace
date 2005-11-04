@@ -26,6 +26,7 @@ import org.apache.log4j.Logger;
 
 import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.net.impl.Discovery;
+import ch.iserver.ace.net.impl.discovery.dnssd.DNSSDUnavailable;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
@@ -34,6 +35,7 @@ import ch.iserver.ace.util.ParameterValidator;
 public class Bonjour implements Discovery {
 	
 	private static Logger LOG = Logger.getLogger(Bonjour.class);
+	private static Logger APP_LOG = Logger.getLogger("application");
 	
 	public static final String KEY_REGISTRATION_TYPE = "registration.type";
 	public static final String KEY_TXT_VERSION = "txt.version";
@@ -127,6 +129,11 @@ public class Bonjour implements Discovery {
 	
 	public static String getLocalServiceName() {
 		return LOCAL_SERVICE_NAME;
+	}
+	
+	
+	public static void writeErrorLog(Exception e) {
+		APP_LOG.fatal("fatal discovery error ["+e.getMessage()+"]");
 	}
 	
 

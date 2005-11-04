@@ -29,7 +29,7 @@ import com.apple.dnssd.TXTRecord;
 /**
  *
  */
-class TXTQueryListener extends AbstractQueryListener {
+public class TXTQueryListener extends AbstractQueryListener {
 
 	private static Logger LOG = Logger.getLogger(TXTQueryListener.class);
 	

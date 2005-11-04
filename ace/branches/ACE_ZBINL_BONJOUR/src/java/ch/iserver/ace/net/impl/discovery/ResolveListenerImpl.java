@@ -23,6 +23,9 @@ package ch.iserver.ace.net.impl.discovery;
 
 import org.apache.log4j.Logger;
 
+import ch.iserver.ace.net.impl.discovery.dnssd.DNSSDUnavailable;
+import ch.iserver.ace.net.impl.discovery.dnssd.QueryRecord;
+
 import com.apple.dnssd.DNSSD;
 import com.apple.dnssd.DNSSDService;
 import com.apple.dnssd.ResolveListener;
@@ -69,15 +72,21 @@ class ResolveListenerImpl extends BaseListenerImpl implements ResolveListener {
 	 * @param hostName
 	 */
 	private void resolveIP(int flags, int ifIndex, String hostName, String serviceName) {
+		ipQueryListener.addNextService(serviceName);
+		QueryRecord call = new QueryRecord(ifIndex, hostName, Bonjour.T_HOST_ADDRESS, ipQueryListener);
 		try {
-			ipQueryListener.addNextService(serviceName);
-			// Start a record query to obtain IP address from hostname
-			DNSSD.queryRecord(0, ifIndex, hostName, Bonjour.T_HOST_ADDRESS, 1 /* ns_c_in */, ipQueryListener);
-		} catch (Exception e) {
-			//TODO: retry strategy
-			LOG.error("Query record failed ["+e.getMessage()+"]");
+			call.execute();
+		} catch (DNSSDUnavailable du) {
+			Bonjour.writeErrorLog(du);
 		}
-		
+//		try {
+//			
+//			// Start a record query to obtain IP address from hostname
+//			DNSSD.queryRecord(0, ifIndex, hostName, Bonjour.T_HOST_ADDRESS, 1 /* ns_c_in */, ipQueryListener);
+//		} catch (Exception e) {
+//			//TODO: retry strategy
+//			LOG.error("Query record failed ["+e.getMessage()+"]");
+//		}
 	}
 	
 	/**
@@ -88,15 +97,24 @@ class ResolveListenerImpl extends BaseListenerImpl implements ResolveListener {
 	 * @param fullName
 	 */
 	private void monitorTXTRecord(int flags, int ifIndex, String fullName) {
+		QueryRecord call = new QueryRecord(ifIndex, fullName, Bonjour.T_TXT, txtQueryListener);
+		//TODO: do we have to keep the return value of the queryRecord call, so that on shutdown
+		//we can stop that service too?
 		try {
-			//16=txt record, 1 = ns_c_in; cf. nameser.h
-			//TODO: do we have to keep the return value of the queryRecord call, so that on shutdown
-			//we can stop that service too?
-			DNSSD.queryRecord(flags, ifIndex, fullName, Bonjour.T_TXT, 1, txtQueryListener);
-		} catch (Exception e) {
-			//TODO: retry strategy
-			LOG.error("Query record failed ["+e.getMessage()+"]");
+			call.execute();
+		} catch (DNSSDUnavailable du) {
+			Bonjour.writeErrorLog(du);
 		}
+		
+//		try {
+//			//16=txt record, 1 = ns_c_in; cf. nameser.h
+//			//TODO: do we have to keep the return value of the queryRecord call, so that on shutdown
+//			//we can stop that service too?
+//			DNSSD.queryRecord(flags, ifIndex, fullName, Bonjour.T_TXT, 1, txtQueryListener);
+//		} catch (Exception e) {
+//			//TODO: retry strategy
+//			LOG.error("Query record failed ["+e.getMessage()+"]");
+//		}
 	}
 
 }

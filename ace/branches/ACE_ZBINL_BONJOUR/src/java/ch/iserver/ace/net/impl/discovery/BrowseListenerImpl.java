@@ -23,8 +23,10 @@ package ch.iserver.ace.net.impl.discovery;
 
 import org.apache.log4j.Logger;
 
+import ch.iserver.ace.net.impl.discovery.dnssd.Resolve;
+import ch.iserver.ace.net.impl.discovery.dnssd.DNSSDUnavailable;
+
 import com.apple.dnssd.BrowseListener;
-import com.apple.dnssd.DNSSD;
 import com.apple.dnssd.DNSSDService;
 import com.apple.dnssd.ResolveListener;
 
@@ -48,11 +50,17 @@ class BrowseListenerImpl extends BaseListenerImpl implements BrowseListener {
 	public void serviceFound(DNSSDService browser, int flags, int ifIndex, String serviceName, String regType, String domain) {
 		if (!Bonjour.getLocalServiceName().equals(serviceName)) {
 			try {
-				DNSSD.resolve(flags, ifIndex, serviceName, regType, domain, resolver);
-			} catch (Exception e) {
-				//TODO: retry strategy
-				LOG.error("Resolve failed ["+e.getMessage()+"]");
+				Resolve call = new Resolve(flags, ifIndex, serviceName, regType, domain, resolver);
+				call.execute();
+			} catch (DNSSDUnavailable du) {
+				Bonjour.writeErrorLog(du);
 			}
+//			try {
+//				DNSSD.resolve(flags, ifIndex, serviceName, regType, domain, resolver);
+//			} catch (Exception e) {
+//				//TODO: retry strategy
+//				LOG.error("QueryRecord failed ["+e.getMessage()+"]");
+//			}
 		}
 	}
 

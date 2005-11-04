@@ -19,42 +19,27 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.net.impl.discovery;
-
-import java.net.InetAddress;
-
-import org.apache.log4j.Logger;
-
-import com.apple.dnssd.DNSSDService;
+package ch.iserver.ace.net.impl.discovery.dnssd;
 
 /**
- *
+ * Exception thrown if a DNNSD call.
+ * 
+ * @see ch.iserver.ace.net.impl.discovery.dnssd.DNSSDCall
  */
-public class IPQueryListener extends AbstractQueryListener {
+public class DNSSDUnavailable extends Exception {
 
-	private static Logger LOG = Logger.getLogger(IPQueryListener.class);
+	/**
+	 * Constructor.
+	 */
+	public DNSSDUnavailable() { }
 	
 	/**
+	 * Constructor.
 	 * 
-	 * @param adapter
+	 * @param message an error message
 	 */
-	public IPQueryListener(DiscoveryCallbackAdapter adapter) {
-		super(adapter);
+	public DNSSDUnavailable(String message) {
+		super(message);
 	}
 	
-	/**
-	 * @inherit
-	 */
-	protected void processQuery(DNSSDService query, int flags, int ifIndex,
-			String fullName, int rrtype, int rrclass, byte[] rdata, int ttl) {
-		InetAddress address = null;
-		try {
-			address = InetAddress.getByAddress(rdata);
-		} catch (Exception e) {
-			LOG.error("Could not resolve address ["+e.getMessage()+"]");
-		}
-		String serviceName = getNextService();
-		adapter.userAddressResolved(serviceName, address);
-		query.stop();
-	}
 }

@@ -32,7 +32,8 @@ import com.apple.dnssd.DNSSDService;
 import com.apple.dnssd.RegisterListener;
 
 /**
- *
+ * Helper class for integration tests. Registers a number of users for
+ * discovery.
  */
 public class TestuserRegistrar implements RegisterListener {
 

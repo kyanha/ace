@@ -31,7 +31,7 @@ import com.apple.dnssd.QueryListener;
 /**
  *
  */
-abstract class AbstractQueryListener extends BaseListenerImpl implements QueryListener {
+public abstract class AbstractQueryListener extends BaseListenerImpl implements QueryListener {
 	
 	private BlockingQueue serviceQueue;
 	

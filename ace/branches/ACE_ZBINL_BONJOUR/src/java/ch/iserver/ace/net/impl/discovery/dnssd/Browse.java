@@ -19,42 +19,36 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.net.impl.discovery;
+package ch.iserver.ace.net.impl.discovery.dnssd;
 
-import java.net.InetAddress;
-
-import org.apache.log4j.Logger;
-
+import com.apple.dnssd.BrowseListener;
+import com.apple.dnssd.DNSSD;
+import com.apple.dnssd.DNSSDException;
 import com.apple.dnssd.DNSSDService;
 
 /**
  *
  */
-public class IPQueryListener extends AbstractQueryListener {
+public class Browse extends DNSSDCall {
 
-	private static Logger LOG = Logger.getLogger(IPQueryListener.class);
+	private String registrationType;
+	private BrowseListener listener;
 	
 	/**
+	 * Constructor.
 	 * 
-	 * @param adapter
+	 * @param registrationType
+	 * @param listener
 	 */
-	public IPQueryListener(DiscoveryCallbackAdapter adapter) {
-		super(adapter);
+	public Browse(String registrationType, BrowseListener listener) {
+		this.registrationType = registrationType;
+		this.listener = listener;
 	}
 	
 	/**
-	 * @inherit
+	 * @see ch.iserver.ace.net.impl.discovery.dnssd.DNSSDCall#makeCall()
 	 */
-	protected void processQuery(DNSSDService query, int flags, int ifIndex,
-			String fullName, int rrtype, int rrclass, byte[] rdata, int ttl) {
-		InetAddress address = null;
-		try {
-			address = InetAddress.getByAddress(rdata);
-		} catch (Exception e) {
-			LOG.error("Could not resolve address ["+e.getMessage()+"]");
-		}
-		String serviceName = getNextService();
-		adapter.userAddressResolved(serviceName, address);
-		query.stop();
+	protected Object makeCall() throws DNSSDException {
+		return DNSSD.browse(0, 0, registrationType, "", listener);
 	}
 }
