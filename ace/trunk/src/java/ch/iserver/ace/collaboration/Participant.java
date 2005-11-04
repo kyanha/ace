@@ -25,8 +25,6 @@ package ch.iserver.ace.collaboration;
 /**
  * A Participant is a contributor to an editing session. He has a session
  * wide unique id identifying him.
- * 
- * @todo add session property
  */
 public interface Participant {
 	
@@ -41,6 +39,13 @@ public interface Participant {
 	 * Signifies a participant that was kicked from the Session.
 	 */
 	int KICKED = 2;
+	
+	/**
+	 * Constant used in notifications when a connection to a participant
+	 * fails. The participant is then no longer considered part of the
+	 * session.
+	 */
+	int DISCONNECTED = 3;
 	
 	/**
 	 * Gets the remote user corresponding to this participant.

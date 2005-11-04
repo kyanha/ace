@@ -30,6 +30,7 @@ import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.DocumentModel;
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.jupiter.Jupiter;
+import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.net.DocumentServer;
 import ch.iserver.ace.net.DocumentServerLogic;
 import ch.iserver.ace.net.ParticipantConnection;
@@ -44,7 +45,7 @@ import edu.emory.mathcs.backport.java.util.concurrent.LinkedBlockingQueue;
 /**
  *
  */
-public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
+public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, FailureHandler {
 	
 	private int nextParticipantId;
 	
@@ -238,6 +239,19 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 		connection.sendKicked();
 		connection.close();
 		removeParticipant(participantId);
+	}
+	
+	// --> FailureHandler method <--
+	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.FailureHandler#handleFailure(int)
+	 */
+	public synchronized void handleFailure(int participantId) {
+		ParticipantConnection connection = getParticipantConnection(participantId);
+		removeParticipant(participantId);
+		
+		SerializerCommand command = new LeaveCommand(participantId, Participant.DISCONNECTED);
+		getSerializerQueue().add(command);
 	}
 
 }
