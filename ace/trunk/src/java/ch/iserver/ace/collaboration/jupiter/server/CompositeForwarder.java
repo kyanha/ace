@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: ForwarderImpl.java 953 2005-11-04 15:10:56 +0100 (Fri, 04 Nov 2005) sim $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -31,11 +31,11 @@ import ch.iserver.ace.util.ParameterValidator;
 /**
  *
  */
-class ForwarderImpl implements ParticipantProxy {
+class CompositeForwarder implements Forwarder {
 	
 	final ServerLogic serverLogic;
 	
-	public ForwarderImpl(ServerLogic logic) {
+	public CompositeForwarder(ServerLogic logic) {
 		ParameterValidator.notNull("logic", logic);
 		this.serverLogic = logic;
 	}
@@ -48,6 +48,9 @@ class ForwarderImpl implements ParticipantProxy {
 		return getServerLogic().getParticipantProxies();
 	}
 		
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.Forwarder#sendCaretUpdate(int, ch.iserver.ace.CaretUpdate)
+	 */
 	public void sendCaretUpdate(int participantId, CaretUpdate update) {
 		Iterator it = getProxies();
 		while (it.hasNext()) {
@@ -56,6 +59,9 @@ class ForwarderImpl implements ParticipantProxy {
 		}
 	}
 	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.Forwarder#sendOperation(int, ch.iserver.ace.Operation)
+	 */
 	public void sendOperation(int participantId, Operation op) {
 		Iterator it = getProxies();
 		while (it.hasNext()) {
@@ -64,6 +70,9 @@ class ForwarderImpl implements ParticipantProxy {
 		}
 	}
 	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.Forwarder#sendParticipantLeft(int, int)
+	 */
 	public void sendParticipantLeft(int participantId, int reason) {
 		Iterator it = getProxies();
 		while (it.hasNext()) {
@@ -72,6 +81,9 @@ class ForwarderImpl implements ParticipantProxy {
 		}
 	}
 	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.Forwarder#sendParticipantJoined(int, ch.iserver.ace.net.RemoteUserProxy)
+	 */
 	public void sendParticipantJoined(int participantId, RemoteUserProxy user) {
 		Iterator it = getProxies();
 		while (it.hasNext()) {
@@ -80,6 +92,9 @@ class ForwarderImpl implements ParticipantProxy {
 		}
 	}
 	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.Forwarder#close()
+	 */
 	public void close() {
 		Iterator it = getProxies();
 		while (it.hasNext()) {

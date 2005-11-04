@@ -37,8 +37,8 @@ public class SerializerTest extends TestCase {
 	public void testDoWork() throws InterruptedException {
 		MockControl lockControl = MockControl.createControl(Lock.class);
 		Lock lock = (Lock) lockControl.getMock();
-		MockControl forwarderControl = MockControl.createControl(Forwarder.class);
-		Forwarder forwarder = (Forwarder) forwarderControl.getMock();
+		MockControl forwarderControl = MockControl.createControl(CompositeForwarder.class);
+		CompositeForwarder forwarder = (CompositeForwarder) forwarderControl.getMock();
 		MockControl commandControl = MockControl.createControl(SerializerCommand.class);
 		SerializerCommand command = (SerializerCommand) commandControl.getMock();
 		BlockingQueue queue = new LinkedBlockingQueue();

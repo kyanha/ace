@@ -36,8 +36,8 @@ public class RequestSerializerCommandTest extends TestCase {
 	 * Test method for 'ch.iserver.ace.collaboration.jupiter.server.RequestSerializerCommand.execute(Forwarder)'
 	 */
 	public void testExecute() {
-		MockControl forwarderCtrl = MockControl.createControl(Forwarder.class);
-		Forwarder forwarder = (Forwarder) forwarderCtrl.getMock();
+		MockControl forwarderCtrl = MockControl.createControl(CompositeForwarder.class);
+		CompositeForwarder forwarder = (CompositeForwarder) forwarderCtrl.getMock();
 		MockControl algorithmCtrl = MockControl.createControl(Algorithm.class);
 		Algorithm algorithm = (Algorithm) algorithmCtrl.getMock();
 		Request request = new JupiterRequest(0, null, new InsertOperation(0, "x"));

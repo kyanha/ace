@@ -35,8 +35,8 @@ public class CaretUpdateSerializerCommandTest extends TestCase {
 	 * Test method for 'ch.iserver.ace.collaboration.jupiter.server.CaretUpdateSerializerCommand.execute(Forwarder)'
 	 */
 	public void testExecute() {
-		MockControl forwarderCtrl = MockControl.createControl(Forwarder.class);
-		Forwarder forwarder = (Forwarder) forwarderCtrl.getMock();
+		MockControl forwarderCtrl = MockControl.createControl(CompositeForwarder.class);
+		CompositeForwarder forwarder = (CompositeForwarder) forwarderCtrl.getMock();
 		MockControl algorithmCtrl = MockControl.createControl(Algorithm.class);
 		algorithmCtrl.setDefaultMatcher(MockControl.ARRAY_MATCHER);
 		Algorithm algorithm = (Algorithm) algorithmCtrl.getMock();

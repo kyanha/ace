@@ -50,7 +50,7 @@ public class ForwarderImplTest extends TestCase {
 	public void setUp() {
 		control = MockControl.createControl(ServerLogic.class);
 		logic = (ServerLogic) control.getMock();
-		forwarder = new Forwarder(logic);
+		forwarder = new CompositeForwarder(logic);
 		
 		controls = new ArrayList();
 		proxies = new ArrayList();

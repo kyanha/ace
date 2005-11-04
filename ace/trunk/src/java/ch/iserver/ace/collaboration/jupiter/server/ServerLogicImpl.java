@@ -76,7 +76,7 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 		ParameterValidator.notNull("document", document);
 		
 		this.nextParticipantId = 0;
-		this.forwarder = new Forwarder(this);
+		this.forwarder = new CompositeForwarder(this);
 		
 		this.serializerQueue = new LinkedBlockingQueue();
 		this.serializer = new Serializer(serializerQueue, lock, forwarder);
