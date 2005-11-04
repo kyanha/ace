@@ -105,7 +105,7 @@ public class CollaborationServiceTest extends TestCase {
 		// assertions
 		assertNotNull(networkService.getTimestampFactory());
 		assertEquals(service, networkService.getCallback());
-		assertEquals(1, server.getConcealCnt());
+		assertEquals(1, server.getShutdownCnt());
 	}
 	
 }

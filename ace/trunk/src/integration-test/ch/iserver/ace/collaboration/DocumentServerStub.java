@@ -31,7 +31,9 @@ import ch.iserver.ace.util.ParameterValidator;
  */
 public class DocumentServerStub implements DocumentServer {
 	
-	private int concealCnt;
+	private int shutdownCnt;
+	
+	private int prepareShutdownCnt;
 	
 	private int setDocumentDetailsCnt;
 	
@@ -46,16 +48,24 @@ public class DocumentServerStub implements DocumentServer {
 		return logic;
 	}
 	
-	public int getConcealCnt() {
-		return concealCnt;
+	public int getPrepareShutdownCnt() {
+		return prepareShutdownCnt;
+	}
+	
+	public int getShutdownCnt() {
+		return shutdownCnt;
 	}
 	
 	public int getSetDocumentDetailsCnt() {
 		return setDocumentDetailsCnt;
 	}
 	
-	public void conceal() {
-		concealCnt++;
+	public void prepareShutdown() {
+		prepareShutdownCnt++;
+	}
+	
+	public void shutdown() {
+		shutdownCnt++;
 	}
 	
 	public void setDocumentDetails(DocumentDetails details) {

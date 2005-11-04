@@ -40,6 +40,8 @@ public interface ServerLogic extends DocumentServerLogic {
 	
 	void kick(int participant);
 	
+	void prepareShutdown();
+
 	void shutdown();
 	
 	Iterator getParticipantProxies();
@@ -52,5 +54,5 @@ public interface ServerLogic extends DocumentServerLogic {
 	 * @param participantId the participant id of the leaving user
 	 */
 	void leave(int participantId);
-
+	
 }

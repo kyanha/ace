@@ -40,8 +40,26 @@ public interface DocumentServer {
 	void setDocumentDetails(DocumentDetails details);
 	
 	/**
-	 * Conceals the published document and shuts down the server.
+	 * Shuts down the DocumentServer. The DocumentServer should take care that
+	 * the document is no longer published on the network. Further, any
+	 * resources associated with this particular document can be released.
+	 * 
+	 * <p><b>Note:</b> calling further methods on this object is an error
+	 * and results in an IllegalStateException beeing thrown.</p>
 	 */
-	void conceal();
+	void shutdown();
+	
+	/**
+	 * Notifies the document server that the collaboration layer is no longer
+	 * accepting joins on the DocumentServerLogic. Further attempts to invoke
+	 * join on the DocumentServerLogic will fail with an exception.
+	 * 
+	 * <p>The document should not be unpublished on the network. Wait until
+	 * the shutdown method is called to unpublish the document.</p>
+	 * 
+	 * <p>TODO: JavaDoc Exception</p>
+	 */
+	void prepareShutdown();
+	
 	
 }

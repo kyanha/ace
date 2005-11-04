@@ -70,6 +70,8 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 	
 	private final ServerDocument document;
 	
+	private boolean acceptingJoins;
+	
 	public ServerLogicImpl(Lock lock, ParticipantConnection connection, DocumentModel document) {
 		ParameterValidator.notNull("lock", lock);
 		ParameterValidator.notNull("connection", connection);
@@ -104,6 +106,10 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 		return port;
 	}
 	
+	public boolean isAcceptingJoins() {
+		return acceptingJoins;
+	}
+	
 	public PortableDocument getDocument() {
 		return document.toPortableDocument();
 	}
@@ -118,6 +124,7 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 	}
 	
 	public void start() {
+		acceptingJoins = true;
 		serializer.start();
 		dispatcher.start();
 	}
@@ -171,6 +178,11 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 	 * @see ch.iserver.ace.net.DocumentServerLogic#join(ch.iserver.ace.net.ParticipantConnection)
 	 */
 	public synchronized ParticipantPort join(ParticipantConnection connection) {
+		if (!isAcceptingJoins()) {
+			// TODO: correct exception type
+			throw new IllegalStateException("DocumentServerLogic is not accepting joins");
+		}
+		
 		Algorithm algorithm = new Jupiter(false);
 		int participantId = nextParticipantId();
 		connection.setParticipantId(participantId);
@@ -190,8 +202,13 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 		getDocumentServer().setDocumentDetails(details);
 	}
 	
+	public synchronized void prepareShutdown() {
+		this.acceptingJoins = false;
+		getDocumentServer().prepareShutdown();
+	}
+	
 	public void shutdown() {
-		getDocumentServer().conceal();
+		getDocumentServer().shutdown();
 		try {
 			dispose();
 		} catch (InterruptedException e) {

@@ -42,6 +42,7 @@ public class PublisherPortImpl extends ParticipantPortImpl implements PublisherP
 	}
 	
 	public void leave() {
+		getLogic().prepareShutdown();
 		getQueue().add(new ShutdownCommand(getLogic()));
 	}
 	
