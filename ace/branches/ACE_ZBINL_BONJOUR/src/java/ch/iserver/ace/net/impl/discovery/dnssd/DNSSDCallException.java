@@ -21,35 +21,40 @@
 
 package ch.iserver.ace.net.impl.discovery.dnssd;
 
-import com.apple.dnssd.DNSRecord;
 import com.apple.dnssd.DNSSDException;
-import com.apple.dnssd.DNSSDRegistration;
+
 
 /**
  *
  */
-public class TXTUpdate extends DNSSDCall {
+public class DNSSDCallException extends Exception {
 
-	private DNSSDRegistration registration;
-	private byte[] rawTXT;
-	
-	public TXTUpdate(DNSSDRegistration registration, byte[] rawTXT) {
-		this.registration = registration;
-		this.rawTXT = rawTXT;
-	}
-	
+	private DNSSDException exception;
 	
 	/**
-	 * @see ch.iserver.ace.net.impl.discovery.dnssd.DNSSDCall#makeCall()
+	 * 
+	 * @param exception
 	 */
-	protected Object makeCall() throws DNSSDCallException {
-		try {
-			DNSRecord record = registration.getTXTRecord();
-			record.update(0, rawTXT, 0);
-			return null;
-		} catch (DNSSDException de) {
-			throw new DNSSDCallException(de);
-		}
+	public DNSSDCallException(DNSSDException exception) {
+		this.exception = exception;
 	}
-
+	
+	/**
+	 * 
+	 * @param message
+	 */
+	public DNSSDCallException(String message) {
+		super(message);
+	}
+	
+	/**
+	 * 
+	 *
+	 */
+	public DNSSDCallException() {}
+	
+	public DNSSDException getDNSSDException() {
+		return exception; 
+	}
+	
 }

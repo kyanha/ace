@@ -21,10 +21,7 @@
 
 package ch.iserver.ace.net.impl.discovery.dnssd;
 
-import java.io.IOException;
 import java.util.Properties;
-
-import ch.iserver.ace.ApplicationError;
 
 /**
  *

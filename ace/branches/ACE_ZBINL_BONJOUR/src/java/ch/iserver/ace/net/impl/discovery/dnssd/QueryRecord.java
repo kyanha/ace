@@ -53,8 +53,12 @@ public class QueryRecord extends DNSSDCall {
 	/**
 	 * @see ch.iserver.ace.net.impl.discovery.dnssd.DNSSDCall#makeCall()
 	 */
-	protected Object makeCall() throws DNSSDException {
-		return DNSSD.queryRecord(0, ifIndex, hostName, rrtype, 1 /* ns_c_in */, listener);
+	protected Object makeCall() throws DNSSDCallException {
+		try {
+			return DNSSD.queryRecord(0, ifIndex, hostName, rrtype, 1 /* ns_c_in */, listener);
+		} catch (DNSSDException de) {
+			throw new DNSSDCallException(de);
+		}
 	}
 
 }

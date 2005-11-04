@@ -56,8 +56,12 @@ public class Resolve extends DNSSDCall {
 	/**
 	 * @see ch.iserver.ace.net.impl.discovery.dnssd.DNSSDCall#makeCall()
 	 */
-	protected Object makeCall() throws DNSSDException {
-		return DNSSD.resolve(flags, ifIndex, serviceName, regType, domain, resolver);
+	protected Object makeCall() throws DNSSDCallException {
+		try {
+			return DNSSD.resolve(flags, ifIndex, serviceName, regType, domain, resolver);
+		} catch (DNSSDException de) {
+			throw new DNSSDCallException(de);
+		}
 	}
 
 }

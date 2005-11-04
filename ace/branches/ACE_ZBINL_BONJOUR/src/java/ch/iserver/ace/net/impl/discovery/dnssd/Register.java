@@ -56,8 +56,12 @@ public class Register extends DNSSDCall {
 	/**
 	 * @see ch.iserver.ace.net.impl.discovery.dnssd.DNSSDCall#makeCall()
 	 */
-	protected Object makeCall() throws DNSSDException {
-		return DNSSD.register(0, 0, serviceName, registrationType, "", "", port, txt, listener);
+	protected Object makeCall() throws DNSSDCallException {
+		try {
+			return DNSSD.register(0, 0, serviceName, registrationType, "", "", port, txt, listener);
+		} catch (DNSSDException de) {
+			throw new DNSSDCallException(de);
+		}
 	}
 
 }

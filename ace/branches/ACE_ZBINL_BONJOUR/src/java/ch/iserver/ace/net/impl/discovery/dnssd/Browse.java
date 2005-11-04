@@ -48,7 +48,11 @@ public class Browse extends DNSSDCall {
 	/**
 	 * @see ch.iserver.ace.net.impl.discovery.dnssd.DNSSDCall#makeCall()
 	 */
-	protected Object makeCall() throws DNSSDException {
-		return DNSSD.browse(0, 0, registrationType, "", listener);
+	protected Object makeCall() throws DNSSDCallException {
+		try {
+			return DNSSD.browse(0, 0, registrationType, "", listener);
+		} catch (DNSSDException de) {
+			throw new DNSSDCallException(de);
+		}
 	}
 }

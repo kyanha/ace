@@ -22,7 +22,6 @@
 package ch.iserver.ace.net.impl.discovery.dnssd;
 
 
-import com.apple.dnssd.DNSSDException;
 
 /**
  *
@@ -43,7 +42,7 @@ abstract class DNSSDCall {
 		while (strategy.shouldRetry()) {
 			try {
 				return makeCall();
-			} catch (DNSSDException de) {
+			} catch (DNSSDCallException dex) {
 				try {
 					strategy.exceptionOccurred();
 				} catch (RetryException re) {
@@ -58,9 +57,9 @@ abstract class DNSSDCall {
 	 * Implements the concrete DNNSD call.
 	 * 
 	 * @return the value returned by the DNSSD call
-	 * @throws DNSSDException
+	 * @throws DNSSDCallException
 	 */
-	protected abstract Object makeCall() throws DNSSDException;
+	protected abstract Object makeCall() throws DNSSDCallException;
 	
 	/**
 	 * Gets the {@link RetryStrategy}.
