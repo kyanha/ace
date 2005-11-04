@@ -21,23 +21,25 @@
 
 package ch.iserver.ace.collaboration.jupiter.server;
 
-import ch.iserver.ace.CaretUpdate;
-import ch.iserver.ace.Operation;
-import ch.iserver.ace.net.RemoteUserProxy;
+import ch.iserver.ace.util.ParameterValidator;
 
 /**
  *
  */
-interface Forwarder {
+public class LeaveCommand implements SerializerCommand {
 	
-	void forward(int participantId, Operation op);
+	private final int participantId;
 	
-	void forward(int participantId, CaretUpdate up);
+	private final int reason;
 	
-	void forwardParticipantLeft(int participantId, int reason);
+	public LeaveCommand(int participantId, int reason) {
+		ParameterValidator.notNegative("participantId", participantId);
+		this.participantId = participantId;
+		this.reason = reason;
+	}
 	
-	void forwardParticipantJoined(int participantId, RemoteUserProxy proxy);
-	
-	void close();
+	public void execute(Forwarder forwarder) {
+		forwarder.forwardParticipantLeft(participantId, reason);
+	}
 	
 }

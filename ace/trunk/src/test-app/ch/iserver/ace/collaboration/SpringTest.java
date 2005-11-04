@@ -19,25 +19,23 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.collaboration.jupiter.server;
+package ch.iserver.ace.collaboration;
 
-import ch.iserver.ace.CaretUpdate;
-import ch.iserver.ace.Operation;
-import ch.iserver.ace.net.RemoteUserProxy;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  *
  */
-interface Forwarder {
+public class SpringTest {
 	
-	void forward(int participantId, Operation op);
+	public static final String[] CONTEXT_FILES = new String[] {
+		"collaboration-context.xml"
+	};
 	
-	void forward(int participantId, CaretUpdate up);
-	
-	void forwardParticipantLeft(int participantId, int reason);
-	
-	void forwardParticipantJoined(int participantId, RemoteUserProxy proxy);
-	
-	void close();
+	public static void main(String[] args) {
+		ApplicationContext context = new ClassPathXmlApplicationContext(CONTEXT_FILES);
+		context.getBean("collaborationService");
+	}
 	
 }

@@ -2,8 +2,6 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
 
-  <!--<bean id="collaborationService" class="ch.iserver.ace.collaboration.jupiter.CollaborationServiceImpl"/>-->
-
   <bean id="messageSource" 
         class="org.springframework.context.support.ResourceBundleMessageSource">
     <property name="basenames">

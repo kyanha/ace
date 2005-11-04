@@ -29,20 +29,42 @@ import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.collaboration.jupiter.AlgorithmWrapper;
 import ch.iserver.ace.collaboration.jupiter.AlgorithmWrapperImpl;
 import ch.iserver.ace.net.ParticipantConnection;
+import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.util.ParameterValidator;
 import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
 
+/**
+ *
+ */
 class ParticipantProxyImpl implements ParticipantProxy {
 	
+	/**
+	 * 
+	 */
 	private final int participantId;
 	
+	/**
+	 * 
+	 */
 	private final BlockingQueue queue;
 	
+	/**
+	 * 
+	 */
 	private final AlgorithmWrapper algorithm;
 	
+	/**
+	 * 
+	 */
 	private final ParticipantConnection connection;
 	
-	public ParticipantProxyImpl(int participantId, 
+	/**
+	 * @param participantId
+	 * @param queue
+	 * @param algorithm
+	 * @param connection
+	 */
+	ParticipantProxyImpl(int participantId, 
 					BlockingQueue queue, 
 					Algorithm algorithm, 
 					ParticipantConnection connection) {
@@ -54,14 +76,23 @@ class ParticipantProxyImpl implements ParticipantProxy {
 		this.connection = connection;
 	}
 	
+	/**
+	 * @return
+	 */
 	protected AlgorithmWrapper getAlgorithm() {
 		return algorithm;
 	}
 	
+	/**
+	 * @return
+	 */
 	protected ParticipantConnection getConnection() {
 		return connection;
 	}
 	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.ParticipantProxy#sendCaretUpdate(int, ch.iserver.ace.CaretUpdate)
+	 */
 	public void sendCaretUpdate(int participantId, CaretUpdate update) {
 		if (this.participantId != participantId) {
 			AlgorithmWrapper algorithm = getAlgorithm();
@@ -72,6 +103,9 @@ class ParticipantProxyImpl implements ParticipantProxy {
 		}
 	}
 	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.ParticipantProxy#sendOperation(int, ch.iserver.ace.Operation)
+	 */
 	public void sendOperation(int participantId, Operation operation) {
 		if (this.participantId != participantId) {
 			AlgorithmWrapper algorithm = getAlgorithm();
@@ -81,4 +115,27 @@ class ParticipantProxyImpl implements ParticipantProxy {
 			queue.add(command);
 		}
 	}
+		
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.ParticipantProxy#sendParticipantLeft(int, int)
+	 */
+	public void sendParticipantLeft(int participantId, int reason) {
+		if (this.participantId != participantId) {
+			getConnection().sendParticipantLeft(participantId, reason);
+		}
+	}
+	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.ParticipantProxy#sendParticipantJoined(int, ch.iserver.ace.net.RemoteUserProxy)
+	 */
+	public void sendParticipantJoined(int participantId, RemoteUserProxy proxy) {
+		if (this.participantId != participantId) {
+			getConnection().sendParticipantJoined(participantId, proxy);
+		}
+	}
+	
+	public void close() {
+		getConnection().close();
+	}
+	
 }

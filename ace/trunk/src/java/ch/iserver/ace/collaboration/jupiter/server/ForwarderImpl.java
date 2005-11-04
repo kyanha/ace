@@ -25,6 +25,7 @@ import java.util.Iterator;
 
 import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.Operation;
+import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
@@ -46,7 +47,7 @@ class ForwarderImpl implements Forwarder {
 	public Iterator getProxies() {
 		return getServerLogic().getParticipantProxies();
 	}
-	
+		
 	public void forward(int participantId, CaretUpdate update) {
 		Iterator it = getProxies();
 		while (it.hasNext()) {
@@ -60,6 +61,30 @@ class ForwarderImpl implements Forwarder {
 		while (it.hasNext()) {
 			ParticipantProxy proxy = (ParticipantProxy) it.next();
 			proxy.sendOperation(participantId, op);			
+		}
+	}
+	
+	public void forwardParticipantLeft(int participantId, int reason) {
+		Iterator it = getProxies();
+		while (it.hasNext()) {
+			ParticipantProxy proxy = (ParticipantProxy) it.next();
+			proxy.sendParticipantLeft(participantId, reason);
+		}
+	}
+	
+	public void forwardParticipantJoined(int participantId, RemoteUserProxy user) {
+		Iterator it = getProxies();
+		while (it.hasNext()) {
+			ParticipantProxy proxy = (ParticipantProxy) it.next();
+			proxy.sendParticipantJoined(participantId, user);
+		}
+	}
+	
+	public void close() {
+		Iterator it = getProxies();
+		while (it.hasNext()) {
+			ParticipantProxy proxy = (ParticipantProxy) it.next();
+			proxy.close();
 		}
 	}
 	

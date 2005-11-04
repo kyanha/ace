@@ -21,23 +21,28 @@
 
 package ch.iserver.ace.collaboration.jupiter.server;
 
-import ch.iserver.ace.CaretUpdate;
-import ch.iserver.ace.Operation;
-import ch.iserver.ace.net.RemoteUserProxy;
+import ch.iserver.ace.algorithm.Algorithm;
+import ch.iserver.ace.collaboration.Participant;
+import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
 
 /**
  *
  */
-interface Forwarder {
+public class PublisherPortImpl extends ParticipantPortImpl implements PublisherPort {
 	
-	void forward(int participantId, Operation op);
+	public PublisherPortImpl(ServerLogic logic, int participantId, Algorithm algorithm, BlockingQueue queue) {
+		super(logic, participantId, algorithm, queue);
+	}
 	
-	void forward(int participantId, CaretUpdate up);
+	public void kick(int participantId) {
+		if (participantId != getParticipantId()) {
+			getLogic().kick(participantId);
+			getQueue().add(new LeaveCommand(participantId, Participant.KICKED));
+		}
+	}
 	
-	void forwardParticipantLeft(int participantId, int reason);
-	
-	void forwardParticipantJoined(int participantId, RemoteUserProxy proxy);
-	
-	void close();
+	public void leave() {
+		getQueue().add(new ShutdownCommand(getLogic()));
+	}
 	
 }

@@ -21,23 +21,26 @@
 
 package ch.iserver.ace.collaboration.jupiter.server;
 
-import ch.iserver.ace.CaretUpdate;
-import ch.iserver.ace.Operation;
-import ch.iserver.ace.net.RemoteUserProxy;
+import ch.iserver.ace.util.ParameterValidator;
 
 /**
  *
  */
-interface Forwarder {
+public class ShutdownCommand implements SerializerCommand {
 	
-	void forward(int participantId, Operation op);
+	private final ServerLogic logic;
 	
-	void forward(int participantId, CaretUpdate up);
+	public ShutdownCommand(ServerLogic logic) {
+		ParameterValidator.notNull("logic", logic);
+		this.logic = logic;
+	}
 	
-	void forwardParticipantLeft(int participantId, int reason);
-	
-	void forwardParticipantJoined(int participantId, RemoteUserProxy proxy);
-	
-	void close();
-	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.SerializerCommand#execute(ch.iserver.ace.collaboration.jupiter.server.Forwarder)
+	 */
+	public void execute(Forwarder forwarder) {
+		logic.shutdown();
+		forwarder.close();
+	}
+
 }

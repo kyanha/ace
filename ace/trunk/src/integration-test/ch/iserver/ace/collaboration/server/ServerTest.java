@@ -27,6 +27,7 @@ import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.DocumentModel;
 import ch.iserver.ace.algorithm.jupiter.JupiterRequest;
 import ch.iserver.ace.algorithm.jupiter.JupiterVectorTime;
+import ch.iserver.ace.collaboration.jupiter.RemoteUserProxyStub;
 import ch.iserver.ace.collaboration.jupiter.server.ServerLogicImpl;
 import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.net.ParticipantPort;
@@ -58,7 +59,7 @@ public class ServerTest extends TestCase {
 		
 		for (int i = 0; i < PARTICIPANTS; i++) {
 			connections[i].getUser();
-			controls[i].setDefaultReturnValue(null);
+			controls[i].setDefaultReturnValue(new RemoteUserProxyStub("" + i));
 		}
 		
 		for (int i = 1; i < PARTICIPANTS; i++) {

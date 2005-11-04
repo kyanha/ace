@@ -34,8 +34,8 @@ import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.jupiter.JupiterRequest;
 import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.collaboration.PublishedSessionCallback;
+import ch.iserver.ace.collaboration.jupiter.server.PublisherPort;
 import ch.iserver.ace.collaboration.jupiter.server.ServerLogic;
-import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.text.InsertOperation;
 
@@ -81,18 +81,22 @@ public class PublishedSessionImplTest extends TestCase {
 	public void testKick() throws Exception {
 		MockControl logicCtrl = MockControl.createControl(ServerLogic.class);
 		ServerLogic logic = (ServerLogic) logicCtrl.getMock();
+
+		MockControl portCtrl = MockControl.createControl(PublisherPort.class);
+		PublisherPort port = (PublisherPort) portCtrl.getMock();
 		
 		PublishedSessionImpl impl = new PublishedSessionImpl(callback);
 		Participant participant = new ParticipantImpl(1, new RemoteUserStub("1"));
 		
 		// define mock behavior
 		logic.getPublisherPort();
-		logicCtrl.setReturnValue(null);
-		logic.kick(participant);
+		logicCtrl.setReturnValue(port);
+		port.kick(1);
 		
 		// replay
 		logicCtrl.replay();
 		callbackCtrl.replay();
+		portCtrl.replay();
 		
 		// test
 		impl.setServerLogic(logic);
@@ -101,43 +105,45 @@ public class PublishedSessionImplTest extends TestCase {
 		// verify
 		logicCtrl.verify();
 		callbackCtrl.verify();
+		portCtrl.verify();
 	}
 	
-	public void testConceal() throws Exception {
+	public void testLeave() throws Exception {
 		MockControl logicCtrl = MockControl.createControl(ServerLogic.class);
 		ServerLogic logic = (ServerLogic) logicCtrl.getMock();
-		
+
+		MockControl portCtrl = MockControl.createControl(PublisherPort.class);
+		PublisherPort port = (PublisherPort) portCtrl.getMock();
+
 		PublishedSessionImpl impl = new PublishedSessionImpl(callback);
 		
 		// define mock behavior
 		logic.getPublisherPort();
-		logicCtrl.setReturnValue(null);
-		logic.shutdown();
+		logicCtrl.setReturnValue(port);
+		port.leave();
 		
 		// replay
 		logicCtrl.replay();
 		callbackCtrl.replay();
+		portCtrl.replay();
 		
 		// test
 		impl.setServerLogic(logic);
-		impl.conceal();
+		impl.leave();
 		
 		// verify
 		logicCtrl.verify();
 		callbackCtrl.verify();
+		portCtrl.verify();
 	}
-	
-	public void testLeave() throws Exception {
-		testConceal();
-	}
-	
+		
 	public void testSendOperation() throws Exception {
 		MockControl algorithmCtrl = MockControl.createControl(AlgorithmWrapper.class);
 		AlgorithmWrapper algorithm = (AlgorithmWrapper) algorithmCtrl.getMock();
 		MockControl logicCtrl = MockControl.createControl(ServerLogic.class);
 		ServerLogic logic = (ServerLogic) logicCtrl.getMock();
-		MockControl portCtrl = MockControl.createControl(ParticipantPort.class);
-		ParticipantPort port = (ParticipantPort) portCtrl.getMock();
+		MockControl portCtrl = MockControl.createControl(PublisherPort.class);
+		PublisherPort port = (PublisherPort) portCtrl.getMock();
 		
 		PublishedSessionImpl impl = new PublishedSessionImpl(callback, algorithm);
 		Operation operation = new InsertOperation(0, "x");
@@ -174,8 +180,8 @@ public class PublishedSessionImplTest extends TestCase {
 		AlgorithmWrapper algorithm = (AlgorithmWrapper) algorithmCtrl.getMock();
 		MockControl logicCtrl = MockControl.createControl(ServerLogic.class);
 		ServerLogic logic = (ServerLogic) logicCtrl.getMock();
-		MockControl portCtrl = MockControl.createControl(ParticipantPort.class);
-		ParticipantPort port = (ParticipantPort) portCtrl.getMock();
+		MockControl portCtrl = MockControl.createControl(PublisherPort.class);
+		PublisherPort port = (PublisherPort) portCtrl.getMock();
 		
 		PublishedSessionImpl impl = new PublishedSessionImpl(callback, algorithm);
 		Operation operation = new InsertOperation(0, "x");
@@ -211,8 +217,8 @@ public class PublishedSessionImplTest extends TestCase {
 		AlgorithmWrapper algorithm = (AlgorithmWrapper) algorithmCtrl.getMock();
 		MockControl logicCtrl = MockControl.createControl(ServerLogic.class);
 		ServerLogic logic = (ServerLogic) logicCtrl.getMock();
-		MockControl portCtrl = MockControl.createControl(ParticipantPort.class);
-		ParticipantPort port = (ParticipantPort) portCtrl.getMock();
+		MockControl portCtrl = MockControl.createControl(PublisherPort.class);
+		PublisherPort port = (PublisherPort) portCtrl.getMock();
 		
 		PublishedSessionImpl impl = new PublishedSessionImpl(callback, algorithm);
 		CaretUpdate update = new CaretUpdate(1, 2);
@@ -249,8 +255,8 @@ public class PublishedSessionImplTest extends TestCase {
 		AlgorithmWrapper algorithm = (AlgorithmWrapper) algorithmCtrl.getMock();
 		MockControl logicCtrl = MockControl.createControl(ServerLogic.class);
 		ServerLogic logic = (ServerLogic) logicCtrl.getMock();
-		MockControl portCtrl = MockControl.createControl(ParticipantPort.class);
-		ParticipantPort port = (ParticipantPort) portCtrl.getMock();
+		MockControl portCtrl = MockControl.createControl(PublisherPort.class);
+		PublisherPort port = (PublisherPort) portCtrl.getMock();
 		
 		PublishedSessionImpl impl = new PublishedSessionImpl(callback, algorithm);
 		CaretUpdate update = new CaretUpdate(0, 1);

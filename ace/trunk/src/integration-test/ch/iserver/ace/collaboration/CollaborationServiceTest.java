@@ -93,7 +93,7 @@ public class CollaborationServiceTest extends TestCase {
 		
 		Thread.sleep(2000);
 		
-		session.conceal();
+		session.leave();
 		
 		// verify
 		callbackCtrl.verify();

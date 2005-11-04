@@ -23,6 +23,7 @@ package ch.iserver.ace.collaboration.jupiter.server;
 
 import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.Operation;
+import ch.iserver.ace.net.RemoteUserProxy;
 
 /**
  *
@@ -32,5 +33,11 @@ interface ParticipantProxy {
 	void sendOperation(int participantId, Operation operation);
 	
 	void sendCaretUpdate(int participantId, CaretUpdate update);
+	
+	void sendParticipantLeft(int participantId, int reason);
+	
+	void sendParticipantJoined(int participantId, RemoteUserProxy proxy);
+	
+	void close();
 	
 }

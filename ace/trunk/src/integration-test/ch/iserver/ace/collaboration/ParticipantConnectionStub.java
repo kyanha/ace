@@ -46,7 +46,6 @@ public class ParticipantConnectionStub implements ParticipantConnection {
 	 * @see ch.iserver.ace.net.ParticipantConnection#setParticipantId(int)
 	 */
 	public void setParticipantId(int participantId) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -74,7 +73,6 @@ public class ParticipantConnectionStub implements ParticipantConnection {
 	 * @see ch.iserver.ace.net.ParticipantConnection#sendRequest(int, ch.iserver.ace.algorithm.Request)
 	 */
 	public void sendRequest(int participantId, Request request) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -83,7 +81,6 @@ public class ParticipantConnectionStub implements ParticipantConnection {
 	 */
 	public void sendCaretUpdateMessage(int participantId,
 					CaretUpdateMessage message) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -91,7 +88,6 @@ public class ParticipantConnectionStub implements ParticipantConnection {
 	 * @see ch.iserver.ace.net.ParticipantConnection#sendParticipantJoined(int, ch.iserver.ace.net.RemoteUserProxy)
 	 */
 	public void sendParticipantJoined(int participantId, RemoteUserProxy proxy) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -99,7 +95,6 @@ public class ParticipantConnectionStub implements ParticipantConnection {
 	 * @see ch.iserver.ace.net.ParticipantConnection#sendParticipantLeft(int, int)
 	 */
 	public void sendParticipantLeft(int participantId, int reason) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -107,7 +102,6 @@ public class ParticipantConnectionStub implements ParticipantConnection {
 	 * @see ch.iserver.ace.net.ParticipantConnection#sendKicked()
 	 */
 	public void sendKicked() {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -115,7 +109,6 @@ public class ParticipantConnectionStub implements ParticipantConnection {
 	 * @see ch.iserver.ace.net.ParticipantConnection#close()
 	 */
 	public void close() {
-		// TODO Auto-generated method stub
 
 	}
 

@@ -30,9 +30,9 @@ import ch.iserver.ace.algorithm.jupiter.Jupiter;
 import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.collaboration.PublishedSession;
 import ch.iserver.ace.collaboration.PublishedSessionCallback;
+import ch.iserver.ace.collaboration.jupiter.server.PublisherPort;
 import ch.iserver.ace.collaboration.jupiter.server.ServerLogic;
 import ch.iserver.ace.net.ParticipantConnection;
-import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.PortableDocument;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.util.ParameterValidator;
@@ -45,7 +45,7 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 	
 	private ServerLogic logic;
 	
-	private ParticipantPort port;
+	private PublisherPort port;
 	
 	private final PublishedSessionCallback callback;
 	
@@ -73,7 +73,7 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 		return logic;
 	}
 	
-	protected ParticipantPort getPort() {
+	protected PublisherPort getPort() {
 		return port;
 	}
 	
@@ -92,15 +92,7 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 	 * @see ch.iserver.ace.collaboration.PublishedSession#kick(ch.iserver.ace.collaboration.Participant)
 	 */
 	public void kick(Participant participant) {
-		getLogic().kick(participant);
-	}
-
-	/**
-	 * @see ch.iserver.ace.collaboration.PublishedSession#conceal()
-	 */
-	public void conceal() {
-		getPublisherConnection().close();
-		getLogic().shutdown();
+		getPort().kick(participant.getParticipantId());
 	}
 
 	/**
@@ -114,7 +106,7 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 	 * @see ch.iserver.ace.collaboration.Session#leave()
 	 */
 	public void leave() {
-		conceal();
+		getPort().leave();
 	}
 
 	/**

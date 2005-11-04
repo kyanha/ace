@@ -21,23 +21,13 @@
 
 package ch.iserver.ace.collaboration.jupiter.server;
 
-import ch.iserver.ace.CaretUpdate;
-import ch.iserver.ace.Operation;
-import ch.iserver.ace.net.RemoteUserProxy;
+import ch.iserver.ace.net.ParticipantPort;
 
 /**
  *
  */
-interface Forwarder {
+public interface PublisherPort extends ParticipantPort {
 	
-	void forward(int participantId, Operation op);
-	
-	void forward(int participantId, CaretUpdate up);
-	
-	void forwardParticipantLeft(int participantId, int reason);
-	
-	void forwardParticipantJoined(int participantId, RemoteUserProxy proxy);
-	
-	void close();
+	void kick(int participantId);
 	
 }

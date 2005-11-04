@@ -47,11 +47,5 @@ public interface PublishedSession extends Session {
 	 * @param participant the participant to kick from the session
 	 */
 	void kick(Participant participant);
-	
-	/**
-	 * Conceals this published session. This terminates the sharing of the
-	 * document.
-	 */
-	void conceal();
-		
+			
 }

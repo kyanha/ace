@@ -24,24 +24,27 @@ package ch.iserver.ace.collaboration.jupiter.server;
 import java.util.Iterator;
 
 import ch.iserver.ace.DocumentDetails;
-import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.net.DocumentServerLogic;
-import ch.iserver.ace.net.ParticipantPort;
+import ch.iserver.ace.net.PortableDocument;
 
 /**
  *
  */
 public interface ServerLogic extends DocumentServerLogic {
 	
-	ParticipantPort getPublisherPort();
+	void addParticipant(SessionParticipant participant);
+	
+	PublisherPort getPublisherPort();
 	
 	void setDocumentDetails(DocumentDetails details);
 	
-	void kick(Participant participant);
+	void kick(int participant);
 	
 	void shutdown();
 	
 	Iterator getParticipantProxies();
+	
+	PortableDocument getDocument();
 	
 	/**
 	 * Notifies the server that the specified user leaves the editing session.

@@ -24,6 +24,7 @@ package ch.iserver.ace.collaboration.jupiter.server;
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
+import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.util.ParameterValidator;
 import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
@@ -41,7 +42,13 @@ class ParticipantPortImpl implements ParticipantPort {
 	
 	private final BlockingQueue queue;
 	
-	public ParticipantPortImpl(ServerLogic logic, int participantId, Algorithm algorithm, BlockingQueue queue) {
+	/**
+	 * @param logic
+	 * @param participantId
+	 * @param algorithm
+	 * @param queue
+	 */
+	ParticipantPortImpl(ServerLogic logic, int participantId, Algorithm algorithm, BlockingQueue queue) {
 		ParameterValidator.notNull("algorithm", algorithm);
 		ParameterValidator.notNull("queue", queue);
 		this.logic = logic;
@@ -49,37 +56,63 @@ class ParticipantPortImpl implements ParticipantPort {
 		this.algorithm = algorithm;
 		this.queue = queue;
 	}
-	
+
+	/**
+	 * @return
+	 */
+	protected BlockingQueue getQueue() {
+		return queue;
+	}
+
+	/**
+	 * @return
+	 */
 	protected ServerLogic getLogic() {
 		return logic;
 	}
-	
-	public int getParticipantId() {
-		return participantId;
-	}
-	
+		
+	/**
+	 * @return
+	 */
 	public Algorithm getAlgorithm() {
 		return algorithm;
 	}
 	
+	/** 
+	 * @see ch.iserver.ace.net.ParticipantPort#getParticipantId()
+	 */
+	public int getParticipantId() {
+		return participantId;
+	}
+
+	/**
+	 * @see ch.iserver.ace.net.ParticipantPort#receiveCaretUpdate(ch.iserver.ace.algorithm.CaretUpdateMessage)
+	 */
 	public void receiveCaretUpdate(CaretUpdateMessage message) {
 		SerializerCommand cmd = new CaretUpdateSerializerCommand(
 						getParticipantId(),
 						getAlgorithm(),
 						message);
-		queue.add(cmd);
+		getQueue().add(cmd);
 	}
 	
+	/**
+	 * @see ch.iserver.ace.net.ParticipantPort#receiveRequest(ch.iserver.ace.algorithm.Request)
+	 */
 	public void receiveRequest(Request request) {
 		SerializerCommand cmd = new RequestSerializerCommand(
 						getParticipantId(),
 						getAlgorithm(),
 						request);
-		queue.add(cmd);
+		getQueue().add(cmd);
 	}
 	
+	/**
+	 * @see ch.iserver.ace.net.ParticipantPort#leave()
+	 */
 	public void leave() {
 		getLogic().leave(getParticipantId());
+		getQueue().add(new LeaveCommand(getParticipantId(), Participant.LEFT));
 	}
 	
 }
