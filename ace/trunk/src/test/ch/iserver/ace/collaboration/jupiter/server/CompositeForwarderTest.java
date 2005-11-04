@@ -31,6 +31,9 @@ import org.easymock.MockControl;
 
 import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.Operation;
+import ch.iserver.ace.collaboration.Participant;
+import ch.iserver.ace.collaboration.jupiter.RemoteUserProxyStub;
+import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.text.InsertOperation;
 
 public class CompositeForwarderTest extends TestCase {
@@ -83,10 +86,7 @@ public class CompositeForwarderTest extends TestCase {
 		}
 	}
 	
-	/**
-	 * Test method for 'ch.iserver.ace.collaboration.jupiter.server.ForwarderImpl.forward(int, CaretUpdate)'
-	 */
-	public void testForwardIntCaretUpdate() {
+	public void testSendCaretUpdate() {
 		// test fixture
 		CaretUpdate update = new CaretUpdate(1, 3);
 
@@ -110,10 +110,7 @@ public class CompositeForwarderTest extends TestCase {
 		verifyProxyControls();
 	}
 
-	/**
-	 * Test method for 'ch.iserver.ace.collaboration.jupiter.server.ForwarderImpl.forward(int, Operation)'
-	 */
-	public void testForwardIntOperation() {
+	public void testSendOperation() {
 		// test fixture
 		Operation operation = new InsertOperation(0, "foo");
 
@@ -132,6 +129,50 @@ public class CompositeForwarderTest extends TestCase {
 		// test forwarding of CaretUpdate
 		forwarder.sendOperation(1, operation);
 		
+		// verify
+		control.verify();
+		verifyProxyControls();
+	}
+	
+	public void testSendParticipantJoined() throws Exception {
+		RemoteUserProxy user = new RemoteUserProxyStub("X");
+
+		// define mock behavior
+		logic.getParticipantProxies();
+		control.setReturnValue(getProxies());
+		
+		for (int i = 0; i < PROXY_COUNT; i++) {
+			((Forwarder) proxies.get(i)).sendParticipantJoined(1, user);
+		}
+		
+		// replay
+		control.replay();
+		replayProxyControls();
+		
+		// test
+		forwarder.sendParticipantJoined(1, user);
+
+		// verify
+		control.verify();
+		verifyProxyControls();
+	}
+	
+	public void testSendParticipantLeft() throws Exception {
+		// define mock behavior
+		logic.getParticipantProxies();
+		control.setReturnValue(getProxies());
+		
+		for (int i = 0; i < PROXY_COUNT; i++) {
+			((Forwarder) proxies.get(i)).sendParticipantLeft(1, Participant.LEFT);
+		}
+		
+		// replay
+		control.replay();
+		replayProxyControls();
+		
+		// test
+		forwarder.sendParticipantLeft(1, Participant.LEFT);
+
 		// verify
 		control.verify();
 		verifyProxyControls();
