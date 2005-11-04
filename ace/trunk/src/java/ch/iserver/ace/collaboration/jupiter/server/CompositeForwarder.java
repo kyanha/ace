@@ -76,7 +76,7 @@ class CompositeForwarder implements Forwarder {
 	public void sendParticipantLeft(int participantId, int reason) {
 		Iterator it = getProxies();
 		while (it.hasNext()) {
-			ParticipantProxy proxy = (ParticipantProxy) it.next();
+			Forwarder proxy = (Forwarder) it.next();
 			proxy.sendParticipantLeft(participantId, reason);
 		}
 	}
@@ -87,7 +87,7 @@ class CompositeForwarder implements Forwarder {
 	public void sendParticipantJoined(int participantId, RemoteUserProxy user) {
 		Iterator it = getProxies();
 		while (it.hasNext()) {
-			ParticipantProxy proxy = (ParticipantProxy) it.next();
+			Forwarder proxy = (Forwarder) it.next();
 			proxy.sendParticipantJoined(participantId, user);
 		}
 	}
@@ -98,7 +98,7 @@ class CompositeForwarder implements Forwarder {
 	public void close() {
 		Iterator it = getProxies();
 		while (it.hasNext()) {
-			ParticipantProxy proxy = (ParticipantProxy) it.next();
+			Forwarder proxy = (Forwarder) it.next();
 			proxy.close();
 		}
 	}

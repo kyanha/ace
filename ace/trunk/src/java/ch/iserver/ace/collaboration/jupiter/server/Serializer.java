@@ -88,9 +88,10 @@ class Serializer extends Worker {
 	 * @see ch.iserver.ace.util.Worker#doWork()
 	 */
 	protected void doWork() throws InterruptedException {
+		SerializerCommand cmd = (SerializerCommand) queue.take();
+		LOG.info("SERIALIZER: serializing next command ...");
+		System.out.println(cmd.getClass().getName());
 		try {
-			SerializerCommand cmd = (SerializerCommand) queue.take();
-			LOG.info("SERIALIZER: serializing next command ...");
 			getLock().lock();
 			cmd.execute(getForwarder());
 			LOG.info("SERIALIZER: command executed ...");

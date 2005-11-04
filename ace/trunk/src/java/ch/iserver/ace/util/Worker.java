@@ -50,7 +50,7 @@ public abstract class Worker extends Thread {
 				} catch (InterruptedException e) {
 					throw e;
 				} catch (Exception e) {
-					System.err.println(e.getMessage());
+					e.printStackTrace();
 				}
 			}
 		} catch (InterruptedException e) {
