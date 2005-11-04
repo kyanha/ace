@@ -47,7 +47,7 @@ class CaretUpdateSerializerCommand extends AbstractSerializerCommand {
 	/**
 	 * @see ch.iserver.ace.collaboration.jupiter.server.SerializerCommand#execute(ch.iserver.ace.collaboration.jupiter.server.Forwarder)
 	 */
-	public void execute(ParticipantProxy forwarder) {
+	public void execute(Forwarder forwarder) {
 		CaretUpdate update = getMessage().getUpdate();
 		Timestamp timestamp = getMessage().getTimestamp();
 		int[] indices = getAlgorithm().transformIndices(timestamp, update.getIndices());

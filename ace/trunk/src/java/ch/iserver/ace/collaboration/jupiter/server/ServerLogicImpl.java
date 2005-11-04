@@ -48,7 +48,7 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 	
 	private int nextParticipantId;
 	
-	private final ParticipantProxy forwarder;
+	private final Forwarder forwarder;
 	
 	private final Serializer serializer;
 	
@@ -99,7 +99,7 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 		int participantId = 0;
 		connection.setParticipantId(participantId);
 		PublisherPort port = new PublisherPortImpl(this, participantId, algorithm, getSerializerQueue());
-		ParticipantProxy proxy = new ParticipantProxyImpl(participantId, dispatcherQueue, algorithm, connection);
+		ParticipantProxy proxy = new ParticipantProxy(participantId, dispatcherQueue, algorithm, connection);
 		addParticipant(port, proxy, connection);
 		return port;
 	}
@@ -180,7 +180,7 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 		connection.setParticipantId(participantId);
 		
 		ParticipantPort port = new ParticipantPortImpl(this, participantId, algorithm, getSerializerQueue());
-		ParticipantProxy proxy = new ParticipantProxyImpl(participantId, dispatcherQueue, algorithm, connection);
+		ParticipantProxy proxy = new ParticipantProxy(participantId, dispatcherQueue, algorithm, connection);
 		SessionParticipant participant = new SessionParticipant(port, proxy, connection, connection.getUser());
 		SerializerCommand cmd = new JoinCommand(participant, this);
 		getSerializerQueue().add(cmd);

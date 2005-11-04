@@ -35,6 +35,6 @@ interface SerializerCommand {
 	 * 
 	 * @param forwarder the Forwarder to receive the results
 	 */
-	void execute(ParticipantProxy forwarder);
+	void execute(Forwarder forwarder);
 	
 }

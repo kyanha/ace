@@ -38,7 +38,7 @@ public class ShutdownCommand implements SerializerCommand {
 	/**
 	 * @see ch.iserver.ace.collaboration.jupiter.server.SerializerCommand#execute(ch.iserver.ace.collaboration.jupiter.server.Forwarder)
 	 */
-	public void execute(ParticipantProxy forwarder) {
+	public void execute(Forwarder forwarder) {
 		logic.shutdown();
 		forwarder.close();
 	}

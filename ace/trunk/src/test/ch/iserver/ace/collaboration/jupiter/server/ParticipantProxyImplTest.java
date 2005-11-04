@@ -48,7 +48,7 @@ public class ParticipantProxyImplTest extends TestCase {
 		Algorithm algorithm = (Algorithm) algorithmCtrl.getMock();
 		MockControl connectionCtrl = MockControl.createControl(ParticipantConnection.class);
 		ParticipantConnection connection = (ParticipantConnection) connectionCtrl.getMock();
-		ParticipantProxy proxy = new ParticipantProxyImpl(1, queue, algorithm, connection);
+		ParticipantProxy proxy = new ParticipantProxy(1, queue, algorithm, connection);
 		
 		// define mock behavior
 		CaretUpdate update = new CaretUpdate(1, 2);
@@ -84,7 +84,7 @@ public class ParticipantProxyImplTest extends TestCase {
 		Algorithm algorithm = (Algorithm) algorithmCtrl.getMock();
 		MockControl connectionCtrl = MockControl.createControl(ParticipantConnection.class);
 		ParticipantConnection connection = (ParticipantConnection) connectionCtrl.getMock();
-		ParticipantProxy proxy = new ParticipantProxyImpl(1, queue, algorithm, connection);
+		ParticipantProxy proxy = new ParticipantProxy(1, queue, algorithm, connection);
 		
 		// define mock behavior
 		Operation operation = new InsertOperation(0, "x");

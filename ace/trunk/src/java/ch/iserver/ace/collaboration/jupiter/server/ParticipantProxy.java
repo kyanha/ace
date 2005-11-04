@@ -36,7 +36,7 @@ import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
 /**
  *
  */
-class ParticipantProxyImpl implements ParticipantProxy {
+class ParticipantProxy implements Forwarder {
 	
 	/**
 	 * 
@@ -64,7 +64,7 @@ class ParticipantProxyImpl implements ParticipantProxy {
 	 * @param algorithm
 	 * @param connection
 	 */
-	ParticipantProxyImpl(int participantId, 
+	ParticipantProxy(int participantId, 
 					BlockingQueue queue, 
 					Algorithm algorithm, 
 					ParticipantConnection connection) {

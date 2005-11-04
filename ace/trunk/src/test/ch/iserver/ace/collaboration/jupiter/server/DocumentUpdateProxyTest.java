@@ -37,7 +37,7 @@ public class DocumentUpdateProxyTest extends TestCase {
 	
 	private ServerDocument document;
 	
-	private ParticipantProxy proxy;
+	private Forwarder proxy;
 	
 	public void setUp() {
 		documentCtrl = MockControl.createControl(ServerDocument.class);

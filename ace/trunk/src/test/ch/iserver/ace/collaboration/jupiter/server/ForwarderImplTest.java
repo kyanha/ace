@@ -56,9 +56,9 @@ public class ForwarderImplTest extends TestCase {
 		proxies = new ArrayList();
 		
 		for (int i = 0; i < PROXY_COUNT; i++) {
-			MockControl control = MockControl.createControl(ParticipantProxy.class);
+			MockControl control = MockControl.createControl(Forwarder.class);
 			controls.add(control);
-			ParticipantProxy proxy = (ParticipantProxy) control.getMock();
+			Forwarder proxy = (Forwarder) control.getMock();
 			proxies.add(proxy);
 		}
 	}
@@ -95,7 +95,7 @@ public class ForwarderImplTest extends TestCase {
 		control.setReturnValue(getProxies());
 		
 		for (int i = 0; i < PROXY_COUNT; i++) {
-			((ParticipantProxy) proxies.get(i)).sendCaretUpdate(1, update);
+			((Forwarder) proxies.get(i)).sendCaretUpdate(1, update);
 		}
 		
 		// replay
@@ -122,7 +122,7 @@ public class ForwarderImplTest extends TestCase {
 		control.setReturnValue(getProxies());
 		
 		for (int i = 0; i < PROXY_COUNT; i++) {
-			((ParticipantProxy) proxies.get(i)).sendOperation(1, operation);
+			((Forwarder) proxies.get(i)).sendOperation(1, operation);
 		}
 		
 		// replay

@@ -54,7 +54,7 @@ class CompositeForwarder implements Forwarder {
 	public void sendCaretUpdate(int participantId, CaretUpdate update) {
 		Iterator it = getProxies();
 		while (it.hasNext()) {
-			ParticipantProxy proxy = (ParticipantProxy) it.next();
+			Forwarder proxy = (Forwarder) it.next();
 			proxy.sendCaretUpdate(participantId, update);
 		}
 	}
@@ -65,7 +65,7 @@ class CompositeForwarder implements Forwarder {
 	public void sendOperation(int participantId, Operation op) {
 		Iterator it = getProxies();
 		while (it.hasNext()) {
-			ParticipantProxy proxy = (ParticipantProxy) it.next();
+			Forwarder proxy = (Forwarder) it.next();
 			proxy.sendOperation(participantId, op);			
 		}
 	}

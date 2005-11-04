@@ -39,7 +39,7 @@ import ch.iserver.ace.util.ParameterValidator;
  * caret updates are applied to a 
  * {@link ch.iserver.ace.collaboration.jupiter.server.ServerDocument} instance.
  */
-class DocumentUpdateProxy implements ParticipantProxy {
+class DocumentUpdateProxy implements Forwarder {
 	
 	/**
 	 * The static logger used by classes of this instance.

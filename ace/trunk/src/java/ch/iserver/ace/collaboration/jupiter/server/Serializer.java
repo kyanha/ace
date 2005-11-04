@@ -51,7 +51,7 @@ class Serializer extends Worker {
 	 * The Forwarder that forwards the results of the transformation to
 	 * all other participants.
 	 */
-	private final ParticipantProxy forwarder;
+	private final Forwarder forwarder;
 	
 	/**
 	 * Creates a new Serializer worker thread.
@@ -60,7 +60,7 @@ class Serializer extends Worker {
 	 * @param lock the lock that guards the critical sections
 	 * @param forwarder the forwarder that forwards the results
 	 */
-	Serializer(BlockingQueue queue, Lock lock, ParticipantProxy forwarder) {
+	Serializer(BlockingQueue queue, Lock lock, Forwarder forwarder) {
 		super("Serializer");
 		ParameterValidator.notNull("queue", queue);
 		ParameterValidator.notNull("lock", lock);
@@ -73,7 +73,7 @@ class Serializer extends Worker {
 	/**
 	 * @return the forwarder that forwards the results
 	 */
-	protected ParticipantProxy getForwarder() {
+	protected Forwarder getForwarder() {
 		return forwarder;
 	}
 	
