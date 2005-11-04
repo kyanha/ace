@@ -50,7 +50,7 @@ public class ForwarderImplTest extends TestCase {
 	public void setUp() {
 		control = MockControl.createControl(ServerLogic.class);
 		logic = (ServerLogic) control.getMock();
-		forwarder = new ForwarderImpl(logic);
+		forwarder = new Forwarder(logic);
 		
 		controls = new ArrayList();
 		proxies = new ArrayList();
@@ -103,7 +103,7 @@ public class ForwarderImplTest extends TestCase {
 		replayProxyControls();
 		
 		// test forwarding of CaretUpdate
-		forwarder.forward(1, update);
+		forwarder.sendCaretUpdate(1, update);
 		
 		// verify
 		control.verify();
@@ -130,7 +130,7 @@ public class ForwarderImplTest extends TestCase {
 		replayProxyControls();
 		
 		// test forwarding of CaretUpdate
-		forwarder.forward(1, operation);
+		forwarder.sendOperation(1, operation);
 		
 		// verify
 		control.verify();

@@ -44,7 +44,7 @@ public class RequestSerializerCommandTest extends TestCase {
 		SerializerCommand command = new RequestSerializerCommand(1, algorithm, request);
 		
 		// define mock behavior
-		forwarder.forward(1, new InsertOperation(1, "x"));
+		forwarder.sendOperation(1, new InsertOperation(1, "x"));
 		algorithm.receiveRequest(new JupiterRequest(0, null, new InsertOperation(0, "x")));
 		algorithmCtrl.setReturnValue(new InsertOperation(1, "x"));
 		

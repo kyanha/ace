@@ -44,7 +44,7 @@ public class CaretUpdateSerializerCommandTest extends TestCase {
 		SerializerCommand command = new CaretUpdateSerializerCommand(1, algorithm, message);
 		
 		// define mock behavior
-		forwarder.forward(1, new CaretUpdate(1, 2));
+		forwarder.sendCaretUpdate(1, new CaretUpdate(1, 2));
 		algorithm.transformIndices(null, new int[] { 1, 2 });
 		algorithmCtrl.setReturnValue(new int[] { 1, 2 });
 		

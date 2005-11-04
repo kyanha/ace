@@ -46,9 +46,9 @@ class RequestSerializerCommand extends AbstractSerializerCommand {
 	/**
 	 * @see ch.iserver.ace.collaboration.jupiter.server.SerializerCommand#execute(ch.iserver.ace.collaboration.jupiter.server.Forwarder)
 	 */
-	public void execute(Forwarder forwarder) {
+	public void execute(ParticipantProxy forwarder) {
 		Operation op = getAlgorithm().receiveRequest(getRequest());
-		forwarder.forward(getParticipantId(), op);
+		forwarder.sendOperation(getParticipantId(), op);
 	}
 
 }

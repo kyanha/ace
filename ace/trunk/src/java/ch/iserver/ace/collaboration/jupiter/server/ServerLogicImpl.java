@@ -48,7 +48,7 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 	
 	private int nextParticipantId;
 	
-	private final Forwarder forwarder;
+	private final ParticipantProxy forwarder;
 	
 	private final Serializer serializer;
 	
@@ -76,7 +76,7 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 		ParameterValidator.notNull("document", document);
 		
 		this.nextParticipantId = 0;
-		this.forwarder = new ForwarderImpl(this);
+		this.forwarder = new Forwarder(this);
 		
 		this.serializerQueue = new LinkedBlockingQueue();
 		this.serializer = new Serializer(serializerQueue, lock, forwarder);

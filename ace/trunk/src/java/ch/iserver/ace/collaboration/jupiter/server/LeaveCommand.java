@@ -28,18 +28,31 @@ import ch.iserver.ace.util.ParameterValidator;
  */
 public class LeaveCommand implements SerializerCommand {
 	
+	/**
+	 * 
+	 */
 	private final int participantId;
 	
+	/**
+	 * 
+	 */
 	private final int reason;
 	
+	/**
+	 * @param participantId
+	 * @param reason
+	 */
 	public LeaveCommand(int participantId, int reason) {
 		ParameterValidator.notNegative("participantId", participantId);
 		this.participantId = participantId;
 		this.reason = reason;
 	}
 	
-	public void execute(Forwarder forwarder) {
-		forwarder.forwardParticipantLeft(participantId, reason);
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.SerializerCommand#execute(ch.iserver.ace.collaboration.jupiter.server.Forwarder)
+	 */
+	public void execute(ParticipantProxy forwarder) {
+		forwarder.sendParticipantLeft(participantId, reason);
 	}
 	
 }

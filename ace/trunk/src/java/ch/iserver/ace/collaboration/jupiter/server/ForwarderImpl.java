@@ -31,7 +31,7 @@ import ch.iserver.ace.util.ParameterValidator;
 /**
  *
  */
-class ForwarderImpl implements Forwarder {
+class ForwarderImpl implements ParticipantProxy {
 	
 	final ServerLogic serverLogic;
 	
@@ -48,7 +48,7 @@ class ForwarderImpl implements Forwarder {
 		return getServerLogic().getParticipantProxies();
 	}
 		
-	public void forward(int participantId, CaretUpdate update) {
+	public void sendCaretUpdate(int participantId, CaretUpdate update) {
 		Iterator it = getProxies();
 		while (it.hasNext()) {
 			ParticipantProxy proxy = (ParticipantProxy) it.next();
@@ -56,7 +56,7 @@ class ForwarderImpl implements Forwarder {
 		}
 	}
 	
-	public void forward(int participantId, Operation op) {
+	public void sendOperation(int participantId, Operation op) {
 		Iterator it = getProxies();
 		while (it.hasNext()) {
 			ParticipantProxy proxy = (ParticipantProxy) it.next();
@@ -64,7 +64,7 @@ class ForwarderImpl implements Forwarder {
 		}
 	}
 	
-	public void forwardParticipantLeft(int participantId, int reason) {
+	public void sendParticipantLeft(int participantId, int reason) {
 		Iterator it = getProxies();
 		while (it.hasNext()) {
 			ParticipantProxy proxy = (ParticipantProxy) it.next();
@@ -72,7 +72,7 @@ class ForwarderImpl implements Forwarder {
 		}
 	}
 	
-	public void forwardParticipantJoined(int participantId, RemoteUserProxy user) {
+	public void sendParticipantJoined(int participantId, RemoteUserProxy user) {
 		Iterator it = getProxies();
 		while (it.hasNext()) {
 			ParticipantProxy proxy = (ParticipantProxy) it.next();

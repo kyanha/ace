@@ -57,12 +57,12 @@ public class JoinCommand implements SerializerCommand {
 	/**
 	 * @see ch.iserver.ace.collaboration.jupiter.server.SerializerCommand#execute(ch.iserver.ace.collaboration.jupiter.server.Forwarder)
 	 */
-	public void execute(Forwarder forwarder) {
+	public void execute(ParticipantProxy forwarder) {
 		ParticipantConnection connection = getConnection();
 		PortableDocument document = logic.getDocument();
 		connection.sendDocument(document);
 		logic.addParticipant(participant);
-		forwarder.forwardParticipantJoined(getParticipantId(), getUserProxy());		
+		forwarder.sendParticipantJoined(getParticipantId(), getUserProxy());		
 	}
 
 }
