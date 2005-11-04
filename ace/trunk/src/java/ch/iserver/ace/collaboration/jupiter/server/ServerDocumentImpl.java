@@ -192,7 +192,6 @@ public class ServerDocumentImpl extends AbstractDocument implements
 	// --> DocumentModel methods <--
 	
 	public void participantJoined(int participantId, RemoteUserProxy proxy) {
-		System.out.println("J " + participantId);
 		setCaretHandler(participantId, new CaretHandler(-1, -1));
 		addParticipant(participantId, proxy);
 	}
@@ -236,7 +235,6 @@ public class ServerDocumentImpl extends AbstractDocument implements
 	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerDocument#insertString(int, int, java.lang.String)
 	 */
 	public void insertString(int participantId, int offset, String text) {
-		System.out.println(participantId + " " + offset + "  " + text);
 		SimpleAttributeSet attr = new SimpleAttributeSet();
 		attr.addAttribute(PARTICIPANT_ATTR, new Integer(participantId));
 		try {
