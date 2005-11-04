@@ -28,7 +28,8 @@ import ch.iserver.ace.collaboration.PublishedSession;
 import ch.iserver.ace.collaboration.RemoteUser;
 
 public class RemoteUserStub implements MutableRemoteUser {
-	final String id;
+	private final String id;
+	private String name;
 	public RemoteUserStub(String id) {
 		this.id = id;
 	}
@@ -39,10 +40,10 @@ public class RemoteUserStub implements MutableRemoteUser {
 		return null;
 	}
 	public void setName(String userName) {
-		// ignore
+		this.name = userName;
 	}
 	public String getName() {
-		return null;
+		return name;
 	}
 	public void invite(PublishedSession session) {
 		// ignore
