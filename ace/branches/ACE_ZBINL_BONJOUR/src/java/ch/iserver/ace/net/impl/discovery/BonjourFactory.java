@@ -38,6 +38,7 @@ public class BonjourFactory extends DiscoveryFactory {
 		UserRegistration registration = new UserRegistrationImpl();
 		PeerDiscovery discovery = createPeerDiscovery(callback);
 		Bonjour b = new Bonjour(registration, discovery, props);
+		Bonjour.setLocalServiceName(System.getProperty("user.name"));
 		return b;
 	}
 	

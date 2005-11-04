@@ -60,7 +60,7 @@ class TXTRecordProxy {
 				LOG.error(uee);
 			}
 		} else {
-			LOG.warn("data in TXT record not found.");
+			LOG.warn("value in TXT record for ["+key+"] not found.");
 		}
 		return result;
 	}

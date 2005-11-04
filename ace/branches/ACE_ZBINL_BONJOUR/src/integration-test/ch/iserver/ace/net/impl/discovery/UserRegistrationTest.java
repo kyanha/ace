@@ -68,6 +68,7 @@ public class UserRegistrationTest extends TestCase {
 //		assertEquals(props.get(Bonjour.KEY_PROTOCOL_VERSION), TXTRecordProxy.get(TXTRecordProxy.TXT_PROTOCOL_VERSION, rec));
 		
 		registration.stop();
+		assertFalse(registration.isRegistered());
 	}
 	
 	public Discovery createDiscovery(DiscoveryCallback callback) {

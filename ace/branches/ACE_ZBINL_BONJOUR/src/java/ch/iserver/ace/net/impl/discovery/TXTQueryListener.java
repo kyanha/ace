@@ -46,7 +46,7 @@ class TXTQueryListener extends AbstractQueryListener {
 			String serviceName = Bonjour.getServiceName(fullName);
 			if (adapter.isServiceKnown(serviceName)) {
 				TXTRecord t = new TXTRecord(rdata);
-				String userName = TXTRecordProxy.get(Bonjour.KEY_USER, t);
+				String userName = TXTRecordProxy.get(TXTRecordProxy.TXT_USER, t);
 				adapter.userNameChanged(serviceName, userName);
 			} else {
 				LOG.warn("TXT record received for unknown user ["+serviceName+"]");

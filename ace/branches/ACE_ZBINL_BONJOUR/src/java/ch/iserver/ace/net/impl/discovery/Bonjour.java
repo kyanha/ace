@@ -22,6 +22,8 @@ package ch.iserver.ace.net.impl.discovery;
 
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
+
 import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.net.impl.Discovery;
 import ch.iserver.ace.util.ParameterValidator;
@@ -30,6 +32,8 @@ import ch.iserver.ace.util.ParameterValidator;
  *
  */
 public class Bonjour implements Discovery {
+	
+	private static Logger LOG = Logger.getLogger(Bonjour.class);
 	
 	public static final String KEY_REGISTRATION_TYPE = "registration.type";
 	public static final String KEY_TXT_VERSION = "txt.version";
@@ -43,6 +47,8 @@ public class Bonjour implements Discovery {
 	//constants defined as in nameser.h
 	public static final int T_HOST_ADDRESS = 1;
 	public static final int T_TXT = 16;
+	
+	private static String LOCAL_SERVICE_NAME;
 
 	private Properties props;
 	private UserRegistration registration;
@@ -91,12 +97,36 @@ public class Bonjour implements Discovery {
 	}
 	
 	/**
+	 * Returns the user id or an empty string if it is not
+	 * available.
+	 * 
+	 * @return the user id or an empty string
+	 */
+	public String getUserId() {
+		return (String)props.getProperty(KEY_USERID, "");
+	}
+	
+	/**
 	 * 
 	 * @param fullName
-	 * @return
+	 * @return the service name
 	 */
 	public static String getServiceName(String fullName) {
-		return fullName.substring(0, fullName.indexOf(SERVICE_NAME_SEPARATOR));
+		String result = "";
+		if ( !(fullName == null || fullName.indexOf(SERVICE_NAME_SEPARATOR) == -1) ) {
+			result = fullName.substring(0, fullName.indexOf(SERVICE_NAME_SEPARATOR));
+		} else {
+			LOG.warn("no service name found for ["+fullName+"]");
+		}
+		return result;
+	}
+	
+	public static void setLocalServiceName(String name) {
+		LOCAL_SERVICE_NAME = name;
+	}
+	
+	public static String getLocalServiceName() {
+		return LOCAL_SERVICE_NAME;
 	}
 	
 

@@ -21,6 +21,10 @@
 
 package ch.iserver.ace.net.impl.discovery;
 
+import ch.iserver.ace.util.BlockingQueue;
+import ch.iserver.ace.util.LinkedBlockingQueue;
+import ch.iserver.ace.util.ParameterValidator;
+
 import com.apple.dnssd.DNSSDService;
 import com.apple.dnssd.QueryListener;
 
@@ -29,12 +33,15 @@ import com.apple.dnssd.QueryListener;
  */
 abstract class AbstractQueryListener extends BaseListenerImpl implements QueryListener {
 	
+	private BlockingQueue serviceQueue;
+	
 	/**
 	 * 
 	 * @param adapter
 	 */
 	public AbstractQueryListener(DiscoveryCallbackAdapter adapter) {
 		super(adapter);
+		this.serviceQueue = new LinkedBlockingQueue();
 	}
 	
 	/**
@@ -45,6 +52,29 @@ abstract class AbstractQueryListener extends BaseListenerImpl implements QueryLi
 
 		processQuery(query, flags, ifIndex, fullName, rrtype, rrclass, rdata, ttl);
 
+	}
+	
+	/**
+	 * 
+	 * @param servicename
+	 */
+	public void addNextService(String servicename) {
+		ParameterValidator.notNull("servicename", servicename);
+		serviceQueue.add(servicename);
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	protected String getNextService() {
+		String result = null;
+		try {
+			result = (String)serviceQueue.get();
+		} catch (InterruptedException ie) {
+			
+		}
+		return result;
 	}
 	
 	/**

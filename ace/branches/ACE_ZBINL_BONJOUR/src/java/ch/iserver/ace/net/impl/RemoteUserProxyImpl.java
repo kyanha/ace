@@ -60,4 +60,8 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 		ParameterValidator.notNull("details", details);
 		this.details = details;
 	}
+	
+	public String toString() {
+		return "RemoteUserProxyImpl("+id+", "+details+")";
+	}
 }

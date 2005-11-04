@@ -46,11 +46,13 @@ class BrowseListenerImpl extends BaseListenerImpl implements BrowseListener {
 	 * @inheritDoc
 	 */
 	public void serviceFound(DNSSDService browser, int flags, int ifIndex, String serviceName, String regType, String domain) {
-		try {
-			DNSSD.resolve(flags, ifIndex, serviceName, regType, domain, resolver);
-		} catch (Exception e) {
-			//TODO: retry strategy
-			LOG.error("Resolve failed ["+e.getMessage()+"]");
+		if (!Bonjour.getLocalServiceName().equals(serviceName)) {
+			try {
+				DNSSD.resolve(flags, ifIndex, serviceName, regType, domain, resolver);
+			} catch (Exception e) {
+				//TODO: retry strategy
+				LOG.error("Resolve failed ["+e.getMessage()+"]");
+			}
 		}
 	}
 

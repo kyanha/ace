@@ -42,7 +42,6 @@ class UserRegistrationImpl implements UserRegistration {
 		String serviceName = System.getProperty("user.name");
 		String username = (String)props.get(Bonjour.KEY_USER);
 		username = (username == null) ? serviceName : username;
-		
 		try {
 			registration = DNSSD.register(0, 0, 
 				serviceName, 
@@ -108,6 +107,10 @@ class UserRegistrationImpl implements UserRegistration {
 		return actualServiceName;
 	}
 	
+	public TXTRecord getTXTRecord() {
+		return txtRecord;
+	}
+	
 	public boolean isRegistered() {
 		return isRegistered;
 	}
@@ -123,12 +126,13 @@ class UserRegistrationImpl implements UserRegistration {
 			DNSRecord record = registration.getTXTRecord();
 			record.update(0, txtRecord.getRawBytes(), 0);
 		} catch (Exception e) {
-			LOG.warn("could not modify TXT record: "+e);
+			LOG.error("could not modify TXT record: "+e);
 		}
 	}
 	
 	public void stop() {
 		registration.stop();
+		isRegistered = false;
 	}
 
 }

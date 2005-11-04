@@ -53,12 +53,12 @@ class ResolveListenerImpl extends BaseListenerImpl implements ResolveListener {
 	public void serviceResolved(DNSSDService resolver, int flags, int ifIndex,
 			String fullName, String hostName, int port, TXTRecord txtRecord) {
 		String serviceName = Bonjour.getServiceName(fullName);
-		String userName = TXTRecordProxy.get(Bonjour.KEY_USER, txtRecord);
-		String userId = TXTRecordProxy.get(Bonjour.KEY_USERID, txtRecord);
+		String userName = TXTRecordProxy.get(TXTRecordProxy.TXT_USER, txtRecord);
+		String userId = TXTRecordProxy.get(TXTRecordProxy.TXT_USERID, txtRecord);
 		adapter.userDiscovered(serviceName, userName, userId, port);
 		resolver.stop();
 		
-		resolveIP(flags, ifIndex, hostName);
+		resolveIP(flags, ifIndex, hostName, serviceName);
 		monitorTXTRecord(flags, ifIndex, fullName);
 	}
 	
@@ -68,8 +68,9 @@ class ResolveListenerImpl extends BaseListenerImpl implements ResolveListener {
 	 * @param ifIndex
 	 * @param hostName
 	 */
-	private void resolveIP(int flags, int ifIndex, String hostName) {
+	private void resolveIP(int flags, int ifIndex, String hostName, String serviceName) {
 		try {
+			ipQueryListener.addNextService(serviceName);
 			// Start a record query to obtain IP address from hostname
 			DNSSD.queryRecord(0, ifIndex, hostName, Bonjour.T_HOST_ADDRESS, 1 /* ns_c_in */, ipQueryListener);
 		} catch (Exception e) {

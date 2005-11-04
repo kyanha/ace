@@ -53,7 +53,7 @@ class IPQueryListener extends AbstractQueryListener {
 		} catch (Exception e) {
 			LOG.error("Could not resolve address ["+e.getMessage()+"]");
 		}
-		String serviceName = Bonjour.getServiceName(fullName);
+		String serviceName = getNextService();
 		adapter.userAddressResolved(serviceName, address);
 		query.stop();
 	}
