@@ -39,11 +39,16 @@ class SessionParticipant {
 	
 	private final RemoteUserProxy userProxy;
 	
+	/**
+	 * @param port
+	 * @param proxy
+	 * @param connection
+	 * @param userProxy
+	 */
 	SessionParticipant(ParticipantPort port, ParticipantProxy proxy, ParticipantConnection connection, RemoteUserProxy userProxy) {
 		ParameterValidator.notNull("port", port);
 		ParameterValidator.notNull("proxy", proxy);
 		ParameterValidator.notNull("connection", connection);
-		ParameterValidator.notNull("userProxy", userProxy);
 		this.participantConnection = connection;
 		this.participantPort = port;
 		this.participantProxy = proxy;

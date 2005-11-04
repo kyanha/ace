@@ -100,7 +100,7 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 		connection.setParticipantId(participantId);
 		PublisherPort port = new PublisherPortImpl(this, participantId, algorithm, getSerializerQueue());
 		ParticipantProxy proxy = new ParticipantProxy(participantId, dispatcherQueue, algorithm, connection);
-		addParticipant(port, proxy, connection);
+		addParticipant(new SessionParticipant(port, proxy, connection, null));
 		return port;
 	}
 	
@@ -144,14 +144,7 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 		proxies.put(key, participant.getParticipantProxy());
 		connections.put(key, participant.getParticipantConnection());
 	}
-	
-	protected synchronized void addParticipant(ParticipantPort port, ParticipantProxy proxy, ParticipantConnection connection) {
-		Integer key = new Integer(port.getParticipantId());
-		ports.put(key, port);
-		proxies.put(key, proxy);
-		connections.put(key, connection);
-	}
-	
+		
 	protected synchronized void removeParticipant(int participantId) {
 		Integer key = new Integer(participantId);
 		connections.remove(key);
@@ -167,6 +160,9 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 		return (ParticipantConnection) connections.get(new Integer(id));
 	}
 	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerLogic#getPublisherPort()
+	 */
 	public PublisherPort getPublisherPort() {
 		return publisherPort;
 	}

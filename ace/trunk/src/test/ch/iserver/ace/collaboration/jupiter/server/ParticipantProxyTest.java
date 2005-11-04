@@ -35,7 +35,7 @@ import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.text.InsertOperation;
 import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
 
-public class ParticipantProxyImplTest extends TestCase {
+public class ParticipantProxyTest extends TestCase {
 
 	/**
 	 * Test method for 'ch.iserver.ace.collaboration.jupiter.server.ParticipantProxyImpl.sendCaretUpdate(int, CaretUpdate)'

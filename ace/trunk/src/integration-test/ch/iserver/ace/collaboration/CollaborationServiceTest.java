@@ -59,6 +59,7 @@ public class CollaborationServiceTest extends TestCase {
 		connection.sendDocument(null);
 		connectionCtrl.setMatcher(MockControl.ALWAYS_MATCHER);
 		connection.sendParticipantJoined(2, new RemoteUserProxyStub("Z"));
+		connection.close();
 		
 		callback.participantJoined(new ParticipantImpl(1, new RemoteUserStub("X")));
 		callback.receiveOperation(new ParticipantImpl(1, new RemoteUserStub("X")), new InsertOperation(0, "XYZ"));
@@ -92,9 +93,11 @@ public class CollaborationServiceTest extends TestCase {
 		logic.join(connectionStub);
 		
 		Thread.sleep(2000);
-		
+
 		session.leave();
-		
+
+		Thread.sleep(2000);
+
 		// verify
 		callbackCtrl.verify();
 		connectionCtrl.verify();

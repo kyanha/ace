@@ -33,7 +33,7 @@ import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.Operation;
 import ch.iserver.ace.text.InsertOperation;
 
-public class ForwarderImplTest extends TestCase {
+public class CompositeForwarderTest extends TestCase {
 	
 	private static final int PROXY_COUNT = 4;
 		
