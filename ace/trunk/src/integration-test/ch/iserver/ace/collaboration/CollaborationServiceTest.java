@@ -37,7 +37,6 @@ import ch.iserver.ace.collaboration.jupiter.server.ServerDocumentImpl;
 import ch.iserver.ace.net.DocumentServerLogic;
 import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.net.ParticipantPort;
-import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.text.InsertOperation;
 
 /**
@@ -84,10 +83,9 @@ public class CollaborationServiceTest extends TestCase {
 		
 		ParticipantConnectionStub connectionStub = new ParticipantConnectionStub(new RemoteUserProxyStub("Z"));
 		ServerDocumentImpl expectedDocument = new ServerDocumentImpl();
-		// TODO: take same stuff as in real document
 		expectedDocument.participantJoined(0, null);
-		expectedDocument.insertString(0, 0, "");
-		expectedDocument.updateCaret(0, 0, 0);
+		expectedDocument.insertString(0, 0, document.getContent());
+		expectedDocument.updateCaret(0, document.getDot(), document.getMark());
 		expectedDocument.participantJoined(1, null);
 		expectedDocument.insertString(1, 0, "XYZ");
 		connectionStub.setExpectedDocument(expectedDocument);
