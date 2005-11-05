@@ -26,6 +26,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.apache.log4j.Logger;
+
 import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.DocumentModel;
 import ch.iserver.ace.algorithm.Algorithm;
@@ -36,6 +38,7 @@ import ch.iserver.ace.net.DocumentServerLogic;
 import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.PortableDocument;
+import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.util.InterruptedRuntimeException;
 import ch.iserver.ace.util.Lock;
 import ch.iserver.ace.util.ParameterValidator;
@@ -46,6 +49,8 @@ import edu.emory.mathcs.backport.java.util.concurrent.LinkedBlockingQueue;
  *
  */
 public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, FailureHandler {
+	
+	private static final Logger LOG = Logger.getLogger(ServerLogicImpl.class);
 	
 	private int nextParticipantId;
 	
@@ -178,7 +183,7 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 	/**
 	 * @see ch.iserver.ace.net.DocumentServerLogic#join(ch.iserver.ace.net.ParticipantConnection)
 	 */
-	public synchronized ParticipantPort join(ParticipantConnection connection) {
+	public synchronized ParticipantPort join(ParticipantConnection target) {
 		if (!isAcceptingJoins()) {
 			// TODO: correct exception type
 			throw new IllegalStateException("DocumentServerLogic is not accepting joins");
@@ -186,11 +191,13 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 		
 		Algorithm algorithm = new Jupiter(false);
 		int participantId = nextParticipantId();
-		connection.setParticipantId(participantId);
+		target.setParticipantId(participantId);
 		
 		ParticipantPort port = new ParticipantPortImpl(this, participantId, algorithm, getSerializerQueue());
-		ParticipantProxy proxy = new ParticipantProxy(participantId, dispatcherQueue, algorithm, connection);
-		SessionParticipant participant = new SessionParticipant(port, proxy, connection, connection.getUser());
+		ParticipantProxy proxy = new ParticipantProxy(participantId, dispatcherQueue, algorithm, target);
+		ParticipantConnection connection = new ParticipantConnectionWrapper(target, this);
+		RemoteUserProxy user = target.getUser();
+		SessionParticipant participant = new SessionParticipant(port, proxy, connection, user);
 		SerializerCommand cmd = new JoinCommand(participant, this);
 		getSerializerQueue().add(cmd);
 		
@@ -241,17 +248,18 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 		removeParticipant(participantId);
 	}
 	
-	// --> FailureHandler method <--
+	// --> start FailureHandler methods <--
 	
 	/**
 	 * @see ch.iserver.ace.collaboration.jupiter.server.FailureHandler#handleFailure(int)
 	 */
-	public synchronized void handleFailure(int participantId) {
-		ParticipantConnection connection = getParticipantConnection(participantId);
-		removeParticipant(participantId);
-		
-		SerializerCommand command = new LeaveCommand(participantId, Participant.DISCONNECTED);
-		getSerializerQueue().add(command);
+	public void handleFailure(int participantId) {
+		LOG.info("handling failed connection to participant " + participantId);
+		synchronized (this) {
+			ParticipantConnection connection = getParticipantConnection(participantId);
+			removeParticipant(participantId);
+			getSerializerQueue().add(new LeaveCommand(participantId, Participant.DISCONNECTED));
+		}
 	}
 
 }
