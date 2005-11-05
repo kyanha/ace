@@ -24,6 +24,7 @@ package ch.iserver.ace.collaboration.jupiter.server;
 import java.util.Iterator;
 
 import ch.iserver.ace.DocumentDetails;
+import ch.iserver.ace.net.DocumentServer;
 import ch.iserver.ace.net.DocumentServerLogic;
 import ch.iserver.ace.net.PortableDocument;
 
@@ -31,6 +32,8 @@ import ch.iserver.ace.net.PortableDocument;
  *
  */
 public interface ServerLogic extends DocumentServerLogic {
+	
+	void setDocumentServer(DocumentServer server);
 	
 	void addParticipant(SessionParticipant participant);
 	

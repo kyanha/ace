@@ -39,6 +39,7 @@ import ch.iserver.ace.collaboration.PublishedSessionCallback;
 import ch.iserver.ace.collaboration.RemoteDocument;
 import ch.iserver.ace.collaboration.RemoteUser;
 import ch.iserver.ace.collaboration.UserListener;
+import ch.iserver.ace.collaboration.jupiter.server.ServerLogic;
 import ch.iserver.ace.collaboration.jupiter.server.ServerLogicImpl;
 import ch.iserver.ace.net.DocumentServer;
 import ch.iserver.ace.net.InvitationProxy;
@@ -149,11 +150,12 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	public PublishedSession publish(PublishedSessionCallback callback, DocumentModel document) {
 		PublishedSessionImpl session = new PublishedSessionImpl(callback);
 		session.setUserRegistry(getUserRegistry());
-		ServerLogicImpl logic = new ServerLogicImpl(new SemaphoreLock("server-lock"), session, document);
+		ServerLogic logic = new ServerLogicImpl(new SemaphoreLock("server-lock"), session, document);
 		session.setServerLogic(logic);
 		DocumentServer server = getNetworkService().publish(logic);
 		logic.setDocumentServer(server);
-		logic.start();
+		// TODO: replace with improved start sequence
+		((ServerLogicImpl) logic).start();
 		return session;
 	}
 

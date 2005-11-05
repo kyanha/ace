@@ -241,11 +241,14 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 	/**
 	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerLogic#kick(int)
 	 */
-	public synchronized void kick(int participantId) {
-		ParticipantConnection connection = getParticipantConnection(participantId);
-		connection.sendKicked();
-		connection.close();
-		removeParticipant(participantId);
+	public void kick(int participantId) {
+		LOG.info("kicking participant " + participantId);
+		synchronized (this) {
+			ParticipantConnection connection = getParticipantConnection(participantId);
+			connection.sendKicked();
+			connection.close();
+			removeParticipant(participantId);
+		}
 	}
 	
 	// --> start FailureHandler methods <--
