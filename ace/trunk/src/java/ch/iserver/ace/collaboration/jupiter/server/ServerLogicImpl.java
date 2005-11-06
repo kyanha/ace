@@ -272,6 +272,7 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 	 * @see ch.iserver.ace.collaboration.jupiter.server.FailureHandler#handleFailure(int)
 	 */
 	public void handleFailure(int participantId) {
+		// TODO: handle failing publisher connection differently
 		LOG.info("handling failed connection to participant " + participantId);
 		synchronized (this) {
 			ParticipantConnection connection = getParticipantConnection(participantId);

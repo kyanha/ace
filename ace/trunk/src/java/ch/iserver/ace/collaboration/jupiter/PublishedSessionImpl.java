@@ -49,8 +49,6 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 	
 	private final PublishedSessionCallback callback;
 	
-	private final PublisherConnection publisherConnection;
-		
 	public PublishedSessionImpl(PublishedSessionCallback callback) {
 		this(callback, new AlgorithmWrapperImpl(new Jupiter(true)));
 	}
@@ -59,7 +57,6 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 		super(wrapper, new SemaphoreLock("client-lock"));
 		ParameterValidator.notNull("callback", callback);
 		this.callback = callback;
-		this.publisherConnection = new PublisherConnectionImpl(getCallback(), getLock(), getAlgorithm());
 	}
 		
 	public void setServerLogic(ServerLogic logic) {
@@ -148,17 +145,14 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 	public void close() {
 		// ignore, PublishedSession is the owner			
 	}
-	
-	protected PublisherConnection getPublisherConnection() {
-		return publisherConnection;
-	}
-	
+		
 	/**
 	 * @see ch.iserver.ace.net.ParticipantConnection#sendCaretUpdateMessage(int, ch.iserver.ace.algorithm.CaretUpdateMessage)
 	 */
 	public void sendCaretUpdateMessage(int participantId, CaretUpdateMessage message) {
 		Participant participant = getParticipant(participantId);
-		getPublisherConnection().receiveCaretUpdateMessage(participant, message);
+		CaretUpdate update = getAlgorithm().receiveCaretUpdateMessage(message);
+		getCallback().receiveCaretUpdate(participant, update);
 	}
 		
 	/**
@@ -166,7 +160,8 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 	 */
 	public void sendRequest(int participantId, Request request) {
 		Participant participant = getParticipant(participantId);
-		getPublisherConnection().receiveRequest(participant, request);
+		Operation op = getAlgorithm().receiveRequest(request);
+		getCallback().receiveOperation(participant, op);
 	}
 
 	/**
@@ -175,7 +170,7 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 	public void sendParticipantJoined(int participantId, RemoteUserProxy proxy) {
 		Participant participant = createParticipant(participantId, proxy);
 		addParticipant(participant);
-		getPublisherConnection().participantJoined(participant);
+		getCallback().participantJoined(participant);
 	}
 			
 	/**
@@ -184,7 +179,7 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 	public void sendParticipantLeft(int participantId, int reason) {
 		Participant participant = getParticipant(participantId);
 		removeParticipant(participant);
-		getPublisherConnection().participantLeft(participant, reason);
+		getCallback().participantLeft(participant, reason);
 	}
 
 	/**
