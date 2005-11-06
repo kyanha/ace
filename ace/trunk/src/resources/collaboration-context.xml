@@ -6,12 +6,24 @@
     <constructor-arg><ref local="networkService"/></constructor-arg>
     <property name="userRegistry"><ref local="userRegistry"/></property>
     <property name="documentRegistry"><ref local="documentRegistry"/></property>
+    <property name="connectionDecorator"><ref local="connectionDecorator"/></property>
   </bean>
   
   <bean id="userRegistry" class="ch.iserver.ace.collaboration.jupiter.UserRegistryImpl"/>
   
   <bean id="documentRegistry" class="ch.iserver.ace.collaboration.jupiter.DocumentRegistryImpl">
     <constructor-arg><ref local="userRegistry"/></constructor-arg>
+  </bean>
+  
+  <bean id="connectionQueue" class="edu.emory.mathcs.backport.java.util.concurrent.LinkedBlockingQueue"/>
+  
+  <bean id="connectionDecorator" class="ch.iserver.ace.collaboration.jupiter.ParticipantConnectionDecoratorImpl">
+    <property name="queue"><ref local="connectionQueue"/></property>
+  </bean>
+  
+  <bean id="connectionWorker" class="ch.iserver.ace.util.AsyncWorker" init-method="start">
+    <constructor-arg><ref local="connectionQueue"/></constructor-arg>
+    <property name="daemon" value="true"/>
   </bean>
   
   <bean id="networkService" class="ch.iserver.ace.collaboration.jupiter.NullNetworkService" factory-method="getInstance"/>

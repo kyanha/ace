@@ -19,23 +19,31 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.collaboration;
+package ch.iserver.ace.collaboration.jupiter;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import ch.iserver.ace.net.ParticipantConnection;
 
 /**
  *
  */
-public class SpringTest {
+public final class NullParticipantConnectionDecorator implements ParticipantConnectionDecorator {
 	
-	public static final String[] CONTEXT_FILES = new String[] {
-		"collaboration-context.xml"
-	};
+	private static ParticipantConnectionDecorator instance;
 	
-	public static void main(String[] args) {
-		ApplicationContext context = new ClassPathXmlApplicationContext(CONTEXT_FILES);
-		CollaborationService service = (CollaborationService) context.getBean("collaborationService");
+	private NullParticipantConnectionDecorator() {
+		// hidden
+	}
+	
+	public static final ParticipantConnectionDecorator getInstance() {
+		if (instance == null) {
+			instance = new NullParticipantConnectionDecorator();
+		}
+		return instance;
+	}
+	
+	
+	public ParticipantConnection decorate(ParticipantConnection target) {
+		return target;
 	}
 	
 }

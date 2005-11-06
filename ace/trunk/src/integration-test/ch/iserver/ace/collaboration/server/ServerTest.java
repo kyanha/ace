@@ -27,6 +27,7 @@ import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.DocumentModel;
 import ch.iserver.ace.algorithm.jupiter.JupiterRequest;
 import ch.iserver.ace.algorithm.jupiter.JupiterVectorTime;
+import ch.iserver.ace.collaboration.jupiter.NullParticipantConnectionDecorator;
 import ch.iserver.ace.collaboration.jupiter.RemoteUserProxyStub;
 import ch.iserver.ace.collaboration.jupiter.server.ServerLogicImpl;
 import ch.iserver.ace.net.ParticipantConnection;
@@ -80,7 +81,10 @@ public class ServerTest extends TestCase {
 
 		// test
 		DocumentModel document = new DocumentModel("", 0, 0, new DocumentDetails("collab.txt"));
-		ServerLogicImpl server = new ServerLogicImpl(lock, connections[0], document);
+		ServerLogicImpl server = new ServerLogicImpl(lock, 
+				NullParticipantConnectionDecorator.getInstance(), 
+				connections[0], 
+				document);
 		ports[0] = server.getPublisherPort();
 		server.start();
 		

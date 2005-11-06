@@ -33,6 +33,7 @@ import ch.iserver.ace.DocumentModel;
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.jupiter.Jupiter;
 import ch.iserver.ace.collaboration.Participant;
+import ch.iserver.ace.collaboration.jupiter.ParticipantConnectionDecorator;
 import ch.iserver.ace.net.DocumentServer;
 import ch.iserver.ace.net.DocumentServerLogic;
 import ch.iserver.ace.net.ParticipantConnection;
@@ -76,15 +77,23 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 	
 	private final ServerDocument document;
 	
+	private final ParticipantConnectionDecorator connectionDecorator;
+	
 	private boolean acceptingJoins;
 	
-	public ServerLogicImpl(Lock lock, ParticipantConnection connection, DocumentModel document) {
+	public ServerLogicImpl(Lock lock, 
+	                       ParticipantConnectionDecorator decorator, 
+	                       ParticipantConnection connection, 
+	                       DocumentModel document) {
 		ParameterValidator.notNull("lock", lock);
+		ParameterValidator.notNull("decorator", decorator);
 		ParameterValidator.notNull("connection", connection);
 		ParameterValidator.notNull("document", document);
 		
 		this.nextParticipantId = 0;
 		this.forwarder = new CompositeForwarder(this);
+		
+		this.connectionDecorator = decorator;
 		
 		this.serializerQueue = new LinkedBlockingQueue();
 		this.serializer = new Serializer(serializerQueue, lock, forwarder);
@@ -92,7 +101,7 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 		this.dispatcherQueue = new LinkedBlockingQueue();
 		this.dispatcher = new Dispatcher(dispatcherQueue);
 		
-		this.publisherPort = createPublisherPort(connection);
+		this.publisherPort = createPublisherPort(connection, connectionDecorator);
 		
 		this.document = new ServerDocumentImpl();
 		this.document.participantJoined(0, null);
@@ -102,10 +111,12 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 		this.proxies.put(new Integer(-1), new DocumentUpdateProxy(this.document));
 	}
 	
-	protected PublisherPort createPublisherPort(ParticipantConnection connection) {
+	protected PublisherPort createPublisherPort(ParticipantConnection connection, 
+				ParticipantConnectionDecorator decorator) {
 		Algorithm algorithm = new Jupiter(false);
 		int participantId = 0;
 		connection.setParticipantId(participantId);
+		connection = decorator.decorate(new ParticipantConnectionWrapper(connection, this));
 		PublisherPort port = new PublisherPortImpl(this, participantId, algorithm, getSerializerQueue());
 		ParticipantProxy proxy = new ParticipantProxy(participantId, dispatcherQueue, algorithm, connection);
 		addParticipant(new SessionParticipant(port, proxy, connection, null));
@@ -129,6 +140,10 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 		this.server = server;
 	}
 	
+	public ParticipantConnectionDecorator getConnectionDecorator() {
+		return connectionDecorator;
+	}
+		
 	public void start() {
 		acceptingJoins = true;
 		serializer.start();
@@ -195,7 +210,7 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 		
 		ParticipantPort port = new ParticipantPortImpl(this, participantId, algorithm, getSerializerQueue());
 		ParticipantProxy proxy = new ParticipantProxy(participantId, dispatcherQueue, algorithm, target);
-		ParticipantConnection connection = new ParticipantConnectionWrapper(target, this);
+		ParticipantConnection connection = getConnectionDecorator().decorate(new ParticipantConnectionWrapper(target, this));
 		RemoteUserProxy user = target.getUser();
 		SessionParticipant participant = new SessionParticipant(port, proxy, connection, user);
 		SerializerCommand cmd = new JoinCommand(participant, this);

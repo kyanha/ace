@@ -19,23 +19,29 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.collaboration;
+package ch.iserver.ace.util;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.aopalliance.intercept.MethodInvocation;
 
-/**
- *
- */
-public class SpringTest {
+import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
+
+public class AsyncWorker extends Worker {
 	
-	public static final String[] CONTEXT_FILES = new String[] {
-		"collaboration-context.xml"
-	};
+	private final BlockingQueue queue;
 	
-	public static void main(String[] args) {
-		ApplicationContext context = new ClassPathXmlApplicationContext(CONTEXT_FILES);
-		CollaborationService service = (CollaborationService) context.getBean("collaborationService");
+	public AsyncWorker(BlockingQueue queue) {
+		super("async-worker");
+		ParameterValidator.notNull("queue", queue);
+		this.queue = queue;
+	}
+	
+	protected void doWork() throws InterruptedException {
+		MethodInvocation invocation = (MethodInvocation) queue.take();
+		try {
+			invocation.proceed();
+		} catch (Throwable e) {
+			// TODO: error handling
+		}
 	}
 	
 }

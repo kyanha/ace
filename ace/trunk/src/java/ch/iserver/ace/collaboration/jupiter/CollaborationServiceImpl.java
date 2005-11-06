@@ -39,7 +39,6 @@ import ch.iserver.ace.collaboration.PublishedSessionCallback;
 import ch.iserver.ace.collaboration.RemoteDocument;
 import ch.iserver.ace.collaboration.RemoteUser;
 import ch.iserver.ace.collaboration.UserListener;
-import ch.iserver.ace.collaboration.jupiter.server.ServerLogic;
 import ch.iserver.ace.collaboration.jupiter.server.ServerLogicImpl;
 import ch.iserver.ace.net.DocumentServer;
 import ch.iserver.ace.net.InvitationProxy;
@@ -47,6 +46,7 @@ import ch.iserver.ace.net.NetworkService;
 import ch.iserver.ace.net.NetworkServiceCallback;
 import ch.iserver.ace.net.RemoteDocumentProxy;
 import ch.iserver.ace.net.RemoteUserProxy;
+import ch.iserver.ace.util.Lock;
 import ch.iserver.ace.util.ParameterValidator;
 import ch.iserver.ace.util.SemaphoreLock;
 
@@ -66,6 +66,8 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	private UserRegistry userRegistry = new UserRegistryImpl();
 	
 	private DocumentRegistry documentRegistry = new DocumentRegistryImpl(userRegistry);
+	
+	private ParticipantConnectionDecorator connectionDecorator;
 	
 	public CollaborationServiceImpl(NetworkService service) {
 		ParameterValidator.notNull("service", service);
@@ -90,6 +92,15 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	public void setDocumentRegistry(DocumentRegistry registry) {
 		ParameterValidator.notNull("registry", registry);
 		this.documentRegistry = registry;
+	}
+	
+	public ParticipantConnectionDecorator getConnectionDecorator() {
+		return connectionDecorator;
+	}
+	
+	public void setConnectionDecorator(ParticipantConnectionDecorator connectionDecorator) {
+		ParameterValidator.notNull("connectionDecorator", connectionDecorator);
+		this.connectionDecorator = connectionDecorator;
 	}
 	
 	protected NetworkService getNetworkService() {
@@ -150,7 +161,8 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	public PublishedSession publish(PublishedSessionCallback callback, DocumentModel document) {
 		PublishedSessionImpl session = new PublishedSessionImpl(callback);
 		session.setUserRegistry(getUserRegistry());
-		ServerLogic logic = new ServerLogicImpl(new SemaphoreLock("server-lock"), session, document);
+		Lock semaphoreLock = new SemaphoreLock("server-lock");
+		ServerLogicImpl logic = new ServerLogicImpl(semaphoreLock, getConnectionDecorator(), session, document);
 		session.setServerLogic(logic);
 		DocumentServer server = getNetworkService().publish(logic);
 		logic.setDocumentServer(server);

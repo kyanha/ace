@@ -19,23 +19,31 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.collaboration;
+package ch.iserver.ace.util;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.aopalliance.intercept.MethodInterceptor;
+import org.aopalliance.intercept.MethodInvocation;
+import org.apache.log4j.Logger;
 
-/**
- *
- */
-public class SpringTest {
+import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
+
+public class AsyncInterceptor implements MethodInterceptor {
+
+	private static final Logger LOG = Logger.getLogger(AsyncInterceptor.class);
 	
-	public static final String[] CONTEXT_FILES = new String[] {
-		"collaboration-context.xml"
-	};
+	private final BlockingQueue queue;
 	
-	public static void main(String[] args) {
-		ApplicationContext context = new ClassPathXmlApplicationContext(CONTEXT_FILES);
-		CollaborationService service = (CollaborationService) context.getBean("collaborationService");
+	public AsyncInterceptor(BlockingQueue queue) {
+		ParameterValidator.notNull("queue", queue);
+		this.queue = queue;
+	}
+	
+	public synchronized Object invoke(MethodInvocation invocation) throws Throwable {
+		if (!invocation.getMethod().getReturnType().equals(Void.TYPE)) {
+			LOG.warn("WARN: invoking non-void return type method - " + invocation.getMethod());
+		}
+		queue.add(invocation);
+		return null;
 	}
 	
 }

@@ -45,7 +45,7 @@ import ch.iserver.ace.util.ParameterValidator;
 /**
  *
  */
-class ParticipantConnectionWrapper implements ParticipantConnection {
+public class ParticipantConnectionWrapper implements ParticipantConnection {
 	
 	/**
 	 * The target ParticipantConnection. Initially this is the real target
@@ -72,7 +72,7 @@ class ParticipantConnectionWrapper implements ParticipantConnection {
 	 * @param target the target ParticipantConnection to be wrapped
 	 * @param handler the FailureHandler to be notified about failures
 	 */
-	ParticipantConnectionWrapper(ParticipantConnection target, FailureHandler handler) {
+	public ParticipantConnectionWrapper(ParticipantConnection target, FailureHandler handler) {
 		ParameterValidator.notNull("target", target);
 		this.target = target;
 		this.handler = handler;
