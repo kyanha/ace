@@ -22,7 +22,6 @@
 package ch.iserver.ace.collaboration.util;
 
 import ch.iserver.ace.collaboration.Session;
-import ch.iserver.ace.util.InterruptedRuntimeException;
 
 /**
  * The SessionTemplate provides a save way to use sessions. It takes care of
