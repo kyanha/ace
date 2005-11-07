@@ -30,26 +30,27 @@ import java.beans.PropertyChangeListener;
 
 public class BrowseItem extends ItemImpl implements Comparable, PropertyChangeListener {
 
-	private String title;
+	private String title, owner;
 	private RemoteDocument document;
 
 	public BrowseItem(RemoteDocument document) {
 		this.document = document;
+		title = document.getTitle();
+		owner = document.getPublisher().getName();
 	}
 
 	public String getTitle() {
-		return "";
-		//firePropertyChange("");
+		return title;
 	}
 	
 	public String getOwner() {
-		return "";
+		return owner;
 	}
 	
 	public void propertyChange(PropertyChangeEvent evt) {
 		if(evt.getPropertyName().equals(RemoteDocument.TITLE_PROPERTY)) {
-			// set new title
-			// fire property changed
+			title = (String)evt.getNewValue();
+			firePropertyChange(RemoteDocument.TITLE_PROPERTY, evt.getOldValue(), evt.getNewValue());
 		}
 	}
 
