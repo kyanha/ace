@@ -115,7 +115,8 @@ class InvitationImpl implements Invitation {
 	 * @see ch.iserver.ace.collaboration.Invitation#accept(ch.iserver.ace.collaboration.SessionCallback)
 	 */
 	public Session accept(SessionCallback callback) {
-		SessionImpl session = new SessionImpl(callback);
+		SessionImpl session = new SessionImpl();
+		session.setSessionCallback(callback);
 		session.setConnectionDecorator(decorator);
 		session.setUserRegistry(getUserRegistry());
 		SessionConnection connection = getProxy().accept(session);

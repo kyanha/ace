@@ -64,11 +64,7 @@ public class SessionImpl extends AbstractSession implements SessionConnectionCal
 	public SessionImpl() {
 		this(new AlgorithmWrapperImpl(new Jupiter(true)));
 	}
-	
-	public SessionImpl(SessionCallback callback) {
-		this(new AlgorithmWrapperImpl(new Jupiter(true)), callback);
-	}
-		
+			
 	public SessionImpl(AlgorithmWrapper algorithm) {
 		this(algorithm, (SessionCallback) null);
 	}
