@@ -42,12 +42,7 @@ class JoinNetworkCallbackImpl implements JoinNetworkCallback {
 	/**
 	 * 
 	 */
-	private final SessionConnectionDecorator connectionDecorator;
-	
-	/**
-	 * 
-	 */
-	private final UserRegistry registry;
+	private final SessionFactory sessionFactory;
 	
 	/**
 	 * Creates a new JoinNetworkCallbackImpl wrapping the given JoinCallback
@@ -56,13 +51,11 @@ class JoinNetworkCallbackImpl implements JoinNetworkCallback {
 	 * @param joinCallback the JoinCallback passed in from the application
 	 *                     layer
 	 */
-	JoinNetworkCallbackImpl(JoinCallback joinCallback, SessionConnectionDecorator decorator, UserRegistry registry) {
+	JoinNetworkCallbackImpl(JoinCallback joinCallback, SessionFactory factory) {
 		ParameterValidator.notNull("joinCallback", joinCallback);
-		ParameterValidator.notNull("decorator", decorator);
-		ParameterValidator.notNull("registry", registry);
+		ParameterValidator.notNull("factory", factory);
 		this.callback = joinCallback;
-		this.connectionDecorator = decorator;
-		this.registry = registry;
+		this.sessionFactory = factory;
 	}
 
 	/**
@@ -71,28 +64,16 @@ class JoinNetworkCallbackImpl implements JoinNetworkCallback {
 	private JoinCallback getCallback() {
 		return callback;
 	}
-	
-	/**
-	 * @return
-	 */
-	private SessionConnectionDecorator getConnectionDecorator() {
-		return connectionDecorator;
+		
+	private SessionFactory getSessionFactory() {
+		return sessionFactory;
 	}
 	
-	/**
-	 * @return
-	 */
-	private UserRegistry getUserRegistry() {
-		return registry;
-	}
-
 	/**
 	 * @see ch.iserver.ace.net.JoinNetworkCallback#accepted(ch.iserver.ace.net.SessionConnection)
 	 */
 	public SessionConnectionCallback accepted(SessionConnection connection) {
-		SessionImpl session = new SessionImpl();
-		session.setConnectionDecorator(getConnectionDecorator());
-		session.setUserRegistry(getUserRegistry());
+		ConfigurableSession session = getSessionFactory().createSession();
 		session.setConnection(connection);
 		session.setSessionCallback(getCallback().accepted(session));
 		return session;

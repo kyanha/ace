@@ -67,6 +67,8 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	
 	private DocumentRegistry documentRegistry;;
 	
+	private SessionFactory sessionFactory;
+	
 	private ParticipantConnectionDecorator connectionDecorator;
 	
 	private SessionConnectionDecorator sessionConnectionDecorator;
@@ -112,6 +114,14 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	public void setSessionConnectionDecorator(SessionConnectionDecorator sessionConnectionDecorator) {
 		ParameterValidator.notNull("sessionConnectionDecorator", sessionConnectionDecorator);
 		this.sessionConnectionDecorator = sessionConnectionDecorator;
+	}
+	
+	public SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+	
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
 	}
 	
 	protected NetworkService getNetworkService() {
@@ -260,13 +270,15 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 		}
 	}
 
-	public void invitationReceived(InvitationProxy invitation) {
-		RemoteDocument document = getDocumentRegistry().getDocument(invitation.getDocument().getId());
-		getInvitationCallback().invitationReceived(new InvitationImpl(
-						invitation,
-						getSessionConnectionDecorator(),
-						getUserRegistry(), 
-						document));
+	public void invitationReceived(InvitationProxy proxy) {
+		RemoteDocument document = getDocumentRegistry().getDocument(proxy.getDocument().getId());
+		RemoteUser inviter = getUserRegistry().getUser(proxy.getInviter().getId());
+		InvitationImpl invitation = new InvitationImpl(
+						proxy,
+						inviter,
+						document,
+						getSessionFactory());
+		getInvitationCallback().invitationReceived(invitation);
 	}
 			
 }

@@ -47,7 +47,7 @@ import ch.iserver.ace.util.SemaphoreLock;
  * the SessionConnectionCallback interface and can thus be set as callback
  * on SessionConnections.
  */
-public class SessionImpl extends AbstractSession implements SessionConnectionCallback, SessionConnectionFailureHandler {
+public class SessionImpl extends AbstractSession implements ConfigurableSession, SessionConnectionCallback, SessionConnectionFailureHandler {
 	
 	/**
 	 * The SessionCallback from the application layer.
@@ -99,7 +99,7 @@ public class SessionImpl extends AbstractSession implements SessionConnectionCal
 	 * 
 	 * @param connection the new connection
 	 */
-	protected void setConnection(SessionConnection connection) {
+	public void setConnection(SessionConnection connection) {
 		ParameterValidator.notNull("connection", connection);
 		this.connection = getConnectionDecorator().decorate(new SessionConnectionWrapper(connection, this));
 	}

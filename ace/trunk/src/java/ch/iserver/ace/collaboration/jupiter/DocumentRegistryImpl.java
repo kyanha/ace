@@ -46,6 +46,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import ch.iserver.ace.collaboration.RemoteUser;
 import ch.iserver.ace.net.RemoteDocumentProxy;
 import ch.iserver.ace.util.ParameterValidator;
 
@@ -58,11 +59,11 @@ class DocumentRegistryImpl implements DocumentRegistry {
 	 * The user registry used to create/get RemoteUser objects
 	 */
 	private final UserRegistry registry;
-	
+		
 	/**
 	 * 
 	 */
-	private final SessionConnectionDecorator connectionDecorator;
+	private SessionFactory sessionFactory;
 	
 	/**
 	 * The mapping from document id to document.
@@ -75,19 +76,18 @@ class DocumentRegistryImpl implements DocumentRegistry {
 	 * 
 	 * @param registry the UserRegistry used to get/create remote users
 	 */
-	public DocumentRegistryImpl(SessionConnectionDecorator decorator, UserRegistry registry) {
-		ParameterValidator.notNull("decorator", decorator);
+	public DocumentRegistryImpl(UserRegistry registry) {
 		ParameterValidator.notNull("registry", registry);
 		this.documents = Collections.synchronizedMap(new HashMap());
-		this.connectionDecorator = decorator;
 		this.registry = registry;
 	}
 	
-	/**
-	 * @return
-	 */
-	protected SessionConnectionDecorator getConnectionDecorator() {
-		return connectionDecorator;
+	public SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+	
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
 	}
 	
 	/**
@@ -101,7 +101,8 @@ class DocumentRegistryImpl implements DocumentRegistry {
 	 * @see ch.iserver.ace.collaboration.jupiter.DocumentRegistry#addDocument(ch.iserver.ace.net.RemoteDocumentProxy)
 	 */
 	public MutableRemoteDocument addDocument(RemoteDocumentProxy proxy) {
-		MutableRemoteDocument doc = new RemoteDocumentImpl(getConnectionDecorator(), proxy, getUserRegistry());
+		RemoteUser publisher = getUserRegistry().getUser(proxy.getPublisher().getId());
+		MutableRemoteDocument doc = new RemoteDocumentImpl(proxy, getSessionFactory(), publisher);
 		documents.put(proxy.getId(), doc);
 		return doc;
 	}

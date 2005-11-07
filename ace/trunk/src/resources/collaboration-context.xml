@@ -10,11 +10,16 @@
     <property name="sessionConnectionDecorator"><ref local="sessionConnectionDecorator"/></property>
   </bean>
   
+  <bean id="sessionFactory" class="ch.iserver.ace.collaboration.jupiter.SessionFactoryImpl">
+    <constructor-arg index="0"><ref local="sessionConnectionDecorator"/></constructor-arg>
+    <constructor-arg index="1"><ref local="userRegistry"/></constructor-arg>
+  </bean>
+  
   <bean id="userRegistry" class="ch.iserver.ace.collaboration.jupiter.UserRegistryImpl"/>
   
   <bean id="documentRegistry" class="ch.iserver.ace.collaboration.jupiter.DocumentRegistryImpl">
-    <constructor-arg index="0"><ref local="sessionConnectionDecorator"/></constructor-arg>
-    <constructor-arg index="1"><ref local="userRegistry"/></constructor-arg>
+     <constructor-arg index="0"><ref local="userRegistry"/></constructor-arg>
+     <property name="sessionFactory"><ref local="sessionFactory"/></property>
   </bean>
   
   <bean id="connectionQueue" class="edu.emory.mathcs.backport.java.util.concurrent.LinkedBlockingQueue"/>

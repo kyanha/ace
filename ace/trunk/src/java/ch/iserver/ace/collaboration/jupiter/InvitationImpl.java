@@ -41,17 +41,7 @@ class InvitationImpl implements Invitation {
 	 * The wrapped InvitationProxy from the network layer.
 	 */
 	private final InvitationProxy proxy;
-	
-	/**
-	 * The SessionConnectionDecorator to use.
-	 */
-	private final SessionConnectionDecorator decorator;
-	
-	/**
-	 * 
-	 */
-	private final UserRegistry registry;
-	
+		
 	/**
 	 * The RemoteUser that invited the local user.
 	 */
@@ -63,6 +53,11 @@ class InvitationImpl implements Invitation {
 	private final RemoteDocument document;
 	
 	/**
+	 * 
+	 */
+	private final SessionFactory sessionFactory;
+	
+	/**
 	 * Creates a new InvitationImpl object delegating most of the work
 	 * to the passed in InvitationProxy.
 	 * 
@@ -72,18 +67,17 @@ class InvitationImpl implements Invitation {
 	 * @param document the RemoteDocument to which the user is invited
 	 */
 	InvitationImpl(InvitationProxy proxy, 
-					SessionConnectionDecorator decorator, 
-					UserRegistry registry, 
-					RemoteDocument document) {
+					RemoteUser inviter, 
+					RemoteDocument document,
+					SessionFactory factory) {
 		ParameterValidator.notNull("proxy", proxy);
-		ParameterValidator.notNull("decorator", decorator);
-		ParameterValidator.notNull("registry", registry);
+		ParameterValidator.notNull("inviter", inviter);
 		ParameterValidator.notNull("document", document);
+		ParameterValidator.notNull("factory", factory);
 		this.proxy = proxy;
-		this.decorator = decorator;
-		this.registry = registry;
-		this.inviter = registry.getUser(proxy.getInviter().getId());
 		this.document = document;
+		this.inviter = inviter;
+		this.sessionFactory = factory;
 	}
 	
 	/**
@@ -92,11 +86,7 @@ class InvitationImpl implements Invitation {
 	private InvitationProxy getProxy() {
 		return proxy;
 	}
-	
-	private UserRegistry getUserRegistry() {
-		return registry;
-	}
-	
+		
 	/**
 	 * @see ch.iserver.ace.collaboration.Invitation#getInviter()
 	 */
@@ -111,14 +101,16 @@ class InvitationImpl implements Invitation {
 		return document;
 	}
 
+	private SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+	
 	/**
 	 * @see ch.iserver.ace.collaboration.Invitation#accept(ch.iserver.ace.collaboration.SessionCallback)
 	 */
 	public Session accept(SessionCallback callback) {
-		SessionImpl session = new SessionImpl();
+		ConfigurableSession session = getSessionFactory().createSession();
 		session.setSessionCallback(callback);
-		session.setConnectionDecorator(decorator);
-		session.setUserRegistry(getUserRegistry());
 		SessionConnection connection = getProxy().accept(session);
 		session.setConnection(connection);
 		return session;

@@ -27,7 +27,6 @@ import java.beans.PropertyChangeSupport;
 import ch.iserver.ace.collaboration.JoinCallback;
 import ch.iserver.ace.collaboration.RemoteDocument;
 import ch.iserver.ace.collaboration.RemoteUser;
-import ch.iserver.ace.net.JoinNetworkCallback;
 import ch.iserver.ace.net.RemoteDocumentProxy;
 import ch.iserver.ace.util.ParameterValidator;
 
@@ -54,43 +53,32 @@ class RemoteDocumentImpl implements MutableRemoteDocument {
 	/**
 	 * 
 	 */
-	private final UserRegistry registry;
-	
-	/**
-	 * 
-	 */
-	private final SessionConnectionDecorator connectionDecorator;
+	private final SessionFactory sessionFactory;
 	
 	/**
 	 * 
 	 */
 	private String title;
 	
+	
+	
 	/**
 	 * Creates a new RemoteDocumentImpl passing most requests directly to
 	 * the passed in RemoteDocumentProxy.
-	 * 
-	 * @param proxy the wrapped RemoteDocumentProxy
-	 * @param publisher the publisher of the document
 	 */
-	RemoteDocumentImpl(SessionConnectionDecorator decorator, RemoteDocumentProxy proxy, UserRegistry registry) {
-		ParameterValidator.notNull("decorator", decorator);
+	RemoteDocumentImpl(RemoteDocumentProxy proxy, SessionFactory sessionFactory, RemoteUser publisher) {
 		ParameterValidator.notNull("proxy", proxy);
-		ParameterValidator.notNull("registry", registry);
-		this.connectionDecorator = decorator;
+		ParameterValidator.notNull("sessionFactory", sessionFactory);
+		ParameterValidator.notNull("publisher", publisher);
 		this.proxy = proxy;
-		this.registry = registry;
-		this.publisher = registry.getUser(proxy.getPublisher().getId());
+		this.sessionFactory = sessionFactory;
+		this.publisher = publisher;
 		this.title = proxy.getDocumentDetails().getTitle();
 		this.title = this.title == null ? "" : title;
 	}
 	
-	private UserRegistry getUserRegistry() {
-		return registry;
-	}
-	
-	private SessionConnectionDecorator getConnectionDecorator() {
-		return connectionDecorator;
+	private SessionFactory getSessionFactory() {
+		return sessionFactory;
 	}
 	
 	/**
@@ -129,8 +117,7 @@ class RemoteDocumentImpl implements MutableRemoteDocument {
 	 * @see ch.iserver.ace.collaboration.RemoteDocument#join(ch.iserver.ace.collaboration.JoinCallback)
 	 */
 	public void join(final JoinCallback callback) {
-		JoinNetworkCallback networkCallback = new JoinNetworkCallbackImpl(callback, getConnectionDecorator(), getUserRegistry());
-		proxy.join(networkCallback);
+		proxy.join(new JoinNetworkCallbackImpl(callback, getSessionFactory()));
 	}
 	
 	/**
