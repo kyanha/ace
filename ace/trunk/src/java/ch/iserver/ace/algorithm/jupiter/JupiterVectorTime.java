@@ -58,6 +58,26 @@ public class JupiterVectorTime implements VectorTime, Cloneable {
 	}
 	
 	/**
+	 * @see ch.iserver.ace.algorithm.VectorTime#getAt(int)
+	 */
+	public int getAt(int index) {
+		if (index == 0) {
+			return getLocalOperationCount();
+		} else if (index == 1) {
+			return getRemoteOperationCount();
+		} else {
+			throw new IndexOutOfBoundsException("" + index);
+		}
+	}
+	
+	/**
+	 * @see ch.iserver.ace.algorithm.VectorTime#getLength()
+	 */
+	public int getLength() {
+		return 2;
+	}
+	
+	/**
 	 * @see Timestamp#getComponents()
 	 */
 	public int[] getComponents() {
