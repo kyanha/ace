@@ -275,7 +275,6 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 		// TODO: handle failing publisher connection differently
 		LOG.info("handling failed connection to participant " + participantId);
 		synchronized (this) {
-			ParticipantConnection connection = getParticipantConnection(participantId);
 			removeParticipant(participantId);
 			getSerializerQueue().add(new LeaveCommand(participantId, Participant.DISCONNECTED));
 		}
