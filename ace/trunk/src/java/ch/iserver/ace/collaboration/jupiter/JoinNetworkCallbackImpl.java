@@ -42,6 +42,11 @@ class JoinNetworkCallbackImpl implements JoinNetworkCallback {
 	/**
 	 * 
 	 */
+	private final SessionConnectionDecorator connectionDecorator;
+	
+	/**
+	 * 
+	 */
 	private final UserRegistry registry;
 	
 	/**
@@ -51,10 +56,12 @@ class JoinNetworkCallbackImpl implements JoinNetworkCallback {
 	 * @param joinCallback the JoinCallback passed in from the application
 	 *                     layer
 	 */
-	JoinNetworkCallbackImpl(JoinCallback joinCallback, UserRegistry registry) {
+	JoinNetworkCallbackImpl(JoinCallback joinCallback, SessionConnectionDecorator decorator, UserRegistry registry) {
 		ParameterValidator.notNull("joinCallback", joinCallback);
+		ParameterValidator.notNull("decorator", decorator);
 		ParameterValidator.notNull("registry", registry);
 		this.callback = joinCallback;
+		this.connectionDecorator = decorator;
 		this.registry = registry;
 	}
 
@@ -63,6 +70,13 @@ class JoinNetworkCallbackImpl implements JoinNetworkCallback {
 	 */
 	private JoinCallback getCallback() {
 		return callback;
+	}
+	
+	/**
+	 * @return
+	 */
+	private SessionConnectionDecorator getConnectionDecorator() {
+		return connectionDecorator;
 	}
 	
 	/**
@@ -77,6 +91,7 @@ class JoinNetworkCallbackImpl implements JoinNetworkCallback {
 	 */
 	public SessionConnectionCallback accepted(SessionConnection connection) {
 		SessionImpl session = new SessionImpl();
+		session.setConnectionDecorator(getConnectionDecorator());
 		session.setUserRegistry(getUserRegistry());
 		session.setConnection(connection);
 		session.setSessionCallback(getCallback().accepted(session));

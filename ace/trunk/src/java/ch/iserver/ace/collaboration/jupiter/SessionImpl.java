@@ -46,7 +46,7 @@ import ch.iserver.ace.util.SemaphoreLock;
  * the SessionConnectionCallback interface and can thus be set as callback
  * on SessionConnections.
  */
-public class SessionImpl extends AbstractSession implements SessionConnectionCallback {
+public class SessionImpl extends AbstractSession implements SessionConnectionCallback, SessionConnectionFailureHandler {
 	
 	/**
 	 * The SessionCallback from the application layer.
@@ -57,6 +57,8 @@ public class SessionImpl extends AbstractSession implements SessionConnectionCal
 	 * The SessionConnection from the network layer.
 	 */
 	private SessionConnection connection;
+	
+	private SessionConnectionDecorator connectionDecorator;
 	
 	public SessionImpl() {
 		this(new AlgorithmWrapperImpl(new Jupiter(true)));
@@ -102,7 +104,7 @@ public class SessionImpl extends AbstractSession implements SessionConnectionCal
 	 */
 	protected void setConnection(SessionConnection connection) {
 		ParameterValidator.notNull("connection", connection);
-		this.connection = connection;
+		this.connection = getConnectionDecorator().decorate(new SessionConnectionWrapper(connection, this));
 	}
 	
 	/**
@@ -110,6 +112,14 @@ public class SessionImpl extends AbstractSession implements SessionConnectionCal
 	 */
 	protected SessionConnection getConnection() {
 		return connection;
+	}
+	
+	public SessionConnectionDecorator getConnectionDecorator() {
+		return connectionDecorator;
+	}
+	
+	public void setConnectionDecorator(SessionConnectionDecorator connectionDecorator) {
+		this.connectionDecorator = connectionDecorator;
 	}
 	
 	/**
@@ -220,6 +230,15 @@ public class SessionImpl extends AbstractSession implements SessionConnectionCal
 		Participant participant = getParticipant(participantId);
 		removeParticipant(participant);
 		getCallback().participantLeft(participant, reason);
+	}
+	
+	// --> FailureHandler implementation <--
+	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.SessionConnectionFailureHandler#handleFailure(int, java.lang.Exception)
+	 */
+	public void handleFailure(int reason, Exception e) {
+		getCallback().sessionFailed(reason, e);
 	}
 	
 }

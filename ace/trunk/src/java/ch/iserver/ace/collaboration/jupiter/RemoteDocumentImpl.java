@@ -59,6 +59,11 @@ class RemoteDocumentImpl implements MutableRemoteDocument {
 	/**
 	 * 
 	 */
+	private final SessionConnectionDecorator connectionDecorator;
+	
+	/**
+	 * 
+	 */
 	private String title;
 	
 	/**
@@ -68,9 +73,11 @@ class RemoteDocumentImpl implements MutableRemoteDocument {
 	 * @param proxy the wrapped RemoteDocumentProxy
 	 * @param publisher the publisher of the document
 	 */
-	RemoteDocumentImpl(RemoteDocumentProxy proxy, UserRegistry registry) {
+	RemoteDocumentImpl(SessionConnectionDecorator decorator, RemoteDocumentProxy proxy, UserRegistry registry) {
+		ParameterValidator.notNull("decorator", decorator);
 		ParameterValidator.notNull("proxy", proxy);
 		ParameterValidator.notNull("registry", registry);
+		this.connectionDecorator = decorator;
 		this.proxy = proxy;
 		this.registry = registry;
 		this.publisher = registry.getUser(proxy.getPublisher().getId());
@@ -80,6 +87,10 @@ class RemoteDocumentImpl implements MutableRemoteDocument {
 	
 	private UserRegistry getUserRegistry() {
 		return registry;
+	}
+	
+	private SessionConnectionDecorator getConnectionDecorator() {
+		return connectionDecorator;
 	}
 	
 	/**
@@ -112,7 +123,7 @@ class RemoteDocumentImpl implements MutableRemoteDocument {
 	 * @see ch.iserver.ace.collaboration.RemoteDocument#join(ch.iserver.ace.collaboration.JoinCallback)
 	 */
 	public void join(final JoinCallback callback) {
-		JoinNetworkCallback networkCallback = new JoinNetworkCallbackImpl(callback, getUserRegistry());
+		JoinNetworkCallback networkCallback = new JoinNetworkCallbackImpl(callback, getConnectionDecorator(), getUserRegistry());
 		proxy.join(networkCallback);
 	}
 	

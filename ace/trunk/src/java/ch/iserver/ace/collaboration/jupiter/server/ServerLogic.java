@@ -33,24 +33,54 @@ import ch.iserver.ace.net.PortableDocument;
  */
 public interface ServerLogic extends DocumentServerLogic {
 	
+	/**
+	 * 
+	 */
 	int PUBLISHER_ID = 0;
 	
+	/**
+	 * @param server
+	 */
 	void setDocumentServer(DocumentServer server);
 	
+	/**
+	 * @param participant
+	 */
 	void addParticipant(SessionParticipant participant);
 	
+	/**
+	 * @return
+	 */
 	PublisherPort getPublisherPort();
 	
+	/**
+	 * @param details
+	 */
 	void setDocumentDetails(DocumentDetails details);
 	
+	/**
+	 * @param participant
+	 */
 	void kick(int participant);
 	
+	/**
+	 * 
+	 */
 	void prepareShutdown();
 
+	/**
+	 * 
+	 */
 	void shutdown();
 	
+	/**
+	 * @return
+	 */
 	Iterator getParticipantProxies();
 	
+	/**
+	 * @return
+	 */
 	PortableDocument getDocument();
 	
 	/**

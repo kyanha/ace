@@ -19,23 +19,34 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.collaboration.jupiter.server;
+package ch.iserver.ace.collaboration.jupiter;
+
+import ch.iserver.ace.net.SessionConnection;
 
 /**
- * Interface to be implemented by an object that is interested to be notified 
- * about failing ParticipantConnection instances.
+ *
  */
-public interface FailureHandler {
+public final class NullSessionConnectionDecorator implements
+				SessionConnectionDecorator {
+
+	private static SessionConnectionDecorator instance;
+	
+	private NullSessionConnectionDecorator() {
+		// hidden constructor
+	}
+	
+	public static final SessionConnectionDecorator getInstance() {
+		if (instance == null) {
+			instance = new NullSessionConnectionDecorator();
+		}
+		return instance;
+	}
 	
 	/**
-	 * Notifies this handler that the ParticipantConnection to the given
-	 * participant failed.
-	 * 
-	 * @param participantId the participant id of the failing connection
+	 * @see ch.iserver.ace.collaboration.jupiter.SessionConnectionDecorator#decorate(ch.iserver.ace.net.SessionConnection)
 	 */
-	/**
-	 * @param participantId
-	 */
-	void handleFailure(int participantId);
-	
+	public SessionConnection decorate(SessionConnection target) {
+		return target;
+	}
+
 }

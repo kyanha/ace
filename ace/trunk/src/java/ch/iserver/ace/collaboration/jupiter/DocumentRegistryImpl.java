@@ -60,6 +60,11 @@ class DocumentRegistryImpl implements DocumentRegistry {
 	private final UserRegistry registry;
 	
 	/**
+	 * 
+	 */
+	private final SessionConnectionDecorator connectionDecorator;
+	
+	/**
 	 * The mapping from document id to document.
 	 */
 	private final Map documents;
@@ -70,10 +75,19 @@ class DocumentRegistryImpl implements DocumentRegistry {
 	 * 
 	 * @param registry the UserRegistry used to get/create remote users
 	 */
-	public DocumentRegistryImpl(UserRegistry registry) {
+	public DocumentRegistryImpl(SessionConnectionDecorator decorator, UserRegistry registry) {
+		ParameterValidator.notNull("decorator", decorator);
 		ParameterValidator.notNull("registry", registry);
 		this.documents = Collections.synchronizedMap(new HashMap());
+		this.connectionDecorator = decorator;
 		this.registry = registry;
+	}
+	
+	/**
+	 * @return
+	 */
+	protected SessionConnectionDecorator getConnectionDecorator() {
+		return connectionDecorator;
 	}
 	
 	/**
@@ -87,7 +101,7 @@ class DocumentRegistryImpl implements DocumentRegistry {
 	 * @see ch.iserver.ace.collaboration.jupiter.DocumentRegistry#addDocument(ch.iserver.ace.net.RemoteDocumentProxy)
 	 */
 	public MutableRemoteDocument addDocument(RemoteDocumentProxy proxy) {
-		MutableRemoteDocument doc = new RemoteDocumentImpl(proxy, getUserRegistry());
+		MutableRemoteDocument doc = new RemoteDocumentImpl(getConnectionDecorator(), proxy, getUserRegistry());
 		documents.put(proxy.getId(), doc);
 		return doc;
 	}

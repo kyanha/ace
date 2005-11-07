@@ -46,6 +46,7 @@ public class SessionImplTest extends TestCase {
 		SessionConnection connection = (SessionConnection) connectionCtrl.getMock();
 		
 		SessionImpl impl = new SessionImpl();
+		impl.setConnectionDecorator(NullSessionConnectionDecorator.getInstance());
 		impl.setConnection(connection);
 		
 		// define mock behavior
@@ -68,6 +69,7 @@ public class SessionImplTest extends TestCase {
 		SessionConnection connection = (SessionConnection) connectionCtrl.getMock();
 		
 		SessionImpl impl = new SessionImpl(algorithm);
+		impl.setConnectionDecorator(NullSessionConnectionDecorator.getInstance());
 		impl.setConnection(connection);
 		
 		// define mock behavior
@@ -95,6 +97,7 @@ public class SessionImplTest extends TestCase {
 		SessionConnection connection = (SessionConnection) connectionCtrl.getMock();
 		
 		SessionImpl impl = new SessionImpl(algorithm);
+		impl.setConnectionDecorator(NullSessionConnectionDecorator.getInstance());
 		impl.setConnection(connection);
 		
 		// replay
@@ -120,6 +123,7 @@ public class SessionImplTest extends TestCase {
 		SessionConnection connection = (SessionConnection) connectionCtrl.getMock();
 		
 		SessionImpl impl = new SessionImpl(algorithm);
+		impl.setConnectionDecorator(NullSessionConnectionDecorator.getInstance());
 		impl.setConnection(connection);
 		
 		// define mock behavior
@@ -147,6 +151,7 @@ public class SessionImplTest extends TestCase {
 		SessionConnection connection = (SessionConnection) connectionCtrl.getMock();
 		
 		SessionImpl impl = new SessionImpl(algorithm);
+		impl.setConnectionDecorator(NullSessionConnectionDecorator.getInstance());
 		impl.setConnection(connection);
 		
 		// replay

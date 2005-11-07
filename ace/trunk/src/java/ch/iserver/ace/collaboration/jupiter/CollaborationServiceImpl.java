@@ -63,11 +63,13 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	
 	private InvitationCallback callback = NullInvitationCallback.getInstance();
 	
-	private UserRegistry userRegistry = new UserRegistryImpl();
+	private UserRegistry userRegistry;
 	
-	private DocumentRegistry documentRegistry = new DocumentRegistryImpl(userRegistry);
+	private DocumentRegistry documentRegistry;;
 	
 	private ParticipantConnectionDecorator connectionDecorator;
+	
+	private SessionConnectionDecorator sessionConnectionDecorator;
 	
 	public CollaborationServiceImpl(NetworkService service) {
 		ParameterValidator.notNull("service", service);
@@ -101,6 +103,15 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	public void setConnectionDecorator(ParticipantConnectionDecorator connectionDecorator) {
 		ParameterValidator.notNull("connectionDecorator", connectionDecorator);
 		this.connectionDecorator = connectionDecorator;
+	}
+	
+	public SessionConnectionDecorator getSessionConnectionDecorator() {
+		return sessionConnectionDecorator;
+	}
+	
+	public void setSessionConnectionDecorator(SessionConnectionDecorator sessionConnectionDecorator) {
+		ParameterValidator.notNull("sessionConnectionDecorator", sessionConnectionDecorator);
+		this.sessionConnectionDecorator = sessionConnectionDecorator;
 	}
 	
 	protected NetworkService getNetworkService() {
@@ -251,7 +262,11 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 
 	public void invitationReceived(InvitationProxy invitation) {
 		RemoteDocument document = getDocumentRegistry().getDocument(invitation.getDocument().getId());
-		getInvitationCallback().invitationReceived(new InvitationImpl(invitation, getUserRegistry(), document));
+		getInvitationCallback().invitationReceived(new InvitationImpl(
+						invitation,
+						getSessionConnectionDecorator(),
+						getUserRegistry(), 
+						document));
 	}
 			
 }

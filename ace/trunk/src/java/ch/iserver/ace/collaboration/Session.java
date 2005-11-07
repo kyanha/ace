@@ -37,7 +37,11 @@ import ch.iserver.ace.Operation;
  */
 public interface Session {
 	
-	int TRANSFORMATION_FAILURE = 1;
+	int TRANSFORMATION_FAILED = 1;
+	
+	int LEAVE_FAILED = 2;
+	
+	int SEND_FAILED = 3;
 	
 	/**
 	 * Locks the session's logic so that only the calling thread can access

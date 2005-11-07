@@ -75,9 +75,9 @@ public class RemoteDocumentImplTest extends TestCase {
 		proxy3Ctrl.replay();
 		
 		// test
-		RemoteDocumentImpl doc1 = new RemoteDocumentImpl(proxy1, registry);
-		RemoteDocumentImpl doc2 = new RemoteDocumentImpl(proxy2, registry);
-		RemoteDocumentImpl doc3 = new RemoteDocumentImpl(proxy3, registry);
+		RemoteDocumentImpl doc1 = new RemoteDocumentImpl(NullSessionConnectionDecorator.getInstance(), proxy1, registry);
+		RemoteDocumentImpl doc2 = new RemoteDocumentImpl(NullSessionConnectionDecorator.getInstance(), proxy2, registry);
+		RemoteDocumentImpl doc3 = new RemoteDocumentImpl(NullSessionConnectionDecorator.getInstance(), proxy3, registry);
 
 		assertFalse(doc1.equals(doc2));
 		assertFalse(doc3.equals(doc1));

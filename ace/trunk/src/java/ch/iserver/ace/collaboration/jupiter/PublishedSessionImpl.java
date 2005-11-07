@@ -158,7 +158,7 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 			CaretUpdate update = getAlgorithm().receiveCaretUpdateMessage(message);
 			getCallback().receiveCaretUpdate(participant, update);
 		} catch (TransformationException e) {
-			getCallback().sessionFailed(TRANSFORMATION_FAILURE, e);
+			getCallback().sessionFailed(TRANSFORMATION_FAILED, e);
 			leave();
 		}
 	}
@@ -172,7 +172,7 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 			Operation op = getAlgorithm().receiveRequest(request);
 			getCallback().receiveOperation(participant, op);
 		} catch (TransformationException e) {
-			getCallback().sessionFailed(TRANSFORMATION_FAILURE, e);
+			getCallback().sessionFailed(TRANSFORMATION_FAILED, e);
 			leave();
 		}
 	}

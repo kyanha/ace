@@ -19,23 +19,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.collaboration.jupiter.server;
+package ch.iserver.ace.collaboration.jupiter;
 
 /**
- * Interface to be implemented by an object that is interested to be notified 
- * about failing ParticipantConnection instances.
+ *
  */
-public interface FailureHandler {
+public interface SessionConnectionFailureHandler {
 	
-	/**
-	 * Notifies this handler that the ParticipantConnection to the given
-	 * participant failed.
-	 * 
-	 * @param participantId the participant id of the failing connection
-	 */
-	/**
-	 * @param participantId
-	 */
-	void handleFailure(int participantId);
+	void handleFailure(int reason, Exception e);
 	
 }

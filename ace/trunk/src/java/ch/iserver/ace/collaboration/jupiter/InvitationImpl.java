@@ -43,6 +43,11 @@ class InvitationImpl implements Invitation {
 	private final InvitationProxy proxy;
 	
 	/**
+	 * The SessionConnectionDecorator to use.
+	 */
+	private final SessionConnectionDecorator decorator;
+	
+	/**
 	 * 
 	 */
 	private final UserRegistry registry;
@@ -62,14 +67,20 @@ class InvitationImpl implements Invitation {
 	 * to the passed in InvitationProxy.
 	 * 
 	 * @param proxy the InvitationProxy wrapped by this instance
+	 * @param decorator the SessionConnectionDecorator
 	 * @param inviter the inviter
 	 * @param document the RemoteDocument to which the user is invited
 	 */
-	InvitationImpl(InvitationProxy proxy, UserRegistry registry, RemoteDocument document) {
+	InvitationImpl(InvitationProxy proxy, 
+					SessionConnectionDecorator decorator, 
+					UserRegistry registry, 
+					RemoteDocument document) {
 		ParameterValidator.notNull("proxy", proxy);
+		ParameterValidator.notNull("decorator", decorator);
 		ParameterValidator.notNull("registry", registry);
 		ParameterValidator.notNull("document", document);
 		this.proxy = proxy;
+		this.decorator = decorator;
 		this.registry = registry;
 		this.inviter = registry.getUser(proxy.getInviter().getId());
 		this.document = document;
@@ -105,6 +116,7 @@ class InvitationImpl implements Invitation {
 	 */
 	public Session accept(SessionCallback callback) {
 		SessionImpl session = new SessionImpl(callback);
+		session.setConnectionDecorator(decorator);
 		session.setUserRegistry(getUserRegistry());
 		SessionConnection connection = getProxy().accept(session);
 		session.setConnection(connection);
