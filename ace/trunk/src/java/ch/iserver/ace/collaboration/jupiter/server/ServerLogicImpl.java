@@ -234,6 +234,7 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 	public synchronized void prepareShutdown() {
 		this.acceptingJoins = false;
 		getDocumentServer().prepareShutdown();
+		getSerializerQueue().add(new ShutdownCommand(this));
 	}
 	
 	/**
@@ -301,7 +302,6 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 				LOG.error("failure related to publisher: " + reason);
 				getPublisherConnection().sessionFailed(reason, null);
 				prepareShutdown();
-				getSerializerQueue().add(new ShutdownCommand(this));
 			} else {
 				removeParticipant(participantId);
 				getSerializerQueue().add(new LeaveCommand(participantId, Participant.DISCONNECTED));

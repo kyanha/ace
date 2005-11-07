@@ -24,7 +24,6 @@ package ch.iserver.ace.collaboration.jupiter.server;
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.collaboration.jupiter.server.serializer.LeaveCommand;
-import ch.iserver.ace.collaboration.jupiter.server.serializer.ShutdownCommand;
 import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
 
 /**
@@ -45,7 +44,6 @@ public class PublisherPortImpl extends ParticipantPortImpl implements PublisherP
 	
 	public void leave() {
 		getLogic().prepareShutdown();
-		getQueue().add(new ShutdownCommand(getLogic()));
 	}
 	
 }
