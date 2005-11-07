@@ -24,14 +24,32 @@ package ch.iserver.ace.collaboration.jupiter;
 import ch.iserver.ace.net.RemoteDocumentProxy;
 
 /**
- *
+ * A registry and factory for MutableRemoteDocument objects.
  */
 public interface DocumentRegistry {
 		
+	/**
+	 * Adds a new remote document to the registry.
+	 * 
+	 * @param proxy the proxy of the document
+	 * @return a new MutableRemoteDocument wrapping the proxy
+	 */
 	MutableRemoteDocument addDocument(RemoteDocumentProxy proxy);
 	
+	/**
+	 * Gets the document with the given id.
+	 * 
+	 * @param id the id of the document to remove
+	 * @return the document or null if there is none with this id
+	 */
 	MutableRemoteDocument getDocument(String id);
 	
+	/**
+	 * Removes a document from the registry.
+	 * 
+	 * @param proxy the proxy of the document to be removed
+	 * @return the removed document or null if there is none
+	 */
 	MutableRemoteDocument removeDocument(RemoteDocumentProxy proxy);
 	
 }

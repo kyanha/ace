@@ -49,16 +49,19 @@ import java.util.Map;
 import ch.iserver.ace.net.RemoteUserProxy;
 
 /**
- *
+ * The default implementation of a UserRegistry.
  */
 class UserRegistryImpl implements UserRegistry {
 	
+	/**
+	 * The map from user id to MutableRemoteUser object.
+	 */
 	private final Map users;
 	
 	/**
-	 * 
+	 * Creates a new UserRegistryImpl object.
 	 */
-	public UserRegistryImpl() {
+	UserRegistryImpl() {
 		this.users = Collections.synchronizedMap(new HashMap());
 	}
 	

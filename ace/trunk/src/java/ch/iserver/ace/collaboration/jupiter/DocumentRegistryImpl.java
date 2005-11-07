@@ -50,22 +50,25 @@ import ch.iserver.ace.net.RemoteDocumentProxy;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
- *
+ * The default implementation of DocumentRegistry.
  */
 class DocumentRegistryImpl implements DocumentRegistry {
 	
 	/**
-	 * 
+	 * The user registry used to create/get RemoteUser objects
 	 */
 	private final UserRegistry registry;
 	
 	/**
-	 * 
+	 * The mapping from document id to document.
 	 */
 	private final Map documents;
 	
 	/**
-	 * @param registry
+	 * Creates a new DocumentRegistryImpl using the given user registry
+	 * to get/create remote users.
+	 * 
+	 * @param registry the UserRegistry used to get/create remote users
 	 */
 	public DocumentRegistryImpl(UserRegistry registry) {
 		ParameterValidator.notNull("registry", registry);
@@ -74,7 +77,7 @@ class DocumentRegistryImpl implements DocumentRegistry {
 	}
 	
 	/**
-	 * @return
+	 * @return the UserRegistry used by this DocumentRegistry
 	 */
 	protected UserRegistry getUserRegistry() {
 		return registry;
