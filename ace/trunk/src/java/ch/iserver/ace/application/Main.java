@@ -43,14 +43,17 @@ public class Main {
 		
 		System.out.println(ms.getIcon("iViewUser"));
 
-		/*
+		
 		JFrame frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(640, 480);
-		UserView uv = new UserView(new LocaleMessageSourceImpl(context));
-		frame.getContentPane().add(uv);
-		uv.getUserViewSource().add(new BasicUserListItem("huhu"));		
-		frame.show();*/
+//		UserView uv = new UserView(new LocaleMessageSourceImpl(context));
+		BrowseViewController bvc = new BrowseViewController();
+		BrowseView bv = new BrowseView(bvc, ms);
+		bvc.setView(bv);
+		frame.getContentPane().add(bv);
+//		uv.getUserViewSource().add(new BasicUserListItem("huhu"));		
+		frame.show();
 	}
 	
 }
