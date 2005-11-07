@@ -19,12 +19,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.collaboration.jupiter.server;
+package ch.iserver.ace.collaboration.jupiter.server.serializer;
 
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.util.ParameterValidator;
 
-abstract class AbstractSerializerCommand implements SerializerCommand {
+public abstract class AbstractSerializerCommand implements SerializerCommand {
 
 	private final int participantId;
 
@@ -36,11 +36,11 @@ abstract class AbstractSerializerCommand implements SerializerCommand {
 		this.participantId = participantId;
 	}
 
-	protected Algorithm getAlgorithm() {
+	public Algorithm getAlgorithm() {
 		return algorithm;
 	}
 
-	protected int getParticipantId() {
+	public int getParticipantId() {
 		return participantId;
 	}
 	

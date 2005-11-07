@@ -29,7 +29,7 @@ import ch.iserver.ace.util.ParameterValidator;
 /**
  *
  */
-class SessionParticipant {
+public class SessionParticipant {
 	
 	private final ParticipantPort participantPort;
 	
@@ -55,23 +55,23 @@ class SessionParticipant {
 		this.userProxy = userProxy;
 	}
 	
-	int getParticipantId() {
+	public int getParticipantId() {
 		return participantPort.getParticipantId();
 	}
 	
-	ParticipantConnection getParticipantConnection() {
+	public ParticipantConnection getParticipantConnection() {
 		return participantConnection;
 	}
 
-	ParticipantPort getParticipantPort() {
+	public ParticipantPort getParticipantPort() {
 		return participantPort;
 	}
 
-	ParticipantProxy getParticipantProxy() {
+	public ParticipantProxy getParticipantProxy() {
 		return participantProxy;
 	}
 	
-	RemoteUserProxy getUserProxy() {
+	public RemoteUserProxy getUserProxy() {
 		return userProxy;
 	}
 	

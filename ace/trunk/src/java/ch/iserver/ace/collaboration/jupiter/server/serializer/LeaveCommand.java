@@ -19,8 +19,9 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.collaboration.jupiter.server;
+package ch.iserver.ace.collaboration.jupiter.server.serializer;
 
+import ch.iserver.ace.collaboration.jupiter.server.Forwarder;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
@@ -49,7 +50,7 @@ public class LeaveCommand implements SerializerCommand {
 	}
 	
 	/**
-	 * @see ch.iserver.ace.collaboration.jupiter.server.SerializerCommand#execute(ch.iserver.ace.collaboration.jupiter.server.Forwarder)
+	 * @see ch.iserver.ace.collaboration.jupiter.server.serializer.SerializerCommand#execute(ch.iserver.ace.collaboration.jupiter.server.Forwarder)
 	 */
 	public void execute(Forwarder forwarder) {
 		forwarder.sendParticipantLeft(participantId, reason);

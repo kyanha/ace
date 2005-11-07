@@ -19,37 +19,30 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.collaboration.jupiter.server;
+package ch.iserver.ace.collaboration.jupiter.server.serializer;
+
+import ch.iserver.ace.collaboration.jupiter.server.Forwarder;
+import ch.iserver.ace.collaboration.jupiter.server.ServerLogic;
+import ch.iserver.ace.util.ParameterValidator;
 
 /**
  *
  */
-public class SerializerException extends Exception {
+public class ShutdownCommand implements SerializerCommand {
 	
-	private final int participantId;
+	private final ServerLogic logic;
 	
-	public SerializerException(int participantId) {
-		super();
-		this.participantId = participantId; 
-	}
-
-	public SerializerException(int participantId, String message, Throwable cause) {
-		super(message, cause);
-		this.participantId = participantId;
-	}
-
-	public SerializerException(int participantId, String message) {
-		super(message);
-		this.participantId = participantId;
-	}
-
-	public SerializerException(int participantId, Throwable cause) {
-		super(cause);
-		this.participantId = participantId;
+	public ShutdownCommand(ServerLogic logic) {
+		ParameterValidator.notNull("logic", logic);
+		this.logic = logic;
 	}
 	
-	public int getParticipantId() {
-		return participantId;
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.serializer.SerializerCommand#execute(ch.iserver.ace.collaboration.jupiter.server.Forwarder)
+	 */
+	public void execute(Forwarder forwarder) {
+		logic.shutdown();
+		forwarder.close();
 	}
-		
+
 }

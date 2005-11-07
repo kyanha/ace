@@ -4,7 +4,7 @@ import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.Operation;
 import ch.iserver.ace.net.RemoteUserProxy;
 
-interface Forwarder {
+public interface Forwarder {
 
 	void sendCaretUpdate(int participantId, CaretUpdate update);
 

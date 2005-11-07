@@ -19,23 +19,37 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.collaboration.jupiter.server;
+package ch.iserver.ace.collaboration.jupiter.server.serializer;
 
 /**
- * SerializerCommands are executed by the Serializer. The Serializer takes
- * care of proper locking/unlocking of the transformation engine. The 
- * commands are responsible to forward the result of their execution to
- * the Forwarder.
+ *
  */
-interface SerializerCommand {
+public class SerializerException extends Exception {
 	
-	/**
-	 * Executes the command. The passed in forwarder is used to forward
-	 * the result to all the other participants.
-	 * 
-	 * @param forwarder the Forwarder to receive the results
-	 * @throws SerializerException if anything goes wrong
-	 */
-	void execute(Forwarder forwarder) throws SerializerException;
+	private final int participantId;
 	
+	public SerializerException(int participantId) {
+		super();
+		this.participantId = participantId; 
+	}
+
+	public SerializerException(int participantId, String message, Throwable cause) {
+		super(message, cause);
+		this.participantId = participantId;
+	}
+
+	public SerializerException(int participantId, String message) {
+		super(message);
+		this.participantId = participantId;
+	}
+
+	public SerializerException(int participantId, Throwable cause) {
+		super(cause);
+		this.participantId = participantId;
+	}
+	
+	public int getParticipantId() {
+		return participantId;
+	}
+		
 }

@@ -19,28 +19,22 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.collaboration.jupiter.server;
+package ch.iserver.ace.collaboration.jupiter.server.serializer;
 
-import ch.iserver.ace.util.ParameterValidator;
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
-/**
- *
- */
-public class ShutdownCommand implements SerializerCommand {
-	
-	private final ServerLogic logic;
-	
-	public ShutdownCommand(ServerLogic logic) {
-		ParameterValidator.notNull("logic", logic);
-		this.logic = logic;
-	}
-	
-	/**
-	 * @see ch.iserver.ace.collaboration.jupiter.server.SerializerCommand#execute(ch.iserver.ace.collaboration.jupiter.server.Forwarder)
-	 */
-	public void execute(Forwarder forwarder) {
-		logic.shutdown();
-		forwarder.close();
+public class AllTests {
+
+	public static Test suite() {
+		TestSuite suite = new TestSuite(
+						"Test for ch.iserver.ace.collaboration.jupiter.server.serializer");
+		//$JUnit-BEGIN$
+		suite.addTestSuite(RequestSerializerCommandTest.class);
+		suite.addTestSuite(CaretUpdateSerializerCommandTest.class);
+		suite.addTestSuite(SerializerTest.class);
+		//$JUnit-END$
+		return suite;
 	}
 
 }

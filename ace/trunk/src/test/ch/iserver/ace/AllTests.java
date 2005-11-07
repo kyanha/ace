@@ -32,6 +32,7 @@ public class AllTests {
 		suite.addTest(ch.iserver.ace.algorithm.jupiter.AllTests.suite());
 		suite.addTest(ch.iserver.ace.collaboration.jupiter.AllTests.suite());
 		suite.addTest(ch.iserver.ace.collaboration.jupiter.server.AllTests.suite());
+		suite.addTest(ch.iserver.ace.collaboration.jupiter.server.serializer.AllTests.suite());
 		suite.addTest(ch.iserver.ace.test.AllTests.suite());
 		suite.addTest(ch.iserver.ace.text.AllTests.suite());
 		//$JUnit-END$

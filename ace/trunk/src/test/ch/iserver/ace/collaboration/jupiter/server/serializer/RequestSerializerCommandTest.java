@@ -19,32 +19,40 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.collaboration.jupiter.server;
+package ch.iserver.ace.collaboration.jupiter.server.serializer;
 
 import junit.framework.TestCase;
 
 import org.easymock.MockControl;
 
-import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.algorithm.Algorithm;
-import ch.iserver.ace.algorithm.CaretUpdateMessage;
+import ch.iserver.ace.algorithm.Request;
+import ch.iserver.ace.algorithm.RequestImpl;
 import ch.iserver.ace.algorithm.TransformationException;
+import ch.iserver.ace.collaboration.jupiter.server.Forwarder;
+import ch.iserver.ace.collaboration.jupiter.server.serializer.RequestSerializerCommand;
+import ch.iserver.ace.collaboration.jupiter.server.serializer.SerializerCommand;
+import ch.iserver.ace.collaboration.jupiter.server.serializer.SerializerException;
+import ch.iserver.ace.text.InsertOperation;
 
-public class CaretUpdateSerializerCommandTest extends TestCase {
+public class RequestSerializerCommandTest extends TestCase {
 
+	/**
+	 * Test method for 'ch.iserver.ace.collaboration.jupiter.server.RequestSerializerCommand.execute(Forwarder)'
+	 * @throws TransformationException 
+	 */
 	public void testExecute() throws SerializerException, TransformationException {
 		MockControl forwarderCtrl = MockControl.createControl(Forwarder.class);
 		Forwarder forwarder = (Forwarder) forwarderCtrl.getMock();
 		MockControl algorithmCtrl = MockControl.createControl(Algorithm.class);
-		algorithmCtrl.setDefaultMatcher(MockControl.ARRAY_MATCHER);
 		Algorithm algorithm = (Algorithm) algorithmCtrl.getMock();
-		CaretUpdateMessage message = new CaretUpdateMessage(0, null, new CaretUpdate(1, 2));
-		SerializerCommand command = new CaretUpdateSerializerCommand(1, algorithm, message);
+		Request request = new RequestImpl(0, null, new InsertOperation(0, "x"));
+		SerializerCommand command = new RequestSerializerCommand(1, algorithm, request);
 		
 		// define mock behavior
-		forwarder.sendCaretUpdate(1, new CaretUpdate(1, 2));
-		algorithm.transformIndices(null, new int[] { 1, 2 });
-		algorithmCtrl.setReturnValue(new int[] { 1, 2 });
+		forwarder.sendOperation(1, new InsertOperation(1, "x"));
+		algorithm.receiveRequest(new RequestImpl(0, null, new InsertOperation(0, "x")));
+		algorithmCtrl.setReturnValue(new InsertOperation(1, "x"));
 		
 		// replay
 		forwarderCtrl.replay();

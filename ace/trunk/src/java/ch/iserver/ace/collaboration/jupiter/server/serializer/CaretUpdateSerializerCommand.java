@@ -19,40 +19,44 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.collaboration.jupiter.server;
+package ch.iserver.ace.collaboration.jupiter.server.serializer;
 
-import ch.iserver.ace.Operation;
+import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.algorithm.Algorithm;
-import ch.iserver.ace.algorithm.Request;
+import ch.iserver.ace.algorithm.CaretUpdateMessage;
+import ch.iserver.ace.algorithm.Timestamp;
 import ch.iserver.ace.algorithm.TransformationException;
+import ch.iserver.ace.collaboration.jupiter.server.Forwarder;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
  *
  */
-class RequestSerializerCommand extends AbstractSerializerCommand {
-
-	private final Request request;
-	
-	public RequestSerializerCommand(int participantId, Algorithm algorithm, Request request) {
-		super(participantId, algorithm);
-		ParameterValidator.notNull("request", request);
-		this.request = request;
-	}
+public class CaretUpdateSerializerCommand extends AbstractSerializerCommand {
 		
-	protected Request getRequest() {
-		return request;
+	private final CaretUpdateMessage message;
+	
+	public CaretUpdateSerializerCommand(int participantId, Algorithm algorithm, CaretUpdateMessage message) {
+		super(participantId, algorithm);
+		ParameterValidator.notNull("message", message);
+		this.message = message;
+	}
+	
+	public CaretUpdateMessage getMessage() {
+		return message;
 	}
 	
 	/**
-	 * @see ch.iserver.ace.collaboration.jupiter.server.SerializerCommand#execute(ch.iserver.ace.collaboration.jupiter.server.Forwarder)
+	 * @see ch.iserver.ace.collaboration.jupiter.server.serializer.SerializerCommand#execute(ch.iserver.ace.collaboration.jupiter.server.Forwarder)
 	 */
 	public void execute(Forwarder forwarder) throws SerializerException {
 		try {
-			Operation op = getAlgorithm().receiveRequest(getRequest());
-			forwarder.sendOperation(getParticipantId(), op);
+			CaretUpdate update = getMessage().getUpdate();
+			Timestamp timestamp = getMessage().getTimestamp();
+			int[] indices = getAlgorithm().transformIndices(timestamp, update.getIndices());
+			forwarder.sendCaretUpdate(getParticipantId(), new CaretUpdate(indices[0], indices[1]));
 		} catch (TransformationException e) {
-			throw new SerializerException(getParticipantId(), e);
+			throw new SerializerException(getParticipantId());
 		}
 	}
 

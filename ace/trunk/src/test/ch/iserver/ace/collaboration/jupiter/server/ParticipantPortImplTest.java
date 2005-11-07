@@ -29,6 +29,8 @@ import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.RequestImpl;
+import ch.iserver.ace.collaboration.jupiter.server.serializer.CaretUpdateSerializerCommand;
+import ch.iserver.ace.collaboration.jupiter.server.serializer.RequestSerializerCommand;
 import ch.iserver.ace.net.ParticipantPort;
 import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
 import edu.emory.mathcs.backport.java.util.concurrent.LinkedBlockingQueue;

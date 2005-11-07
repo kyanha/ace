@@ -19,8 +19,11 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.collaboration.jupiter.server;
+package ch.iserver.ace.collaboration.jupiter.server.serializer;
 
+import ch.iserver.ace.collaboration.jupiter.server.Forwarder;
+import ch.iserver.ace.collaboration.jupiter.server.ServerLogic;
+import ch.iserver.ace.collaboration.jupiter.server.SessionParticipant;
 import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.net.PortableDocument;
 import ch.iserver.ace.net.RemoteUserProxy;
@@ -55,7 +58,7 @@ public class JoinCommand implements SerializerCommand {
 	}
 	
 	/**
-	 * @see ch.iserver.ace.collaboration.jupiter.server.SerializerCommand#execute(ch.iserver.ace.collaboration.jupiter.server.Forwarder)
+	 * @see ch.iserver.ace.collaboration.jupiter.server.serializer.SerializerCommand#execute(ch.iserver.ace.collaboration.jupiter.server.Forwarder)
 	 */
 	public void execute(Forwarder forwarder) {
 		ParticipantConnection connection = getConnection();

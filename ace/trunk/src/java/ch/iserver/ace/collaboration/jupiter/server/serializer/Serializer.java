@@ -19,10 +19,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.collaboration.jupiter.server;
+package ch.iserver.ace.collaboration.jupiter.server.serializer;
 
 import org.apache.log4j.Logger;
 
+import ch.iserver.ace.collaboration.jupiter.server.FailureHandler;
+import ch.iserver.ace.collaboration.jupiter.server.Forwarder;
 import ch.iserver.ace.util.Lock;
 import ch.iserver.ace.util.ParameterValidator;
 import ch.iserver.ace.util.Worker;
@@ -33,7 +35,7 @@ import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
  * a fundamental requirement of the Jupiter algorithm server-side
  * component.
  */
-class Serializer extends Worker {
+public class Serializer extends Worker {
 	
 	private static final Logger LOG = Logger.getLogger(Serializer.class);
 	
@@ -66,7 +68,7 @@ class Serializer extends Worker {
 	 * @param forwarder the forwarder that forwards the results
 	 * @param failureHandler the FailureHandler to be notified about failures
 	 */
-	Serializer(BlockingQueue queue, Lock lock, Forwarder forwarder, FailureHandler failureHandler) {
+	public Serializer(BlockingQueue queue, Lock lock, Forwarder forwarder, FailureHandler failureHandler) {
 		super("Serializer");
 		ParameterValidator.notNull("queue", queue);
 		ParameterValidator.notNull("lock", lock);
