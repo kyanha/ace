@@ -21,10 +21,8 @@
 
 package ch.iserver.ace.collaboration.jupiter;
 
-import org.springframework.aop.framework.ProxyFactoryBean;
-
 import ch.iserver.ace.net.ParticipantConnection;
-import ch.iserver.ace.util.AsyncInterceptor;
+import ch.iserver.ace.util.AsyncUtil;
 import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
 
 /**
@@ -47,12 +45,7 @@ public class ParticipantConnectionDecoratorImpl implements
 	 * @see ch.iserver.ace.collaboration.jupiter.ParticipantConnectionDecorator#decorate(ch.iserver.ace.net.ParticipantConnection)
 	 */
 	public ParticipantConnection decorate(ParticipantConnection target) {
-		ProxyFactoryBean factory = new ProxyFactoryBean();
-		factory.addInterface(ParticipantConnection.class);
-		AsyncInterceptor interceptor = new AsyncInterceptor(getQueue());
-		factory.addAdvice(interceptor);
-		factory.setTarget(target);
-		return (ParticipantConnection) factory.getObject();
+		return (ParticipantConnection) AsyncUtil.wrap(target, ParticipantConnection.class, getQueue());
 	}
 
 }

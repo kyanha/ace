@@ -100,10 +100,16 @@ class RemoteDocumentImpl implements MutableRemoteDocument {
 		return proxy.getId();
 	}
 
+	/**
+	 * @see ch.iserver.ace.collaboration.RemoteDocument#getTitle()
+	 */
 	public String getTitle() {
 		return title;
 	}
 	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.MutableRemoteDocument#setTitle(java.lang.String)
+	 */
 	public void setTitle(String title) {
 		String old = this.title;
 		if (!old.equals(title)) {
