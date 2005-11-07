@@ -23,17 +23,24 @@ package ch.iserver.ace.application;
 
 
 
-public class UserItem implements Comparable {
+public class BrowseItem implements Comparable {
 
-	public UserItem() {
+	private String title;
+	//private RemoteDocument document;
+
+	public BrowseItem() {
 	}
 
-	public String getUserName() {
+	public String getTitle() {
+		return "";
+	}
+	
+	public String getOwner() {
 		return "";
 	}
 
 	public int compareTo(Object o) {
-		//return -((BasicUserListItem)o).getUsername().compareTo(username);
+		//return -((BasicDocumentListItem)o).getDocumentName().compareTo(documentName);
 		return -1;
 	}
 

@@ -26,15 +26,17 @@ import javax.swing.*;
 
 
 
-public class UserItemCellRenderer extends JPanel implements ListCellRenderer {
+public class BrowseItemCellRenderer extends JPanel implements ListCellRenderer {
 
-	private UserItem value;
+	private BrowseItem value;
 	private LocaleMessageSource messageSource;
-	protected ImageIcon iconUser;
+	protected ImageIcon iconLocalPrivate, iconLocalPublished, iconRemote;
 
-	public UserItemCellRenderer(LocaleMessageSource messageSource) {
+	public BrowseItemCellRenderer(LocaleMessageSource messageSource) {
 		this.messageSource = messageSource;
-		//iconUser = source.getIcon("iViewUser");
+//		iconLocalPrivate = messageSource.getIcon("iViewFileLocalPrivate");
+//		iconLocalPublished = messageSource.getIcon("iViewFileLocalPublished");
+//		iconRemote = messageSource.getIcon("iViewFileRemote");
 	}
 
 	public Component getListCellRendererComponent(JList list,
@@ -43,7 +45,7 @@ public class UserItemCellRenderer extends JPanel implements ListCellRenderer {
 							boolean isSelected,
 							boolean cellHasFocus) {
 		setOpaque(true);
-		this.value = (UserItem)value;
+		this.value = (BrowseItem)value;
 		
 		if(isSelected) {
 			setForeground(list.getSelectionForeground());
@@ -54,33 +56,17 @@ public class UserItemCellRenderer extends JPanel implements ListCellRenderer {
 			setBackground(list.getBackground());
 			//setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 		}
-
+		
 		return this;
 	}
 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		// draw icon
-		/*if(value.getUsername().length() < 12) {
-			g.drawImage(icon2.getImage(), 2, 1, 14, 14, this);
-		} else {
-			g.drawImage(icon.getImage(), 2, 1, 14, 14, this);
-		}
+		/*// draw icon
+		g.drawImage(icon.getImage(), 0, 0, 15, 15, this);
 		
 		// draw string
-		int posX = 10;
-		int posY = g.getClipBounds().height / 2 - 4;
-
-		g.drawString(value.getUsername(), 20, 13);
-
-		// draw color
-		Color blubb = new Color((int)(255 * Math.random()), (int)(255 * Math.random()), (int)(255 * Math.random()));
-		g.setColor(blubb);
-		g.fillRect(g.getClipBounds().width - 32, 4, 20, 8);
-		g.setColor(blubb.darker());
-		g.drawRect(g.getClipBounds().width - 32, 4, 20, 8);
-		*/
-				
+		g.drawString(value.getDocumentName(), 10, 10);*/
 	}
 
 	public Dimension getPreferredSize() {

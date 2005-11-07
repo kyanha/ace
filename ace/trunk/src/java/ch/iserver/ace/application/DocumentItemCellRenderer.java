@@ -26,17 +26,17 @@ import javax.swing.*;
 
 
 
-public class BasicDocumentListItemCellRenderer extends JPanel implements ListCellRenderer {
+public class DocumentItemCellRenderer extends JPanel implements ListCellRenderer {
 
-	private BasicDocumentListItem value;
-	private LocaleMessageSource source;
+	private DocumentItem value;
+	private LocaleMessageSource messageSource;
 	protected ImageIcon iconLocalPrivate, iconLocalPublished, iconRemote;
 
-	public BasicDocumentListItemCellRenderer(LocaleMessageSource source) {
-		this.source = source;
-		iconLocalPrivate = source.getIcon("iViewFileLocalPrivate");
-		iconLocalPublished = source.getIcon("iViewFileLocalPublished");
-		iconRemote = source.getIcon("iViewFileRemote");
+	public DocumentItemCellRenderer(LocaleMessageSource messageSource) {
+		this.messageSource = messageSource;
+//		iconLocalPrivate = messageSource.getIcon("iViewFileLocalPrivate");
+//		iconLocalPublished = messageSource.getIcon("iViewFileLocalPublished");
+//		iconRemote = messageSource.getIcon("iViewFileRemote");
 	}
 
 	public Component getListCellRendererComponent(JList list,
@@ -45,7 +45,7 @@ public class BasicDocumentListItemCellRenderer extends JPanel implements ListCel
 							boolean isSelected,
 							boolean cellHasFocus) {
 		setOpaque(true);
-		this.value = (BasicDocumentListItem)value;
+		this.value = (DocumentItem)value;
 		
 		if(isSelected) {
 			setForeground(list.getSelectionForeground());

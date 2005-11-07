@@ -26,50 +26,65 @@ import javax.swing.*;
 
 
 
-public class ColorUserListItemCellRenderer extends BasicUserListItemCellRenderer {
+public class ParticipantItemCellRenderer extends JPanel implements ListCellRenderer {
 
-	private ColorUserListItem value;
+	private ParticipantItem value;
+	private LocaleMessageSource messageSource;
+	protected ImageIcon iconUser;
 
-	public ColorUserListItemCellRenderer(LocaleMessageSource source) {
-		super(source);
+	public ParticipantItemCellRenderer(LocaleMessageSource messageSource) {
+		this.messageSource = messageSource;
+		//iconUser = source.getIcon("iViewUser");
 	}
 
-	/*public Component getListCellRendererComponent(JList list,
+	public Component getListCellRendererComponent(JList list,
 							Object value,
 							int index,
 							boolean isSelected,
 							boolean cellHasFocus) {
 		setOpaque(true);
-		this.value = (ColorUserListItem)value;
+		this.value = (ParticipantItem)value;
 		
 		if(isSelected) {
 			setForeground(list.getSelectionForeground());
 			setBackground(list.getSelectionBackground());
+			//setBorder(BorderFactory.createLineBorder(Color.black, 1));
 		} else {
 			setForeground(list.getForeground());
 			setBackground(list.getBackground());
+			//setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 		}
 
-		if(isSelected) {
-			setBorder(BorderFactory.createLineBorder(Color.black, 1));
-		} else {
-			setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
-			//setBorder(BorderFactory.createEtchedBorder());
-		}
-		
 		return this;
-	}*/
+	}
 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		/*		// draw string
-		g.drawString("Color", 50, 10);
-*/
+		// draw icon
+		/*if(value.getUsername().length() < 12) {
+			g.drawImage(icon2.getImage(), 2, 1, 14, 14, this);
+		} else {
+			g.drawImage(icon.getImage(), 2, 1, 14, 14, this);
+		}
+		
+		// draw string
+		int posX = 10;
+		int posY = g.getClipBounds().height / 2 - 4;
+
+		g.drawString(value.getUsername(), 20, 13);
+
 		// draw color
+		Color blubb = new Color((int)(255 * Math.random()), (int)(255 * Math.random()), (int)(255 * Math.random()));
+		g.setColor(blubb);
+		g.fillRect(g.getClipBounds().width - 32, 4, 20, 8);
+		g.setColor(blubb.darker());
+		g.drawRect(g.getClipBounds().width - 32, 4, 20, 8);
+		*/
+				
 	}
 
-	/*public Dimension getPreferredSize() {
+	public Dimension getPreferredSize() {
 		return new Dimension(0, 16);
-	}*/
+	}
 	
 }

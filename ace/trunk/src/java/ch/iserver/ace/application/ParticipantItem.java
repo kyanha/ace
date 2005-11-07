@@ -25,22 +25,19 @@ import java.awt.Color;
 
 
 
-public class ColorUserListItem extends BasicUserListItem {
+public class ParticipantItem {
 
-	private Color color;
-
-	public ColorUserListItem(String username, Color color) {
-		super(username);
-		this.color = color;
+	public ParticipantItem() {
 	}
 
 	public Color getColor() {
-		return color;
+		return null;
 	}
 
-	/*public int compareTo(Object o) {
-		return -((BasicUserListItem)o).getUsername().compareTo(username);
-	}*/
+	public int compareTo(Object o) {
+		//return -((BasicUserListItem)o).getUsername().compareTo(username);
+		return -1;
+	}
 
 }
 

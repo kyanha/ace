@@ -68,15 +68,15 @@ public class UserView extends DefaultView {
 		JTextField filterField = new JTextField();
 		TextFilterator textFilterator = new TextFilterator() {
 			public void getFilterStrings(List baseList, Object element) {
-				BasicUserListItem item = (BasicUserListItem)element;
-				baseList.add(item.getUsername());
+				UserItem item = (UserItem)element;
+				baseList.add(item.getUserName());
 			}
 		};
 		MatcherEditor matcherEditor = new TextComponentMatcherEditor(filterField, textFilterator);
 		viewSource = new BasicEventList();
 		FilterList filterList = new FilterList(viewSource, matcherEditor);
 		final JList userFilterList = new JList(new EventListModel(new SortedList(filterList)));
-		userFilterList.setCellRenderer(new BasicUserListItemCellRenderer(source));
+		userFilterList.setCellRenderer(new UserItemCellRenderer(source));
 		userFilterList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		userFilterList.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {

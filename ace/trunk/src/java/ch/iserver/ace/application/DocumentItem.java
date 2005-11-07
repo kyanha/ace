@@ -23,20 +23,18 @@ package ch.iserver.ace.application;
 
 
 
-public class BasicDocumentListItem implements Comparable {
+public class DocumentItem implements Comparable {
 
-	private String documentName;
-
-	public BasicDocumentListItem(String documentName) {
-		this.documentName = documentName;
+	public DocumentItem() {
 	}
 
 	public String getDocumentName() {
-		return documentName;
+		return "";
 	}
 
 	public int compareTo(Object o) {
-		return -((BasicDocumentListItem)o).getDocumentName().compareTo(documentName);
+		//return -((BasicDocumentListItem)o).getDocumentName().compareTo(documentName);
+		return -1;
 	}
 
 }
