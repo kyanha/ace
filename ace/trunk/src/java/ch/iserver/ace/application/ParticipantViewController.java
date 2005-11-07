@@ -40,6 +40,7 @@ public class ParticipantViewController extends ViewControllerImpl {
 	}
 
 	private ParticipantView getView() {
+		if(view == null) throw new IllegalStateException("View have to be set before using getView()!");
 		return (ParticipantView)view;
 	}
 	

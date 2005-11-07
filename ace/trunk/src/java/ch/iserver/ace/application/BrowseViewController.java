@@ -48,6 +48,7 @@ public class BrowseViewController extends ViewControllerImpl implements Document
 	}
 		
 	private BrowseView getView() {
+		if(view == null) throw new IllegalStateException("View have to be set before using getView()!");
 		return (BrowseView)view;
 	}
 	

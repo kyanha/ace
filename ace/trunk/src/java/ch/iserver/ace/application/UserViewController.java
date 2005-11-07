@@ -48,6 +48,7 @@ public class UserViewController extends ViewControllerImpl implements UserListen
 	}
 	
 	private UserView getView() {
+		if(view == null) throw new IllegalStateException("View have to be set before using getView()!");
 		return (UserView)view;
 	}
 	
