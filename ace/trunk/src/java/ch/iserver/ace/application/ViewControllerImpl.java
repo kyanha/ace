@@ -27,12 +27,13 @@ import java.beans.PropertyChangeSupport;
 
 
 
-public class ViewControllerImpl implements ViewController, PropertyChangeListener {
+public class ViewControllerImpl implements ViewController {
 
 	protected View view;
 	private PropertyChangeSupport propertyChangeSupport;
 	
 	public ViewControllerImpl() {
+		propertyChangeSupport = new PropertyChangeSupport(this);
 	}
 	
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
@@ -43,9 +44,9 @@ public class ViewControllerImpl implements ViewController, PropertyChangeListene
 		propertyChangeSupport.removePropertyChangeListener(listener);
 	}
 	
-	protected void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
+/*	protected void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
 		propertyChangeSupport.firePropertyChange(propertyName, oldValue, newValue);
-	}
+	}*/
 	
 	public void propertyChange(PropertyChangeEvent evt) {
 		propertyChangeSupport.firePropertyChange(evt);

@@ -53,8 +53,8 @@ public class UserView extends ViewImpl {
 	private AbstractAction toolbarActBtnDiscoverUser, toolbarActBtnInviteUser;
 
 
-	public UserView(LocaleMessageSource source) {
-		super(source);
+	public UserView(UserViewController controller, LocaleMessageSource messageSource) {
+		super(controller, messageSource);
 		/*
 		// create view header
 		JToolBar toolbar = new JToolBar();
@@ -123,6 +123,8 @@ public class UserView extends ViewImpl {
 		this.viewSource = viewSource;
 	}*/
 
-	
+	public Item getSelectedItem() {
+		return null;
+	}	
 
 }

@@ -25,8 +25,12 @@ package ch.iserver.ace.application;
 
 public class DocumentView extends ViewImpl {
 
-	public DocumentView(LocaleMessageSource source) {
-		super(source);
+	public DocumentView(DocumentViewController controller, LocaleMessageSource messageSource) {
+		super(controller, messageSource);
+	}
+	
+	public Item getSelectedItem() {
+		return null;
 	}
 
 }

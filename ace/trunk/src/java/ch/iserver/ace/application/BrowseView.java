@@ -21,15 +21,53 @@
 
 package ch.iserver.ace.application;
 
+import java.awt.BorderLayout;
+import javax.swing.JList;
+import javax.swing.JScrollPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.JToolBar;
+
+import com.jgoodies.uif_lite.panel.SimpleInternalFrame;
+
+import ca.odell.glazedlists.BasicEventList;
+import ca.odell.glazedlists.EventList;
+import ca.odell.glazedlists.swing.EventSelectionModel;
+
 
 
 public class BrowseView extends ViewImpl {
 
-	public BrowseView(LocaleMessageSource source) {
-		super(source);
+	private EventList browseSourceList;
+	private EventSelectionModel eventSelectionModel;
+
+	public BrowseView(BrowseViewController controller, LocaleMessageSource messageSource) {
+		super(controller, messageSource);
+		// get view source
+		browseSourceList = controller.getBrowseSourceList();
+		
+		// create view toolbar & actions
+		JToolBar viewToolBar = new JToolBar();
+		//final AbstractAction vtbaDiscoverUser = new AbstractAction() { public void actionPerformed(ActionEvent e) { System.out.println("Discover User"); }};
+		//viewToolBar.add(vtbaDiscoverUser);
+		//final AbstractAction vtbaJoinSession = new AbstractAction() { public void actionPerformed(ActionEvent e) { System.out.println("Join Session"); }};
+		//viewToolBar.add(vtbaJoinSession);
+
+		// create data list
+		JTextField filterField = new JTextField();
+		JList browseList = new JList();
+		
+		// create frame
+		JPanel browseViewContent = new JPanel(new BorderLayout());
+		browseViewContent.add(new JScrollPane(browseList), BorderLayout.CENTER);
+		browseViewContent.add(filterField, BorderLayout.SOUTH);
+		SimpleInternalFrame browseView = new SimpleInternalFrame(null, messageSource.getMessage("vBrowseTitle"), viewToolBar, browseViewContent);
+		setLayout(new BorderLayout());
+		add(browseView);		
 	}
 
 	public Item getSelectedItem() {
+		// if item selected
 		return null;
 	}
 }

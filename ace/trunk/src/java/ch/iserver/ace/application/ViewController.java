@@ -25,7 +25,7 @@ import java.beans.PropertyChangeListener;
 
 
 
-public interface ViewController {
+public interface ViewController extends PropertyChangeListener {
 
 	void addPropertyChangeListener(PropertyChangeListener listener);
 	
