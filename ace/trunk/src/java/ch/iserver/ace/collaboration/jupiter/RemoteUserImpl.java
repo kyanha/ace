@@ -36,8 +36,9 @@ import ch.iserver.ace.util.ParameterValidator;
  */
 public class RemoteUserImpl implements MutableRemoteUser {
 	
-	public static final String USERNAME_PROPERTY = "userName";
-	
+	/**
+	 * 
+	 */
 	private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 	
 	/**
@@ -45,6 +46,9 @@ public class RemoteUserImpl implements MutableRemoteUser {
 	 */
 	private final RemoteUserProxy proxy;
 	
+	/**
+	 * 
+	 */
 	private String userName;
 	
 	/**
@@ -83,7 +87,7 @@ public class RemoteUserImpl implements MutableRemoteUser {
 		String old = this.userName;
 		if (!old.equals(userName)) {
 			this.userName = userName;
-			support.firePropertyChange(USERNAME_PROPERTY, old, userName);
+			support.firePropertyChange(NAME_PROPERTY, old, userName);
 		}
 	}
 

@@ -24,14 +24,35 @@ package ch.iserver.ace.collaboration.jupiter;
 import ch.iserver.ace.net.RemoteUserProxy;
 
 /**
- *
+ * Registry class and factory for RemoteUser objects.
  */
 public interface UserRegistry {
 		
+	/**
+	 * Adds a new user to the registry. The passed in RemoteUserProxy is
+	 * used to create the RemoteUser.
+	 * 
+	 * @param proxy the proxy object from the network layer
+	 * @return the newly created MutableRemoteUser
+	 */
 	MutableRemoteUser addUser(RemoteUserProxy proxy);
 	
+	/**
+	 * Gets the user with the given id from the registry. If there is no
+	 * such user, null is returned.
+	 * 
+	 * @param id the id of the remote user
+	 * @return the MutableRemoteUser with the given id or null if there is none
+	 */
 	MutableRemoteUser getUser(String id);
 	
+	/**
+	 * Removes the remote user specified by the given RemoteUserProxy from
+	 * the registry.
+	 * 
+	 * @param proxy the proxy of the user to be removed
+	 * @return the removed MutableRemoteUser or null if there is no such user
+	 */
 	MutableRemoteUser removeUser(RemoteUserProxy proxy);
 	
 }

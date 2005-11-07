@@ -30,7 +30,12 @@ import java.beans.PropertyChangeListener;
  * which allows to send a join request to the document.
  */
 public interface RemoteDocument {
-		
+	
+	/**
+	 * The name of the title property. 
+	 */
+	String TITLE_PROPERTY = "title";
+
 	/**
 	 * Gets the unique identifier of the document.
 	 * 

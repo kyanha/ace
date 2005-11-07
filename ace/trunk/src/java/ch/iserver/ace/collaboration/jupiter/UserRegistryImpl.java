@@ -55,20 +55,32 @@ class UserRegistryImpl implements UserRegistry {
 	
 	private final Map users;
 	
+	/**
+	 * 
+	 */
 	public UserRegistryImpl() {
 		this.users = Collections.synchronizedMap(new HashMap());
 	}
 	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.UserRegistry#addUser(ch.iserver.ace.net.RemoteUserProxy)
+	 */
 	public MutableRemoteUser addUser(RemoteUserProxy proxy) {
 		MutableRemoteUser user = new RemoteUserImpl(proxy);
 		users.put(user.getId(), user);
 		return user;
 	}
 	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.UserRegistry#getUser(java.lang.String)
+	 */
 	public MutableRemoteUser getUser(String id) {
 		return (MutableRemoteUser) users.get(id);
 	}
 	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.UserRegistry#removeUser(ch.iserver.ace.net.RemoteUserProxy)
+	 */
 	public MutableRemoteUser removeUser(RemoteUserProxy proxy) {
 		return (MutableRemoteUser) users.remove(proxy.getId());
 	}

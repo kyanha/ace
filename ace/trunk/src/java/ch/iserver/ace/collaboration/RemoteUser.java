@@ -31,6 +31,11 @@ import java.beans.PropertyChangeListener;
 public interface RemoteUser {
 	
 	/**
+	 * The name of the name property.
+	 */
+	String NAME_PROPERTY = "name";
+	
+	/**
 	 * Gets the unique identifier of the user.
 	 * 
 	 * @return the unique identifier of the user

@@ -35,12 +35,7 @@ import ch.iserver.ace.util.ParameterValidator;
  * Default implementation of the RemoteDocument interface.
  */
 class RemoteDocumentImpl implements MutableRemoteDocument {
-	
-	/**
-	 * 
-	 */
-	public static final String TITLE_PROPERTY = "title";
-	
+		
 	/**
 	 * 
 	 */
