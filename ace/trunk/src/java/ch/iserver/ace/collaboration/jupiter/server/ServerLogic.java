@@ -33,6 +33,8 @@ import ch.iserver.ace.net.PortableDocument;
  */
 public interface ServerLogic extends DocumentServerLogic {
 	
+	int PUBLISHER_ID = 0;
+	
 	void setDocumentServer(DocumentServer server);
 	
 	void addParticipant(SessionParticipant participant);

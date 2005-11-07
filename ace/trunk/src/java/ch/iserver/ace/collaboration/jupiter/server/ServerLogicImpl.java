@@ -248,6 +248,9 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerLogic#kick(int)
 	 */
 	public void kick(int participantId) {
+		if (participantId == PUBLISHER_ID) {
+			throw new IllegalArgumentException("cannot kick publisher of session");
+		}
 		LOG.info("kicking participant " + participantId);
 		synchronized (this) {
 			ParticipantConnection connection = getParticipantConnection(participantId);
@@ -263,11 +266,15 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 	 * @see ch.iserver.ace.collaboration.jupiter.server.FailureHandler#handleFailure(int)
 	 */
 	public void handleFailure(int participantId) {
-		// TODO: handle failing publisher connection differently
 		LOG.info("handling failed connection to participant " + participantId);
 		synchronized (this) {
-			removeParticipant(participantId);
-			getSerializerQueue().add(new LeaveCommand(participantId, Participant.DISCONNECTED));
+			if (participantId == PUBLISHER_ID) {
+				prepareShutdown();
+				getSerializerQueue().add(new ShutdownCommand(this));
+			} else {
+				removeParticipant(participantId);
+				getSerializerQueue().add(new LeaveCommand(participantId, Participant.DISCONNECTED));
+			}
 		}
 	}
 
