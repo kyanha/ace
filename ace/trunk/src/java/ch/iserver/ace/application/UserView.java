@@ -46,7 +46,7 @@ import ca.odell.glazedlists.swing.TextComponentMatcherEditor;
 
 
 
-public class UserView extends DefaultView {
+public class UserView extends ViewImpl {
 
 	private EventList viewSource;
 	private boolean userListItemSelected = false;

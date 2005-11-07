@@ -23,7 +23,7 @@ package ch.iserver.ace.application;
 
 
 
-public class DocumentView extends DefaultView {
+public class DocumentView extends ViewImpl {
 
 	public DocumentView(LocaleMessageSource source) {
 		super(source);

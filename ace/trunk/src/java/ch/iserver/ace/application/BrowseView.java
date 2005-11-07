@@ -23,7 +23,7 @@ package ch.iserver.ace.application;
 
 
 
-public class BrowseView extends DefaultView {
+public class BrowseView extends ViewImpl {
 
 	public BrowseView(LocaleMessageSource source) {
 		super(source);

@@ -23,7 +23,7 @@ package ch.iserver.ace.application;
 
 
 
-public class ParticipantView extends DefaultView {
+public class ParticipantView extends ViewImpl {
 
 	public ParticipantView(LocaleMessageSource source) {
 		super(source);
