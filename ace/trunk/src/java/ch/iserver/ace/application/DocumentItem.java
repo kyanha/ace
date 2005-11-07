@@ -21,20 +21,34 @@
 
 package ch.iserver.ace.application;
 
+import ch.iserver.ace.collaboration.RemoteDocument;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 
-public class DocumentItem implements Comparable {
+
+public class DocumentItem extends ItemImpl implements Comparable, PropertyChangeListener {
+
+	String title;
 
 	public DocumentItem() {
+		title = "title ...";
 	}
 
-	public String getDocumentName() {
-		return "";
+	public String getTitle() {
+		return title;
+	}
+	
+	public void propertyChange(PropertyChangeEvent evt) {
+		if(evt.getPropertyName().equals(RemoteDocument.TITLE_PROPERTY)) {
+			title = (String)evt.getNewValue();
+			firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.getNewValue());
+		}
 	}
 
 	public int compareTo(Object o) {
-		//return -((BasicDocumentListItem)o).getDocumentName().compareTo(documentName);
-		return -1;
+		return -((DocumentItem)o).getTitle().compareTo(title);
 	}
 
 }

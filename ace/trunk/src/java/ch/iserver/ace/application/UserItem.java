@@ -21,20 +21,41 @@
 
 package ch.iserver.ace.application;
 
+import ch.iserver.ace.collaboration.RemoteUser;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 
-public class UserItem implements Comparable {
 
-	public UserItem() {
+public class UserItem extends ItemImpl implements Comparable, PropertyChangeListener {
+
+	private String name;
+	private RemoteUser user;
+
+	public UserItem(RemoteUser user) {
+		this.user = user;
+		user.addPropertyChangeListener(this);
+		name = user.getName();
 	}
 
-	public String getUserName() {
-		return "";
+	public String getName() {
+		return name;
+	}
+	
+	public RemoteUser getUser() {
+		return user;
+	}
+	
+	public void propertyChange(PropertyChangeEvent evt) {
+		if(evt.getPropertyName().equals(RemoteUser.NAME_PROPERTY)) {
+			name = (String)evt.getNewValue();
+			firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.getNewValue());
+		}
 	}
 
 	public int compareTo(Object o) {
-		//return -((BasicUserListItem)o).getUsername().compareTo(username);
-		return -1;
+		return -((UserItem)o).getName().compareTo(name);
 	}
 
 }
