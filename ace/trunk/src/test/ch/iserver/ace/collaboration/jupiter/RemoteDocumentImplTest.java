@@ -21,12 +21,12 @@
 
 package ch.iserver.ace.collaboration.jupiter;
 
+import junit.framework.TestCase;
+
 import org.easymock.MockControl;
 
 import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.net.RemoteDocumentProxy;
-
-import junit.framework.TestCase;
 
 public class RemoteDocumentImplTest extends TestCase {
 		

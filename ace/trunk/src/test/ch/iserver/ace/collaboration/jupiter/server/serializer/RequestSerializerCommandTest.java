@@ -30,9 +30,6 @@ import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.RequestImpl;
 import ch.iserver.ace.algorithm.TransformationException;
 import ch.iserver.ace.collaboration.jupiter.server.Forwarder;
-import ch.iserver.ace.collaboration.jupiter.server.serializer.RequestSerializerCommand;
-import ch.iserver.ace.collaboration.jupiter.server.serializer.SerializerCommand;
-import ch.iserver.ace.collaboration.jupiter.server.serializer.SerializerException;
 import ch.iserver.ace.text.InsertOperation;
 
 public class RequestSerializerCommandTest extends TestCase {

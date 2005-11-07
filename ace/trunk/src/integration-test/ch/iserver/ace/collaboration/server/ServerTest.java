@@ -33,7 +33,6 @@ import ch.iserver.ace.collaboration.jupiter.NullParticipantConnectionDecorator;
 import ch.iserver.ace.collaboration.jupiter.PublisherConnection;
 import ch.iserver.ace.collaboration.jupiter.RemoteUserProxyStub;
 import ch.iserver.ace.collaboration.jupiter.server.ServerLogicImpl;
-import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.text.InsertOperation;
 import ch.iserver.ace.util.Lock;

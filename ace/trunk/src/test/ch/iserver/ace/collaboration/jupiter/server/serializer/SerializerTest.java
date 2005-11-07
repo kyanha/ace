@@ -26,9 +26,6 @@ import junit.framework.TestCase;
 import org.easymock.MockControl;
 
 import ch.iserver.ace.collaboration.jupiter.server.Forwarder;
-import ch.iserver.ace.collaboration.jupiter.server.serializer.Serializer;
-import ch.iserver.ace.collaboration.jupiter.server.serializer.SerializerCommand;
-import ch.iserver.ace.collaboration.jupiter.server.serializer.SerializerException;
 import ch.iserver.ace.util.Lock;
 import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
 import edu.emory.mathcs.backport.java.util.concurrent.LinkedBlockingQueue;

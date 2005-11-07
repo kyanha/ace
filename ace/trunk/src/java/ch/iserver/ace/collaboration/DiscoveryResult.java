@@ -21,6 +21,8 @@
 
 package ch.iserver.ace.collaboration;
 
+import java.net.InetAddress;
+
 import ch.iserver.ace.util.ParameterValidator;
 
 /**

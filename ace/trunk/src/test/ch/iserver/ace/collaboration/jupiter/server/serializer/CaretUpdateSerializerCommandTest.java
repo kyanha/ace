@@ -30,9 +30,6 @@ import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.TransformationException;
 import ch.iserver.ace.collaboration.jupiter.server.Forwarder;
-import ch.iserver.ace.collaboration.jupiter.server.serializer.CaretUpdateSerializerCommand;
-import ch.iserver.ace.collaboration.jupiter.server.serializer.SerializerCommand;
-import ch.iserver.ace.collaboration.jupiter.server.serializer.SerializerException;
 
 public class CaretUpdateSerializerCommandTest extends TestCase {
 

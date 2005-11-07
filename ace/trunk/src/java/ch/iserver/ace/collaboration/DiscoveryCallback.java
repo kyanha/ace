@@ -21,6 +21,8 @@
 
 package ch.iserver.ace.collaboration;
 
+import java.net.InetAddress;
+
 /**
  * Callback interface for explicit discovery requests through
  * {@link ch.iserver.ace.collaboration.CollaborationService#discoverUser(DiscoveryCallback, InetAddress, int)}.

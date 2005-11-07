@@ -21,12 +21,12 @@
 
 package ch.iserver.ace.collaboration.jupiter.server;
 
+import junit.framework.TestCase;
+
 import org.easymock.MockControl;
 
 import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.net.ParticipantConnection;
-
-import junit.framework.TestCase;
 
 /**
  *
