@@ -55,7 +55,7 @@ public class UserView extends ViewImpl {
 
 	public UserView(LocaleMessageSource source) {
 		super(source);
-		
+		/*
 		// create view header
 		JToolBar toolbar = new JToolBar();
 		toolbarActBtnDiscoverUser = new AbstractAction() { public void actionPerformed(ActionEvent e){}};//new DiscoverUserAction("Discover", null);
@@ -99,9 +99,10 @@ public class UserView extends ViewImpl {
 		SimpleInternalFrame userView = new SimpleInternalFrame(null, "UserView", toolbar, userViewContent);
 		setLayout(new BorderLayout());
 		add(userView);
+*/
 	}
 
-	private void setUserListItemSelected(boolean userListItemSelected) {
+	/*private void setUserListItemSelected(boolean userListItemSelected) {
 		boolean userListItemSelectedOld = this.userListItemSelected;
 		if (userListItemSelected != userListItemSelectedOld) {
 			this.userListItemSelected = userListItemSelected;
@@ -120,6 +121,8 @@ public class UserView extends ViewImpl {
 
 	public void setUserViewSource(EventList viewSource) {
 		this.viewSource = viewSource;
-	}
+	}*/
+
+	
 
 }
