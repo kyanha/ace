@@ -62,11 +62,11 @@ public class BrowseItemCellRenderer extends JPanel implements ListCellRenderer {
 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		/*// draw icon
-		g.drawImage(icon.getImage(), 0, 0, 15, 15, this);
+		// draw document icon
+
+		// draw document title
 		
-		// draw string
-		g.drawString(value.getDocumentName(), 10, 10);*/
+		// draw owner		
 	}
 
 	public Dimension getPreferredSize() {

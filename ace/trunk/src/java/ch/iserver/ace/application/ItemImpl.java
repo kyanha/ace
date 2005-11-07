@@ -21,40 +21,28 @@
 
 package ch.iserver.ace.application;
 
-import ch.iserver.ace.collaboration.RemoteDocument;
-
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 
 
 
-public class BrowseItem extends ItemImpl implements Comparable, PropertyChangeListener {
+public class ItemImpl implements Item {
 
-	private String title;
-	private RemoteDocument document;
-
-	public BrowseItem(RemoteDocument document) {
-		this.document = document;
+	protected PropertyChangeSupport propertyChangeSupport;
+	
+	public ItemImpl() {
 	}
 
-	public String getTitle() {
-		return "";
-		//firePropertyChange("");
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		propertyChangeSupport.addPropertyChangeListener(listener);
 	}
 	
-	public String getOwner() {
-		return "";
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		propertyChangeSupport.removePropertyChangeListener(listener);
 	}
 	
-	public void propertyChange(PropertyChangeEvent evt) {
-		if(evt.getPropertyName().equals(RemoteDocument.TITLE_PROPERTY)) {
-			// set new title
-			// fire property changed
-		}
-	}
-
-	public int compareTo(Object o) {
-		return -((BrowseItem)o).getTitle().compareTo(title);
+	protected void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
+		propertyChangeSupport.firePropertyChange(propertyName, oldValue, newValue);
 	}
 
 }

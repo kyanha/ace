@@ -21,40 +21,21 @@
 
 package ch.iserver.ace.application;
 
-import ch.iserver.ace.collaboration.RemoteDocument;
-
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import ca.odell.glazedlists.CompositeList;
+import ca.odell.glazedlists.EventList;
 
 
 
-public class BrowseItem extends ItemImpl implements Comparable, PropertyChangeListener {
+public class ParticipantViewController extends ViewControllerImpl {
 
-	private String title;
-	private RemoteDocument document;
+	private CompositeList participantSource;
 
-	public BrowseItem(RemoteDocument document) {
-		this.document = document;
-	}
-
-	public String getTitle() {
-		return "";
-		//firePropertyChange("");
+	public ParticipantViewController() {
 	}
 	
-	public String getOwner() {
-		return "";
-	}
-	
-	public void propertyChange(PropertyChangeEvent evt) {
-		if(evt.getPropertyName().equals(RemoteDocument.TITLE_PROPERTY)) {
-			// set new title
-			// fire property changed
-		}
-	}
-
-	public int compareTo(Object o) {
-		return -((BrowseItem)o).getTitle().compareTo(title);
+	public void setParticipantList(EventList participantList) {
+		participantSource.clear();
+		participantSource.addMemberList(participantList);
 	}
 
 }

@@ -21,12 +21,18 @@
 
 package ch.iserver.ace.application;
 
+import ch.iserver.ace.collaboration.Participant;
+
 
 
 public class ParticipantView extends ViewImpl {
 
 	public ParticipantView(LocaleMessageSource source) {
 		super(source);
+	}
+	
+	public Participant getSelectedParticipant() {
+		return null;
 	}
 
 }

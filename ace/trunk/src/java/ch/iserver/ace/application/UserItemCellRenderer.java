@@ -60,27 +60,9 @@ public class UserItemCellRenderer extends JPanel implements ListCellRenderer {
 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		// draw icon
-		/*if(value.getUsername().length() < 12) {
-			g.drawImage(icon2.getImage(), 2, 1, 14, 14, this);
-		} else {
-			g.drawImage(icon.getImage(), 2, 1, 14, 14, this);
-		}
+		// draw user icon
 		
-		// draw string
-		int posX = 10;
-		int posY = g.getClipBounds().height / 2 - 4;
-
-		g.drawString(value.getUsername(), 20, 13);
-
-		// draw color
-		Color blubb = new Color((int)(255 * Math.random()), (int)(255 * Math.random()), (int)(255 * Math.random()));
-		g.setColor(blubb);
-		g.fillRect(g.getClipBounds().width - 32, 4, 20, 8);
-		g.setColor(blubb.darker());
-		g.drawRect(g.getClipBounds().width - 32, 4, 20, 8);
-		*/
-				
+		// draw user name
 	}
 
 	public Dimension getPreferredSize() {
