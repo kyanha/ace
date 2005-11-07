@@ -67,10 +67,6 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 	
 	private final TreeMap connections = new TreeMap();
 	
-	private final BlockingQueue dispatcherQueue;
-	
-	private final Dispatcher dispatcher;
-	
 	private DocumentServer server;
 		
 	private final PublisherPort publisherPort;
@@ -98,9 +94,6 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 		this.serializerQueue = new LinkedBlockingQueue();
 		this.serializer = new Serializer(serializerQueue, lock, forwarder, this);
 		
-		this.dispatcherQueue = new LinkedBlockingQueue();
-		this.dispatcher = new Dispatcher(dispatcherQueue);
-		
 		this.publisherPort = createPublisherPort(connection, connectionDecorator);
 		
 		this.document = new ServerDocumentImpl();
@@ -118,7 +111,7 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 		connection.setParticipantId(participantId);
 		connection = decorator.decorate(new ParticipantConnectionWrapper(connection, this));
 		PublisherPort port = new PublisherPortImpl(this, participantId, algorithm, getSerializerQueue());
-		ParticipantProxy proxy = new ParticipantProxy(participantId, dispatcherQueue, algorithm, connection);
+		ParticipantProxy proxy = new ParticipantProxy(participantId, algorithm, connection);
 		addParticipant(new SessionParticipant(port, proxy, connection, null));
 		return port;
 	}
@@ -147,12 +140,10 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 	public void start() {
 		acceptingJoins = true;
 		serializer.start();
-		dispatcher.start();
 	}
 	
 	public void dispose() throws InterruptedException {
 		serializer.kill();
-		dispatcher.kill();
 	}
 	
 	private synchronized int nextParticipantId() {
@@ -209,7 +200,7 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 		target.setParticipantId(participantId);
 		
 		ParticipantPort port = new ParticipantPortImpl(this, participantId, algorithm, getSerializerQueue());
-		ParticipantProxy proxy = new ParticipantProxy(participantId, dispatcherQueue, algorithm, target);
+		ParticipantProxy proxy = new ParticipantProxy(participantId, algorithm, target);
 		ParticipantConnection connection = getConnectionDecorator().decorate(new ParticipantConnectionWrapper(target, this));
 		RemoteUserProxy user = target.getUser();
 		SessionParticipant participant = new SessionParticipant(port, proxy, connection, user);

@@ -31,7 +31,6 @@ import ch.iserver.ace.collaboration.jupiter.AlgorithmWrapperImpl;
 import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.util.ParameterValidator;
-import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
 
 /**
  *
@@ -42,12 +41,7 @@ class ParticipantProxy implements Forwarder {
 	 * 
 	 */
 	private final int participantId;
-	
-	/**
-	 * 
-	 */
-	private final BlockingQueue queue;
-	
+		
 	/**
 	 * 
 	 */
@@ -65,13 +59,10 @@ class ParticipantProxy implements Forwarder {
 	 * @param connection
 	 */
 	ParticipantProxy(int participantId, 
-					BlockingQueue queue, 
 					Algorithm algorithm, 
 					ParticipantConnection connection) {
-		ParameterValidator.notNull("queue", queue);
 		ParameterValidator.notNull("connection", connection);
 		this.participantId = participantId;
-		this.queue = queue;
 		this.algorithm = new AlgorithmWrapperImpl(algorithm);
 		this.connection = connection;
 	}
@@ -97,9 +88,7 @@ class ParticipantProxy implements Forwarder {
 		if (this.participantId != participantId) {
 			AlgorithmWrapper algorithm = getAlgorithm();
 			CaretUpdateMessage message = algorithm.generateCaretUpdateMessage(update);
-			ParticipantConnection connection = getConnection();
-			DispatcherCommand command = new CaretUpdateDispatcherCommand(connection, participantId, message);
-			queue.add(command);
+			getConnection().sendCaretUpdateMessage(participantId, message);
 		}
 	}
 	
@@ -110,9 +99,7 @@ class ParticipantProxy implements Forwarder {
 		if (this.participantId != participantId) {
 			AlgorithmWrapper algorithm = getAlgorithm();
 			Request request = algorithm.generateRequest(operation);
-			ParticipantConnection connection = getConnection();
-			DispatcherCommand command = new RequestDispatcherCommand(connection, participantId, request);
-			queue.add(command);
+			getConnection().sendRequest(participantId, request);
 		}
 	}
 		
