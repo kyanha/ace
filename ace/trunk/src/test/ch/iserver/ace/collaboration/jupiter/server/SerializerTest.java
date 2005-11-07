@@ -34,7 +34,7 @@ public class SerializerTest extends TestCase {
 	/**
 	 * Test method for 'ch.iserver.ace.collaboration.jupiter.server.Serializer.doWork()'
 	 */
-	public void testDoWork() throws InterruptedException {
+	public void testDoWork() throws InterruptedException, SerializerException {
 		MockControl lockControl = MockControl.createControl(Lock.class);
 		Lock lock = (Lock) lockControl.getMock();
 		MockControl forwarderControl = MockControl.createControl(Forwarder.class);
@@ -53,7 +53,7 @@ public class SerializerTest extends TestCase {
 		commandControl.replay();
 		
 		// test
-		Serializer serializer = new Serializer(queue, lock, forwarder);
+		Serializer serializer = new Serializer(queue, lock, forwarder, null);
 		queue.add(command);
 		serializer.doWork();
 		

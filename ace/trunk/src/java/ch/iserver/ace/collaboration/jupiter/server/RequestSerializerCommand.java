@@ -24,6 +24,7 @@ package ch.iserver.ace.collaboration.jupiter.server;
 import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.Request;
+import ch.iserver.ace.algorithm.TransformationException;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
@@ -46,9 +47,13 @@ class RequestSerializerCommand extends AbstractSerializerCommand {
 	/**
 	 * @see ch.iserver.ace.collaboration.jupiter.server.SerializerCommand#execute(ch.iserver.ace.collaboration.jupiter.server.Forwarder)
 	 */
-	public void execute(Forwarder forwarder) {
-		Operation op = getAlgorithm().receiveRequest(getRequest());
-		forwarder.sendOperation(getParticipantId(), op);
+	public void execute(Forwarder forwarder) throws SerializerException {
+		try {
+			Operation op = getAlgorithm().receiveRequest(getRequest());
+			forwarder.sendOperation(getParticipantId(), op);
+		} catch (TransformationException e) {
+			throw new SerializerException(getParticipantId(), e);
+		}
 	}
 
 }

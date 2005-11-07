@@ -21,6 +21,7 @@
 package ch.iserver.ace.algorithm.jupiter;
 
 import junit.framework.TestCase;
+import ch.iserver.ace.algorithm.TransformationException;
 import ch.iserver.ace.text.DeleteOperation;
 import ch.iserver.ace.text.InsertOperation;
 
@@ -28,8 +29,9 @@ public class JupiterTest extends TestCase {
 
 	/**
 	 * Test method for 'ch.iserver.ace.algorithm.jupiter.Jupiter.receiveAwarenessInformation(AwarenessInformation)'
+	 * @throws TransformationException 
 	 */
-	public void testReceiveAwarenessInformation() {
+	public void testReceiveAwarenessInformation() throws TransformationException {
 		Jupiter jupiter = new Jupiter(false);
 		jupiter.generateRequest(new InsertOperation(0, "a"));
 		jupiter.generateRequest(new InsertOperation(1, "b"));

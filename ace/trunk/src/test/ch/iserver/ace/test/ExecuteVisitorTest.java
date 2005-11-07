@@ -29,6 +29,7 @@ import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.Timestamp;
+import ch.iserver.ace.algorithm.TransformationException;
 
 /**
  * Tests the ExecuteVisitor class.
@@ -228,8 +229,9 @@ public class ExecuteVisitorTest extends TestCase {
 	 * The main purpose of this test is to test that generateRequest
 	 * and receiveRequest are executed by the execute visitor on
 	 * the algorithms.
+	 * @throws TransformationException 
 	 */
-	public void testVisitReceptionNode() {
+	public void testVisitReceptionNode() throws TransformationException {
 		// setup mock objects
 		MockControl factoryCtrl = MockControl.createControl(AlgorithmTestFactory.class);
 		MockControl algoCtrl = MockControl.createControl(Algorithm.class);

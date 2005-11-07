@@ -60,5 +60,11 @@ public interface PublishedSessionCallback {
 	 * @param update the caret update specification
 	 */
 	void receiveCaretUpdate(Participant participant, CaretUpdate update);
+	
+	/**
+	 * @param reason
+	 * @param e
+	 */
+	void sessionFailed(int reason, Exception e);
 
 }

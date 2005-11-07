@@ -29,6 +29,7 @@ import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
+import ch.iserver.ace.algorithm.TransformationException;
 import ch.iserver.ace.algorithm.jupiter.Jupiter;
 import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.collaboration.SessionCallback;
@@ -36,7 +37,6 @@ import ch.iserver.ace.net.PortableDocument;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.net.SessionConnection;
 import ch.iserver.ace.net.SessionConnectionCallback;
-import ch.iserver.ace.util.InterruptedRuntimeException;
 import ch.iserver.ace.util.Lock;
 import ch.iserver.ace.util.ParameterValidator;
 import ch.iserver.ace.util.SemaphoreLock;
@@ -164,17 +164,14 @@ public class SessionImpl extends AbstractSession implements SessionConnectionCal
 	 * @see ch.iserver.ace.net.SessionConnectionCallback#receiveCaretUpdate(int, ch.iserver.ace.algorithm.CaretUpdateMessage)
 	 */
 	public void receiveCaretUpdate(int participantId, CaretUpdateMessage message) {
+		lock();
 		try {
-			lock();
-			try {
-				CaretUpdate update = getAlgorithm().receiveCaretUpdateMessage(message);
-				getCallback().receiveCaretUpdate(getParticipant(participantId), update);
-			} finally {
-				unlock();
-			}
-		} catch (InterruptedException e) {
-			// TODO: interrupted runtime exception
-			throw new InterruptedRuntimeException("interrupted reception", e);
+			CaretUpdate update = getAlgorithm().receiveCaretUpdateMessage(message);
+			getCallback().receiveCaretUpdate(getParticipant(participantId), update);
+		} catch (TransformationException e) {
+			// TODO: handle receive failed
+		} finally {
+			unlock();
 		}
 	}
 	
@@ -182,17 +179,14 @@ public class SessionImpl extends AbstractSession implements SessionConnectionCal
 	 * @see ch.iserver.ace.net.SessionConnectionCallback#receiveRequest(int, ch.iserver.ace.algorithm.Request)
 	 */
 	public void receiveRequest(int participantId, Request request) {
+		lock();
 		try {
-			lock();
-			try {
-				Operation operation = getAlgorithm().receiveRequest(request);
-				getCallback().receiveOperation(getParticipant(participantId), operation);
-			} finally {
-				unlock();
-			}
-		} catch (InterruptedException e) {
-			// TODO: interrupted runtime exception
-			throw new InterruptedRuntimeException("interrupted reception", e);
+			Operation operation = getAlgorithm().receiveRequest(request);
+			getCallback().receiveOperation(getParticipant(participantId), operation);
+		} catch (TransformationException e) {
+			// TODO: handle receive failed
+		} finally {
+			unlock();
 		}
 	}
 	

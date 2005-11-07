@@ -45,4 +45,7 @@ public class PublishedSessionCallbackImpl implements PublishedSessionCallback {
 	public void receiveOperation(Participant participant, Operation operation) {
 	}
 	
+	public void sessionFailed(int reason, Exception e) {	
+	}
+	
 }

@@ -18,28 +18,41 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package ch.iserver.ace.algorithm.jupiter;
+
+package ch.iserver.ace.algorithm;
 
 /**
- * JupiterException used by the Jupiter algorithm to indicate
- * that some conditions are violated.
- * 
- * @see ch.iserver.ace.algorithm.jupiter.Jupiter
+ *
  */
-public class JupiterException extends RuntimeException {
+public class TransformationException extends Exception {
 
 	/**
-	 * Constructor.
-	 */
-	public JupiterException() { }
-	
-	/**
-	 * Constructor.
 	 * 
-	 * @param message an error message
 	 */
-	public JupiterException(String message) {
+	public TransformationException() {
+		super();
+	}
+
+	/**
+	 * @param message
+	 */
+	public TransformationException(String message) {
 		super(message);
 	}
-	
+
+	/**
+	 * @param cause
+	 */
+	public TransformationException(Throwable cause) {
+		super(cause);
+	}
+
+	/**
+	 * @param message
+	 * @param cause
+	 */
+	public TransformationException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
 }

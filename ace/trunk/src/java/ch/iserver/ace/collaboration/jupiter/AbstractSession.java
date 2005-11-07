@@ -115,7 +115,7 @@ abstract class AbstractSession implements Session {
 	/**
 	 * @see ch.iserver.ace.collaboration.Session#lock()
 	 */
-	public void lock() throws InterruptedException {
+	public void lock() {
 		lock.lock();
 	}
 

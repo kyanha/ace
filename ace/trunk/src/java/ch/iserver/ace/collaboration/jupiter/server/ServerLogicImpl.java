@@ -96,7 +96,7 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 		this.connectionDecorator = decorator;
 		
 		this.serializerQueue = new LinkedBlockingQueue();
-		this.serializer = new Serializer(serializerQueue, lock, forwarder);
+		this.serializer = new Serializer(serializerQueue, lock, forwarder, this);
 		
 		this.dispatcherQueue = new LinkedBlockingQueue();
 		this.dispatcher = new Dispatcher(dispatcherQueue);

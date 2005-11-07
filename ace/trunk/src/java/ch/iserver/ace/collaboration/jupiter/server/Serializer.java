@@ -54,13 +54,19 @@ class Serializer extends Worker {
 	private final Forwarder forwarder;
 	
 	/**
+	 * 
+	 */
+	private final FailureHandler failureHandler;
+	
+	/**
 	 * Creates a new Serializer worker thread.
 	 * 
 	 * @param queue the queue from which to retrieve commands
 	 * @param lock the lock that guards the critical sections
 	 * @param forwarder the forwarder that forwards the results
+	 * @param failureHandler the FailureHandler to be notified about failures
 	 */
-	Serializer(BlockingQueue queue, Lock lock, Forwarder forwarder) {
+	Serializer(BlockingQueue queue, Lock lock, Forwarder forwarder, FailureHandler failureHandler) {
 		super("Serializer");
 		ParameterValidator.notNull("queue", queue);
 		ParameterValidator.notNull("lock", lock);
@@ -68,6 +74,7 @@ class Serializer extends Worker {
 		this.queue = queue;
 		this.lock = lock;
 		this.forwarder = forwarder;
+		this.failureHandler = failureHandler;
 	}
 
 	/**
@@ -84,16 +91,22 @@ class Serializer extends Worker {
 		return lock;
 	}
 	
+	protected FailureHandler getFailureHandler() {
+		return failureHandler;
+	}
+	
 	/**
 	 * @see ch.iserver.ace.util.Worker#doWork()
 	 */
 	protected void doWork() throws InterruptedException {
 		SerializerCommand cmd = (SerializerCommand) queue.take();
 		LOG.info("SERIALIZER: serializing next command ...");
+		getLock().lock();
 		try {
-			getLock().lock();
 			cmd.execute(getForwarder());
 			LOG.info("SERIALIZER: command executed ...");
+		} catch (SerializerException e) {
+			getFailureHandler().handleFailure(e.getParticipantId());
 		} finally {
 			getLock().unlock();
 		}

@@ -26,6 +26,7 @@ import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
+import ch.iserver.ace.algorithm.TransformationException;
 
 /**
  * Wrapper interface for algorithm instances. Adds methods for receiving
@@ -45,16 +46,18 @@ public interface AlgorithmWrapper {
 	 * 
 	 * @param request the Request to receive
 	 * @return the transformed Operation
+	 * @throws TransformationException
 	 */
-	Operation receiveRequest(Request request);
+	Operation receiveRequest(Request request) throws TransformationException;
 	
 	/**
 	 * Receives a CaretUpdateMessage and returns the transformed CaretUpdate.
 	 * 
 	 * @param message the CaretUpdateMessage to receive
 	 * @return the transformed CaretUpdate
+	 * @throws TransformationException
 	 */
-	CaretUpdate receiveCaretUpdateMessage(CaretUpdateMessage message);
+	CaretUpdate receiveCaretUpdateMessage(CaretUpdateMessage message) throws TransformationException;
 	
 	/**
 	 * Generates a Request for a locally generated Operation.

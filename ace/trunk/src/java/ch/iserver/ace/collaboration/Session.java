@@ -36,7 +36,9 @@ import ch.iserver.ace.Operation;
  * by accepting an invitation of another user.</p>
  */
 public interface Session {
-		
+	
+	int TRANSFORMATION_FAILURE = 1;
+	
 	/**
 	 * Locks the session's logic so that only the calling thread can access
 	 * the concurrency sensitive parts of the logic. This method must be

@@ -26,6 +26,7 @@ import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
+import ch.iserver.ace.algorithm.TransformationException;
 import ch.iserver.ace.algorithm.jupiter.Jupiter;
 import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.collaboration.PublishedSession;
@@ -123,7 +124,9 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 		CaretUpdateMessage message = getAlgorithm().generateCaretUpdateMessage(update);
 		getPort().receiveCaretUpdate(message);
 	}
-			
+	
+	// --> start ParticipantConnection implementation <--
+	
 	/**
 	 * @see ch.iserver.ace.net.ParticipantConnection#setParticipantId(int)
 	 */
@@ -150,18 +153,28 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 	 * @see ch.iserver.ace.net.ParticipantConnection#sendCaretUpdateMessage(int, ch.iserver.ace.algorithm.CaretUpdateMessage)
 	 */
 	public void sendCaretUpdateMessage(int participantId, CaretUpdateMessage message) {
-		Participant participant = getParticipant(participantId);
-		CaretUpdate update = getAlgorithm().receiveCaretUpdateMessage(message);
-		getCallback().receiveCaretUpdate(participant, update);
+		try {
+			Participant participant = getParticipant(participantId);
+			CaretUpdate update = getAlgorithm().receiveCaretUpdateMessage(message);
+			getCallback().receiveCaretUpdate(participant, update);
+		} catch (TransformationException e) {
+			getCallback().sessionFailed(TRANSFORMATION_FAILURE, e);
+			leave();
+		}
 	}
 		
 	/**
 	 * @see ch.iserver.ace.net.ParticipantConnection#sendRequest(int, ch.iserver.ace.algorithm.Request)
 	 */
 	public void sendRequest(int participantId, Request request) {
-		Participant participant = getParticipant(participantId);
-		Operation op = getAlgorithm().receiveRequest(request);
-		getCallback().receiveOperation(participant, op);
+		try {
+			Participant participant = getParticipant(participantId);
+			Operation op = getAlgorithm().receiveRequest(request);
+			getCallback().receiveOperation(participant, op);
+		} catch (TransformationException e) {
+			getCallback().sessionFailed(TRANSFORMATION_FAILURE, e);
+			leave();
+		}
 	}
 
 	/**

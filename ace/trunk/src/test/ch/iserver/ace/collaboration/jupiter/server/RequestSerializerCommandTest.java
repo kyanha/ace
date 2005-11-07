@@ -27,6 +27,7 @@ import org.easymock.MockControl;
 
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.Request;
+import ch.iserver.ace.algorithm.TransformationException;
 import ch.iserver.ace.algorithm.jupiter.JupiterRequest;
 import ch.iserver.ace.text.InsertOperation;
 
@@ -34,8 +35,9 @@ public class RequestSerializerCommandTest extends TestCase {
 
 	/**
 	 * Test method for 'ch.iserver.ace.collaboration.jupiter.server.RequestSerializerCommand.execute(Forwarder)'
+	 * @throws TransformationException 
 	 */
-	public void testExecute() {
+	public void testExecute() throws SerializerException, TransformationException {
 		MockControl forwarderCtrl = MockControl.createControl(Forwarder.class);
 		Forwarder forwarder = (Forwarder) forwarderCtrl.getMock();
 		MockControl algorithmCtrl = MockControl.createControl(Algorithm.class);

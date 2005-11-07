@@ -28,13 +28,11 @@ import org.easymock.MockControl;
 import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
+import ch.iserver.ace.algorithm.TransformationException;
 
 public class CaretUpdateSerializerCommandTest extends TestCase {
 
-	/**
-	 * Test method for 'ch.iserver.ace.collaboration.jupiter.server.CaretUpdateSerializerCommand.execute(Forwarder)'
-	 */
-	public void testExecute() {
+	public void testExecute() throws SerializerException, TransformationException {
 		MockControl forwarderCtrl = MockControl.createControl(Forwarder.class);
 		Forwarder forwarder = (Forwarder) forwarderCtrl.getMock();
 		MockControl algorithmCtrl = MockControl.createControl(Algorithm.class);

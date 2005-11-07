@@ -25,6 +25,7 @@ import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Timestamp;
+import ch.iserver.ace.algorithm.TransformationException;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
@@ -47,11 +48,15 @@ class CaretUpdateSerializerCommand extends AbstractSerializerCommand {
 	/**
 	 * @see ch.iserver.ace.collaboration.jupiter.server.SerializerCommand#execute(ch.iserver.ace.collaboration.jupiter.server.Forwarder)
 	 */
-	public void execute(Forwarder forwarder) {
-		CaretUpdate update = getMessage().getUpdate();
-		Timestamp timestamp = getMessage().getTimestamp();
-		int[] indices = getAlgorithm().transformIndices(timestamp, update.getIndices());
-		forwarder.sendCaretUpdate(getParticipantId(), new CaretUpdate(indices[0], indices[1]));
+	public void execute(Forwarder forwarder) throws SerializerException {
+		try {
+			CaretUpdate update = getMessage().getUpdate();
+			Timestamp timestamp = getMessage().getTimestamp();
+			int[] indices = getAlgorithm().transformIndices(timestamp, update.getIndices());
+			forwarder.sendCaretUpdate(getParticipantId(), new CaretUpdate(indices[0], indices[1]));
+		} catch (TransformationException e) {
+			throw new SerializerException(getParticipantId());
+		}
 	}
 
 }

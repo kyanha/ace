@@ -89,7 +89,7 @@ public interface Algorithm {
 	 * @param req the request to transform and apply
 	 * @return the transformed Operation
 	 */
-	public Operation receiveRequest(Request req);
+	public Operation receiveRequest(Request req) throws TransformationException;
 	
 	/**
 	 * Transform the array of indices from the state indicated by the timestamp
@@ -100,6 +100,6 @@ public interface Algorithm {
 	 * @param indices the array of integer indices
 	 * @return the transformed array of indices
 	 */
-	public int[] transformIndices(Timestamp timestamp, int[] indices);
+	public int[] transformIndices(Timestamp timestamp, int[] indices) throws TransformationException;
 	
 }
