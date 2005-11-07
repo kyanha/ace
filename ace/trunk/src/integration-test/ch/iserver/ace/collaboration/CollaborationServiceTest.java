@@ -27,7 +27,7 @@ import org.easymock.MockControl;
 
 import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.DocumentModel;
-import ch.iserver.ace.algorithm.jupiter.JupiterRequest;
+import ch.iserver.ace.algorithm.RequestImpl;
 import ch.iserver.ace.algorithm.jupiter.JupiterVectorTime;
 import ch.iserver.ace.collaboration.jupiter.CollaborationServiceImpl;
 import ch.iserver.ace.collaboration.jupiter.ParticipantImpl;
@@ -80,7 +80,7 @@ public class CollaborationServiceTest extends TestCase {
 		
 		DocumentServerLogic logic = server.getLogic();
 		ParticipantPort port1 = logic.join(connection);
-		port1.receiveRequest(new JupiterRequest(1, new JupiterVectorTime(0, 0), new InsertOperation(0, "XYZ")));
+		port1.receiveRequest(new RequestImpl(1, new JupiterVectorTime(0, 0), new InsertOperation(0, "XYZ")));
 		
 		ParticipantConnectionStub connectionStub = new ParticipantConnectionStub(new RemoteUserProxyStub("Z"));
 		ServerDocumentImpl expectedDocument = new ServerDocumentImpl();

@@ -21,6 +21,8 @@
 
 package ch.iserver.ace.collaboration.jupiter;
 
+import junit.framework.TestCase;
+
 import org.easymock.MockControl;
 
 import ch.iserver.ace.CaretUpdate;
@@ -28,11 +30,9 @@ import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
-import ch.iserver.ace.algorithm.jupiter.JupiterRequest;
+import ch.iserver.ace.algorithm.RequestImpl;
 import ch.iserver.ace.algorithm.jupiter.JupiterVectorTime;
 import ch.iserver.ace.text.InsertOperation;
-
-import junit.framework.TestCase;
 
 /**
  * 
@@ -53,7 +53,7 @@ public class AlgorithmWrapperImplTest extends TestCase {
 	}
 	
 	public void testReceiveRequest() throws Exception {
-		Request request = new JupiterRequest(0, null, null);
+		Request request = new RequestImpl(0, null, null);
 		Operation op = new InsertOperation(0, "x");
 		
 		// define mock behavior
@@ -68,7 +68,7 @@ public class AlgorithmWrapperImplTest extends TestCase {
 	}
 	
 	public void testGenerateRequest() throws Exception {
-		Request request = new JupiterRequest(0, null, null);
+		Request request = new RequestImpl(0, null, null);
 		Operation op = new InsertOperation(0, "x");
 		
 		// define mock behavior

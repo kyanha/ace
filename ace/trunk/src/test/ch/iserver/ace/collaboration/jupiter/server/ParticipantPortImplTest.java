@@ -28,7 +28,7 @@ import org.easymock.MockControl;
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
-import ch.iserver.ace.algorithm.jupiter.JupiterRequest;
+import ch.iserver.ace.algorithm.RequestImpl;
 import ch.iserver.ace.net.ParticipantPort;
 import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
 import edu.emory.mathcs.backport.java.util.concurrent.LinkedBlockingQueue;
@@ -69,7 +69,7 @@ public class ParticipantPortImplTest extends TestCase {
 	 * Test method for 'ch.iserver.ace.collaboration.jupiter.server.ParticipantPortImpl.receiveRequest(Request)'
 	 */
 	public void testReceiveRequest() throws InterruptedException {
-		Request request = new JupiterRequest(0, null, null);
+		Request request = new RequestImpl(0, null, null);
 		port.receiveRequest(request);
 		assertEquals(1, queue.size());
 		RequestSerializerCommand command = (RequestSerializerCommand) queue.take();

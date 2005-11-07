@@ -21,11 +21,13 @@
 
 package ch.iserver.ace.collaboration.server;
 
+import junit.framework.TestCase;
+
 import org.easymock.MockControl;
 
 import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.DocumentModel;
-import ch.iserver.ace.algorithm.jupiter.JupiterRequest;
+import ch.iserver.ace.algorithm.RequestImpl;
 import ch.iserver.ace.algorithm.jupiter.JupiterVectorTime;
 import ch.iserver.ace.collaboration.jupiter.NullParticipantConnectionDecorator;
 import ch.iserver.ace.collaboration.jupiter.RemoteUserProxyStub;
@@ -35,7 +37,6 @@ import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.text.InsertOperation;
 import ch.iserver.ace.util.Lock;
 import ch.iserver.ace.util.SemaphoreLock;
-import junit.framework.TestCase;
 
 /**
  *
@@ -71,7 +72,7 @@ public class ServerTest extends TestCase {
 				connections[j].sendParticipantJoined(i, null);
 				controls[j].setMatcher(MockControl.ALWAYS_MATCHER);
 			}
-			connections[i].sendRequest(0, new JupiterRequest(0, new JupiterVectorTime(0, 0), new InsertOperation(0, "x")));
+			connections[i].sendRequest(0, new RequestImpl(0, new JupiterVectorTime(0, 0), new InsertOperation(0, "x")));
 		}
 				
 		// replay
@@ -93,7 +94,7 @@ public class ServerTest extends TestCase {
 		}
 				
 		// test
-		ports[0].receiveRequest(new JupiterRequest(1, new JupiterVectorTime(0, 0), new InsertOperation(0, "x")));
+		ports[0].receiveRequest(new RequestImpl(1, new JupiterVectorTime(0, 0), new InsertOperation(0, "x")));
 		
 		// sleeep
 		Thread.sleep(2000);

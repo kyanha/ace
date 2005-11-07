@@ -27,8 +27,8 @@ import org.easymock.MockControl;
 
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.Request;
+import ch.iserver.ace.algorithm.RequestImpl;
 import ch.iserver.ace.algorithm.TransformationException;
-import ch.iserver.ace.algorithm.jupiter.JupiterRequest;
 import ch.iserver.ace.text.InsertOperation;
 
 public class RequestSerializerCommandTest extends TestCase {
@@ -42,12 +42,12 @@ public class RequestSerializerCommandTest extends TestCase {
 		Forwarder forwarder = (Forwarder) forwarderCtrl.getMock();
 		MockControl algorithmCtrl = MockControl.createControl(Algorithm.class);
 		Algorithm algorithm = (Algorithm) algorithmCtrl.getMock();
-		Request request = new JupiterRequest(0, null, new InsertOperation(0, "x"));
+		Request request = new RequestImpl(0, null, new InsertOperation(0, "x"));
 		SerializerCommand command = new RequestSerializerCommand(1, algorithm, request);
 		
 		// define mock behavior
 		forwarder.sendOperation(1, new InsertOperation(1, "x"));
-		algorithm.receiveRequest(new JupiterRequest(0, null, new InsertOperation(0, "x")));
+		algorithm.receiveRequest(new RequestImpl(0, null, new InsertOperation(0, "x")));
 		algorithmCtrl.setReturnValue(new InsertOperation(1, "x"));
 		
 		// replay

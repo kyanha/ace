@@ -29,7 +29,7 @@ import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
-import ch.iserver.ace.algorithm.jupiter.JupiterRequest;
+import ch.iserver.ace.algorithm.RequestImpl;
 import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.collaboration.SessionCallback;
 import ch.iserver.ace.net.SessionConnection;
@@ -214,7 +214,7 @@ public class SessionImplTest extends TestCase {
 		SessionCallback callback = (SessionCallback) callbackCtrl.getMock();
 		
 		Operation operation = new InsertOperation(0, "x");
-		Request request = new JupiterRequest(0, null, operation);
+		Request request = new RequestImpl(0, null, operation);
 		Participant participant = new ParticipantImpl(1, new RemoteUserStub("1"));
 		SessionImpl impl = new SessionImpl(algorithm, lock);
 		impl.setSessionCallback(callback);

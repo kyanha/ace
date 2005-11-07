@@ -31,7 +31,7 @@ import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
-import ch.iserver.ace.algorithm.jupiter.JupiterRequest;
+import ch.iserver.ace.algorithm.RequestImpl;
 import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.collaboration.PublishedSessionCallback;
 import ch.iserver.ace.collaboration.jupiter.server.PublisherPort;
@@ -147,7 +147,7 @@ public class PublishedSessionImplTest extends TestCase {
 		
 		PublishedSessionImpl impl = new PublishedSessionImpl(callback, algorithm);
 		Operation operation = new InsertOperation(0, "x");
-		Request request = new JupiterRequest(0, null, operation);
+		Request request = new RequestImpl(0, null, operation);
 		
 		// define mock behavior
 		logic.getPublisherPort();
