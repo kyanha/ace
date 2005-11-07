@@ -25,6 +25,7 @@ import java.util.Set;
 
 import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.Operation;
+import ch.iserver.ace.util.InterruptedRuntimeException;
 
 /**
  * A session represents one particular editing session of a shared document.
@@ -48,9 +49,9 @@ public interface Session {
 	 * the concurrency sensitive parts of the logic. This method must be
 	 * called before any send call is invoked.
 	 * 
-	 * @throws InterruptedException
+	 * @throws InterruptedRuntimeException
 	 */
-	void lock() throws InterruptedException;
+	void lock() throws InterruptedRuntimeException;
 	
 	/**
 	 * Unlocks the session's logic so that other threads may gain access

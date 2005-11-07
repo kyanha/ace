@@ -79,16 +79,11 @@ public final class SessionTemplate {
 	 * @param callback the SessionTemplateCallback to execute
 	 */
 	public void execute(SessionTemplateCallback callback) {
+		session.lock();
 		try {
-			session.lock();
-			try {
-				callback.execute(session);
-			} finally {
-				session.unlock();
-			}
-		} catch (InterruptedException e) {
-			// TODO: interrupted runtime exception
-			throw new InterruptedRuntimeException("interrupted template", e);
+			callback.execute(session);
+		} finally {
+			session.unlock();
 		}
 	}
 	

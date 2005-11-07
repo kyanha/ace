@@ -32,6 +32,7 @@ import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.TransformationException;
 import ch.iserver.ace.algorithm.jupiter.Jupiter;
 import ch.iserver.ace.collaboration.Participant;
+import ch.iserver.ace.collaboration.Session;
 import ch.iserver.ace.collaboration.SessionCallback;
 import ch.iserver.ace.net.PortableDocument;
 import ch.iserver.ace.net.RemoteUserProxy;
@@ -179,7 +180,7 @@ public class SessionImpl extends AbstractSession implements SessionConnectionCal
 			CaretUpdate update = getAlgorithm().receiveCaretUpdateMessage(message);
 			getCallback().receiveCaretUpdate(getParticipant(participantId), update);
 		} catch (TransformationException e) {
-			// TODO: handle receive failed
+			getCallback().sessionFailed(Session.TRANSFORMATION_FAILED, e);
 		} finally {
 			unlock();
 		}
@@ -194,7 +195,7 @@ public class SessionImpl extends AbstractSession implements SessionConnectionCal
 			Operation operation = getAlgorithm().receiveRequest(request);
 			getCallback().receiveOperation(getParticipant(participantId), operation);
 		} catch (TransformationException e) {
-			// TODO: handle receive failed
+			getCallback().sessionFailed(Session.TRANSFORMATION_FAILED, e);
 		} finally {
 			unlock();
 		}
