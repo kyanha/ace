@@ -19,31 +19,24 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.collaboration.jupiter;
+package ch.iserver.ace.util;
 
-import ch.iserver.ace.net.ParticipantConnection;
+import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
+import edu.emory.mathcs.backport.java.util.concurrent.LinkedBlockingQueue;
 
 /**
  *
  */
-public final class NullParticipantConnectionDecorator implements ParticipantConnectionDecorator {
-	
-	private static ParticipantConnectionDecorator instance;
-	
-	private NullParticipantConnectionDecorator() {
-		// hidden
+public class IsolatedThreadDomain extends AbstractThreadDomain {
+
+	/**
+	 * @see ch.iserver.ace.util.ThreadDomain#wrap(java.lang.Object, java.lang.Class)
+	 */
+	public Object wrap(Object target, Class clazz) {
+		BlockingQueue queue = new LinkedBlockingQueue();
+		Worker worker = new AsyncWorker(queue);
+		worker.start();
+		return wrap(target, clazz, queue);
 	}
-	
-	public static final ParticipantConnectionDecorator getInstance() {
-		if (instance == null) {
-			instance = new NullParticipantConnectionDecorator();
-		}
-		return instance;
-	}
-	
-	
-	public ParticipantConnection decorate(ParticipantConnection target) {
-		return target;
-	}
-	
+
 }

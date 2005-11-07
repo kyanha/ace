@@ -21,27 +21,23 @@
 
 package ch.iserver.ace.util;
 
-import org.springframework.aop.framework.ProxyFactoryBean;
-
-import ch.iserver.ace.net.ParticipantConnection;
 import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
+import edu.emory.mathcs.backport.java.util.concurrent.LinkedBlockingQueue;
 
-/**
- *
- */
-public final class AsyncUtil {
+public class SingleThreadDomain extends AbstractThreadDomain {
 	
-	private AsyncUtil() {
-		// hidden constructor
+	private final BlockingQueue queue;
+	
+	private final Worker worker;
+	
+	public SingleThreadDomain() {
+		this.queue = new LinkedBlockingQueue();
+		this.worker = new AsyncWorker(queue);
+		this.worker.start();
 	}
 	
-	public static final Object wrap(Object target, Class interfaceClass, BlockingQueue queue) {
-		ProxyFactoryBean factory = new ProxyFactoryBean();
-		factory.addInterface(interfaceClass);
-		AsyncInterceptor interceptor = new AsyncInterceptor(queue);
-		factory.addAdvice(interceptor);
-		factory.setTarget(target);
-		return (ParticipantConnection) factory.getObject();
+	public Object wrap(Object target, Class clazz) {
+		return wrap(target, clazz, queue);
 	}
-	
+
 }

@@ -33,7 +33,6 @@ import ch.iserver.ace.DocumentModel;
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.jupiter.Jupiter;
 import ch.iserver.ace.collaboration.Participant;
-import ch.iserver.ace.collaboration.jupiter.ParticipantConnectionDecorator;
 import ch.iserver.ace.collaboration.jupiter.PublisherConnection;
 import ch.iserver.ace.collaboration.jupiter.server.serializer.JoinCommand;
 import ch.iserver.ace.collaboration.jupiter.server.serializer.LeaveCommand;
@@ -49,6 +48,7 @@ import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.util.InterruptedRuntimeException;
 import ch.iserver.ace.util.Lock;
 import ch.iserver.ace.util.ParameterValidator;
+import ch.iserver.ace.util.ThreadDomain;
 import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
 import edu.emory.mathcs.backport.java.util.concurrent.LinkedBlockingQueue;
 
@@ -75,35 +75,38 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 	
 	private DocumentServer server;
 	
+	private final ThreadDomain threadDomain;
+	
 	private final PublisherConnection publisherConnection;
 	
 	private final PublisherPort publisherPort;
 	
 	private final ServerDocument document;
 	
-	private final ParticipantConnectionDecorator connectionDecorator;
-	
 	private boolean acceptingJoins;
 	
 	public ServerLogicImpl(Lock lock, 
-	                       ParticipantConnectionDecorator decorator, 
+	                       ThreadDomain domain, 
 	                       PublisherConnection connection, 
 	                       DocumentModel document) {
 		ParameterValidator.notNull("lock", lock);
-		ParameterValidator.notNull("decorator", decorator);
+		ParameterValidator.notNull("domain", domain);
 		ParameterValidator.notNull("connection", connection);
 		ParameterValidator.notNull("document", document);
 		
 		this.nextParticipantId = 0;
 		this.forwarder = new CompositeForwarder(this);
 		
-		this.connectionDecorator = decorator;
+		this.threadDomain = domain;
 		
 		this.serializerQueue = new LinkedBlockingQueue();
 		this.serializer = new Serializer(serializerQueue, lock, forwarder, this);
 		
 		this.publisherConnection = connection;
-		this.publisherPort = createPublisherPort(connection, connectionDecorator);
+		
+		ParticipantConnection wrapped = (ParticipantConnection) threadDomain.wrap(
+				new ParticipantConnectionWrapper(connection, this), ParticipantConnection.class);
+		this.publisherPort = createPublisherPort(connection);
 		
 		this.document = new ServerDocumentImpl();
 		this.document.participantJoined(0, null);
@@ -113,12 +116,10 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 		this.proxies.put(new Integer(-1), new DocumentUpdateProxy(this.document));
 	}
 	
-	protected PublisherPort createPublisherPort(ParticipantConnection connection, 
-				ParticipantConnectionDecorator decorator) {
+	protected PublisherPort createPublisherPort(ParticipantConnection connection) {
 		Algorithm algorithm = new Jupiter(false);
 		int participantId = 0;
 		connection.setParticipantId(participantId);
-		connection = decorator.decorate(new ParticipantConnectionWrapper(connection, this));
 		PublisherPort port = new PublisherPortImpl(this, participantId, algorithm, getSerializerQueue());
 		ParticipantProxy proxy = new ParticipantProxy(participantId, algorithm, connection);
 		addParticipant(new SessionParticipant(port, proxy, connection, null));
@@ -142,8 +143,8 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 		this.server = server;
 	}
 	
-	public ParticipantConnectionDecorator getConnectionDecorator() {
-		return connectionDecorator;
+	public ThreadDomain getThreadDomain() {
+		return threadDomain;
 	}
 		
 	public void start() {
@@ -203,7 +204,8 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 		
 		ParticipantPort port = new ParticipantPortImpl(this, participantId, algorithm, getSerializerQueue());
 		ParticipantProxy proxy = new ParticipantProxy(participantId, algorithm, target);
-		ParticipantConnection connection = getConnectionDecorator().decorate(new ParticipantConnectionWrapper(target, this));
+		ParticipantConnection connection = (ParticipantConnection) getThreadDomain().wrap(
+				new ParticipantConnectionWrapper(target, this), ParticipantConnection.class);
 		RemoteUserProxy user = target.getUser();
 		SessionParticipant participant = new SessionParticipant(port, proxy, connection, user);
 		SerializerCommand cmd = new JoinCommand(participant, this);

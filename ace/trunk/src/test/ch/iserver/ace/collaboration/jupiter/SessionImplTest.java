@@ -34,6 +34,7 @@ import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.collaboration.SessionCallback;
 import ch.iserver.ace.net.SessionConnection;
 import ch.iserver.ace.text.InsertOperation;
+import ch.iserver.ace.util.CallerThreadDomain;
 import ch.iserver.ace.util.Lock;
 
 /**
@@ -46,7 +47,7 @@ public class SessionImplTest extends TestCase {
 		SessionConnection connection = (SessionConnection) connectionCtrl.getMock();
 		
 		SessionImpl impl = new SessionImpl();
-		impl.setConnectionDecorator(NullSessionConnectionDecorator.getInstance());
+		impl.setThreadDomain(new CallerThreadDomain());
 		impl.setConnection(connection);
 		
 		// define mock behavior
@@ -69,7 +70,7 @@ public class SessionImplTest extends TestCase {
 		SessionConnection connection = (SessionConnection) connectionCtrl.getMock();
 		
 		SessionImpl impl = new SessionImpl(algorithm);
-		impl.setConnectionDecorator(NullSessionConnectionDecorator.getInstance());
+		impl.setThreadDomain(new CallerThreadDomain());
 		impl.setConnection(connection);
 		
 		// define mock behavior
@@ -97,7 +98,7 @@ public class SessionImplTest extends TestCase {
 		SessionConnection connection = (SessionConnection) connectionCtrl.getMock();
 		
 		SessionImpl impl = new SessionImpl(algorithm);
-		impl.setConnectionDecorator(NullSessionConnectionDecorator.getInstance());
+		impl.setThreadDomain(new CallerThreadDomain());
 		impl.setConnection(connection);
 		
 		// replay
@@ -123,7 +124,7 @@ public class SessionImplTest extends TestCase {
 		SessionConnection connection = (SessionConnection) connectionCtrl.getMock();
 		
 		SessionImpl impl = new SessionImpl(algorithm);
-		impl.setConnectionDecorator(NullSessionConnectionDecorator.getInstance());
+		impl.setThreadDomain(new CallerThreadDomain());
 		impl.setConnection(connection);
 		
 		// define mock behavior
@@ -151,7 +152,7 @@ public class SessionImplTest extends TestCase {
 		SessionConnection connection = (SessionConnection) connectionCtrl.getMock();
 		
 		SessionImpl impl = new SessionImpl(algorithm);
-		impl.setConnectionDecorator(NullSessionConnectionDecorator.getInstance());
+		impl.setThreadDomain(new CallerThreadDomain());
 		impl.setConnection(connection);
 		
 		// replay

@@ -19,15 +19,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.collaboration.jupiter;
-
-import ch.iserver.ace.net.SessionConnection;
+package ch.iserver.ace.util;
 
 /**
  *
  */
-public interface SessionConnectionDecorator {
+public interface ThreadDomain {
 	
-	SessionConnection decorate(SessionConnection target);
+	Object wrap(Object target, Class clazz);
 	
 }

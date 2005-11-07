@@ -19,15 +19,18 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.collaboration.jupiter;
-
-import ch.iserver.ace.net.ParticipantConnection;
+package ch.iserver.ace.util;
 
 /**
  *
  */
-public interface ParticipantConnectionDecorator {
-	
-	ParticipantConnection decorate(ParticipantConnection target);
-	
+public class CallerThreadDomain implements ThreadDomain {
+
+	/**
+	 * @see ch.iserver.ace.util.ThreadDomain#wrap(java.lang.Object, java.lang.Class)
+	 */
+	public Object wrap(Object target, Class clazz) {
+		return target;
+	}
+
 }

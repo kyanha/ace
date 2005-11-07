@@ -6,13 +6,16 @@
     <constructor-arg><ref local="networkService"/></constructor-arg>
     <property name="userRegistry"><ref local="userRegistry"/></property>
     <property name="documentRegistry"><ref local="documentRegistry"/></property>
-    <property name="connectionDecorator"><ref local="connectionDecorator"/></property>
-    <property name="sessionConnectionDecorator"><ref local="sessionConnectionDecorator"/></property>
+    <property name="publisherThreadDomain"><ref local="threadDomain"/></property>
   </bean>
   
   <bean id="sessionFactory" class="ch.iserver.ace.collaboration.jupiter.SessionFactoryImpl">
-    <constructor-arg index="0"><ref local="sessionConnectionDecorator"/></constructor-arg>
-    <constructor-arg index="1"><ref local="userRegistry"/></constructor-arg>
+    <property name="threadDomain"><ref local="threadDomain"/></property>
+    <property name="userRegistry"><ref local="userRegistry"/></property>
+  </bean>
+  
+  <bean id="threadDomain" class="ch.iserver.ace.util.BoundedThreadDomain">
+    <constructor-arg><value>5</value></constructor-arg>
   </bean>
   
   <bean id="userRegistry" class="ch.iserver.ace.collaboration.jupiter.UserRegistryImpl"/>
@@ -20,28 +23,6 @@
   <bean id="documentRegistry" class="ch.iserver.ace.collaboration.jupiter.DocumentRegistryImpl">
      <constructor-arg index="0"><ref local="userRegistry"/></constructor-arg>
      <property name="sessionFactory"><ref local="sessionFactory"/></property>
-  </bean>
-  
-  <bean id="connectionQueue" class="edu.emory.mathcs.backport.java.util.concurrent.LinkedBlockingQueue"/>
-  
-  <bean id="connectionDecorator" class="ch.iserver.ace.collaboration.jupiter.ParticipantConnectionDecoratorImpl">
-    <property name="queue"><ref local="connectionQueue"/></property>
-  </bean>
-  
-  <bean id="connectionWorker" class="ch.iserver.ace.util.AsyncWorker" init-method="start">
-    <constructor-arg><ref local="connectionQueue"/></constructor-arg>
-    <property name="daemon" value="true"/>
-  </bean>
-  
-  <bean id="sessionConnectionQueue" class="edu.emory.mathcs.backport.java.util.concurrent.LinkedBlockingQueue"/>
-  
-  <bean id="sessionConnectionDecorator" class="ch.iserver.ace.collaboration.jupiter.SessionConnectionDecoratorImpl">
-    <property name="queue"><ref local="sessionConnectionQueue"/></property>
-  </bean>
-  
-  <bean id="sessionConnectionWorker" class="ch.iserver.ace.util.AsyncWorker" init-method="start">
-    <constructor-arg><ref local="sessionConnectionQueue"/></constructor-arg>
-    <property name="daemon" value="true"/>
   </bean>
   
   <bean id="networkService" class="ch.iserver.ace.collaboration.jupiter.NullNetworkService" factory-method="getInstance"/>

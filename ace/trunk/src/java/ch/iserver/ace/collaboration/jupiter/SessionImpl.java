@@ -41,6 +41,7 @@ import ch.iserver.ace.net.SessionConnectionCallback;
 import ch.iserver.ace.util.Lock;
 import ch.iserver.ace.util.ParameterValidator;
 import ch.iserver.ace.util.SemaphoreLock;
+import ch.iserver.ace.util.ThreadDomain;
 
 /**
  * Default implementation of the Session interface. This class further implements
@@ -58,8 +59,11 @@ public class SessionImpl extends AbstractSession implements ConfigurableSession,
 	 * The SessionConnection from the network layer.
 	 */
 	private SessionConnection connection;
-	
-	private SessionConnectionDecorator connectionDecorator;
+
+	/**
+	 * 
+	 */
+	private ThreadDomain threadDomain;
 	
 	public SessionImpl() {
 		this(new AlgorithmWrapperImpl(new Jupiter(true)));
@@ -101,7 +105,8 @@ public class SessionImpl extends AbstractSession implements ConfigurableSession,
 	 */
 	public void setConnection(SessionConnection connection) {
 		ParameterValidator.notNull("connection", connection);
-		this.connection = getConnectionDecorator().decorate(new SessionConnectionWrapper(connection, this));
+		this.connection = (SessionConnection) getThreadDomain().wrap(
+				new SessionConnectionWrapper(connection, this), SessionConnection.class);
 	}
 	
 	/**
@@ -111,12 +116,12 @@ public class SessionImpl extends AbstractSession implements ConfigurableSession,
 		return connection;
 	}
 	
-	public SessionConnectionDecorator getConnectionDecorator() {
-		return connectionDecorator;
+	public ThreadDomain getThreadDomain() {
+		return threadDomain;
 	}
 	
-	public void setConnectionDecorator(SessionConnectionDecorator connectionDecorator) {
-		this.connectionDecorator = connectionDecorator;
+	public void setThreadDomain(ThreadDomain threadDomain) {
+		this.threadDomain = threadDomain;
 	}
 	
 	/**

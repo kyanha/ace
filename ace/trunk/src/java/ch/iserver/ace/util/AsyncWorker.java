@@ -22,10 +22,13 @@
 package ch.iserver.ace.util;
 
 import org.aopalliance.intercept.MethodInvocation;
+import org.apache.log4j.Logger;
 
 import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
 
 public class AsyncWorker extends Worker {
+	
+	private static final Logger LOG = Logger.getLogger(AsyncWorker.class);
 	
 	private final BlockingQueue queue;
 	
@@ -33,6 +36,7 @@ public class AsyncWorker extends Worker {
 		super("async-worker");
 		ParameterValidator.notNull("queue", queue);
 		this.queue = queue;
+		setDaemon(true);
 	}
 	
 	protected void doWork() throws InterruptedException {
@@ -40,7 +44,7 @@ public class AsyncWorker extends Worker {
 		try {
 			invocation.proceed();
 		} catch (Throwable e) {
-			// TODO: error handling
+			LOG.warn(e);
 		}
 	}
 	

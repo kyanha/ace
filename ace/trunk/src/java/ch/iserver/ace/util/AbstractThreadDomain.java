@@ -19,34 +19,24 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.collaboration.jupiter;
+package ch.iserver.ace.util;
 
-import ch.iserver.ace.net.SessionConnection;
+import org.springframework.aop.framework.ProxyFactoryBean;
+
+import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
 
 /**
  *
  */
-public final class NullSessionConnectionDecorator implements
-				SessionConnectionDecorator {
-
-	private static SessionConnectionDecorator instance;
+public abstract class AbstractThreadDomain implements ThreadDomain {
 	
-	private NullSessionConnectionDecorator() {
-		// hidden constructor
-	}
-	
-	public static final SessionConnectionDecorator getInstance() {
-		if (instance == null) {
-			instance = new NullSessionConnectionDecorator();
-		}
-		return instance;
-	}
-	
-	/**
-	 * @see ch.iserver.ace.collaboration.jupiter.SessionConnectionDecorator#decorate(ch.iserver.ace.net.SessionConnection)
-	 */
-	public SessionConnection decorate(SessionConnection target) {
+	protected Object wrap(Object target, Class clazz, BlockingQueue queue) {
+		ProxyFactoryBean factory = new ProxyFactoryBean();
+		factory.addInterface(clazz);
+		AsyncInterceptor interceptor = new AsyncInterceptor(queue);
+		factory.addAdvice(interceptor);
+		factory.setTarget(target);
 		return target;
 	}
-
+	
 }

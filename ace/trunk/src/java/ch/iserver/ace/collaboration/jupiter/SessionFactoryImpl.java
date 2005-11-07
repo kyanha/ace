@@ -22,6 +22,7 @@
 package ch.iserver.ace.collaboration.jupiter;
 
 import ch.iserver.ace.util.ParameterValidator;
+import ch.iserver.ace.util.ThreadDomain;
 
 /**
  *
@@ -31,29 +32,33 @@ public class SessionFactoryImpl implements SessionFactory {
 	/**
 	 * 
 	 */
-	private final SessionConnectionDecorator decorator;
+	private ThreadDomain threadDomain;
 	
 	/**
 	 * 
 	 */
-	private final UserRegistry registry;
+	private UserRegistry registry;
 	
 	/**
-	 * @param decorator
-	 * @param registry
+	 * @param threadDomain
 	 */
-	public SessionFactoryImpl(SessionConnectionDecorator decorator, UserRegistry registry) {
-		ParameterValidator.notNull("decorator", decorator);
-		ParameterValidator.notNull("registry", registry);
-		this.decorator = decorator;
-		this.registry = registry;
+	public void setThreadDomain(ThreadDomain threadDomain) {
+		ParameterValidator.notNull("threadDomain", threadDomain);
+		this.threadDomain = threadDomain;
 	}
 	
 	/**
 	 * @return
 	 */
-	public SessionConnectionDecorator getConnectionDecorator() {
-		return decorator;
+	public ThreadDomain getThreadDomain() {
+		return threadDomain;
+	}
+	
+	/**
+	 * @param registry
+	 */
+	public void setUserRegistry(UserRegistry registry) {
+		this.registry = registry;
 	}
 	
 	/**
@@ -68,7 +73,7 @@ public class SessionFactoryImpl implements SessionFactory {
 	 */
 	public ConfigurableSession createSession() {
 		SessionImpl session = new SessionImpl();
-		session.setConnectionDecorator(getConnectionDecorator());
+		session.setThreadDomain(getThreadDomain());
 		session.setUserRegistry(getUserRegistry());
 		return session;
 	}

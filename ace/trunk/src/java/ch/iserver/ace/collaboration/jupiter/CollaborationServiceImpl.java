@@ -49,6 +49,7 @@ import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.util.Lock;
 import ch.iserver.ace.util.ParameterValidator;
 import ch.iserver.ace.util.SemaphoreLock;
+import ch.iserver.ace.util.ThreadDomain;
 
 /**
  *
@@ -69,9 +70,7 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	
 	private SessionFactory sessionFactory;
 	
-	private ParticipantConnectionDecorator connectionDecorator;
-	
-	private SessionConnectionDecorator sessionConnectionDecorator;
+	private ThreadDomain publisherThreadDomain;
 	
 	public CollaborationServiceImpl(NetworkService service) {
 		ParameterValidator.notNull("service", service);
@@ -97,31 +96,22 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 		ParameterValidator.notNull("registry", registry);
 		this.documentRegistry = registry;
 	}
-	
-	public ParticipantConnectionDecorator getConnectionDecorator() {
-		return connectionDecorator;
-	}
-	
-	public void setConnectionDecorator(ParticipantConnectionDecorator connectionDecorator) {
-		ParameterValidator.notNull("connectionDecorator", connectionDecorator);
-		this.connectionDecorator = connectionDecorator;
-	}
-	
-	public SessionConnectionDecorator getSessionConnectionDecorator() {
-		return sessionConnectionDecorator;
-	}
-	
-	public void setSessionConnectionDecorator(SessionConnectionDecorator sessionConnectionDecorator) {
-		ParameterValidator.notNull("sessionConnectionDecorator", sessionConnectionDecorator);
-		this.sessionConnectionDecorator = sessionConnectionDecorator;
-	}
-	
+		
 	public SessionFactory getSessionFactory() {
 		return sessionFactory;
 	}
 	
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
+	}
+	
+	public ThreadDomain getPublisherThreadDomain() {
+		return publisherThreadDomain;
+	}
+	
+	public void setPublisherThreadDomain(ThreadDomain domain) {
+		ParameterValidator.notNull("domain", domain);
+		this.publisherThreadDomain = domain;
 	}
 	
 	protected NetworkService getNetworkService() {
@@ -183,7 +173,7 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 		PublishedSessionImpl session = new PublishedSessionImpl(callback);
 		session.setUserRegistry(getUserRegistry());
 		Lock semaphoreLock = new SemaphoreLock("server-lock");
-		ServerLogicImpl logic = new ServerLogicImpl(semaphoreLock, getConnectionDecorator(), session, document);
+		ServerLogicImpl logic = new ServerLogicImpl(semaphoreLock, getPublisherThreadDomain(), session, document);
 		session.setServerLogic(logic);
 		DocumentServer server = getNetworkService().publish(logic);
 		logic.setDocumentServer(server);

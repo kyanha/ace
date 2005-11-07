@@ -19,32 +19,40 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.collaboration.jupiter;
+package ch.iserver.ace.util;
 
-import ch.iserver.ace.net.SessionConnection;
-import ch.iserver.ace.util.AsyncUtil;
 import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
+import edu.emory.mathcs.backport.java.util.concurrent.LinkedBlockingQueue;
 
 /**
  *
  */
-public class SessionConnectionDecoratorImpl implements SessionConnectionDecorator {
-
-	private BlockingQueue queue;
+public class BoundedThreadDomain extends AbstractThreadDomain {
 	
-	public void setQueue(BlockingQueue queue) {
-		this.queue = queue;
+	private final int maxWorkers;
+	
+	private final BlockingQueue[] queues;
+	
+	private int index;
+	
+	private int workers;
+	
+	public BoundedThreadDomain(int maxWorkers) {
+		this.maxWorkers = maxWorkers;
+		this.queues = new BlockingQueue[maxWorkers];
 	}
 	
-	public BlockingQueue getQueue() {
-		return queue;
+	public Object wrap(Object target, Class clazz) {
+		if (queues[index] == null) {
+			queues[index] = new LinkedBlockingQueue();
+			Worker worker = new AsyncWorker(queues[index]);
+			worker.start();
+		}
+		
+		BlockingQueue queue = queues[index];		
+		index = (index + 1) % maxWorkers;
+		
+		return wrap(target, clazz, queue);
 	}
 	
-	/**
-	 * @see ch.iserver.ace.collaboration.jupiter.SessionConnectionDecorator#decorate(ch.iserver.ace.net.SessionConnection)
-	 */
-	public SessionConnection decorate(SessionConnection target) {
-		return (SessionConnection) AsyncUtil.wrap(target, SessionConnection.class, getQueue());
-	}
-
 }
