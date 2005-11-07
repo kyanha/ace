@@ -27,12 +27,12 @@ import javax.swing.JPanel;
 
 
 
-public class DefaultView extends JPanel implements View {
+public class ViewImpl extends JPanel implements View {
 
 	protected LocaleMessageSource source;
 	protected PropertyChangeSupport propertyChangeSupport;
 
-	public DefaultView(LocaleMessageSource source) {
+	public ViewImpl(LocaleMessageSource source) {
 		propertyChangeSupport = new PropertyChangeSupport(this);
 	}
 
