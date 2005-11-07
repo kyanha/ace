@@ -21,11 +21,42 @@
 
 package ch.iserver.ace.application;
 
+import ch.iserver.ace.collaboration.UserListener;
+import ch.iserver.ace.collaboration.RemoteUser;
+
+import ca.odell.glazedlists.EventList;
+import ca.odell.glazedlists.BasicEventList;
 
 
-public class UserViewController extends ViewControllerImpl {
 
+public class UserViewController extends ViewControllerImpl implements UserListener {
+
+	private EventList userSourceList;
+	
 	public UserViewController() {
+		userSourceList = new BasicEventList();
+	}
+	
+	public void userDiscarded(RemoteUser user) {
+		// remove discarded user from the list
+		userSourceList.remove(new UserItem(user));
+	}
+	
+	public void userDiscovered(RemoteUser user) {
+		// add discovered user to the list
+		userSourceList.add(new UserItem(user));
+	}
+	
+	private UserView getView() {
+		return (UserView)view;
+	}
+	
+	public EventList getUserSourceList() {
+		return userSourceList;
+	}
+
+	public UserItem getSeletedItem() {
+		return (UserItem)getView().getSelectedItem();
 	}
 
 }

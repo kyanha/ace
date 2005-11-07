@@ -22,6 +22,7 @@
 package ch.iserver.ace.application;
 
 import ch.iserver.ace.collaboration.RemoteDocument;
+import ch.iserver.ace.collaboration.Session;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -30,10 +31,21 @@ import java.beans.PropertyChangeListener;
 
 public class DocumentItem extends ItemImpl implements Comparable, PropertyChangeListener {
 
-	String title;
+	public final String LOCAL_DOCUMENT = "local";
+	public final String REMOTE_DOCUMENT = "shared";
+	
+	
+	private String title;
+	private RemoteDocument document;
+	private Session session;
 
-	public DocumentItem() {
-		title = "title ...";
+	public DocumentItem(String title) {
+		// create local document
+		this.title = title;
+	}
+	
+	public DocumentItem(RemoteDocument document) {
+		// create remote document
 	}
 
 	public String getTitle() {

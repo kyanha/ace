@@ -27,6 +27,14 @@ public class DocumentViewController extends ViewControllerImpl {
 
 	public DocumentViewController() {
 	}
+	
+	private DocumentView getView() {
+		return (DocumentView)view;
+	}
+	
+	public DocumentItem getSelectedItem() {
+		return (DocumentItem)getView().getSelectedItem();
+	}
 
 }
 

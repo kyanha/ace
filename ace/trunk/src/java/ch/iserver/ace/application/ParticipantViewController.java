@@ -28,14 +28,27 @@ import ca.odell.glazedlists.EventList;
 
 public class ParticipantViewController extends ViewControllerImpl {
 
-	private CompositeList participantSource;
+	private CompositeList participantSourceList;
 
 	public ParticipantViewController() {
+		participantSourceList = new CompositeList();
 	}
 	
 	public void setParticipantList(EventList participantList) {
-		participantSource.clear();
-		participantSource.addMemberList(participantList);
+		participantSourceList.clear();
+		participantSourceList.addMemberList(participantList);
+	}
+
+	private ParticipantView getView() {
+		return (ParticipantView)view;
+	}
+	
+	public CompositeList getParticipantSourceList() {
+		return participantSourceList;
+	}
+	
+	public ParticipantItem getSelectedItem() {
+		return (ParticipantItem)getView().getSelectedItem();
 	}
 
 }

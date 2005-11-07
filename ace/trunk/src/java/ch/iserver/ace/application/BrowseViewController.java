@@ -25,26 +25,38 @@ import ch.iserver.ace.collaboration.DocumentListener;
 import ch.iserver.ace.collaboration.RemoteDocument;
 
 import ca.odell.glazedlists.EventList;
+import ca.odell.glazedlists.BasicEventList;
 
 
 
 public class BrowseViewController extends ViewControllerImpl implements DocumentListener {
 
-	private EventList browseSource;
+	private EventList browseSourceList;
 
 	public BrowseViewController() {
+		browseSourceList = new BasicEventList();
 	}
 	
 	public void documentDiscarded(RemoteDocument document) {
 		// remove discarded document from the list
+		browseSourceList.remove(new BrowseItem(document));
 	}
 	
 	public void documentDiscovered(RemoteDocument document) {
 		// add discovered document to the list
+		browseSourceList.add(new BrowseItem(document));
+	}
+		
+	private BrowseView getView() {
+		return (BrowseView)view;
 	}
 	
 	public EventList getBrowseSourceList() {
-		return browseSource;
+		return browseSourceList;
+	}
+	
+	public BrowseItem getSelectedItem() {
+		return (BrowseItem)getView().getSelectedItem();
 	}
 
 }

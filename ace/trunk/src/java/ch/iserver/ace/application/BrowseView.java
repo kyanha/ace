@@ -29,4 +29,7 @@ public class BrowseView extends ViewImpl {
 		super(source);
 	}
 
+	public Item getSelectedItem() {
+		return null;
+	}
 }

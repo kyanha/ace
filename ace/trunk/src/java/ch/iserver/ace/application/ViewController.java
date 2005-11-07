@@ -30,5 +30,6 @@ public interface ViewController {
 	void addPropertyChangeListener(PropertyChangeListener listener);
 	
 	void removePropertyChangeListener(PropertyChangeListener listener);
+
 }
 

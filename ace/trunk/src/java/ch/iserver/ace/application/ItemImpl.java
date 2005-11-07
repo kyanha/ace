@@ -28,7 +28,7 @@ import java.beans.PropertyChangeSupport;
 
 public class ItemImpl implements Item {
 
-	protected PropertyChangeSupport propertyChangeSupport;
+	private PropertyChangeSupport propertyChangeSupport;
 	
 	public ItemImpl() {
 	}

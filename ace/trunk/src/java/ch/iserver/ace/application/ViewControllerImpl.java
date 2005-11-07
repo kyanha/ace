@@ -22,20 +22,33 @@
 package ch.iserver.ace.application;
 
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 
 
 
 public class ViewControllerImpl implements ViewController {
 
+	protected View view;
+	private PropertyChangeSupport propertyChangeSupport;
+	
 	public ViewControllerImpl() {
 	}
 	
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		propertyChangeSupport.addPropertyChangeListener(listener);
 	}
 	
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		propertyChangeSupport.removePropertyChangeListener(listener);
 	}
 	
-
+	protected void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
+		propertyChangeSupport.firePropertyChange(propertyName, oldValue, newValue);
+	}
+	
+	public void setView(View view) {
+		this.view = view;
+	}
+	
 }
 
