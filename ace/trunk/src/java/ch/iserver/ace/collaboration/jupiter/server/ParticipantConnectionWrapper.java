@@ -23,6 +23,7 @@ package ch.iserver.ace.collaboration.jupiter.server;
 
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
+import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.net.PortableDocument;
 import ch.iserver.ace.net.RemoteUserProxy;
@@ -108,7 +109,7 @@ public class ParticipantConnectionWrapper implements ParticipantConnection {
 	 * </ol>
 	 */
 	private void failed() {
-		getFailureHandler().handleFailure(participantId);
+		getFailureHandler().handleFailure(participantId, Participant.DISCONNECTED);
 		target = NullParticipantConnection.getInstance();
 	}
 	

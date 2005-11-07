@@ -32,10 +32,8 @@ public interface FailureHandler {
 	 * participant failed.
 	 * 
 	 * @param participantId the participant id of the failing connection
+	 * @param reason added reason code to method signature
 	 */
-	/**
-	 * @param participantId
-	 */
-	void handleFailure(int participantId);
+	void handleFailure(int participantId, int reason);
 	
 }

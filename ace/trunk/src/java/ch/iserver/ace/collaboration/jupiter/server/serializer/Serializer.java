@@ -23,6 +23,7 @@ package ch.iserver.ace.collaboration.jupiter.server.serializer;
 
 import org.apache.log4j.Logger;
 
+import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.collaboration.jupiter.server.FailureHandler;
 import ch.iserver.ace.collaboration.jupiter.server.Forwarder;
 import ch.iserver.ace.util.Lock;
@@ -102,13 +103,14 @@ public class Serializer extends Worker {
 	 */
 	protected void doWork() throws InterruptedException {
 		SerializerCommand cmd = (SerializerCommand) queue.take();
-		LOG.info("SERIALIZER: serializing next command ...");
+		LOG.info("serializing next command ...");
 		getLock().lock();
 		try {
 			cmd.execute(getForwarder());
-			LOG.info("SERIALIZER: command executed ...");
+			LOG.info("command executed ...");
 		} catch (SerializerException e) {
-			getFailureHandler().handleFailure(e.getParticipantId());
+			LOG.warn("command execution failed: " + e.getMessage());
+			getFailureHandler().handleFailure(e.getParticipantId(), Participant.RECEPTION_FAILED);
 		} finally {
 			getLock().unlock();
 		}

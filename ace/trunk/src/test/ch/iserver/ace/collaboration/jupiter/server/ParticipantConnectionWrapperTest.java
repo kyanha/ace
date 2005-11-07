@@ -45,7 +45,7 @@ public class ParticipantConnectionWrapperTest extends TestCase {
 		target.sendCaretUpdateMessage(0, null);
 		targetCtrl.setThrowable(new RuntimeException());
 		
-		handler.handleFailure(1);
+		handler.handleFailure(1, Participant.DISCONNECTED);
 		
 		// replay
 		targetCtrl.replay();
@@ -73,7 +73,7 @@ public class ParticipantConnectionWrapperTest extends TestCase {
 		target.sendRequest(0, null);
 		targetCtrl.setThrowable(new RuntimeException());
 		
-		handler.handleFailure(1);
+		handler.handleFailure(1, Participant.DISCONNECTED);
 		
 		// replay
 		targetCtrl.replay();
@@ -101,7 +101,7 @@ public class ParticipantConnectionWrapperTest extends TestCase {
 		target.sendParticipantLeft(2, Participant.LEFT);
 		targetCtrl.setThrowable(new RuntimeException());
 		
-		handler.handleFailure(1);
+		handler.handleFailure(1, Participant.DISCONNECTED);
 		
 		// replay
 		targetCtrl.replay();
@@ -129,7 +129,7 @@ public class ParticipantConnectionWrapperTest extends TestCase {
 		target.sendParticipantJoined(2, null);
 		targetCtrl.setThrowable(new RuntimeException());
 		
-		handler.handleFailure(1);
+		handler.handleFailure(1, Participant.DISCONNECTED);
 		
 		// replay
 		targetCtrl.replay();
@@ -157,7 +157,7 @@ public class ParticipantConnectionWrapperTest extends TestCase {
 		target.sendKicked();
 		targetCtrl.setThrowable(new RuntimeException());
 		
-		handler.handleFailure(1);
+		handler.handleFailure(1, Participant.DISCONNECTED);
 		
 		// replay
 		targetCtrl.replay();
@@ -185,7 +185,7 @@ public class ParticipantConnectionWrapperTest extends TestCase {
 		target.sendDocument(null);
 		targetCtrl.setThrowable(new RuntimeException());
 		
-		handler.handleFailure(1);
+		handler.handleFailure(1, Participant.DISCONNECTED);
 		
 		// replay
 		targetCtrl.replay();

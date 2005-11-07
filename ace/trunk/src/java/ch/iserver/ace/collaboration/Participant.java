@@ -48,6 +48,13 @@ public interface Participant {
 	int DISCONNECTED = 3;
 	
 	/**
+	 * Constant used in notifications when receiving things from a participant
+	 * fails. The participant is then no longer considered part of the
+	 * session.
+	 */
+	int RECEPTION_FAILED = 4;
+	
+	/**
 	 * Gets the remote user corresponding to this participant.
 	 *
 	 * @return the remote user corresponding to this participant
