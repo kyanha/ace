@@ -29,10 +29,11 @@ import javax.swing.JPanel;
 
 public class ViewImpl extends JPanel implements View {
 
-	protected LocaleMessageSource source;
-	protected PropertyChangeSupport propertyChangeSupport;
+	protected LocaleMessageSource messageSource;
+	private PropertyChangeSupport propertyChangeSupport;
 
-	public ViewImpl(LocaleMessageSource source) {
+	public ViewImpl(LocaleMessageSource messageSource) {
+		this.messageSource = messageSource;
 		propertyChangeSupport = new PropertyChangeSupport(this);
 	}
 
@@ -42,6 +43,14 @@ public class ViewImpl extends JPanel implements View {
 	
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
 		propertyChangeSupport.removePropertyChangeListener(listener);
+	}
+	
+	protected void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
+		propertyChangeSupport.firePropertyChange(propertyName, oldValue, newValue);
+	}
+	
+	public Item getSelectedItem() {
+		return null;
 	}
 
 }
