@@ -30,6 +30,7 @@ import ch.iserver.ace.DocumentModel;
 import ch.iserver.ace.algorithm.RequestImpl;
 import ch.iserver.ace.algorithm.jupiter.JupiterVectorTime;
 import ch.iserver.ace.collaboration.jupiter.NullParticipantConnectionDecorator;
+import ch.iserver.ace.collaboration.jupiter.PublisherConnection;
 import ch.iserver.ace.collaboration.jupiter.RemoteUserProxyStub;
 import ch.iserver.ace.collaboration.jupiter.server.ServerLogicImpl;
 import ch.iserver.ace.net.ParticipantConnection;
@@ -48,12 +49,12 @@ public class ServerTest extends TestCase {
 	public void testBasics() throws Exception {
 		Lock lock = new SemaphoreLock("serializer-lock");
 		MockControl[] controls = new MockControl[PARTICIPANTS];
-		ParticipantConnection[] connections = new ParticipantConnection[PARTICIPANTS];
+		PublisherConnection[] connections = new PublisherConnection[PARTICIPANTS];
 		ParticipantPort[] ports = new ParticipantPort[PARTICIPANTS];
 		
 		for (int i = 0; i < PARTICIPANTS; i++) {
-			controls[i] = MockControl.createControl(ParticipantConnection.class);
-			connections[i] = (ParticipantConnection) controls[i].getMock();
+			controls[i] = MockControl.createControl(PublisherConnection.class);
+			connections[i] = (PublisherConnection) controls[i].getMock();
 		}
 		
 		// define mock behavior

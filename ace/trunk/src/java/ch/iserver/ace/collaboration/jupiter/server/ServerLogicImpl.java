@@ -34,6 +34,7 @@ import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.jupiter.Jupiter;
 import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.collaboration.jupiter.ParticipantConnectionDecorator;
+import ch.iserver.ace.collaboration.jupiter.PublisherConnection;
 import ch.iserver.ace.collaboration.jupiter.server.serializer.JoinCommand;
 import ch.iserver.ace.collaboration.jupiter.server.serializer.LeaveCommand;
 import ch.iserver.ace.collaboration.jupiter.server.serializer.Serializer;
@@ -73,7 +74,9 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 	private final TreeMap connections = new TreeMap();
 	
 	private DocumentServer server;
-		
+	
+	private final PublisherConnection publisherConnection;
+	
 	private final PublisherPort publisherPort;
 	
 	private final ServerDocument document;
@@ -84,7 +87,7 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 	
 	public ServerLogicImpl(Lock lock, 
 	                       ParticipantConnectionDecorator decorator, 
-	                       ParticipantConnection connection, 
+	                       PublisherConnection connection, 
 	                       DocumentModel document) {
 		ParameterValidator.notNull("lock", lock);
 		ParameterValidator.notNull("decorator", decorator);
@@ -99,6 +102,7 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 		this.serializerQueue = new LinkedBlockingQueue();
 		this.serializer = new Serializer(serializerQueue, lock, forwarder, this);
 		
+		this.publisherConnection = connection;
 		this.publisherPort = createPublisherPort(connection, connectionDecorator);
 		
 		this.document = new ServerDocumentImpl();
@@ -159,6 +163,10 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 		return serializerQueue;
 	}
 	
+	protected PublisherConnection getPublisherConnection() {
+		return publisherConnection;
+	}
+	
 	/**
 	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerLogic#addParticipant(ch.iserver.ace.collaboration.jupiter.server.SessionParticipant)
 	 */
@@ -176,21 +184,10 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 		ports.remove(key);
 	}
 		
-	protected synchronized Map getParticipantConnections() {
-		return (Map) connections.clone();
-	}
-	
 	private synchronized ParticipantConnection getParticipantConnection(int id) {
 		return (ParticipantConnection) connections.get(new Integer(id));
 	}
-	
-	/**
-	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerLogic#getPublisherPort()
-	 */
-	public PublisherPort getPublisherPort() {
-		return publisherPort;
-	}
-			
+				
 	/**
 	 * @see ch.iserver.ace.net.DocumentServerLogic#join(ch.iserver.ace.net.ParticipantConnection)
 	 */
@@ -217,15 +214,31 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 	
 	// --> session logic methods <--
 	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerLogic#getPublisherPort()
+	 */
+	public PublisherPort getPublisherPort() {
+		return publisherPort;
+	}
+
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerLogic#setDocumentDetails(ch.iserver.ace.DocumentDetails)
+	 */
 	public void setDocumentDetails(DocumentDetails details) {
 		getDocumentServer().setDocumentDetails(details);
 	}
 	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerLogic#prepareShutdown()
+	 */
 	public synchronized void prepareShutdown() {
 		this.acceptingJoins = false;
 		getDocumentServer().prepareShutdown();
 	}
 	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerLogic#shutdown()
+	 */
 	public void shutdown() {
 		getDocumentServer().shutdown();
 		try {
@@ -235,6 +248,9 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 		}
 	}
 	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerLogic#getParticipantProxies()
+	 */
 	public synchronized Iterator getParticipantProxies() {
 		Map clone = (Map) proxies.clone();
 		return clone.values().iterator();
@@ -245,6 +261,10 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 	 */
 	public synchronized void leave(int participantId) {
 		ParticipantConnection connection = getParticipantConnection(participantId);
+		if (connection == null) {
+			LOG.warn("participant with id " + participantId + " not (or no longer) in session");
+			return;
+		}
 		connection.close();
 		removeParticipant(participantId);
 	}
@@ -259,6 +279,10 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 		LOG.info("kicking participant " + participantId);
 		synchronized (this) {
 			ParticipantConnection connection = getParticipantConnection(participantId);
+			if (connection == null) {
+				LOG.warn("participant with id " + participantId + " not (or no longer) in session");
+				return;
+			}
 			connection.sendKicked();
 			connection.close();
 			removeParticipant(participantId);
@@ -274,6 +298,8 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 		LOG.info("handling failed connection to participant " + participantId);
 		synchronized (this) {
 			if (participantId == PUBLISHER_ID) {
+				LOG.error("failure related to publisher: " + reason);
+				getPublisherConnection().sessionFailed(reason, null);
 				prepareShutdown();
 				getSerializerQueue().add(new ShutdownCommand(this));
 			} else {

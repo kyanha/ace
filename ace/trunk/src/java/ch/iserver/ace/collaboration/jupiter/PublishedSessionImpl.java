@@ -33,7 +33,6 @@ import ch.iserver.ace.collaboration.PublishedSession;
 import ch.iserver.ace.collaboration.PublishedSessionCallback;
 import ch.iserver.ace.collaboration.jupiter.server.PublisherPort;
 import ch.iserver.ace.collaboration.jupiter.server.ServerLogic;
-import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.net.PortableDocument;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.util.ParameterValidator;
@@ -42,7 +41,7 @@ import ch.iserver.ace.util.SemaphoreLock;
 /**
  *
  */
-public class PublishedSessionImpl extends AbstractSession implements PublishedSession, ParticipantConnection {
+public class PublishedSessionImpl extends AbstractSession implements PublishedSession, PublisherConnection {
 	
 	private ServerLogic logic;
 	
@@ -126,6 +125,10 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 	}
 	
 	// --> start ParticipantConnection implementation <--
+	
+	public void sessionFailed(int reason, Exception e) {
+		getCallback().sessionFailed(reason, e);
+	}
 	
 	/**
 	 * @see ch.iserver.ace.net.ParticipantConnection#setParticipantId(int)
