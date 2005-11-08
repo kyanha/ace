@@ -63,9 +63,20 @@ public class DocumentItemCellRenderer extends JPanel implements ListCellRenderer
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		// draw document icon
+		switch(value.getType()) {
+			case DocumentItem.LOCAL:
+				g.drawString("L", 10, 10);
+			break;
+			case DocumentItem.PUBLISHED:
+				g.drawString("P", 10, 10);
+			break;			
+			case DocumentItem.REMOTE:
+				g.drawString("R", 10, 10);
+			break;
+		}
 		
 		// draw document title
-		g.drawString("document: " + value.getTitle(), 10, 10);
+		g.drawString("document: " + value.getTitle(), 20, 10);
 	}
 
 	public Dimension getPreferredSize() {
