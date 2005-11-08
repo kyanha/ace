@@ -25,6 +25,7 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
+import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.algorithm.TimestampFactory;
 import ch.iserver.ace.net.DiscoveryNetworkCallback;
@@ -93,9 +94,9 @@ public class NetworkServiceStub implements NetworkService {
 	}
 
 	/**
-	 * @see ch.iserver.ace.net.NetworkService#publish(ch.iserver.ace.net.DocumentServerLogic)
+	 * @see ch.iserver.ace.net.NetworkService#publish(ch.iserver.ace.net.DocumentServerLogic, ch.iserver.ace.DocumentDetails)
 	 */
-	public DocumentServer publish(DocumentServerLogic logic) {
+	public DocumentServer publish(DocumentServerLogic logic, DocumentDetails details) {
 		DocumentServer server = new DocumentServerStub(logic);
 		documentServers.add(server);
 		return server;

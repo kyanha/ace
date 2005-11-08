@@ -175,7 +175,7 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 		Lock semaphoreLock = new SemaphoreLock("server-lock");
 		ServerLogicImpl logic = new ServerLogicImpl(semaphoreLock, getPublisherThreadDomain(), session, document);
 		session.setServerLogic(logic);
-		DocumentServer server = getNetworkService().publish(logic);
+		DocumentServer server = getNetworkService().publish(logic, document.getDetails());
 		logic.setDocumentServer(server);
 		logic.start();
 		return session;
