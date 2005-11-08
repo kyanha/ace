@@ -21,12 +21,46 @@
 
 package ch.iserver.ace.application;
 
+import java.awt.BorderLayout;
+import javax.swing.JList;
+import javax.swing.JScrollPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.JToolBar;
+
+import com.jgoodies.uif_lite.panel.SimpleInternalFrame;
+
+import ca.odell.glazedlists.EventList;
+import ca.odell.glazedlists.swing.EventSelectionModel;
+
 
 
 public class DocumentView extends ViewImpl {
 
+	private EventList documentSourceList;
+	private EventSelectionModel eventSelectionModel;
+
 	public DocumentView(DocumentViewController controller, LocaleMessageSource messageSource) {
 		super(controller, messageSource);
+		// get view source
+		documentSourceList = controller.getDocumentSourceList();
+		
+		// create view toolbar & actions
+		JToolBar viewToolBar = new JToolBar();
+		//final AbstractAction vtbaDiscoverUser = new AbstractAction() { public void actionPerformed(ActionEvent e) { System.out.println("Discover User"); }};
+		//viewToolBar.add(vtbaDiscoverUser);
+		//final AbstractAction vtbaJoinSession = new AbstractAction() { public void actionPerformed(ActionEvent e) { System.out.println("Join Session"); }};
+		//viewToolBar.add(vtbaJoinSession);
+
+		// create data list
+		JList documentList = new JList();
+		
+		// create frame
+		JPanel documentViewContent = new JPanel(new BorderLayout());
+		documentViewContent.add(new JScrollPane(documentList), BorderLayout.CENTER);
+		SimpleInternalFrame documentView = new SimpleInternalFrame(null, messageSource.getMessage("vDocumentTitle"), viewToolBar, documentViewContent);
+		setLayout(new BorderLayout());
+		add(documentView);		
 	}
 	
 	public Item getSelectedItem() {

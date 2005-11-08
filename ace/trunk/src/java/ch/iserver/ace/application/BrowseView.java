@@ -30,7 +30,6 @@ import javax.swing.JToolBar;
 
 import com.jgoodies.uif_lite.panel.SimpleInternalFrame;
 
-import ca.odell.glazedlists.BasicEventList;
 import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.swing.EventSelectionModel;
 

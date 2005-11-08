@@ -30,15 +30,14 @@ import javax.swing.JToolBar;
 
 import com.jgoodies.uif_lite.panel.SimpleInternalFrame;
 
-import ca.odell.glazedlists.BasicEventList;
-import ca.odell.glazedlists.EventList;
+import ca.odell.glazedlists.CompositeList;
 import ca.odell.glazedlists.swing.EventSelectionModel;
 
 
 
 public class ParticipantView extends ViewImpl {
 
-	private EventList participantSourceList;
+	private CompositeList participantSourceList;
 	private EventSelectionModel eventSelectionModel;
 
 	public ParticipantView(ParticipantViewController controller, LocaleMessageSource messageSource) {
@@ -55,17 +54,14 @@ public class ParticipantView extends ViewImpl {
 		//viewToolBar.add(vtbaJoinSession);
 
 		// create data list
-		JTextField filterField = new JTextField();
 		JList participantList = new JList();
 		
 		// create frame
 		JPanel participantViewContent = new JPanel(new BorderLayout());
 		participantViewContent.add(new JScrollPane(participantList), BorderLayout.CENTER);
-		participantViewContent.add(filterField, BorderLayout.SOUTH);
 		SimpleInternalFrame participantView = new SimpleInternalFrame(null, messageSource.getMessage("vParticipantTitle"), participantToolBar, participantViewContent);
 		setLayout(new BorderLayout());
 		add(participantView);		
-		
 	}
 	
 	public Item getSelectedItem() {
