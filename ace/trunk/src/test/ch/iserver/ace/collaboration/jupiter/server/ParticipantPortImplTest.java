@@ -53,9 +53,6 @@ public class ParticipantPortImplTest extends TestCase {
 		port = new ParticipantPortImpl(null, 1, algorithm, queue);
 	}
 	
-	/**
-	 * Test method for 'ch.iserver.ace.collaboration.jupiter.server.ParticipantPortImpl.receiveCaretUpdate(CaretUpdateMessage)'
-	 */
 	public void testReceiveCaretUpdate() throws InterruptedException {
 		CaretUpdateMessage message = new CaretUpdateMessage(0, null, null);
 		port.receiveCaretUpdate(message);
@@ -64,12 +61,8 @@ public class ParticipantPortImplTest extends TestCase {
 		assertEquals(1, command.getParticipantId());
 		assertSame(algorithm, command.getAlgorithm());
 		assertSame(message, command.getMessage());
-		
 	}
 
-	/**
-	 * Test method for 'ch.iserver.ace.collaboration.jupiter.server.ParticipantPortImpl.receiveRequest(Request)'
-	 */
 	public void testReceiveRequest() throws InterruptedException {
 		Request request = new RequestImpl(0, null, null);
 		port.receiveRequest(request);
