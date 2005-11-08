@@ -54,13 +54,11 @@ public interface NetworkServiceCallback {
 	void userDiscarded(RemoteUserProxy proxy);
 		
 	/**
-	 * Notifies the callback that a new document was discovered on the network.
-	 * The passed in <var>proxy</var> can be used to communicate with that
-	 * newly discovered document.
+	 * Notifies the callback that new documents were discovered on the network.
 	 * 
-	 * @param proxy the proxy for the newly discovered document
+	 * @param proxy the array of document proxies
 	 */
-	void documentDiscovered(RemoteDocumentProxy proxy);
+	void documentDiscovered(RemoteDocumentProxy[] proxy);
 	
 	/**
 	 * Notifies the callback that the document details of the given
@@ -71,12 +69,12 @@ public interface NetworkServiceCallback {
 	void documentDetailsChanged(RemoteDocumentProxy proxy);
 	
 	/**
-	 * Notifies the callback that a previously present document disappeared
+	 * Notifies the callback that previously present documents disappeared
 	 * from the network.
 	 * 
-	 * @param proxy the proxy for the document
+	 * @param proxy the array of the document
 	 */
-	void documentDiscarded(RemoteDocumentProxy proxy);
+	void documentDiscarded(RemoteDocumentProxy[] proxy);
 	
 	/**
 	 * Notifies the callback that an invitation was received. The passed in

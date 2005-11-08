@@ -11,10 +11,85 @@ pdftitle={System Requirements},
 pdfcreator={pdftex},
 ]{hyperref}
 
-\import{ace}
+\include{ace}
 
 \begin{document}
 
+\include{titlepage}
+
 \section{Introduction}
 
+\section{Project Goals}
+
+The goal of the project ACE is to create a collaborative text editor. In the following a more detailed
+description of what the functionality the application must have are described.
+
+\subsection{Graphical User Interface}
+
+The following list shows the basic features of the text editor:
+
+\begin{itemize}
+ \item create new documents
+ \item load and save documents
+ \item open several documents at the same time
+ \item cut/copy/paste
+ \item about information
+\end{itemize}
+
+\subsection{Collaboration Functionality}
+
+\begin{itemize}
+ \item publish local documents
+ \item automatic discovery of other running instances of ACE on a local area network
+ \item automatic discovery of published documents of other running instances of ACE
+ \item manual discovery of running instances outside of the local area network
+ \item join published documents
+ \item leave joined documents
+ \item kick users
+\end{itemize}
+
+One of the core principles for ACE was that we wanted it to be as simple as possible to set up. Most users
+will feel lost if they have to enter IP addresses and ports. So ACE has to support automatic discovery
+of other users (other running instances of ACE) and their shared documents. These automatically discovered
+users and documents must be displayed in the graphical user interface where the user has a set of actions
+to interact with them.
+
+
+\section{Optional Goals}
+
+We might implement optional goals if we have additional time.
+
+\begin{itemize}
+ \item access right mechanism
+ \item invite other users to a session 
+\end{itemize}
+
+\subsection{Access Right Mechanism}
+
+There is no mandatory goal that requires any kind of access right mechanism meaning that any user can join a published
+document and gain read/write access. Of course, this can be an undesirable situation, especially in an environement
+where you do not trust all the other users on the local area network.
+
+A access right mechanism should allow the publisher to choose default access rights for each of his published 
+documents. Reasonable access right settings would be:
+
+\begin{itemize}
+ \item ask for join permission
+ \item read-only access
+ \item read-write access
+\end{itemize}
+
+The first access mode ensures that nobody can access or even view a shared document before the publisher explicitely gives
+that user the permission to view the document, either with read-only access or full read-write access.
+
+
+\section{Non-Goals}
+
+Due to the limited available time, certain (useful) functionality cannot be implemented in the diploma project. The 
+principle is that if something is not explicitely listed in the project goals, it is not a goal of the project. However,
+we want to highlight in this section some points that are not goals.
+
+\begin{itemize}
+ \item security aspects: authentication, confidentiality, authorization
+ \item undo/redo
 \end{document}

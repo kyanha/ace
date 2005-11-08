@@ -22,6 +22,8 @@
 package ch.iserver.ace.collaboration.jupiter;
 
 import java.net.InetAddress;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.event.EventListenerList;
 
@@ -194,39 +196,56 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	
 	// --> network service callback methods <--
 
-	public void documentDiscovered(RemoteDocumentProxy proxy) {
-		RemoteDocument doc = getDocumentRegistry().addDocument(proxy);
+	/**
+	 * @see ch.iserver.ace.net.NetworkServiceCallback#documentDiscovered(ch.iserver.ace.net.RemoteDocumentProxy[])
+	 */
+	public void documentDiscovered(RemoteDocumentProxy[] proxies) {
+		RemoteDocument[] documents = new RemoteDocument[proxies.length];
+		for (int i = 0; i < proxies.length; i++) {
+			documents[i] = getDocumentRegistry().addDocument(proxies[i]);
+		}
 		DocumentListener[] list = (DocumentListener[]) listeners.getListeners(DocumentListener.class);
 		for (int i = 0; i < list.length; i++) {
 			DocumentListener listener = list[i];
-			listener.documentDiscovered(doc);
+			listener.documentsDiscovered(documents);
 		}		
 	}
 	
+	/**
+	 * @see ch.iserver.ace.net.NetworkServiceCallback#documentDetailsChanged(ch.iserver.ace.net.RemoteDocumentProxy)
+	 */
 	public void documentDetailsChanged(RemoteDocumentProxy proxy) {
 		MutableRemoteDocument doc = getDocumentRegistry().getDocument(proxy.getId());
 		if (doc == null) {
-			// TODO: throw exception
 			LOG.error("documentDetailsChanged called with an unknown document id (i.e. documentDiscovered not called)");
 		} else {
 			doc.setTitle(proxy.getDocumentDetails().getTitle());
 		}
 	}
 	
-	public void documentDiscarded(RemoteDocumentProxy proxy) {
-		RemoteDocument doc = getDocumentRegistry().removeDocument(proxy);
-		if (doc == null) {
-			// TODO: throw exception
-			LOG.error("documentDiscarded called without previos documentDiscovered call");
-		} else {
-			DocumentListener[] list = (DocumentListener[]) listeners.getListeners(DocumentListener.class);
-			for (int i = 0; i < list.length; i++) {
-				DocumentListener listener = list[i];
-				listener.documentDiscovered(doc);
+	/**
+	 * @see ch.iserver.ace.net.NetworkServiceCallback#documentDiscarded(ch.iserver.ace.net.RemoteDocumentProxy[])
+	 */
+	public void documentDiscarded(RemoteDocumentProxy[] proxies) {
+		List tmp = new ArrayList();
+		for (int i = 0; i < proxies.length; i++) {
+			RemoteDocument doc = getDocumentRegistry().removeDocument(proxies[i]);
+			if (doc == null) {
+				LOG.error("documentDiscarded called without previos documentDiscovered call");
 			}
+			tmp.add(doc);
+		}
+		RemoteDocument[] documents = (RemoteDocument[]) tmp.toArray(new RemoteDocument[tmp.size()]);
+		DocumentListener[] list = (DocumentListener[]) listeners.getListeners(DocumentListener.class);
+		for (int i = 0; i < list.length; i++) {
+			DocumentListener listener = list[i];
+			listener.documentsDiscovered(documents);
 		}
 	}
 	
+	/**
+	 * @see ch.iserver.ace.net.NetworkServiceCallback#userDiscovered(ch.iserver.ace.net.RemoteUserProxy)
+	 */
 	public void userDiscovered(RemoteUserProxy proxy) {
 		RemoteUser user = getUserRegistry().addUser(proxy);
 		UserListener[] listeners = (UserListener[]) this.listeners.getListeners(UserListener.class);
@@ -236,6 +255,9 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 		}
 	}
 
+	/**
+	 * @see ch.iserver.ace.net.NetworkServiceCallback#userDetailsChanged(ch.iserver.ace.net.RemoteUserProxy)
+	 */
 	public void userDetailsChanged(RemoteUserProxy proxy) {
 		MutableRemoteUser user = getUserRegistry().getUser(proxy.getId());
 		if (user == null) {
@@ -246,6 +268,9 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 		}
 	}
 
+	/**
+	 * @see ch.iserver.ace.net.NetworkServiceCallback#userDiscarded(ch.iserver.ace.net.RemoteUserProxy)
+	 */
 	public void userDiscarded(RemoteUserProxy proxy) {
 		RemoteUser user = getUserRegistry().removeUser(proxy);
 		if (user == null) {
@@ -260,6 +285,9 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 		}
 	}
 
+	/**
+	 * @see ch.iserver.ace.net.NetworkServiceCallback#invitationReceived(ch.iserver.ace.net.InvitationProxy)
+	 */
 	public void invitationReceived(InvitationProxy proxy) {
 		RemoteDocument document = getDocumentRegistry().getDocument(proxy.getDocument().getId());
 		RemoteUser inviter = getUserRegistry().getUser(proxy.getInviter().getId());
