@@ -23,6 +23,7 @@ package ch.iserver.ace.application;
 
 import ch.iserver.ace.collaboration.RemoteDocument;
 import ch.iserver.ace.collaboration.Session;
+import ch.iserver.ace.collaboration.SessionCallback;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -37,8 +38,10 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 
 	private int type = LOCAL;
 	private String title;
+	//private Document editorDocument;
 	private RemoteDocument document;
 	private Session session;
+	//private SessionCallback sessionCallback;
 
 	public DocumentItem(String title) {
 		// create local document
@@ -58,6 +61,14 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 	
 	public int getType() {
 		return type;
+	}
+	
+	public RemoteDocument getDocument() {
+		return document;
+	}
+	
+	public Session getSession() {
+		return session;
 	}
 	
 	public void propertyChange(PropertyChangeEvent evt) {
