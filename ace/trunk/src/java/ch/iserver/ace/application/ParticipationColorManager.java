@@ -45,21 +45,15 @@ public class ParticipationColorManager {
 		participantColor = new HashMap();//Collections.synchronizedMap(new HashMap());
 	}
 	
-	public void addParticipant(Participant participant) {
-		participantColor.put("" + participant.getParticipantId(), defaultColors[participantCount++%8]);
+	public synchronized Color addParticipant(Participant participant) {
+		Color newParticipantColor = defaultColors[participantCount++%8];
+		participantColor.put("" + participant.getParticipantId(), newParticipantColor);
+		return newParticipantColor;
 	}
 	
 	public void removeParticipant(Participant participant) {
 		participantColor.remove("" + participant.getParticipantId());
 	}
-	
-	/*public void userJoined(ParticipationEvent event) {
-		addParticipant(event.getParticipant());
-	}
-	
-	public void userLeft(ParticipationEvent event) {
-		removeParticipant(event.getParticipant());
-	}*/
 	
 	public Color getHighlightColor(Participant participant) {
 		if(participantColor.containsKey("" + participant.getParticipantId())) {
