@@ -37,17 +37,21 @@ public class BrowseViewController extends ViewControllerImpl implements Document
 		browseSourceList = new BasicEventList();
 	}
 	
-	public void documentDiscarded(RemoteDocument document) {
+	public void documentsDiscarded(RemoteDocument[] documents) {
 		// remove discarded document from the list
-		browseSourceList.remove(new BrowseItem(document));
+		for(int i = 0; i < documents.length; i++ ) {
+			browseSourceList.remove(new BrowseItem(documents[i]));
+		}
 	}
 	
-	public void documentDiscovered(RemoteDocument document) {
+	public void documentsDiscovered(RemoteDocument[] documents) {
 		// add discovered document to the list
-		browseSourceList.add(new BrowseItem(document));
+		for(int i = 0; i < documents.length; i++ ) {
+			browseSourceList.add(new BrowseItem(documents[i]));
+		}
 	}
 		
-	private BrowseView getView() {
+	private BrowseView getBrowseView() {
 		if(view == null) throw new IllegalStateException("View have to be set before using getView()!");
 		return (BrowseView)view;
 	}
@@ -57,7 +61,7 @@ public class BrowseViewController extends ViewControllerImpl implements Document
 	}
 	
 	public BrowseItem getSelectedItem() {
-		return (BrowseItem)getView().getSelectedItem();
+		return (BrowseItem)getBrowseView().getSelectedItem();
 	}
 
 }

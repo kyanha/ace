@@ -21,20 +21,30 @@
 
 package ch.iserver.ace.application;
 
+import ca.odell.glazedlists.EventList;
+import ca.odell.glazedlists.BasicEventList;
+
 
 
 public class DocumentViewController extends ViewControllerImpl {
 
+	private EventList documentSourceList;
+
 	public DocumentViewController() {
+		documentSourceList = new BasicEventList();
 	}
 	
-	private DocumentView getView() {
+	private DocumentView getDocumentView() {
 		if(view == null) throw new IllegalStateException("View have to be set before using getView()!");
 		return (DocumentView)view;
 	}
 	
+	public EventList getDocumentSourceList() {
+		return documentSourceList;
+	}
+	
 	public DocumentItem getSelectedItem() {
-		return (DocumentItem)getView().getSelectedItem();
+		return (DocumentItem)getDocumentView().getSelectedItem();
 	}
 
 }

@@ -39,7 +39,7 @@ public class ParticipantViewController extends ViewControllerImpl {
 		participantSourceList.addMemberList(participantList);
 	}
 
-	private ParticipantView getView() {
+	private ParticipantView getParticipantView() {
 		if(view == null) throw new IllegalStateException("View have to be set before using getView()!");
 		return (ParticipantView)view;
 	}
@@ -49,7 +49,7 @@ public class ParticipantViewController extends ViewControllerImpl {
 	}
 	
 	public ParticipantItem getSelectedItem() {
-		return (ParticipantItem)getView().getSelectedItem();
+		return (ParticipantItem)getParticipantView().getSelectedItem();
 	}
 
 }

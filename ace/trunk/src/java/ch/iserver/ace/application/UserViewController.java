@@ -47,7 +47,7 @@ public class UserViewController extends ViewControllerImpl implements UserListen
 		userSourceList.add(new UserItem(user));
 	}
 	
-	private UserView getView() {
+	private UserView getUserView() {
 		if(view == null) throw new IllegalStateException("View have to be set before using getView()!");
 		return (UserView)view;
 	}
@@ -57,7 +57,7 @@ public class UserViewController extends ViewControllerImpl implements UserListen
 	}
 
 	public UserItem getSeletedItem() {
-		return (UserItem)getView().getSelectedItem();
+		return (UserItem)getUserView().getSelectedItem();
 	}
 
 }
