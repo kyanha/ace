@@ -2,8 +2,13 @@
 <classpath>
 	<classpathentry kind="src" path="src/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.launching.macosx.MacOSXType/JVM 1.4.2 (MacOS X Default)"/>
-	<classpathentry kind="lib" path="lib/beepcore.jar"/>
+	<classpathentry sourcepath="/Users/lukaszbinden/ace-network/beep/doc/beepcore-0.9.08/beepsource.jar" kind="lib" path="lib/beepcore.jar"/>
 	<classpathentry kind="lib" path="lib/concurrent.jar"/>
 	<classpathentry kind="var" path="MAVEN2/commons-logging/commons-logging/1.0.4/commons-logging-1.0.4.jar"/>
+	<classpathentry kind="var" path="MAVEN2/junit/junit/3.8.1/junit-3.8.1.jar"/>
+	<classpathentry kind="var" path="MAVEN2/log4j/log4j/1.2.12/log4j-1.2.12.jar"/>
+	<classpathentry kind="lib" path="lib/asn1-codec-0.3.3.jar"/>
+	<classpathentry kind="lib" path="lib/asn1-ber-0.3.3.jar"/>
+	<classpathentry kind="var" path="MAVEN2/xerces/xercesImpl/2.6.2/xercesImpl-2.6.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
