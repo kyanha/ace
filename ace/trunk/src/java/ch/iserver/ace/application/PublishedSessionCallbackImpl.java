@@ -23,20 +23,34 @@ package ch.iserver.ace.application;
 
 import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.Operation;
+import ch.iserver.ace.application.ParticipationColorManager;
+import ch.iserver.ace.application.ParticipantItem;
 import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.collaboration.PublishedSessionCallback;
+
+import ca.odell.glazedlists.BasicEventList;
+import ca.odell.glazedlists.EventList;
 
 
 
 public class PublishedSessionCallbackImpl implements PublishedSessionCallback {
 
+	private EventList participantSourceList;
+	private ParticipationColorManager participationColorManager;
+
 	public PublishedSessionCallbackImpl() {
+		participantSourceList = new BasicEventList();
+		participationColorManager = new ParticipationColorManager();
 	}
 
 	public void participantJoined(Participant participant) {
+		participationColorManager.addParticipant(participant);
+		participantSourceList.add(new ParticipantItem(participant, participationColorManager.getHighlightColor(participant)));
 	}
 	
 	public void participantLeft(Participant participant, int code) {
+		participantSourceList.remove(new ParticipantItem(participant, participationColorManager.getHighlightColor(participant)));
+		participationColorManager.removeParticipant(participant);
 	}	
 	
 	public void receiveCaretUpdate(Participant participant, CaretUpdate update) {
