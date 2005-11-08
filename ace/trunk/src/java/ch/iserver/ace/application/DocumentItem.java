@@ -31,10 +31,11 @@ import java.beans.PropertyChangeListener;
 
 public class DocumentItem extends ItemImpl implements Comparable, PropertyChangeListener {
 
-	public final String LOCAL_DOCUMENT = "local";
-	public final String REMOTE_DOCUMENT = "shared";
-	
-	
+	public final static int LOCAL		= 1;
+	public final static int REMOTE		= 2;
+	public final static int PUBLISHED	= 3;
+
+	private int type = LOCAL;
 	private String title;
 	private RemoteDocument document;
 	private Session session;
@@ -42,14 +43,21 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 	public DocumentItem(String title) {
 		// create local document
 		this.title = title;
+		type = LOCAL;
 	}
 	
 	public DocumentItem(RemoteDocument document) {
 		// create remote document
+		title = document.getTitle();
+		type = REMOTE;
 	}
 
 	public String getTitle() {
 		return title;
+	}
+	
+	public int getType() {
+		return type;
 	}
 	
 	public void propertyChange(PropertyChangeEvent evt) {
