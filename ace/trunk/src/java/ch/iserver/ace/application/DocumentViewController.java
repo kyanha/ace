@@ -34,6 +34,14 @@ public class DocumentViewController extends ViewControllerImpl {
 		documentSourceList = new BasicEventList();
 	}
 	
+	public void addDocument(DocumentItem document) {
+		documentSourceList.add(document);
+	}
+	
+	public void removeDocument(DocumentItem document) {
+		documentSourceList.remove(document);
+	}
+	
 	private DocumentView getDocumentView() {
 		if(view == null) throw new IllegalStateException("View have to be set before using getView()!");
 		return (DocumentView)view;
