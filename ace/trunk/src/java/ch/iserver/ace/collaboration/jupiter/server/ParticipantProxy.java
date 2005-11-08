@@ -61,9 +61,21 @@ class ParticipantProxy implements Forwarder {
 	ParticipantProxy(int participantId, 
 					Algorithm algorithm, 
 					ParticipantConnection connection) {
+		this(participantId, new AlgorithmWrapperImpl(algorithm), connection);
+	}
+	
+	/**
+	 * @param participantId
+	 * @param algorithm
+	 * @param connection
+	 */
+	ParticipantProxy(int participantId,
+					AlgorithmWrapper algorithm,
+					ParticipantConnection connection) {
 		ParameterValidator.notNull("connection", connection);
+		ParameterValidator.notNull("algorithm", algorithm);
 		this.participantId = participantId;
-		this.algorithm = new AlgorithmWrapperImpl(algorithm);
+		this.algorithm = algorithm;
 		this.connection = connection;
 	}
 	
