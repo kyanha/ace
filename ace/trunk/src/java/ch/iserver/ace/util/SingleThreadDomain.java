@@ -24,18 +24,35 @@ package ch.iserver.ace.util;
 import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
 import edu.emory.mathcs.backport.java.util.concurrent.LinkedBlockingQueue;
 
+/**
+ * SingleThreadDomain creates one single worker thread and associated queue
+ * that is used by all proxies returned from {@link #wrap(Object, Class)}
+ * invocations.
+ */
 public class SingleThreadDomain extends AbstractThreadDomain {
 	
+	/**
+	 * The queue used for the single worker.
+	 */
 	private final BlockingQueue queue;
 	
+	/**
+	 * The single worker thread.
+	 */
 	private final Worker worker;
 	
+	/**
+	 * Creates a new SingleThreadDomain object.
+	 */
 	public SingleThreadDomain() {
 		this.queue = new LinkedBlockingQueue();
 		this.worker = new AsyncWorker(queue);
 		this.worker.start();
 	}
 	
+	/**
+	 * @see ch.iserver.ace.util.ThreadDomain#wrap(java.lang.Object, java.lang.Class)
+	 */
 	public Object wrap(Object target, Class clazz) {
 		return wrap(target, clazz, queue);
 	}

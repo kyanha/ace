@@ -27,17 +27,40 @@ import org.apache.log4j.Logger;
 
 import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
 
+/**
+ * AsyncInterceptor is a special method interceptor that adds the intercepted
+ * MethodInvocation objects to a BlockingQueue and then returns immediately.
+ * Together with a worker thread that reads and executes invocations from
+ * the same queue this can be used to execute methods asynchronously.
+ * 
+ * @see ch.iserver.ace.util.AsyncWorker
+ */
 public class AsyncInterceptor implements MethodInterceptor {
 
+	/**
+	 * The logger for instances of this class.
+	 */
 	private static final Logger LOG = Logger.getLogger(AsyncInterceptor.class);
 	
+	/**
+	 * The queue used to store MethodInvocation objects.
+	 */
 	private final BlockingQueue queue;
 	
+	/**
+	 * Creates a new AsyncInterceptor that adds MethodInvocations to the given
+	 * <var>queue</var>.
+	 * 
+	 * @param queue the queue used to store method invocation objects
+	 */
 	public AsyncInterceptor(BlockingQueue queue) {
 		ParameterValidator.notNull("queue", queue);
 		this.queue = queue;
 	}
 	
+	/**
+	 * @see org.aopalliance.intercept.MethodInterceptor#invoke(org.aopalliance.intercept.MethodInvocation)
+	 */
 	public synchronized Object invoke(MethodInvocation invocation) throws Throwable {
 		if (!invocation.getMethod().getReturnType().equals(Void.TYPE)) {
 			LOG.warn("WARN: invoking non-void return type method - " + invocation.getMethod());

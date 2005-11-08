@@ -22,7 +22,13 @@
 package ch.iserver.ace.util;
 
 /**
- *
+ * CallerThreadDomain does not create worker threads at all. It does not wrap
+ * the target instances either. It simply returns the target from the
+ * {@link #wrap(Object, Class)} method and thus method calls on the target
+ * are processed on the caller thread.
+ * 
+ * <p>Note, this might especially be useful in unit testing scenarios where
+ * threading introduces a degree of non-deterministic behavior.</p>
  */
 public class CallerThreadDomain implements ThreadDomain {
 

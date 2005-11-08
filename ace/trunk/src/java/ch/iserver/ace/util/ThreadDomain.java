@@ -22,10 +22,24 @@
 package ch.iserver.ace.util;
 
 /**
- *
+ * ThreadDomain allow to wrap objects so that they are executed on different
+ * threads. By using thread domains, it is possible to easily determine
+ * the number of threads in a system. A thread domain could create a worker
+ * thread for each call to {@link #wrap(Object, Class)} or could use
+ * a more conservative approach. It is even possible to choose an 
+ * implementation that returns the target object unmodified, thus executing
+ * the methods in the thread of the caller.
  */
 public interface ThreadDomain {
 	
+	/**
+	 * Wraps the <var>target</var> object so that calls to it are executed
+	 * in this ThreadDomain.
+	 * 
+	 * @param target the target object to be wrapped
+	 * @param clazz the interface implemented by the target object
+	 * @return the proxied target object
+	 */
 	Object wrap(Object target, Class clazz);
 	
 }

@@ -25,24 +25,45 @@ import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
 import edu.emory.mathcs.backport.java.util.concurrent.LinkedBlockingQueue;
 
 /**
- *
+ * BoundedThreadDomain creates only a certain number of worker threads and
+ * associated queues. The queues are used in a round-robin style by the
+ * proxies returned from {@link #wrap(Object, Class)}.
+ * 
+ * <p>Note that if the wrap method is called less than maxWorkers times,
+ * not all the worker threads are created.</p>
  */
 public class BoundedThreadDomain extends AbstractThreadDomain {
 	
+	/**
+	 * The maximum number of worker threads to create.
+	 */
 	private final int maxWorkers;
 	
+	/**
+	 * The blocking queues used by the maxWorkers worker threads.
+	 */
 	private final BlockingQueue[] queues;
 	
+	/**
+	 * The current index.
+	 */
 	private int index;
 	
-	private int workers;
-	
+	/**
+	 * Creates a new BoundedThreadDomain using the specified number of maximum
+	 * workers.
+	 * 
+	 * @param maxWorkers the maximum number of workers
+	 */
 	public BoundedThreadDomain(int maxWorkers) {
 		this.maxWorkers = maxWorkers;
 		this.queues = new BlockingQueue[maxWorkers];
 	}
 	
-	public Object wrap(Object target, Class clazz) {
+	/**
+	 * @see ch.iserver.ace.util.ThreadDomain#wrap(java.lang.Object, java.lang.Class)
+	 */
+	public synchronized Object wrap(Object target, Class clazz) {
 		if (queues[index] == null) {
 			queues[index] = new LinkedBlockingQueue();
 			Worker worker = new AsyncWorker(queues[index]);

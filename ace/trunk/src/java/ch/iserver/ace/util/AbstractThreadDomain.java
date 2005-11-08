@@ -26,10 +26,22 @@ import org.springframework.aop.framework.ProxyFactoryBean;
 import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
 
 /**
- *
+ * Abstract base class for ThreadDomain implementations.
  */
 public abstract class AbstractThreadDomain implements ThreadDomain {
-	
+		
+	/**
+	 * Wraps the given <var>target</var> object and returns a proxy that
+	 * implements the specified interface <var>clazz</var>. It is thus
+	 * safe to cast the returned object to the specified class. The
+	 * <var>queue</var> serves as target for the AsyncInterceptor that
+	 * intercepts all the calls to the target object.
+	 * 
+	 * @param target the target object to be wrapped
+	 * @param clazz the interface the proxy should implement
+	 * @param queue the queue used to queue MethodInvocation objects
+	 * @return a dynamic proxy wrapping the given target object
+	 */
 	protected Object wrap(Object target, Class clazz, BlockingQueue queue) {
 		ProxyFactoryBean factory = new ProxyFactoryBean();
 		factory.addInterface(clazz);

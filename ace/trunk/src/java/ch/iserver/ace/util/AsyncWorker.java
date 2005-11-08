@@ -26,6 +26,13 @@ import org.apache.log4j.Logger;
 
 import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
 
+/**
+ * Worker thread that services a queue of MethodInvocation objects. It takes
+ * MethodInvocation objects from a BlockingQueue and calls the
+ * {@link org.aopalliance.intercept.MethodInvocation#proceed()} method.
+ * 
+ * @see ch.iserver.ace.util.AsyncInterceptor
+ */
 public class AsyncWorker extends Worker {
 	
 	private static final Logger LOG = Logger.getLogger(AsyncWorker.class);

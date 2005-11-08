@@ -25,7 +25,8 @@ import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
 import edu.emory.mathcs.backport.java.util.concurrent.LinkedBlockingQueue;
 
 /**
- *
+ * ThreadDomain that creates a new worker thread per invocation of the
+ * {@link #wrap(Object, Class)} method.
  */
 public class IsolatedThreadDomain extends AbstractThreadDomain {
 
