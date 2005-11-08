@@ -33,11 +33,15 @@ import ch.iserver.ace.collaboration.jupiter.CollaborationServiceImpl;
 import ch.iserver.ace.collaboration.jupiter.ParticipantImpl;
 import ch.iserver.ace.collaboration.jupiter.RemoteUserProxyStub;
 import ch.iserver.ace.collaboration.jupiter.RemoteUserStub;
+import ch.iserver.ace.collaboration.jupiter.UserRegistry;
+import ch.iserver.ace.collaboration.jupiter.UserRegistryImpl;
 import ch.iserver.ace.collaboration.jupiter.server.ServerDocumentImpl;
 import ch.iserver.ace.net.DocumentServerLogic;
 import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.text.InsertOperation;
+import ch.iserver.ace.util.CallerThreadDomain;
+import ch.iserver.ace.util.ThreadDomain;
 
 /**
  *
@@ -70,7 +74,11 @@ public class CollaborationServiceTest extends TestCase {
 		connectionCtrl.replay();
 		
 		// test
+		ThreadDomain threadDomain = new CallerThreadDomain();
+		UserRegistry registry = new UserRegistryImpl();
 		CollaborationServiceImpl service = new CollaborationServiceImpl(networkService);
+		service.setUserRegistry(registry);
+		service.setPublisherThreadDomain(threadDomain);
 
 		DocumentModel document = new DocumentModel("", 0, 0, new DocumentDetails("collab.txt"));
 		PublishedSession session = service.publish(callback, document);

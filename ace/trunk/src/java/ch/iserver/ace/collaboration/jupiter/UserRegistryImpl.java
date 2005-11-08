@@ -51,7 +51,7 @@ import ch.iserver.ace.net.RemoteUserProxy;
 /**
  * The default implementation of a UserRegistry.
  */
-class UserRegistryImpl implements UserRegistry {
+public class UserRegistryImpl implements UserRegistry {
 	
 	/**
 	 * The map from user id to MutableRemoteUser object.
@@ -61,7 +61,7 @@ class UserRegistryImpl implements UserRegistry {
 	/**
 	 * Creates a new UserRegistryImpl object.
 	 */
-	UserRegistryImpl() {
+	public UserRegistryImpl() {
 		this.users = Collections.synchronizedMap(new HashMap());
 	}
 	

@@ -108,7 +108,7 @@ public class ParticipantConnectionWrapper implements ParticipantConnection {
 	 *   <li>replace the target with a null object connection</li>
 	 * </ol>
 	 */
-	private void failed() {
+	private void failed(Exception e) {
 		getFailureHandler().handleFailure(participantId, Participant.DISCONNECTED);
 		target = NullParticipantConnection.getInstance();
 	}
@@ -135,7 +135,7 @@ public class ParticipantConnectionWrapper implements ParticipantConnection {
 		try {
 			getTarget().sendDocument(document);
 		} catch (Exception e) {
-			failed();
+			failed(e);
 		}
 	}
 
@@ -146,7 +146,7 @@ public class ParticipantConnectionWrapper implements ParticipantConnection {
 		try {
 			getTarget().sendRequest(participantId, request);
 		} catch (Exception e) {
-			failed();
+			failed(e);
 		}
 	}
 
@@ -157,7 +157,7 @@ public class ParticipantConnectionWrapper implements ParticipantConnection {
 		try {
 			getTarget().sendCaretUpdateMessage(participantId, message);
 		} catch (Exception e) {
-			failed();
+			failed(e);
 		}
 	}
 
@@ -168,7 +168,7 @@ public class ParticipantConnectionWrapper implements ParticipantConnection {
 		try {
 			getTarget().sendParticipantJoined(participantId, proxy);
 		} catch (Exception e) {
-			failed();
+			failed(e);
 		}
 	}
 
@@ -179,7 +179,7 @@ public class ParticipantConnectionWrapper implements ParticipantConnection {
 		try {
 			getTarget().sendParticipantLeft(participantId, reason);
 		} catch (Exception e) {
-			failed();
+			failed(e);
 		}
 	}
 
@@ -190,7 +190,7 @@ public class ParticipantConnectionWrapper implements ParticipantConnection {
 		try {
 			getTarget().sendKicked();
 		} catch (Exception e) {
-			failed();
+			failed(e);
 		}
 	}
 

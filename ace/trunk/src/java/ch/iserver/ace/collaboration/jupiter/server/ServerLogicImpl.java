@@ -106,7 +106,7 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 		
 		ParticipantConnection wrapped = (ParticipantConnection) threadDomain.wrap(
 				new ParticipantConnectionWrapper(connection, this), ParticipantConnection.class);
-		this.publisherPort = createPublisherPort(connection);
+		this.publisherPort = createPublisherPort(wrapped);
 		
 		this.document = new ServerDocumentImpl();
 		this.document.participantJoined(0, null);
