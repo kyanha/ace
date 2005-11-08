@@ -21,23 +21,70 @@
 
 package ch.iserver.ace.util;
 
+import java.lang.ref.ReferenceQueue;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
 import edu.emory.mathcs.backport.java.util.concurrent.LinkedBlockingQueue;
+import edu.emory.mathcs.backport.java.util.concurrent.ScheduledExecutorService;
+import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 
 /**
  * ThreadDomain that creates a new worker thread per invocation of the
  * {@link #wrap(Object, Class)} method.
  */
-public class IsolatedThreadDomain extends AbstractThreadDomain {
-
+public class IsolatedThreadDomain extends AbstractThreadDomain implements Runnable {
+	
+	private Map workers = new HashMap();
+	
+	private ReferenceQueue queue;
+	
+	private int id;
+	
+	private List references = new LinkedList();
+	
+	public IsolatedThreadDomain(ScheduledExecutorService ses) {
+		queue = new ReferenceQueue();
+		ses.scheduleWithFixedDelay(this, 1, 1, TimeUnit.SECONDS);
+	}
+	
+	protected Worker getWorker(int id) {
+		return (Worker) workers.get(new Integer(id));
+	}
+	
+	protected void addWorker(int id, Worker worker) {
+		workers.put(new Integer(id), worker);
+	}
+	
+	protected void addReference(int id, Object referent) {
+		references.add(new AsyncReference(referent, queue, id));
+	}
+	
 	/**
 	 * @see ch.iserver.ace.util.ThreadDomain#wrap(java.lang.Object, java.lang.Class)
 	 */
-	public Object wrap(Object target, Class clazz) {
+	public synchronized Object wrap(Object target, Class clazz) {
 		BlockingQueue queue = new LinkedBlockingQueue();
 		Worker worker = new AsyncWorker(queue);
 		worker.start();
-		return wrap(target, clazz, queue);
+		int currentId = id++;
+		addWorker(currentId, worker);
+		Object wrapped = wrap(target, clazz, queue);
+		addReference(currentId, wrapped);
+		return wrapped;
+	}
+	
+	public void run() {
+		AsyncReference ref = (AsyncReference) queue.poll();
+		while (ref != null) {
+			System.out.println("... found worker to collect: " + ref.getId());
+			Worker worker = getWorker(ref.getId());
+			worker.kill();
+			ref = (AsyncReference) queue.poll();
+		}
 	}
 
 }
