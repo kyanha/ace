@@ -65,6 +65,7 @@ public class BrowseItemCellRenderer extends JPanel implements ListCellRenderer {
 		// draw document icon
 
 		// draw document title
+		g.drawString("browse: " + value.getTitle() + "(" + value.getPublisher() + ")", 10, 10);
 		
 		// draw owner		
 	}

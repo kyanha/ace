@@ -65,6 +65,7 @@ public class DocumentItemCellRenderer extends JPanel implements ListCellRenderer
 		// draw document icon
 		
 		// draw document title
+		g.drawString("document: " + value.getTitle(), 10, 10);
 	}
 
 	public Dimension getPreferredSize() {

@@ -63,6 +63,7 @@ public class ParticipantItemCellRenderer extends JPanel implements ListCellRende
 		// draw participant icon
 		
 		// draw participant name
+		g.drawString("participant: " + value.getName(), 10, 10);
 		
 		// draw participant color				
 	}
