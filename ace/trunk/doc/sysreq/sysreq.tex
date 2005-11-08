@@ -6,7 +6,7 @@
 \usepackage[dvips]{graphicx}
 
 \usepackage[
-pdfauthor={},
+pdfauthor={ACE Project Team},
 pdftitle={System Requirements},
 pdfcreator={pdftex},
 ]{hyperref}
@@ -19,12 +19,16 @@ pdfcreator={pdftex},
 
 \section{Introduction}
 
+ACE is a collaborative editor. Collaborative editing allows multiple users
+to edit a shared document together on different computers. Changes of each user can be viewed 
+by the other users immediately.
+
 \section{Project Goals}
 
 The goal of the project ACE is to create a collaborative text editor. In the following a more detailed
-description of what the functionality the application must have are described.
+description of the functionality is described.
 
-\subsection{Graphical User Interface}
+\subsection{Mandatory Goals}
 
 The following list shows the basic features of the text editor:
 
@@ -36,14 +40,15 @@ The following list shows the basic features of the text editor:
  \item about information
 \end{itemize}
 
-\subsection{Collaboration Functionality}
+And this is the list of collaboration functionality that must be implemented:
 
 \begin{itemize}
  \item publish local documents
  \item automatic discovery of other running instances of ACE on a local area network
  \item automatic discovery of published documents of other running instances of ACE
- \item manual discovery of running instances outside of the local area network
  \item join published documents
+ \item collaborative editing in a shared document
+ \item awareness information
  \item leave joined documents
  \item kick users
 \end{itemize}
@@ -54,24 +59,32 @@ of other users (other running instances of ACE) and their shared documents. Thes
 users and documents must be displayed in the graphical user interface where the user has a set of actions
 to interact with them.
 
+Discovered shared documents of other users can be joined. Already joined document editing sessions can
+be left and the publisher can kick participants in an editing session that are not welcome. When a shared
+document is joined, it is possible to collaboratively edit the same shared document at the same time. 
+So-called awareness information provides information about the other users editing location, i.e. their
+current text insert position and selection.
 
-\section{Optional Goals}
+
+\subsection{Optional Goals}
 
 We might implement optional goals if we have additional time.
 
 \begin{itemize}
  \item access right mechanism
+ \item manual discovery of running instances outside of the local area network
  \item invite other users to a session 
 \end{itemize}
 
-\subsection{Access Right Mechanism}
+\subsubsection{Access Right Mechanism}
 
 There is no mandatory goal that requires any kind of access right mechanism meaning that any user can join a published
 document and gain read/write access. Of course, this can be an undesirable situation, especially in an environement
 where you do not trust all the other users on the local area network.
 
 A access right mechanism should allow the publisher to choose default access rights for each of his published 
-documents. Reasonable access right settings would be:
+documents. These default access rights specify which access rights a freshly joined user has.
+Reasonable access right settings would be:
 
 \begin{itemize}
  \item ask for join permission
@@ -80,16 +93,67 @@ documents. Reasonable access right settings would be:
 \end{itemize}
 
 The first access mode ensures that nobody can access or even view a shared document before the publisher explicitely gives
-that user the permission to view the document, either with read-only access or full read-write access.
+that user the permission to view the document, either with read-only access or full read-write access. The access rights
+can be changed for each user independently or globally for all participants in a shared document.
+
+\subsubsection{Manual Discovery}
+
+Beside the automatic discovery, a mechanism to explicitely discover other users might be implemented. This
+mechanism allows to enter IP/port information to connect to another ACE instance running on another
+network.
+
+\subsubsection{Invitations}
+
+The publisher of a shared document should be able to invite other users to an editing session of a particular shared
+document.
 
 
-\section{Non-Goals}
+\subsection{Non-Goals}
 
 Due to the limited available time, certain (useful) functionality cannot be implemented in the diploma project. The 
 principle is that if something is not explicitely listed in the project goals, it is not a goal of the project. However,
 we want to highlight in this section some points that are not goals.
 
 \begin{itemize}
- \item security aspects: authentication, confidentiality, authorization
+ \item security aspects: authentication, confidentiality
  \item undo/redo
+\end{itemize}
+
+\subsubsection{Security Aspects}
+
+Collaborative editing requires that changes to the local replica of the shared document must be sent to the other
+participants. These changes pass through the network and thus can be viewed by eavesdroppers. As the document
+might contain potentially confidential information, ideally all transformation should be encrypted.
+
+Further, if a user tries to join a document, the publisher should be certain who the joining user is. The use
+of digital signatures would help to assertain the identity of the joining user.
+
+Although both authentication and confidentiality would be very useful additions to a collaborative editor, they
+will not be implemented in ACE for time reasons.
+
+\subsubsection{Undo/Redo}
+
+
+\section{Requirements}
+
+In this section, the basic requirements for ACE are described.
+
+\subsection{Platform Independence}
+
+The currently only working collaborative text editor is limited to the Mac platform. ACE must run on at least Windows,
+Linux, and Mac platform.
+
+\subsection{Programming Language}
+
+ACE has to be implemented with Java SE 1.4.2. This requirement comes directly from the platform independece requirement.
+
+\subsubsection{Interoperability}
+
+The protocol employed by ACE should be open and platform independent. For that reason, we won't use Java serialization
+in the network layer.
+
+
+\section{Architecture}
+
+
 \end{document}
