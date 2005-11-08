@@ -24,9 +24,12 @@ package ch.iserver.ace.application;
 import java.util.Locale;
 
 import javax.swing.*;
+import java.awt.BorderLayout;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import ch.iserver.ace.collaboration.jupiter.*;
 
 /**
  *
@@ -39,20 +42,45 @@ public class Main {
 	
 	public static void main(String[] args) {
 		ApplicationContext context = new ClassPathXmlApplicationContext(CONTEXT_FILES);
-		LocaleMessageSource ms = new LocaleMessageSourceImpl(context);
-		
-		System.out.println(ms.getIcon("iViewUser"));
+		LocaleMessageSource messageSource = new LocaleMessageSourceImpl(context);
 
-		
+		// set look & feel
+		try {
+			UIManager.setLookAndFeel("com.jgoodies.looks.plastic.PlasticXPLookAndFeel");
+		} catch(Exception e) {}
+
+		/*// create document controller & view
+		DocumentViewController dvc = new DocumentViewController();
+		DocumentView dv = new DocumentView(dvc, messageSource);
+		dvc.setView(dv);
+
+		// create browse controller & view
+		BrowseViewController bvc = new BrowseViewController();
+		BrowseView bv = new BrowseView(bvc, messageSource);
+		bvc.setView(bv);
+
+		// create participant controller & view
+		ParticipantViewController pvc = new ParticipantViewController();
+		ParticipantView pv = new ParticipantView(pvc, messageSource);
+		pvc.setView(pv);
+
+		// create user controller & view
+		UserViewController uvc = new UserViewController();
+		UserView uv = new UserView(uvc, messageSource);
+		uvc.setView(uv);
+
+		// create editor
+		//JPanel editor = EditorFactory.createEditor();
+		//JPanel editor = EditorFactory.createBasicEditor(messageSource);
+		*/
+		// create frame
 		JFrame frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(640, 480);
-//		UserView uv = new UserView(new LocaleMessageSourceImpl(context));
-		BrowseViewController bvc = new BrowseViewController();
-		BrowseView bv = new BrowseView(bvc, ms);
-		bvc.setView(bv);
-		frame.getContentPane().add(bv);
-//		uv.getUserViewSource().add(new BasicUserListItem("huhu"));		
+		frame.setSize(640, 480);	
+		//frame.setJMenuBar(ApplicationFactory.createMenuBar(messageSource));
+		//frame.getContentPane().add(BorderLayout.PAGE_START, ApplicationFactory.createToolBar(messageSource));
+		//frame.getContentPane().add(BorderLayout.CENTER, ApplicationFactory.createComponentPane(dv, bv, editor, pv, uv));
+		//frame.getContentPane().add(BorderLayout.PAGE_END, ApplicationFactory.createStatusBar());
 		frame.show();
 	}
 	
