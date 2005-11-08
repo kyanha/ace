@@ -23,12 +23,24 @@ package ch.iserver.ace.util;
 
 import java.util.Iterator;
 
+/**
+ * Utility class for comparisons. 
+ */
 public final class CompareUtil {
 
 	private CompareUtil() {
 		// ignore
 	}
 	
+	/**
+	 * Checks whether the two passed in arrays are equal. To be equal, both
+	 * arrays must have the same length and contain the same value at
+	 * the same index.
+	 * 
+	 * @param a1 the first array
+	 * @param a2 the second array
+	 * @return true iff the objects are equal
+	 */
 	public static boolean arrayEquals(int[] a1, int[] a2) {
 		if (a1 == a2) {
 			return true;
@@ -46,6 +58,14 @@ public final class CompareUtil {
 		}
 	}
 	
+	/**
+	 * Checks whether the two iterators are equal. That is, the both have the
+	 * same number of elements and each element is equal.
+	 * 
+	 * @param i1 the first iterator
+	 * @param i2 the second iterator
+	 * @return true iff the iterators are equal
+	 */
 	public static boolean iteratorEquals(Iterator i1, Iterator i2) {
 		if (i1 == i2) {
 			return true;
@@ -63,6 +83,15 @@ public final class CompareUtil {
 		}
 	}
 
+	/**
+	 * Null safe check for equality of two objects. This method returns true
+	 * iff either both objects are null or equal according to
+	 * {@link Object#equals(java.lang.Object)}.
+	 * 
+	 * @param o1 the first object
+	 * @param o2 the second object
+	 * @return true iff both objects are equal or both null
+	 */
 	public static boolean nullSafeEquals(Object o1, Object o2) {
 		if (o1 == o2) {
 			return true;
