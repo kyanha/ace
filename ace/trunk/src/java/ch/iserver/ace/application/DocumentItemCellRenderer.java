@@ -30,13 +30,13 @@ public class DocumentItemCellRenderer extends JPanel implements ListCellRenderer
 
 	private DocumentItem value;
 	private LocaleMessageSource messageSource;
-	protected ImageIcon iconLocalPrivate, iconLocalPublished, iconRemote;
+	protected ImageIcon iconLocal, iconPublished, iconRemote;
 
 	public DocumentItemCellRenderer(LocaleMessageSource messageSource) {
 		this.messageSource = messageSource;
-//		iconLocalPrivate = messageSource.getIcon("iViewFileLocalPrivate");
-//		iconLocalPublished = messageSource.getIcon("iViewFileLocalPublished");
-//		iconRemote = messageSource.getIcon("iViewFileRemote");
+		iconLocal = messageSource.getIcon("iViewFileLocal");
+		iconPublished = messageSource.getIcon("iViewFilePublished");
+		iconRemote = messageSource.getIcon("iViewFileRemote");
 	}
 
 	public Component getListCellRendererComponent(JList list,
@@ -65,13 +65,13 @@ public class DocumentItemCellRenderer extends JPanel implements ListCellRenderer
 		// draw document icon
 		switch(value.getType()) {
 			case DocumentItem.LOCAL:
-				g.drawString("L", 10, 10);
+				g.drawImage(iconLocal.getImage(), 2, 1, 14, 14, this);
 			break;
 			case DocumentItem.PUBLISHED:
-				g.drawString("P", 10, 10);
+				g.drawImage(iconPublished.getImage(), 2, 1, 14, 14, this);
 			break;			
 			case DocumentItem.REMOTE:
-				g.drawString("R", 10, 10);
+				g.drawImage(iconRemote.getImage(), 2, 1, 14, 14, this);
 			break;
 		}
 		

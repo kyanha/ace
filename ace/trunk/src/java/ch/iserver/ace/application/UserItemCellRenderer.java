@@ -34,7 +34,7 @@ public class UserItemCellRenderer extends JPanel implements ListCellRenderer {
 
 	public UserItemCellRenderer(LocaleMessageSource messageSource) {
 		this.messageSource = messageSource;
-		//iconUser = source.getIcon("iViewUser");
+		iconUser = messageSource.getIcon("iViewUser");
 	}
 
 	public Component getListCellRendererComponent(JList list,
@@ -61,6 +61,7 @@ public class UserItemCellRenderer extends JPanel implements ListCellRenderer {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		// draw user icon
+		g.drawImage(iconUser.getImage(), 2, 1, 14, 14, this);
 		
 		// draw user name
 		g.drawString("user: " + value.getName(), 10, 10);

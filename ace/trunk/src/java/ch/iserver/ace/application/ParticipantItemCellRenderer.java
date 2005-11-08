@@ -30,11 +30,11 @@ public class ParticipantItemCellRenderer extends JPanel implements ListCellRende
 
 	private ParticipantItem value;
 	private LocaleMessageSource messageSource;
-	protected ImageIcon iconUser;
+	protected ImageIcon iconParticipant;
 
 	public ParticipantItemCellRenderer(LocaleMessageSource messageSource) {
 		this.messageSource = messageSource;
-		//iconUser = source.getIcon("iViewUser");
+		iconParticipant = messageSource.getIcon("iViewParticipant");
 	}
 
 	public Component getListCellRendererComponent(JList list,
@@ -61,6 +61,7 @@ public class ParticipantItemCellRenderer extends JPanel implements ListCellRende
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		// draw participant icon
+		g.drawImage(iconParticipant.getImage(), 2, 1, 14, 14, this);
 		
 		// draw participant name
 		g.drawString("participant: " + value.getName(), 10, 10);

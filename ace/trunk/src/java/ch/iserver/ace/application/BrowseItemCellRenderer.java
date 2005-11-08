@@ -30,13 +30,11 @@ public class BrowseItemCellRenderer extends JPanel implements ListCellRenderer {
 
 	private BrowseItem value;
 	private LocaleMessageSource messageSource;
-	protected ImageIcon iconLocalPrivate, iconLocalPublished, iconRemote;
+	protected ImageIcon iconRemote;
 
 	public BrowseItemCellRenderer(LocaleMessageSource messageSource) {
 		this.messageSource = messageSource;
-//		iconLocalPrivate = messageSource.getIcon("iViewFileLocalPrivate");
-//		iconLocalPublished = messageSource.getIcon("iViewFileLocalPublished");
-//		iconRemote = messageSource.getIcon("iViewFileRemote");
+		iconRemote = messageSource.getIcon("iViewFileRemote");
 	}
 
 	public Component getListCellRendererComponent(JList list,
@@ -63,6 +61,7 @@ public class BrowseItemCellRenderer extends JPanel implements ListCellRenderer {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		// draw document icon
+		g.drawImage(iconRemote.getImage(), 2, 1, 14, 14, this);
 
 		// draw document title
 		g.drawString("browse: " + value.getTitle() + "(" + value.getPublisher() + ")", 10, 10);
