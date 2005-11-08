@@ -29,8 +29,6 @@ import org.apache.asn1.ber.primitives.UniversalTag;
 import org.apache.asn1.codec.stateful.EncoderCallback;
 import org.apache.asn1.codec.stateful.StatefulEncoder;
 
-import ch.iserver.ace.net.impl.NetworkConstants;
-
 /**
  *
  */

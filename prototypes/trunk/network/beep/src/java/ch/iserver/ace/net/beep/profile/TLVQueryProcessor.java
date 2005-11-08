@@ -35,8 +35,6 @@ import org.apache.asn1.codec.stateful.DecoderCallback;
 import org.apache.asn1.codec.stateful.DecoderMonitor;
 import org.apache.asn1.codec.stateful.StatefulDecoder;
 
-import ch.iserver.ace.net.impl.NetworkConstants;
-
 /**
  *
  */

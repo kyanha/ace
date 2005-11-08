@@ -1,7 +1,6 @@
 package ch.iserver.ace.net.beep.profile;
 
 import org.beepcore.beep.core.ProfileRegistry;
-import org.beepcore.beep.transport.tcp.TCPSession;
 import org.beepcore.beep.transport.tcp.TCPSessionCreator;
 
 public class TestACEProfileServer extends Thread {

@@ -27,8 +27,6 @@ import org.apache.xml.serialize.OutputFormat;
 import org.apache.xml.serialize.XMLSerializer;
 import org.xml.sax.helpers.AttributesImpl;
 
-import ch.iserver.ace.net.impl.NetworkConstants;
-
 /**
  *
  */

@@ -17,8 +17,6 @@ import org.beepcore.beep.transport.tcp.TCPSession;
 import org.beepcore.beep.transport.tcp.TCPSessionCreator;
 import org.beepcore.beep.util.BufferSegment;
 
-import ch.iserver.ace.net.impl.NetworkConstants;
-
 public class TestACEProfileClient extends TestCase {
 
 	private TestACEProfileServer server;
