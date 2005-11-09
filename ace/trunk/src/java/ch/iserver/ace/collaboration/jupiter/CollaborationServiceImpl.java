@@ -290,10 +290,8 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	 */
 	public void invitationReceived(InvitationProxy proxy) {
 		RemoteDocument document = getDocumentRegistry().getDocument(proxy.getDocument().getId());
-		RemoteUser inviter = getUserRegistry().getUser(proxy.getInviter().getId());
 		InvitationImpl invitation = new InvitationImpl(
 						proxy,
-						inviter,
 						document,
 						getSessionFactory());
 		getInvitationCallback().invitationReceived(invitation);

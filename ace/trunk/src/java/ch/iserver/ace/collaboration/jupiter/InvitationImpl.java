@@ -63,20 +63,17 @@ class InvitationImpl implements Invitation {
 	 * 
 	 * @param proxy the InvitationProxy wrapped by this instance
 	 * @param decorator the SessionConnectionDecorator
-	 * @param inviter the inviter
 	 * @param document the RemoteDocument to which the user is invited
 	 */
 	InvitationImpl(InvitationProxy proxy, 
-					RemoteUser inviter, 
 					RemoteDocument document,
 					SessionFactory factory) {
 		ParameterValidator.notNull("proxy", proxy);
-		ParameterValidator.notNull("inviter", inviter);
 		ParameterValidator.notNull("document", document);
 		ParameterValidator.notNull("factory", factory);
 		this.proxy = proxy;
 		this.document = document;
-		this.inviter = inviter;
+		this.inviter = document.getPublisher();
 		this.sessionFactory = factory;
 	}
 	
