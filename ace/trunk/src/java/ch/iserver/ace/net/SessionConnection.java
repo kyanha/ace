@@ -64,6 +64,6 @@ public interface SessionConnection {
 	 *
 	 * @param message the CaretUpdateMessage to be sent
 	 */
-	void sendCaretUpdate(CaretUpdateMessage message);
+	void sendCaretUpdateMessage(CaretUpdateMessage message);
 			
 }

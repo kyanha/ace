@@ -38,7 +38,6 @@ public class SessionConnectionWrapper implements SessionConnection {
 	
 	public SessionConnectionWrapper(SessionConnection target, SessionConnectionFailureHandler handler) {
 		ParameterValidator.notNull("target", target);
-		ParameterValidator.notNull("handler", handler);
 		this.target = target;
 		this.handler = handler;
 	}
@@ -68,7 +67,6 @@ public class SessionConnectionWrapper implements SessionConnection {
 		try {
 			target.leave();
 		} catch (Exception e) {
-			// TODO: correct exception type
 			getFailureHandler().handleFailure(Session.LEAVE_FAILED, e);
 		}
 	}
@@ -80,19 +78,17 @@ public class SessionConnectionWrapper implements SessionConnection {
 		try {
 			target.sendRequest(request);			
 		} catch (Exception e) {
-			// TODO: correct exception type
 			getFailureHandler().handleFailure(Session.SEND_FAILED, e);
 		}
 	}
 
 	/**
-	 * @see ch.iserver.ace.net.SessionConnection#sendCaretUpdate(ch.iserver.ace.algorithm.CaretUpdateMessage)
+	 * @see ch.iserver.ace.net.SessionConnection#sendCaretUpdateMessage(ch.iserver.ace.algorithm.CaretUpdateMessage)
 	 */
-	public void sendCaretUpdate(CaretUpdateMessage message) {
+	public void sendCaretUpdateMessage(CaretUpdateMessage message) {
 		try {
-			target.sendCaretUpdate(message);
+			target.sendCaretUpdateMessage(message);
 		} catch (Exception e) {
-			// TODO: correct exception type
 			getFailureHandler().handleFailure(Session.SEND_FAILED, e);
 		}
 	}

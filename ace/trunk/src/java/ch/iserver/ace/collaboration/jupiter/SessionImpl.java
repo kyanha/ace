@@ -153,7 +153,7 @@ public class SessionImpl extends AbstractSession implements ConfigurableSession,
 	public void sendCaretUpdate(CaretUpdate update) {
 		checkLockUsage();
 		CaretUpdateMessage message = getAlgorithm().generateCaretUpdateMessage(update);
-		getConnection().sendCaretUpdate(message);
+		getConnection().sendCaretUpdateMessage(message);
 	}
 
 	// --> SessionConnectionCallback methods <--

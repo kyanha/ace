@@ -132,7 +132,7 @@ public class SessionImplTest extends TestCase {
 		// define mock behavior
 		algorithm.generateCaretUpdateMessage(null);
 		algorithmCtrl.setReturnValue(null);
-		connection.sendCaretUpdate(null);
+		connection.sendCaretUpdateMessage(null);
 		
 		// replay
 		algorithmCtrl.replay();
