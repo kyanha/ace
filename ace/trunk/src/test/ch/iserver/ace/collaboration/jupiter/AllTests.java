@@ -31,6 +31,7 @@ public class AllTests {
 						"Test for ch.iserver.ace.collaboration.jupiter");
 		//$JUnit-BEGIN$
 		suite.addTestSuite(RemoteUserTest.class);
+		suite.addTestSuite(DiscoveryNetworkCallbackImplTest.class);
 		suite.addTestSuite(PublishedSessionImplTest.class);
 		suite.addTestSuite(SessionImplTest.class);
 		suite.addTestSuite(SessionConnectionWrapperTest.class);
