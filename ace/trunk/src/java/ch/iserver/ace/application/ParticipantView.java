@@ -22,23 +22,22 @@
 package ch.iserver.ace.application;
 
 import java.awt.BorderLayout;
+
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import com.jgoodies.uif_lite.panel.SimpleInternalFrame;
-
 import ca.odell.glazedlists.CompositeList;
-import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.GlazedLists;
 import ca.odell.glazedlists.ObservableElementList;
 import ca.odell.glazedlists.SortedList;
 import ca.odell.glazedlists.swing.EventListModel;
 import ca.odell.glazedlists.swing.EventSelectionModel;
+
+import com.jgoodies.uif_lite.panel.SimpleInternalFrame;
 
 
 
@@ -47,8 +46,6 @@ public class ParticipantView extends ViewImpl {
 	private CompositeList participantSourceList;
 	private EventListModel participantEventListModel;
 	private EventSelectionModel participantEventSelectionModel;
-	protected JList participantList;
-
 	public ParticipantView(ParticipantViewController controller, LocaleMessageSource messageSource) {
 		super(controller, messageSource);
 		// get view source
@@ -62,13 +59,13 @@ public class ParticipantView extends ViewImpl {
 		participantEventListModel = new EventListModel(participantSortedList);
 		participantEventSelectionModel = new EventSelectionModel(participantSortedList);
 
-		participantList = new JList(participantEventListModel);
-		participantList.setCellRenderer(new ParticipantItemCellRenderer(messageSource));
-		participantList.setSelectionModel(participantEventSelectionModel);
-		participantList.setSelectionMode(EventSelectionModel.SINGLE_SELECTION);
+		setList(new JList(participantEventListModel));
+		getList().setCellRenderer(new ParticipantItemCellRenderer(messageSource));
+		getList().setSelectionModel(participantEventSelectionModel);
+		getList().setSelectionMode(EventSelectionModel.SINGLE_SELECTION);
 		
 		// add mouse listener
-		participantList.addListSelectionListener(new ListSelectionListener() {
+		getList().addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent event) {
 				if(event.getValueIsAdjusting()) {
 					return;
@@ -83,7 +80,7 @@ public class ParticipantView extends ViewImpl {
 
 		// create frame
 		JPanel participantViewContent = new JPanel(new BorderLayout());
-		participantViewContent.add(new JScrollPane(participantList), BorderLayout.CENTER);
+		participantViewContent.add(new JScrollPane(getList()), BorderLayout.CENTER);
 		SimpleInternalFrame participantView = new SimpleInternalFrame(null, messageSource.getMessage("vParticipantTitle"), participantToolBar, participantViewContent);
 		setLayout(new BorderLayout());
 		add(participantView);		

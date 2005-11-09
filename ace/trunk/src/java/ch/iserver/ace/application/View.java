@@ -32,4 +32,9 @@ public interface View {
 	void removeItemSelectionChangeListener(ItemSelectionChangeListener listener);
 
 	Item getSelectedItem();
+	
+	void setSelectedIndex(int index);
+	
+	int getSelectedIndex();
+	
 }

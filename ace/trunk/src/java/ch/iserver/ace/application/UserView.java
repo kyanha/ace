@@ -51,7 +51,6 @@ public class UserView extends ViewImpl {
 	private EventList userSourceList;
 	private EventListModel userEventListModel;
 	private EventSelectionModel userEventSelectionModel;
-	protected JList userList;
 
 	public UserView(UserViewController controller, LocaleMessageSource messageSource) {
 		super(controller, messageSource);
@@ -74,13 +73,13 @@ public class UserView extends ViewImpl {
 		userEventListModel = new EventListModel(userSortedList);
 		userEventSelectionModel = new EventSelectionModel(userSortedList);
 
-		userList = new JList(userEventListModel);
-		userList.setCellRenderer(new UserItemCellRenderer(messageSource));
-		userList.setSelectionModel(userEventSelectionModel);
-		userList.setSelectionMode(EventSelectionModel.SINGLE_SELECTION);
+		setList(new JList(userEventListModel));
+		getList().setCellRenderer(new UserItemCellRenderer(messageSource));
+		getList().setSelectionModel(userEventSelectionModel);
+		getList().setSelectionMode(EventSelectionModel.SINGLE_SELECTION);
 		
 		// add mouse listener
-		userList.addListSelectionListener(new ListSelectionListener() {
+		getList().addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent event) {
 				if(event.getValueIsAdjusting()) {
 					return;
@@ -95,7 +94,7 @@ public class UserView extends ViewImpl {
 
 		// create frame
 		JPanel userViewContent = new JPanel(new BorderLayout());
-		userViewContent.add(new JScrollPane(userList), BorderLayout.CENTER);
+		userViewContent.add(new JScrollPane(getList()), BorderLayout.CENTER);
 		userViewContent.add(userFilterField, BorderLayout.SOUTH);
 		SimpleInternalFrame userView = new SimpleInternalFrame(null, messageSource.getMessage("vUserTitle"), userToolBar, userViewContent);
 		setLayout(new BorderLayout());

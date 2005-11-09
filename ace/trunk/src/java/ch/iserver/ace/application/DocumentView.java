@@ -22,15 +22,13 @@
 package ch.iserver.ace.application;
 
 import java.awt.BorderLayout;
+
 import javax.swing.JList;
-import javax.swing.JScrollPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
-import com.jgoodies.uif_lite.panel.SimpleInternalFrame;
 
 import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.GlazedLists;
@@ -39,6 +37,8 @@ import ca.odell.glazedlists.SortedList;
 import ca.odell.glazedlists.swing.EventListModel;
 import ca.odell.glazedlists.swing.EventSelectionModel;
 
+import com.jgoodies.uif_lite.panel.SimpleInternalFrame;
+
 
 
 public class DocumentView extends ViewImpl {
@@ -46,7 +46,6 @@ public class DocumentView extends ViewImpl {
 	private EventList documentSourceList;
 	private EventListModel documentEventListModel;
 	private EventSelectionModel documentEventSelectionModel;
-	protected JList documentList;
 
 	public DocumentView(DocumentViewController controller, LocaleMessageSource messageSource) {
 		super(controller, messageSource);
@@ -61,13 +60,13 @@ public class DocumentView extends ViewImpl {
 		documentEventListModel = new EventListModel(documentSortedList);
 		documentEventSelectionModel = new EventSelectionModel(documentSortedList);
 
-		documentList = new JList(documentEventListModel);
-		documentList.setCellRenderer(new DocumentItemCellRenderer(messageSource));
-		documentList.setSelectionModel(documentEventSelectionModel);
-		documentList.setSelectionMode(EventSelectionModel.SINGLE_SELECTION);
+		setList(new JList(documentEventListModel));
+		getList().setCellRenderer(new DocumentItemCellRenderer(messageSource));
+		getList().setSelectionModel(documentEventSelectionModel);
+		getList().setSelectionMode(EventSelectionModel.SINGLE_SELECTION);
 
 		// add mouse listener
-		documentList.addListSelectionListener(new ListSelectionListener() {
+		getList().addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent event) {
 				if(event.getValueIsAdjusting()) {
 					return;
@@ -82,7 +81,7 @@ public class DocumentView extends ViewImpl {
 		
 		// create frame
 		JPanel documentViewContent = new JPanel(new BorderLayout());
-		documentViewContent.add(new JScrollPane(documentList), BorderLayout.CENTER);
+		documentViewContent.add(new JScrollPane(getList()), BorderLayout.CENTER);
 		SimpleInternalFrame documentView = new SimpleInternalFrame(null, messageSource.getMessage("vDocumentTitle"), viewToolBar, documentViewContent);
 		setLayout(new BorderLayout());
 		add(documentView);		

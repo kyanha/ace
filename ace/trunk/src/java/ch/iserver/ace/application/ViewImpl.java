@@ -24,16 +24,18 @@ package ch.iserver.ace.application;
 import ch.iserver.ace.application.ItemSelectionChangeListener;
 import ch.iserver.ace.application.ItemSelectionChangeEvent;
 
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.event.EventListenerList;
 
 
 
-public class ViewImpl extends JPanel implements View {
+public abstract class ViewImpl extends JPanel implements View {
 
 	protected ViewController controller;
 	protected LocaleMessageSource messageSource;
 	private EventListenerList eventListenerList;
+	private JList list;
 
 	public ViewImpl(ViewController controller, LocaleMessageSource messageSource) {
 		this.controller = controller;
@@ -60,8 +62,22 @@ public class ViewImpl extends JPanel implements View {
 		}
 	}
 	
-	public Item getSelectedItem() {
-		return null;
+	public abstract Item getSelectedItem();
+	
+	public void setSelectedIndex(int index) {
+		getList().setSelectedIndex(index);
+	}
+	
+	public int getSelectedIndex() {
+		return getList().getSelectedIndex();
+	}
+
+	protected void setList(JList list) {
+		this.list = list;
+	}
+
+	protected JList getList() {
+		return list;
 	}
 
 }

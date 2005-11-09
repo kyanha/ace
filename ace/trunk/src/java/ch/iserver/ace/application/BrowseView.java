@@ -51,7 +51,6 @@ public class BrowseView extends ViewImpl {
 	private EventList browseSourceList;
 	private EventListModel browseEventListModel;
 	private EventSelectionModel browseEventSelectionModel;
-	protected JList browseList;
 
 	public BrowseView(BrowseViewController controller, LocaleMessageSource messageSource) {
 		super(controller, messageSource);
@@ -74,13 +73,13 @@ public class BrowseView extends ViewImpl {
 		browseEventListModel = new EventListModel(browseSortedList);
 		browseEventSelectionModel = new EventSelectionModel(browseSortedList);
 
-		browseList = new JList(browseEventListModel);
-		browseList.setCellRenderer(new BrowseItemCellRenderer(messageSource));
-		browseList.setSelectionModel(browseEventSelectionModel);
-		browseList.setSelectionMode(EventSelectionModel.SINGLE_SELECTION);
+		setList(new JList(browseEventListModel));
+		getList().setCellRenderer(new BrowseItemCellRenderer(messageSource));
+		getList().setSelectionModel(browseEventSelectionModel);
+		getList().setSelectionMode(EventSelectionModel.SINGLE_SELECTION);
 		
 		// add mouse listener
-		browseList.addListSelectionListener(new ListSelectionListener() {
+		getList().addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent event) {
 				if(event.getValueIsAdjusting()) {
 					return;
@@ -95,7 +94,7 @@ public class BrowseView extends ViewImpl {
 
 		// create frame
 		JPanel browseViewContent = new JPanel(new BorderLayout());
-		browseViewContent.add(new JScrollPane(browseList), BorderLayout.CENTER);
+		browseViewContent.add(new JScrollPane(getList()), BorderLayout.CENTER);
 		browseViewContent.add(browseFilterField, BorderLayout.SOUTH);
 		SimpleInternalFrame browseView = new SimpleInternalFrame(null, messageSource.getMessage("vBrowseTitle"), viewToolBar, browseViewContent);
 		setLayout(new BorderLayout());
