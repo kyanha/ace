@@ -51,7 +51,7 @@ public class RemoteDocumentStub implements MutableRemoteDocument {
 	 */
 	public void setTitle(String title) {
 		String old = this.title;
-		if (CompareUtil.nullSafeEquals(old, title)) {
+		if (!CompareUtil.nullSafeEquals(old, title)) {
 			this.title = title;
 			support.firePropertyChange(TITLE_PROPERTY, old, title);
 		}

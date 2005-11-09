@@ -22,33 +22,78 @@
 package ch.iserver.ace.collaboration;
 
 import java.beans.PropertyChangeListener;
-import java.util.Collection;
+import java.beans.PropertyChangeSupport;
 
-import ch.iserver.ace.collaboration.PublishedSession;
-import ch.iserver.ace.collaboration.RemoteUser;
 import ch.iserver.ace.collaboration.jupiter.MutableRemoteUser;
+import ch.iserver.ace.util.CompareUtil;
 
+/**
+ *
+ */
 public class RemoteUserStub implements MutableRemoteUser {
+	
+	private final PropertyChangeSupport support = new PropertyChangeSupport(this);
+	
 	private final String id;
+	
 	private String name;
+	
+	/**
+	 * @param id
+	 */
 	public RemoteUserStub(String id) {
 		this.id = id;
 	}
+	
+	/**
+	 * @see ch.iserver.ace.collaboration.RemoteUser#getId()
+	 */
 	public String getId() {
 		return id;
 	}
-	public Collection getSharedDocuments() {
-		return null;
+		
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.MutableRemoteUser#setName(java.lang.String)
+	 */
+	public void setName(String name) {
+		String old = this.name;
+		if (!CompareUtil.nullSafeEquals(old, name)) {
+			this.name = name;
+			support.firePropertyChange(NAME_PROPERTY, old, name);
+		}
 	}
-	public void setName(String userName) {
-		this.name = userName;
-	}
+	
+	/**
+	 * @see ch.iserver.ace.collaboration.RemoteUser#getName()
+	 */
 	public String getName() {
 		return name;
 	}
+	
+	/**
+	 * @see ch.iserver.ace.collaboration.RemoteUser#invite(ch.iserver.ace.collaboration.PublishedSession)
+	 */
 	public void invite(PublishedSession session) {
 		// ignore
 	}
+	
+	/**
+	 * @see ch.iserver.ace.collaboration.RemoteUser#addPropertyChangeListener(java.beans.PropertyChangeListener)
+	 */
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		support.addPropertyChangeListener(listener);
+	}
+	
+	/**
+	 * @see ch.iserver.ace.collaboration.RemoteUser#removePropertyChangeListener(java.beans.PropertyChangeListener)
+	 */
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		support.removePropertyChangeListener(listener);
+	}
+
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
@@ -58,10 +103,12 @@ public class RemoteUserStub implements MutableRemoteUser {
 		}
 		return super.equals(obj);
 	}
-	public void addPropertyChangeListener(PropertyChangeListener listener) {
-		
+	
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	public int hashCode() {
+		return getId().hashCode();
 	}
-	public void removePropertyChangeListener(PropertyChangeListener listener) {
 		
-	}
 }
