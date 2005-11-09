@@ -21,23 +21,39 @@
 
 package ch.iserver.ace.collaboration.jupiter.server.serializer;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import junit.framework.TestCase;
 
-public class AllTests {
+import org.easymock.MockControl;
 
-	public static Test suite() {
-		TestSuite suite = new TestSuite(
-						"Test for ch.iserver.ace.collaboration.jupiter.server.serializer");
-		//$JUnit-BEGIN$
-		suite.addTestSuite(RequestSerializerCommandTest.class);
-		suite.addTestSuite(CaretUpdateSerializerCommandTest.class);
-		suite.addTestSuite(SerializerTest.class);
-		suite.addTestSuite(JoinCommandTest.class);
-		suite.addTestSuite(ShutdownCommandTest.class);
-		suite.addTestSuite(LeaveCommandTest.class);
-		//$JUnit-END$
-		return suite;
+import ch.iserver.ace.collaboration.jupiter.server.Forwarder;
+import ch.iserver.ace.collaboration.jupiter.server.ServerLogic;
+
+/**
+ *
+ */
+public class ShutdownCommandTest extends TestCase {
+	
+	public void testExecute() throws Exception {
+		MockControl forwarderCtrl = MockControl.createControl(Forwarder.class);
+		Forwarder forwarder = (Forwarder) forwarderCtrl.getMock();
+		MockControl logicCtrl = MockControl.createControl(ServerLogic.class);
+		ServerLogic logic = (ServerLogic) logicCtrl.getMock();
+		
+		// define mock behavior
+		logic.shutdown();
+		forwarder.close();
+		
+		// replay
+		forwarderCtrl.replay();
+		logicCtrl.replay();
+		
+		// test
+		ShutdownCommand command = new ShutdownCommand(logic);
+		command.execute(forwarder);
+		
+		// verify
+		forwarderCtrl.verify();
+		logicCtrl.verify();
 	}
-
+	
 }
