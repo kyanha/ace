@@ -31,6 +31,10 @@ import javax.swing.JToolBar;
 import com.jgoodies.uif_lite.panel.SimpleInternalFrame;
 
 import ca.odell.glazedlists.EventList;
+import ca.odell.glazedlists.GlazedLists;
+import ca.odell.glazedlists.ObservableElementList;
+import ca.odell.glazedlists.SortedList;
+import ca.odell.glazedlists.swing.EventListModel;
 import ca.odell.glazedlists.swing.EventSelectionModel;
 
 
@@ -38,7 +42,9 @@ import ca.odell.glazedlists.swing.EventSelectionModel;
 public class DocumentView extends ViewImpl {
 
 	private EventList documentSourceList;
-	private EventSelectionModel eventSelectionModel;
+	private EventListModel documentEventListModel;
+	private EventSelectionModel documentEventSelectionModel;
+	protected JList documentList;
 
 	public DocumentView(DocumentViewController controller, LocaleMessageSource messageSource) {
 		super(controller, messageSource);
@@ -47,13 +53,16 @@ public class DocumentView extends ViewImpl {
 		
 		// create view toolbar & actions
 		JToolBar viewToolBar = new JToolBar();
-		//final AbstractAction vtbaDiscoverUser = new AbstractAction() { public void actionPerformed(ActionEvent e) { System.out.println("Discover User"); }};
-		//viewToolBar.add(vtbaDiscoverUser);
-		//final AbstractAction vtbaJoinSession = new AbstractAction() { public void actionPerformed(ActionEvent e) { System.out.println("Join Session"); }};
-		//viewToolBar.add(vtbaJoinSession);
 
 		// create data list
-		JList documentList = new JList();
+		SortedList documentSortedList = new SortedList(new ObservableElementList(documentSourceList, GlazedLists.beanConnector(DocumentItem.class)));
+		documentEventListModel = new EventListModel(documentSortedList);
+		documentEventSelectionModel = new EventSelectionModel(documentSortedList);
+
+		documentList = new JList(documentEventListModel);
+		documentList.setCellRenderer(new DocumentItemCellRenderer(messageSource));
+		documentList.setSelectionModel(documentEventSelectionModel);
+		documentList.setSelectionMode(EventSelectionModel.SINGLE_SELECTION);
 		
 		// create frame
 		JPanel documentViewContent = new JPanel(new BorderLayout());
@@ -64,6 +73,9 @@ public class DocumentView extends ViewImpl {
 	}
 	
 	public Item getSelectedItem() {
+		if(documentEventSelectionModel.getMinSelectionIndex() >= 0) {
+			return (DocumentItem)documentEventListModel.getElementAt(documentEventSelectionModel.getMinSelectionIndex());
+		}
 		return null;
 	}
 

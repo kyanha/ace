@@ -32,9 +32,6 @@ import java.util.List;
 import com.jgoodies.uif_lite.panel.SimpleInternalFrame;
 
 import ca.odell.glazedlists.EventList;
-import ca.odell.glazedlists.swing.EventSelectionModel;
-
-import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.FilterList;
 import ca.odell.glazedlists.GlazedLists;
 import ca.odell.glazedlists.ObservableElementList;
