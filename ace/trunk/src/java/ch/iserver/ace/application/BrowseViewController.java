@@ -21,11 +21,10 @@
 
 package ch.iserver.ace.application;
 
+import ca.odell.glazedlists.BasicEventList;
+import ca.odell.glazedlists.EventList;
 import ch.iserver.ace.collaboration.DocumentListener;
 import ch.iserver.ace.collaboration.RemoteDocument;
-
-import ca.odell.glazedlists.EventList;
-import ca.odell.glazedlists.BasicEventList;
 
 
 

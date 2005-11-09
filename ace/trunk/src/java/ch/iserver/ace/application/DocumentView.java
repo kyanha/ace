@@ -30,7 +30,6 @@ import javax.swing.JToolBar;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.GlazedLists;
 import ca.odell.glazedlists.ObservableElementList;
 import ca.odell.glazedlists.SortedList;
@@ -43,26 +42,22 @@ import com.jgoodies.uif_lite.panel.SimpleInternalFrame;
 
 public class DocumentView extends ViewImpl {
 
-	private EventList documentSourceList;
-	private EventListModel documentEventListModel;
-	private EventSelectionModel documentEventSelectionModel;
-
 	public DocumentView(DocumentViewController controller, LocaleMessageSource messageSource) {
 		super(controller, messageSource);
 		// get view source
-		documentSourceList = controller.getDocumentSourceList();
+		setSourceList(controller.getDocumentSourceList());
 		
 		// create view toolbar & actions
 		JToolBar viewToolBar = new JToolBar();
 
 		// create list
-		SortedList documentSortedList = new SortedList(new ObservableElementList(documentSourceList, GlazedLists.beanConnector(DocumentItem.class)));
-		documentEventListModel = new EventListModel(documentSortedList);
-		documentEventSelectionModel = new EventSelectionModel(documentSortedList);
+		SortedList documentSortedList = new SortedList(new ObservableElementList(getSourceList(), GlazedLists.beanConnector(DocumentItem.class)));
+		setEventListModel(new EventListModel(documentSortedList));
+		setEventSelectionModel(new EventSelectionModel(documentSortedList));
 
-		setList(new JList(documentEventListModel));
+		setList(new JList(getEventListModel()));
 		getList().setCellRenderer(new DocumentItemCellRenderer(messageSource));
-		getList().setSelectionModel(documentEventSelectionModel);
+		getList().setSelectionModel(getEventSelectionModel());
 		getList().setSelectionMode(EventSelectionModel.SINGLE_SELECTION);
 
 		// add mouse listener
@@ -73,7 +68,7 @@ public class DocumentView extends ViewImpl {
 				}
 				DocumentItem newItem = null;
 				try {
-					newItem = (DocumentItem)documentEventListModel.getElementAt(documentEventSelectionModel.getMinSelectionIndex());
+					newItem = (DocumentItem)getEventListModel().getElementAt(getEventSelectionModel().getMinSelectionIndex());
 				} catch(ArrayIndexOutOfBoundsException e) {}
 				fireItemSelectionChange(newItem);
 			}
@@ -90,7 +85,7 @@ public class DocumentView extends ViewImpl {
 	public Item getSelectedItem() {
 		DocumentItem selectedItem = null;
 		try {
-			selectedItem = (DocumentItem)documentEventListModel.getElementAt(documentEventSelectionModel.getMinSelectionIndex());
+			selectedItem = (DocumentItem)getEventListModel().getElementAt(getEventSelectionModel().getMinSelectionIndex());
 		} catch(ArrayIndexOutOfBoundsException e) {}
 		return selectedItem;
 	}

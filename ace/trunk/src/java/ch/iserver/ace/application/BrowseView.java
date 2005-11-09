@@ -22,18 +22,16 @@
 package ch.iserver.ace.application;
 
 import java.awt.BorderLayout;
+import java.util.List;
+
 import javax.swing.JList;
-import javax.swing.JScrollPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import java.util.List;
 
-import com.jgoodies.uif_lite.panel.SimpleInternalFrame;
-
-import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.FilterList;
 import ca.odell.glazedlists.GlazedLists;
 import ca.odell.glazedlists.ObservableElementList;
@@ -44,18 +42,16 @@ import ca.odell.glazedlists.swing.EventListModel;
 import ca.odell.glazedlists.swing.EventSelectionModel;
 import ca.odell.glazedlists.swing.TextComponentMatcherEditor;
 
+import com.jgoodies.uif_lite.panel.SimpleInternalFrame;
+
 
 
 public class BrowseView extends ViewImpl {
 
-	private EventList browseSourceList;
-	private EventListModel browseEventListModel;
-	private EventSelectionModel browseEventSelectionModel;
-
 	public BrowseView(BrowseViewController controller, LocaleMessageSource messageSource) {
 		super(controller, messageSource);
 		// get view source
-		browseSourceList = controller.getBrowseSourceList();
+		setSourceList(controller.getBrowseSourceList());
 		
 		// create view toolbar & actions
 		JToolBar viewToolBar = new JToolBar();
@@ -69,13 +65,13 @@ public class BrowseView extends ViewImpl {
 			}
 		};
 		MatcherEditor browseMatcherEditor = new TextComponentMatcherEditor(browseFilterField, browseFilterator);
-		SortedList browseSortedList = new SortedList(new ObservableElementList(new FilterList(browseSourceList, browseMatcherEditor), GlazedLists.beanConnector(BrowseItem.class)));
-		browseEventListModel = new EventListModel(browseSortedList);
-		browseEventSelectionModel = new EventSelectionModel(browseSortedList);
+		SortedList browseSortedList = new SortedList(new ObservableElementList(new FilterList(getSourceList(), browseMatcherEditor), GlazedLists.beanConnector(BrowseItem.class)));
+		setEventListModel(new EventListModel(browseSortedList));
+		setEventSelectionModel(new EventSelectionModel(browseSortedList));
 
-		setList(new JList(browseEventListModel));
+		setList(new JList(getEventListModel()));
 		getList().setCellRenderer(new BrowseItemCellRenderer(messageSource));
-		getList().setSelectionModel(browseEventSelectionModel);
+		getList().setSelectionModel(getEventSelectionModel());
 		getList().setSelectionMode(EventSelectionModel.SINGLE_SELECTION);
 		
 		// add mouse listener
@@ -86,7 +82,7 @@ public class BrowseView extends ViewImpl {
 				}
 				BrowseItem newItem = null;
 				try {
-					newItem = (BrowseItem)browseEventListModel.getElementAt(browseEventSelectionModel.getMinSelectionIndex());
+					newItem = (BrowseItem)getEventListModel().getElementAt(getEventSelectionModel().getMinSelectionIndex());
 				} catch(ArrayIndexOutOfBoundsException e) {}
 				fireItemSelectionChange(newItem);
 			}
@@ -104,7 +100,7 @@ public class BrowseView extends ViewImpl {
 	public Item getSelectedItem() {
 		BrowseItem selectedItem = null;
 		try {
-			selectedItem = (BrowseItem)browseEventListModel.getElementAt(browseEventSelectionModel.getMinSelectionIndex());
+			selectedItem = (BrowseItem)getEventListModel().getElementAt(getEventSelectionModel().getMinSelectionIndex());
 		} catch(ArrayIndexOutOfBoundsException e) {}
 		return selectedItem;
 	}

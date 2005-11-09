@@ -21,8 +21,8 @@
 
 package ch.iserver.ace.application;
 
-import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.BasicEventList;
+import ca.odell.glazedlists.EventList;
 
 
 

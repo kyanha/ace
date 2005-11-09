@@ -30,7 +30,6 @@ import javax.swing.JToolBar;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import ca.odell.glazedlists.CompositeList;
 import ca.odell.glazedlists.GlazedLists;
 import ca.odell.glazedlists.ObservableElementList;
 import ca.odell.glazedlists.SortedList;
@@ -43,25 +42,22 @@ import com.jgoodies.uif_lite.panel.SimpleInternalFrame;
 
 public class ParticipantView extends ViewImpl {
 
-	private CompositeList participantSourceList;
-	private EventListModel participantEventListModel;
-	private EventSelectionModel participantEventSelectionModel;
 	public ParticipantView(ParticipantViewController controller, LocaleMessageSource messageSource) {
 		super(controller, messageSource);
 		// get view source
-		participantSourceList = controller.getParticipantSourceList();
+		setSourceList(controller.getParticipantSourceList());
 		
 		// create view toolbar & actions
 		JToolBar participantToolBar = new JToolBar();
 
 		// create list
-		SortedList participantSortedList = new SortedList(new ObservableElementList(participantSourceList, GlazedLists.beanConnector(ParticipantItem.class)));
-		participantEventListModel = new EventListModel(participantSortedList);
-		participantEventSelectionModel = new EventSelectionModel(participantSortedList);
+		SortedList participantSortedList = new SortedList(new ObservableElementList(getSourceList(), GlazedLists.beanConnector(ParticipantItem.class)));
+		setEventListModel(new EventListModel(participantSortedList));
+		setEventSelectionModel(new EventSelectionModel(participantSortedList));
 
-		setList(new JList(participantEventListModel));
+		setList(new JList(getEventListModel()));
 		getList().setCellRenderer(new ParticipantItemCellRenderer(messageSource));
-		getList().setSelectionModel(participantEventSelectionModel);
+		getList().setSelectionModel(getEventSelectionModel());
 		getList().setSelectionMode(EventSelectionModel.SINGLE_SELECTION);
 		
 		// add mouse listener
@@ -72,7 +68,7 @@ public class ParticipantView extends ViewImpl {
 				}
 				ParticipantItem newItem = null;
 				try {
-					newItem = (ParticipantItem)participantEventListModel.getElementAt(participantEventSelectionModel.getMinSelectionIndex());
+					newItem = (ParticipantItem)getEventListModel().getElementAt(getEventSelectionModel().getMinSelectionIndex());
 				} catch(ArrayIndexOutOfBoundsException e) {}
 				fireItemSelectionChange(newItem);
 			}
@@ -89,7 +85,7 @@ public class ParticipantView extends ViewImpl {
 	public Item getSelectedItem() {
 		ParticipantItem selectedItem = null;
 		try {
-			selectedItem = (ParticipantItem)participantEventListModel.getElementAt(participantEventSelectionModel.getMinSelectionIndex());
+			selectedItem = (ParticipantItem)getEventListModel().getElementAt(getEventSelectionModel().getMinSelectionIndex());
 		} catch(ArrayIndexOutOfBoundsException e) {}
 		return selectedItem;
 	}

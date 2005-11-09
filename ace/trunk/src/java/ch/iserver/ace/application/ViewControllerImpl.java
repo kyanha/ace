@@ -21,9 +21,6 @@
 
 package ch.iserver.ace.application;
 
-import ch.iserver.ace.application.ItemSelectionChangeListener;
-import ch.iserver.ace.application.ItemSelectionChangeEvent;
-
 import javax.swing.event.EventListenerList;
 
 

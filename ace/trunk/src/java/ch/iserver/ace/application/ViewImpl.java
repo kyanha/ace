@@ -21,12 +21,13 @@
 
 package ch.iserver.ace.application;
 
-import ch.iserver.ace.application.ItemSelectionChangeListener;
-import ch.iserver.ace.application.ItemSelectionChangeEvent;
-
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.event.EventListenerList;
+
+import ca.odell.glazedlists.EventList;
+import ca.odell.glazedlists.swing.EventListModel;
+import ca.odell.glazedlists.swing.EventSelectionModel;
 
 
 
@@ -36,6 +37,9 @@ public abstract class ViewImpl extends JPanel implements View {
 	protected LocaleMessageSource messageSource;
 	private EventListenerList eventListenerList;
 	private JList list;
+	private EventList sourceList;
+	private EventListModel eventListModel;
+	private EventSelectionModel eventSelectionModel;
 
 	public ViewImpl(ViewController controller, LocaleMessageSource messageSource) {
 		this.controller = controller;
@@ -78,6 +82,30 @@ public abstract class ViewImpl extends JPanel implements View {
 
 	protected JList getList() {
 		return list;
+	}
+
+	protected void setSourceList(EventList sourceList) {
+		this.sourceList = sourceList;
+	}
+
+	protected EventList getSourceList() {
+		return sourceList;
+	}
+
+	protected void setEventListModel(EventListModel eventListModel) {
+		this.eventListModel = eventListModel;
+	}
+
+	protected EventListModel getEventListModel() {
+		return eventListModel;
+	}
+
+	protected void setEventSelectionModel(EventSelectionModel eventSelectionModel) {
+		this.eventSelectionModel = eventSelectionModel;
+	}
+
+	protected EventSelectionModel getEventSelectionModel() {
+		return eventSelectionModel;
 	}
 
 }

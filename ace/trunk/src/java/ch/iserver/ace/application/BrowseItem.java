@@ -21,10 +21,10 @@
 
 package ch.iserver.ace.application;
 
-import ch.iserver.ace.collaboration.RemoteDocument;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+
+import ch.iserver.ace.collaboration.RemoteDocument;
 
 
 

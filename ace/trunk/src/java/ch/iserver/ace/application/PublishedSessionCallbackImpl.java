@@ -21,15 +21,12 @@
 
 package ch.iserver.ace.application;
 
-import ch.iserver.ace.CaretUpdate;
-import ch.iserver.ace.Operation;
-import ch.iserver.ace.application.ParticipationColorManager;
-import ch.iserver.ace.application.ParticipantItem;
-import ch.iserver.ace.collaboration.Participant;
-import ch.iserver.ace.collaboration.PublishedSessionCallback;
-
 import ca.odell.glazedlists.BasicEventList;
 import ca.odell.glazedlists.EventList;
+import ch.iserver.ace.CaretUpdate;
+import ch.iserver.ace.Operation;
+import ch.iserver.ace.collaboration.Participant;
+import ch.iserver.ace.collaboration.PublishedSessionCallback;
 
 
 

@@ -22,7 +22,6 @@
 package ch.iserver.ace.application;
 
 import java.awt.Color;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 

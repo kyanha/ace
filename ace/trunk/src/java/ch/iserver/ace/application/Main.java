@@ -21,15 +21,11 @@
 
 package ch.iserver.ace.application;
 
-import java.util.Locale;
-
-import javax.swing.*;
-import java.awt.BorderLayout;
+import javax.swing.JFrame;
+import javax.swing.UIManager;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-
-import ch.iserver.ace.collaboration.jupiter.*;
 
 /**
  *

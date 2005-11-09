@@ -175,6 +175,8 @@
 				<fileset dir="${src.test}">
 					<include name="**/*Test*.java"/>
 					<exclude name="**/AllTests.java"/>
+					<exclude name="ch/iserver/ace/application/ItemSelectionChangeEventMatcher.java"/>
+					<exclude name="ch/iserver/ace/application/PropertyChangeEventMatcher.java"/>
 					<exclude name="ch/iserver/ace/test/AlgorithmTestCase.java"/>
 					<exclude name="ch/iserver/ace/test/jupiter/JupiterTestCase.java"/>
 					<exclude name="ch/iserver/ace/test/jupiter/TwoWayTestCase.java"/>

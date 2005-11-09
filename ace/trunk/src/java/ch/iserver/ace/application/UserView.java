@@ -22,6 +22,8 @@
 package ch.iserver.ace.application;
 
 import java.awt.BorderLayout;
+import java.util.List;
+
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -29,11 +31,7 @@ import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import java.util.List;
 
-import com.jgoodies.uif_lite.panel.SimpleInternalFrame;
-
-import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.FilterList;
 import ca.odell.glazedlists.GlazedLists;
 import ca.odell.glazedlists.ObservableElementList;
@@ -44,18 +42,16 @@ import ca.odell.glazedlists.swing.EventListModel;
 import ca.odell.glazedlists.swing.EventSelectionModel;
 import ca.odell.glazedlists.swing.TextComponentMatcherEditor;
 
+import com.jgoodies.uif_lite.panel.SimpleInternalFrame;
+
 
 
 public class UserView extends ViewImpl {
 	
-	private EventList userSourceList;
-	private EventListModel userEventListModel;
-	private EventSelectionModel userEventSelectionModel;
-
 	public UserView(UserViewController controller, LocaleMessageSource messageSource) {
 		super(controller, messageSource);
 		// get view source
-		userSourceList = controller.getUserSourceList();
+		setSourceList(controller.getUserSourceList());
 		
 		// create view toolbar & actions
 		JToolBar userToolBar = new JToolBar();
@@ -69,13 +65,13 @@ public class UserView extends ViewImpl {
 			}
 		};
 		MatcherEditor userMatcherEditor = new TextComponentMatcherEditor(userFilterField, userFilterator);
-		SortedList userSortedList = new SortedList(new ObservableElementList(new FilterList(userSourceList, userMatcherEditor), GlazedLists.beanConnector(UserItem.class)));
-		userEventListModel = new EventListModel(userSortedList);
-		userEventSelectionModel = new EventSelectionModel(userSortedList);
+		SortedList userSortedList = new SortedList(new ObservableElementList(new FilterList(getSourceList(), userMatcherEditor), GlazedLists.beanConnector(UserItem.class)));
+		setEventListModel(new EventListModel(userSortedList));
+		setEventSelectionModel(new EventSelectionModel(userSortedList));
 
-		setList(new JList(userEventListModel));
+		setList(new JList(getEventListModel()));
 		getList().setCellRenderer(new UserItemCellRenderer(messageSource));
-		getList().setSelectionModel(userEventSelectionModel);
+		getList().setSelectionModel(getEventSelectionModel());
 		getList().setSelectionMode(EventSelectionModel.SINGLE_SELECTION);
 		
 		// add mouse listener
@@ -86,7 +82,7 @@ public class UserView extends ViewImpl {
 				}
 				UserItem newItem = null;
 				try {
-					newItem = (UserItem)userEventListModel.getElementAt(userEventSelectionModel.getMinSelectionIndex());
+					newItem = (UserItem)getEventListModel().getElementAt(getEventSelectionModel().getMinSelectionIndex());
 				} catch(ArrayIndexOutOfBoundsException e) { }
 				fireItemSelectionChange(newItem);
 			}
@@ -104,7 +100,7 @@ public class UserView extends ViewImpl {
 	public synchronized Item getSelectedItem() {
 		UserItem selectedItem = null;
 		try {
-			selectedItem = (UserItem)userEventListModel.getElementAt(userEventSelectionModel.getMinSelectionIndex());
+			selectedItem = (UserItem)getEventListModel().getElementAt(getEventSelectionModel().getMinSelectionIndex());
 		} catch(ArrayIndexOutOfBoundsException e) {}
 		return selectedItem;
 	}	

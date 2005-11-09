@@ -21,11 +21,10 @@
 
 package ch.iserver.ace.application;
 
-import ch.iserver.ace.collaboration.UserListener;
-import ch.iserver.ace.collaboration.RemoteUser;
-
-import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.BasicEventList;
+import ca.odell.glazedlists.EventList;
+import ch.iserver.ace.collaboration.RemoteUser;
+import ch.iserver.ace.collaboration.UserListener;
 
 
 
