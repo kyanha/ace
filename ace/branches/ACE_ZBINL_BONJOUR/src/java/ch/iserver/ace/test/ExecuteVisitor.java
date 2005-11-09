@@ -30,6 +30,7 @@ import org.apache.log4j.Logger;
 import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.Request;
+import ch.iserver.ace.algorithm.TransformationException;
 
 /**
  * An ExecuteVisitor is a special node visitor implementation that executes a
@@ -202,8 +203,12 @@ public class ExecuteVisitor implements NodeVisitor {
 		LOG.info("visit: " + node);
 		Request request = node.getRequest();
 		Algorithm algo = getAlgorithm(node.getParticipantId());
-		Operation op = algo.receiveRequest(request);
-		apply(node.getParticipantId(), op);
+		try {
+			Operation op = algo.receiveRequest(request);
+			apply(node.getParticipantId(), op);
+		} catch (TransformationException e) {
+			throw new RuntimeException("algorithm threw unexected runtime exception", e);
+		}
 	}
 
 	/**

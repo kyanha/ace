@@ -21,6 +21,8 @@
 
 package ch.iserver.ace.collaboration.jupiter.server;
 
+import junit.framework.TestCase;
+
 import org.easymock.MockControl;
 
 import ch.iserver.ace.CaretUpdate;
@@ -29,15 +31,13 @@ import ch.iserver.ace.text.InsertOperation;
 import ch.iserver.ace.text.NoOperation;
 import ch.iserver.ace.text.SplitOperation;
 
-import junit.framework.TestCase;
-
 public class DocumentUpdateProxyTest extends TestCase {
 	
 	private MockControl documentCtrl;
 	
 	private ServerDocument document;
 	
-	private ParticipantProxy proxy;
+	private Forwarder proxy;
 	
 	public void setUp() {
 		documentCtrl = MockControl.createControl(ServerDocument.class);

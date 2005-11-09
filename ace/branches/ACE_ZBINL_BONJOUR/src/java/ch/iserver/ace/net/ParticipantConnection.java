@@ -32,6 +32,11 @@ import ch.iserver.ace.algorithm.Request;
 public interface ParticipantConnection {
 	
 	/**
+	 * The participant id of the publisher.
+	 */
+	int PUBLISHER_ID = 0;
+
+	/**
 	 * @param participantId the participant id of the participant
 	 */
 	void setParticipantId(int participantId);

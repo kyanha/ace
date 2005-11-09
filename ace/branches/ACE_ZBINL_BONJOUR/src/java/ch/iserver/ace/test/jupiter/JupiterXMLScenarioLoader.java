@@ -26,8 +26,8 @@ import java.util.Iterator;
 
 import org.jdom.Element;
 
-import ch.iserver.ace.test.XMLScenarioLoader;
 import ch.iserver.ace.test.ScenarioBuilder;
+import ch.iserver.ace.test.XMLScenarioLoader;
 
 /**
  * A ScenarioLoader for Jupiter scenarios, that is scenarios that communicate 

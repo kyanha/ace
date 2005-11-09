@@ -26,6 +26,7 @@ import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
+import ch.iserver.ace.algorithm.TransformationException;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
@@ -61,14 +62,14 @@ public class AlgorithmWrapperImpl implements AlgorithmWrapper {
 	/**
 	 * @see ch.iserver.ace.collaboration.jupiter.AlgorithmWrapper#receiveRequest(ch.iserver.ace.algorithm.Request)
 	 */
-	public Operation receiveRequest(Request request) {
+	public Operation receiveRequest(Request request) throws TransformationException {
 		return getAlgorithm().receiveRequest(request);
 	}
 
 	/**
 	 * @see ch.iserver.ace.collaboration.jupiter.AlgorithmWrapper#receiveCaretUpdateMessage(ch.iserver.ace.algorithm.CaretUpdateMessage)
 	 */
-	public CaretUpdate receiveCaretUpdateMessage(CaretUpdateMessage message) {
+	public CaretUpdate receiveCaretUpdateMessage(CaretUpdateMessage message) throws TransformationException {
 		Algorithm algorithm = getAlgorithm();
 		int[] indices = message.getUpdate().getIndices();
 		indices = algorithm.transformIndices(message.getTimestamp(), indices);

@@ -8,6 +8,7 @@ import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.Timestamp;
+import ch.iserver.ace.algorithm.TransformationException;
 import ch.iserver.ace.test.AlgorithmTestFactory;
 import ch.iserver.ace.test.ReceptionNode;
 import ch.iserver.ace.test.RelayNode;
@@ -64,8 +65,9 @@ public class NWayExecuteVisitorTest extends TestCase {
 	 * includes calling receiveRequest on the algorithm of the incoming
 	 * site, calling generateRequest on all other server algorithms
 	 * and calling setRequest on all remote successors.
+	 * @throws TransformationException 
 	 */
-	public void testVisitRelayNode() {
+	public void testVisitRelayNode() throws TransformationException {
 		// create mock objects
 		MockControl[] algoCtrl = new MockControl[] {
 				MockControl.createControl(Algorithm.class),

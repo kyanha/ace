@@ -21,16 +21,12 @@
 
 package ch.iserver.ace.collaboration.jupiter;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 
-import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.collaboration.PublishedSession;
 import ch.iserver.ace.collaboration.RemoteUser;
 import ch.iserver.ace.net.DocumentServerLogic;
-import ch.iserver.ace.net.RemoteDocumentProxy;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.util.ParameterValidator;
 
@@ -38,12 +34,22 @@ import ch.iserver.ace.util.ParameterValidator;
  * Default implementation of the RemoteUser interface. The RemoteUserImpl
  * passes most requests directly to a wrapped RemoteUserProxy instance.
  */
-public class RemoteUserImpl implements RemoteUser {
+public class RemoteUserImpl implements MutableRemoteUser {
+	
+	/**
+	 * 
+	 */
+	private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 	
 	/**
 	 * The wrapped target RemoteUserProxy instance.
 	 */
 	private final RemoteUserProxy proxy;
+	
+	/**
+	 * 
+	 */
+	private String userName;
 	
 	/**
 	 * Creates a new RemoteUserImpl object.
@@ -53,6 +59,7 @@ public class RemoteUserImpl implements RemoteUser {
 	public RemoteUserImpl(RemoteUserProxy proxy) {
 		ParameterValidator.notNull("proxy", proxy);
 		this.proxy = proxy;
+		this.userName = proxy.getUserDetails().getUsername();
 	}
 	
 	/**
@@ -70,23 +77,18 @@ public class RemoteUserImpl implements RemoteUser {
 	}
 
 	/**
-	 * @see ch.iserver.ace.collaboration.RemoteUser#getSharedDocuments()
+	 * @see ch.iserver.ace.collaboration.RemoteUser#getName()
 	 */
-	public Collection getSharedDocuments() {
-		List result = new LinkedList();
-		Iterator it = getProxy().getSharedDocuments().iterator();
-		while (it.hasNext()) {
-			RemoteDocumentProxy document = (RemoteDocumentProxy) it.next();
-			result.add(new RemoteDocumentImpl(document));
-		}
-		return result;
+	public String getName() {
+		return userName;
 	}
-
-	/**
-	 * @see ch.iserver.ace.collaboration.RemoteUser#getUserDetails()
-	 */
-	public UserDetails getUserDetails() {
-		return getProxy().getUserDetails();
+	
+	public void setName(String userName) {
+		String old = this.userName;
+		if (!old.equals(userName)) {
+			this.userName = userName;
+			support.firePropertyChange(NAME_PROPERTY, old, userName);
+		}
 	}
 
 	/**
@@ -96,6 +98,14 @@ public class RemoteUserImpl implements RemoteUser {
 		PublishedSessionImpl session = (PublishedSessionImpl) s;
 		DocumentServerLogic logic = session.getLogic();
 		getProxy().invite(logic);
+	}
+	
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		support.addPropertyChangeListener(listener);		
+	}
+	
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		support.removePropertyChangeListener(listener);
 	}
 
 	/**

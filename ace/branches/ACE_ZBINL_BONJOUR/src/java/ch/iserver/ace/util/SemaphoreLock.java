@@ -61,6 +61,9 @@ public class SemaphoreLock implements Lock {
 	 * @see ch.iserver.ace.util.Lock#unlock()
 	 */
 	public synchronized void unlock() {
+		if (Thread.currentThread() != owner) {
+			throw new IllegalMonitorStateException("thread is not owner of lock");
+		}
 		semaphore.release();
 		owner = null;
 	}

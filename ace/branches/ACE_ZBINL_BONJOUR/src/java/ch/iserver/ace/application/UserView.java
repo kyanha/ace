@@ -22,104 +22,78 @@
 package ch.iserver.ace.application;
 
 import java.util.List;
-import java.util.Collection;
 
-import java.awt.event.*;
-import java.awt.*;
-
-import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import java.awt.BorderLayout;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.JToolBar;
 
 import com.jgoodies.uif_lite.panel.SimpleInternalFrame;
 
-import ca.odell.glazedlists.BasicEventList;
 import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.FilterList;
 import ca.odell.glazedlists.GlazedLists;
+import ca.odell.glazedlists.ObservableElementList;
 import ca.odell.glazedlists.SortedList;
 import ca.odell.glazedlists.TextFilterator;
 import ca.odell.glazedlists.matchers.MatcherEditor;
 import ca.odell.glazedlists.swing.EventListModel;
+import ca.odell.glazedlists.swing.EventSelectionModel;
 import ca.odell.glazedlists.swing.TextComponentMatcherEditor;
 
 
 
+public class UserView extends ViewImpl {
+	
+	public static final String SELECTED_ITEM_PROPERTY = "selectedItem";
+	
+	private EventList userSourceList;
+	private EventListModel userEventListModel;
+	private EventSelectionModel userEventSelectionModel;
+	protected JList userList;
 
-public class UserView extends DefaultView {
-
-	private EventList viewSource;
-	private boolean userListItemSelected = false;
-	private AbstractAction toolbarActBtnDiscoverUser, toolbarActBtnInviteUser;
-
-
-	public UserView(LocaleMessageSource source) {
-		super(source);
+	public UserView(UserViewController controller, LocaleMessageSource messageSource) {
+		super(controller, messageSource);
+		// get view source
+		userSourceList = controller.getUserSourceList();
 		
-		// create view header
-		JToolBar toolbar = new JToolBar();
-		toolbarActBtnDiscoverUser = new AbstractAction() { public void actionPerformed(ActionEvent e){}};//new DiscoverUserAction("Discover", null);
-		toolbar.add(toolbarActBtnDiscoverUser);
-		toolbarActBtnInviteUser = new AbstractAction() { public void actionPerformed(ActionEvent e){}};//new InviteUserAction("Invite", null);
-		toolbarActBtnInviteUser.setEnabled(false);
-		toolbar.add(toolbarActBtnInviteUser);
+		// create view toolbar & actions
+		JToolBar userToolBar = new JToolBar();
 
-		// create filtered event list
-		JTextField filterField = new JTextField();
-		TextFilterator textFilterator = new TextFilterator() {
+		// create data list
+		JTextField userFilterField = new JTextField();
+		TextFilterator userFilterator = new TextFilterator() {
 			public void getFilterStrings(List baseList, Object element) {
-				BasicUserListItem item = (BasicUserListItem)element;
-				baseList.add(item.getUsername());
+				UserItem item = (UserItem)element;
+				baseList.add(item.getName());
 			}
 		};
-		MatcherEditor matcherEditor = new TextComponentMatcherEditor(filterField, textFilterator);
-		viewSource = new BasicEventList();
-		FilterList filterList = new FilterList(viewSource, matcherEditor);
-		final JList userFilterList = new JList(new EventListModel(new SortedList(filterList)));
-		userFilterList.setCellRenderer(new BasicUserListItemCellRenderer(source));
-		userFilterList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		userFilterList.addListSelectionListener(new ListSelectionListener() {
-			public void valueChanged(ListSelectionEvent e) {
-				if(userFilterList.getSelectedIndex() == -1) {
-					// no item selected
-					setUserListItemSelected(false);
-				} else {
-					// item selected
-					setUserListItemSelected(true);
-				}
-			}
-		});
+		MatcherEditor userMatcherEditor = new TextComponentMatcherEditor(userFilterField, userFilterator);
+		SortedList userSortedList = new SortedList(new ObservableElementList(new FilterList(userSourceList, userMatcherEditor), GlazedLists.beanConnector(UserItem.class)));
+		userEventListModel = new EventListModel(userSortedList);
+		userEventSelectionModel = new EventSelectionModel(userSortedList);
 
-		// create view body
-		JPanel userViewContent = new JPanel(new BorderLayout());
-		userViewContent.add(new JScrollPane(userFilterList), BorderLayout.CENTER);
-		userViewContent.add(filterField, BorderLayout.SOUTH);
+		userList = new JList(userEventListModel);
+		userList.setCellRenderer(new UserItemCellRenderer(messageSource));
+		userList.setSelectionModel(userEventSelectionModel);
+		userList.setSelectionMode(EventSelectionModel.SINGLE_SELECTION);
 
 		// create frame
-		SimpleInternalFrame userView = new SimpleInternalFrame(null, "UserView", toolbar, userViewContent);
+		JPanel userViewContent = new JPanel(new BorderLayout());
+		userViewContent.add(new JScrollPane(userList), BorderLayout.CENTER);
+		userViewContent.add(userFilterField, BorderLayout.SOUTH);
+		SimpleInternalFrame userView = new SimpleInternalFrame(null, messageSource.getMessage("vUserTitle"), userToolBar, userViewContent);
 		setLayout(new BorderLayout());
-		add(userView);
+		add(userView);		
 	}
 
-	private void setUserListItemSelected(boolean userListItemSelected) {
-		boolean userListItemSelectedOld = this.userListItemSelected;
-		if (userListItemSelected != userListItemSelectedOld) {
-			this.userListItemSelected = userListItemSelected;
-			toolbarActBtnInviteUser.setEnabled(userListItemSelected);
-			propertyChangeSupport.firePropertyChange("userListItemSelected", userListItemSelectedOld, userListItemSelected);
+	public synchronized Item getSelectedItem() {
+		if (userEventSelectionModel.getMinSelectionIndex() >= 0) {
+			return (UserItem)userEventListModel.getElementAt(userEventSelectionModel.getMinSelectionIndex());
 		}
-	}
-
-	public boolean isUserListItemSelected() {
-		return userListItemSelected;
-	}
-
-	public EventList getUserViewSource() {
-		return viewSource;
-	}
-
-	public void setUserViewSource(EventList viewSource) {
-		this.viewSource = viewSource;
-	}
+		return null;
+	}	
 
 }

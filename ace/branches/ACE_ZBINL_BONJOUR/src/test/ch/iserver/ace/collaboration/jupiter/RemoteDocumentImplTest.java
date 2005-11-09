@@ -21,33 +21,37 @@
 
 package ch.iserver.ace.collaboration.jupiter;
 
+import junit.framework.TestCase;
+
 import org.easymock.MockControl;
 
+import ch.iserver.ace.DocumentDetails;
+import ch.iserver.ace.collaboration.RemoteUserStub;
 import ch.iserver.ace.net.RemoteDocumentProxy;
-
-import junit.framework.TestCase;
 
 public class RemoteDocumentImplTest extends TestCase {
 		
-	public void testEquals() throws Exception {
+	public void testEquals() throws Exception {		
 		MockControl proxy1Ctrl = MockControl.createControl(RemoteDocumentProxy.class);
 		RemoteDocumentProxy proxy1 = (RemoteDocumentProxy) proxy1Ctrl.getMock();
 		MockControl proxy2Ctrl = MockControl.createControl(RemoteDocumentProxy.class);
 		RemoteDocumentProxy proxy2 = (RemoteDocumentProxy) proxy2Ctrl.getMock();
 		MockControl proxy3Ctrl = MockControl.createControl(RemoteDocumentProxy.class);
 		RemoteDocumentProxy proxy3 = (RemoteDocumentProxy) proxy3Ctrl.getMock();
-
-		RemoteDocumentImpl doc1 = new RemoteDocumentImpl(proxy1);
-		RemoteDocumentImpl doc2 = new RemoteDocumentImpl(proxy2);
-		RemoteDocumentImpl doc3 = new RemoteDocumentImpl(proxy2);
-		
+				
 		// define mock behavior
 		proxy1.getId();
 		proxy1Ctrl.setDefaultReturnValue("ABCDEFG");
+		proxy1.getDocumentDetails();
+		proxy1Ctrl.setDefaultReturnValue(new DocumentDetails("X"));
 		proxy2.getId();
 		proxy2Ctrl.setDefaultReturnValue("ABCDE");
+		proxy2.getDocumentDetails();
+		proxy2Ctrl.setDefaultReturnValue(new DocumentDetails("Y"));
 		proxy3.getId();
 		proxy3Ctrl.setDefaultReturnValue("ABCDE");
+		proxy3.getDocumentDetails();
+		proxy3Ctrl.setDefaultReturnValue(new DocumentDetails("Z"));
 		
 		// replay
 		proxy1Ctrl.replay();
@@ -55,6 +59,10 @@ public class RemoteDocumentImplTest extends TestCase {
 		proxy3Ctrl.replay();
 		
 		// test
+		RemoteDocumentImpl doc1 = new RemoteDocumentImpl(proxy1, NullSessionFactory.getInstance(), new RemoteUserStub("ABCDEFG"));
+		RemoteDocumentImpl doc2 = new RemoteDocumentImpl(proxy2, NullSessionFactory.getInstance(), new RemoteUserStub("ABCDE"));
+		RemoteDocumentImpl doc3 = new RemoteDocumentImpl(proxy3, NullSessionFactory.getInstance(), new RemoteUserStub("ABCDE"));
+
 		assertFalse(doc1.equals(doc2));
 		assertFalse(doc3.equals(doc1));
 		assertTrue(doc2.equals(doc3));

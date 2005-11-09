@@ -31,10 +31,12 @@ public class AllTests {
 						"Test for ch.iserver.ace.collaboration.jupiter");
 		//$JUnit-BEGIN$
 		suite.addTestSuite(RemoteUserTest.class);
-		suite.addTestSuite(CaretUpdateCommandTest.class);
+		suite.addTestSuite(DiscoveryNetworkCallbackImplTest.class);
 		suite.addTestSuite(PublishedSessionImplTest.class);
 		suite.addTestSuite(SessionImplTest.class);
-		suite.addTestSuite(RequestCommandTest.class);
+		suite.addTestSuite(JoinNetworkCallbackImplTest.class);
+		suite.addTestSuite(InvitationImplTest.class);
+		suite.addTestSuite(SessionConnectionWrapperTest.class);
 		suite.addTestSuite(RemoteDocumentImplTest.class);
 		suite.addTestSuite(AlgorithmWrapperImplTest.class);
 		//$JUnit-END$

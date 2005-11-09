@@ -41,26 +41,40 @@ class InvitationImpl implements Invitation {
 	 * The wrapped InvitationProxy from the network layer.
 	 */
 	private final InvitationProxy proxy;
-	
+		
 	/**
 	 * The RemoteUser that invited the local user.
 	 */
-	private RemoteUser inviter;
+	private final RemoteUser inviter;
 	
 	/**
 	 * The RemoteDocument for which the user is invited.
 	 */
-	private RemoteDocument document;
+	private final RemoteDocument document;
+	
+	/**
+	 * 
+	 */
+	private final SessionFactory sessionFactory;
 	
 	/**
 	 * Creates a new InvitationImpl object delegating most of the work
 	 * to the passed in InvitationProxy.
 	 * 
 	 * @param proxy the InvitationProxy wrapped by this instance
+	 * @param decorator the SessionConnectionDecorator
+	 * @param document the RemoteDocument to which the user is invited
 	 */
-	InvitationImpl(InvitationProxy proxy) {
+	InvitationImpl(InvitationProxy proxy, 
+					RemoteDocument document,
+					SessionFactory factory) {
 		ParameterValidator.notNull("proxy", proxy);
+		ParameterValidator.notNull("document", document);
+		ParameterValidator.notNull("factory", factory);
 		this.proxy = proxy;
+		this.document = document;
+		this.inviter = document.getPublisher();
+		this.sessionFactory = factory;
 	}
 	
 	/**
@@ -69,14 +83,11 @@ class InvitationImpl implements Invitation {
 	private InvitationProxy getProxy() {
 		return proxy;
 	}
-	
+		
 	/**
 	 * @see ch.iserver.ace.collaboration.Invitation#getInviter()
 	 */
 	public RemoteUser getInviter() {
-		if (inviter == null) {
-			inviter = new RemoteUserImpl(getProxy().getInviter());
-		}
 		return inviter;
 	}
 	
@@ -84,17 +95,19 @@ class InvitationImpl implements Invitation {
 	 * @see ch.iserver.ace.collaboration.Invitation#getDocument()
 	 */
 	public RemoteDocument getDocument() {
-		if (document == null) {
-			document = new RemoteDocumentImpl(getProxy().getDocument());
-		}
 		return document;
 	}
 
+	private SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+	
 	/**
 	 * @see ch.iserver.ace.collaboration.Invitation#accept(ch.iserver.ace.collaboration.SessionCallback)
 	 */
 	public Session accept(SessionCallback callback) {
-		SessionImpl session = new SessionImpl(callback);
+		ConfigurableSession session = getSessionFactory().createSession();
+		session.setSessionCallback(callback);
 		SessionConnection connection = getProxy().accept(session);
 		session.setConnection(connection);
 		return session;

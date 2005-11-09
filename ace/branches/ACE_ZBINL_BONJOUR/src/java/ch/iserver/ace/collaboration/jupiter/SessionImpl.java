@@ -29,24 +29,26 @@ import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
+import ch.iserver.ace.algorithm.TransformationException;
 import ch.iserver.ace.algorithm.jupiter.Jupiter;
 import ch.iserver.ace.collaboration.Participant;
+import ch.iserver.ace.collaboration.Session;
 import ch.iserver.ace.collaboration.SessionCallback;
 import ch.iserver.ace.net.PortableDocument;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.net.SessionConnection;
 import ch.iserver.ace.net.SessionConnectionCallback;
-import ch.iserver.ace.util.InterruptedRuntimeException;
 import ch.iserver.ace.util.Lock;
 import ch.iserver.ace.util.ParameterValidator;
 import ch.iserver.ace.util.SemaphoreLock;
+import ch.iserver.ace.util.ThreadDomain;
 
 /**
  * Default implementation of the Session interface. This class further implements
  * the SessionConnectionCallback interface and can thus be set as callback
  * on SessionConnections.
  */
-public class SessionImpl extends AbstractSession implements SessionConnectionCallback {
+public class SessionImpl extends AbstractSession implements ConfigurableSession, SessionConnectionCallback, SessionConnectionFailureHandler {
 	
 	/**
 	 * The SessionCallback from the application layer.
@@ -57,15 +59,16 @@ public class SessionImpl extends AbstractSession implements SessionConnectionCal
 	 * The SessionConnection from the network layer.
 	 */
 	private SessionConnection connection;
+
+	/**
+	 * 
+	 */
+	private ThreadDomain threadDomain;
 	
 	public SessionImpl() {
 		this(new AlgorithmWrapperImpl(new Jupiter(true)));
 	}
-	
-	public SessionImpl(SessionCallback callback) {
-		this(new AlgorithmWrapperImpl(new Jupiter(true)), callback);
-	}
-		
+			
 	public SessionImpl(AlgorithmWrapper algorithm) {
 		this(algorithm, (SessionCallback) null);
 	}
@@ -100,9 +103,10 @@ public class SessionImpl extends AbstractSession implements SessionConnectionCal
 	 * 
 	 * @param connection the new connection
 	 */
-	protected void setConnection(SessionConnection connection) {
+	public void setConnection(SessionConnection connection) {
 		ParameterValidator.notNull("connection", connection);
-		this.connection = connection;
+		this.connection = (SessionConnection) getThreadDomain().wrap(
+				new SessionConnectionWrapper(connection, this), SessionConnection.class);
 	}
 	
 	/**
@@ -110,6 +114,14 @@ public class SessionImpl extends AbstractSession implements SessionConnectionCal
 	 */
 	protected SessionConnection getConnection() {
 		return connection;
+	}
+	
+	public ThreadDomain getThreadDomain() {
+		return threadDomain;
+	}
+	
+	public void setThreadDomain(ThreadDomain threadDomain) {
+		this.threadDomain = threadDomain;
 	}
 	
 	/**
@@ -141,7 +153,7 @@ public class SessionImpl extends AbstractSession implements SessionConnectionCal
 	public void sendCaretUpdate(CaretUpdate update) {
 		checkLockUsage();
 		CaretUpdateMessage message = getAlgorithm().generateCaretUpdateMessage(update);
-		getConnection().sendCaretUpdate(message);
+		getConnection().sendCaretUpdateMessage(message);
 	}
 
 	// --> SessionConnectionCallback methods <--
@@ -164,17 +176,14 @@ public class SessionImpl extends AbstractSession implements SessionConnectionCal
 	 * @see ch.iserver.ace.net.SessionConnectionCallback#receiveCaretUpdate(int, ch.iserver.ace.algorithm.CaretUpdateMessage)
 	 */
 	public void receiveCaretUpdate(int participantId, CaretUpdateMessage message) {
+		lock();
 		try {
-			lock();
-			try {
-				CaretUpdate update = getAlgorithm().receiveCaretUpdateMessage(message);
-				getCallback().receiveCaretUpdate(getParticipant(participantId), update);
-			} finally {
-				unlock();
-			}
-		} catch (InterruptedException e) {
-			// TODO: interrupted runtime exception
-			throw new InterruptedRuntimeException("interrupted reception", e);
+			CaretUpdate update = getAlgorithm().receiveCaretUpdateMessage(message);
+			getCallback().receiveCaretUpdate(getParticipant(participantId), update);
+		} catch (TransformationException e) {
+			getCallback().sessionFailed(Session.TRANSFORMATION_FAILED, e);
+		} finally {
+			unlock();
 		}
 	}
 	
@@ -182,17 +191,14 @@ public class SessionImpl extends AbstractSession implements SessionConnectionCal
 	 * @see ch.iserver.ace.net.SessionConnectionCallback#receiveRequest(int, ch.iserver.ace.algorithm.Request)
 	 */
 	public void receiveRequest(int participantId, Request request) {
+		lock();
 		try {
-			lock();
-			try {
-				Operation operation = getAlgorithm().receiveRequest(request);
-				getCallback().receiveOperation(getParticipant(participantId), operation);
-			} finally {
-				unlock();
-			}
-		} catch (InterruptedException e) {
-			// TODO: interrupted runtime exception
-			throw new InterruptedRuntimeException("interrupted reception", e);
+			Operation operation = getAlgorithm().receiveRequest(request);
+			getCallback().receiveOperation(getParticipant(participantId), operation);
+		} catch (TransformationException e) {
+			getCallback().sessionFailed(Session.TRANSFORMATION_FAILED, e);
+		} finally {
+			unlock();
 		}
 	}
 	
@@ -226,6 +232,15 @@ public class SessionImpl extends AbstractSession implements SessionConnectionCal
 		Participant participant = getParticipant(participantId);
 		removeParticipant(participant);
 		getCallback().participantLeft(participant, reason);
+	}
+	
+	// --> FailureHandler implementation <--
+	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.SessionConnectionFailureHandler#handleFailure(int, java.lang.Exception)
+	 */
+	public void handleFailure(int reason, Exception e) {
+		getCallback().sessionFailed(reason, e);
 	}
 	
 }

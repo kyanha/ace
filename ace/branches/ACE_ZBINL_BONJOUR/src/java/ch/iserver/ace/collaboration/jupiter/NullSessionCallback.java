@@ -92,5 +92,12 @@ final class NullSessionCallback implements SessionCallback {
 	public void receiveCaretUpdate(Participant participant, CaretUpdate update) {
 		LOG.warn("SessionCallback not set on Session (receiveCaretUpdate called)");
 	}
+	
+	/**
+	 * @see ch.iserver.ace.collaboration.PublishedSessionCallback#sessionFailed(int, java.lang.Exception)
+	 */
+	public void sessionFailed(int reason, Exception e) {
+		LOG.warn("SessionCallback not set on Session (sessionFailed called)");
+	}
 
 }

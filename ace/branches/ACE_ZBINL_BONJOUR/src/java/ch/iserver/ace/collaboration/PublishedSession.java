@@ -27,7 +27,7 @@ import ch.iserver.ace.DocumentDetails;
 /**
  * A PublishedSession extends a Session with methods that are only
  * available to the owner (publisher) of the session itself. These
- * methods are {@link #kick(Participant)} and {@link #conceal()}.
+ * methods are {@link #kick(Participant)} and {@link #shutdown()}.
  *
  * <p>PublishedSessions are obtained by calling publish on the
  * {@link CollaborationService} instance.</p>
@@ -47,11 +47,5 @@ public interface PublishedSession extends Session {
 	 * @param participant the participant to kick from the session
 	 */
 	void kick(Participant participant);
-	
-	/**
-	 * Conceals this published session. This terminates the sharing of the
-	 * document.
-	 */
-	void conceal();
-		
+			
 }

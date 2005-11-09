@@ -33,29 +33,21 @@ import java.util.EventListener;
 public interface DocumentListener extends EventListener {
 	
 	/**
-	 * Notifies the listener that a new RemoteDocument was discovered.
+	 * Notifies the listener that new RemoteDocuments were discovered.
 	 * 
-	 * @param document the discovered document
+	 * @param document the discovered documents
 	 */
-	void documentDiscovered(RemoteDocument document);
-	
+	void documentsDiscovered(RemoteDocument[] documents);
+		
 	/**
-	 * Notifies the listener that the details of a RemoteDocument have been
-	 * changed.
-	 * 
-	 * @param document the document whose details changed
-	 */
-	void documentDetailsChanged(RemoteDocument document);
-	
-	/**
-	 * Notifies the listener that a RemoteDocument was discarded, that is it is
+	 * Notifies the listener that RemoteDocuments were discarded, that is it is
 	 * no longer available.
  	 * Do not call any methods on this object that make network calls (see
 	 * documentation of RemoteDocument for information, which methods make network
 	 * calls).
 	 * 
-	 * @param document the discarded document
+	 * @param document the discarded documents
 	 */
-	void documentDiscarded(RemoteDocument document);
+	void documentsDiscarded(RemoteDocument[] documents);
 	
 }

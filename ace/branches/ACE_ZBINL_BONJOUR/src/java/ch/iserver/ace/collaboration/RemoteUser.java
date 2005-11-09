@@ -21,9 +21,7 @@
 
 package ch.iserver.ace.collaboration;
 
-import java.util.Collection;
-
-import ch.iserver.ace.UserDetails;
+import java.beans.PropertyChangeListener;
 
 
 /**
@@ -33,26 +31,21 @@ import ch.iserver.ace.UserDetails;
 public interface RemoteUser {
 	
 	/**
+	 * The name of the name property.
+	 */
+	String NAME_PROPERTY = "name";
+	
+	/**
 	 * Gets the unique identifier of the user.
 	 * 
 	 * @return the unique identifier of the user
 	 */
 	String getId();
-	
+		
 	/**
-	 * Retrieves a collection of all remote documents published by this
-	 * remote user.
-	 *
-	 * @return a collection of remote documents published by this user
+	 * @return
 	 */
-	Collection getSharedDocuments();
-	
-	/**
-	 * Gets the display information about the user.
-	 * 
-	 * @return the UserDetails information
-	 */	
-	UserDetails getUserDetails();
+	String getName();
 			
 	/**
 	 * Invites the user represented by this instance to a given published
@@ -61,5 +54,15 @@ public interface RemoteUser {
 	 * @param session the session for which the user is invited
 	 */
 	void invite(PublishedSession session);
+	
+	/**
+	 * @param listener
+	 */
+	void addPropertyChangeListener(PropertyChangeListener listener);
+	
+	/**
+	 * @param listener
+	 */
+	void removePropertyChangeListener(PropertyChangeListener listener);
 	
 }

@@ -21,6 +21,9 @@
 
 package ch.iserver.ace.collaboration;
 
+import java.net.InetAddress;
+
+import ch.iserver.ace.util.CompareUtil;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
@@ -104,6 +107,34 @@ public final class DiscoveryResult {
 	 */
 	public String getStatusMessage() {
 		return statusMessage;
+	}
+	
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		} else if (obj == null) {
+			return false;
+		} else if (getClass().equals(obj.getClass())) {
+			DiscoveryResult result = (DiscoveryResult) obj;
+			return status == result.status 
+					&& CompareUtil.nullSafeEquals(statusMessage, result.statusMessage)
+					&& CompareUtil.nullSafeEquals(user, result.user);
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	public int hashCode() {
+		int hashCode = status;
+		hashCode += statusMessage == null ? 0 : 13 * statusMessage.hashCode();
+		hashCode += user == null ? 0 : 17 * user.hashCode();
+		return hashCode;
 	}
 	
 }

@@ -29,14 +29,6 @@ package ch.iserver.ace.net;
 public interface InvitationProxy {
 	
 	/**
-	 * Retrieves the proxy object that allows to communicate (and identify)
-	 * the remote user.
-	 * 
-	 * @return the RemoteUserProxy object of the inviting user
-	 */
-	RemoteUserProxy getInviter();
-
-	/**
 	 * Retrieves the remote document for which the local user is 
 	 * invited.
 	 * 

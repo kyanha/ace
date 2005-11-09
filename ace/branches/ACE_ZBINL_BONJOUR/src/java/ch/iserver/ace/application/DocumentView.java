@@ -21,12 +21,62 @@
 
 package ch.iserver.ace.application;
 
+import java.awt.BorderLayout;
+import javax.swing.JList;
+import javax.swing.JScrollPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.JToolBar;
+
+import com.jgoodies.uif_lite.panel.SimpleInternalFrame;
+
+import ca.odell.glazedlists.EventList;
+import ca.odell.glazedlists.GlazedLists;
+import ca.odell.glazedlists.ObservableElementList;
+import ca.odell.glazedlists.SortedList;
+import ca.odell.glazedlists.swing.EventListModel;
+import ca.odell.glazedlists.swing.EventSelectionModel;
 
 
-public class DocumentView extends DefaultView {
 
-	public DocumentView(LocaleMessageSource source) {
-		super(source);
+public class DocumentView extends ViewImpl {
+
+	private EventList documentSourceList;
+	private EventListModel documentEventListModel;
+	private EventSelectionModel documentEventSelectionModel;
+	protected JList documentList;
+
+	public DocumentView(DocumentViewController controller, LocaleMessageSource messageSource) {
+		super(controller, messageSource);
+		// get view source
+		documentSourceList = controller.getDocumentSourceList();
+		
+		// create view toolbar & actions
+		JToolBar viewToolBar = new JToolBar();
+
+		// create data list
+		SortedList documentSortedList = new SortedList(new ObservableElementList(documentSourceList, GlazedLists.beanConnector(DocumentItem.class)));
+		documentEventListModel = new EventListModel(documentSortedList);
+		documentEventSelectionModel = new EventSelectionModel(documentSortedList);
+
+		documentList = new JList(documentEventListModel);
+		documentList.setCellRenderer(new DocumentItemCellRenderer(messageSource));
+		documentList.setSelectionModel(documentEventSelectionModel);
+		documentList.setSelectionMode(EventSelectionModel.SINGLE_SELECTION);
+		
+		// create frame
+		JPanel documentViewContent = new JPanel(new BorderLayout());
+		documentViewContent.add(new JScrollPane(documentList), BorderLayout.CENTER);
+		SimpleInternalFrame documentView = new SimpleInternalFrame(null, messageSource.getMessage("vDocumentTitle"), viewToolBar, documentViewContent);
+		setLayout(new BorderLayout());
+		add(documentView);		
+	}
+	
+	public Item getSelectedItem() {
+		if(documentEventSelectionModel.getMinSelectionIndex() >= 0) {
+			return (DocumentItem)documentEventListModel.getElementAt(documentEventSelectionModel.getMinSelectionIndex());
+		}
+		return null;
 	}
 
 }

@@ -21,19 +21,22 @@
 
 package ch.iserver.ace.collaboration.server;
 
+import junit.framework.TestCase;
+
 import org.easymock.MockControl;
 
 import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.DocumentModel;
-import ch.iserver.ace.algorithm.jupiter.JupiterRequest;
+import ch.iserver.ace.algorithm.RequestImpl;
 import ch.iserver.ace.algorithm.jupiter.JupiterVectorTime;
+import ch.iserver.ace.collaboration.jupiter.PublisherConnection;
 import ch.iserver.ace.collaboration.jupiter.server.ServerLogicImpl;
-import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.net.ParticipantPort;
+import ch.iserver.ace.net.RemoteUserProxyStub;
 import ch.iserver.ace.text.InsertOperation;
+import ch.iserver.ace.util.CallerThreadDomain;
 import ch.iserver.ace.util.Lock;
 import ch.iserver.ace.util.SemaphoreLock;
-import junit.framework.TestCase;
 
 /**
  *
@@ -45,12 +48,12 @@ public class ServerTest extends TestCase {
 	public void testBasics() throws Exception {
 		Lock lock = new SemaphoreLock("serializer-lock");
 		MockControl[] controls = new MockControl[PARTICIPANTS];
-		ParticipantConnection[] connections = new ParticipantConnection[PARTICIPANTS];
+		PublisherConnection[] connections = new PublisherConnection[PARTICIPANTS];
 		ParticipantPort[] ports = new ParticipantPort[PARTICIPANTS];
 		
 		for (int i = 0; i < PARTICIPANTS; i++) {
-			controls[i] = MockControl.createControl(ParticipantConnection.class);
-			connections[i] = (ParticipantConnection) controls[i].getMock();
+			controls[i] = MockControl.createControl(PublisherConnection.class);
+			connections[i] = (PublisherConnection) controls[i].getMock();
 		}
 		
 		// define mock behavior
@@ -58,7 +61,7 @@ public class ServerTest extends TestCase {
 		
 		for (int i = 0; i < PARTICIPANTS; i++) {
 			connections[i].getUser();
-			controls[i].setDefaultReturnValue(null);
+			controls[i].setDefaultReturnValue(new RemoteUserProxyStub("" + i));
 		}
 		
 		for (int i = 1; i < PARTICIPANTS; i++) {
@@ -69,7 +72,7 @@ public class ServerTest extends TestCase {
 				connections[j].sendParticipantJoined(i, null);
 				controls[j].setMatcher(MockControl.ALWAYS_MATCHER);
 			}
-			connections[i].sendRequest(0, new JupiterRequest(0, new JupiterVectorTime(0, 0), new InsertOperation(0, "x")));
+			connections[i].sendRequest(0, new RequestImpl(0, new JupiterVectorTime(0, 0), new InsertOperation(0, "x")));
 		}
 				
 		// replay
@@ -79,7 +82,10 @@ public class ServerTest extends TestCase {
 
 		// test
 		DocumentModel document = new DocumentModel("", 0, 0, new DocumentDetails("collab.txt"));
-		ServerLogicImpl server = new ServerLogicImpl(lock, connections[0], document);
+		ServerLogicImpl server = new ServerLogicImpl(lock, 
+				new CallerThreadDomain(), 
+				connections[0], 
+				document);
 		ports[0] = server.getPublisherPort();
 		server.start();
 		
@@ -88,7 +94,7 @@ public class ServerTest extends TestCase {
 		}
 				
 		// test
-		ports[0].receiveRequest(new JupiterRequest(1, new JupiterVectorTime(0, 0), new InsertOperation(0, "x")));
+		ports[0].receiveRequest(new RequestImpl(1, new JupiterVectorTime(0, 0), new InsertOperation(0, "x")));
 		
 		// sleeep
 		Thread.sleep(2000);

@@ -25,6 +25,7 @@ import java.util.Set;
 
 import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.Operation;
+import ch.iserver.ace.util.InterruptedRuntimeException;
 
 /**
  * A session represents one particular editing session of a shared document.
@@ -36,15 +37,21 @@ import ch.iserver.ace.Operation;
  * by accepting an invitation of another user.</p>
  */
 public interface Session {
-		
+	
+	int TRANSFORMATION_FAILED = 1;
+	
+	int LEAVE_FAILED = 2;
+	
+	int SEND_FAILED = 3;
+	
 	/**
 	 * Locks the session's logic so that only the calling thread can access
 	 * the concurrency sensitive parts of the logic. This method must be
 	 * called before any send call is invoked.
 	 * 
-	 * @throws InterruptedException
+	 * @throws InterruptedRuntimeException
 	 */
-	void lock() throws InterruptedException;
+	void lock() throws InterruptedRuntimeException;
 	
 	/**
 	 * Unlocks the session's logic so that other threads may gain access

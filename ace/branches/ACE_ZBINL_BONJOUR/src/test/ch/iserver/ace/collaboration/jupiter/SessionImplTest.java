@@ -29,11 +29,14 @@ import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
-import ch.iserver.ace.algorithm.jupiter.JupiterRequest;
+import ch.iserver.ace.algorithm.RequestImpl;
 import ch.iserver.ace.collaboration.Participant;
+import ch.iserver.ace.collaboration.RemoteUserStub;
 import ch.iserver.ace.collaboration.SessionCallback;
+import ch.iserver.ace.net.RemoteUserProxyStub;
 import ch.iserver.ace.net.SessionConnection;
 import ch.iserver.ace.text.InsertOperation;
+import ch.iserver.ace.util.CallerThreadDomain;
 import ch.iserver.ace.util.Lock;
 
 /**
@@ -46,6 +49,7 @@ public class SessionImplTest extends TestCase {
 		SessionConnection connection = (SessionConnection) connectionCtrl.getMock();
 		
 		SessionImpl impl = new SessionImpl();
+		impl.setThreadDomain(new CallerThreadDomain());
 		impl.setConnection(connection);
 		
 		// define mock behavior
@@ -68,6 +72,7 @@ public class SessionImplTest extends TestCase {
 		SessionConnection connection = (SessionConnection) connectionCtrl.getMock();
 		
 		SessionImpl impl = new SessionImpl(algorithm);
+		impl.setThreadDomain(new CallerThreadDomain());
 		impl.setConnection(connection);
 		
 		// define mock behavior
@@ -95,6 +100,7 @@ public class SessionImplTest extends TestCase {
 		SessionConnection connection = (SessionConnection) connectionCtrl.getMock();
 		
 		SessionImpl impl = new SessionImpl(algorithm);
+		impl.setThreadDomain(new CallerThreadDomain());
 		impl.setConnection(connection);
 		
 		// replay
@@ -120,12 +126,13 @@ public class SessionImplTest extends TestCase {
 		SessionConnection connection = (SessionConnection) connectionCtrl.getMock();
 		
 		SessionImpl impl = new SessionImpl(algorithm);
+		impl.setThreadDomain(new CallerThreadDomain());
 		impl.setConnection(connection);
 		
 		// define mock behavior
 		algorithm.generateCaretUpdateMessage(null);
 		algorithmCtrl.setReturnValue(null);
-		connection.sendCaretUpdate(null);
+		connection.sendCaretUpdateMessage(null);
 		
 		// replay
 		algorithmCtrl.replay();
@@ -147,6 +154,7 @@ public class SessionImplTest extends TestCase {
 		SessionConnection connection = (SessionConnection) connectionCtrl.getMock();
 		
 		SessionImpl impl = new SessionImpl(algorithm);
+		impl.setThreadDomain(new CallerThreadDomain());
 		impl.setConnection(connection);
 		
 		// replay
@@ -214,7 +222,7 @@ public class SessionImplTest extends TestCase {
 		SessionCallback callback = (SessionCallback) callbackCtrl.getMock();
 		
 		Operation operation = new InsertOperation(0, "x");
-		Request request = new JupiterRequest(0, null, operation);
+		Request request = new RequestImpl(0, null, operation);
 		Participant participant = new ParticipantImpl(1, new RemoteUserStub("1"));
 		SessionImpl impl = new SessionImpl(algorithm, lock);
 		impl.setSessionCallback(callback);
@@ -280,16 +288,24 @@ public class SessionImplTest extends TestCase {
 	public void testJoinLeave() throws Exception {
 		MockControl callbackCtrl = MockControl.createControl(SessionCallback.class);
 		SessionCallback callback = (SessionCallback) callbackCtrl.getMock();
-
+		
+		MockControl registryCtrl = MockControl.createControl(UserRegistry.class);
+		UserRegistry registry = (UserRegistry) registryCtrl.getMock();
+		
 		SessionImpl impl = new SessionImpl();
 		impl.setSessionCallback(callback);
+		impl.setUserRegistry(registry);
 		
 		// define mock behavior
 		callback.participantJoined(new ParticipantImpl(1, new RemoteUserStub("1")));
 		callback.participantLeft(new ParticipantImpl(1, new RemoteUserStub("1")), Participant.LEFT);
 		
+		registry.addUser(new RemoteUserProxyStub("1"));
+		registryCtrl.setDefaultReturnValue(new RemoteUserStub("1"));
+		
 		// replay
 		callbackCtrl.replay();
+		registryCtrl.replay();
 		
 		// test
 		impl.participantJoined(1, new RemoteUserProxyStub("1"));
@@ -300,6 +316,7 @@ public class SessionImplTest extends TestCase {
 		
 		// verify
 		callbackCtrl.verify();
+		registryCtrl.verify();
 	}
 
 }

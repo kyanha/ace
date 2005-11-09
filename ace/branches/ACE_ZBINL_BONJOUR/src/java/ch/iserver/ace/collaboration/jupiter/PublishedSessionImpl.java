@@ -26,13 +26,13 @@ import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
+import ch.iserver.ace.algorithm.TransformationException;
 import ch.iserver.ace.algorithm.jupiter.Jupiter;
 import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.collaboration.PublishedSession;
 import ch.iserver.ace.collaboration.PublishedSessionCallback;
+import ch.iserver.ace.collaboration.jupiter.server.PublisherPort;
 import ch.iserver.ace.collaboration.jupiter.server.ServerLogic;
-import ch.iserver.ace.net.ParticipantConnection;
-import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.PortableDocument;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.util.ParameterValidator;
@@ -41,16 +41,14 @@ import ch.iserver.ace.util.SemaphoreLock;
 /**
  *
  */
-public class PublishedSessionImpl extends AbstractSession implements PublishedSession, ParticipantConnection {
+public class PublishedSessionImpl extends AbstractSession implements PublishedSession, PublisherConnection {
 	
 	private ServerLogic logic;
 	
-	private ParticipantPort port;
+	private PublisherPort port;
 	
 	private final PublishedSessionCallback callback;
 	
-	private final PublisherConnection publisherConnection;
-		
 	public PublishedSessionImpl(PublishedSessionCallback callback) {
 		this(callback, new AlgorithmWrapperImpl(new Jupiter(true)));
 	}
@@ -59,7 +57,6 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 		super(wrapper, new SemaphoreLock("client-lock"));
 		ParameterValidator.notNull("callback", callback);
 		this.callback = callback;
-		this.publisherConnection = new PublisherConnectionImpl(getCallback(), getLock(), getAlgorithm());
 	}
 		
 	public void setServerLogic(ServerLogic logic) {
@@ -73,7 +70,7 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 		return logic;
 	}
 	
-	protected ParticipantPort getPort() {
+	protected PublisherPort getPort() {
 		return port;
 	}
 	
@@ -92,15 +89,7 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 	 * @see ch.iserver.ace.collaboration.PublishedSession#kick(ch.iserver.ace.collaboration.Participant)
 	 */
 	public void kick(Participant participant) {
-		getLogic().kick(participant);
-	}
-
-	/**
-	 * @see ch.iserver.ace.collaboration.PublishedSession#conceal()
-	 */
-	public void conceal() {
-		getPublisherConnection().close();
-		getLogic().shutdown();
+		getPort().kick(participant.getParticipantId());
 	}
 
 	/**
@@ -114,7 +103,7 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 	 * @see ch.iserver.ace.collaboration.Session#leave()
 	 */
 	public void leave() {
-		conceal();
+		getPort().leave();
 	}
 
 	/**
@@ -134,7 +123,13 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 		CaretUpdateMessage message = getAlgorithm().generateCaretUpdateMessage(update);
 		getPort().receiveCaretUpdate(message);
 	}
-			
+	
+	// --> start ParticipantConnection implementation <--
+	
+	public void sessionFailed(int reason, Exception e) {
+		getCallback().sessionFailed(reason, e);
+	}
+	
 	/**
 	 * @see ch.iserver.ace.net.ParticipantConnection#setParticipantId(int)
 	 */
@@ -156,25 +151,33 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 	public void close() {
 		// ignore, PublishedSession is the owner			
 	}
-	
-	protected PublisherConnection getPublisherConnection() {
-		return publisherConnection;
-	}
-	
+		
 	/**
 	 * @see ch.iserver.ace.net.ParticipantConnection#sendCaretUpdateMessage(int, ch.iserver.ace.algorithm.CaretUpdateMessage)
 	 */
 	public void sendCaretUpdateMessage(int participantId, CaretUpdateMessage message) {
-		Participant participant = getParticipant(participantId);
-		getPublisherConnection().receiveCaretUpdateMessage(participant, message);
+		try {
+			Participant participant = getParticipant(participantId);
+			CaretUpdate update = getAlgorithm().receiveCaretUpdateMessage(message);
+			getCallback().receiveCaretUpdate(participant, update);
+		} catch (TransformationException e) {
+			getCallback().sessionFailed(TRANSFORMATION_FAILED, e);
+			leave();
+		}
 	}
 		
 	/**
 	 * @see ch.iserver.ace.net.ParticipantConnection#sendRequest(int, ch.iserver.ace.algorithm.Request)
 	 */
 	public void sendRequest(int participantId, Request request) {
-		Participant participant = getParticipant(participantId);
-		getPublisherConnection().receiveRequest(participant, request);
+		try {
+			Participant participant = getParticipant(participantId);
+			Operation op = getAlgorithm().receiveRequest(request);
+			getCallback().receiveOperation(participant, op);
+		} catch (TransformationException e) {
+			getCallback().sessionFailed(TRANSFORMATION_FAILED, e);
+			leave();
+		}
 	}
 
 	/**
@@ -182,8 +185,8 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 	 */
 	public void sendParticipantJoined(int participantId, RemoteUserProxy proxy) {
 		Participant participant = createParticipant(participantId, proxy);
-		addParticipant(createParticipant(participantId, proxy));
-		getPublisherConnection().participantJoined(participant);
+		addParticipant(participant);
+		getCallback().participantJoined(participant);
 	}
 			
 	/**
@@ -192,7 +195,7 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 	public void sendParticipantLeft(int participantId, int reason) {
 		Participant participant = getParticipant(participantId);
 		removeParticipant(participant);
-		getPublisherConnection().participantLeft(participant, reason);
+		getCallback().participantLeft(participant, reason);
 	}
 
 	/**

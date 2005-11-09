@@ -29,13 +29,13 @@ import javax.swing.undo.CannotUndoException;
 
 import org.apache.log4j.Logger;
 
-import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.Algorithm;
-import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.InclusionTransformation;
 import ch.iserver.ace.algorithm.Request;
+import ch.iserver.ace.algorithm.RequestImpl;
 import ch.iserver.ace.algorithm.Timestamp;
+import ch.iserver.ace.algorithm.TransformationException;
 import ch.iserver.ace.text.GOTOInclusionTransformation;
 import ch.iserver.ace.text.SplitOperation;
 
@@ -77,9 +77,9 @@ public class Jupiter implements Algorithm {
 	 */
 	public Request generateRequest(Operation op) {
 		// send(op, myMsgs, otherMsgs);
-		Request req = new JupiterRequest(
+		Request req = new RequestImpl(
 						getSiteId(), 
-						(JupiterVectorTime) vectorTime.clone(), 
+						(Timestamp) vectorTime.clone(), 
 						op);
 
 		// add(op, myMsgs) to outgoing;
@@ -100,29 +100,24 @@ public class Jupiter implements Algorithm {
 		return req;
 	}
 	
-	public CaretUpdateMessage generateCaretUpdateMessage(CaretUpdate update) {
-		CaretUpdateMessage msg = new CaretUpdateMessage(
-						getSiteId(),
-						(JupiterVectorTime) vectorTime.clone(),
-						update);
-		return msg;
-	}
-
 	/**
 	 * {@inheritDoc}
 	 */
-	public Operation receiveRequest(Request req) {
+	public Operation receiveRequest(Request req) throws TransformationException {
 		LOG.info(">>> recv");
-		JupiterRequest jupReq = (JupiterRequest) req;
-		checkPreconditions(jupReq.getJupiterVectorTime());
+		Timestamp timestamp = req.getTimestamp();
+		if (!(timestamp instanceof JupiterVectorTime)) {
+			throw new IllegalArgumentException("Jupiter expects timestamps of type JupiterVectorTime");
+		}
+		checkPreconditions((JupiterVectorTime) timestamp);
 		LOG.info("ini:" + ackRequestList);
 
 		// Discard acknowledged messages.
-		discardOperations(jupReq.getJupiterVectorTime());
+		discardOperations((JupiterVectorTime) timestamp);
 
 		LOG.info("dsc:" + ackRequestList);
 
-		Operation newOp = transform(jupReq.getOperation());
+		Operation newOp = transform(req.getOperation());
 
 		LOG.info("tnf:" + ackRequestList);
 
@@ -131,7 +126,7 @@ public class Jupiter implements Algorithm {
 		return newOp;
 	}
 	
-	public int[] transformIndices(Timestamp timestamp, int[] indices) {
+	public int[] transformIndices(Timestamp timestamp, int[] indices) throws TransformationException {
 		checkPreconditions((JupiterVectorTime) timestamp);
 		discardOperations((JupiterVectorTime) timestamp);
 		int[] result = new int[indices.length]; 
@@ -240,17 +235,17 @@ public class Jupiter implements Algorithm {
 	 * @param jupReq
 	 *            the request to be tested.
 	 */
-	private void checkPreconditions(JupiterVectorTime time) {
+	private void checkPreconditions(JupiterVectorTime time) throws TransformationException {
 		if (!ackRequestList.isEmpty()
 						&& time.getRemoteOperationCount() < ((OperationWrapper) ackRequestList
 							   .get(0)).getLocalOperationCount()) {
-			throw new JupiterException("precondition #1 violated.");
+			throw new TransformationException("precondition #1 violated.");
 		} else if (time.getRemoteOperationCount() > vectorTime
 						.getLocalOperationCount()) {
-			throw new JupiterException("precondition #2 violated.");
+			throw new TransformationException("precondition #2 violated.");
 		} else if (time.getLocalOperationCount() != vectorTime
 						.getRemoteOperationCount()) {
-			throw new JupiterException("precondition #3 violated: " + time + " , " + vectorTime);
+			throw new TransformationException("precondition #3 violated: " + time + " , " + vectorTime);
 		}
 	}
 

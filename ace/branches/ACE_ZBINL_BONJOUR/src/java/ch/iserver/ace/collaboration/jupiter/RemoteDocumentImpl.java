@@ -21,18 +21,24 @@
 
 package ch.iserver.ace.collaboration.jupiter;
 
-import ch.iserver.ace.DocumentDetails;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+
 import ch.iserver.ace.collaboration.JoinCallback;
 import ch.iserver.ace.collaboration.RemoteDocument;
 import ch.iserver.ace.collaboration.RemoteUser;
-import ch.iserver.ace.net.JoinNetworkCallback;
 import ch.iserver.ace.net.RemoteDocumentProxy;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
  * Default implementation of the RemoteDocument interface.
  */
-class RemoteDocumentImpl implements RemoteDocument {
+class RemoteDocumentImpl implements MutableRemoteDocument {
+		
+	/**
+	 * 
+	 */
+	private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 	
 	/**
 	 * The wrapped RemoteDocumentProxy instance.
@@ -42,17 +48,37 @@ class RemoteDocumentImpl implements RemoteDocument {
 	/**
 	 * The publisher of the document.
 	 */
-	private RemoteUser publisher;
+	private final RemoteUser publisher;
+	
+	/**
+	 * 
+	 */
+	private final SessionFactory sessionFactory;
+	
+	/**
+	 * 
+	 */
+	private String title;
+	
+	
 	
 	/**
 	 * Creates a new RemoteDocumentImpl passing most requests directly to
 	 * the passed in RemoteDocumentProxy.
-	 * 
-	 * @param proxy the wrapped RemoteDocumentProxy
 	 */
-	RemoteDocumentImpl(RemoteDocumentProxy proxy) {
+	RemoteDocumentImpl(RemoteDocumentProxy proxy, SessionFactory sessionFactory, RemoteUser publisher) {
 		ParameterValidator.notNull("proxy", proxy);
+		ParameterValidator.notNull("sessionFactory", sessionFactory);
+		ParameterValidator.notNull("publisher", publisher);
 		this.proxy = proxy;
+		this.sessionFactory = sessionFactory;
+		this.publisher = publisher;
+		this.title = proxy.getDocumentDetails().getTitle();
+		this.title = this.title == null ? "" : title;
+	}
+	
+	private SessionFactory getSessionFactory() {
+		return sessionFactory;
 	}
 	
 	/**
@@ -63,19 +89,27 @@ class RemoteDocumentImpl implements RemoteDocument {
 	}
 
 	/**
-	 * @see ch.iserver.ace.collaboration.RemoteDocument#getDocumentDetails()
+	 * @see ch.iserver.ace.collaboration.RemoteDocument#getTitle()
 	 */
-	public DocumentDetails getDocumentDetails() {
-		return proxy.getDocumentDetails();
+	public String getTitle() {
+		return title;
+	}
+	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.MutableRemoteDocument#setTitle(java.lang.String)
+	 */
+	public void setTitle(String title) {
+		String old = this.title;
+		if (!old.equals(title)) {
+			this.title = title;
+			support.firePropertyChange(TITLE_PROPERTY, old, title);
+		}
 	}
 
 	/**
 	 * @see ch.iserver.ace.collaboration.RemoteDocument#getPublisher()
 	 */
 	public RemoteUser getPublisher() {
-		if (publisher == null) {
-			publisher = new RemoteUserImpl(proxy.getPublisher());
-		}
 		return publisher;
 	}
 
@@ -83,8 +117,21 @@ class RemoteDocumentImpl implements RemoteDocument {
 	 * @see ch.iserver.ace.collaboration.RemoteDocument#join(ch.iserver.ace.collaboration.JoinCallback)
 	 */
 	public void join(final JoinCallback callback) {
-		JoinNetworkCallback networkCallback = new JoinNetworkCallbackImpl(callback);
-		proxy.join(networkCallback);
+		proxy.join(new JoinNetworkCallbackImpl(callback, getSessionFactory()));
+	}
+	
+	/**
+	 * @see ch.iserver.ace.collaboration.RemoteDocument#addPropertyChangeListener(java.beans.PropertyChangeListener)
+	 */
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		support.addPropertyChangeListener(listener);
+	}
+	
+	/**
+	 * @see ch.iserver.ace.collaboration.RemoteDocument#removePropertyChangeListener(java.beans.PropertyChangeListener)
+	 */
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		support.removePropertyChangeListener(listener);
 	}
 	
 	/**

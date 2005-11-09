@@ -29,6 +29,7 @@ import org.apache.log4j.Logger;
 import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.Request;
+import ch.iserver.ace.algorithm.TransformationException;
 import ch.iserver.ace.test.AlgorithmTestFactory;
 import ch.iserver.ace.test.DefaultDocument;
 import ch.iserver.ace.test.ExecuteVisitor;
@@ -92,14 +93,18 @@ public class NWayExecuteVisitor extends ExecuteVisitor {
 		LOG.info("visit: " + node);
 		String participantId = "" + node.getSenderParticipantId();
 		Algorithm algo = getServerAlgorithm(participantId);
-		Operation op = algo.receiveRequest(node.getRequest());
-		LOG.info("receive from " + participantId + ": " + op);
-		Iterator succ = node.getRemoteSuccessors().iterator();
-		while (succ.hasNext()) {
-			ReceptionNode remote = (ReceptionNode) succ.next();
-			algo = getServerAlgorithm(remote.getParticipantId());
-			Request request = algo.generateRequest(op);
-			remote.setRequest(participantId, request);
+		try {
+			Operation op = algo.receiveRequest(node.getRequest());
+			LOG.info("receive from " + participantId + ": " + op);
+			Iterator succ = node.getRemoteSuccessors().iterator();
+			while (succ.hasNext()) {
+				ReceptionNode remote = (ReceptionNode) succ.next();
+				algo = getServerAlgorithm(remote.getParticipantId());
+				Request request = algo.generateRequest(op);
+				remote.setRequest(participantId, request);
+			}
+		} catch (TransformationException e) {
+			throw new RuntimeException("algorithm threw unexpected runtime exception", e);
 		}
 	}
 

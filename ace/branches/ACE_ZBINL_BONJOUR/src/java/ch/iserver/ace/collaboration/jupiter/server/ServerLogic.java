@@ -24,30 +24,88 @@ package ch.iserver.ace.collaboration.jupiter.server;
 import java.util.Iterator;
 
 import ch.iserver.ace.DocumentDetails;
-import ch.iserver.ace.collaboration.Participant;
+import ch.iserver.ace.net.DocumentServer;
 import ch.iserver.ace.net.DocumentServerLogic;
-import ch.iserver.ace.net.ParticipantPort;
+import ch.iserver.ace.net.PortableDocument;
 
 /**
- *
+ * Extended interface for internal use of the server logic.
  */
 public interface ServerLogic extends DocumentServerLogic {
 	
-	ParticipantPort getPublisherPort();
+	/**
+	 * The participant id of the publisher.
+	 */
+	int PUBLISHER_ID = 0;
 	
-	void setDocumentDetails(DocumentDetails details);
+	/**
+	 * Sets the document server that is associated with this server logic.
+	 * 
+	 * @param server the server
+	 */
+	void setDocumentServer(DocumentServer server);
 	
-	void kick(Participant participant);
+	/**
+	 * Adds a participant to the session logic.
+	 * 
+	 * @param participant the participant to add
+	 */
+	void addParticipant(SessionParticipant participant);
 	
-	void shutdown();
-	
+	/**
+	 * Gets an Iterator over all the participant proxy objects in the
+	 * session.
+	 * 
+	 * @return an Iterator over all participant proxies
+	 */
 	Iterator getParticipantProxies();
 	
 	/**
-	 * Notifies the server that the specified user leaves the editing session.
+	 * Retrieves the current document for sending it to a joining user.
+	 * 
+	 * @return the current document as present at the server
+	 */
+	PortableDocument getDocument();
+
+	/**
+	 * Retrieves the PublisherPort used by the publisher to send requests to
+	 * the logical server.
+	 * 
+	 * @return the port for the publisher
+	 */
+	PublisherPort getPublisherPort();
+	
+	/**
+	 * Sets the document details object for the session.
+	 * 
+	 * @param details the document details object
+	 */
+	void setDocumentDetails(DocumentDetails details);
+	
+	/**
+	 * Notifies the server that the specified user left the editing session.
 	 *
 	 * @param participantId the participant id of the leaving user
 	 */
 	void leave(int participantId);
 
+	/**
+	 * Kicks the participant with the given id from the session.
+	 * 
+	 * @param participant the participant to be kicked
+	 */
+	void kick(int participant);
+	
+	/**
+	 * Prepares the shutdown of the server. After calling this method, the 
+	 * server should no longer accept any join requests.
+	 */
+	void prepareShutdown();
+
+	/**
+	 * Shuts the server logic down. The server logic takes care that the
+	 * associated document server is shut down too. 
+	 */
+	void shutdown();
+			
 }

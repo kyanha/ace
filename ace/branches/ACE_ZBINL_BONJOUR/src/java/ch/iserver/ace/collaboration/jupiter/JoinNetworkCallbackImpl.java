@@ -40,15 +40,22 @@ class JoinNetworkCallbackImpl implements JoinNetworkCallback {
 	private final JoinCallback callback;
 	
 	/**
+	 * 
+	 */
+	private final SessionFactory sessionFactory;
+	
+	/**
 	 * Creates a new JoinNetworkCallbackImpl wrapping the given JoinCallback
 	 * from the application layer.
 	 * 
 	 * @param joinCallback the JoinCallback passed in from the application
 	 *                     layer
 	 */
-	JoinNetworkCallbackImpl(JoinCallback joinCallback) {
+	JoinNetworkCallbackImpl(JoinCallback joinCallback, SessionFactory factory) {
 		ParameterValidator.notNull("joinCallback", joinCallback);
+		ParameterValidator.notNull("factory", factory);
 		this.callback = joinCallback;
+		this.sessionFactory = factory;
 	}
 
 	/**
@@ -57,12 +64,16 @@ class JoinNetworkCallbackImpl implements JoinNetworkCallback {
 	private JoinCallback getCallback() {
 		return callback;
 	}
-
+		
+	private SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+	
 	/**
 	 * @see ch.iserver.ace.net.JoinNetworkCallback#accepted(ch.iserver.ace.net.SessionConnection)
 	 */
 	public SessionConnectionCallback accepted(SessionConnection connection) {
-		SessionImpl session = new SessionImpl();
+		ConfigurableSession session = getSessionFactory().createSession();
 		session.setConnection(connection);
 		session.setSessionCallback(getCallback().accepted(session));
 		return session;

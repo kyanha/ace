@@ -22,8 +22,12 @@
 package ch.iserver.ace.collaboration.jupiter;
 
 import java.net.InetAddress;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.event.EventListenerList;
+
+import org.apache.log4j.Logger;
 
 import ch.iserver.ace.DocumentModel;
 import ch.iserver.ace.UserDetails;
@@ -44,13 +48,17 @@ import ch.iserver.ace.net.NetworkService;
 import ch.iserver.ace.net.NetworkServiceCallback;
 import ch.iserver.ace.net.RemoteDocumentProxy;
 import ch.iserver.ace.net.RemoteUserProxy;
+import ch.iserver.ace.util.Lock;
 import ch.iserver.ace.util.ParameterValidator;
 import ch.iserver.ace.util.SemaphoreLock;
+import ch.iserver.ace.util.ThreadDomain;
 
 /**
  *
  */
 public class CollaborationServiceImpl implements CollaborationService, NetworkServiceCallback {
+	
+	private static final Logger LOG = Logger.getLogger(CollaborationServiceImpl.class);
 	
 	private final NetworkService service;
 	
@@ -58,11 +66,54 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	
 	private InvitationCallback callback = NullInvitationCallback.getInstance();
 	
+	private UserRegistry userRegistry;
+	
+	private DocumentRegistry documentRegistry;;
+	
+	private SessionFactory sessionFactory;
+	
+	private ThreadDomain publisherThreadDomain;
+	
 	public CollaborationServiceImpl(NetworkService service) {
 		ParameterValidator.notNull("service", service);
 		this.service = service;
 		this.service.setCallback(this);
 		this.service.setTimestampFactory(new JupiterTimestampFactory());
+	}
+	
+	public UserRegistry getUserRegistry() {
+		return userRegistry;
+	}
+	
+	public void setUserRegistry(UserRegistry registry) {
+		ParameterValidator.notNull("registry", registry);
+		this.userRegistry = registry;
+	}
+	
+	public DocumentRegistry getDocumentRegistry() {
+		return documentRegistry;
+	}
+	
+	public void setDocumentRegistry(DocumentRegistry registry) {
+		ParameterValidator.notNull("registry", registry);
+		this.documentRegistry = registry;
+	}
+		
+	public SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+	
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
+	
+	public ThreadDomain getPublisherThreadDomain() {
+		return publisherThreadDomain;
+	}
+	
+	public void setPublisherThreadDomain(ThreadDomain domain) {
+		ParameterValidator.notNull("domain", domain);
+		this.publisherThreadDomain = domain;
 	}
 	
 	protected NetworkService getNetworkService() {
@@ -122,10 +173,13 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	 */
 	public PublishedSession publish(PublishedSessionCallback callback, DocumentModel document) {
 		PublishedSessionImpl session = new PublishedSessionImpl(callback);
-		ServerLogicImpl logic = new ServerLogicImpl(new SemaphoreLock("server-lock"), session, document);
+		session.setUserRegistry(getUserRegistry());
+		Lock semaphoreLock = new SemaphoreLock("server-lock");
+		ServerLogicImpl logic = new ServerLogicImpl(semaphoreLock, getPublisherThreadDomain(), session, document);
 		session.setServerLogic(logic);
-		DocumentServer server = getNetworkService().publish(logic);
+		DocumentServer server = getNetworkService().publish(logic, document.getDetails());
 		logic.setDocumentServer(server);
+		logic.start();
 		return session;
 	}
 
@@ -135,69 +189,112 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	public void discoverUser(DiscoveryCallback callback, InetAddress addr,
 					int port) {
 		getNetworkService().discoverUser(
-						new DiscoveryNetworkCallbackImpl(callback), 
+						new DiscoveryNetworkCallbackImpl(callback, getUserRegistry()), 
 						addr, 
 						port);
 	}
 	
 	// --> network service callback methods <--
 
-	public void documentDiscovered(RemoteDocumentProxy proxy) {
-		RemoteDocument doc = new RemoteDocumentImpl(proxy);
+	/**
+	 * @see ch.iserver.ace.net.NetworkServiceCallback#documentDiscovered(ch.iserver.ace.net.RemoteDocumentProxy[])
+	 */
+	public void documentDiscovered(RemoteDocumentProxy[] proxies) {
+		RemoteDocument[] documents = new RemoteDocument[proxies.length];
+		for (int i = 0; i < proxies.length; i++) {
+			documents[i] = getDocumentRegistry().addDocument(proxies[i]);
+		}
 		DocumentListener[] list = (DocumentListener[]) listeners.getListeners(DocumentListener.class);
 		for (int i = 0; i < list.length; i++) {
 			DocumentListener listener = list[i];
-			listener.documentDiscovered(doc);
+			listener.documentsDiscovered(documents);
 		}		
 	}
 	
+	/**
+	 * @see ch.iserver.ace.net.NetworkServiceCallback#documentDetailsChanged(ch.iserver.ace.net.RemoteDocumentProxy)
+	 */
 	public void documentDetailsChanged(RemoteDocumentProxy proxy) {
-		RemoteDocument doc = new RemoteDocumentImpl(proxy);
-		DocumentListener[] list = (DocumentListener[]) listeners.getListeners(DocumentListener.class);
-		for (int i = 0; i < list.length; i++) {
-			DocumentListener listener = list[i];
-			listener.documentDetailsChanged(doc);
-		}		
-	}
-	
-	public void documentDiscarded(RemoteDocumentProxy proxy) {
-		RemoteDocument doc = new RemoteDocumentImpl(proxy);
-		DocumentListener[] list = (DocumentListener[]) listeners.getListeners(DocumentListener.class);
-		for (int i = 0; i < list.length; i++) {
-			DocumentListener listener = list[i];
-			listener.documentDiscarded(doc);
+		MutableRemoteDocument doc = getDocumentRegistry().getDocument(proxy.getId());
+		if (doc == null) {
+			LOG.error("documentDetailsChanged called with an unknown document id (i.e. documentDiscovered not called)");
+		} else {
+			doc.setTitle(proxy.getDocumentDetails().getTitle());
 		}
 	}
 	
-	public void userDiscovered(RemoteUserProxy proxy) {
-		RemoteUser user = new RemoteUserImpl(proxy);
-		UserListener[] list = (UserListener[]) listeners.getListeners(UserListener.class);
+	/**
+	 * @see ch.iserver.ace.net.NetworkServiceCallback#documentDiscarded(ch.iserver.ace.net.RemoteDocumentProxy[])
+	 */
+	public void documentDiscarded(RemoteDocumentProxy[] proxies) {
+		List tmp = new ArrayList();
+		for (int i = 0; i < proxies.length; i++) {
+			RemoteDocument doc = getDocumentRegistry().removeDocument(proxies[i]);
+			if (doc == null) {
+				LOG.error("documentDiscarded called without previos documentDiscovered call");
+			}
+			tmp.add(doc);
+		}
+		RemoteDocument[] documents = (RemoteDocument[]) tmp.toArray(new RemoteDocument[tmp.size()]);
+		DocumentListener[] list = (DocumentListener[]) listeners.getListeners(DocumentListener.class);
 		for (int i = 0; i < list.length; i++) {
-			UserListener listener = list[i];
+			DocumentListener listener = list[i];
+			listener.documentsDiscovered(documents);
+		}
+	}
+	
+	/**
+	 * @see ch.iserver.ace.net.NetworkServiceCallback#userDiscovered(ch.iserver.ace.net.RemoteUserProxy)
+	 */
+	public void userDiscovered(RemoteUserProxy proxy) {
+		RemoteUser user = getUserRegistry().addUser(proxy);
+		UserListener[] listeners = (UserListener[]) this.listeners.getListeners(UserListener.class);
+		for (int i = 0; i < listeners.length; i++) {
+			UserListener listener = listeners[i];
 			listener.userDiscovered(user);
 		}
 	}
 
+	/**
+	 * @see ch.iserver.ace.net.NetworkServiceCallback#userDetailsChanged(ch.iserver.ace.net.RemoteUserProxy)
+	 */
 	public void userDetailsChanged(RemoteUserProxy proxy) {
-		RemoteUser user = new RemoteUserImpl(proxy);
-		UserListener[] list = (UserListener[]) listeners.getListeners(UserListener.class);
-		for (int i = 0; i < list.length; i++) {
-			UserListener listener = list[i];
-			listener.userDetailsChanged(user);
+		MutableRemoteUser user = getUserRegistry().getUser(proxy.getId());
+		if (user == null) {
+			// TODO: throw exception
+			LOG.error("userDetailsChanged called with an unkown user id (i.e. userDiscovered not called)");
+		} else {
+			user.setName(proxy.getUserDetails().getUsername());
 		}
 	}
 
+	/**
+	 * @see ch.iserver.ace.net.NetworkServiceCallback#userDiscarded(ch.iserver.ace.net.RemoteUserProxy)
+	 */
 	public void userDiscarded(RemoteUserProxy proxy) {
-		RemoteUser user = new RemoteUserImpl(proxy);
-		UserListener[] list = (UserListener[]) listeners.getListeners(UserListener.class);
-		for (int i = 0; i < list.length; i++) {
-			UserListener listener = list[i];
-			listener.userDiscarded(user);
+		RemoteUser user = getUserRegistry().removeUser(proxy);
+		if (user == null) {
+			// TODO: throw exception
+			LOG.error("userDiscarded called without previous userDiscovered call");
+		} else {
+			UserListener[] listeners = (UserListener[]) this.listeners.getListeners(UserListener.class);
+			for (int i = 0; i < listeners.length; i++) {
+				UserListener listener = listeners[i];
+				listener.userDiscovered(user);
+			}
 		}
 	}
 
-	public void invitationReceived(InvitationProxy invitation) {
-		getInvitationCallback().invitationReceived(new InvitationImpl(invitation));
+	/**
+	 * @see ch.iserver.ace.net.NetworkServiceCallback#invitationReceived(ch.iserver.ace.net.InvitationProxy)
+	 */
+	public void invitationReceived(InvitationProxy proxy) {
+		RemoteDocument document = getDocumentRegistry().getDocument(proxy.getDocument().getId());
+		InvitationImpl invitation = new InvitationImpl(
+						proxy,
+						document,
+						getSessionFactory());
+		getInvitationCallback().invitationReceived(invitation);
 	}
 			
 }

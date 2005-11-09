@@ -23,6 +23,7 @@ package ch.iserver.ace.net;
 
 import java.net.InetAddress;
 
+import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.algorithm.TimestampFactory;
 
@@ -69,10 +70,11 @@ public interface NetworkService {
 	 * 
 	 * @param logic the DocumentServerLogic providing access to logic layer
 	 *              functionality
+	 * @param details the document details
 	 * @return a DocumentServer instance that allows the caller to control
 	 *         the network layer server functionality
 	 */
-	DocumentServer publish(DocumentServerLogic logic);
+	DocumentServer publish(DocumentServerLogic logic, DocumentDetails details);
 	
 	/**
 	 * Initiates an explicit discovery of a user. The network layer tries to 

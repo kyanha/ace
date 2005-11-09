@@ -21,16 +21,19 @@
 
 package ch.iserver.ace.collaboration.jupiter.server;
 
+import junit.framework.TestCase;
+
 import org.easymock.MockControl;
 
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
-import ch.iserver.ace.algorithm.jupiter.JupiterRequest;
+import ch.iserver.ace.algorithm.RequestImpl;
+import ch.iserver.ace.collaboration.jupiter.server.serializer.CaretUpdateSerializerCommand;
+import ch.iserver.ace.collaboration.jupiter.server.serializer.RequestSerializerCommand;
 import ch.iserver.ace.net.ParticipantPort;
-import ch.iserver.ace.util.BlockingQueue;
-import ch.iserver.ace.util.LinkedBlockingQueue;
-import junit.framework.TestCase;
+import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
+import edu.emory.mathcs.backport.java.util.concurrent.LinkedBlockingQueue;
 
 public class ParticipantPortImplTest extends TestCase {
 	
@@ -50,28 +53,21 @@ public class ParticipantPortImplTest extends TestCase {
 		port = new ParticipantPortImpl(null, 1, algorithm, queue);
 	}
 	
-	/**
-	 * Test method for 'ch.iserver.ace.collaboration.jupiter.server.ParticipantPortImpl.receiveCaretUpdate(CaretUpdateMessage)'
-	 */
 	public void testReceiveCaretUpdate() throws InterruptedException {
 		CaretUpdateMessage message = new CaretUpdateMessage(0, null, null);
 		port.receiveCaretUpdate(message);
 		assertEquals(1, queue.size());
-		CaretUpdateSerializerCommand command = (CaretUpdateSerializerCommand) queue.get();
+		CaretUpdateSerializerCommand command = (CaretUpdateSerializerCommand) queue.take();
 		assertEquals(1, command.getParticipantId());
 		assertSame(algorithm, command.getAlgorithm());
 		assertSame(message, command.getMessage());
-		
 	}
 
-	/**
-	 * Test method for 'ch.iserver.ace.collaboration.jupiter.server.ParticipantPortImpl.receiveRequest(Request)'
-	 */
 	public void testReceiveRequest() throws InterruptedException {
-		Request request = new JupiterRequest(0, null, null);
+		Request request = new RequestImpl(0, null, null);
 		port.receiveRequest(request);
 		assertEquals(1, queue.size());
-		RequestSerializerCommand command = (RequestSerializerCommand) queue.get();
+		RequestSerializerCommand command = (RequestSerializerCommand) queue.take();
 		assertEquals(1, command.getParticipantId());
 		assertSame(algorithm, command.getAlgorithm());
 		assertSame(request, command.getRequest());

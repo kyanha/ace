@@ -26,26 +26,38 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.apache.log4j.Logger;
+
 import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.DocumentModel;
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.jupiter.Jupiter;
 import ch.iserver.ace.collaboration.Participant;
+import ch.iserver.ace.collaboration.jupiter.PublisherConnection;
+import ch.iserver.ace.collaboration.jupiter.server.serializer.JoinCommand;
+import ch.iserver.ace.collaboration.jupiter.server.serializer.LeaveCommand;
+import ch.iserver.ace.collaboration.jupiter.server.serializer.Serializer;
+import ch.iserver.ace.collaboration.jupiter.server.serializer.SerializerCommand;
+import ch.iserver.ace.collaboration.jupiter.server.serializer.ShutdownCommand;
 import ch.iserver.ace.net.DocumentServer;
 import ch.iserver.ace.net.DocumentServerLogic;
 import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.PortableDocument;
 import ch.iserver.ace.net.RemoteUserProxy;
-import ch.iserver.ace.util.BlockingQueue;
-import ch.iserver.ace.util.LinkedBlockingQueue;
+import ch.iserver.ace.util.InterruptedRuntimeException;
 import ch.iserver.ace.util.Lock;
 import ch.iserver.ace.util.ParameterValidator;
+import ch.iserver.ace.util.ThreadDomain;
+import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
+import edu.emory.mathcs.backport.java.util.concurrent.LinkedBlockingQueue;
 
 /**
  *
  */
-public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
+public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, FailureHandler {
+	
+	private static final Logger LOG = Logger.getLogger(ServerLogicImpl.class);
 	
 	private int nextParticipantId;
 	
@@ -61,55 +73,65 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 	
 	private final TreeMap connections = new TreeMap();
 	
-	private final BlockingQueue dispatcherQueue;
-	
-	private final Dispatcher dispatcher;
-	
 	private DocumentServer server;
 	
-	private final Lock lock;
+	private final ThreadDomain threadDomain;
 	
-	private final ParticipantPort publisherPort;
+	private final PublisherConnection publisherConnection;
+	
+	private final PublisherPort publisherPort;
 	
 	private final ServerDocument document;
 	
-	public ServerLogicImpl(Lock lock, ParticipantConnection connection, DocumentModel document) {
+	private boolean acceptingJoins;
+	
+	public ServerLogicImpl(Lock lock, 
+	                       ThreadDomain domain, 
+	                       PublisherConnection connection, 
+	                       DocumentModel document) {
 		ParameterValidator.notNull("lock", lock);
+		ParameterValidator.notNull("domain", domain);
 		ParameterValidator.notNull("connection", connection);
 		ParameterValidator.notNull("document", document);
 		
 		this.nextParticipantId = 0;
-		this.forwarder = new ForwarderImpl(this);
+		this.forwarder = new CompositeForwarder(this);
 		
-		this.lock = lock;
+		this.threadDomain = domain;
 		
 		this.serializerQueue = new LinkedBlockingQueue();
-		this.serializer = new Serializer(serializerQueue, lock, forwarder);
+		this.serializer = new Serializer(serializerQueue, lock, forwarder, this);
 		
-		this.dispatcherQueue = new LinkedBlockingQueue();
-		this.dispatcher = new Dispatcher(dispatcherQueue);
+		this.publisherConnection = connection;
 		
-		this.publisherPort = createPublisherPort(connection);
+		ParticipantConnection wrapped = (ParticipantConnection) threadDomain.wrap(
+				new ParticipantConnectionWrapper(connection, this), ParticipantConnection.class);
+		this.publisherPort = createPublisherPort(wrapped);
 		
 		this.document = new ServerDocumentImpl();
+		this.document.participantJoined(0, null);
 		this.document.insertString(0, 0, document.getContent());
 		this.document.updateCaret(0, document.getDot(), document.getMark());
 		
 		this.proxies.put(new Integer(-1), new DocumentUpdateProxy(this.document));
 	}
 	
-	protected ParticipantPort createPublisherPort(ParticipantConnection connection) {
+	protected PublisherPort createPublisherPort(ParticipantConnection connection) {
 		Algorithm algorithm = new Jupiter(false);
 		int participantId = 0;
 		connection.setParticipantId(participantId);
-		ParticipantPort port = new ParticipantPortImpl(this, participantId, algorithm, getSerializerQueue());
-		ParticipantProxy proxy = new ParticipantProxyImpl(participantId, dispatcherQueue, algorithm, connection);
-		addParticipant(port, proxy, connection);
+		PublisherPort port = new PublisherPortImpl(this, participantId, algorithm, getSerializerQueue());
+		ParticipantProxy proxy = new ParticipantProxy(participantId, algorithm, connection);
+		addParticipant(new SessionParticipant(port, proxy, connection, null));
 		return port;
 	}
 	
-	protected ServerDocument getDocument() {
-		return document;
+	public boolean isAcceptingJoins() {
+		return acceptingJoins;
+	}
+	
+	public PortableDocument getDocument() {
+		return document.toPortableDocument();
 	}
 	
 	protected DocumentServer getDocumentServer() {
@@ -121,14 +143,17 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 		this.server = server;
 	}
 	
+	public ThreadDomain getThreadDomain() {
+		return threadDomain;
+	}
+		
 	public void start() {
+		acceptingJoins = true;
 		serializer.start();
-		dispatcher.start();
 	}
 	
 	public void dispose() throws InterruptedException {
 		serializer.kill();
-		dispatcher.kill();
 	}
 	
 	private synchronized int nextParticipantId() {
@@ -139,13 +164,20 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 		return serializerQueue;
 	}
 	
-	protected synchronized void addParticipant(ParticipantPort port, ParticipantProxy proxy, ParticipantConnection connection) {
-		Integer key = new Integer(port.getParticipantId());
-		ports.put(key, port);
-		proxies.put(key, proxy);
-		connections.put(key, connection);
+	protected PublisherConnection getPublisherConnection() {
+		return publisherConnection;
 	}
 	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerLogic#addParticipant(ch.iserver.ace.collaboration.jupiter.server.SessionParticipant)
+	 */
+	public synchronized void addParticipant(SessionParticipant participant) {
+		Integer key = new Integer(participant.getParticipantId());
+		ports.put(key, participant.getParticipantPort());
+		proxies.put(key, participant.getParticipantProxy());
+		connections.put(key, participant.getParticipantConnection());
+	}
+		
 	protected synchronized void removeParticipant(int participantId) {
 		Integer key = new Integer(participantId);
 		connections.remove(key);
@@ -153,100 +185,130 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic {
 		ports.remove(key);
 	}
 		
-	protected synchronized Map getParticipantConnections() {
-		return (Map) connections.clone();
-	}
-	
-	private ParticipantConnection getParticipantConnection(int id) {
+	private synchronized ParticipantConnection getParticipantConnection(int id) {
 		return (ParticipantConnection) connections.get(new Integer(id));
 	}
+				
+	/**
+	 * @see ch.iserver.ace.net.DocumentServerLogic#join(ch.iserver.ace.net.ParticipantConnection)
+	 */
+	public synchronized ParticipantPort join(ParticipantConnection target) {
+		if (!isAcceptingJoins()) {
+			// TODO: correct exception type
+			throw new IllegalStateException("DocumentServerLogic is not accepting joins");
+		}
+		
+		Algorithm algorithm = new Jupiter(false);
+		int participantId = nextParticipantId();
+		target.setParticipantId(participantId);
+		
+		ParticipantPort port = new ParticipantPortImpl(this, participantId, algorithm, getSerializerQueue());
+		ParticipantProxy proxy = new ParticipantProxy(participantId, algorithm, target);
+		ParticipantConnection connection = (ParticipantConnection) getThreadDomain().wrap(
+				new ParticipantConnectionWrapper(target, this), ParticipantConnection.class);
+		RemoteUserProxy user = target.getUser();
+		SessionParticipant participant = new SessionParticipant(port, proxy, connection, user);
+		SerializerCommand cmd = new JoinCommand(participant, this);
+		getSerializerQueue().add(cmd);
+		
+		return port;
+	}
 	
-	public ParticipantPort getPublisherPort() {
+	// --> session logic methods <--
+	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerLogic#getPublisherPort()
+	 */
+	public PublisherPort getPublisherPort() {
 		return publisherPort;
 	}
-		
-	protected PortableDocument retrieveDocument() {
-		lock.lock();
+
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerLogic#setDocumentDetails(ch.iserver.ace.DocumentDetails)
+	 */
+	public void setDocumentDetails(DocumentDetails details) {
+		getDocumentServer().setDocumentDetails(details);
+	}
+	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerLogic#prepareShutdown()
+	 */
+	public synchronized void prepareShutdown() {
+		this.acceptingJoins = false;
+		getDocumentServer().prepareShutdown();
+		getSerializerQueue().add(new ShutdownCommand(this));
+	}
+	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerLogic#shutdown()
+	 */
+	public void shutdown() {
+		getDocumentServer().shutdown();
 		try {
-			return getDocument().toPortableDocument();
-		} finally {
-			lock.unlock();
+			dispose();
+		} catch (InterruptedException e) {
+			throw new InterruptedRuntimeException(e);
 		}
 	}
 	
 	/**
-	 * @see ch.iserver.ace.net.DocumentServerLogic#join(ch.iserver.ace.net.ParticipantConnection)
+	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerLogic#getParticipantProxies()
 	 */
-	public ParticipantPort join(ParticipantConnection connection) {
-		Algorithm algorithm = new Jupiter(false);
-		int participantId = nextParticipantId();
-		connection.setParticipantId(participantId);
-		connection.sendDocument(retrieveDocument());
-		ParticipantPort port = new ParticipantPortImpl(this, participantId, algorithm, getSerializerQueue());
-		ParticipantProxy proxy = new ParticipantProxyImpl(participantId, dispatcherQueue, algorithm, connection);
-		notifyOthersAboutJoin(participantId, connection.getUser());
-		addParticipant(port, proxy, connection);
-		return port;
-	}
-	
-	protected void notifyOthersAboutJoin(int participantId, RemoteUserProxy proxy) {
-		getDocument().participantJoined(participantId, proxy);
-		Map map = getParticipantConnections();
-		Iterator it = map.keySet().iterator();
-		while (it.hasNext()) {
-			Integer key = (Integer) it.next();
-			ParticipantConnection connection = (ParticipantConnection) map.get(key);
-			if (key.intValue() != participantId) {
-				connection.sendParticipantJoined(participantId, proxy);
-			}
-		}
-	}
-
-	protected void notifyOthersAboutLeave(int participantId, int reason) {
-		getDocument().participantLeft(participantId);
-		Map map = getParticipantConnections();
-		Iterator it = map.keySet().iterator();
-		while (it.hasNext()) {
-			Integer key = (Integer) it.next();
-			ParticipantConnection connection = (ParticipantConnection) map.get(key);
-			if (key.intValue() != participantId) {
-				connection.sendParticipantLeft(participantId, reason);
-			}
-		}
+	public synchronized Iterator getParticipantProxies() {
+		Map clone = (Map) proxies.clone();
+		return clone.values().iterator();
 	}
 
 	/**
 	 * @see ServerLogic#leave(int)
 	 */
-	public void leave(int participantId) {
+	public synchronized void leave(int participantId) {
 		ParticipantConnection connection = getParticipantConnection(participantId);
+		if (connection == null) {
+			LOG.warn("participant with id " + participantId + " not (or no longer) in session");
+			return;
+		}
 		connection.close();
 		removeParticipant(participantId);
-		notifyOthersAboutLeave(participantId, Participant.LEFT);
 	}
 		
-	// --> session logic methods <--
-	
-	public void setDocumentDetails(DocumentDetails details) {
-		getDocumentServer().setDocumentDetails(details);
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerLogic#kick(int)
+	 */
+	public void kick(int participantId) {
+		if (participantId == PUBLISHER_ID) {
+			throw new IllegalArgumentException("cannot kick publisher of session");
+		}
+		LOG.info("kicking participant " + participantId);
+		synchronized (this) {
+			ParticipantConnection connection = getParticipantConnection(participantId);
+			if (connection == null) {
+				LOG.warn("participant with id " + participantId + " not (or no longer) in session");
+				return;
+			}
+			connection.sendKicked();
+			connection.close();
+			removeParticipant(participantId);
+		}
 	}
 	
-	public void shutdown() {
-		getDocumentServer().conceal();
-	}
+	// --> start FailureHandler methods <--
 	
-	public synchronized Iterator getParticipantProxies() {
-		Map clone = (Map) proxies.clone();
-		return clone.values().iterator();
-	}
-	
-	public void kick(Participant participant) {
-		int participantId = participant.getParticipantId();
-		ParticipantConnection connection = getParticipantConnection(participantId);
-		connection.sendKicked();
-		connection.close();
-		removeParticipant(participantId);
-		notifyOthersAboutLeave(participantId, Participant.KICKED);
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.FailureHandler#handleFailure(int, int)
+	 */
+	public void handleFailure(int participantId, int reason) {
+		LOG.info("handling failed connection to participant " + participantId);
+		synchronized (this) {
+			if (participantId == PUBLISHER_ID) {
+				LOG.error("failure related to publisher: " + reason);
+				getPublisherConnection().sessionFailed(reason, null);
+				prepareShutdown();
+			} else {
+				removeParticipant(participantId);
+				getSerializerQueue().add(new LeaveCommand(participantId, Participant.DISCONNECTED));
+			}
+		}
 	}
 
 }

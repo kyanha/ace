@@ -21,12 +21,63 @@
 
 package ch.iserver.ace.application;
 
+import java.awt.BorderLayout;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.JToolBar;
+
+import com.jgoodies.uif_lite.panel.SimpleInternalFrame;
+
+import ca.odell.glazedlists.CompositeList;
+import ca.odell.glazedlists.EventList;
+import ca.odell.glazedlists.GlazedLists;
+import ca.odell.glazedlists.ObservableElementList;
+import ca.odell.glazedlists.SortedList;
+import ca.odell.glazedlists.swing.EventListModel;
+import ca.odell.glazedlists.swing.EventSelectionModel;
 
 
-public class ParticipantView extends DefaultView {
 
-	public ParticipantView(LocaleMessageSource source) {
-		super(source);
+public class ParticipantView extends ViewImpl {
+
+	private CompositeList participantSourceList;
+	private EventListModel participantEventListModel;
+	private EventSelectionModel participantEventSelectionModel;
+	protected JList participantList;
+
+	public ParticipantView(ParticipantViewController controller, LocaleMessageSource messageSource) {
+		super(controller, messageSource);
+		// get view source
+		participantSourceList = controller.getParticipantSourceList();
+		
+		// create view toolbar & actions
+		JToolBar participantToolBar = new JToolBar();
+
+		// create data list
+		SortedList participantSortedList = new SortedList(new ObservableElementList(participantSourceList, GlazedLists.beanConnector(ParticipantItem.class)));
+		participantEventListModel = new EventListModel(participantSortedList);
+		participantEventSelectionModel = new EventSelectionModel(participantSortedList);
+
+		participantList = new JList(participantEventListModel);
+		participantList.setCellRenderer(new ParticipantItemCellRenderer(messageSource));
+		participantList.setSelectionModel(participantEventSelectionModel);
+		participantList.setSelectionMode(EventSelectionModel.SINGLE_SELECTION);
+		
+		// create frame
+		JPanel participantViewContent = new JPanel(new BorderLayout());
+		participantViewContent.add(new JScrollPane(participantList), BorderLayout.CENTER);
+		SimpleInternalFrame participantView = new SimpleInternalFrame(null, messageSource.getMessage("vParticipantTitle"), participantToolBar, participantViewContent);
+		setLayout(new BorderLayout());
+		add(participantView);		
+	}
+	
+	public Item getSelectedItem() {
+		if(participantEventSelectionModel.getMinSelectionIndex() >= 0) {
+			return (ParticipantItem)participantEventListModel.getElementAt(participantEventSelectionModel.getMinSelectionIndex());
+		}
+		return null;
 	}
 
 }

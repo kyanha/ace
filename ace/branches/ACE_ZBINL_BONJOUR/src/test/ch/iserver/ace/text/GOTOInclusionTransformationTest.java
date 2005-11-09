@@ -21,11 +21,7 @@
 package ch.iserver.ace.text;
 
 import junit.framework.TestCase;
-
 import ch.iserver.ace.Operation;
-import ch.iserver.ace.text.DeleteOperation;
-import ch.iserver.ace.text.GOTOInclusionTransformation;
-import ch.iserver.ace.text.InsertOperation;
 
 /**
  * This class tests the GOTO transformation functions with all the possible transformation

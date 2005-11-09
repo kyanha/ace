@@ -25,6 +25,7 @@ import org.apache.log4j.Logger;
 
 import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.Operation;
+import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.text.DeleteOperation;
 import ch.iserver.ace.text.InsertOperation;
 import ch.iserver.ace.text.NoOperation;
@@ -38,7 +39,7 @@ import ch.iserver.ace.util.ParameterValidator;
  * caret updates are applied to a 
  * {@link ch.iserver.ace.collaboration.jupiter.server.ServerDocument} instance.
  */
-class DocumentUpdateProxy implements ParticipantProxy {
+class DocumentUpdateProxy implements Forwarder {
 	
 	/**
 	 * The static logger used by classes of this instance.
@@ -100,6 +101,27 @@ class DocumentUpdateProxy implements ParticipantProxy {
 	public void sendCaretUpdate(int participantId, CaretUpdate update) {
 		ParameterValidator.notNull("update", update);
 		getDocument().updateCaret(participantId, update.getDot(), update.getMark());
+	}
+	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.ParticipantProxy#sendParticipantLeft(int, int)
+	 */
+	public void sendParticipantLeft(int participantId, int reason) {
+		getDocument().participantLeft(participantId);
+	}
+	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.ParticipantProxy#sendParticipantJoined(int, RemoteUserProxy)
+	 */
+	public void sendParticipantJoined(int participantId, RemoteUserProxy proxy) {
+		getDocument().participantJoined(participantId, proxy);
+	}
+	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.ParticipantProxy#close()
+	 */
+	public void close() {
+		// ignore
 	}
 
 }

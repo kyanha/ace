@@ -31,4 +31,5 @@ public interface View {
 	
 	void removePropertyChangeListener(PropertyChangeListener listener);
 
+	Item getSelectedItem();
 }
