@@ -35,8 +35,10 @@ public class ParticipantViewController extends ViewControllerImpl {
 	}
 	
 	public void setParticipantList(EventList participantList) {
+		participantSourceList.getReadWriteLock().writeLock().lock();
 		participantSourceList.clear();
 		participantSourceList.addMemberList(participantList);
+		participantSourceList.getReadWriteLock().writeLock().unlock();
 	}
 
 	private ParticipantView getParticipantView() {

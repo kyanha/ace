@@ -35,11 +35,15 @@ public class DocumentViewController extends ViewControllerImpl {
 	}
 	
 	public void addDocument(DocumentItem document) {
+		documentSourceList.getReadWriteLock().writeLock().lock();
 		documentSourceList.add(document);
+		documentSourceList.getReadWriteLock().writeLock().unlock();
 	}
 	
 	public void removeDocument(DocumentItem document) {
+		documentSourceList.getReadWriteLock().writeLock().lock();
 		documentSourceList.remove(document);
+		documentSourceList.getReadWriteLock().writeLock().unlock();
 	}
 	
 	private DocumentView getDocumentView() {
