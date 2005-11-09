@@ -62,7 +62,7 @@ public class SessionConnectionWrapperTest extends TestCase {
 		handlerCtrl.verify();
 	}
 	
-	public void testSendCaretUpdate() throws Exception {
+	public void testSendCaretUpdateMessage() throws Exception {
 		MockControl targetCtrl = MockControl.createControl(SessionConnection.class);
 		SessionConnection target = (SessionConnection) targetCtrl.getMock();
 		MockControl handlerCtrl = MockControl.createControl(SessionConnectionFailureHandler.class);
