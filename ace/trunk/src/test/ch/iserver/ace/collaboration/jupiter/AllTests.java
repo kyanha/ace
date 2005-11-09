@@ -34,6 +34,7 @@ public class AllTests {
 		suite.addTestSuite(DiscoveryNetworkCallbackImplTest.class);
 		suite.addTestSuite(PublishedSessionImplTest.class);
 		suite.addTestSuite(SessionImplTest.class);
+		suite.addTestSuite(JoinNetworkCallbackImplTest.class);
 		suite.addTestSuite(SessionConnectionWrapperTest.class);
 		suite.addTestSuite(RemoteDocumentImplTest.class);
 		suite.addTestSuite(AlgorithmWrapperImplTest.class);
