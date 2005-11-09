@@ -37,7 +37,7 @@ import ch.iserver.ace.collaboration.jupiter.*;
 public class Main {
 	
 	private static final String[] CONTEXT_FILES = new String[] {
-		"application-context.xml"
+		"application-context.xml", "actions-context.xml"
 	};
 	
 	public static void main(String[] args) {
