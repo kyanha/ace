@@ -22,6 +22,6 @@ package ch.iserver.ace.net.impl;
 
 public interface NetworkConstants {
 
-	public static final String DEFAULT_CHARSET = "UTF-8";
+	public static final String DEFAULT_ENCODING = "UTF-8";
 	
 }

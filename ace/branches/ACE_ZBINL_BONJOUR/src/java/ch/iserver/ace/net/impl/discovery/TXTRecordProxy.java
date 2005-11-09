@@ -53,7 +53,7 @@ class TXTRecordProxy {
 		String result = null;
 		if (data != null) {
 			try {
-				result = new String(data, NetworkConstants.DEFAULT_CHARSET);
+				result = new String(data, NetworkConstants.DEFAULT_ENCODING);
 			} catch (UnsupportedEncodingException uee) {
 				//should not happen, since  every implementation of the Java platform 
 				//is required to support the default charset
@@ -67,7 +67,7 @@ class TXTRecordProxy {
 	
 	public static void set(String key, String value, TXTRecord txt) {
 		try {
-			txt.set(key, value.getBytes(NetworkConstants.DEFAULT_CHARSET));
+			txt.set(key, value.getBytes(NetworkConstants.DEFAULT_ENCODING));
 		} catch (UnsupportedEncodingException uee) {
 			//should not happen, since  every implementation of the Java platform 
 			//is required to support the default charset
