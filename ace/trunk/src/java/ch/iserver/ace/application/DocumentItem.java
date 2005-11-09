@@ -37,6 +37,7 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 
 	private int type = LOCAL;
 	private String title;
+	private String id;
 	//private Document editorDocument;
 	private RemoteDocument document;
 	private Session session;
@@ -44,16 +45,23 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 
 	public DocumentItem(String title) {
 		// create local document
+		// TODO: id-generator
+		id = "" + Math.round(1000000 * Math.random());
 		this.title = title;
 		type = LOCAL;
 	}
 	
 	public DocumentItem(RemoteDocument document) {
 		// create remote document
+		id = document.getId();
 		title = document.getTitle();
 		type = REMOTE;
 	}
 
+	public String getId() {
+		return id;
+	}
+	
 	public String getTitle() {
 		return title;
 	}
@@ -81,19 +89,19 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 		return -((DocumentItem)o).getTitle().compareTo(title);
 	}
 
-	/*public boolean equals(Object obj) {
+	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
 		} else if (obj instanceof DocumentItem) {
 			DocumentItem documentItem = (DocumentItem)obj;
-			return getDocumentUser().equals(participantItem.getUser());
+			return getId().equals(documentItem.getId());
 		}
 		return super.equals(obj);
 	}
 	
 	public int hashCode() {
-		return getUser().hashCode();
-	}*/
+		return getId().hashCode();
+	}
 
 }
 
