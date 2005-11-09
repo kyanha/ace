@@ -24,12 +24,13 @@ package ch.iserver.ace.collaboration.jupiter.server;
 import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.RemoteUserProxy;
-import ch.iserver.ace.util.ParameterValidator;
 
 /**
  *
  */
 public class SessionParticipant {
+	
+	private final int participantId;
 	
 	private final ParticipantPort participantPort;
 	
@@ -45,10 +46,11 @@ public class SessionParticipant {
 	 * @param connection
 	 * @param userProxy
 	 */
-	SessionParticipant(ParticipantPort port, ParticipantProxy proxy, ParticipantConnection connection, RemoteUserProxy userProxy) {
-		ParameterValidator.notNull("port", port);
-		ParameterValidator.notNull("proxy", proxy);
-		ParameterValidator.notNull("connection", connection);
+	public SessionParticipant(ParticipantPort port, 
+					ParticipantProxy proxy, 
+					ParticipantConnection connection, 
+					RemoteUserProxy userProxy) {
+		this.participantId = port.getParticipantId();
 		this.participantConnection = connection;
 		this.participantPort = port;
 		this.participantProxy = proxy;
@@ -56,7 +58,7 @@ public class SessionParticipant {
 	}
 	
 	public int getParticipantId() {
-		return participantPort.getParticipantId();
+		return participantId;
 	}
 	
 	public ParticipantConnection getParticipantConnection() {
