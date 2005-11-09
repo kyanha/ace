@@ -76,7 +76,7 @@ public class DocumentItemCellRenderer extends JPanel implements ListCellRenderer
 		}
 		
 		// draw document title
-		g.drawString("document: " + value.getTitle(), 20, 10);
+		g.drawString(value.getTitle(), 20, 10);
 	}
 
 	public Dimension getPreferredSize() {
