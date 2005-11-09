@@ -25,6 +25,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import ch.iserver.ace.collaboration.RemoteDocument;
+import ch.iserver.ace.collaboration.RemoteUser;
 
 
 
@@ -32,12 +33,15 @@ public class BrowseItem extends ItemImpl implements Comparable, PropertyChangeLi
 
 	private String title, publisher;
 	private RemoteDocument document;
+	private RemoteUser user;
 
 	public BrowseItem(RemoteDocument document) {
 		this.document = document;
 		document.addPropertyChangeListener(this);
 		title = document.getTitle();
-		publisher = document.getPublisher().getName();
+		user = document.getPublisher();
+		user.addPropertyChangeListener(this);
+		publisher = user.getName();
 	}
 
 	public String getTitle() {
@@ -55,6 +59,10 @@ public class BrowseItem extends ItemImpl implements Comparable, PropertyChangeLi
 	public void propertyChange(PropertyChangeEvent evt) {
 		if(evt.getPropertyName().equals(RemoteDocument.TITLE_PROPERTY)) {
 			title = (String)evt.getNewValue();
+			firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.getNewValue());
+		}
+		if(evt.getPropertyName().equals(RemoteUser.NAME_PROPERTY)) {
+			publisher = (String)evt.getNewValue();
 			firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.getNewValue());
 		}
 	}
