@@ -31,6 +31,7 @@ public class ItemImpl implements Item {
 	private PropertyChangeSupport propertyChangeSupport;
 	
 	public ItemImpl() {
+		propertyChangeSupport = new PropertyChangeSupport(this);
 	}
 
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
