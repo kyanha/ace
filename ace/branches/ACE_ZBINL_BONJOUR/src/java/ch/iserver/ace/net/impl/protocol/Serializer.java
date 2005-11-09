@@ -19,16 +19,17 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.net.protocol;
-
-import java.util.Map;
+package ch.iserver.ace.net.impl.protocol;
 
 /**
  *
  */
-public interface DocumentDiscoveryCallback {
+public interface Serializer {
 
+	public static final int PUBLISHED_DOCUMENTS = 0;
 	
-	public void documentsDiscovered(String id, Map docs);
+	public static final String[] NAMES = new String[] { "doc" }; 
+	
+	public byte[] createQuery(int type) throws SerializeException;
 	
 }

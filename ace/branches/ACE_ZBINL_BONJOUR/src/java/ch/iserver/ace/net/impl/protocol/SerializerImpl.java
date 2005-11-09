@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.net.protocol;
+package ch.iserver.ace.net.impl.protocol;
 
 import java.io.ByteArrayOutputStream;
 
@@ -38,7 +38,7 @@ public class SerializerImpl implements Serializer {
 	
 	
 	/**
-	 * @see ch.iserver.ace.net.protocol.Serializer#createQuery(int)
+	 * @see ch.iserver.ace.net.impl.protocol.Serializer#createQuery(int)
 	 */
 	public byte[] createQuery(int type) throws SerializeException {
 		ParameterValidator.inRange("queryType", type, 0, NAMES.length-1);

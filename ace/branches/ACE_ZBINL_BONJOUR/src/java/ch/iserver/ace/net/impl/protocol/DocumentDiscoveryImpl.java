@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.net.protocol;
+package ch.iserver.ace.net.impl.protocol;
 
 import org.beepcore.beep.core.ReplyListener;
 
@@ -43,7 +43,7 @@ public class DocumentDiscoveryImpl implements DocumentDiscovery {
 	}
 	
 	/**
-	 * @see ch.iserver.ace.net.protocol.DocumentDiscovery#execute(ch.iserver.ace.net.RemoteUserProxy)
+	 * @see ch.iserver.ace.net.impl.protocol.DocumentDiscovery#execute(ch.iserver.ace.net.RemoteUserProxy)
 	 */
 	public void execute(RemoteUserProxy proxy) {
 		String userId = proxy.getId();

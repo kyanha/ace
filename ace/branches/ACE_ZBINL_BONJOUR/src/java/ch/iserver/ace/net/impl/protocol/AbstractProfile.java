@@ -19,17 +19,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.net.protocol;
+package ch.iserver.ace.net.impl.protocol;
+
+import org.beepcore.beep.profile.Profile;
 
 /**
  *
  */
-public interface Serializer {
+public abstract class AbstractProfile implements Profile {
 
-	public static final int PUBLISHED_DOCUMENTS = 0;
-	
-	public static final String[] NAMES = new String[] { "doc" }; 
-	
-	public byte[] createQuery(int type) throws SerializeException;
-	
+	public static final String PROFILE_URI = "http://ace.iserver.ch/profiles/ACE";
+
 }

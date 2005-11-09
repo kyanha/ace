@@ -13,7 +13,7 @@ import ch.iserver.ace.net.RemoteDocumentProxy;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.net.impl.RemoteDocumentProxyImpl;
 import ch.iserver.ace.net.impl.RemoteUserProxyImpl;
-import ch.iserver.ace.net.protocol.DocumentDiscoveryCallback;
+import ch.iserver.ace.net.impl.protocol.DocumentDiscoveryCallback;
 import ch.iserver.ace.util.UUID;
 
 public class DocumentDiscoveryTest extends TestCase {

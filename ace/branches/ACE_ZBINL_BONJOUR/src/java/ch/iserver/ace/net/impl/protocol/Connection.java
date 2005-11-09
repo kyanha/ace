@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.net.protocol;
+package ch.iserver.ace.net.impl.protocol;
 
 import org.beepcore.beep.core.BEEPException;
 import org.beepcore.beep.core.Channel;
@@ -27,7 +27,7 @@ import org.beepcore.beep.core.OutputDataStream;
 import org.beepcore.beep.core.ReplyListener;
 import org.beepcore.beep.util.BufferSegment;
 
-import ch.iserver.ace.net.protocol.DocumentDiscoveryImpl.QueryInfo;
+import ch.iserver.ace.net.impl.protocol.DocumentDiscoveryImpl.QueryInfo;
 
 /**
  * Wrapper/Decorator class around a <code>Channel</code>.

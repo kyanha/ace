@@ -19,27 +19,34 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.net.protocol;
-
-import ch.iserver.ace.net.RemoteUserProxy;
+package ch.iserver.ace.net.impl.protocol;
 
 /**
- * Interface for document discovery.
+ *
  */
-public interface DocumentDiscovery {
+public class DeserializeException extends Exception {
 
-	/**
-	 * Discovers the published documents for the {@link RemoteUserProxy} 
-	 * <var>proxy</var>.
-	 * 
-	 * @param proxy the RemoteUserProxy
-	 */
-	public void execute(RemoteUserProxy proxy);
+	private Exception reason;
 	
 	/**
-	 * Sets the DocumentDiscoveryCallback.
 	 * 
-	 * @param callback the callback to set
+	 * @param reason
 	 */
-	public void setCallback(DocumentDiscoveryCallback callback);
+	public DeserializeException(Exception reason) {
+		this.reason = reason;
+	}
+	
+	/**
+	 * Constructor.
+	 * 
+	 * @param message an error message
+	 */
+	public DeserializeException(String message) {
+		super(message);
+	}
+	
+	public Exception getReason() {
+		return reason;
+	}
+	
 }

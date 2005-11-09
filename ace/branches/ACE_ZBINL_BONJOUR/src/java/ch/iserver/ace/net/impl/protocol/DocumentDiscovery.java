@@ -19,47 +19,27 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.net.protocol;
+package ch.iserver.ace.net.impl.protocol;
 
-import java.net.InetAddress;
-import java.util.HashMap;
-import java.util.Map;
-
-import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.net.RemoteUserProxy;
 
 /**
- *
+ * Interface for document discovery.
  */
-public class SessionHandler {
+public interface DocumentDiscovery {
 
-	private Map sessions;
+	/**
+	 * Discovers the published documents for the {@link RemoteUserProxy} 
+	 * <var>proxy</var>.
+	 * 
+	 * @param proxy the RemoteUserProxy
+	 */
+	public void execute(RemoteUserProxy proxy);
 	
-	private static SessionHandler theInstance;
-	
-	private SessionHandler() {
-		sessions = new HashMap();
-	}
-	
-	public static SessionHandler getInstance() {
-		if (theInstance == null) {
-			theInstance = new SessionHandler();
-		}
-		return theInstance;
-	}
-	
-	public synchronized RemoteUserSession createSession(RemoteUserProxy user) {
-		String id = user.getId();
-		UserDetails details = user.getUserDetails();
-		RemoteUserSession newSession = new RemoteUserSession(details.getAddress(), details.getPort(), user);
-		sessions.put(id, newSession);
-		return newSession;
-	}
-	
-	public RemoteUserSession getSession(String id) {
-		return (RemoteUserSession)sessions.get(id);
-	}
-	
-	
-	
+	/**
+	 * Sets the DocumentDiscoveryCallback.
+	 * 
+	 * @param callback the callback to set
+	 */
+	public void setCallback(DocumentDiscoveryCallback callback);
 }

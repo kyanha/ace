@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.net.protocol;
+package ch.iserver.ace.net.impl.protocol;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -44,7 +44,7 @@ public class DocumentDiscoveryCallbackImpl implements DocumentDiscoveryCallback 
 	}
 	
 	/**
-	 * @see ch.iserver.ace.net.protocol.DocumentDiscoveryCallback#documentsDiscovered(java.lang.String, java.util.Map)
+	 * @see ch.iserver.ace.net.impl.protocol.DocumentDiscoveryCallback#documentsDiscovered(java.lang.String, java.util.Map)
 	 */
 	public void documentsDiscovered(String id, Map docs) {
 		RemoteDocumentProxy[] proxies = createProxies(id, docs);

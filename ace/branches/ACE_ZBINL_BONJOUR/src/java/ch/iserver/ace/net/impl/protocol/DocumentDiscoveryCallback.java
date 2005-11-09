@@ -19,15 +19,16 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.net.protocol;
+package ch.iserver.ace.net.impl.protocol;
 
-import org.beepcore.beep.profile.Profile;
+import java.util.Map;
 
 /**
  *
  */
-public abstract class AbstractProfile implements Profile {
+public interface DocumentDiscoveryCallback {
 
-	public static final String PROFILE_URI = "http://ace.iserver.ch/profiles/ACE";
-
+	
+	public void documentsDiscovered(String id, Map docs);
+	
 }

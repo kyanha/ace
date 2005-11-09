@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.net.protocol;
+package ch.iserver.ace.net.impl.protocol;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ import org.beepcore.beep.core.ReplyListener;
 import org.beepcore.beep.util.BufferSegment;
 
 import ch.iserver.ace.net.RemoteDocumentProxy;
-import ch.iserver.ace.net.protocol.DocumentDiscoveryImpl.QueryInfo;
+import ch.iserver.ace.net.impl.protocol.DocumentDiscoveryImpl.QueryInfo;
 
 /**
  *
