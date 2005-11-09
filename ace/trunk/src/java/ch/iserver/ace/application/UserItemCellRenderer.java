@@ -64,7 +64,7 @@ public class UserItemCellRenderer extends JPanel implements ListCellRenderer {
 		g.drawImage(iconUser.getImage(), 2, 1, 14, 14, this);
 		
 		// draw user name
-		g.drawString("user: " + value.getName(), 10, 10);
+		g.drawString(value.getName(), 20, 10);
 	}
 
 	public Dimension getPreferredSize() {
