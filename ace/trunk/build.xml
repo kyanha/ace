@@ -96,6 +96,8 @@
 	
 	<path id="classpath.test">
 		<path refid="classpath"/>
+		<pathelement path="${build.classes}"/>
+		<pathelement path="${build.resources}"/>
 	</path>
 	
 	<path id="classpath.run">
