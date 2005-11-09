@@ -21,12 +21,13 @@
 
 package ch.iserver.ace.net.impl.discovery;
 
-import ch.iserver.ace.util.BlockingQueue;
-import ch.iserver.ace.util.LinkedBlockingQueue;
 import ch.iserver.ace.util.ParameterValidator;
 
 import com.apple.dnssd.DNSSDService;
 import com.apple.dnssd.QueryListener;
+
+import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
+import edu.emory.mathcs.backport.java.util.concurrent.LinkedBlockingQueue;
 
 /**
  *
@@ -70,7 +71,7 @@ public abstract class AbstractQueryListener extends BaseListenerImpl implements 
 	protected String getNextService() {
 		String result = null;
 		try {
-			result = (String)serviceQueue.get();
+			result = (String)serviceQueue.take();
 		} catch (InterruptedException ie) {
 			
 		}

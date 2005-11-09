@@ -22,6 +22,7 @@ package ch.iserver.ace.net.impl;
 
 import java.net.InetAddress;
 
+import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.algorithm.TimestampFactory;
 import ch.iserver.ace.net.DiscoveryNetworkCallback;
@@ -78,14 +79,14 @@ public class NetworkServiceImpl implements NetworkService {
 		return networkCallback;
 	}
 
-	public DocumentServer publish(DocumentServerLogic logic) {
-		
-		return null;
-	}
 
 	public void discoverUser(DiscoveryNetworkCallback callback, InetAddress addr, int port) {
 		
 		
+	}
+
+	public DocumentServer publish(DocumentServerLogic logic, DocumentDetails details) {
+		return null;
 	}
 
 }
