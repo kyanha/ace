@@ -46,7 +46,9 @@ import ca.odell.glazedlists.swing.TextComponentMatcherEditor;
 
 
 public class UserView extends ViewImpl {
-
+	
+	public static final String SELECTED_ITEM_PROPERTY = "selectedItem";
+	
 	private EventList userSourceList;
 	private EventListModel userEventListModel;
 	private EventSelectionModel userEventSelectionModel;
@@ -85,11 +87,10 @@ public class UserView extends ViewImpl {
 		SimpleInternalFrame userView = new SimpleInternalFrame(null, messageSource.getMessage("vUserTitle"), userToolBar, userViewContent);
 		setLayout(new BorderLayout());
 		add(userView);		
-		
 	}
 
 	public synchronized Item getSelectedItem() {
-		if(userEventSelectionModel.getMinSelectionIndex() >= 0) {
+		if (userEventSelectionModel.getMinSelectionIndex() >= 0) {
 			return (UserItem)userEventListModel.getElementAt(userEventSelectionModel.getMinSelectionIndex());
 		}
 		return null;
