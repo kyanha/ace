@@ -51,7 +51,7 @@ public class DocumentViewController extends ViewControllerImpl {
 		return documentSourceList;
 	}
 	
-	public DocumentItem getSelectedItem() {
+	public DocumentItem getSelectedDocumentItem() {
 		return (DocumentItem)getDocumentView().getSelectedItem();
 	}
 

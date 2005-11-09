@@ -48,7 +48,7 @@ public class ParticipantViewController extends ViewControllerImpl {
 		return participantSourceList;
 	}
 	
-	public ParticipantItem getSelectedItem() {
+	public ParticipantItem getSelectedParticipantItem() {
 		return (ParticipantItem)getParticipantView().getSelectedItem();
 	}
 
