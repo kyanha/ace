@@ -60,7 +60,7 @@ public class BrowseViewController extends ViewControllerImpl implements Document
 		return browseSourceList;
 	}
 	
-	public BrowseItem getSelectedItem() {
+	public BrowseItem getSelectedBrowseItem() {
 		return (BrowseItem)getBrowseView().getSelectedItem();
 	}
 

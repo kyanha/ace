@@ -21,6 +21,8 @@
 
 package ch.iserver.ace.application;
 
+import java.util.List;
+
 import java.awt.BorderLayout;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -31,43 +33,65 @@ import javax.swing.JToolBar;
 import com.jgoodies.uif_lite.panel.SimpleInternalFrame;
 
 import ca.odell.glazedlists.EventList;
+import ca.odell.glazedlists.FilterList;
+import ca.odell.glazedlists.GlazedLists;
+import ca.odell.glazedlists.ObservableElementList;
+import ca.odell.glazedlists.SortedList;
+import ca.odell.glazedlists.TextFilterator;
+import ca.odell.glazedlists.matchers.MatcherEditor;
+import ca.odell.glazedlists.swing.EventListModel;
 import ca.odell.glazedlists.swing.EventSelectionModel;
+import ca.odell.glazedlists.swing.TextComponentMatcherEditor;
 
 
 
 public class UserView extends ViewImpl {
 
 	private EventList userSourceList;
-	private EventSelectionModel eventSelectionModel;
+	private EventListModel userEventListModel;
+	private EventSelectionModel userEventSelectionModel;
+	protected JList userList;
 
 	public UserView(UserViewController controller, LocaleMessageSource messageSource) {
 		super(controller, messageSource);
 		// get view source
 		userSourceList = controller.getUserSourceList();
 		
-		
 		// create view toolbar & actions
 		JToolBar userToolBar = new JToolBar();
-		//final AbstractAction vtbaDiscoverUser = new AbstractAction() { public void actionPerformed(ActionEvent e) { System.out.println("Discover User"); }};
-		//viewToolBar.add(vtbaDiscoverUser);
-		//final AbstractAction vtbaJoinSession = new AbstractAction() { public void actionPerformed(ActionEvent e) { System.out.println("Join Session"); }};
-		//viewToolBar.add(vtbaJoinSession);
 
 		// create data list
-		JTextField filterField = new JTextField();
-		JList userList = new JList();
-		
+		JTextField userFilterField = new JTextField();
+		TextFilterator userFilterator = new TextFilterator() {
+			public void getFilterStrings(List baseList, Object element) {
+				UserItem item = (UserItem)element;
+				baseList.add(item.getName());
+			}
+		};
+		MatcherEditor userMatcherEditor = new TextComponentMatcherEditor(userFilterField, userFilterator);
+		SortedList userSortedList = new SortedList(new ObservableElementList(new FilterList(userSourceList, userMatcherEditor), GlazedLists.beanConnector(UserItem.class)));
+		userEventListModel = new EventListModel(userSortedList);
+		userEventSelectionModel = new EventSelectionModel(userSortedList);
+
+		userList = new JList(userEventListModel);
+		userList.setCellRenderer(new UserItemCellRenderer(messageSource));
+		userList.setSelectionModel(userEventSelectionModel);
+		userList.setSelectionMode(EventSelectionModel.SINGLE_SELECTION);
+
 		// create frame
 		JPanel userViewContent = new JPanel(new BorderLayout());
 		userViewContent.add(new JScrollPane(userList), BorderLayout.CENTER);
-		userViewContent.add(filterField, BorderLayout.SOUTH);
+		userViewContent.add(userFilterField, BorderLayout.SOUTH);
 		SimpleInternalFrame userView = new SimpleInternalFrame(null, messageSource.getMessage("vUserTitle"), userToolBar, userViewContent);
 		setLayout(new BorderLayout());
 		add(userView);		
 		
 	}
 
-	public Item getSelectedItem() {
+	public synchronized Item getSelectedItem() {
+		if(userEventSelectionModel.getMinSelectionIndex() >= 0) {
+			return (UserItem)userEventListModel.getElementAt(userEventSelectionModel.getMinSelectionIndex());
+		}
 		return null;
 	}	
 

@@ -27,18 +27,32 @@ import javax.swing.JScrollPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
+import java.util.List;
 
 import com.jgoodies.uif_lite.panel.SimpleInternalFrame;
 
 import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.swing.EventSelectionModel;
 
+import ca.odell.glazedlists.EventList;
+import ca.odell.glazedlists.FilterList;
+import ca.odell.glazedlists.GlazedLists;
+import ca.odell.glazedlists.ObservableElementList;
+import ca.odell.glazedlists.SortedList;
+import ca.odell.glazedlists.TextFilterator;
+import ca.odell.glazedlists.matchers.MatcherEditor;
+import ca.odell.glazedlists.swing.EventListModel;
+import ca.odell.glazedlists.swing.EventSelectionModel;
+import ca.odell.glazedlists.swing.TextComponentMatcherEditor;
+
 
 
 public class BrowseView extends ViewImpl {
 
 	private EventList browseSourceList;
-	private EventSelectionModel eventSelectionModel;
+	private EventListModel browseEventListModel;
+	private EventSelectionModel browseEventSelectionModel;
+	protected JList browseList;
 
 	public BrowseView(BrowseViewController controller, LocaleMessageSource messageSource) {
 		super(controller, messageSource);
@@ -47,26 +61,38 @@ public class BrowseView extends ViewImpl {
 		
 		// create view toolbar & actions
 		JToolBar viewToolBar = new JToolBar();
-		//final AbstractAction vtbaDiscoverUser = new AbstractAction() { public void actionPerformed(ActionEvent e) { System.out.println("Discover User"); }};
-		//viewToolBar.add(vtbaDiscoverUser);
-		//final AbstractAction vtbaJoinSession = new AbstractAction() { public void actionPerformed(ActionEvent e) { System.out.println("Join Session"); }};
-		//viewToolBar.add(vtbaJoinSession);
 
 		// create data list
-		JTextField filterField = new JTextField();
-		JList browseList = new JList();
+		JTextField browseFilterField = new JTextField();
+		TextFilterator browseFilterator = new TextFilterator() {
+			public void getFilterStrings(List baseList, Object element) {
+				BrowseItem item = (BrowseItem)element;
+				baseList.add(item.getTitle());
+			}
+		};
+		MatcherEditor browseMatcherEditor = new TextComponentMatcherEditor(browseFilterField, browseFilterator);
+		SortedList browseSortedList = new SortedList(new ObservableElementList(new FilterList(browseSourceList, browseMatcherEditor), GlazedLists.beanConnector(BrowseItem.class)));
+		browseEventListModel = new EventListModel(browseSortedList);
+		browseEventSelectionModel = new EventSelectionModel(browseSortedList);
+
+		browseList = new JList(browseEventListModel);
+		browseList.setCellRenderer(new BrowseItemCellRenderer(messageSource));
+		browseList.setSelectionModel(browseEventSelectionModel);
+		browseList.setSelectionMode(EventSelectionModel.SINGLE_SELECTION);
 		
 		// create frame
 		JPanel browseViewContent = new JPanel(new BorderLayout());
 		browseViewContent.add(new JScrollPane(browseList), BorderLayout.CENTER);
-		browseViewContent.add(filterField, BorderLayout.SOUTH);
+		browseViewContent.add(browseFilterField, BorderLayout.SOUTH);
 		SimpleInternalFrame browseView = new SimpleInternalFrame(null, messageSource.getMessage("vBrowseTitle"), viewToolBar, browseViewContent);
 		setLayout(new BorderLayout());
 		add(browseView);		
 	}
 
 	public Item getSelectedItem() {
-		// if item selected
+		if(browseEventSelectionModel.getMinSelectionIndex() >= 0) {
+			return (BrowseItem)browseEventListModel.getElementAt(browseEventSelectionModel.getMinSelectionIndex());
+		}
 		return null;
 	}
 }
