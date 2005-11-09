@@ -24,13 +24,21 @@ package ch.iserver.ace.collaboration.jupiter;
 import ch.iserver.ace.net.ParticipantConnection;
 
 /**
- *
+ * A ParticipantConnection to the publisher of the document. Adds a single
+ * method used for abnormal termination of a published session caused
+ * by an fatal exception. If the sessionFailed method is called, it is 
+ * likely an indication of a bug in the implementation.
  */
 public interface PublisherConnection extends ParticipantConnection {
 	
 	/**
-	 * @param reason
-	 * @param e
+	 * Called by the ServerLogic on the publisher connection when there was a
+	 * failure in the server part of the published session. The server logic
+	 * shuts itself down after calling this method. Thus, the published session
+	 * is unusable after this method is called.
+	 * 
+	 * @param reason the failure code
+	 * @param e the exception causing the failure
 	 */
 	void sessionFailed(int reason, Exception e);
 	
