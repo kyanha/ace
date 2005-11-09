@@ -45,6 +45,11 @@ public class RemoteUserStub implements MutableRemoteUser {
 		this.id = id;
 	}
 	
+	public RemoteUserStub(String id, String name) {
+		this.id = id;
+		this.name = name;
+	}
+	
 	/**
 	 * @see ch.iserver.ace.collaboration.RemoteUser#getId()
 	 */
