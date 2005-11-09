@@ -23,6 +23,9 @@ package ch.iserver.ace.application;
 
 import java.awt.Color;
 
+import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
+
 import junit.framework.TestCase;
 
 import org.easymock.MockControl;
@@ -30,6 +33,7 @@ import org.easymock.MockControl;
 import ca.odell.glazedlists.EventList;
 import ch.iserver.ace.collaboration.ParticipantStub;
 import ch.iserver.ace.collaboration.RemoteUserStub;
+import ch.iserver.ace.collaboration.jupiter.MutableRemoteUser;
 
 /**
  *
@@ -73,6 +77,42 @@ public class ParticipantViewTest extends TestCase {
 		view.setSelectedIndex(-1);
 		
 		// verify
+		listenerCtrl.verify();
+	}
+	
+	public void testItemPropertiesChanged() throws Exception {
+		MockControl listenerCtrl = MockControl.createControl(ListDataListener.class);
+		listenerCtrl.setDefaultMatcher(new ListDataEventMatcher());
+		ListDataListener listener = (ListDataListener) listenerCtrl.getMock();
+		
+		// test fixture
+		ParticipantViewController controller = new ParticipantViewController();
+		EventList participantList = controller.getParticipantSourceList().createMemberList();
+		ParticipantView view = new ParticipantView(controller, new LocaleMessageSourceStub());
+		controller.setParticipantList(participantList);
+
+		MutableRemoteUser user = new RemoteUserStub("X", "X");
+		Item item = new ParticipantItem(new ParticipantStub(user, 1), Color.BLACK);
+
+		controller.getParticipantSourceList().getReadWriteLock().writeLock().lock();
+		participantList.add(item);
+		participantList.add(new ParticipantItem(new ParticipantStub(new RemoteUserStub("Y", "Y"), 2), Color.BLACK));
+		controller.getParticipantSourceList().getReadWriteLock().writeLock().unlock();
+		
+		Thread.sleep(500);
+		view.getList().getModel().addListDataListener(listener);
+		
+		// define mock behavior
+		listener.contentsChanged(new ListDataEvent(view.getList().getModel(), ListDataEvent.CONTENTS_CHANGED, 0, 0));
+		
+		// replay
+		listenerCtrl.replay();
+		
+		// test
+		user.setName("JIM");
+				
+		// verify
+		Thread.sleep(500);
 		listenerCtrl.verify();
 	}
 	

@@ -21,12 +21,16 @@
 
 package ch.iserver.ace.application;
 
+import javax.swing.event.ListSelectionListener;
+
+import junit.framework.TestCase;
+
 import org.easymock.MockControl;
 
 import ch.iserver.ace.collaboration.RemoteDocumentStub;
+import ch.iserver.ace.collaboration.RemoteUser;
 import ch.iserver.ace.collaboration.RemoteUserStub;
-
-import junit.framework.TestCase;
+import ch.iserver.ace.collaboration.jupiter.MutableRemoteDocument;
 
 /**
  *
@@ -66,6 +70,37 @@ public class BrowseViewTest extends TestCase {
 		view.setSelectedIndex(2);
 		view.setSelectedIndex(0);
 		view.setSelectedIndex(-1);
+		
+		// verify
+		listenerCtrl.verify();
+	}
+	
+	public void testItemPropertiesChanged() throws Exception {
+		MockControl listenerCtrl = MockControl.createControl(ListSelectionListener.class);
+		ListSelectionListener listener = (ListSelectionListener) listenerCtrl.getMock();
+		
+		// test fixture
+		BrowseViewController controller = new BrowseViewController();
+		BrowseView view = new BrowseView(controller, new LocaleMessageSourceStub());
+
+		RemoteUser user = new RemoteUserStub("X", "X");
+		MutableRemoteDocument document = new RemoteDocumentStub("X", "X", user);
+		Item item = new BrowseItem(document);
+
+		controller.getBrowseSourceList().getReadWriteLock().writeLock().lock();
+		controller.getBrowseSourceList().add(item);
+		controller.getBrowseSourceList().getReadWriteLock().writeLock().unlock();
+
+		view.getList().addListSelectionListener(listener);
+		
+		// define mock behavior
+		//listener.valueChanged(new ListSelectionEvent(view.getList(), 0, 0, false));
+		
+		// replay
+		listenerCtrl.replay();
+		
+		// test
+		document.setTitle("NEW TITLE");
 		
 		// verify
 		listenerCtrl.verify();
