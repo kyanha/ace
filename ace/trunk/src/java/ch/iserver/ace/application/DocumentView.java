@@ -27,6 +27,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import com.jgoodies.uif_lite.panel.SimpleInternalFrame;
 
@@ -54,7 +56,7 @@ public class DocumentView extends ViewImpl {
 		// create view toolbar & actions
 		JToolBar viewToolBar = new JToolBar();
 
-		// create data list
+		// create list
 		SortedList documentSortedList = new SortedList(new ObservableElementList(documentSourceList, GlazedLists.beanConnector(DocumentItem.class)));
 		documentEventListModel = new EventListModel(documentSortedList);
 		documentEventSelectionModel = new EventSelectionModel(documentSortedList);
@@ -63,6 +65,20 @@ public class DocumentView extends ViewImpl {
 		documentList.setCellRenderer(new DocumentItemCellRenderer(messageSource));
 		documentList.setSelectionModel(documentEventSelectionModel);
 		documentList.setSelectionMode(EventSelectionModel.SINGLE_SELECTION);
+
+		// add mouse listener
+		documentList.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent event) {
+				if(event.getValueIsAdjusting()) {
+					return;
+				}
+				DocumentItem newItem = null;
+				try {
+					newItem = (DocumentItem)documentEventListModel.getElementAt(documentEventSelectionModel.getMinSelectionIndex());
+				} catch(ArrayIndexOutOfBoundsException e) {}
+				fireItemSelectionChange(newItem);
+			}
+		});
 		
 		// create frame
 		JPanel documentViewContent = new JPanel(new BorderLayout());
@@ -73,10 +89,11 @@ public class DocumentView extends ViewImpl {
 	}
 	
 	public Item getSelectedItem() {
-		if(documentEventSelectionModel.getMinSelectionIndex() >= 0) {
-			return (DocumentItem)documentEventListModel.getElementAt(documentEventSelectionModel.getMinSelectionIndex());
-		}
-		return null;
+		DocumentItem selectedItem = null;
+		try {
+			selectedItem = (DocumentItem)documentEventListModel.getElementAt(documentEventSelectionModel.getMinSelectionIndex());
+		} catch(ArrayIndexOutOfBoundsException e) {}
+		return selectedItem;
 	}
 
 }

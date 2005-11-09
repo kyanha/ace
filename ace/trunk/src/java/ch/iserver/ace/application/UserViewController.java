@@ -44,7 +44,6 @@ public class UserViewController extends ViewControllerImpl implements UserListen
 	
 	public void userDiscovered(RemoteUser user) {
 		// add discovered user to the list
-		System.out.println("userDiscovered");
 		userSourceList.add(new UserItem(user));
 	}
 	

@@ -27,6 +27,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.util.List;
 
 import com.jgoodies.uif_lite.panel.SimpleInternalFrame;
@@ -59,7 +61,7 @@ public class BrowseView extends ViewImpl {
 		// create view toolbar & actions
 		JToolBar viewToolBar = new JToolBar();
 
-		// create data list
+		// create list
 		JTextField browseFilterField = new JTextField();
 		TextFilterator browseFilterator = new TextFilterator() {
 			public void getFilterStrings(List baseList, Object element) {
@@ -77,6 +79,20 @@ public class BrowseView extends ViewImpl {
 		browseList.setSelectionModel(browseEventSelectionModel);
 		browseList.setSelectionMode(EventSelectionModel.SINGLE_SELECTION);
 		
+		// add mouse listener
+		browseList.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent event) {
+				if(event.getValueIsAdjusting()) {
+					return;
+				}
+				BrowseItem newItem = null;
+				try {
+					newItem = (BrowseItem)browseEventListModel.getElementAt(browseEventSelectionModel.getMinSelectionIndex());
+				} catch(ArrayIndexOutOfBoundsException e) {}
+				fireItemSelectionChange(newItem);
+			}
+		});
+
 		// create frame
 		JPanel browseViewContent = new JPanel(new BorderLayout());
 		browseViewContent.add(new JScrollPane(browseList), BorderLayout.CENTER);
@@ -87,9 +103,10 @@ public class BrowseView extends ViewImpl {
 	}
 
 	public Item getSelectedItem() {
-		if(browseEventSelectionModel.getMinSelectionIndex() >= 0) {
-			return (BrowseItem)browseEventListModel.getElementAt(browseEventSelectionModel.getMinSelectionIndex());
-		}
-		return null;
+		BrowseItem selectedItem = null;
+		try {
+			selectedItem = (BrowseItem)browseEventListModel.getElementAt(browseEventSelectionModel.getMinSelectionIndex());
+		} catch(ArrayIndexOutOfBoundsException e) {}
+		return selectedItem;
 	}
 }

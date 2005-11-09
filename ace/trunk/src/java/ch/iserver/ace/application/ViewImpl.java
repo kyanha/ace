@@ -21,9 +21,11 @@
 
 package ch.iserver.ace.application;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
+import ch.iserver.ace.application.ItemSelectionChangeListener;
+import ch.iserver.ace.application.ItemSelectionChangeEvent;
+
 import javax.swing.JPanel;
+import javax.swing.event.EventListenerList;
 
 
 
@@ -31,26 +33,32 @@ public class ViewImpl extends JPanel implements View {
 
 	protected ViewController controller;
 	protected LocaleMessageSource messageSource;
-	private PropertyChangeSupport propertyChangeSupport;
+	private EventListenerList eventListenerList;
 
 	public ViewImpl(ViewController controller, LocaleMessageSource messageSource) {
 		this.controller = controller;
 		this.messageSource = messageSource;
-		propertyChangeSupport = new PropertyChangeSupport(this);
-		addPropertyChangeListener(controller);
+		eventListenerList = new EventListenerList();
+		addItemSelectionChangeListener(controller);
 	}
 
-	public void addPropertyChangeListener(PropertyChangeListener listener) {
-		propertyChangeSupport.addPropertyChangeListener(listener);
+	public void addItemSelectionChangeListener(ItemSelectionChangeListener listener) {
+		eventListenerList.add(ItemSelectionChangeListener.class, listener);
 	}
 	
-	public void removePropertyChangeListener(PropertyChangeListener listener) {
-		propertyChangeSupport.removePropertyChangeListener(listener);
+	public void removeItemSelectionChangeListener(ItemSelectionChangeListener listener) {
+		eventListenerList.add(ItemSelectionChangeListener.class, listener);
 	}
 	
-/*	protected void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
-		propertyChangeSupport.firePropertyChange(propertyName, oldValue, newValue);
-	}*/
+	protected void fireItemSelectionChange(Item newItem) {
+		ItemSelectionChangeEvent event = new ItemSelectionChangeEvent(this, newItem);
+		Object[] listeners = eventListenerList.getListenerList();
+		for(int i = listeners.length-2; i >= 0; i -= 2) {
+			if(listeners[i] == ItemSelectionChangeListener.class) {
+				((ItemSelectionChangeListener)listeners[i+1]).itemSelectionChanged(event);
+			}
+		}
+	}
 	
 	public Item getSelectedItem() {
 		return null;

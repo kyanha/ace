@@ -27,6 +27,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import com.jgoodies.uif_lite.panel.SimpleInternalFrame;
 
@@ -55,7 +57,7 @@ public class ParticipantView extends ViewImpl {
 		// create view toolbar & actions
 		JToolBar participantToolBar = new JToolBar();
 
-		// create data list
+		// create list
 		SortedList participantSortedList = new SortedList(new ObservableElementList(participantSourceList, GlazedLists.beanConnector(ParticipantItem.class)));
 		participantEventListModel = new EventListModel(participantSortedList);
 		participantEventSelectionModel = new EventSelectionModel(participantSortedList);
@@ -65,6 +67,20 @@ public class ParticipantView extends ViewImpl {
 		participantList.setSelectionModel(participantEventSelectionModel);
 		participantList.setSelectionMode(EventSelectionModel.SINGLE_SELECTION);
 		
+		// add mouse listener
+		participantList.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent event) {
+				if(event.getValueIsAdjusting()) {
+					return;
+				}
+				ParticipantItem newItem = null;
+				try {
+					newItem = (ParticipantItem)participantEventListModel.getElementAt(participantEventSelectionModel.getMinSelectionIndex());
+				} catch(ArrayIndexOutOfBoundsException e) {}
+				fireItemSelectionChange(newItem);
+			}
+		});
+
 		// create frame
 		JPanel participantViewContent = new JPanel(new BorderLayout());
 		participantViewContent.add(new JScrollPane(participantList), BorderLayout.CENTER);
@@ -74,10 +90,11 @@ public class ParticipantView extends ViewImpl {
 	}
 	
 	public Item getSelectedItem() {
-		if(participantEventSelectionModel.getMinSelectionIndex() >= 0) {
-			return (ParticipantItem)participantEventListModel.getElementAt(participantEventSelectionModel.getMinSelectionIndex());
-		}
-		return null;
+		ParticipantItem selectedItem = null;
+		try {
+			selectedItem = (ParticipantItem)participantEventListModel.getElementAt(participantEventSelectionModel.getMinSelectionIndex());
+		} catch(ArrayIndexOutOfBoundsException e) {}
+		return selectedItem;
 	}
 
 }

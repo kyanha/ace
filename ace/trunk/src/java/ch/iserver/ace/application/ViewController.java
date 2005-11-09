@@ -21,15 +21,15 @@
 
 package ch.iserver.ace.application;
 
-import java.beans.PropertyChangeListener;
+import ch.iserver.ace.application.ItemSelectionChangeListener;
 
 
 
-public interface ViewController extends PropertyChangeListener {
+public interface ViewController extends ItemSelectionChangeListener {
 
-	void addPropertyChangeListener(PropertyChangeListener listener);
+	void addItemSelectionChangeListener(ItemSelectionChangeListener listener);
 	
-	void removePropertyChangeListener(PropertyChangeListener listener);
+	void removeItemSelectionChangeListener(ItemSelectionChangeListener listener);
 
 }
 
