@@ -32,8 +32,8 @@ import org.easymock.MockControl;
 import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.Operation;
 import ch.iserver.ace.collaboration.Participant;
-import ch.iserver.ace.collaboration.jupiter.RemoteUserProxyStub;
 import ch.iserver.ace.net.RemoteUserProxy;
+import ch.iserver.ace.net.RemoteUserProxyStub;
 import ch.iserver.ace.text.InsertOperation;
 
 public class CompositeForwarderTest extends TestCase {

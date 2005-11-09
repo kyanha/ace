@@ -19,24 +19,20 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.collaboration.jupiter;
+package ch.iserver.ace.collaboration;
 
+import java.beans.PropertyChangeListener;
 import java.util.Collection;
 
-import ch.iserver.ace.UserDetails;
-import ch.iserver.ace.net.DocumentServerLogic;
-import ch.iserver.ace.net.RemoteUserProxy;
+import ch.iserver.ace.collaboration.PublishedSession;
+import ch.iserver.ace.collaboration.RemoteUser;
+import ch.iserver.ace.collaboration.jupiter.MutableRemoteUser;
 
-public class RemoteUserProxyStub implements RemoteUserProxy {
-	final String id;
-	final String name;
-	public RemoteUserProxyStub(String id) {
+public class RemoteUserStub implements MutableRemoteUser {
+	private final String id;
+	private String name;
+	public RemoteUserStub(String id) {
 		this.id = id;
-		this.name = "";
-	}
-	public RemoteUserProxyStub(String id, String name) {
-		this.id = id;
-		this.name = name;
 	}
 	public String getId() {
 		return id;
@@ -44,22 +40,28 @@ public class RemoteUserProxyStub implements RemoteUserProxy {
 	public Collection getSharedDocuments() {
 		return null;
 	}
-	public UserDetails getUserDetails() {
-		return new UserDetails(name);
+	public void setName(String userName) {
+		this.name = userName;
 	}
-	public void invite(DocumentServerLogic logic) {
+	public String getName() {
+		return name;
+	}
+	public void invite(PublishedSession session) {
 		// ignore
 	}
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
-		} else if (obj instanceof RemoteUserProxy) {
-			RemoteUserProxy user = (RemoteUserProxy) obj;
+		} else if (obj instanceof RemoteUser) {
+			RemoteUser user = (RemoteUser) obj;
 			return id.equals(user.getId());
 		}
 		return super.equals(obj);
 	}
-	public String toString() {
-		return getClass().getName() + "[id=" + id + "]";
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		
+	}
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		
 	}
 }

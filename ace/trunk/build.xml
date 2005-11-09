@@ -9,6 +9,7 @@
 	<property name="dist.dir" value="dist"/>
 	<property name="docs.dir" value="doc/pdf"/>
 	<property name="src.dir" value="src"/>
+	<property name="src.stub" value="${src.dir}/stubs"/>
 	<property name="src.test" value="${src.dir}/test"/>
 	
 	<artifact:remoteRepository id="remote.repository.ace" url="http://ace.iserver.ch/maven2/" />
@@ -93,6 +94,10 @@
 		<path refid="dependency.classpath"/>
 	</path>
 	
+	<path id="classpath.test">
+		<path refid="classpath"/>
+	</path>
+	
 	<path id="classpath.run">
 		<path refid="dependency.classpath"/>
 		<pathelement path="${build.classes}"/>
@@ -123,8 +128,14 @@
 		</copy>
 	</target>
 	
-	<target name="compile-tests" depends="compile,resources">
+	<target name="compile-tests" depends="compile-stubs,resources">
 		<javac srcdir="${src.test}" destdir="${build.classes}" target="1.4"
+		       source="1.4" classpathref="classpath.test"
+		       debug="true" optimize="false"/>
+	</target>
+	
+	<target name="compile-stubs" depends="compile,resources">
+		<javac srcdir="${src.stub}" destdir="${build.classes}" target="1.4"
 		       source="1.4" classpathref="classpath"
 		       debug="true" optimize="false"/>
 	</target>
@@ -156,7 +167,7 @@
 			haltonfailure="true">
 			<jvmarg value="-enableassertions"/>
 			<jvmarg value="-Djava.awt.headless=true"/>
-			<classpath refid="classpath.run"/>
+			<classpath refid="classpath.test"/>
 			<formatter type="xml"/>
 			<batchtest todir="${build.testreports}" unless="testcase">
 				<fileset dir="${src.test}">

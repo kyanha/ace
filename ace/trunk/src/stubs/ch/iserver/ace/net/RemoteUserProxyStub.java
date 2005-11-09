@@ -19,19 +19,24 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.collaboration.jupiter;
+package ch.iserver.ace.net;
 
-import java.beans.PropertyChangeListener;
 import java.util.Collection;
 
-import ch.iserver.ace.collaboration.PublishedSession;
-import ch.iserver.ace.collaboration.RemoteUser;
+import ch.iserver.ace.UserDetails;
+import ch.iserver.ace.net.DocumentServerLogic;
+import ch.iserver.ace.net.RemoteUserProxy;
 
-public class RemoteUserStub implements MutableRemoteUser {
-	private final String id;
-	private String name;
-	public RemoteUserStub(String id) {
+public class RemoteUserProxyStub implements RemoteUserProxy {
+	final String id;
+	final String name;
+	public RemoteUserProxyStub(String id) {
 		this.id = id;
+		this.name = "";
+	}
+	public RemoteUserProxyStub(String id, String name) {
+		this.id = id;
+		this.name = name;
 	}
 	public String getId() {
 		return id;
@@ -39,28 +44,22 @@ public class RemoteUserStub implements MutableRemoteUser {
 	public Collection getSharedDocuments() {
 		return null;
 	}
-	public void setName(String userName) {
-		this.name = userName;
+	public UserDetails getUserDetails() {
+		return new UserDetails(name);
 	}
-	public String getName() {
-		return name;
-	}
-	public void invite(PublishedSession session) {
+	public void invite(DocumentServerLogic logic) {
 		// ignore
 	}
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
-		} else if (obj instanceof RemoteUser) {
-			RemoteUser user = (RemoteUser) obj;
+		} else if (obj instanceof RemoteUserProxy) {
+			RemoteUserProxy user = (RemoteUserProxy) obj;
 			return id.equals(user.getId());
 		}
 		return super.equals(obj);
 	}
-	public void addPropertyChangeListener(PropertyChangeListener listener) {
-		
-	}
-	public void removePropertyChangeListener(PropertyChangeListener listener) {
-		
+	public String toString() {
+		return getClass().getName() + "[id=" + id + "]";
 	}
 }

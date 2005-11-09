@@ -26,6 +26,7 @@ import junit.framework.TestCase;
 import org.easymock.MockControl;
 
 import ch.iserver.ace.DocumentDetails;
+import ch.iserver.ace.collaboration.RemoteUserStub;
 import ch.iserver.ace.net.RemoteDocumentProxy;
 
 public class RemoteDocumentImplTest extends TestCase {
