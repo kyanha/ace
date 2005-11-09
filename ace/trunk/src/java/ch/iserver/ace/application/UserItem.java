@@ -57,6 +57,20 @@ public class UserItem extends ItemImpl implements Comparable, PropertyChangeList
 	public int compareTo(Object o) {
 		return -((UserItem)o).getName().compareTo(name);
 	}
+	
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		} else if (obj instanceof UserItem) {
+			UserItem userItem = (UserItem)obj;
+			return getUser().equals(userItem.getUser());
+		}
+		return super.equals(obj);
+	}
+	
+	public int hashCode() {
+		return getUser().hashCode();
+	}
 
 }
 

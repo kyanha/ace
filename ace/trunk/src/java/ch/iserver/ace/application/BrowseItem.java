@@ -63,5 +63,19 @@ public class BrowseItem extends ItemImpl implements Comparable, PropertyChangeLi
 		return -((BrowseItem)o).getTitle().compareTo(title);
 	}
 
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		} else if (obj instanceof BrowseItem) {
+			BrowseItem browseItem = (BrowseItem)obj;
+			return getDocument().equals(browseItem.getDocument());
+		}
+		return super.equals(obj);
+	}
+	
+	public int hashCode() {
+		return getDocument().hashCode();
+	}
+
 }
 

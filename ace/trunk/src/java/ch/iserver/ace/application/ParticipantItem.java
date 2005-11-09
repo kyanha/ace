@@ -66,5 +66,19 @@ public class ParticipantItem extends ItemImpl implements Comparable, PropertyCha
 		return -((ParticipantItem)o).getName().compareTo(name);
 	}
 
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		} else if (obj instanceof ParticipantItem) {
+			ParticipantItem participantItem = (ParticipantItem)obj;
+			return getUser().equals(participantItem.getUser());
+		}
+		return super.equals(obj);
+	}
+	
+	public int hashCode() {
+		return getUser().hashCode();
+	}
+
 }
 

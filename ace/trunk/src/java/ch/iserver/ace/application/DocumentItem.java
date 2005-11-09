@@ -82,5 +82,19 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 		return -((DocumentItem)o).getTitle().compareTo(title);
 	}
 
+	/*public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		} else if (obj instanceof DocumentItem) {
+			DocumentItem documentItem = (DocumentItem)obj;
+			return getDocumentUser().equals(participantItem.getUser());
+		}
+		return super.equals(obj);
+	}
+	
+	public int hashCode() {
+		return getUser().hashCode();
+	}*/
+
 }
 
