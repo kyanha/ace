@@ -29,6 +29,8 @@ import ca.odell.glazedlists.EventList;
 public class ParticipantViewController extends ViewControllerImpl {
 
 	private CompositeList participantSourceList;
+	
+	private EventList memberList;
 
 	public ParticipantViewController() {
 		participantSourceList = new CompositeList();
@@ -36,9 +38,15 @@ public class ParticipantViewController extends ViewControllerImpl {
 	
 	public void setParticipantList(EventList participantList) {
 		participantSourceList.getReadWriteLock().writeLock().lock();
-		participantSourceList.clear();
-		participantSourceList.addMemberList(participantList);
-		participantSourceList.getReadWriteLock().writeLock().unlock();
+		try {
+			if (memberList != null) {
+				participantSourceList.removeMemberList(memberList);
+			}
+			this.memberList = participantList;
+			participantSourceList.addMemberList(participantList);
+		} finally {
+			participantSourceList.getReadWriteLock().writeLock().unlock();
+		}
 	}
 
 	private ParticipantView getParticipantView() {

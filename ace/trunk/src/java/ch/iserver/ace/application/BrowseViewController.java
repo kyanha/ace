@@ -41,8 +41,11 @@ public class BrowseViewController extends ViewControllerImpl implements Document
 		// remove discarded document from the list
 		for(int i = 0; i < documents.length; i++ ) {
 			browseSourceList.getReadWriteLock().writeLock().lock();
-			browseSourceList.remove(new BrowseItem(documents[i]));
-			browseSourceList.getReadWriteLock().writeLock().unlock();
+			try {
+				browseSourceList.remove(new BrowseItem(documents[i]));
+			} finally {
+				browseSourceList.getReadWriteLock().writeLock().unlock();
+			}
 		}
 	}
 	
@@ -50,8 +53,11 @@ public class BrowseViewController extends ViewControllerImpl implements Document
 		// add discovered document to the list
 		for(int i = 0; i < documents.length; i++ ) {
 			browseSourceList.getReadWriteLock().writeLock().lock();
-			browseSourceList.add(new BrowseItem(documents[i]));
-			browseSourceList.getReadWriteLock().writeLock().unlock();
+			try {
+				browseSourceList.add(new BrowseItem(documents[i]));
+			} finally {
+				browseSourceList.getReadWriteLock().writeLock().unlock();
+			}
 		}
 	}
 		

@@ -40,15 +40,21 @@ public class UserViewController extends ViewControllerImpl implements UserListen
 	public void userDiscarded(RemoteUser user) {
 		// remove discarded user from the list
 		userSourceList.getReadWriteLock().writeLock().lock();
-		userSourceList.remove(new UserItem(user));
-		userSourceList.getReadWriteLock().writeLock().unlock();
+		try {
+			userSourceList.remove(new UserItem(user));
+		} finally {
+			userSourceList.getReadWriteLock().writeLock().unlock();
+		}
 	}
 	
 	public void userDiscovered(RemoteUser user) {
 		// add discovered user to the list
 		userSourceList.getReadWriteLock().writeLock().lock();
-		userSourceList.add(new UserItem(user));
-		userSourceList.getReadWriteLock().writeLock().unlock();
+		try {
+			userSourceList.add(new UserItem(user));
+		} finally {
+			userSourceList.getReadWriteLock().writeLock().unlock();
+		}
 	}
 	
 	private UserView getUserView() {
