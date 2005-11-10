@@ -52,6 +52,15 @@ public class DocumentViewController extends ViewControllerImpl {
 		}
 	}
 	
+	public boolean containsDocument(DocumentItem document) {
+		documentSourceList.getReadWriteLock().readLock().lock();
+		try {
+			return documentSourceList.contains(document);
+		} finally {
+			documentSourceList.getReadWriteLock().readLock().unlock();
+		}
+	}
+	
 	private DocumentView getDocumentView() {
 		if(view == null) throw new IllegalStateException("View have to be set before using getView()!");
 		return (DocumentView)view;
