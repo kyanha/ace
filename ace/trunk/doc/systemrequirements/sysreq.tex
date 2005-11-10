@@ -2,6 +2,7 @@
 \usepackage[T1]{fontenc}
 \usepackage[latin1]{inputenc}
 \usepackage{a4wide}
+\usepackage{lmodern}
 \usepackage[dvips]{graphicx}
 
 \usepackage[
@@ -14,18 +15,25 @@ pdfcreator={pdftex},
 
 \begin{document}
 
+\setlength{\parindent}{0pt}
+
 \include{titlepage}
+
+\tableofcontents
+\newpage
 
 \section{Introduction}
 
 ACE is a collaborative editor. Collaborative editing allows multiple users
-to edit a shared document together on different computers. Changes of each user can be viewed 
-by the other users immediately.
+to edit a shared document together on different computers. Changes of each 
+user can be viewed by the other users immediately.
+
 
 \section{Project Goals}
 
-The goal of the project ACE is to create a collaborative text editor. In the following a more detailed
-description of the functionality is described.
+The goal of the project ACE is to create a collaborative text editor. In 
+the following a more detailed description of the functionality is described.
+The project goals are categorized into mandatory, optional, and non-goals.
 
 \subsection{Mandatory Goals}
 
@@ -48,6 +56,7 @@ And this is the list of collaboration functionality that must be implemented:
  \item join published documents
  \item collaborative editing in a shared document
  \item awareness information
+ \item conceal published documents
  \item leave joined documents
  \item kick users
 \end{itemize}
@@ -59,7 +68,9 @@ users and documents must be displayed in the graphical user interface where the 
 to interact with them.
 
 Discovered shared documents of other users can be joined. Already joined document editing sessions can
-be left and the publisher can kick participants in an editing session that are not welcome. When a shared
+be left and the publisher can kick participants in an editing session that are not welcome. A
+publisher of a document can conceal a document, which effectively ends the collaborative editing
+session. When a shared
 document is joined, it is possible to collaboratively edit the same shared document at the same time. 
 So-called awareness information provides information about the other users editing location, i.e. their
 current text insert position and selection.
@@ -77,13 +88,16 @@ We might implement optional goals if we have additional time.
 
 \subsubsection{Access Right Mechanism}
 
-There is no mandatory goal that requires any kind of access right mechanism meaning that any user can join a published
-document and gain read/write access. Of course, this can be an undesirable situation, especially in an environement
-where you do not trust all the other users on the local area network.
+There is no mandatory goal that requires any kind of access right mechanism 
+meaning that any user can join a published document and gain read/write 
+access. Of course, this can be an undesirable situation, especially in an 
+environement where you do not trust all the other users on the local 
+area network.
 
-A access right mechanism should allow the publisher to choose default access rights for each of his published 
-documents. These default access rights specify which access rights a freshly joined user has.
-Reasonable access right settings would be:
+An access right mechanism should allow the publisher to choose default access 
+rights for each of his published documents. These default access rights 
+specify which access rights a freshly joined user gets. Reasonable access 
+modes would be:
 
 \begin{itemize}
  \item ask for join permission
@@ -91,27 +105,28 @@ Reasonable access right settings would be:
  \item read-write access
 \end{itemize}
 
-The first access mode ensures that nobody can access or even view a shared document before the publisher explicitely gives
-that user the permission to view the document, either with read-only access or full read-write access. The access rights
-can be changed for each user independently or globally for all participants in a shared document.
+The first access mode ensures that nobody can access or even view a shared 
+document before the publisher explicitely grants that user more the permission
+(i.e. read-only or read-write). The access rights can be changed for each 
+user independently or globally for all participants in a shared document.
 
 \subsubsection{Manual Discovery}
 
-Beside the automatic discovery, a mechanism to explicitely discover other users might be implemented. This
-mechanism allows to enter IP/port information to connect to another ACE instance running on another
-network.
+Beside the automatic discovery, a mechanism to explicitely discover other users
+might be implemented. This mechanism allows to enter IP/port information to
+connect to another ACE instance running on another network.
 
 \subsubsection{Invitations}
-
-The publisher of a shared document should be able to invite other users to an editing session of a particular shared
-document.
-
+The publisher of a shared document should be able to invite other users to an 
+editing session of a particular shared document.
 
 \subsection{Non-Goals}
 
-Due to the limited available time, certain (useful) functionality cannot be implemented in the diploma project. The 
-principle is that if something is not explicitely listed in the project goals, it is not a goal of the project. However,
-we want to highlight in this section some points that are not goals.
+Due to the limited available time, certain (useful) functionality cannot be 
+implemented in the diploma project. The principle is that if something is not
+explicitely listed in the project goals, it is not a goal of the project. 
+However, we want to explicitely highlight in this section some points that are 
+not goals.
 
 \begin{itemize}
  \item security aspects: authentication, confidentiality
@@ -119,40 +134,84 @@ we want to highlight in this section some points that are not goals.
 \end{itemize}
 
 \subsubsection{Security Aspects}
+Collaborative editing requires that changes to the local replica of the shared 
+document must be sent to the other participants. These changes pass through
+the network and thus can be viewed by eavesdroppers. As the document might 
+contain potentially confidential information, ideally all transformation 
+should be encrypted.
 
-Collaborative editing requires that changes to the local replica of the shared document must be sent to the other
-participants. These changes pass through the network and thus can be viewed by eavesdroppers. As the document
-might contain potentially confidential information, ideally all transformation should be encrypted.
+Further, if a user tries to join a document, the publisher should be certain 
+who the joining user is. The use of digital signatures would help to 
+ascertain the identity of the joining user.
 
-Further, if a user tries to join a document, the publisher should be certain who the joining user is. The use
-of digital signatures would help to assertain the identity of the joining user.
-
-Although both authentication and confidentiality would be very useful additions to a collaborative editor, they
-will not be implemented in ACE for time reasons.
+Although both authentication and confidentiality would be very useful additions
+to a collaborative editor, they will not be implemented in ACE for time 
+reasons.
 
 \subsubsection{Undo/Redo}
+In the semester project we envisioned ACE to have a fully functioning 
+undo/redo, even in a collaborative editing session. Unfortunately we have 
+stumbled across a bug, which we could not resolve in reasonable time. That is 
+the reason why ACE will not have any undo/redo actions. We will explain the 
+source of the problem in detail in the final report. 
 
 
 \section{Requirements}
 
 In this section, the basic requirements for ACE are described.
 
-\subsection{Platform Independence}
+\paragraph{Platform Independence}
+The currently only working collaborative text editor is limited to the Mac
+platform. ACE must run on at least Windows, Linux, and Mac platform.
 
-The currently only working collaborative text editor is limited to the Mac platform. ACE must run on at least Windows,
-Linux, and Mac platform.
+\paragraph{Programming Language}
+ACE has to be implemented with Java SE 1.4.2. This requirement comes directly
+from the platform independece requirement.
 
-\subsection{Programming Language}
+\paragraph{Interoperability}
+The protocol employed by ACE should be open and platform independent. 
+For that reason, we won't use Java serialization in the network layer.
 
-ACE has to be implemented with Java SE 1.4.2. This requirement comes directly from the platform independece requirement.
+\paragraph{Configuration}
+As ACE is an end-user application, the required configuration for the 
+application should be minimal, ideally zero.
 
-\subsubsection{Interoperability}
-
-The protocol employed by ACE should be open and platform independent. For that reason, we won't use Java serialization
-in the network layer.
+\paragraph{No Server Application}
+ACE is an end-user application. We do not want that it is necessary to setup
+an additional server application in order to use ACE. All that should be
+necessary to start using ACE is to download the application and start it.
 
 
 \section{Architecture}
 
+ACE uses a concurrency control algorithm that is based on a client-server 
+architecture. The document content is replicated at each participant's
+site. In order to maintain the consistency of the replicas, each operation 
+has to pass through the server algorithm. We consider this as a natural
+fit, because of the nature of collaborative editing. A user shares a 
+local document and other users can join the editing session. However, setting
+up a separate server is not desired because this would require additional 
+setup steps.
+
+In ACE, each running instance of the application will start one network level
+server. This server publishes the presence of the application on the local
+area network. It runs inside the client application. There is no specialized 
+server application.
+
+For each published document an additional logical server exists for the 
+transformation and forwarding of messages. This logical server is not an 
+additional network server.
+
+The figure \ref{fig:collaboration} shows a network with three applications. 
+User C shares document 1 and user A shares documents 2 and 3. Each user
+in this situation is part of the documents 1, 2, and 3, either as publisher
+or as participant.
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=11.57cm,height=9.24cm]{../images/collaboration.eps}
+ \caption{Three hosts with three shared documents.}
+ \label{fig:collaboration}
+\end{figure}
 
 \end{document}
