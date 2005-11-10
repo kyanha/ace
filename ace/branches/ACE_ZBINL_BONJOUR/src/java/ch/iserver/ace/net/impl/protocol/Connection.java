@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:Connection.java 1095 2005-11-09 13:56:51Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -27,8 +27,6 @@ import org.beepcore.beep.core.OutputDataStream;
 import org.beepcore.beep.core.ReplyListener;
 import org.beepcore.beep.util.BufferSegment;
 
-import ch.iserver.ace.net.impl.protocol.DocumentDiscoveryImpl.QueryInfo;
-
 /**
  * Wrapper/Decorator class around a <code>Channel</code>.
  * 
@@ -47,6 +45,7 @@ public class Connection {
 			OutputDataStream output = prepare(message);
 			//TODO: is the AppData also serialized or only kept locally? -> check logs
 			channel.setAppData(data);
+			//TODO: make shure that sendMSG does not block
 			channel.sendMSG(output, listener);
 		} catch (BEEPException be) {
 			throw new ProtocolException(be.getMessage());

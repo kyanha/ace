@@ -4,23 +4,25 @@ import java.net.InetAddress;
 
 import junit.framework.TestCase;
 
+import org.beepcore.beep.core.ReplyListener;
 import org.easymock.ArgumentsMatcher;
 import org.easymock.MockControl;
 
 import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.UserDetails;
+import ch.iserver.ace.net.NetworkServiceCallback;
 import ch.iserver.ace.net.RemoteDocumentProxy;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.net.impl.RemoteDocumentProxyImpl;
+import ch.iserver.ace.net.impl.RemoteUserProxyExt;
 import ch.iserver.ace.net.impl.RemoteUserProxyImpl;
-import ch.iserver.ace.net.impl.protocol.DocumentDiscoveryCallback;
 import ch.iserver.ace.util.UUID;
 
 public class DocumentDiscoveryTest extends TestCase {
 
 	private final int NUM_DOCS = 5;
 	private RemoteDocumentProxy[] docs;
-	private RemoteUserProxy user;
+	private RemoteUserProxyExt user;
 	
 	public DocumentDiscoveryTest() throws Exception {
 		user = new RemoteUserProxyImpl(UUID.nextUUID(), 
@@ -33,21 +35,26 @@ public class DocumentDiscoveryTest extends TestCase {
 	}
 	
 	public void testExecute() throws Exception {
-		MockControl callbackCtrl = MockControl.createControl(DocumentDiscoveryCallback.class);
-		DocumentDiscoveryCallback callback = (DocumentDiscoveryCallback)callbackCtrl.getMock();
-//		DocumentDiscovery discovery = new DocumentDiscoveryImpl();
-//		discovery.setCallback(callback);
-//
-//		callback.documentsDiscovered(docs);
-//		//TODO: finish class RemoteDocumentProxyArrayMatcher()
-//		fail("finish class RemoteDocumentProxyArrayMatcher() first.");
-//		callbackCtrl.setDefaultMatcher(new RemoteDocumentProxyArrayMatcher());
-//		
-//		callbackCtrl.replay();
-//		
-//		discovery.execute(user);
-//		
-//		callbackCtrl.verify();
+		MockControl callbackCtrl = MockControl.createControl(NetworkServiceCallback.class);
+		NetworkServiceCallback callback = (NetworkServiceCallback)callbackCtrl.getMock();
+		
+		Serializer serializer = new SerializerImpl();
+		DocumentDiscoveryCallback docCallback = new DocumentDiscoveryCallbackImpl(callback);
+		DocumentParserHandler parseHandler = new DocumentParserHandler();
+		Deserializer deserializer = new DeserializerImpl(parseHandler);
+		ReplyListener listener = new QueryListener(docCallback, deserializer);
+		DocumentDiscovery discovery = new DocumentDiscoveryImpl(serializer, listener);
+
+		callback.documentDiscovered(docs);
+		//TODO: finish class RemoteDocumentProxyArrayMatcher()
+		fail("finish class RemoteDocumentProxyArrayMatcher() first.");
+		callbackCtrl.setDefaultMatcher(new RemoteDocumentProxyArrayMatcher());
+		
+		callbackCtrl.replay();
+		
+		discovery.execute(user);
+		
+		callbackCtrl.verify();
 	}
 	
 }

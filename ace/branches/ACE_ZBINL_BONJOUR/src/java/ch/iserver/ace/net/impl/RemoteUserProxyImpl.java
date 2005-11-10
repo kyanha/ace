@@ -21,21 +21,26 @@
 package ch.iserver.ace.net.impl;
 
 import java.util.Collection;
+import java.util.Iterator;
 
 import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.net.DocumentServerLogic;
+import ch.iserver.ace.net.RemoteDocumentProxy;
 import ch.iserver.ace.util.ParameterValidator;
 
 public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 	
 	private String id;
 	private UserDetails details;
+	private Collection sharedDocuments;
+	private String sharedDocs;
 	
 	public RemoteUserProxyImpl(String id, UserDetails details) {
 		ParameterValidator.notNull("id", id);
 		ParameterValidator.notNull("details", details);
 		this.id = id;
 		this.details = details;
+		this.sharedDocs = null;
 	}
 
 	public String getId() {
@@ -47,8 +52,7 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 	}
 
 	public Collection getSharedDocuments() {
-		// TODO Auto-generated method stub
-		return null;
+		return sharedDocuments;
 	}
 
 	public void invite(DocumentServerLogic logic) {
@@ -61,7 +65,24 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 		this.details = details;
 	}
 	
-	public String toString() {
-		return "RemoteUserProxyImpl("+id+", "+details+")";
+	public void setSharedDocuments(Collection docs) {
+		this.sharedDocuments = docs;
 	}
+	
+	//TODO: toString() method has to be improved, consider: add/remove of documents
+	public String toString() {
+		if (sharedDocs == null) {
+			sharedDocs = "{ ";
+			Iterator docs = sharedDocuments.iterator();
+			while (docs.hasNext()) {
+				RemoteDocumentProxy r = (RemoteDocumentProxy)docs.next();
+				sharedDocs += r.getDocumentDetails().getTitle()+"; ";
+			}
+			sharedDocs += " }";
+		}
+		
+		return "RemoteUserProxyImpl( "+id+", "+details+", "+sharedDocs+" )";
+	}
+
+
 }

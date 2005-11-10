@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:RemoteUserSession.java 1095 2005-11-09 13:56:51Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -28,7 +28,8 @@ import org.beepcore.beep.core.Channel;
 import org.beepcore.beep.transport.tcp.TCPSession;
 import org.beepcore.beep.transport.tcp.TCPSessionCreator;
 
-import ch.iserver.ace.net.RemoteUserProxy;
+import ch.iserver.ace.net.impl.RemoteUserProxyExt;
+import ch.iserver.ace.util.ParameterValidator;
 
 /**
  *
@@ -39,19 +40,24 @@ public class RemoteUserSession {
 	private int port;
 	private TCPSession session;
 	private Connection connection;
-	private RemoteUserProxy user;
+	private RemoteUserProxyExt user;
+	private boolean isInitiated;
 	
-	public RemoteUserSession(InetAddress address, int port, RemoteUserProxy user) {
+	public RemoteUserSession(InetAddress address, int port, RemoteUserProxyExt user) {
+		ParameterValidator.notNull("address", address);
+		ParameterValidator.notNegative("port", port);
 		this.host = address;
 		this.port = port;
 		this.session = null;
 		this.user = user;
+		isInitiated = false;
 	}
 	
 	public void initiate() {
 		if ( session != null ) {
 			try {
 				session =  TCPSessionCreator.initiate(host, port);
+				isInitiated = true;
 			} catch (BEEPException be) {
 				//TODO: 
 			}
@@ -59,6 +65,9 @@ public class RemoteUserSession {
 	}
 	
 	public Connection getConnection() {
+		if (!isInitiated()) {
+			initiate();
+		}
 		if (connection == null) {
 			try {
 			Channel channel = session.startChannel(AbstractProfile.PROFILE_URI);
@@ -70,8 +79,20 @@ public class RemoteUserSession {
 		return connection;
 	}
 	
-	public RemoteUserProxy getUser() {
+	public boolean isInitiated() {
+		return isInitiated;
+	}
+	
+	public RemoteUserProxyExt getUser() {
 		return user;
+	}
+	
+	public InetAddress getHost() {
+		return host;
+	}
+	
+	public int getPort() {
+		return port;
 	}
 	
 	

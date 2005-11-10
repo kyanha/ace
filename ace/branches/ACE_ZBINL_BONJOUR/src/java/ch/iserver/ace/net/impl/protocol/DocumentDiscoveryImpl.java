@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:DocumentDiscoveryImpl.java 1095 2005-11-09 13:56:51Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -23,8 +23,7 @@ package ch.iserver.ace.net.impl.protocol;
 
 import org.beepcore.beep.core.ReplyListener;
 
-import ch.iserver.ace.UserDetails;
-import ch.iserver.ace.net.RemoteUserProxy;
+import ch.iserver.ace.net.impl.RemoteUserProxyExt;
 
 /**
  *
@@ -32,44 +31,35 @@ import ch.iserver.ace.net.RemoteUserProxy;
 public class DocumentDiscoveryImpl implements DocumentDiscovery {
 
 	private Serializer serializer;
-	private SessionHandler handler;
+	private SessionManager manager;
 	private ReplyListener listener;
 	
-	//TODO: singleton?
+	/**
+	 * 
+	 * @param serializer
+	 * @param listener
+	 */
 	public DocumentDiscoveryImpl(Serializer serializer, ReplyListener listener) {
 		this.serializer = serializer;
 		this.listener = listener;
-		this.handler = SessionHandler.getInstance();
+		this.manager = SessionManager.getInstance();
 	}
 	
 	/**
 	 * @see ch.iserver.ace.net.impl.protocol.DocumentDiscovery#execute(ch.iserver.ace.net.RemoteUserProxy)
 	 */
-	public void execute(RemoteUserProxy proxy) {
+	public void execute(RemoteUserProxyExt proxy) {
 		String userId = proxy.getId();
-		RemoteUserSession session = handler.createSession(proxy); 
+		RemoteUserSession session = manager.createSession(proxy); 
 		Connection connection = session.getConnection();
 		byte[] query = null;
 		try {
 			query = serializer.createQuery(Serializer.PUBLISHED_DOCUMENTS);
-		} catch (SerializeException se) {
-			//TODO: 
-			se.printStackTrace();
-		}
-		try {
 			connection.send(query, new QueryInfo(userId, Serializer.PUBLISHED_DOCUMENTS), listener);
-		} catch (ProtocolException pe) {
-			//TOOD: handling
-			pe.printStackTrace();
+		} catch (Exception e) {
+			//TODO: handling
+			e.printStackTrace();
 		}
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public void setCallback(DocumentDiscoveryCallback callback) {
-		//TODO: create NullDocumentDiscoveryCallback
-		
 	}
 	
 	static class QueryInfo {

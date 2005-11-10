@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:DocumentDiscoveryCallbackImpl.java 1095 2005-11-09 13:56:51Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -29,8 +29,9 @@ import java.util.Map;
 import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.net.NetworkServiceCallback;
 import ch.iserver.ace.net.RemoteDocumentProxy;
-import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.net.impl.RemoteDocumentProxyImpl;
+import ch.iserver.ace.net.impl.RemoteUserProxyExt;
+import ch.iserver.ace.util.ParameterValidator;
 
 /**
  *
@@ -40,6 +41,7 @@ public class DocumentDiscoveryCallbackImpl implements DocumentDiscoveryCallback 
 	private NetworkServiceCallback callback;
 	
 	public DocumentDiscoveryCallbackImpl(NetworkServiceCallback callback) {
+		ParameterValidator.notNull("callback", callback);
 		this.callback = callback;
 	}
 	
@@ -48,12 +50,12 @@ public class DocumentDiscoveryCallbackImpl implements DocumentDiscoveryCallback 
 	 */
 	public void documentsDiscovered(String id, Map docs) {
 		RemoteDocumentProxy[] proxies = createProxies(id, docs);
-//		callback.
+		callback.documentDiscovered(proxies);
 	}
 	
 
 	private RemoteDocumentProxy[] createProxies(String id, Map result) {
-		RemoteUserProxy user = SessionHandler.getInstance().getSession(id).getUser();
+		RemoteUserProxyExt user = SessionManager.getInstance().getSession(id).getUser();
 		Iterator keys = result.keySet().iterator();
 		List docs = new ArrayList(result.size());
 		while (keys.hasNext()) {
@@ -63,6 +65,7 @@ public class DocumentDiscoveryCallbackImpl implements DocumentDiscoveryCallback 
 			RemoteDocumentProxy newDoc = new RemoteDocumentProxyImpl(docId, details, user);
 			docs.add(newDoc);
 		}
+		user.setSharedDocuments(docs);
 		return (RemoteDocumentProxy[])docs.toArray(new RemoteDocumentProxy[0]);
 	}
 

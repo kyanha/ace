@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:QueryListener.java 1095 2005-11-09 13:56:51Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -22,9 +22,6 @@
 package ch.iserver.ace.net.impl.protocol;
 
 import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -34,8 +31,8 @@ import org.beepcore.beep.core.Message;
 import org.beepcore.beep.core.ReplyListener;
 import org.beepcore.beep.util.BufferSegment;
 
-import ch.iserver.ace.net.RemoteDocumentProxy;
 import ch.iserver.ace.net.impl.protocol.DocumentDiscoveryImpl.QueryInfo;
+import ch.iserver.ace.util.ParameterValidator;
 
 /**
  *
@@ -48,6 +45,8 @@ public class QueryListener implements ReplyListener {
 	private Deserializer deserializer;
 	
 	public QueryListener(DocumentDiscoveryCallback callback, Deserializer deserializer) {
+		ParameterValidator.notNull("callback", callback);
+		ParameterValidator.notNull("deserializer", deserializer);
 		this.callback = callback;
 		this.deserializer = deserializer;
 	}
@@ -57,9 +56,9 @@ public class QueryListener implements ReplyListener {
 	 * @see org.beepcore.beep.core.ReplyListener#receiveRPY(org.beepcore.beep.core.Message)
 	 */
 	public void receiveRPY(Message message) throws AbortChannelException {
-		QueryInfo info = (QueryInfo)message.getChannel().getAppData();
-		
 		byte[] data = read(message);
+		
+		QueryInfo info = (QueryInfo)message.getChannel().getAppData();
 		int queryType = info.getQueryType();
 		if (queryType == Serializer.PUBLISHED_DOCUMENTS) {
 			Map result = null;
@@ -67,6 +66,7 @@ public class QueryListener implements ReplyListener {
 				result = deserializer.deserializeDocuments(data);
 			} catch (DeserializeException de) {
 				//TODO: handling
+				de.printStackTrace();
 			}
 			callback.documentsDiscovered(info.getId(), result);
 		} else {

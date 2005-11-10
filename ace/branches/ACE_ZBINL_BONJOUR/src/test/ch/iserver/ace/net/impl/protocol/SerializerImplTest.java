@@ -5,7 +5,7 @@ import ch.iserver.ace.net.impl.NetworkConstants;
 
 public class SerializerImplTest extends TestCase {
 
-	private static final String EXPECTED_PUBLISHED_DOCUMENTS = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ace><request><query type=\"doc\"/></request></ace>";
+	private static final String EXPECTED_DATA = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ace><request><query type=\"doc\"/></request></ace>";
 	
 	public void testCreateQueryForPublishedDocuments() throws Exception {
 		Serializer serializer = new SerializerImpl();
@@ -13,7 +13,7 @@ public class SerializerImplTest extends TestCase {
 		byte[] data = serializer.createQuery(Serializer.PUBLISHED_DOCUMENTS);
 		String actual = new String(data, NetworkConstants.DEFAULT_ENCODING);
 		
-		assertEquals(actual, EXPECTED_PUBLISHED_DOCUMENTS);
+		assertEquals(actual, EXPECTED_DATA);
 	}
 	
 }

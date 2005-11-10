@@ -41,35 +41,32 @@ public class RemoteDocumentProxyImpl implements RemoteDocumentProxy {
 		this.publisher = publisher;
 	}
 	
-	/* (non-Javadoc)
+	/**
 	 * @see ch.iserver.ace.net.RemoteDocumentProxy#getId()
 	 */
 	public String getId() {
-		// TODO Auto-generated method stub
-		return null;
+		return id;
 	}
 
-	/* (non-Javadoc)
+	/**
 	 * @see ch.iserver.ace.net.RemoteDocumentProxy#getDocumentDetails()
 	 */
 	public DocumentDetails getDocumentDetails() {
-		// TODO Auto-generated method stub
-		return null;
+		return details;
 	}
 
-	/* (non-Javadoc)
+	/**
 	 * @see ch.iserver.ace.net.RemoteDocumentProxy#getPublisher()
 	 */
 	public RemoteUserProxy getPublisher() {
-		// TODO Auto-generated method stub
-		return null;
+		return publisher;
 	}
 
-	/* (non-Javadoc)
+	/**
 	 * @see ch.iserver.ace.net.RemoteDocumentProxy#join(ch.iserver.ace.net.JoinNetworkCallback)
 	 */
 	public void join(JoinNetworkCallback callback) {
-		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException();
 
 	}
 

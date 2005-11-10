@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:DeserializerImpl.java 1095 2005-11-09 13:56:51Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -49,6 +49,7 @@ public class DeserializerImpl implements Deserializer {
 		try {
 			ByteArrayInputStream input = new ByteArrayInputStream(data);
 			SAXParserFactory factory;
+			//TODO: add xml validating!!
 			factory = SAXParserFactory.newInstance();
 			SAXParser saxParser = factory.newSAXParser();
 			saxParser.parse( input, docHandler );
@@ -56,7 +57,6 @@ public class DeserializerImpl implements Deserializer {
 		} catch (Exception e) {
 			throw new DeserializeException(e);
 		}
-		
 	}
 
 }

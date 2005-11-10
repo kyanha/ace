@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:DocumentParserHandler.java 1095 2005-11-09 13:56:51Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -21,51 +21,56 @@
 
 package ch.iserver.ace.net.impl.protocol;
 
-import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import ch.iserver.ace.net.impl.NetworkConstants;
-
 /**
  *
  */
-public class DocumentParserHandler extends DefaultHandler implements ParserHandler {
-	
-	public static final String DEFAULT_ANSWER = "doc1.txt doc2.txt doc3.txt";
-	
-//	public static final String DEFAULT_ANSWER = "<ace><publishedDocs><doc name=\"testfile.txt\" id=\"WERS24-RE2\" /><doc name=\"meeting2.txt\" " +
-//	"id=\"ADSFBW-45S\" /><doc name=\"notes232.txt\" id=\"23SSWD-3ED\" /></publishedDocs></ace>";
+public class DocumentParserHandler extends DefaultHandler implements ParserHandler, ProtocolConstants {
 	
 	private Map result;
-	
+	private boolean isReady;
 	
 	public DocumentParserHandler() {
+		isReady = false;
 	}
 
 	public void startDocument() throws SAXException {
+		result = new HashMap();
 	}
 	
 	public void endDocument() throws SAXException {
 		
 	}
 	
-	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-		System.out.println("StartElement: u-"+uri+" ln-"+localName+" q-"+qName+" aln-"+attributes.getLocalName(0)+" aqn-"+
-				attributes.getQName(0)+" at-"+attributes.getType(0)+" av-"+attributes.getValue(0));
+	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {	
+		if (isReady) {
+			String id = attributes.getValue(DOCUMENT_ID);
+			String name = attributes.getValue(DOCUMENT_NAME);
+			result.put(id, name);
+		} else if (qName.equals(RESPONSE_PUBLISHED_DOCUMENTS)) {
+			isReady = true;
+		}
+
 	}
 	
 	public void endElement(String uri, String localName, String qName) throws SAXException {
-		System.out.println("EndElement: u-"+uri+" ln-"+localName+" qn-"+qName);
+		if (qName.equals(RESPONSE_PUBLISHED_DOCUMENTS)) {
+			isReady = false;
+		}
 	}
 	
 	/**
 	 * Returns a Map with document id's and document names.
 	 */
 	public Object getResult() {
-		return result;
+		Map tmp = result;
+		result = null;
+		return tmp;
 	}
 }

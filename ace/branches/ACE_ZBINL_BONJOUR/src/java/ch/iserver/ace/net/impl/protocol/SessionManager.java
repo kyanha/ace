@@ -55,8 +55,18 @@ public class SessionManager {
 		return newSession;
 	}
 	
+	/**
+	 * Gets the session for the user.
+	 * 
+	 * @param id the user id
+	 * @return the session of the user
+	 */
 	public RemoteUserSession getSession(String id) {
 		return (RemoteUserSession)sessions.get(id);
+	}
+	
+	public int getSessions() {
+		return sessions.size();
 	}
 	
 	

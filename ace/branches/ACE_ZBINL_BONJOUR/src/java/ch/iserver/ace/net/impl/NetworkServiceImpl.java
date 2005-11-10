@@ -30,18 +30,20 @@ import ch.iserver.ace.net.DocumentServer;
 import ch.iserver.ace.net.DocumentServerLogic;
 import ch.iserver.ace.net.NetworkService;
 import ch.iserver.ace.net.NetworkServiceCallback;
+import ch.iserver.ace.net.impl.protocol.DiscoveryLauncher;
 import ch.iserver.ace.util.ParameterValidator;
 import ch.iserver.ace.util.UUID;
 
 /**
  *
  */
-public class NetworkServiceImpl implements NetworkService {
+public class NetworkServiceImpl implements NetworkServiceExt {
 	
 	private TimestampFactory timestampFactory;
 	private NetworkServiceCallback networkCallback;
 	
 	private Discovery discovery;
+	private UserDetails details;
 	private String userId;
 	
 	public NetworkServiceImpl() {
@@ -49,7 +51,12 @@ public class NetworkServiceImpl implements NetworkService {
 	}
 
 	public void setUserDetails(UserDetails details) {
-		discovery.setUserDetails(details);
+		this.details = details;
+		//update user details in sessions
+		if (discovery != null) {
+			//TODO: how is threading here?
+			discovery.setUserDetails(details);
+		}
 	}
 
 	public void setTimestampFactory(TimestampFactory factory) {
@@ -68,17 +75,21 @@ public class NetworkServiceImpl implements NetworkService {
 	 * Launches the discovery process.
 	 */
 	private void launchDiscovery() {
-		DiscoveryFactory factory = DiscoveryFactory.getInstance();
-		DiscoveryCallback callback = new DiscoveryCallbackImpl(getCallback());
-		discovery = factory.createDiscovery(callback);
-		discovery.setUserId(userId);
-		discovery.execute();
+		DiscoveryLauncher launcher = new DiscoveryLauncher(getUserId(), getCallback(), this);
+		launcher.start();
+	}
+	
+	public void setDiscovery(Discovery discovery) {
+		this.discovery = discovery;
 	}
 	
 	public NetworkServiceCallback getCallback() {
 		return networkCallback;
 	}
 
+	public String getUserId() {
+		return userId;
+	}
 
 	public void discoverUser(DiscoveryNetworkCallback callback, InetAddress addr, int port) {
 		

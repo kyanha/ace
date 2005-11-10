@@ -23,6 +23,7 @@ package ch.iserver.ace.net.impl;
 import org.apache.log4j.Logger;
 
 import ch.iserver.ace.net.NetworkServiceCallback;
+import ch.iserver.ace.net.impl.protocol.DocumentDiscovery;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
@@ -34,14 +35,16 @@ public class DiscoveryCallbackImpl implements DiscoveryCallback {
 	private static Logger LOG = Logger.getLogger(DiscoveryCallbackImpl.class);
 	
 	private NetworkServiceCallback callback;
+	private DocumentDiscovery docDiscovery;
 	
 	/**
 	 * 
 	 * @param callback
 	 */
-	public DiscoveryCallbackImpl(NetworkServiceCallback callback) {
+	public DiscoveryCallbackImpl(NetworkServiceCallback callback, DocumentDiscovery docDiscovery) {
 		ParameterValidator.notNull("callback", callback);
 		this.callback = callback;
+		this.docDiscovery = docDiscovery;
 	}
 	
 	/**
@@ -51,8 +54,9 @@ public class DiscoveryCallbackImpl implements DiscoveryCallback {
 		//notify upper layer of discovery
 		callback.userDiscovered(proxy);
 		
-		//TODO: initiate process of getting published documents for this remote user
-		
+		//TODO: possibly include SingleThreadDomain between DiscoveryCallbackImpl and DocumentDiscovery?
+		LOG.info("--> start document discovery for ["+proxy.getUserDetails().getUsername()+"]");
+		docDiscovery.execute(proxy);
 	}
 
 	/**

@@ -20,6 +20,8 @@
  */
 package ch.iserver.ace.net.impl;
 
+import java.util.Collection;
+
 import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.net.RemoteUserProxy;
 
@@ -33,4 +35,5 @@ public interface RemoteUserProxyExt extends RemoteUserProxy {
 
 	void setUserDetails(UserDetails details);
 	
+	void setSharedDocuments(Collection docs);
 }

@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:DocumentDiscovery.java 1095 2005-11-09 13:56:51Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -21,7 +21,7 @@
 
 package ch.iserver.ace.net.impl.protocol;
 
-import ch.iserver.ace.net.RemoteUserProxy;
+import ch.iserver.ace.net.impl.RemoteUserProxyExt;
 
 /**
  * Interface for document discovery.
@@ -34,12 +34,12 @@ public interface DocumentDiscovery {
 	 * 
 	 * @param proxy the RemoteUserProxy
 	 */
-	public void execute(RemoteUserProxy proxy);
+	public void execute(RemoteUserProxyExt proxy);
 	
-	/**
-	 * Sets the DocumentDiscoveryCallback.
-	 * 
-	 * @param callback the callback to set
-	 */
-	public void setCallback(DocumentDiscoveryCallback callback);
+//	/**
+//	 * Sets the DocumentDiscoveryCallback.
+//	 * 
+//	 * @param callback the callback to set
+//	 */
+//	public void setCallback(DocumentDiscoveryCallback callback);
 }
