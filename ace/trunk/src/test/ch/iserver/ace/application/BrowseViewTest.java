@@ -21,7 +21,8 @@
 
 package ch.iserver.ace.application;
 
-import javax.swing.event.ListSelectionListener;
+import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
 
 import junit.framework.TestCase;
 
@@ -76,8 +77,9 @@ public class BrowseViewTest extends TestCase {
 	}
 	
 	public void testItemPropertiesChanged() throws Exception {
-		MockControl listenerCtrl = MockControl.createControl(ListSelectionListener.class);
-		ListSelectionListener listener = (ListSelectionListener) listenerCtrl.getMock();
+		MockControl listenerCtrl = MockControl.createControl(ListDataListener.class);
+		listenerCtrl.setDefaultMatcher(new ListDataEventMatcher());
+		ListDataListener listener = (ListDataListener) listenerCtrl.getMock();
 		
 		// test fixture
 		BrowseViewController controller = new BrowseViewController();
@@ -91,10 +93,11 @@ public class BrowseViewTest extends TestCase {
 		controller.getBrowseSourceList().add(item);
 		controller.getBrowseSourceList().getReadWriteLock().writeLock().unlock();
 
-		view.getList().addListSelectionListener(listener);
+		Thread.sleep(5);
+		view.getList().getModel().addListDataListener(listener);
 		
 		// define mock behavior
-		//listener.valueChanged(new ListSelectionEvent(view.getList(), 0, 0, false));
+		listener.contentsChanged(new ListDataEvent(view.getList().getModel(), ListDataEvent.CONTENTS_CHANGED, 0, 0));
 		
 		// replay
 		listenerCtrl.replay();
@@ -103,6 +106,7 @@ public class BrowseViewTest extends TestCase {
 		document.setTitle("NEW TITLE");
 		
 		// verify
+		Thread.sleep(5);
 		listenerCtrl.verify();
 	}
 	

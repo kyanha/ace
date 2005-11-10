@@ -21,9 +21,17 @@
 
 package ch.iserver.ace.application;
 
+import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
+
 import junit.framework.TestCase;
 
 import org.easymock.MockControl;
+
+import ch.iserver.ace.collaboration.RemoteDocumentStub;
+import ch.iserver.ace.collaboration.RemoteUserStub;
+import ch.iserver.ace.collaboration.jupiter.MutableRemoteDocument;
+import ch.iserver.ace.collaboration.jupiter.MutableRemoteUser;
 
 /**
  *
@@ -65,6 +73,41 @@ public class DocumentViewTest extends TestCase {
 		view.setSelectedIndex(-1);
 		
 		// verify
+		listenerCtrl.verify();
+	}
+	
+	public void testItemPropertiesChanged() throws Exception {
+		MockControl listenerCtrl = MockControl.createControl(ListDataListener.class);
+		listenerCtrl.setDefaultMatcher(new ListDataEventMatcher());
+		ListDataListener listener = (ListDataListener) listenerCtrl.getMock();
+		
+		// test fixture
+		DocumentViewController controller = new DocumentViewController();
+		DocumentView view = new DocumentView(controller, new LocaleMessageSourceStub());
+
+		MutableRemoteUser user = new RemoteUserStub("X", "X");
+		MutableRemoteDocument document = new RemoteDocumentStub("0", "z", user);
+		Item item = new DocumentItem(document);
+
+		controller.getDocumentSourceList().getReadWriteLock().writeLock().lock();
+		controller.getDocumentSourceList().add(new DocumentItem(new RemoteDocumentStub("1", "ZZZ", new RemoteUserStub("Z"))));
+		controller.getDocumentSourceList().add(item);
+		controller.getDocumentSourceList().getReadWriteLock().writeLock().unlock();
+		
+		Thread.sleep(5);
+		view.getList().getModel().addListDataListener(listener);
+		
+		// define mock behavior
+		listener.contentsChanged(new ListDataEvent(view.getList().getModel(), ListDataEvent.CONTENTS_CHANGED, 1, 1));
+		
+		// replay
+		listenerCtrl.replay();
+		
+		// test
+		document.setTitle("collab.txt");
+				
+		// verify
+		Thread.sleep(5);
 		listenerCtrl.verify();
 	}
 	

@@ -99,7 +99,7 @@ public class ParticipantViewTest extends TestCase {
 		participantList.add(new ParticipantItem(new ParticipantStub(new RemoteUserStub("Y", "Y"), 2), Color.BLACK));
 		controller.getParticipantSourceList().getReadWriteLock().writeLock().unlock();
 		
-		Thread.sleep(500);
+		Thread.sleep(5);
 		view.getList().getModel().addListDataListener(listener);
 		
 		// define mock behavior
@@ -112,7 +112,7 @@ public class ParticipantViewTest extends TestCase {
 		user.setName("JIM");
 				
 		// verify
-		Thread.sleep(500);
+		Thread.sleep(5);
 		listenerCtrl.verify();
 	}
 	

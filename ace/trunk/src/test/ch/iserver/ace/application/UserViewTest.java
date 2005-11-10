@@ -94,7 +94,7 @@ public class UserViewTest extends TestCase {
 		controller.getUserSourceList().add(new UserItem(new RemoteUserStub("Z", "Z")));
 		controller.getUserSourceList().getReadWriteLock().writeLock().unlock();
 		
-		Thread.sleep(500);
+		Thread.sleep(5);
 		view.getList().getModel().addListDataListener(listener);
 		
 		// define mock behavior
@@ -107,7 +107,7 @@ public class UserViewTest extends TestCase {
 		user.setName("JIM");
 				
 		// verify
-		Thread.sleep(500);
+		Thread.sleep(5);
 		listenerCtrl.verify();
 	}
 	
