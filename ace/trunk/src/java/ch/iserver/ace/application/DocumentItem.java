@@ -25,6 +25,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import ch.iserver.ace.collaboration.RemoteDocument;
+import ch.iserver.ace.collaboration.RemoteUser;
 import ch.iserver.ace.collaboration.Session;
 
 
@@ -83,6 +84,8 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 	public void propertyChange(PropertyChangeEvent evt) {
 		if(evt.getPropertyName().equals(RemoteDocument.TITLE_PROPERTY)) {
 			title = (String)evt.getNewValue();
+			firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.getNewValue());
+		} else if (RemoteUser.NAME_PROPERTY.equals(evt.getPropertyName())) {
 			firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.getNewValue());
 		}
 	}

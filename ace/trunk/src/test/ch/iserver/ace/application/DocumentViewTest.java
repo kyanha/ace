@@ -99,12 +99,14 @@ public class DocumentViewTest extends TestCase {
 		
 		// define mock behavior
 		listener.contentsChanged(new ListDataEvent(view.getList().getModel(), ListDataEvent.CONTENTS_CHANGED, 1, 1));
+		listener.contentsChanged(new ListDataEvent(view.getList().getModel(), ListDataEvent.CONTENTS_CHANGED, 1, 1));
 		
 		// replay
 		listenerCtrl.replay();
 		
 		// test
 		document.setTitle("collab.txt");
+		user.setName("a");
 				
 		// verify
 		Thread.sleep(5);
