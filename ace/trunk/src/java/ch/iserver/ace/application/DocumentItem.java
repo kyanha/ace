@@ -56,6 +56,8 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 		id = document.getId();
 		title = document.getTitle();
 		type = REMOTE;
+		document.addPropertyChangeListener(this);
+		document.getPublisher().addPropertyChangeListener(this);
 	}
 
 	public String getId() {
