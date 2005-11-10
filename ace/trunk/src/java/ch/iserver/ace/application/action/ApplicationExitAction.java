@@ -26,12 +26,17 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
 
+import java.awt.Toolkit;
+import javax.swing.KeyStroke;
+
 
 
 public class ApplicationExitAction extends AbstractAction {
 
 	public ApplicationExitAction(LocaleMessageSource messageSource) {
 		super(messageSource.getMessage("mAppExit"));
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke('Q', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+		putValue(SHORT_DESCRIPTION, messageSource.getMessage("mAppExit"));
 	}
 	
 	public void actionPerformed(ActionEvent e) {

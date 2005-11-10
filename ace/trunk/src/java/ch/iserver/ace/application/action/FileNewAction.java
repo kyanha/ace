@@ -26,12 +26,17 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
 
+import java.awt.Toolkit;
+import javax.swing.KeyStroke;
+
 
 
 public class FileNewAction extends AbstractAction {
 
 	public FileNewAction(LocaleMessageSource messageSource) {
 		super(messageSource.getMessage("mFileNew"), messageSource.getIcon("iMenuFileNew"));
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke('N', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+		putValue(SHORT_DESCRIPTION, messageSource.getMessage("mFileNew"));
 	}
 	
 	public void actionPerformed(ActionEvent e) {

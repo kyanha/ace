@@ -35,7 +35,7 @@ public class HelpAboutAction extends AbstractAction {
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		System.out.println("FileNewAction");
+		System.out.println("HelpAboutAction");
 	}
 
 }

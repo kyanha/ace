@@ -26,12 +26,17 @@ import ch.iserver.ace.application.LocaleMessageSource;
 import ch.iserver.ace.application.ViewController;
 import java.awt.event.ActionEvent;
 
+import java.awt.Toolkit;
+import javax.swing.KeyStroke;
+
 
 
 public class FileCloseAction extends ItemSelectionChangeAction {
 
 	public FileCloseAction(LocaleMessageSource messageSource, ViewController controller) {
 		super(messageSource.getMessage("mFileClose"), messageSource.getIcon("iMenuFileClose"), controller);
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke('W', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+		putValue(SHORT_DESCRIPTION, messageSource.getMessage("mFileClose"));
 		setEnabled(true);
 	}
 	

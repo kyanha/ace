@@ -26,12 +26,17 @@ import ch.iserver.ace.application.LocaleMessageSource;
 import ch.iserver.ace.application.ViewController;
 import java.awt.event.ActionEvent;
 
+import java.awt.Toolkit;
+import javax.swing.KeyStroke;
+
 
 
 public class FileSaveAction extends ItemSelectionChangeAction {
 
 	public FileSaveAction(LocaleMessageSource messageSource, ViewController controller) {
 		super(messageSource.getMessage("mFileSave"), messageSource.getIcon("iMenuFileSave"), controller);
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke('S', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+		putValue(SHORT_DESCRIPTION, messageSource.getMessage("mFileSave"));
 		setEnabled(true);
 	}
 	
