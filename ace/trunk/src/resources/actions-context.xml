@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
-  
-  
+
+  <bean id="fileNewAction" class="ch.iserver.ace.application.action.FileNewAction">
+    <constructor-arg><ref bean="localeMessageSource"/></constructor-arg>
+  </bean>
+
+  <bean id="fileOpenAction" class="ch.iserver.ace.application.action.FileOpenAction">
+    <constructor-arg><ref bean="localeMessageSource"/></constructor-arg>
+  </bean>
+
 </beans>
