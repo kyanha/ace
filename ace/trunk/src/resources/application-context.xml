@@ -19,6 +19,10 @@
 
 
 
+
+
+
+
   <bean id="documentViewController" class="ch.iserver.ace.application.DocumentViewController">
     <property name="view"><ref local="documentView"/></property>
   </bean>
