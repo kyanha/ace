@@ -41,7 +41,7 @@ public class DocumentItemCellRenderer extends JPanel implements ListCellRenderer
 	public DocumentItemCellRenderer(LocaleMessageSource messageSource) {
 		this.messageSource = messageSource;
 		iconLocal = messageSource.getIcon("iViewFileLocal");
-		iconPublished = messageSource.getIcon("iViewFilePublished");
+		iconPublished = messageSource.getIcon("iViewFilePublic");
 		iconRemote = messageSource.getIcon("iViewFileRemote");
 	}
 
