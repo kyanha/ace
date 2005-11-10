@@ -10,13 +10,13 @@
     </property>
   </bean>
 
-
   <bean id="localeMessageSource" class="ch.iserver.ace.application.LocaleMessageSourceImpl">
     <constructor-arg><ref local="messageSource"/></constructor-arg>
   </bean>
 
-
-
+  <bean id="appFactory" class="ch.iserver.ace.application.ApplicationFactoryImpl">
+    <property name="messageSource"><ref local="localeMessageSource"/></property>
+  </bean>
 
 
 

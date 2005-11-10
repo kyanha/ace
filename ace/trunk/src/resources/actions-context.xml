@@ -99,4 +99,14 @@
 
 
 
+
+  <bean id="helpDebugAction" class="ch.iserver.ace.application.action.HelpDebugAction">
+    <constructor-arg><ref bean="localeMessageSource"/></constructor-arg>
+  </bean>
+
+  <bean id="helpAboutAction" class="ch.iserver.ace.application.action.HelpAboutAction">
+    <constructor-arg><ref bean="localeMessageSource"/></constructor-arg>
+  </bean>
+
+
 </beans>
