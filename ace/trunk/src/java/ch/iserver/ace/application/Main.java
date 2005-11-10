@@ -57,7 +57,7 @@ public class Main {
 		frame.setJMenuBar(applicationFactory.createMenuBar());
 		frame.getContentPane().add(BorderLayout.PAGE_START, applicationFactory.createToolBar());
 		frame.getContentPane().add(BorderLayout.CENTER, applicationFactory.createComponentPane());
-		//frame.getContentPane().add(BorderLayout.PAGE_END, ApplicationFactory.createStatusBar());		
+		frame.getContentPane().add(BorderLayout.PAGE_END, applicationFactory.createStatusBar());		
 		frame.show();
 	}
 	
