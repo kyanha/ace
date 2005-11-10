@@ -36,21 +36,23 @@ The following list contains all the relevant documents for the diploma project A
 \end{itemize}
 
 \subsection{System Requirements}
-This document defines the goals and expected functionality of ACE - a collaborative editor.
+\begin{itemize}
+ \item definition of project goals
+ \item description of functionality
+\end{itemize}
 
 \subsection{Project Manual}
-The project manual contains:
 \begin{itemize}
  \item list of delivered documents
  \item project plan: work phases, project organization
  \item used methods and tools
+ \item standards, guidelines, and conventions
 \end{itemize}
 
 \subsection{User Manual}
-The user manual contains:
 \begin{itemize}
- \item instructions how to use the application
- \item instructions how to build and run the application
+ \item instructions how to use the application (end users)
+ \item instructions how to build and run the application (developers)
 \end{itemize}
 
 \subsection{Final Report}
@@ -66,7 +68,7 @@ The final report contains all the technical documentation of the project.
 \end{itemize}
 
 
-\section{Project Organization}
+\section{Persons}
 
 \begin{table}[H]
  \begin{center}
@@ -95,7 +97,7 @@ The final report contains all the technical documentation of the project.
 
 In the diploma project we use a lifecycle model tailored to our needs. It is an iterative
 model with a very short iteration time (2 weeks). Three iterations are planned where the last
-iteration consists mainly in a bugfix and/or usability improvement phase. Each phase is
+iteration consists mainly of bugfixes and/or usability improvements. Each phase is
 completed by a milestone (see the milestone plan \ref{sect:Milestone Plan}). At the end of
 the third phase, the application will be finished according to the defined goals (see
 \emph{System Requirements} document).
@@ -136,6 +138,12 @@ between the adjoining layers and well-defined responsibilities.
 It should be possible to replace a layer implementation without affecting the other 
 layers.
 
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=6.6cm,height=3.42cm]{../images/layers.eps}
+ \caption{The Layers of ACE}
+\end{figure}
+
 \paragraph{Application Layer:} The application layer consists mainly in the graphical
 user interface. ACE itself will have a layer implementation based on a Java Swing GUI.
 
@@ -156,7 +164,8 @@ and/or a different protocol.
 \section{Project Plan}
 
 \begin{figure}[H]
- \includegraphics[height=413pt,width=585pt,angle=90]{../images/gantt.eps}
+ \centering
+ \includegraphics[height=379pt,width=585pt,angle=90]{../images/projectmanagement/gantt.eps}
  \caption{Project Plan}
 \end{figure}
 \newpage
@@ -207,6 +216,20 @@ usability improvements based on feedback from testing.
  \item design
  \item optional goals
 \end{itemize}
+
+\subsection{Work Packages}
+
+\include{wp/initialization}
+%\include{wp/concept}
+%\include{wp/logic-1}
+%\include{wp/gui-1}
+%\include{wp/network-1}
+%\include{wp/merge-1}
+%\include{wp/gui-2}
+%\include{wp/network-2}
+%\include{wp/merge-2}
+%\include{wp/stabilization}
+%\include{wp/closedown}
 
 
 \section{Methods and Tools}
