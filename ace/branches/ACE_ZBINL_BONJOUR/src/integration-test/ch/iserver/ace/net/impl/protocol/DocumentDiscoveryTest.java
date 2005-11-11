@@ -38,11 +38,10 @@ public class DocumentDiscoveryTest extends TestCase {
 		MockControl callbackCtrl = MockControl.createControl(NetworkServiceCallback.class);
 		NetworkServiceCallback callback = (NetworkServiceCallback)callbackCtrl.getMock();
 		
-		Serializer serializer = new SerializerImpl();
+		Serializer serializer = SerializerImpl.getInstance();
 		DocumentDiscoveryCallback docCallback = new DocumentDiscoveryCallbackImpl(callback);
-		DocumentParserHandler parseHandler = new DocumentParserHandler();
-		Deserializer deserializer = new DeserializerImpl(parseHandler);
-		ReplyListener listener = new QueryListener(docCallback, deserializer);
+		Deserializer deserializer = DeserializerImpl.getInstance();
+		ReplyListener listener = new ResponseListener(docCallback, deserializer);
 		DocumentDiscovery discovery = new DocumentDiscoveryImpl(serializer, listener);
 
 		callback.documentDiscovered(docs);
