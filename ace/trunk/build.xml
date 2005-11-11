@@ -1,16 +1,28 @@
 <?xml version="1.0"?> 
 <project name="ace" default="compile" 
 	     xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+	     
 	<property name="build.dir" value="build"/>
 	<property name="build.classes" value="${build.dir}/classes"/>
+	<property name="build.test" value="${build.dir}/test"/>
+	<property name="build.stubs" value="${build.dir}/stubs"/>
+	<property name="build.integration-test" value="${build.dir}/integration-test"/>
 	<property name="build.javadoc" value="${build.dir}/api"/>
 	<property name="build.resources" value="${build.dir}/resources"/>
+	<property name="build.resources-test" value="${build.dir}/resources-test"/>
 	<property name="build.testreports" value="${build.dir}/testreports"/>
+	
+	<property name="maven.repo" value="${user.home}/.m2/repository"/>
+	
 	<property name="dist.dir" value="dist"/>
 	<property name="docs.dir" value="doc/pdf"/>
+	
 	<property name="src.dir" value="src"/>
 	<property name="src.stub" value="${src.dir}/stubs"/>
 	<property name="src.test" value="${src.dir}/test"/>
+	<property name="src.integration-test" value="${src.dir}/integration-test"/>
+	<property name="src.resources" value="${src.dir}/resources"/>
+	<property name="src.resources-test" value="${src.dir}/resources-test"/>
 	
 	<artifact:remoteRepository id="remote.repository.ace" url="http://ace.iserver.ch/maven2/" />
 	<artifact:remoteRepository id="remote.repository.maven" url="http://repo1.maven.org/maven2"/>
@@ -68,80 +80,94 @@
 		<remoteRepository refid="remote.repository.ace" />
 		<remoteRepository refid="remote.repository.maven" />
 	</artifact:dependencies>
-	
-	<artifact:dependencies pathId="dependency.checkstyle">
-		<dependency groupId="checkstyle"
-		            artifactId="checkstyle"
-		            version="4.0-beta4"/>
-		<dependency groupId="antlr"
-		            artifactId="antlr"
-		            version="2.7.2"/>
-		<dependency groupId="commons-beanutils"
-		            artifactId="commons-beanutils"
-		            version="1.7.0"/>
-		<dependency groupId="commons-logging" 
-		            artifactId="commons-logging" 
-		            version="1.0.4"/>
-		<dependency groupId="commons-collections"
-		            artifactId="commons-collections"
-		            version="3.1"/>
-		<dependency groupId="regexp"
-	                artifactId="regexp"
-		            version="1.3"/>
-	</artifact:dependencies>
-	
-	<path id="classpath">
+		
+	<path id="classpath.compile">
 		<path refid="dependency.classpath"/>
 	</path>
 	
-	<path id="classpath.test">
-		<path refid="classpath"/>
+	<path id="classpath.stubs.compile">
+		<path refid="dependency.classpath"/>
 		<pathelement path="${build.classes}"/>
-		<pathelement path="${build.resources}"/>
+	</path>
+	
+	<path id="classpath.test.compile">
+		<path refid="dependency.classpath"/>
+        <pathelement path="${build.classes}"/>
+        <pathelement path="${build.stubs}"/>
 	</path>
 	
 	<path id="classpath.run">
-		<path refid="dependency.classpath"/>
-		<pathelement path="${build.classes}"/>
-		<pathelement path="${build.resources}"/>
+        <path refid="dependency.classpath"/>
+        <pathelement path="${build.classes}"/>
+        <pathelement path="${build.resources}"/>
+	</path>
+	
+	<path id="classpath.test.run">
+        <path refid="dependency.classpath"/>
+        <pathelement path="${build.classes}"/>
+        <pathelement path="${build.stubs}"/>
+        <pathelement path="${build.test}"/>
+        <pathelement path="${build.integration-test}"/>
+        <pathelement path="${build.resources}"/>
+		<pathelement path="${build.resources-test}"/>
 	</path>
 	
 	<target name="init">
 		<mkdir dir="${build.dir}"/>
+		<mkdir dir="${build.javadoc}"/>
 		<mkdir dir="${build.classes}"/>
+		<mkdir dir="${build.test}"/>
+		<mkdir dir="${build.stubs}"/>
+		<mkdir dir="${build.integration-test}"/>
 		<mkdir dir="${build.resources}"/>
+		<mkdir dir="${build.resources-test}"/>
 		<mkdir dir="${build.testreports}"/>
+		<mkdir dir="${dist.dir}"/>
 	</target>
 	
 	<target name="clean">
 		<delete dir="${build.dir}"/>
+		<delete dir="${dist.dir}"/>
 	</target>
 	
 	<target name="compile" depends="init">
+	    <echo>compiling main sources ...</echo>
 		<javac srcdir="${src.dir}/java" destdir="${build.classes}" target="1.4"
-		       source="1.4" classpathref="classpath" debug="true" optimize="false"/>
+		       source="1.4" classpathref="classpath.compile" debug="true" optimize="false"/>
+        <echo>compiling stub classes ...</echo>
+		<javac srcdir="${src.stub}" destdir="${build.stubs}" target="1.4"
+		       source="1.4" classpathref="classpath.stubs.compile"
+		       debug="true" optimize="false"/>
+        <echo>compiling tests ...</echo>
+		<javac srcdir="${src.test}" destdir="${build.test}" target="1.4"
+		       source="1.4" classpathref="classpath.test.compile"
+		       debug="true" optimize="false"/>
+        <echo>compiling integration tests ...</echo>
+        <javac srcdir="${src.integration-test}" destdir="${build.integration-test}"
+               target="1.4" source="1.4" classpathref="classpath.test.compile"
+	           debug="true" optimize="false"/>
 	</target>
-	
+		
 	<target name="resources" depends="compile">
 		<copy todir="${build.resources}">
 			<fileset dir="${src.dir}/resources">
 				<include name="**/*"/>
 			</fileset>
 		</copy>
+		<copy todir="${build.resources-test}">
+			<fileset dir="${src.dir}/resources-test">
+				<include name="**/*"/>
+			</fileset>
+		</copy>
 	</target>
 	
-	<target name="compile-tests" depends="compile-stubs,resources">
-		<javac srcdir="${src.test}" destdir="${build.classes}" target="1.4"
-		       source="1.4" classpathref="classpath.test"
-		       debug="true" optimize="false"/>
+	<target name="jar" depends="compile,resources">
+        <jar destfile="${dist.dir}/ace.jar">
+            <fileset dir="${build.classes}"/>
+            <fileset dir="${build.resources}"/>
+        </jar>
 	</target>
-	
-	<target name="compile-stubs" depends="compile,resources">
-		<javac srcdir="${src.stub}" destdir="${build.classes}" target="1.4"
-		       source="1.4" classpathref="classpath"
-		       debug="true" optimize="false"/>
-	</target>
-	
+		
 	<target name="run" depends="resources">
 		<echo>running ${class}</echo>
 		<java classname="${class}" fork="true" classpathref="classpath.run"/>
@@ -153,7 +179,10 @@
 	</target>
 
 	<target name="javadoc" depends="compile">
-		<javadoc destdir="${build.javadoc}" windowtitle="ACE API" source="1.4" classpathref="classpath">
+		<javadoc destdir="${build.javadoc}" 
+		         windowtitle="ACE API" 
+		         source="1.4" 
+		         classpathref="classpath.compile">
 		    <tag name="todo" scope="all" description="To do:" />
 			<packageset dir="${src.dir}/java" defaultexcludes="yes">
 				<include name="**/*"/>
@@ -163,20 +192,20 @@
 		</javadoc>
 	</target>
 	
-	<target name="test" depends="compile-tests">
-		<junit showoutput="yes" printsummary="yes" fork="true" 
-			haltonerror="true" 
-			haltonfailure="true">
+	<target name="test" depends="compile,resources">
+		<junit showoutput="yes" 
+		       printsummary="yes" 
+		       fork="true" 
+               haltonerror="true" 
+			   haltonfailure="true">
 			<jvmarg value="-enableassertions"/>
 			<jvmarg value="-Djava.awt.headless=true"/>
-			<classpath refid="classpath.test"/>
+			<classpath refid="classpath.test.run"/>
 			<formatter type="xml"/>
 			<batchtest todir="${build.testreports}" unless="testcase">
 				<fileset dir="${src.test}">
 					<include name="**/*Test*.java"/>
 					<exclude name="**/AllTests.java"/>
-					<exclude name="ch/iserver/ace/application/ItemSelectionChangeEventMatcher.java"/>
-					<exclude name="ch/iserver/ace/application/PropertyChangeEventMatcher.java"/>
 					<exclude name="ch/iserver/ace/test/AlgorithmTestCase.java"/>
 					<exclude name="ch/iserver/ace/test/jupiter/JupiterTestCase.java"/>
 					<exclude name="ch/iserver/ace/test/jupiter/TwoWayTestCase.java"/>
@@ -190,70 +219,70 @@
 		</junit>
 	</target>
 	
-	<taskdef resource="checkstyletask.properties" classpathref="dependency.checkstyle"/>	
-	
-	<target name="checkstyle">
-		<checkstyle config="checkstyle.xml">
-			<fileset dir="src/java" includes="**/*.java"/>
-			<property key="checkstyle.cache.file" file="build/cachefile"/>
-			<property key="checkstyle.header.file" file="checkstyle-license.txt"/>
-		</checkstyle>
+    <target name="integration-test" depends="compile,resources">
+		<junit showoutput="yes" printsummary="yes" fork="true" 
+			haltonerror="true" 
+			haltonfailure="true">
+			<jvmarg value="-enableassertions"/>
+			<jvmarg value="-Djava.awt.headless=true"/>
+			<classpath refid="classpath.test.run"/>
+			<formatter type="xml"/>
+			<batchtest todir="${build.testreports}" unless="testcase">
+				<fileset dir="${src.integration-test}">
+					<include name="ch/iserver/ace/collaboration/CollaborationServiceTest.java"/>
+					<include name="ch/iserver/ace/collaboration/server/ServerTest.java"/>
+				</fileset>
+			</batchtest>
+			<test if="testcase" todir="${build.testreports}" name="${testcase}"/>
+		</junit>
 	</target>
-
-	<target name="checkstyle-file">
-		<checkstyle config="checkstyle.xml" file="${file}">
-			<property key="checkstyle.cache.file" file="build/cachefile"/>
-			<property key="checkstyle.header.file" file="checkstyle-license.txt"/>
-		</checkstyle>
-	</target>
-	
+		
 	<target name="publish-api" depends="javadoc">
 		<scp todir="${username}:${password}@ace.iserver.ch:/home/ace/ace.iserver.ch/www/api">
-			<fileset dir="${build.javadoc}">
-				<include name="**/*"/>
-			</fileset>
+			<fileset dir="${build.javadoc}"/>
 		</scp>
 	</target>
 	
-	<target name="dist" depends="javadoc">
+	<target name="dist" depends="clean,compile,resources,javadoc,jar,copy-dependencies">
 	    <tstamp/>
-	    <property name="dist.dir.current" value="${dist.dir}/${DSTAMP}"/>
+	    <property name="dist.dir.current" value="${dist.dir}/ace-${DSTAMP}"/>
 	    <delete dir="${dist.dir.current}"/>
 	    <mkdir dir="${dist.dir.current}/"/>
-	    <mkdir dir="${dist.dir.current}/docs"/>
-	    <mkdir dir="${dist.dir.current}/docs/pm"/>
-	    <mkdir dir="${dist.dir.current}/docs/products"/>
-	    <copy todir="${dist.dir.current}/docs/api">
-	        <fileset dir="${build.javadoc}"/>
-	    </copy>
-	    <copy todir="${dist.dir.current}/docs/pm">
-	        <fileset dir="${docs.dir}">
-	            <include name="projektantrag.pdf"/>
-	            <include name="pflichtenheft.pdf"/>
-	            <include name="projekthandbuch.pdf"/>
-	            <include name="projektplan.pdf"/>
-	            <include name="erfahrungsbericht.pdf"/>
-	        </fileset>
-	    </copy>
-	    <copy todir="${dist.dir.current}/docs/products">
-	        <fileset dir="${docs.dir}">
-	            <include name="algorithm.pdf"/>
-	            <include name="algorithm-impl.pdf"/>
-	            <include name="finalreport.pdf"/>
-	            <include name="gui.pdf"/>
-	            <include name="network.pdf"/>
-	            <include name="testframework.pdf"/>
-	        </fileset>
-	    </copy>
+	    <mkdir dir="${dist.dir.current}/api"/>
+	    <mkdir dir="${dist.dir.current}/lib"/>
+	    <mkdir dir="${dist.dir.current}/src"/>
+	    <mkdir dir="${dist.dir.current}/build"/>
 	    <copy todir="${dist.dir.current}/src">
 	        <fileset dir="${src.dir}"/>
+	    </copy>
+	    <copy todir="${dist.dir.current}/build">
+	       <fileset dir="${build.dir}">
+	           <exclude name="api/**"/>
+	           <exclude name="testreports"/>
+	       </fileset>
+	    </copy>
+	    <copy todir="${dist.dir.current}/api">
+	        <fileset dir="${build.javadoc}"/>
+	    </copy>
+	    <copy todir="${dist.dir.current}/lib">
+            <fileset dir="${dist.dir}" includes="ace.jar"/>
+	    </copy>
+	    <copy todir="${dist.dir.current}/lib">
+            <fileset dir="${dist.dir}/lib"/>
 	    </copy>
 	    <copy todir="${dist.dir.current}">
 	        <fileset dir=".">
 	            <include name="build.xml"/>
-	            <include name="README"/>
 	        </fileset>
 	    </copy>
+	</target>
+	
+	<target name="copy-dependencies">
+        <xslt in="build.xml" out="build-dependencies.xml" style="dependencies.xsl"/>
+        <ant antfile="build-dependencies.xml" inheritAll="false">
+          <property name="maven.repo" value="${maven.repo}"/>
+          <property name="target.dir" value="${dist.dir}/lib"/>
+        </ant>
 	</target>
 
 </project>
