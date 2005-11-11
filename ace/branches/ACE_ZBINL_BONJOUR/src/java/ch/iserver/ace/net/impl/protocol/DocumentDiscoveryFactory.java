@@ -32,10 +32,9 @@ public class DocumentDiscoveryFactory {
 
 	
 	public static DocumentDiscovery create(NetworkServiceCallback callback) {
-		Serializer serializer = new SerializerImpl();
+		Serializer serializer = SerializerImpl.getInstance();
 		DocumentDiscoveryCallback docCallback = new DocumentDiscoveryCallbackImpl(callback);
-		DocumentParserHandler parseHandler = new DocumentParserHandler();
-		Deserializer deserializer = new DeserializerImpl(parseHandler);
+		Deserializer deserializer = DeserializerImpl.getInstance();
 		ReplyListener listener = new QueryListener(docCallback, deserializer);
 		DocumentDiscovery discovery = new DocumentDiscoveryImpl(serializer, listener);
 		return discovery;

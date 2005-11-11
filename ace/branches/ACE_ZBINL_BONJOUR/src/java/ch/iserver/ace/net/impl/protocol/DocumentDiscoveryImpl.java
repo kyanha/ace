@@ -54,8 +54,8 @@ public class DocumentDiscoveryImpl implements DocumentDiscovery {
 		Connection connection = session.getConnection();
 		byte[] query = null;
 		try {
-			query = serializer.createQuery(Serializer.PUBLISHED_DOCUMENTS);
-			connection.send(query, new QueryInfo(userId, Serializer.PUBLISHED_DOCUMENTS), listener);
+			query = serializer.createQuery(ProtocolConstants.PUBLISHED_DOCUMENTS);
+			connection.send(query, new QueryInfo(userId, ProtocolConstants.PUBLISHED_DOCUMENTS), listener);
 		} catch (Exception e) {
 			//TODO: handling
 			e.printStackTrace();
@@ -80,6 +80,9 @@ public class DocumentDiscoveryImpl implements DocumentDiscovery {
 			return queryType;
 		}
 		
+		public String toString() {
+			return "QueryInfo("+id+", "+queryType+")";
+		}
 	}
 
 }

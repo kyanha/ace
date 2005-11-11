@@ -8,21 +8,22 @@ import ch.iserver.ace.net.impl.NetworkConstants;
 public class DeserializerImplTest extends TestCase {
 
 	private static final String MESSAGE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-		"<ace><response>" +
-		"<publishedDocs>" +
-		"<doc name=\"testfile.txt\" id=\"WERS24-RE2\" />" +
-		"<doc name=\"meeting2.txt\" id=\"ADSFBW-45S\" />" +
-		"<doc name=\"notes232.txt\" id=\"23SSWD-3ED\" />" +
-		"</publishedDocs>" +
-		"</response></ace>";
+	"<ace><response>" +
+	"<publishedDocs>" +
+	"<doc name=\"testfile.txt\" id=\"WERS24-RE2\" />" +
+	"<doc name=\"meeting2.txt\" id=\"ADSFBW-45S\" />" +
+	"<doc name=\"notes232.txt\" id=\"23SSWD-3ED\" />" +
+	"</publishedDocs>" +
+	"</response></ace>";
 	
 	public void testDeserializeDocuments() throws Exception {
 		
 		DocumentParserHandler handler = new DocumentParserHandler();
-		Deserializer deserializer = new DeserializerImpl(handler);
+		Deserializer deserializer = DeserializerImpl.getInstance();
 		
 		byte[] data = MESSAGE.getBytes(NetworkConstants.DEFAULT_ENCODING);
-		Map result = deserializer.deserializeDocuments(data);
+		deserializer.deserialize(data, handler);
+		Map result = (Map)handler.getResult();
 		
 		assertEquals(result.size(), 3);
 		assertTrue(result.containsKey("WERS24-RE2"));

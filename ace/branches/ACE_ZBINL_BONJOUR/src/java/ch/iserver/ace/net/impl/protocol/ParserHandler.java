@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:ParserHandler.java 1095 2005-11-09 13:56:51Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -21,12 +21,14 @@
 
 package ch.iserver.ace.net.impl.protocol;
 
+import org.xml.sax.helpers.DefaultHandler;
+
 
 /**
  *
  */
-public interface ParserHandler {
+public abstract class ParserHandler extends DefaultHandler implements ProtocolConstants {
 
-	public Object getResult();
+	public abstract Object getResult();
 	
 }

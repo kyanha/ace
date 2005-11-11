@@ -30,7 +30,7 @@ public class ConnectionTest extends TestCase {
 		
 		MockControl callbackCtrl = MockControl.createControl(NetworkServiceCallback.class);
 		NetworkServiceCallback callback = (NetworkServiceCallback)callbackCtrl.getMock();
-		QueryListener listener = new QueryListener(new DocumentDiscoveryCallbackImpl(callback), new DeserializerImpl(new DocumentParserHandler()));
+		QueryListener listener = new QueryListener(new DocumentDiscoveryCallbackImpl(callback), DeserializerImpl.getInstance());
 		
 		channel.sendMSG(prepare(data), listener);
 		channelCtrl.setDefaultReturnValue(null);
@@ -41,7 +41,6 @@ public class ConnectionTest extends TestCase {
 		connection.send(data, queryInfo, listener);
 		
 		channelCtrl.verify();
-		
 	}
 	
 	private OutputDataStream prepare(byte[] data) {

@@ -43,12 +43,14 @@ public class QueryListener implements ReplyListener {
 	
 	private DocumentDiscoveryCallback callback;
 	private Deserializer deserializer;
+	private DocumentParserHandler handler;
 	
 	public QueryListener(DocumentDiscoveryCallback callback, Deserializer deserializer) {
 		ParameterValidator.notNull("callback", callback);
 		ParameterValidator.notNull("deserializer", deserializer);
 		this.callback = callback;
 		this.deserializer = deserializer;
+		handler = new DocumentParserHandler();
 	}
 	
 	/**
@@ -60,10 +62,11 @@ public class QueryListener implements ReplyListener {
 		
 		QueryInfo info = (QueryInfo)message.getChannel().getAppData();
 		int queryType = info.getQueryType();
-		if (queryType == Serializer.PUBLISHED_DOCUMENTS) {
+		if (queryType == ProtocolConstants.PUBLISHED_DOCUMENTS) {
 			Map result = null;
 			try {
-				result = deserializer.deserializeDocuments(data);
+				deserializer.deserialize(data, handler);
+				result = (Map)handler.getResult();
 			} catch (DeserializeException de) {
 				//TODO: handling
 				de.printStackTrace();

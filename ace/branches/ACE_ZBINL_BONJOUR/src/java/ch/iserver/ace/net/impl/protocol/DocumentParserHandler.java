@@ -26,15 +26,15 @@ import java.util.Map;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
 
 /**
  *
  */
-public class DocumentParserHandler extends DefaultHandler implements ParserHandler, ProtocolConstants {
+public class DocumentParserHandler extends ParserHandler {
 	
 	private Map result;
 	private boolean isReady;
+	private int type;
 	
 	public DocumentParserHandler() {
 		isReady = false;
@@ -55,6 +55,7 @@ public class DocumentParserHandler extends DefaultHandler implements ParserHandl
 			result.put(id, name);
 		} else if (qName.equals(RESPONSE_PUBLISHED_DOCUMENTS)) {
 			isReady = true;
+			type = PUBLISHED_DOCUMENTS;
 		}
 
 	}
@@ -72,5 +73,9 @@ public class DocumentParserHandler extends DefaultHandler implements ParserHandl
 		Map tmp = result;
 		result = null;
 		return tmp;
+	}
+	
+	public int getType() {
+		return type;
 	}
 }

@@ -28,7 +28,7 @@ import org.beepcore.beep.core.MessageMSG;
 
 /**
  * Catches all requests which could not be filtered.
- * 
+ * This class is used at the end of the request filter chain.
  */
 public class FailureFilter extends AbstractRequestFilter {
 

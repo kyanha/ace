@@ -26,6 +26,15 @@ package ch.iserver.ace.net.impl.protocol;
  */
 public interface ProtocolConstants {
 
+	/** constants for serialization **/
+	public static final int PUBLISHED_DOCUMENTS = 0;
+	public static final int PUBLISH = 1;
+	public static final int CONCEAL = 2;
+	
+	public static final String[] NAMES = new String[] { "docs" };
+	
+	
+	/** constants for deserialization **/
 	public static final String QUERY = "query";
 	public static final String QUERY_TYPE= "type";
 	public static final String QUERY_TYPE_PUBLISHED_DOCUMENTS = "docs";

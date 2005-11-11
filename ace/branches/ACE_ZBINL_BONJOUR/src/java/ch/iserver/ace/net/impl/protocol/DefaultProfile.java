@@ -21,13 +21,28 @@
 
 package ch.iserver.ace.net.impl.protocol;
 
+import org.beepcore.beep.core.BEEPException;
+import org.beepcore.beep.core.StartChannelListener;
 import org.beepcore.beep.profile.Profile;
+import org.beepcore.beep.profile.ProfileConfiguration;
 
 /**
  *
  */
-public abstract class DefaultProfile implements Profile {
+public class DefaultProfile implements Profile {
 
 	public static final String PROFILE_URI = "http://ace.iserver.ch/profiles/ACE";
+
+	private StartChannelListener listener;
+	
+	public DefaultProfile(StartChannelListener listener) {
+		this.listener = listener;
+	}
+	
+	
+	public StartChannelListener init(String uri, ProfileConfiguration config) throws BEEPException {
+		//TODO: check if uri and config must/can be used in any concern
+		return listener;
+	}
 
 }
