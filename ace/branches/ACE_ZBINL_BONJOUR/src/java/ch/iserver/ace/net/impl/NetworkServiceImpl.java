@@ -21,6 +21,10 @@
 package ch.iserver.ace.net.impl;
 
 import java.net.InetAddress;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.log4j.Logger;
 
 import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.UserDetails;
@@ -28,9 +32,15 @@ import ch.iserver.ace.algorithm.TimestampFactory;
 import ch.iserver.ace.net.DiscoveryNetworkCallback;
 import ch.iserver.ace.net.DocumentServer;
 import ch.iserver.ace.net.DocumentServerLogic;
-import ch.iserver.ace.net.NetworkService;
 import ch.iserver.ace.net.NetworkServiceCallback;
+import ch.iserver.ace.net.impl.protocol.BEEPServer;
+import ch.iserver.ace.net.impl.protocol.BEEPServerFactory;
 import ch.iserver.ace.net.impl.protocol.DiscoveryLauncher;
+import ch.iserver.ace.net.impl.protocol.ProtocolConstants;
+import ch.iserver.ace.net.impl.protocol.Request;
+import ch.iserver.ace.net.impl.protocol.RequestFilter;
+import ch.iserver.ace.net.impl.protocol.RequestFilterFactory;
+import ch.iserver.ace.net.impl.protocol.RequestImpl;
 import ch.iserver.ace.util.ParameterValidator;
 import ch.iserver.ace.util.UUID;
 
@@ -39,18 +49,40 @@ import ch.iserver.ace.util.UUID;
  */
 public class NetworkServiceImpl implements NetworkServiceExt {
 	
+	private static Logger LOG = Logger.getLogger(NetworkServiceImpl.class);
+	
 	private TimestampFactory timestampFactory;
 	private NetworkServiceCallback networkCallback;
+	private RequestFilter filterChain;
+	private BEEPServer server;
 	
 	private Discovery discovery;
 	private UserDetails details;
 	private String userId;
 	
-	public NetworkServiceImpl() {
+	private List publishedDocs;
+	
+	private static NetworkServiceImpl instance;
+	
+	private NetworkServiceImpl() {
 		userId = UUID.nextUUID();
+		publishedDocs = new ArrayList();
+		filterChain = RequestFilterFactory.createClientChain();
+		server = BEEPServerFactory.create();
+		//TODO: when is it appropriate to start the server?
+		server.start();
 	}
-
+	
+	public static NetworkServiceImpl getInstance() {
+		if (instance == null) {
+			instance = new NetworkServiceImpl();
+		}
+		return instance;
+	}
+	
+	
 	public void setUserDetails(UserDetails details) {
+		//TOOD: verify that: return immediately
 		this.details = details;
 		//update user details in sessions
 		if (discovery != null) {
@@ -63,6 +95,7 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 		this.timestampFactory = factory;
 	}
 
+	//TODO: how is threading here?
 	public void setCallback(NetworkServiceCallback callback) {
 		ParameterValidator.notNull("callback", callback);
 		this.networkCallback = callback;
@@ -91,13 +124,32 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 		return userId;
 	}
 
+	//immediate return
 	public void discoverUser(DiscoveryNetworkCallback callback, InetAddress addr, int port) {
-		
-		
+		throw new UnsupportedOperationException();
 	}
 
-	public DocumentServer publish(DocumentServerLogic logic, DocumentDetails details) {
-		return null;
+	public synchronized DocumentServer publish(DocumentServerLogic logic, DocumentDetails details) {
+		PublishedDocument doc = new PublishedDocument(UUID.nextUUID(), logic, details);
+		//TODO: maybe I need a map id-doc, get published docs at GetPDFilter
+		publishedDocs.add(doc);
+		
+		//TODO: threading?
+		Request request = new RequestImpl(ProtocolConstants.PUBLISH, doc);
+		filterChain.process(request);
+		
+		return doc;
 	}
-
+	
+	public synchronized List getPublishedDocuments() {
+		return publishedDocs;
+	}
+	
+	public void discoverDocuments(RemoteUserProxyExt proxy) {
+		//TODO: possibly include SingleThreadDomain between DiscoveryCallbackImpl and DocumentDiscovery?
+		LOG.info("--> start document discovery for ["+proxy.getUserDetails().getUsername()+"]");
+		
+		Request request = new RequestImpl(ProtocolConstants.PUBLISHED_DOCUMENTS, proxy);
+		filterChain.process(request);
+	}
 }

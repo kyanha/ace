@@ -34,17 +34,21 @@ public class SerializerImplTest extends TestCase {
 		Serializer serializer = SerializerImpl.getInstance();
 		
 		List docs = new ArrayList();
-		PublishedDocument doc = new PublishedDocument("WERS24-RE2", new DocumentDetails("testfile.txt"));
+		PublishedDocument doc = new PublishedDocument("WERS24-RE2", null, new DocumentDetails("testfile.txt"));
 		docs.add(doc);
-		doc = new PublishedDocument("ADSFBW-45S", new DocumentDetails("meeting2.txt"));
+		doc = new PublishedDocument("ADSFBW-45S", null, new DocumentDetails("meeting2.txt"));
 		docs.add(doc);
-		doc = new PublishedDocument("23SSWD-3ED", new DocumentDetails("notes232.txt"));
+		doc = new PublishedDocument("23SSWD-3ED", null, new DocumentDetails("notes232.txt"));
 		docs.add(doc);
 		
 		byte[] data = serializer.createResponse(ProtocolConstants.PUBLISHED_DOCUMENTS, docs);
 		String actual = new String(data, NetworkConstants.DEFAULT_ENCODING);
 		
 		assertEquals(EXPECTED_RESPONSE, actual);
+	}
+	
+	public void testCreateNotification() throws Exception {
+		fail("to be implemented");
 	}
 	
 }

@@ -21,6 +21,7 @@
 
 package ch.iserver.ace.net.impl.protocol;
 
+import org.apache.log4j.Logger;
 import org.beepcore.beep.core.ReplyListener;
 
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;
@@ -30,6 +31,8 @@ import ch.iserver.ace.net.impl.RemoteUserProxyExt;
  */
 public class DocumentDiscoveryImpl implements DocumentDiscovery {
 
+	private Logger LOG = Logger.getLogger(DocumentDiscoveryImpl.class);
+	
 	private Serializer serializer;
 	private SessionManager manager;
 	private ReplyListener listener;
@@ -58,7 +61,7 @@ public class DocumentDiscoveryImpl implements DocumentDiscovery {
 			connection.send(query, new QueryInfo(userId, ProtocolConstants.PUBLISHED_DOCUMENTS), listener);
 		} catch (Exception e) {
 			//TODO: handling
-			e.printStackTrace();
+			LOG.error("could no serialize ["+e.getMessage()+"]");
 		}
 	}
 	

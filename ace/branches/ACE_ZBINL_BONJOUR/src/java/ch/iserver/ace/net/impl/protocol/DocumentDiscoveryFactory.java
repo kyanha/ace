@@ -21,8 +21,6 @@
 
 package ch.iserver.ace.net.impl.protocol;
 
-import org.beepcore.beep.core.ReplyListener;
-
 import ch.iserver.ace.net.NetworkServiceCallback;
 
 /**
@@ -30,12 +28,12 @@ import ch.iserver.ace.net.NetworkServiceCallback;
  */
 public class DocumentDiscoveryFactory {
 
-	
 	public static DocumentDiscovery create(NetworkServiceCallback callback) {
 		Serializer serializer = SerializerImpl.getInstance();
 		DocumentDiscoveryCallback docCallback = new DocumentDiscoveryCallbackImpl(callback);
 		Deserializer deserializer = DeserializerImpl.getInstance();
-		ReplyListener listener = new QueryListener(docCallback, deserializer);
+//		ResponseListener listener = new ResponseListener(docCallback, deserializer);
+		ResponseListener listener = null;
 		DocumentDiscovery discovery = new DocumentDiscoveryImpl(serializer, listener);
 		return discovery;
 	}

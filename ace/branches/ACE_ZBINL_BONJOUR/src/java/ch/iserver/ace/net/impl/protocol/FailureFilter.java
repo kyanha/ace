@@ -40,11 +40,15 @@ public class FailureFilter extends AbstractRequestFilter {
 	
 	public void process(Request request) {
 		MessageMSG message = request.getMessage();
-		try {
-			message.sendERR(BEEPError.CODE_SERVICE_NOT_AVAILABLE, "could not process request.");
-		} catch (BEEPException be) {
-			//TODO: handling			
-			LOG.error("could not send BEEPError ["+be.getMessage()+"]");
+		if (message != null) {
+			try {
+				message.sendERR(BEEPError.CODE_SERVICE_NOT_AVAILABLE, "could not process request.");
+			} catch (BEEPException be) {
+				//TODO: handling			
+				LOG.error("could not send BEEPError ["+be.getMessage()+"]");
+			}
+		} else {
+			LOG.error("unknown request could not be serialized ["+request.getType()+"]");
 		}
 		
 	}

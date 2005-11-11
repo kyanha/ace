@@ -56,7 +56,7 @@ public class DeserializerImpl implements Deserializer {
 			SAXParser saxParser = factory.newSAXParser();
 			saxParser.parse( input, handler );
 		} catch (Exception e) {
-			throw new DeserializeException(e);
+			throw new DeserializeException(e.getMessage());
 		}
 	}
 

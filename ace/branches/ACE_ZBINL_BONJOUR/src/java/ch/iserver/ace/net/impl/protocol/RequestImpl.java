@@ -29,20 +29,20 @@ import org.beepcore.beep.core.MessageMSG;
 public class RequestImpl implements Request {
 
 	private int type;
-	private Object data;
+	private Object payload;
 	private MessageMSG message;
 	
-	public RequestImpl(int type, Object data) {
+	public RequestImpl(int type, Object payload) {
 		this.type = type;
-		this.data = data;
+		this.payload = payload;
 	}
 
 	public int getType() {
 		return type;
 	}
 	
-	public Object getData() {
-		return data;
+	public Object getPayload() {
+		return payload;
 	}
 
 	public void setMessage(MessageMSG message) {

@@ -18,7 +18,7 @@ public class DeserializerImplTest extends TestCase {
 	
 	public void testDeserializeDocuments() throws Exception {
 		
-		DocumentParserHandler handler = new DocumentParserHandler();
+		ResponseParserHandler handler = new ResponseParserHandler();
 		Deserializer deserializer = DeserializerImpl.getInstance();
 		
 		byte[] data = MESSAGE.getBytes(NetworkConstants.DEFAULT_ENCODING);

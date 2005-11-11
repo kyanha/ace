@@ -24,7 +24,7 @@ public class SessionManagerTest extends TestCase {
 		
 		manager.createSession(proxy);
 		
-		assertEquals(manager.getSessions(), 1);
+		assertEquals(manager.size(), 1);
 		assertEquals(manager.getSession(id).getUser().getId(), id);
 		assertEquals(manager.getSession(id).getHost(), address);
 		assertEquals(manager.getSession(id).getPort(), port);

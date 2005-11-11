@@ -42,6 +42,7 @@ public class RemoteUserSession {
 	private Connection connection;
 	private RemoteUserProxyExt user;
 	private boolean isInitiated;
+	private int channelNo;
 	
 	public RemoteUserSession(InetAddress address, int port, RemoteUserProxyExt user) {
 		ParameterValidator.notNull("address", address);
@@ -71,6 +72,7 @@ public class RemoteUserSession {
 		if (connection == null) {
 			try {
 			Channel channel = session.startChannel(DefaultProfile.PROFILE_URI);
+			channelNo = channel.getNumber();
 			connection = new Connection(channel);
 			} catch (BEEPException be) {
 				//TODO:
@@ -93,6 +95,17 @@ public class RemoteUserSession {
 	
 	public int getPort() {
 		return port;
+	}
+	
+	/**
+	 * Returns -1 if no channel has been started yet,
+	 * otherwise the channel's number.
+	 * 
+	 * @return int 	the number of the channel or -1 
+	 * 				if no channel has been started
+	 */
+	public int getChannelNo() {
+		return (isInitiated()) ? channelNo : -1;
 	}
 	
 	

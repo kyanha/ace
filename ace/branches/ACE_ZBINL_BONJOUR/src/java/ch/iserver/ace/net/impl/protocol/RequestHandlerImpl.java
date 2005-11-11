@@ -36,12 +36,12 @@ public class RequestHandlerImpl implements RequestHandler {
 
 	private static Logger LOG = Logger.getLogger(RequestHandlerImpl.class);
 	
-	private AbstractRequestFilter filter;
+	private RequestFilter filter;
 	private Deserializer deserializer;
 	private RequestParserHandler handler;
 	
 	//TODO: write integration-test for this class
-	public RequestHandlerImpl(Deserializer deserializer, AbstractRequestFilter filter) {
+	public RequestHandlerImpl(Deserializer deserializer, RequestFilter filter) {
 		this.deserializer = deserializer;
 		this.filter = filter;
 		handler = new RequestParserHandler();

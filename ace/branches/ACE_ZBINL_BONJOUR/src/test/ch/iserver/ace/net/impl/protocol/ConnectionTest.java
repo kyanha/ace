@@ -30,7 +30,8 @@ public class ConnectionTest extends TestCase {
 		
 		MockControl callbackCtrl = MockControl.createControl(NetworkServiceCallback.class);
 		NetworkServiceCallback callback = (NetworkServiceCallback)callbackCtrl.getMock();
-		QueryListener listener = new QueryListener(new DocumentDiscoveryCallbackImpl(callback), DeserializerImpl.getInstance());
+		ResponseListener listener = ResponseListener.getInstance();
+		listener.init(DeserializerImpl.getInstance(), new FailureFilter(null));
 		
 		channel.sendMSG(prepare(data), listener);
 		channelCtrl.setDefaultReturnValue(null);
@@ -77,8 +78,8 @@ class SendMSGMatcher extends AbstractMatcher {
 			OutputDataStream out2 = (OutputDataStream)actual;
 			return out1.equals(out2);
 		} else {  //QueryListener
-			QueryListener l1 = (QueryListener)expected;
-			QueryListener l2 = (QueryListener)actual;
+			ResponseListener l1 = (ResponseListener)expected;
+			ResponseListener l2 = (ResponseListener)actual;
 			return l1.equals(l2);
 		}
 	}

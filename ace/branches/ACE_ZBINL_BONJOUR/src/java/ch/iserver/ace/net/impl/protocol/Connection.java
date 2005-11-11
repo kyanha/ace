@@ -43,7 +43,7 @@ public class Connection {
 	public void send(byte[] message, Object data, ReplyListener listener) throws ProtocolException {
 		try {
 			OutputDataStream output = prepare(message);
-			//TODO: is the AppData also serialized or only kept locally? -> check logs
+			//AppData is only kept in-process
 			channel.setAppData(data);
 			//TODO: make shure that sendMSG does not block
 			channel.sendMSG(output, listener);

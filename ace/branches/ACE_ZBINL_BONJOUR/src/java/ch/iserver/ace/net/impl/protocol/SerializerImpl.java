@@ -28,7 +28,6 @@ import java.util.List;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
@@ -37,6 +36,7 @@ import org.apache.log4j.Logger;
 import org.xml.sax.helpers.AttributesImpl;
 
 import ch.iserver.ace.net.impl.NetworkConstants;
+import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.PublishedDocument;
 import ch.iserver.ace.util.ParameterValidator;
 
@@ -142,7 +142,7 @@ public class SerializerImpl implements Serializer, ProtocolConstants {
 					PublishedDocument doc = (PublishedDocument)docIter.next();
 					attrs = new AttributesImpl();
 					attrs.addAttribute("", "", "id", "", doc.getId());
-					attrs.addAttribute("", "", "name", "", doc.getDetails().getTitle());
+					attrs.addAttribute("", "", "name", "", doc.getDocumentDetails().getTitle());
 					handler.startElement("", "", "doc", attrs);
 					handler.endElement("", "", "doc");
 				}
@@ -157,5 +157,63 @@ public class SerializerImpl implements Serializer, ProtocolConstants {
 			LOG.error("could not serialize ["+e.getMessage()+"]");
 			throw new SerializeException(e.getMessage());
 		}
+	}
+
+	public byte[] createNotification(int type, Object data) throws SerializeException {
+		try {
+			TransformerHandler handler = createHandler();
+			ByteArrayOutputStream output = new ByteArrayOutputStream();
+			StreamResult result = new StreamResult(output);
+			handler.setResult(result);
+			handler.startDocument();
+			AttributesImpl attrs = new AttributesImpl();
+			handler.startElement("", "", "ace", attrs);
+			
+			if (type == PUBLISH) {
+				PublishedDocument doc = (PublishedDocument)data;	
+				generatePublishXML(handler, doc);
+			} else if (type == CONCEAL) {
+				PublishedDocument doc = (PublishedDocument)data;	
+				generateConcealXML(handler, doc);
+			} else {
+				LOG.error("unknown notification type ["+type+"]");
+			}
+			handler.endElement("", "", "ace");
+			handler.endDocument();
+			output.flush();
+			return output.toByteArray();
+		} catch (Exception e) {
+			LOG.error("could not serialize ["+e.getMessage()+"]");
+			throw new SerializeException(e.getMessage());
+		}
+	}
+	
+	private void generatePublishXML(TransformerHandler handler, PublishedDocument doc) throws Exception {
+		AttributesImpl attrs = new AttributesImpl();
+		handler.startElement("", "", "notification", attrs);
+		String userid = NetworkServiceImpl.getInstance().getUserId();
+		attrs.addAttribute("", "", "userid", "", userid);	
+		handler.startElement("", "", NOTIFICATION_PUBLISH, attrs);
+		attrs = new AttributesImpl();
+		attrs.addAttribute("", "", "id", "", doc.getId());
+		attrs.addAttribute("", "", "name", "", doc.getDocumentDetails().getTitle());
+		handler.startElement("", "", "doc", attrs);
+		handler.endElement("", "", "doc");
+		handler.endElement("", "", NOTIFICATION_PUBLISH);
+		handler.endElement("", "", "notification");
+	}
+	
+	private void generateConcealXML(TransformerHandler handler, PublishedDocument doc) throws Exception {
+		AttributesImpl attrs = new AttributesImpl();
+		handler.startElement("", "", "notification", attrs);
+		String userid = NetworkServiceImpl.getInstance().getUserId();
+		attrs.addAttribute("", "", "userid", "", userid);
+		handler.startElement("", "", NOTIFICATION_CONCEAL, attrs);
+		attrs = new AttributesImpl();
+		attrs.addAttribute("", "", "id", "", doc.getId());
+		handler.startElement("", "", "doc", attrs);
+		handler.endElement("", "", "doc");
+		handler.endElement("", "", NOTIFICATION_CONCEAL);
+		handler.endElement("", "", "notification");
 	}
 }

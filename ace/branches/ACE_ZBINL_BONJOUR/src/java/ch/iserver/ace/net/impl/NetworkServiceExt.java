@@ -30,4 +30,5 @@ public interface NetworkServiceExt extends NetworkService {
 
 	public void setDiscovery(Discovery discovery);
 	
+	public void discoverDocuments(RemoteUserProxyExt proxy);
 }

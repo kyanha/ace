@@ -38,8 +38,8 @@ public class DiscoveryLauncher extends Thread {
 	private static Logger LOG = Logger.getLogger(DiscoveryLauncher.class);
 	
 	private NetworkServiceCallback callback;
-	private String userId;
 	private NetworkServiceExt service;
+	private String userId;
 	
 	public DiscoveryLauncher(String userId, NetworkServiceCallback callback, NetworkServiceExt service) {
 		this.userId = userId;
@@ -50,8 +50,7 @@ public class DiscoveryLauncher extends Thread {
 	public void run() {
 		LOG.info("--> run()");
 		DiscoveryFactory factory = DiscoveryFactory.getInstance();
-		DocumentDiscovery docDisc = DocumentDiscoveryFactory.create(callback);
-		DiscoveryCallback discCallback = new DiscoveryCallbackImpl(callback, docDisc);
+		DiscoveryCallback discCallback = new DiscoveryCallbackImpl(callback, service);
 		Discovery discovery = factory.createDiscovery(discCallback);
 		discovery.setUserId(userId);
 		service.setDiscovery(discovery);

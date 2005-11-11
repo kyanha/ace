@@ -22,16 +22,15 @@
 package ch.iserver.ace.net.impl.protocol;
 
 import java.io.ByteArrayOutputStream;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.beepcore.beep.core.AbortChannelException;
 import org.beepcore.beep.core.InputDataStream;
 import org.beepcore.beep.core.Message;
+import org.beepcore.beep.core.MessageMSG;
 import org.beepcore.beep.core.ReplyListener;
 import org.beepcore.beep.util.BufferSegment;
 
-import ch.iserver.ace.net.impl.protocol.DocumentDiscoveryImpl.QueryInfo;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
@@ -40,17 +39,38 @@ import ch.iserver.ace.util.ParameterValidator;
 public class ResponseListener implements ReplyListener {
 
 	private static Logger LOG = Logger.getLogger(ResponseListener.class);
-	
-	private DocumentDiscoveryCallback callback;
+
+//	private DocumentDiscoveryCallback callback;
 	private Deserializer deserializer;
-	private DocumentParserHandler handler;
+	private ResponseParserHandler handler;
+	private RequestFilter filter;
 	
-	public ResponseListener(DocumentDiscoveryCallback callback, Deserializer deserializer) {
-		ParameterValidator.notNull("callback", callback);
+	private static ResponseListener instance;
+	
+//	public ResponseListener(DocumentDiscoveryCallback callback, Deserializer deserializer) {
+//		ParameterValidator.notNull("callback", callback);
+//		ParameterValidator.notNull("deserializer", deserializer);
+//		this.callback = callback;
+//		this.deserializer = deserializer;
+//		handler = new ResponseParserHandler();
+//	}
+	
+	private ResponseListener() {
+		handler = new ResponseParserHandler();
+	}
+	
+	public static ResponseListener getInstance() {
+		if (instance == null) {
+			instance = new ResponseListener();
+		}
+		return instance;
+	}
+	
+	public void init(Deserializer deserializer, RequestFilter filter) {
 		ParameterValidator.notNull("deserializer", deserializer);
-		this.callback = callback;
+		ParameterValidator.notNull("filter", filter);
 		this.deserializer = deserializer;
-		handler = new DocumentParserHandler();
+		this.filter = filter;
 	}
 	
 	/**
@@ -59,22 +79,20 @@ public class ResponseListener implements ReplyListener {
 	 */
 	public void receiveRPY(Message message) throws AbortChannelException {
 		byte[] data = read(message);
-		
-		QueryInfo info = (QueryInfo)message.getChannel().getAppData();
-		int queryType = info.getQueryType();
-		if (queryType == ProtocolConstants.PUBLISHED_DOCUMENTS) {
-			Map result = null;
-			try {
-				deserializer.deserialize(data, handler);
-				result = (Map)handler.getResult();
-			} catch (DeserializeException de) {
-				//TODO: handling
-				de.printStackTrace();
+		try {
+			deserializer.deserialize(data, handler);
+			Request request = (Request)handler.getResult();
+			if (message.getMessageType() == Message.MESSAGE_TYPE_MSG) {
+				request.setMessage((MessageMSG)message);
+			} else {
+				LOG.warn("message not set in request, type is ["+message.getMessageType()+"]");
 			}
-			callback.documentsDiscovered(info.getId(), result);
-		} else {
-			LOG.warn("unknown query type ["+queryType+"]");
+			filter.process(request);
+		} catch (DeserializeException de) {
+			//TODO: handling
+			LOG.error("could not deserialize ["+de.getMessage()+"]");
 		}
+//			callback.documentsDiscovered(info.getId(), result);
 	}
 
 
@@ -98,8 +116,8 @@ public class ResponseListener implements ReplyListener {
 	 * @see org.beepcore.beep.core.ReplyListener#receiveNUL(org.beepcore.beep.core.Message)
 	 */
 	public void receiveNUL(Message message) throws AbortChannelException {
-		// TODO Auto-generated method stub
-
+		Object appData = message.getChannel().getAppData();
+		LOG.debug("received NUL message for ["+appData+"] from ["+message.toString()+"]");
 	}
 	
 	private byte[] read(Message message) throws AbortChannelException {

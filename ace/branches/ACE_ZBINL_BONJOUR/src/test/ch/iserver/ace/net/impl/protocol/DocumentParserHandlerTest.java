@@ -26,7 +26,7 @@ public class DocumentParserHandlerTest extends TestCase {
 		ByteArrayInputStream input = new ByteArrayInputStream(data);
 		SAXParserFactory factory;
 		factory = SAXParserFactory.newInstance();
-		DocumentParserHandler docHandler = new DocumentParserHandler();
+		ResponseParserHandler docHandler = new ResponseParserHandler();
 		SAXParser saxParser = factory.newSAXParser();
 		saxParser.parse( input, docHandler );
 		

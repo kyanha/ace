@@ -35,28 +35,24 @@ public class DiscoveryCallbackImpl implements DiscoveryCallback {
 	private static Logger LOG = Logger.getLogger(DiscoveryCallbackImpl.class);
 	
 	private NetworkServiceCallback callback;
-	private DocumentDiscovery docDiscovery;
+	private NetworkServiceExt service;
 	
 	/**
 	 * 
 	 * @param callback
 	 */
-	public DiscoveryCallbackImpl(NetworkServiceCallback callback, DocumentDiscovery docDiscovery) {
+	public DiscoveryCallbackImpl(NetworkServiceCallback callback, NetworkServiceExt service) {
 		ParameterValidator.notNull("callback", callback);
 		this.callback = callback;
-		this.docDiscovery = docDiscovery;
+		this.service = service;
 	}
 	
 	/**
 	 * 
 	 */
 	public void userDiscovered(RemoteUserProxyExt proxy) {
-		//notify upper layer of discovery
 		callback.userDiscovered(proxy);
-		
-		//TODO: possibly include SingleThreadDomain between DiscoveryCallbackImpl and DocumentDiscovery?
-		LOG.info("--> start document discovery for ["+proxy.getUserDetails().getUsername()+"]");
-		docDiscovery.execute(proxy);
+		service.discoverDocuments(proxy);
 	}
 
 	/**

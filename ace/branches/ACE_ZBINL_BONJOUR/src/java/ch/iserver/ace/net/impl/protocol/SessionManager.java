@@ -22,6 +22,7 @@
 package ch.iserver.ace.net.impl.protocol;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import ch.iserver.ace.UserDetails;
@@ -32,6 +33,9 @@ import ch.iserver.ace.net.impl.RemoteUserProxyExt;
  */
 public class SessionManager {
 
+	/**
+	 * A map of userId to RemoteUserSession mappings.
+	 */
 	private Map sessions;
 	
 	private static SessionManager theInstance;
@@ -65,10 +69,31 @@ public class SessionManager {
 		return (RemoteUserSession)sessions.get(id);
 	}
 	
-	public int getSessions() {
+	/**
+	 * Gets the session for the user the channel number
+	 * belongs to.
+	 * 
+	 * @param channelNo
+	 * @return
+	 */
+	public RemoteUserSession getSession(int channelNo) {
+		Iterator iter = sessions.values().iterator();
+		RemoteUserSession result = null;
+		while (iter.hasNext()) {
+			RemoteUserSession user = (RemoteUserSession)iter.next();
+			if (user.getChannelNo() == channelNo)
+				result = user;
+		}
+		return result;
+	}
+	
+	public int size() {
 		return sessions.size();
 	}
 	
+	public Map getSessions() {
+		return sessions;
+	}
 	
 	
 }

@@ -30,6 +30,8 @@ public interface Request {
 
 	public int getType();
 	
+	public Object getPayload();
+	
 	public void setMessage(MessageMSG message);
 	
 	public MessageMSG getMessage();

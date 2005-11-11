@@ -26,6 +26,10 @@ package ch.iserver.ace.net.impl.protocol;
  */
 public interface ProtocolConstants {
 
+	public static final String PROFILE_URI = "http://ace.iserver.ch/profiles/ACE";
+	//TODO: get port from config file
+	public static final int LISTENING_PORT = 41234;
+	
 	/** constants for serialization **/
 	public static final int PUBLISHED_DOCUMENTS = 0;
 	public static final int PUBLISH = 1;
@@ -42,5 +46,8 @@ public interface ProtocolConstants {
 	public static final String RESPONSE_PUBLISHED_DOCUMENTS = "publishedDocs";
 	public static final String DOCUMENT_NAME = "name";
 	public static final String DOCUMENT_ID = "id";
+	
+	public static final String NOTIFICATION_PUBLISH = "publishDocs";
+	public static final String NOTIFICATION_CONCEAL = "concealDocs";
 	
 }

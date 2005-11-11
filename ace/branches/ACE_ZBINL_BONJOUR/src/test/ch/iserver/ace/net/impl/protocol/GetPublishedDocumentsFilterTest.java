@@ -27,7 +27,7 @@ public class GetPublishedDocumentsFilterTest extends TestCase {
 		details = new DocumentDetails("file3.txt");
 		service.publish(null, details);
 		
-		GetPublishedDocumentsFilter filter = new GetPublishedDocumentsFilter(successor);
+		PublishedDocumentsRequestFilter filter = new PublishedDocumentsRequestFilter(successor);
 		
 		Request request = new RequestImpl(ProtocolConstants.PUBLISHED_DOCUMENTS, null);
 		MockControl msgCtrl = MockControl.createControl(MessageMSG.class);
@@ -48,7 +48,7 @@ public class GetPublishedDocumentsFilterTest extends TestCase {
 		MockControl succCtrl = MockControl.createControl(RequestFilter.class);
 		RequestFilter successor = (RequestFilter)succCtrl.getMock();
 		
-		GetPublishedDocumentsFilter filter = new GetPublishedDocumentsFilter(successor);
+		PublishedDocumentsRequestFilter filter = new PublishedDocumentsRequestFilter(successor);
 		
 		Request request = new RequestImpl(ProtocolConstants.PUBLISH, null);
 		successor.process(request);

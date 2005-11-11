@@ -30,4 +30,6 @@ public interface Serializer {
 	
 	public byte[] createResponse(int type, Object data) throws SerializeException;
 	
+	public byte[] createNotification(int type, Object data) throws SerializeException;
+	
 }
