@@ -32,28 +32,29 @@ import javax.xml.parsers.SAXParserFactory;
  */
 public class DeserializerImpl implements Deserializer {
 
-	private DocumentParserHandler docHandler;
+	private static DeserializerImpl instance;
 	
-	public DeserializerImpl(DocumentParserHandler handler) {
-		this.docHandler = handler;
+	private DeserializerImpl() {
+	}
+	
+	public static DeserializerImpl getInstance() {
+		if (instance == null) {
+			instance = new DeserializerImpl();
+		}
+		return instance;
 	}
 	
 	/**
-	 * Returns a Map with document id's and document names.
 	 * 
-	 * @param data
-	 * @return a map with id's and names
-	 * @throws DeserializeException 
 	 */
-	public Map deserializeDocuments(byte[] data) throws DeserializeException {
+	public void deserialize(byte[] data, ParserHandler handler) throws DeserializeException {
 		try {
 			ByteArrayInputStream input = new ByteArrayInputStream(data);
 			SAXParserFactory factory;
-			//TODO: add xml validating!!
+			//TODO: add xml validating if possible
 			factory = SAXParserFactory.newInstance();
 			SAXParser saxParser = factory.newSAXParser();
-			saxParser.parse( input, docHandler );
-			return (Map)docHandler.getResult();
+			saxParser.parse( input, handler );
 		} catch (Exception e) {
 			throw new DeserializeException(e);
 		}

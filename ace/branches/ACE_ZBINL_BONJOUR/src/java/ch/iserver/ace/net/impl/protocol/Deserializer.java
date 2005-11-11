@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:Deserializer.java 1095 2005-11-09 13:56:51Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -21,7 +21,6 @@
 
 package ch.iserver.ace.net.impl.protocol;
 
-import java.util.Map;
 
 /**
  *
@@ -29,6 +28,5 @@ import java.util.Map;
 public interface Deserializer {
 
 	//TODO: get better method name
-	public Map deserializeDocuments(byte[] data) throws DeserializeException; 
-	
+	public void deserialize(byte[] data, ParserHandler handler) throws DeserializeException; 
 }
