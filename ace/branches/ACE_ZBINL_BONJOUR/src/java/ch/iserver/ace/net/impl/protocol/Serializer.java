@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:Serializer.java 1095 2005-11-09 13:56:51Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -24,12 +24,10 @@ package ch.iserver.ace.net.impl.protocol;
 /**
  *
  */
-public interface Serializer {
-
-	public static final int PUBLISHED_DOCUMENTS = 0;
-	
-	public static final String[] NAMES = new String[] { "doc" }; 
+public interface Serializer { 
 	
 	public byte[] createQuery(int type) throws SerializeException;
+	
+	public byte[] createResponse(int type, Object data) throws SerializeException;
 	
 }

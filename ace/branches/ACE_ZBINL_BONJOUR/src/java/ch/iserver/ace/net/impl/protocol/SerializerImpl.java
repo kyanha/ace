@@ -22,6 +22,8 @@
 package ch.iserver.ace.net.impl.protocol;
 
 import java.io.ByteArrayOutputStream;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -32,43 +34,66 @@ import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.log4j.Logger;
-import org.apache.xml.serialize.OutputFormat;
-import org.apache.xml.serialize.XMLSerializer;
 import org.xml.sax.helpers.AttributesImpl;
 
 import ch.iserver.ace.net.impl.NetworkConstants;
+import ch.iserver.ace.net.impl.PublishedDocument;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
  *
  */
-public class SerializerImpl implements Serializer {
+public class SerializerImpl implements Serializer, ProtocolConstants {
 
 	private Logger LOG = Logger.getLogger(SerializerImpl.class);
 	
-	private TransformerHandler handler;
+//	private TransformerHandler handler;
+	private SAXTransformerFactory factory;
 	
-	public SerializerImpl() {
-		init();
+	private static SerializerImpl instance;
+	
+	private SerializerImpl() {
+		factory = (SAXTransformerFactory)SAXTransformerFactory.newInstance();
 	}
 	
-	private void init() {
-		TransformerFactory factory = TransformerFactory.newInstance();
-		if (factory instanceof SAXTransformerFactory) {
-			try {
-				SAXTransformerFactory sax = (SAXTransformerFactory)factory;
-				handler = sax.newTransformerHandler();
-				Transformer serializer = handler.getTransformer();
-				serializer.setOutputProperty(OutputKeys.ENCODING, NetworkConstants.DEFAULT_ENCODING);;
-				serializer.setOutputProperty(OutputKeys.INDENT,"no");
-			} catch (TransformerConfigurationException tce) {
-				//TODO: handling
-				LOG.error("transformer could not be configured.");
-			}
-		} else {
-			LOG.error("unexpected TransformerFactory");
-			throw new IllegalStateException("unexpected TransformerFactory");
+	public static SerializerImpl getInstance() {
+		if (instance == null) {
+			instance = new SerializerImpl();
 		}
+		return instance;
+	}
+	
+//	private void init() {
+//		TransformerFactory factory = TransformerFactory.newInstance();
+//		if (factory instanceof SAXTransformerFactory) {
+//			try {
+//				SAXTransformerFactory sax = (SAXTransformerFactory)factory;
+//				handler = sax.newTransformerHandler();
+//				Transformer serializer = handler.getTransformer();
+//				serializer.setOutputProperty(OutputKeys.ENCODING, NetworkConstants.DEFAULT_ENCODING);;
+//				serializer.setOutputProperty(OutputKeys.INDENT,"no");
+//			} catch (TransformerConfigurationException tce) {
+//				//TODO: handling
+//				LOG.error("transformer could not be configured.");
+//			}
+//		} else {
+//			LOG.error("unexpected TransformerFactory");
+//			throw new IllegalStateException("unexpected TransformerFactory");
+//		}
+//	}
+	
+	private TransformerHandler createHandler() {
+		TransformerHandler handler = null;
+		try {
+			handler = factory.newTransformerHandler();
+			Transformer serializer = handler.getTransformer();
+			serializer.setOutputProperty(OutputKeys.ENCODING, NetworkConstants.DEFAULT_ENCODING);;
+			serializer.setOutputProperty(OutputKeys.INDENT,"no");
+		} catch (TransformerConfigurationException tce) {
+			//TODO: handling
+			LOG.error("transformer could not be configured.");
+		} 
+		return handler;
 	}
 	
 	/**
@@ -77,6 +102,7 @@ public class SerializerImpl implements Serializer {
 	public byte[] createQuery(int type) throws SerializeException {
 		ParameterValidator.inRange("queryType", type, 0, NAMES.length-1);
 		try {
+			TransformerHandler handler = createHandler();
 			ByteArrayOutputStream output = new ByteArrayOutputStream();
 			StreamResult result = new StreamResult(output);
 			AttributesImpl attrs = new AttributesImpl();
@@ -93,9 +119,43 @@ public class SerializerImpl implements Serializer {
 			output.flush();
 			return output.toByteArray();
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error("could not serialize ["+e.getMessage()+"]");
 			throw new SerializeException(e.getMessage());
 		}
 	}
 
+	public byte[] createResponse(int type, Object data) throws SerializeException {
+		try {
+			TransformerHandler handler = createHandler();
+			ByteArrayOutputStream output = new ByteArrayOutputStream();
+			StreamResult result = new StreamResult(output);
+			if (type == PUBLISHED_DOCUMENTS) {
+				List docs = (List)data;
+				handler.setResult(result);
+				handler.startDocument();
+				AttributesImpl attrs = new AttributesImpl();
+				handler.startElement("", "", "ace", attrs);
+				handler.startElement("", "", "response", attrs);
+				handler.startElement("", "", RESPONSE_PUBLISHED_DOCUMENTS, attrs);
+				Iterator docIter = docs.iterator();
+				while (docIter.hasNext()) {
+					PublishedDocument doc = (PublishedDocument)docIter.next();
+					attrs = new AttributesImpl();
+					attrs.addAttribute("", "", "id", "", doc.getId());
+					attrs.addAttribute("", "", "name", "", doc.getDetails().getTitle());
+					handler.startElement("", "", "doc", attrs);
+					handler.endElement("", "", "doc");
+				}
+				handler.endElement("", "", RESPONSE_PUBLISHED_DOCUMENTS);
+				handler.endElement("", "", "response");
+				handler.endElement("", "", "ace");
+				handler.endDocument();
+			}
+			output.flush();
+			return output.toByteArray();
+		} catch (Exception e) {
+			LOG.error("could not serialize ["+e.getMessage()+"]");
+			throw new SerializeException(e.getMessage());
+		}
+	}
 }
