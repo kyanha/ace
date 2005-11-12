@@ -11,6 +11,7 @@
 	<property name="build.resources" value="${build.dir}/resources"/>
 	<property name="build.resources-test" value="${build.dir}/resources-test"/>
 	<property name="build.testreports" value="${build.dir}/testreports"/>
+	<property name="build.osx" value="${build.dir}/osx"/>
 	
 	<property name="maven.repo" value="${user.home}/.m2/repository"/>
 	
@@ -23,6 +24,7 @@
 	<property name="src.integration-test" value="${src.dir}/integration-test"/>
 	<property name="src.resources" value="${src.dir}/resources"/>
 	<property name="src.resources-test" value="${src.dir}/resources-test"/>
+	<property name="src.osx" value="${src.dir}/osx"/>
 	
 	<artifact:remoteRepository id="remote.repository.ace" url="http://ace.iserver.ch/maven2/" />
 	<artifact:remoteRepository id="remote.repository.maven" url="http://repo1.maven.org/maven2"/>
@@ -43,7 +45,8 @@
 		            version="1.0.0"/>
 		<dependency groupId="junit" 
 		            artifactId="junit" 
-		            version="3.8.1"/>
+		            version="3.8.1"
+		            scope="test"/>
 		<dependency groupId="easymock"
 		            artifactId="easymock"
 		            version="1.1"
@@ -79,6 +82,13 @@
                     version="1.1_01"/>
 		<remoteRepository refid="remote.repository.ace" />
 		<remoteRepository refid="remote.repository.maven" />
+	</artifact:dependencies>
+	
+	<artifact:dependencies pathId="enhancer.classpath">
+		<dependency groupId="ace"
+		            artifactId="enhancer-task"
+		            version="1.0.0"/>
+		<remoteRepository refid="remote.repository.ace"/>
 	</artifact:dependencies>
 		
 	<path id="classpath.compile">
@@ -122,8 +132,13 @@
 		<mkdir dir="${build.resources}"/>
 		<mkdir dir="${build.resources-test}"/>
 		<mkdir dir="${build.testreports}"/>
+		<mkdir dir="${build.dir}/lib"/>
 		<mkdir dir="${dist.dir}"/>
 	</target>
+	
+	<condition property="osx">
+		<os name="Mac OS X"/>
+	</condition>
 	
 	<target name="clean">
 		<delete dir="${build.dir}"/>
@@ -162,7 +177,7 @@
 	</target>
 	
 	<target name="jar" depends="compile,resources">
-        <jar destfile="${dist.dir}/ace.jar">
+        <jar destfile="${build.dir}/lib/ace.jar">
             <fileset dir="${build.classes}"/>
             <fileset dir="${build.resources}"/>
         </jar>
@@ -265,24 +280,66 @@
 	        <fileset dir="${build.javadoc}"/>
 	    </copy>
 	    <copy todir="${dist.dir.current}/lib">
-            <fileset dir="${dist.dir}" includes="ace.jar"/>
-	    </copy>
-	    <copy todir="${dist.dir.current}/lib">
-            <fileset dir="${dist.dir}/lib"/>
+            <fileset dir="${build.dir}/lib"/>
 	    </copy>
 	    <copy todir="${dist.dir.current}">
 	        <fileset dir=".">
 	            <include name="build.xml"/>
 	        </fileset>
 	    </copy>
+		
+		<!-- create tar.gz and zip archive -->
+		<tar basedir="${dist.dir}/ace-${DSTAMP}" 
+		     tarfile="${dist.dir}/ace-${DSTAMP}.tar"/>
+		<gzip src="${dist.dir}/ace-${DSTAMP}.tar" 
+		      zipfile="${dist.dir}/ace-${DSTAMP}.tar.gz"/>
+		<zip basedir="${dist.dir}/ace-${DSTAMP}" 
+		     destfile="${dist.dir}/ace-${DSTAMP}.zip"/>
+		
+		<!-- os x double-clickable application -->
+		<antcall target="dist-osx"/>
+		
+		<!-- cleanup -->
+		<delete file="${dist.dir}/ace-${DSTAMP}.tar"/>
+		<delete dir="${dist.dir}/ace-${DSTAMP}"/>
 	</target>
 	
 	<target name="copy-dependencies">
-        <xslt in="build.xml" out="build-dependencies.xml" style="dependencies.xsl"/>
-        <ant antfile="build-dependencies.xml" inheritAll="false">
-          <property name="maven.repo" value="${maven.repo}"/>
-          <property name="target.dir" value="${dist.dir}/lib"/>
-        </ant>
+		<xslt in="build.xml" 
+		      out="${build.dir}/build-dependencies.xml" style="${src.dir}/xsl/dependencies.xsl"/>
+		<ant antfile="${build.dir}/build-dependencies.xml" inheritAll="false">
+			<property name="maven.repo" value="${maven.repo}"/>
+			<property name="target.dir" value="lib"/>
+		</ant>
+	</target>
+	
+	<!-- OS X specific distribution -->
+	
+	<target name="build-osx" depends="jar,copy-dependencies">
+		<typedef name="enhance" 
+			     classname="ch.iserver.ace.ant.dependency.DependencyTask"
+			     classpathref="enhancer.classpath"/>
+		<mkdir dir="${build.osx}/ACE.app/Contents"/>
+		<copy todir="${build.osx}/ACE.app/Contents">
+			<fileset dir="${src.osx}">
+				<include name="**/*"/>
+				<exclude name="Info.plist"/>
+			</fileset>
+		</copy>
+		<chmod file="${build.osx}/ACE.app/Contents/MacOS/JavaApplicationStub" perm="+x" />
+		<enhance dependencies="build.xml"
+		         plist="${src.osx}/Info.plist"
+		         target="${build.osx}/ACE.app/Contents/Info.plist"/>
+		<mkdir dir="${build.osx}/ACE.app/Contents/Resources/Java"/>
+		<copy todir="${build.osx}/ACE.app/Contents/Resources/Java">
+			<fileset dir="${build.dir}/lib"/>
+		</copy>
+	</target>
+	
+	<target name="dist-osx" depends="build-osx" if="osx">
+	  <exec executable="/usr/bin/hdiutil" os="Mac OS X">
+	    <arg line="create -fs HFS+ -volname ace -srcfolder ${build.dir}/osx ${dist.dir}/ace.dmg"/>
+	  </exec>
 	</target>
 
 </project>
