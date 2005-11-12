@@ -258,7 +258,7 @@
 		</scp>
 	</target>
 	
-	<target name="dist" depends="clean,compile,resources,javadoc,jar,copy-dependencies">
+	<target name="dist" depends="clean,compile,resources,javadoc,jar,copy-dependencies,test,integration-test">
 	    <tstamp/>
 	    <property name="dist.dir.current" value="${dist.dir}/ace-${DSTAMP}"/>
 	    <delete dir="${dist.dir.current}"/>
