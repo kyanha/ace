@@ -315,23 +315,45 @@
 	
 	<!-- OS X specific distribution -->
 	
-	<target name="build-osx" depends="jar,copy-dependencies">
+	<target name="compile-osx" if="osx">
+		<mkdir dir="${build.osx}/classes"/>
+		<javac srcdir="${src.osx}/java"
+		       destdir="${build.osx}/classes" 
+		       target="1.4"
+		       source="1.4" 
+		       debug="true" 
+		       optimize="false">
+			<classpath>
+				<path refid="classpath.compile"/>
+				<pathelement path="${build.dir}/classes"/>
+				<pathelement location="/System/Library/Frameworks/JavaVM.framework/Versions/CurrentJDK/Classes/ui.jar"/>
+			</classpath>
+		</javac>
+	</target>
+	
+	<target name="jar-osx" if="osx" depends="compile-osx">
+        <jar destfile="${build.dir}/lib/ace-osx.jar">
+            <fileset dir="${build.osx}/classes"/>
+        </jar>
+	</target>
+	
+	<target name="build-osx" depends="jar,copy-dependencies,jar-osx">
 		<typedef name="enhance" 
 			     classname="ch.iserver.ace.ant.dependency.DependencyTask"
 			     classpathref="enhancer.classpath"/>
-		<mkdir dir="${build.osx}/ACE.app/Contents"/>
-		<copy todir="${build.osx}/ACE.app/Contents">
+		<mkdir dir="${build.osx}/application/ACE.app/Contents"/>
+		<copy todir="${build.osx}/application/ACE.app/Contents">
 			<fileset dir="${src.osx}/application">
 				<include name="**/*"/>
 				<exclude name="Info.plist"/>
 			</fileset>
 		</copy>
-		<chmod file="${build.osx}/ACE.app/Contents/MacOS/JavaApplicationStub" perm="+x" />
+		<chmod file="${build.osx}/application/ACE.app/Contents/MacOS/JavaApplicationStub" perm="+x" />
 		<enhance dependencies="build.xml"
 		         plist="${src.osx}/application/Info.plist"
-		         target="${build.osx}/ACE.app/Contents/Info.plist"/>
-		<mkdir dir="${build.osx}/ACE.app/Contents/Resources/Java"/>
-		<copy todir="${build.osx}/ACE.app/Contents/Resources/Java">
+		         target="${build.osx}/application/ACE.app/Contents/Info.plist"/>
+		<mkdir dir="${build.osx}/application/ACE.app/Contents/Resources/Java"/>
+		<copy todir="${build.osx}/application/ACE.app/Contents/Resources/Java">
 			<fileset dir="${build.dir}/lib"/>
 		</copy>
 	</target>
@@ -339,7 +361,7 @@
 	<target name="dist-osx" depends="build-osx" if="osx">
 	  <delete file="${dist.dir}/ace.dmg"/>
 	  <exec executable="/usr/bin/hdiutil" os="Mac OS X">
-	    <arg line="create -fs HFS+ -volname ace -srcfolder ${build.dir}/osx ${dist.dir}/ace.dmg"/>
+	    <arg line="create -fs HFS+ -volname ace -srcfolder ${build.dir}/osx/application ${dist.dir}/ace.dmg"/>
 	  </exec>
 	</target>
 
