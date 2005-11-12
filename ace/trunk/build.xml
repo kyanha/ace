@@ -337,7 +337,7 @@
         </jar>
 	</target>
 	
-	<target name="build-osx" depends="jar,copy-dependencies,jar-osx">
+	<target name="build-osx" depends="jar,copy-dependencies,jar-osx" if="osx">
 		<typedef name="enhance" 
 			     classname="ch.iserver.ace.ant.dependency.DependencyTask"
 			     classpathref="enhancer.classpath"/>
@@ -350,6 +350,7 @@
 		</copy>
 		<chmod file="${build.osx}/application/ACE.app/Contents/MacOS/JavaApplicationStub" perm="+x" />
 		<enhance dependencies="build.xml"
+		         pathId="dependency.classpath"
 		         plist="${src.osx}/application/Info.plist"
 		         target="${build.osx}/application/ACE.app/Contents/Info.plist"/>
 		<mkdir dir="${build.osx}/application/ACE.app/Contents/Resources/Java"/>
