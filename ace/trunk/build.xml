@@ -321,14 +321,14 @@
 			     classpathref="enhancer.classpath"/>
 		<mkdir dir="${build.osx}/ACE.app/Contents"/>
 		<copy todir="${build.osx}/ACE.app/Contents">
-			<fileset dir="${src.osx}">
+			<fileset dir="${src.osx}/application">
 				<include name="**/*"/>
 				<exclude name="Info.plist"/>
 			</fileset>
 		</copy>
 		<chmod file="${build.osx}/ACE.app/Contents/MacOS/JavaApplicationStub" perm="+x" />
 		<enhance dependencies="build.xml"
-		         plist="${src.osx}/Info.plist"
+		         plist="${src.osx}/application/Info.plist"
 		         target="${build.osx}/ACE.app/Contents/Info.plist"/>
 		<mkdir dir="${build.osx}/ACE.app/Contents/Resources/Java"/>
 		<copy todir="${build.osx}/ACE.app/Contents/Resources/Java">
@@ -337,6 +337,7 @@
 	</target>
 	
 	<target name="dist-osx" depends="build-osx" if="osx">
+	  <delete file="${dist.dir}/ace.dmg"/>
 	  <exec executable="/usr/bin/hdiutil" os="Mac OS X">
 	    <arg line="create -fs HFS+ -volname ace -srcfolder ${build.dir}/osx ${dist.dir}/ace.dmg"/>
 	  </exec>
