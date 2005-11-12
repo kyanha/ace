@@ -1,4 +1,5 @@
 package ch.iserver.ace.ant.dependency;
+
 import java.io.File;
 import java.util.Set;
 
@@ -20,6 +21,8 @@ public class DependencyTask extends Task {
 	private File plist;
 	
 	private File target;
+	
+	private String pathId;
 
 	public File getDependencies() {
 		return dependencies;
@@ -45,8 +48,16 @@ public class DependencyTask extends Task {
 		return target;
 	}
 	
+	public String getPathId() {
+		return pathId;
+	}
+	
+	public void setPathId(String pathId) {
+		this.pathId = pathId;
+	}
+	
 	public void execute() throws BuildException {
-		DependencyHandler dependencyHandler = new DependencyHandler();
+		DependencyHandler dependencyHandler = new DependencyHandler(getPathId());
 		try {
 			SAXParserFactory factory = SAXParserFactory.newInstance();
 			factory.setNamespaceAware(true);
