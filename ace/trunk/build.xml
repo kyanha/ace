@@ -1,7 +1,7 @@
 <?xml version="1.0"?> 
 <project name="ace" default="compile" 
 	     xmlns:artifact="antlib:org.apache.maven.artifact.ant">
-	     
+        
 	<property name="build.dir" value="build"/>
 	<property name="build.classes" value="${build.dir}/classes"/>
 	<property name="build.test" value="${build.dir}/test"/>
@@ -25,6 +25,10 @@
 	<property name="src.resources" value="${src.dir}/resources"/>
 	<property name="src.resources-test" value="${src.dir}/resources-test"/>
 	<property name="src.osx" value="${src.dir}/osx"/>
+	
+	<!-- compiler settings javac (override on command line if desired) -->
+    <property name="debug" value="true"/>
+    <property name="optimize" value="false"/>
 	
 	<artifact:remoteRepository id="remote.repository.ace" url="http://ace.iserver.ch/maven2/" />
 	<artifact:remoteRepository id="remote.repository.maven" url="http://repo1.maven.org/maven2"/>
@@ -90,6 +94,13 @@
 		            version="1.0.0"/>
 		<remoteRepository refid="remote.repository.ace"/>
 	</artifact:dependencies>
+
+	<artifact:dependencies pathId="grand.classpath">
+		<dependency groupId="ggtools"
+		            artifactId="grand"
+		            version="1.8"/>
+		<remoteRepository refid="remote.repository.ace"/>
+	</artifact:dependencies>
 		
 	<path id="classpath.compile">
 		<path refid="dependency.classpath"/>
@@ -121,8 +132,14 @@
         <pathelement path="${build.resources}"/>
 		<pathelement path="${build.resources-test}"/>
 	</path>
+    
+    <!-- condition used to avoid build for OS X on other platforms -->
+	<condition property="osx">
+		<os name="Mac OS X"/>
+	</condition>
 	
 	<target name="init">
+        <description>initializes the build</description>
 		<mkdir dir="${build.dir}"/>
 		<mkdir dir="${build.javadoc}"/>
 		<mkdir dir="${build.classes}"/>
@@ -135,35 +152,47 @@
 		<mkdir dir="${build.dir}/lib"/>
 		<mkdir dir="${dist.dir}"/>
 	</target>
-	
-	<condition property="osx">
-		<os name="Mac OS X"/>
-	</condition>
-	
+
 	<target name="clean">
+        <description>cleans the build and dist directories</description>
 		<delete dir="${build.dir}"/>
 		<delete dir="${dist.dir}"/>
 	</target>
 	
 	<target name="compile" depends="init">
-	    <echo>compiling main sources ...</echo>
-		<javac srcdir="${src.dir}/java" destdir="${build.classes}" target="1.4"
-		       source="1.4" classpathref="classpath.compile" debug="true" optimize="false"/>
-        <echo>compiling stub classes ...</echo>
-		<javac srcdir="${src.stub}" destdir="${build.stubs}" target="1.4"
-		       source="1.4" classpathref="classpath.stubs.compile"
-		       debug="true" optimize="false"/>
-        <echo>compiling tests ...</echo>
-		<javac srcdir="${src.test}" destdir="${build.test}" target="1.4"
-		       source="1.4" classpathref="classpath.test.compile"
-		       debug="true" optimize="false"/>
-        <echo>compiling integration tests ...</echo>
-        <javac srcdir="${src.integration-test}" destdir="${build.integration-test}"
-               target="1.4" source="1.4" classpathref="classpath.test.compile"
-	           debug="true" optimize="false"/>
+        <description>compiles all the sources</description>
+		<javac srcdir="${src.dir}/java" 
+		       destdir="${build.classes}" 
+		       target="1.4"
+		       source="1.4" 
+		       classpathref="classpath.compile" 
+		       debug="${debug}" 
+		       optimize="${optimize}"/>
+		<javac srcdir="${src.stub}" 
+               destdir="${build.stubs}" 
+               target="1.4"
+		       source="1.4" 
+		       classpathref="classpath.stubs.compile"
+		       debug="true" 
+		       optimize="false"/>
+		<javac srcdir="${src.test}" 
+		       destdir="${build.test}" 
+		       target="1.4"
+		       source="1.4" 
+		       classpathref="classpath.test.compile"
+		       debug="true" 
+		       optimize="false"/>
+        <javac srcdir="${src.integration-test}" 
+               destdir="${build.integration-test}"
+               target="1.4" 
+               source="1.4" 
+               classpathref="classpath.test.compile"
+		       debug="true" 
+		       optimize="false"/>
 	</target>
 		
-	<target name="resources" depends="compile">
+	<target name="resources">
+        <description>copies all resources to the build directory</description>
 		<copy todir="${build.resources}">
 			<fileset dir="${src.dir}/resources">
 				<include name="**/*"/>
@@ -177,23 +206,26 @@
 	</target>
 	
 	<target name="jar" depends="compile,resources">
+        <description>creates the jar file</description>
         <jar destfile="${build.dir}/lib/ace.jar">
             <fileset dir="${build.classes}"/>
             <fileset dir="${build.resources}"/>
         </jar>
 	</target>
 		
-	<target name="run" depends="resources">
+	<target name="run-class" depends="compile,resources">
+        <description>runs an arbitrary class specified as system property named class</description>
 		<echo>running ${class}</echo>
 		<java classname="${class}" fork="true" classpathref="classpath.run"/>
 	</target>
 	
-	<target name="run-gui" depends="resources">
-		<echo>running GUI</echo>
+	<target name="run" depends="compile,resources">
+        <description>runs the main class</description>
 		<java classname="ch.iserver.ace.application.Main" fork="true" classpathref="classpath.run"/>
 	</target>
 
-	<target name="javadoc" depends="compile">
+	<target name="javadoc">
+        <description>creates the javadoc API documentation</description>
 		<javadoc destdir="${build.javadoc}" 
 		         windowtitle="ACE API" 
 		         source="1.4" 
@@ -208,6 +240,7 @@
 	</target>
 	
 	<target name="test" depends="compile,resources">
+        <description>runs the JUnit tests</description>
 		<junit showoutput="yes" 
 		       printsummary="yes" 
 		       fork="true" 
@@ -235,6 +268,7 @@
 	</target>
 	
     <target name="integration-test" depends="compile,resources">
+        <description>runs the integration tests</description>
 		<junit showoutput="yes" printsummary="yes" fork="true" 
 			haltonerror="true" 
 			haltonfailure="true">
@@ -253,12 +287,18 @@
 	</target>
 		
 	<target name="publish-api" depends="javadoc">
+        <description>publishes the API</description>
+        <!--<sshexec host="ace.iserver.ch"
+                 username="${username}"
+                 password="${password}"
+                 command="rm -rf /home/ace/ace.iserver.ch/www/api"/>-->
 		<scp todir="${username}:${password}@ace.iserver.ch:/home/ace/ace.iserver.ch/www/api">
 			<fileset dir="${build.javadoc}"/>
 		</scp>
 	</target>
 	
-	<target name="dist" depends="clean,compile,resources,javadoc,jar,copy-dependencies,test,integration-test">
+	<target name="dist" depends="clean,javadoc,jar,copy-dependencies,test,integration-test">
+        <description>creates the distribution tar.gz and zip files</description>
 	    <tstamp/>
 	    <property name="dist.dir.current" value="${dist.dir}/ace-${DSTAMP}"/>
 	    <delete dir="${dist.dir.current}"/>
@@ -305,6 +345,7 @@
 	</target>
 	
 	<target name="copy-dependencies">
+        <description>copies all dependencies to the build directory</description>
 		<xslt in="build.xml" 
 		      out="${build.dir}/build-dependencies.xml" style="${src.dir}/xsl/dependencies.xsl"/>
 		<ant antfile="${build.dir}/build-dependencies.xml" inheritAll="false">
@@ -316,13 +357,14 @@
 	<!-- OS X specific distribution -->
 	
 	<target name="compile-osx" if="osx">
+        <description>compiles OS X specific classes</description>
 		<mkdir dir="${build.osx}/classes"/>
 		<javac srcdir="${src.osx}/java"
 		       destdir="${build.osx}/classes" 
 		       target="1.4"
 		       source="1.4" 
-		       debug="true" 
-		       optimize="false">
+		       debug="${debug}" 
+		       optimize="${optimize}">
 			<classpath>
 				<path refid="classpath.compile"/>
 				<pathelement path="${build.dir}/classes"/>
@@ -332,12 +374,14 @@
 	</target>
 	
 	<target name="jar-osx" if="osx" depends="compile-osx">
+        <description>creates a jar file for OS X specific classes</description>
         <jar destfile="${build.dir}/lib/ace-osx.jar">
             <fileset dir="${build.osx}/classes"/>
         </jar>
 	</target>
 	
-	<target name="build-osx" depends="jar,copy-dependencies,jar-osx" if="osx">
+	<target name="build-osx" depends="jar-osx" if="osx">
+        <description>builds the OS X application bundle</description>
 		<typedef name="enhance" 
 			     classname="ch.iserver.ace.ant.dependency.DependencyTask"
 			     classpathref="enhancer.classpath"/>
@@ -360,10 +404,24 @@
 	</target>
 	
 	<target name="dist-osx" depends="build-osx" if="osx">
-	  <delete file="${dist.dir}/ace.dmg"/>
-	  <exec executable="/usr/bin/hdiutil" os="Mac OS X">
-	    <arg line="create -fs HFS+ -volname ace -srcfolder ${build.dir}/osx/application ${dist.dir}/ace.dmg"/>
-	  </exec>
+        <description>creates the disk image for OS X</description>
+        <delete file="${dist.dir}/ace.dmg"/>
+        <exec executable="/usr/bin/hdiutil" os="Mac OS X">
+            <arg line="create -fs HFS+ -volname ace -srcfolder ${build.dir}/osx/application ${dist.dir}/ace.dmg"/>
+        </exec>
 	</target>
+	
+	<!-- create dependency graph of Ant build file -->
+	
+    <target name="graph">
+        <typedef resource="net/ggtools/grand/antlib.xml" classpathref="grand.classpath"/>
+        <property name="name" value="ant-graph"/>
+        <grand output="${build.dir}/${name}.dot">
+            <filter name="isolatednode"/>
+        </grand>
+        <exec executable="dot">
+            <arg line="-Tps -Gsize=10,7 -Grotate=90 -Gcenter=1 -o ${build.dir}/${name}.ps ${build.dir}/${name}.dot"/>
+        </exec>
+    </target>
 
 </project>
