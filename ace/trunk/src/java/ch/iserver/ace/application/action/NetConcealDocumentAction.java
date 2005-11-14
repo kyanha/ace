@@ -21,6 +21,8 @@
 
 package ch.iserver.ace.application.action;
 
+import ch.iserver.ace.application.DocumentManager;
+import ch.iserver.ace.application.DocumentItem;
 import ch.iserver.ace.application.ItemSelectionChangeEvent;
 import ch.iserver.ace.application.LocaleMessageSource;
 import ch.iserver.ace.application.ViewController;
@@ -32,17 +34,25 @@ import java.util.List;
 
 public class NetConcealDocumentAction extends ItemSelectionChangeAction {
 
-	public NetConcealDocumentAction(LocaleMessageSource messageSource, List viewControllers) {
+	private DocumentManager documentManager;
+
+	public NetConcealDocumentAction(LocaleMessageSource messageSource, DocumentManager documentManager, List viewControllers) {
 		super(messageSource.getMessage("mNetConceal"), messageSource.getIcon("iMenuNetConceal"), viewControllers);
+		this.documentManager = documentManager;
 		setEnabled(false);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		System.out.println("NetConcealDocumentAction");
+		documentManager.concealDocument();
 	}
 
 	public void itemSelectionChanged(ItemSelectionChangeEvent e) {
-		System.out.println("ItemSelectionChangeEvent: " + e);
+		if((e.getItem() != null) && ((DocumentItem)e.getItem()).getType() == DocumentItem.PUBLISHED) {
+			setEnabled(true);
+		} else {
+			setEnabled(false);
+		}
 	}
 
 }

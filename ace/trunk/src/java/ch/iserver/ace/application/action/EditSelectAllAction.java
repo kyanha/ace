@@ -40,11 +40,10 @@ public class EditSelectAllAction extends ItemSelectionChangeAction {
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		System.out.println("EditSelectAllAction");
 	}
 
 	public void itemSelectionChanged(ItemSelectionChangeEvent e) {
-		System.out.println("ItemSelectionChangeEvent: " + e);
+		//System.out.println("ItemSelectionChangeEvent: " + e);
 	}
 
 }
