@@ -30,6 +30,7 @@ public class AllTests {
 		TestSuite suite = new TestSuite("Test for ch.iserver.ace");
 		//$JUnit-BEGIN$
 		suite.addTest(ch.iserver.ace.algorithm.jupiter.AllTests.suite());
+		suite.addTest(ch.iserver.ace.application.AllTests.suite());
 		suite.addTest(ch.iserver.ace.collaboration.jupiter.AllTests.suite());
 		suite.addTest(ch.iserver.ace.collaboration.jupiter.server.AllTests.suite());
 		suite.addTest(ch.iserver.ace.collaboration.jupiter.server.serializer.AllTests.suite());

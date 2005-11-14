@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:UserItem.java 1091 2005-11-09 13:29:05Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -21,10 +21,10 @@
 
 package ch.iserver.ace.application;
 
-import ch.iserver.ace.collaboration.RemoteUser;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+
+import ch.iserver.ace.collaboration.RemoteUser;
 
 
 

@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:ViewControllerImpl.java 1091 2005-11-09 13:29:05Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -21,35 +21,35 @@
 
 package ch.iserver.ace.application;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
+import javax.swing.event.EventListenerList;
 
 
 
 public class ViewControllerImpl implements ViewController {
 
 	protected View view;
-	private PropertyChangeSupport propertyChangeSupport;
+	private EventListenerList eventListenerList;
 	
 	public ViewControllerImpl() {
-		propertyChangeSupport = new PropertyChangeSupport(this);
+		eventListenerList = new EventListenerList();
 	}
 	
-	public void addPropertyChangeListener(PropertyChangeListener listener) {
-		propertyChangeSupport.addPropertyChangeListener(listener);
+	public void addItemSelectionChangeListener(ItemSelectionChangeListener listener) {
+		eventListenerList.add(ItemSelectionChangeListener.class, listener);
 	}
 	
-	public void removePropertyChangeListener(PropertyChangeListener listener) {
-		propertyChangeSupport.removePropertyChangeListener(listener);
+	public void removeItemSelectionChangeListener(ItemSelectionChangeListener listener) {
+		eventListenerList.add(ItemSelectionChangeListener.class, listener);
 	}
-	
-/*	protected void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
-		propertyChangeSupport.firePropertyChange(propertyName, oldValue, newValue);
-	}*/
-	
-	public void propertyChange(PropertyChangeEvent evt) {
-		propertyChangeSupport.firePropertyChange(evt);
+
+	public void itemSelectionChanged(ItemSelectionChangeEvent event) {
+		ItemSelectionChangeEvent newEvent = new ItemSelectionChangeEvent(this, (Item)event.getItem());
+		Object[] listeners = eventListenerList.getListenerList();
+		for(int i = listeners.length-2; i >= 0; i -= 2) {
+			if(listeners[i] == ItemSelectionChangeListener.class) {
+				((ItemSelectionChangeListener)listeners[i+1]).itemSelectionChanged(newEvent);
+			}
+		}
 	}
 	
 	public void setView(View view) {

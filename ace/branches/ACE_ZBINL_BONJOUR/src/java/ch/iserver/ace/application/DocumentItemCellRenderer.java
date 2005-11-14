@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:DocumentItemCellRenderer.java 1091 2005-11-09 13:29:05Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -21,8 +21,14 @@
 
 package ch.iserver.ace.application;
 
-import java.awt.*;
-import javax.swing.*;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Graphics;
+
+import javax.swing.ImageIcon;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.ListCellRenderer;
 
 
 
@@ -35,7 +41,7 @@ public class DocumentItemCellRenderer extends JPanel implements ListCellRenderer
 	public DocumentItemCellRenderer(LocaleMessageSource messageSource) {
 		this.messageSource = messageSource;
 		iconLocal = messageSource.getIcon("iViewFileLocal");
-		iconPublished = messageSource.getIcon("iViewFilePublished");
+		iconPublished = messageSource.getIcon("iViewFilePublic");
 		iconRemote = messageSource.getIcon("iViewFileRemote");
 	}
 

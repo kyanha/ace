@@ -22,16 +22,16 @@
 package ch.iserver.ace.application;
 
 import java.awt.BorderLayout;
-import javax.swing.JList;
-import javax.swing.JScrollPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.JToolBar;
 import java.util.List;
 
-import com.jgoodies.uif_lite.panel.SimpleInternalFrame;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.JToolBar;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
-import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.FilterList;
 import ca.odell.glazedlists.GlazedLists;
 import ca.odell.glazedlists.ObservableElementList;
@@ -42,24 +42,21 @@ import ca.odell.glazedlists.swing.EventListModel;
 import ca.odell.glazedlists.swing.EventSelectionModel;
 import ca.odell.glazedlists.swing.TextComponentMatcherEditor;
 
+import com.jgoodies.uif_lite.panel.SimpleInternalFrame;
+
 
 
 public class BrowseView extends ViewImpl {
 
-	private EventList browseSourceList;
-	private EventListModel browseEventListModel;
-	private EventSelectionModel browseEventSelectionModel;
-	protected JList browseList;
-
 	public BrowseView(BrowseViewController controller, LocaleMessageSource messageSource) {
 		super(controller, messageSource);
 		// get view source
-		browseSourceList = controller.getBrowseSourceList();
+		setSourceList(controller.getBrowseSourceList());
 		
 		// create view toolbar & actions
 		JToolBar viewToolBar = new JToolBar();
 
-		// create data list
+		// create list
 		JTextField browseFilterField = new JTextField();
 		TextFilterator browseFilterator = new TextFilterator() {
 			public void getFilterStrings(List baseList, Object element) {
@@ -68,18 +65,32 @@ public class BrowseView extends ViewImpl {
 			}
 		};
 		MatcherEditor browseMatcherEditor = new TextComponentMatcherEditor(browseFilterField, browseFilterator);
-		SortedList browseSortedList = new SortedList(new ObservableElementList(new FilterList(browseSourceList, browseMatcherEditor), GlazedLists.beanConnector(BrowseItem.class)));
-		browseEventListModel = new EventListModel(browseSortedList);
-		browseEventSelectionModel = new EventSelectionModel(browseSortedList);
+		SortedList browseSortedList = new SortedList(new ObservableElementList(new FilterList(getSourceList(), browseMatcherEditor), GlazedLists.beanConnector(BrowseItem.class)));
+		setEventListModel(new EventListModel(browseSortedList));
+		setEventSelectionModel(new EventSelectionModel(browseSortedList));
 
-		browseList = new JList(browseEventListModel);
-		browseList.setCellRenderer(new BrowseItemCellRenderer(messageSource));
-		browseList.setSelectionModel(browseEventSelectionModel);
-		browseList.setSelectionMode(EventSelectionModel.SINGLE_SELECTION);
+		setList(new JList(getEventListModel()));
+		getList().setCellRenderer(new BrowseItemCellRenderer(messageSource));
+		getList().setSelectionModel(getEventSelectionModel());
+		getList().setSelectionMode(EventSelectionModel.SINGLE_SELECTION);
 		
+		// add mouse listener
+		getList().addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent event) {
+				if(event.getValueIsAdjusting()) {
+					return;
+				}
+				BrowseItem newItem = null;
+				try {
+					newItem = (BrowseItem)getEventListModel().getElementAt(getEventSelectionModel().getMinSelectionIndex());
+				} catch(ArrayIndexOutOfBoundsException e) {}
+				fireItemSelectionChange(newItem);
+			}
+		});
+
 		// create frame
 		JPanel browseViewContent = new JPanel(new BorderLayout());
-		browseViewContent.add(new JScrollPane(browseList), BorderLayout.CENTER);
+		browseViewContent.add(new JScrollPane(getList()), BorderLayout.CENTER);
 		browseViewContent.add(browseFilterField, BorderLayout.SOUTH);
 		SimpleInternalFrame browseView = new SimpleInternalFrame(null, messageSource.getMessage("vBrowseTitle"), viewToolBar, browseViewContent);
 		setLayout(new BorderLayout());
@@ -87,9 +98,10 @@ public class BrowseView extends ViewImpl {
 	}
 
 	public Item getSelectedItem() {
-		if(browseEventSelectionModel.getMinSelectionIndex() >= 0) {
-			return (BrowseItem)browseEventListModel.getElementAt(browseEventSelectionModel.getMinSelectionIndex());
-		}
-		return null;
+		BrowseItem selectedItem = null;
+		try {
+			selectedItem = (BrowseItem)getEventListModel().getElementAt(getEventSelectionModel().getMinSelectionIndex());
+		} catch(ArrayIndexOutOfBoundsException e) {}
+		return selectedItem;
 	}
 }

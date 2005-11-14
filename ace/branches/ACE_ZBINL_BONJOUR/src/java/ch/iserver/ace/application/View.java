@@ -21,15 +21,19 @@
 
 package ch.iserver.ace.application;
 
-import java.beans.PropertyChangeListener;
 
 
 
 public interface View {
 
-	void addPropertyChangeListener(PropertyChangeListener listener);
+	void addItemSelectionChangeListener(ItemSelectionChangeListener listener);
 	
-	void removePropertyChangeListener(PropertyChangeListener listener);
+	void removeItemSelectionChangeListener(ItemSelectionChangeListener listener);
 
 	Item getSelectedItem();
+	
+	void setSelectedIndex(int index);
+	
+	int getSelectedIndex();
+	
 }

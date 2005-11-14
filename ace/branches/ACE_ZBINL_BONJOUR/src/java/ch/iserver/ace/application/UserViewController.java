@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:UserViewController.java 1091 2005-11-09 13:29:05Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -21,11 +21,10 @@
 
 package ch.iserver.ace.application;
 
-import ch.iserver.ace.collaboration.UserListener;
-import ch.iserver.ace.collaboration.RemoteUser;
-
-import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.BasicEventList;
+import ca.odell.glazedlists.EventList;
+import ch.iserver.ace.collaboration.RemoteUser;
+import ch.iserver.ace.collaboration.UserListener;
 
 
 
@@ -39,13 +38,22 @@ public class UserViewController extends ViewControllerImpl implements UserListen
 	
 	public void userDiscarded(RemoteUser user) {
 		// remove discarded user from the list
-		userSourceList.remove(new UserItem(user));
+		userSourceList.getReadWriteLock().writeLock().lock();
+		try {
+			userSourceList.remove(new UserItem(user));
+		} finally {
+			userSourceList.getReadWriteLock().writeLock().unlock();
+		}
 	}
 	
 	public void userDiscovered(RemoteUser user) {
 		// add discovered user to the list
-		System.out.println("userDiscovered");
-		userSourceList.add(new UserItem(user));
+		userSourceList.getReadWriteLock().writeLock().lock();
+		try {
+			userSourceList.add(new UserItem(user));
+		} finally {
+			userSourceList.getReadWriteLock().writeLock().unlock();
+		}
 	}
 	
 	private UserView getUserView() {

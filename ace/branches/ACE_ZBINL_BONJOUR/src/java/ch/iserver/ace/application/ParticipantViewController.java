@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:ParticipantViewController.java 1091 2005-11-09 13:29:05Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -29,14 +29,24 @@ import ca.odell.glazedlists.EventList;
 public class ParticipantViewController extends ViewControllerImpl {
 
 	private CompositeList participantSourceList;
+	
+	private EventList memberList;
 
 	public ParticipantViewController() {
 		participantSourceList = new CompositeList();
 	}
 	
 	public void setParticipantList(EventList participantList) {
-		participantSourceList.clear();
-		participantSourceList.addMemberList(participantList);
+		participantSourceList.getReadWriteLock().writeLock().lock();
+		try {
+			if (memberList != null) {
+				participantSourceList.removeMemberList(memberList);
+			}
+			this.memberList = participantList;
+			participantSourceList.addMemberList(participantList);
+		} finally {
+			participantSourceList.getReadWriteLock().writeLock().unlock();
+		}
 	}
 
 	private ParticipantView getParticipantView() {

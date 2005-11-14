@@ -1,0 +1,275 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[latin1]{inputenc}
+\usepackage{lmodern}
+\usepackage{float}
+\usepackage{a4wide}
+\usepackage[dvips]{graphicx}
+
+\usepackage[
+pdfauthor={ACE Project Team},
+pdftitle={Developers Guide},
+pdfcreator={pdftex},
+]{hyperref}
+
+\include{ace}
+
+\begin{document}
+
+\include{titlepage}
+
+\tableofcontents
+
+
+\section{Introduction}
+
+The \emph{Developers Guide} contains information on how to build the application
+from source, how to install, and run the application. Further, information
+about the subversion repository is given.
+
+Unless you want to change the source code, we do not recommend to build the
+application from source. We provide installers for Windows and a double
+clickable application for Mac OS X. These install a completely working
+application without the need for all the details that follow.
+
+
+\section{Setup}
+ACE uses Apache Ant (see \href{http://ant.apache.org/}{http://ant.apache.org/})
+to build the application. If you have not installed Ant, download and install
+it from the above URL. Further, we use a special Ant task to download the
+libraries used by ACE. These libraries are not stored inside of the source
+repository.
+
+\subsection{Maven 2.0 Ant Tasks}
+Maven 2.0 now comes with a set of Ant tasks that can be used to utilise Maven's
+artifact handling features from within Ant. This includes most notably the
+transitive \emph{Dependency management} handling of Maven 2.0. You can
+download these Ant tasks from 
+\href{http://maven.apache.org/download.html}{http://maven.apache.org/download.html}.
+
+\subsubsection{Installation}
+To install these Ant tasks you have to do the following:
+\begin{itemize}
+ \item download the maven-artifact-ant-2.0-dep.jar from the Maven download site
+ \item copy the downloaded jar file to the directory \texttt{ANT_HOME/lib} where \texttt{ANT_HOME} is where Ant is installed
+\end{itemize}
+
+\subsubsection{Maven Repositories}
+ACE uses two different Maven repository. A Maven repository is a place where
+dependencies are installed. The first repository is a custom repository that
+stores all dependencies that are not available from the default Maven
+repository. The URL of this repository is http://ace.iserver.ch/maven2. The
+second repository is the standard Maven repository at the URL
+http://repo1.maven.org/maven2/.
+
+\subsubsection{Dependencies}
+In the \texttt{build.xml} you find the declaration of the dependencies.
+
+\small{\begin{verbatim}
+<artifact:dependencies pathId="dependency.classpath">
+		<dependency groupId="jdom" 
+		            artifactId="jdom" 
+		            version="1.0"/>
+		<dependency groupId="commons-beanutils" 
+		            artifactId="commons-beanutils" 
+		            version="1.7.0"/>
+        ...
+</artifact:dependencies>
+\end{verbatim}}
+
+A dependency has a group id, an artifact id, and a version. You have to know
+these in order to add dependencies (browse the Maven repositories to find
+out the correct values). The dependencies are downloaded to a local repository,
+which can be found in the directory \texttt{~/.m2/repository/}.
+
+The id given to the set of dependencies with the \texttt{pathId} attribute
+can be used like any other path in the Ant build file. The Maven Ant tasks
+allow to get the correct versions of dependencies without needing to place
+them in the source repository.
+
+To find out more about the Maven Ant tasks visit
+\href{http://maven.apache.org/ant-tasks.html}{http://maven.apache.org/ant-tasks.html}.
+
+\subsubsection{First Time Build}
+When you run the build the first time you will get a couple of messages like:
+
+\small{\begin{verbatim}
+[artifact:dependencies] Downloading: log4j/log4j/1.2.12/log4j-1.2.12.pom
+[artifact:dependencies] Transferring 0K
+[artifact:dependencies] Downloading: log4j/log4j/1.2.12/log4j-1.2.12.jar
+[artifact:dependencies] Transferring 349K
+\end{varbatim}}
+
+You will get also some warnings, because the task first checks the custom
+repository of ACE, which does not contain all the dependencies of the project.
+
+
+\section{Directory Structure}
+
+ACE has the following contents in the top-level directory:
+
+\begin{table}[H]
+ \begin{tabular}{|l|l|}
+  \hline
+  /.classpath         &  Eclipse classpath file    \\
+  \hline
+  /.project           &  Eclipse project file      \\
+  \hline
+  /build              &  build products            \\
+  \hline
+  /build.xml          &  Ant build file            \\
+  \hline
+  /dist               &  distribution directory    \\
+  \hline
+  /doc                &  documentation             \\
+  \hline
+  /project.properties &  Maven project properties  \\
+  \hline
+  /project.xml        &  Maven project model       \\
+  \hline
+  /src                &  source files              \\
+  \hline
+  /www                &  the project website       \\
+  \hline
+ \end{tabular}
+ \caption{Top-level directory structure}
+\end{table}
+
+\subsection{Build Products}
+The \texttt{build} folder contains the build results of the project:
+
+\begin{table}[H]
+ \begin{tabular}{|l|l|}
+  \hline
+  /build/api             &  generated Javadoc API  \\
+  \hline
+  /build/classes         &  class files            \\
+  \hline
+  /build/resources       &  resource files         \\
+  \hline
+  /build/testreports     &  JUnit test reports     \\
+  \hline
+ \end{tabular}
+ \caption{build directory structure}
+\end{table}
+
+\subsection{Sources}
+The \texttt{src} folder contains the sources of the project:
+
+\begin{table}[H]
+ \begin{tabular}{|l|l|}
+  \hline
+  /src/installer
+  &  NSIS Windows installer        \\
+  \hline
+  /src/integration-test
+  &  integration tests     \\
+  \hline
+  /src/java
+  &  Java source files \\
+  \hline
+  /src/resources
+  &  resources used by the application \\
+  \hline
+  /src/stubs 
+  &  stub classes used for testing \\
+  \hline
+  /src/test
+  &  JUnit tests \\
+  \hline
+  /src/test-app
+  &  simple test applications to quickly test parts of the application \\
+  \hline
+ \end{tabular}
+ \caption{source directory structure}
+\end{table}
+
+\subsection{Documentation}
+The \texttt{doc} folder contains the sources of the project:
+
+\begin{table}[H]
+ \begin{tabular}{|l|l|}
+  \hline
+  /doc/developersguide
+  &  the \LaTeX{} source for the developers guide \\
+  \hline
+  /doc/finalreport
+  &  the \LaTeX{} source for the final report \\
+  \hline
+  /doc/images
+  &  images used in the documentation \\
+  \hline
+  /doc/latex
+  &  the \LaTeX{} templates \\
+  \hline
+  /doc/projectmanual
+  &  the \LaTeX{} source for the project manual \\
+  \hline
+  /doc/systemrequirements
+  &  the \LaTeX{} source for the system requirements \\
+  \hline
+  /doc/templates
+  &  source code templates \\
+  \hline
+  /doc/usermanual
+  &  the \LaTeX{} source for the system user manual \\
+  \hline
+ \end{tabular}
+ \caption{documentation directory structure}
+\end{table}
+
+
+\section{Build File}
+
+The Ant build file contains the all the relevant targets. The main targets
+are:
+
+\begin{itemize}
+ \item \texttt{compile}
+ \item \texttt{test}
+ \item \texttt{integration-test}
+ \item \texttt{run-gui}
+ \item \texttt{clean}
+ \item \texttt{javadoc}
+ \item \texttt{dist}
+\end{itemize}
+
+\subsection{Compiling the Sources}
+To compile the sources you use the Ant target \texttt{compile}. 
+
+\subsection{Running the Tests}
+There are two test targets. The first that runs the unit tests is called
+\texttt{test}. These tests are run regularly by our continous integration
+server. The test sources are found in the directory \texttt{/src/test}. They
+must run quickly and deterministically.
+
+The other test target is \texttt{integration-test} which runs integration tests.
+Integration tests test large parts of the system and thus run slower than
+the pure unit tests.
+
+\subsection{Running the Application}
+You can run the application by calling the \texttt{run-gui} task. This starts
+the main class of the whole application. If you want to run another class
+with the main argument, you can start it with by calling the \texttt{run}
+task with a system property \texttt{class} set to the correct class name.
+You do this from the command line with an additional argument 
+\texttt{-Dclass=...}.
+
+\subsection{Cleaning the Build Results}
+The well-known \texttt{clean} target can be used to clean the build directory,
+forcing a complete rebuild.
+
+\subsection{Javadoc}
+The \texttt{javadoc} target creates the Javadoc of the application into the
+directory \texttt{/build/api}.
+
+\subsection{Creating a Distribution}
+The Ant target \texttt{dist} creates a \texttt{tar.gz} file containing the
+sources, the javadoc, and all the necessary jar files into the directory
+\texttt{/dist}.
+
+
+\section{Building the Installers}
+
+
+\end{document}

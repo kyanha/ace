@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:DocumentViewController.java 1091 2005-11-09 13:29:05Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -21,8 +21,8 @@
 
 package ch.iserver.ace.application;
 
-import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.BasicEventList;
+import ca.odell.glazedlists.EventList;
 
 
 
@@ -35,11 +35,30 @@ public class DocumentViewController extends ViewControllerImpl {
 	}
 	
 	public void addDocument(DocumentItem document) {
-		documentSourceList.add(document);
+		documentSourceList.getReadWriteLock().writeLock().lock();
+		try {
+			documentSourceList.add(document);
+		} finally {
+			documentSourceList.getReadWriteLock().writeLock().unlock();
+		}
 	}
 	
 	public void removeDocument(DocumentItem document) {
-		documentSourceList.remove(document);
+		documentSourceList.getReadWriteLock().writeLock().lock();
+		try {
+			documentSourceList.remove(document);
+		} finally {
+			documentSourceList.getReadWriteLock().writeLock().unlock();
+		}
+	}
+	
+	public boolean containsDocument(DocumentItem document) {
+		documentSourceList.getReadWriteLock().readLock().lock();
+		try {
+			return documentSourceList.contains(document);
+		} finally {
+			documentSourceList.getReadWriteLock().readLock().unlock();
+		}
 	}
 	
 	private DocumentView getDocumentView() {

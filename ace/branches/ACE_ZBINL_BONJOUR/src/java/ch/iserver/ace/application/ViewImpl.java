@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:ViewImpl.java 1091 2005-11-09 13:29:05Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -21,39 +21,91 @@
 
 package ch.iserver.ace.application;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.event.EventListenerList;
+
+import ca.odell.glazedlists.EventList;
+import ca.odell.glazedlists.swing.EventListModel;
+import ca.odell.glazedlists.swing.EventSelectionModel;
 
 
 
-public class ViewImpl extends JPanel implements View {
+public abstract class ViewImpl extends JPanel implements View {
 
 	protected ViewController controller;
 	protected LocaleMessageSource messageSource;
-	private PropertyChangeSupport propertyChangeSupport;
+	private EventListenerList eventListenerList;
+	private JList list;
+	private EventList sourceList;
+	private EventListModel eventListModel;
+	private EventSelectionModel eventSelectionModel;
 
 	public ViewImpl(ViewController controller, LocaleMessageSource messageSource) {
 		this.controller = controller;
 		this.messageSource = messageSource;
-		propertyChangeSupport = new PropertyChangeSupport(this);
-		addPropertyChangeListener(controller);
+		eventListenerList = new EventListenerList();
+		addItemSelectionChangeListener(controller);
 	}
 
-	public void addPropertyChangeListener(PropertyChangeListener listener) {
-		propertyChangeSupport.addPropertyChangeListener(listener);
+	public void addItemSelectionChangeListener(ItemSelectionChangeListener listener) {
+		eventListenerList.add(ItemSelectionChangeListener.class, listener);
 	}
 	
-	public void removePropertyChangeListener(PropertyChangeListener listener) {
-		propertyChangeSupport.removePropertyChangeListener(listener);
+	public void removeItemSelectionChangeListener(ItemSelectionChangeListener listener) {
+		eventListenerList.add(ItemSelectionChangeListener.class, listener);
 	}
 	
-/*	protected void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
-		propertyChangeSupport.firePropertyChange(propertyName, oldValue, newValue);
-	}*/
+	protected void fireItemSelectionChange(Item newItem) {
+		ItemSelectionChangeEvent event = new ItemSelectionChangeEvent(this, newItem);
+		Object[] listeners = eventListenerList.getListenerList();
+		for(int i = listeners.length-2; i >= 0; i -= 2) {
+			if(listeners[i] == ItemSelectionChangeListener.class) {
+				((ItemSelectionChangeListener)listeners[i+1]).itemSelectionChanged(event);
+			}
+		}
+	}
 	
-	public Item getSelectedItem() {
-		return null;
+	public abstract Item getSelectedItem();
+	
+	public void setSelectedIndex(int index) {
+		getList().setSelectedIndex(index);
+	}
+	
+	public int getSelectedIndex() {
+		return getList().getSelectedIndex();
+	}
+
+	protected void setList(JList list) {
+		this.list = list;
+	}
+
+	protected JList getList() {
+		return list;
+	}
+
+	protected void setSourceList(EventList sourceList) {
+		this.sourceList = sourceList;
+	}
+
+	protected EventList getSourceList() {
+		return sourceList;
+	}
+
+	protected void setEventListModel(EventListModel eventListModel) {
+		this.eventListModel = eventListModel;
+	}
+
+	protected EventListModel getEventListModel() {
+		return eventListModel;
+	}
+
+	protected void setEventSelectionModel(EventSelectionModel eventSelectionModel) {
+		this.eventSelectionModel = eventSelectionModel;
+	}
+
+	protected EventSelectionModel getEventSelectionModel() {
+		return eventSelectionModel;
 	}
 
 }

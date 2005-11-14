@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:PublishedSessionCallbackImpl.java 1091 2005-11-09 13:29:05Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -21,15 +21,12 @@
 
 package ch.iserver.ace.application;
 
-import ch.iserver.ace.CaretUpdate;
-import ch.iserver.ace.Operation;
-import ch.iserver.ace.application.ParticipationColorManager;
-import ch.iserver.ace.application.ParticipantItem;
-import ch.iserver.ace.collaboration.Participant;
-import ch.iserver.ace.collaboration.PublishedSessionCallback;
-
 import ca.odell.glazedlists.BasicEventList;
 import ca.odell.glazedlists.EventList;
+import ch.iserver.ace.CaretUpdate;
+import ch.iserver.ace.Operation;
+import ch.iserver.ace.collaboration.Participant;
+import ch.iserver.ace.collaboration.PublishedSessionCallback;
 
 
 

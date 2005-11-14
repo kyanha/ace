@@ -21,23 +21,23 @@
 
 package ch.iserver.ace.application;
 
-import java.util.Locale;
-
-import javax.swing.*;
-import java.awt.BorderLayout;
+import java.awt.Component;
+import javax.swing.JFrame;
+import javax.swing.UIManager;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import ch.iserver.ace.collaboration.jupiter.*;
+import java.awt.BorderLayout;
+import javax.swing.*;
+import javax.swing.event.*;
 
-/**
- *
- */
+
+
 public class Main {
 	
 	private static final String[] CONTEXT_FILES = new String[] {
-		"application-context.xml"
+		"application-context.xml", "actions-context.xml"
 	};
 	
 	public static void main(String[] args) {
@@ -45,42 +45,19 @@ public class Main {
 		LocaleMessageSource messageSource = new LocaleMessageSourceImpl(context);
 
 		// set look & feel
-		try {
+		/*try {
 			UIManager.setLookAndFeel("com.jgoodies.looks.plastic.PlasticXPLookAndFeel");
-		} catch(Exception e) {}
+		} catch(Exception e) {}*/
 
-		/*// create document controller & view
-		DocumentViewController dvc = new DocumentViewController();
-		DocumentView dv = new DocumentView(dvc, messageSource);
-		dvc.setView(dv);
-
-		// create browse controller & view
-		BrowseViewController bvc = new BrowseViewController();
-		BrowseView bv = new BrowseView(bvc, messageSource);
-		bvc.setView(bv);
-
-		// create participant controller & view
-		ParticipantViewController pvc = new ParticipantViewController();
-		ParticipantView pv = new ParticipantView(pvc, messageSource);
-		pvc.setView(pv);
-
-		// create user controller & view
-		UserViewController uvc = new UserViewController();
-		UserView uv = new UserView(uvc, messageSource);
-		uvc.setView(uv);
-
-		// create editor
-		//JPanel editor = EditorFactory.createEditor();
-		//JPanel editor = EditorFactory.createBasicEditor(messageSource);
-		*/
 		// create frame
 		JFrame frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(640, 480);	
-		//frame.setJMenuBar(ApplicationFactory.createMenuBar(messageSource));
-		//frame.getContentPane().add(BorderLayout.PAGE_START, ApplicationFactory.createToolBar(messageSource));
-		//frame.getContentPane().add(BorderLayout.CENTER, ApplicationFactory.createComponentPane(dv, bv, editor, pv, uv));
-		//frame.getContentPane().add(BorderLayout.PAGE_END, ApplicationFactory.createStatusBar());
+		frame.setSize(640, 480);
+		ApplicationFactory applicationFactory = (ApplicationFactory)context.getBean("appFactory");
+		frame.setJMenuBar(applicationFactory.createMenuBar());
+		frame.getContentPane().add(BorderLayout.PAGE_START, applicationFactory.createToolBar());
+		frame.getContentPane().add(BorderLayout.CENTER, applicationFactory.createComponentPane());
+		frame.getContentPane().add(BorderLayout.PAGE_END, applicationFactory.createStatusBar());		
 		frame.show();
 	}
 	

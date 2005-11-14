@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:BrowseViewController.java 1091 2005-11-09 13:29:05Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -21,11 +21,10 @@
 
 package ch.iserver.ace.application;
 
+import ca.odell.glazedlists.BasicEventList;
+import ca.odell.glazedlists.EventList;
 import ch.iserver.ace.collaboration.DocumentListener;
 import ch.iserver.ace.collaboration.RemoteDocument;
-
-import ca.odell.glazedlists.EventList;
-import ca.odell.glazedlists.BasicEventList;
 
 
 
@@ -40,14 +39,24 @@ public class BrowseViewController extends ViewControllerImpl implements Document
 	public void documentsDiscarded(RemoteDocument[] documents) {
 		// remove discarded document from the list
 		for(int i = 0; i < documents.length; i++ ) {
-			browseSourceList.remove(new BrowseItem(documents[i]));
+			browseSourceList.getReadWriteLock().writeLock().lock();
+			try {
+				browseSourceList.remove(new BrowseItem(documents[i]));
+			} finally {
+				browseSourceList.getReadWriteLock().writeLock().unlock();
+			}
 		}
 	}
 	
 	public void documentsDiscovered(RemoteDocument[] documents) {
 		// add discovered document to the list
 		for(int i = 0; i < documents.length; i++ ) {
-			browseSourceList.add(new BrowseItem(documents[i]));
+			browseSourceList.getReadWriteLock().writeLock().lock();
+			try {
+				browseSourceList.add(new BrowseItem(documents[i]));
+			} finally {
+				browseSourceList.getReadWriteLock().writeLock().unlock();
+			}
 		}
 	}
 		
