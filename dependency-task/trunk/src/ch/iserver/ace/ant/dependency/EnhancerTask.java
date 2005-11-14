@@ -22,6 +22,9 @@
 package ch.iserver.ace.ant.dependency;
 
 import java.io.File;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -44,22 +47,18 @@ public class EnhancerTask extends Task {
 	
 	private PatternSet patterns = new PatternSet();
 	
-	private FileSet fileset;
-	
 	private File source;
 	
 	private File target;
 	
-	public EnhancerTask() {
-		
-	}
+	private List filesets;
 	
-	public FileSet getFileset() {
-		return fileset;
+	public EnhancerTask() {
+		filesets = new LinkedList();
 	}
 	
 	public void addFileset(FileSet fileset) {
-		this.fileset = fileset;
+		filesets.add(fileset);
 	}
 	
 	public File getSource() {
@@ -87,20 +86,41 @@ public class EnhancerTask extends Task {
 	}
 	
 	public void execute() throws BuildException {
+		// validate usage of task
+		checkParameters();
+		
 		Set entries = new TreeSet();
-		DirectoryScanner scanner = getFileset().getDirectoryScanner(getProject());
-		scanner.scan();
+		
+		Iterator it = filesets.iterator();
+		while (it.hasNext()) {
+			FileSet fileset = (FileSet) it.next();
+			DirectoryScanner scanner = fileset.getDirectoryScanner(getProject());
+			scanner.scan();
 
-		String[] files = scanner.getIncludedFiles();
-		for (int i = 0; i < files.length; i++) {
-			File source = new File(files[i]);
-			if (isIncluded(source)) {
-				String name = source.getName();
-				entries.add(name);
+			String[] files = scanner.getIncludedFiles();
+			for (int i = 0; i < files.length; i++) {
+				File source = new File(files[i]);
+				if (isIncluded(source)) {
+					String name = source.getName();
+					entries.add(name);
+				}
 			}
 		}
 		
+		// process the dependencies (i.e. enhance the source)
 		processDependencies(entries);
+	}
+	
+	protected void checkParameters() throws BuildException {
+		if (getTarget() == null) {
+			throw new BuildException("target must be specified");
+		}
+		if (getSource() == null) {
+			throw new BuildException("source must be specified");
+		}
+		if (filesets.size() == 0) {
+			throw new BuildException("at least one nested fileset is mandatory");
+		}
 	}
 	
 	private boolean isIncluded(File source) {
