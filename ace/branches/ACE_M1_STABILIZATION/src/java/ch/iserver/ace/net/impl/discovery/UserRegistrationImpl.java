@@ -44,7 +44,9 @@ class UserRegistrationImpl implements UserRegistration {
 	public void register(final Properties props) {
 		String serviceName = System.getProperty("user.name");
 		String username = (String)props.get(Bonjour.KEY_USER);
-		username = (username == null) ? serviceName : username;
+		if (username == null) {
+			props.put(Bonjour.KEY_USER, serviceName);
+		}
 		
 		Register call = new Register(serviceName, 
 				(String)props.get(Bonjour.KEY_REGISTRATION_TYPE), 
