@@ -40,6 +40,7 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 	public final static int LOCAL		= 1;
 	public final static int REMOTE		= 2;
 	public final static int PUBLISHED	= 3;
+	public final static String TYPE_PROPERTY = "type";
 
 	private String id;
 	private String title;
@@ -101,15 +102,18 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 	
 	
 	public void publish(CollaborationService collaborationService) {
-		System.out.println("huasdf");
 		sessionCallback = new SessionCallbackImpl();
 		session = collaborationService.publish(sessionCallback, new DocumentModel("", 0, 0, new DocumentDetails(title)));
 		type = PUBLISHED;
+		//TODO: firePropertyChange();
+		firePropertyChange(TYPE_PROPERTY, "LOCAL", "PUBLISHED");
 	}
 	
 	public void conceal() {
 		session.leave();
 		type = LOCAL;
+		//TODO: firePropertyChange();
+		firePropertyChange(TYPE_PROPERTY, "PUBLISHED", "LOCAL");
 	}
 	
 	
