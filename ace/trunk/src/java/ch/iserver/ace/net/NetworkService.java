@@ -55,6 +55,7 @@ public interface NetworkService {
 	
 	/**
 	 * Sets the <var>callback</var> for events from the network layer.
+	 * It further initiates the discovery process for remote users.
 	 * 
 	 * @param callback the callback object for events from the network layer
 	 */
@@ -85,5 +86,4 @@ public interface NetworkService {
 	 * @param port the target port
 	 */	
 	void discoverUser(DiscoveryNetworkCallback callback, InetAddress addr, int port);
-	
 }

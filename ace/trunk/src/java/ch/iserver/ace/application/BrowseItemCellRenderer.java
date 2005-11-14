@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:BrowseItemCellRenderer.java 1091 2005-11-09 13:29:05Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden

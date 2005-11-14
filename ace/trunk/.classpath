@@ -19,6 +19,7 @@
 	<classpathentry kind="var" path="MAVEN2/xml-apis/xml-apis/2.0.2/xml-apis-2.0.2.jar"/>
 	<classpathentry sourcepath="/ACE_SOURCE_PATH/glazedlists-1.0.0-source" kind="var" path="MAVEN2/glazedlists/glazedlists/1.0.0/glazedlists-1.0.0.jar"/>
 	<classpathentry kind="var" path="MAVEN2/jgoodies/looks/1.3.2/looks-1.3.2.jar"/>
+	<classpathentry kind="var" path="MAVEN2/beepcore/beepcore/0.9.08/beepcore-0.9.08.jar"/>
 	<classpathentry kind="var" path="MAVEN2/backport-util-concurrent/backport-util-concurrent/1.1_01/backport-util-concurrent-1.1_01.jar"/>
 	<classpathentry kind="src" path="src/test-app"/>
 	<classpathentry kind="var" path="MAVEN2/springframework/spring-aop/1.2.5/spring-aop-1.2.5.jar"/>
