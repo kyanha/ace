@@ -9,8 +9,6 @@ import org.easymock.AbstractMatcher;
 import org.easymock.MockControl;
 
 public class StartChannelListenerImplTest extends TestCase {
-
-//	private StartChannelListenerImpl instance;
 	
 	public void testAdvertiseProfile() throws Exception {
 		MockControl handlerCtrl = MockControl.createControl(RequestHandler.class);
