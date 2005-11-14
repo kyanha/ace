@@ -53,7 +53,7 @@ public class DocumentDiscoveryResponseFilter extends AbstractRequestFilter {
 				proxies.add(proxy);
 			}
 			NetworkServiceCallback callback = NetworkServiceImpl.getInstance().getCallback();
-			RemoteDocumentProxy[] proxyArr = (RemoteDocumentProxy[]) docs.toArray(new RemoteDocumentProxy[0]);
+			RemoteDocumentProxy[] proxyArr = (RemoteDocumentProxy[]) proxies.toArray(new RemoteDocumentProxy[0]);
 			callback.documentDiscovered(proxyArr);
 			//TODO: ensure that no further MessageMSG processing is necessary here
 		} else { //Forward
