@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:DocumentDiscoveryResponseFilter.java 1205 2005-11-14 07:57:10Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -21,6 +21,18 @@
 
 package ch.iserver.ace.net.impl.protocol;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import ch.iserver.ace.DocumentDetails;
+import ch.iserver.ace.net.NetworkServiceCallback;
+import ch.iserver.ace.net.RemoteDocumentProxy;
+import ch.iserver.ace.net.impl.NetworkServiceImpl;
+import ch.iserver.ace.net.impl.RemoteDocumentProxyImpl;
+import ch.iserver.ace.net.impl.RemoteUserProxyExt;
+import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
+
 /**
  *
  */
@@ -31,7 +43,33 @@ public class DocumentDiscoveryResponseFilter extends AbstractRequestFilter {
 	}
 	
 	public void process(Request request) {
-		
+		if (request.getType() == ProtocolConstants.PUBLISHED_DOCUMENTS) {
+			List docs = (List) request.getPayload();
+			Iterator iter = docs.iterator();
+			List proxies = new ArrayList(docs.size());
+			while (iter.hasNext()) {
+				DocumentInfo doc = (DocumentInfo) iter.next();
+				RemoteDocumentProxy proxy = createProxy(doc);
+				proxies.add(proxy);
+			}
+			NetworkServiceCallback callback = NetworkServiceImpl.getInstance().getCallback();
+			RemoteDocumentProxy[] proxyArr = (RemoteDocumentProxy[]) docs.toArray(new RemoteDocumentProxy[0]);
+			callback.documentDiscovered(proxyArr);
+			//TODO: ensure that no further MessageMSG processing is necessary here
+		} else { //Forward
+			super.process(request);
+		}
 	}
-
+    
+    private RemoteDocumentProxy createProxy(DocumentInfo doc) {
+    		String docId 	= doc.getDocId();
+    		String docName 	= doc.getName();
+    		String userId 	= doc.getUserId();
+    	
+        RemoteUserProxyExt user = SessionManager.getInstance().getSession(userId).getUser();
+        DocumentDetails details = new DocumentDetails(docName);
+        RemoteDocumentProxy proxy = new RemoteDocumentProxyImpl(docId, details, user);
+        user.addSharedDocument(proxy);
+        return proxy;
+    }
 }
