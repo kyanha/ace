@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:DiscoveryCallbackImpl.java 1205 2005-11-14 07:57:10Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -23,7 +23,6 @@ package ch.iserver.ace.net.impl;
 import org.apache.log4j.Logger;
 
 import ch.iserver.ace.net.NetworkServiceCallback;
-import ch.iserver.ace.net.impl.protocol.DocumentDiscovery;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
