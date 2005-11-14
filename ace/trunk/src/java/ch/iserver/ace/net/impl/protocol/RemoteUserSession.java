@@ -39,7 +39,7 @@ public class RemoteUserSession {
 	private InetAddress host;
 	private int port;
 	private TCPSession session;
-	private Connection connection;
+	private ParticipantConnectionExt connection;
 	private RemoteUserProxyExt user;
 	private boolean isInitiated;
 	private int channelNo;
@@ -65,7 +65,7 @@ public class RemoteUserSession {
 		}
 	}
 	
-	public Connection getConnection() {
+	public ParticipantConnectionExt getConnection() {
 		if (!isInitiated()) {
 			initiate();
 		}
@@ -73,7 +73,7 @@ public class RemoteUserSession {
 			try {
 			Channel channel = session.startChannel(ProtocolConstants.PROFILE_URI);
 			channelNo = channel.getNumber();
-			connection = new Connection(channel);
+			connection = new ParticipantConnectionImpl(channel);
 			} catch (BEEPException be) {
 				//TODO:
 			}

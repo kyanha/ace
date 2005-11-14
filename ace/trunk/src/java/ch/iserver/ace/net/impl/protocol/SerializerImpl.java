@@ -47,7 +47,6 @@ public class SerializerImpl implements Serializer, ProtocolConstants {
 
 	private Logger LOG = Logger.getLogger(SerializerImpl.class);
 	
-//	private TransformerHandler handler;
 	private SAXTransformerFactory factory;
 	
 	private static SerializerImpl instance;
@@ -62,25 +61,6 @@ public class SerializerImpl implements Serializer, ProtocolConstants {
 		}
 		return instance;
 	}
-	
-//	private void init() {
-//		TransformerFactory factory = TransformerFactory.newInstance();
-//		if (factory instanceof SAXTransformerFactory) {
-//			try {
-//				SAXTransformerFactory sax = (SAXTransformerFactory)factory;
-//				handler = sax.newTransformerHandler();
-//				Transformer serializer = handler.getTransformer();
-//				serializer.setOutputProperty(OutputKeys.ENCODING, NetworkConstants.DEFAULT_ENCODING);;
-//				serializer.setOutputProperty(OutputKeys.INDENT,"no");
-//			} catch (TransformerConfigurationException tce) {
-//				//TODO: handling
-//				LOG.error("transformer could not be configured.");
-//			}
-//		} else {
-//			LOG.error("unexpected TransformerFactory");
-//			throw new IllegalStateException("unexpected TransformerFactory");
-//		}
-//	}
 	
 	private TransformerHandler createHandler() {
 		TransformerHandler handler = null;

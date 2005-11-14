@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:DocumentDiscoveryPrepareFilter.java 1205 2005-11-14 07:57:10Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -48,7 +48,7 @@ public class DocumentDiscoveryPrepareFilter extends AbstractRequestFilter {
 		if (request.getType() == ProtocolConstants.PUBLISHED_DOCUMENTS) {
 			RemoteUserProxyExt user = (RemoteUserProxyExt)request.getPayload(); 
 			RemoteUserSession session = manager.createSession(user); 
-			Connection connection = session.getConnection();
+			ParticipantConnectionExt connection = session.getConnection();
 			byte[] query = null;
 			try {
 				query = serializer.createQuery(ProtocolConstants.PUBLISHED_DOCUMENTS);
