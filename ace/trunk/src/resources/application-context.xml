@@ -18,7 +18,7 @@
     <property name="messageSource"><ref local="localeMessageSource"/></property>
   </bean>
 
-  <bean id="editorFactory" class="ch.iserver.ace.application.EditorFactoryImpl">
+  <bean id="editorFactory" class="ch.iserver.ace.application.editor.DummyEditorFactory">
     <property name="messageSource"><ref local="localeMessageSource"/></property>
   </bean>
 
@@ -70,5 +70,13 @@
   </bean>
 
 
-  
+
+
+
+
+  <bean id="documentManager" class="ch.iserver.ace.application.DocumentManager">
+    <constructor-arg><ref local="documentViewController"/></constructor-arg>
+  </bean>
+
+
 </beans>
