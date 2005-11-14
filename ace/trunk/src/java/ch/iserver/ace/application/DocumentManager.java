@@ -21,13 +21,19 @@
 
 package ch.iserver.ace.application;
 
+import ch.iserver.ace.application.*;
+import ch.iserver.ace.collaboration.*;
 
 
-public class DocumentManager {
+
+public class DocumentManager implements ItemSelectionChangeListener {
 
 	private DocumentViewController controller;
+	private CollaborationService collaborationService;
+	private DocumentItem currentDocumentItem;
 
 	public DocumentManager(DocumentViewController controller) {
+		controller.addItemSelectionChangeListener(this);
 		this.controller = controller;
 	}
 	
@@ -37,7 +43,7 @@ public class DocumentManager {
 	}
 	
 	public void newDocument() {
-		System.out.println("new");
+		//System.out.println("new");
 		DocumentItem newItem = new DocumentItem("New Document");
 		controller.addDocument(newItem);
 		controller.setSelectedIndex(controller.indexOf(newItem));
@@ -51,13 +57,26 @@ public class DocumentManager {
 		System.out.println("exit application");
 	}
 	
-/*	public void DocumentManager() {
-	}
 	
 	public void publishDocument() {
+		currentDocumentItem.publish(collaborationService);
 	}
 	
 	public void concealDocument() {
-	}*/
+		currentDocumentItem.conceal();
+	}
+	
+	public void itemSelectionChanged(ItemSelectionChangeEvent e) {
+		// set actual document
+		//System.out.println("DM: set current item");
+		currentDocumentItem = (DocumentItem)e.getItem();
+	}
+
+
+
+	public void setCollaborationService(CollaborationService collaborationService) {
+		this.collaborationService = collaborationService;
+	}
+
 
 }

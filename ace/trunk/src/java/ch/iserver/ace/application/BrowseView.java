@@ -48,13 +48,16 @@ import com.jgoodies.uif_lite.panel.SimpleInternalFrame;
 
 public class BrowseView extends ViewImpl {
 
-	public BrowseView(BrowseViewController controller, LocaleMessageSource messageSource) {
+	public BrowseView(BrowseViewController controller, LocaleMessageSource messageSource) {//, List toolBarActions) {
 		super(controller, messageSource);
 		// get view source
 		setSourceList(controller.getBrowseSourceList());
 		
 		// create view toolbar & actions
-		JToolBar viewToolBar = new JToolBar();
+		JToolBar browseToolBar = new JToolBar();
+		//for(int i = 0; i < toolBarActions.size(); i++) {
+			//browseToolBar.add()toolBarActions.get(i));
+		//}
 
 		// create list
 		JTextField browseFilterField = new JTextField();
@@ -92,7 +95,7 @@ public class BrowseView extends ViewImpl {
 		JPanel browseViewContent = new JPanel(new BorderLayout());
 		browseViewContent.add(new JScrollPane(getList()), BorderLayout.CENTER);
 		browseViewContent.add(browseFilterField, BorderLayout.SOUTH);
-		SimpleInternalFrame browseView = new SimpleInternalFrame(null, messageSource.getMessage("vBrowseTitle"), viewToolBar, browseViewContent);
+		SimpleInternalFrame browseView = new SimpleInternalFrame(null, messageSource.getMessage("vBrowseTitle"), browseToolBar, browseViewContent);
 		setLayout(new BorderLayout());
 		add(browseView);		
 	}

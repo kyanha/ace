@@ -24,9 +24,14 @@ package ch.iserver.ace.application;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import ch.iserver.ace.DocumentDetails;
+import ch.iserver.ace.DocumentModel;
+import ch.iserver.ace.collaboration.*;
 import ch.iserver.ace.collaboration.RemoteDocument;
 import ch.iserver.ace.collaboration.RemoteUser;
 import ch.iserver.ace.collaboration.Session;
+
+import javax.swing.text.*;
 
 
 
@@ -36,14 +41,16 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 	public final static int REMOTE		= 2;
 	public final static int PUBLISHED	= 3;
 
-	private int type = LOCAL;
-	private String title;
 	private String id;
-	//private Document editorDocument;
-	private RemoteDocument document;
+	private String title;
+	private int type;
+
+	private StyledDocument editorDocument;
+	private RemoteDocument remoteDocument;
 	private Session session;
-//	private Document editorDocument;
-	//private SessionCallback sessionCallback;
+	private SessionCallback sessionCallback;
+
+
 
 	public DocumentItem(String title) {
 		// create local document
@@ -51,6 +58,7 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 		id = "" + Math.round(1000000 * Math.random());
 		this.title = title;
 		type = LOCAL;
+		editorDocument = new DefaultStyledDocument();
 	}
 	
 	public DocumentItem(RemoteDocument document) {
@@ -74,13 +82,45 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 		return type;
 	}
 	
-	public RemoteDocument getDocument() {
-		return document;
+	
+	
+	
+	public RemoteDocument getRemoteDocument() {
+		return remoteDocument;
+	}
+	
+	public StyledDocument getEditorDocument() {
+		return editorDocument;
 	}
 	
 	public Session getSession() {
 		return session;
 	}
+	
+	
+	
+	
+	public void publish(CollaborationService collaborationService) {
+		System.out.println("huasdf");
+		sessionCallback = new SessionCallbackImpl();
+		session = collaborationService.publish(sessionCallback, new DocumentModel("", 0, 0, new DocumentDetails(title)));
+		type = PUBLISHED;
+	}
+	
+	public void conceal() {
+		session.leave();
+		type = LOCAL;
+	}
+	
+	
+	
+	
+
+
+
+
+	
+	
 	
 	public void propertyChange(PropertyChangeEvent evt) {
 		if(evt.getPropertyName().equals(RemoteDocument.TITLE_PROPERTY)) {
