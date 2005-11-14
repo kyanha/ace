@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:ConcealDocumentPrepareFilter.java 1205 2005-11-14 07:57:10Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -55,10 +55,10 @@ public class ConcealDocumentPrepareFilter extends AbstractRequestFilter {
 			
 				//send data to each known remote user
 				SessionManager manager = SessionManager.getInstance();
-				Iterator iter = manager.getSessions().values().iterator();
+				Iterator iter = manager.getSessions().iterator();
 				while (iter.hasNext()) {
 					RemoteUserSession session = (RemoteUserSession)iter.next();
-					Connection connection = session.getConnection();
+					ParticipantConnectionExt connection = session.getConnection();
 					connection.send(data, doc.toString(), listener);
 				}
 				
