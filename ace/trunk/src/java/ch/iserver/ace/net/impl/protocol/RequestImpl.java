@@ -53,6 +53,10 @@ public class RequestImpl implements Request {
 		return message;
 	}
 	
+	public String toString() {
+		return "RequestImpl("+type+", "+payload+", "+message+")";
+	}
+	
 	/**
 	 * Helper class to wrap document specific information in the
 	 * Request.
@@ -81,6 +85,9 @@ public class RequestImpl implements Request {
 			return userId;
 		}
 		
+		public String toString() {
+			return "DocumentInfo("+docId+", "+name+", "+userId+")";
+		}
 	}
 	
 }
