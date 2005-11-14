@@ -16,10 +16,13 @@ pdfcreator={pdftex},
 
 \begin{document}
 
+\setlength{\parindent}{0pt}
+
 \include{titlepage}
 
 \tableofcontents
 \newpage
+
 
 \section{Introduction}
 
@@ -93,30 +96,13 @@ To find out more about the Maven Ant tasks visit
 \href{http://maven.apache.org/ant-tasks.html}{http://maven.apache.org/ant-tasks.html}.
 
 \subsubsection{First Time Build}
-When you run the build the first time you will get a couple of messages like:
-
-%\small{
-%\begin{verbatim}
-%[artifact:dependencies] Downloading: log4j/log4j/1.2.12/log4j-1.2.12.pom
-%[artifact:dependencies] Transferring 0K
-%[artifact:dependencies] Downloading: log4j/log4j/1.2.12/log4j-1.2.12.jar
-%[artifact:dependencies] Transferring 349K
-%\end{varbatim}
-%}
-
-You will get also some warnings, because the task first checks the custom
+When you run the build the first time you will get a couple of messages saying that dependencies are downloaded to the local maven repository. You will get 
+some warnings too, because the task first checks the custom
 repository of ACE, which does not contain all the dependencies of the project.
 
 
 \section{Directory Structure}
-
 ACE has the following contents in the top-level directory:
-
-\begin{figure}[H]
- \centering
- \includegraphics[width=7.1cm,height=8.2cm]{../images/developersguide/dir-toplevel.eps}
- \caption{top-level directory structure}
-\end{figure}
 
 \begin{itemize}
  \item build: the build directory
@@ -132,12 +118,6 @@ ACE has the following contents in the top-level directory:
 
 \subsection{Build Products}
 The \texttt{build} folder contains the build results of the project:
-
-\begin{figure}[H]
- \centering
- \includegraphics[width=8.8cm,height=10.9cm]{../images/developersguide/dir-build.eps}
- \caption{build directory structure}
-\end{figure}
 
 \begin{itemize}
  \item ant-graph.*: dependency graph of Ant build file
@@ -157,12 +137,6 @@ The \texttt{build} folder contains the build results of the project:
 \subsection{Sources}
 The \texttt{src} folder contains the sources of the project.
 
-\begin{figure}[H]
- \centering
- \includegraphics[width=8.0cm,height=8.9cm]{../images/developersguide/dir-src.eps}
- \caption{source directory structure}
-\end{figure}
-
 \begin{itemize}
  \item installer: windows NSIS installer scripts
  \item integration-test: integration tests
@@ -173,17 +147,10 @@ The \texttt{src} folder contains the sources of the project.
  \item stubs: stub classes for testing purpose
  \item test: JUnit tests
  \item test-app: test applications
- \item xsl: XSL stylesheets (used to extract dependencies from build.xml)
 \end{itemize}
 
 \subsection{Documentation}
 The \texttt{doc} folder contains the sources of the project:
-
-\begin{figure}[H]
- \centering
- \includegraphics[width=8.4cm,height=6.3cm]{../images/developersguide/dir-doc.eps}
- \caption{documentation directory structure}
-\end{figure}
 
 \begin{itemize}
  \item developersguide: the \LaTeX{} sources of the developers guide
@@ -195,6 +162,7 @@ The \texttt{doc} folder contains the sources of the project:
  \item templates: source code header
  \item usermanual: the \LaTeX{} sources of the user manual
 \end{itemize}
+
 
 \section{Build File}
 
@@ -263,5 +231,73 @@ be built on OS X for two reasons. First, the targets use a command line
 utility only available on OS X and second, the customization Java code
 for OS X relies on Apple Java extensions, which are not available on
 other systems.
+
+The resulting disk image is placed in the \texttt{dist} folder. The disk
+image can be mounted in every version of Mac OS X. The disk image contains
+the application bundle.
+
+\subsubsection{Application Bundles}
+On Mac OS X, an application is basically a folder containing a specialized
+structure, called application bundle. The extension of such an application
+bundle is \texttt{.app}. A bundle has the following basic content:
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=12.3cm,height=10.2cm]{../images/developersguide/app-bundle.eps}
+ \caption{application bundle structure}
+\end{figure}
+
+The file \texttt{Info.plist} is used by the operating system to determine
+things like the executable, the icons for the application, Java version to
+use, and the classpath. The \texttt{Resources} folder contains all the
+resources needed by the application. In ACE, all the required jar files
+are placed inside a subfolder of \texttt{Resources}.
+
+Application bundles can be installed by simply moving the bundle into any
+place the user likes. There is no need for an installer. Everything needed
+by the application is contained in the bundle. Launching the application
+happens by double-clicking the application bundle.
+
+\subsubsection{Ant Targets}
+The Ant targets ending with \texttt{osx} are used to build the Mac OS X
+application bundle. To do this, a special Ant task is required. The Ant
+task is called \texttt{EnhancerTask}. This task determines all the needed
+dependency libraries from a fileset. It allows to further exclude some
+unwanted dependencies, for instance JUnit libraries by specifying excludes.
+This task is needed because we define dependencies as Maven Ant task
+dependencies. A dependency can have additional dependencies, which in turn
+can have dependencies, and so on. The dependency declaration from 
+the Maven Ant task allows to set a fileset attribute, which allows to
+get all the needed dependency jar files.
+
+The task must be defined with a \texttt{typedef}:
+
+\small{
+\begin{verbatim}
+<typedef name="enhance"
+         classname="ch.iserver.ace.ant.dependency.EnhancerTask"
+         classpathref="enhancer.classpath"/>
+\end{verbatim}
+}
+
+The enhance task can have two attributes.
+\begin{itemize}
+ \item source: the source Info.plist file
+ \item target: the generated enhanced Info.plist file
+\end{itemize}
+
+Further, the enhance task supports nested \texttt{fileset} elements as well
+as \texttt{exclude} elements. All the files included by the fileset are
+added to the classpath declaration in the \texttt{Info.plist} file, except
+for those files that are explicitely excluded by an exclude element.
+
+\small{
+\begin{verbatim}
+<enhance source="Info.plist" target="Info.plist.enhanced">
+  <fileset refid="dependency.fileset"/>
+  <exclude name="junit*.jar"/>
+</enhance>
+\end{verbatim}
+}
 
 \end{document}
