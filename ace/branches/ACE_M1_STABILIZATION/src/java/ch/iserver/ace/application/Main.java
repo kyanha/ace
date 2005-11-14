@@ -41,7 +41,7 @@ import javax.swing.event.*;
 public class Main {
 	
 	private static final String[] CONTEXT_FILES = new String[] {
-		"application-context.xml", "actions-context.xml"
+		"application-context.xml", "actions-context.xml" ,"collaboration-context.xml", "network-context.xml"
 	};
 	
 	public static void main(String[] args) {
