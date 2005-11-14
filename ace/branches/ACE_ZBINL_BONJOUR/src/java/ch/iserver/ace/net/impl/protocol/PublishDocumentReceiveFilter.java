@@ -23,6 +23,14 @@ package ch.iserver.ace.net.impl.protocol;
 
 import org.apache.log4j.Logger;
 
+import ch.iserver.ace.DocumentDetails;
+import ch.iserver.ace.net.NetworkServiceCallback;
+import ch.iserver.ace.net.RemoteDocumentProxy;
+import ch.iserver.ace.net.impl.NetworkServiceImpl;
+import ch.iserver.ace.net.impl.RemoteDocumentProxyImpl;
+import ch.iserver.ace.net.impl.RemoteUserProxyExt;
+import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
+
 /**
  *
  */
@@ -36,12 +44,20 @@ public class PublishDocumentReceiveFilter extends AbstractRequestFilter {
 
 	public void process(Request request) {
 		if (request.getType() == ProtocolConstants.PUBLISH) {
-			//handle published document
 			
-			//...
-			
-			//confirm reception of msg
+			DocumentInfo info = (DocumentInfo) request.getPayload();
+			String userId = info.getUserId();
+			RemoteUserSession session = SessionManager.getInstance().getSession(userId);
+			RemoteUserProxyExt publisher = session.getUser();
+			RemoteDocumentProxy doc = new RemoteDocumentProxyImpl(
+					info.getDocId(), new DocumentDetails(info.getName()), publisher);
+			publisher.addSharedDocument(doc);
+			NetworkServiceCallback callback = NetworkServiceImpl.getInstance().getCallback();
+			RemoteDocumentProxy[] docs = new RemoteDocumentProxy[]{ doc };
+			callback.documentDiscovered(docs);
+
 			try {
+				//confirm reception of msg				
 				request.getMessage().sendNUL();
 			} catch (Exception e) {
 				LOG.error("could not send Nul confirmation ["+e.getMessage()+"]");

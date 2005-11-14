@@ -67,7 +67,8 @@ public class RemoteDocumentProxyImpl implements RemoteDocumentProxy {
 	 */
 	public void join(JoinNetworkCallback callback) {
 		throw new UnsupportedOperationException();
-
 	}
+	
+	//TODO: implement equals and hashCode methods!!
 
 }

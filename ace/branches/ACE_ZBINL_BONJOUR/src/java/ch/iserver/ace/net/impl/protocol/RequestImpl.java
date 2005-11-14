@@ -53,4 +53,34 @@ public class RequestImpl implements Request {
 		return message;
 	}
 	
+	/**
+	 * Helper class to wrap document specific information in the
+	 * Request.
+	 *
+	 * @see Request
+	 */
+	static class DocumentInfo {
+		
+		private String docId, name, userId;
+		
+		public DocumentInfo(String docId, String name, String userId) {
+			this.docId = docId;
+			this.name = name;
+			this.userId = userId;
+		}
+
+		public String getDocId() {
+			return docId;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public String getUserId() {
+			return userId;
+		}
+		
+	}
+	
 }

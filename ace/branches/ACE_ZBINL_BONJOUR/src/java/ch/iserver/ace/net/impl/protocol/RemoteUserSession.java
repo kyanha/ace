@@ -71,7 +71,7 @@ public class RemoteUserSession {
 		}
 		if (connection == null) {
 			try {
-			Channel channel = session.startChannel(DefaultProfile.PROFILE_URI);
+			Channel channel = session.startChannel(ProtocolConstants.PROFILE_URI);
 			channelNo = channel.getNumber();
 			connection = new Connection(channel);
 			} catch (BEEPException be) {

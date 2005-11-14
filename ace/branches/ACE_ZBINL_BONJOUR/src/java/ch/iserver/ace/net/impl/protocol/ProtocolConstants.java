@@ -39,15 +39,18 @@ public interface ProtocolConstants {
 	
 	
 	/** constants for deserialization **/
-	public static final String QUERY = "query";
 	public static final String QUERY_TYPE= "type";
 	public static final String QUERY_TYPE_PUBLISHED_DOCUMENTS = "docs";
 	
 	public static final String RESPONSE_PUBLISHED_DOCUMENTS = "publishedDocs";
 	public static final String DOCUMENT_NAME = "name";
 	public static final String DOCUMENT_ID = "id";
+	public static final String USER_ID = "userid";
 	
-	public static final String NOTIFICATION_PUBLISH = "publishDocs";
-	public static final String NOTIFICATION_CONCEAL = "concealDocs";
+	/** Top level tags **/
+	public static final String TAG_QUERY = "query";
+	public static final String TAG_PUBLISH = "publishDocs";
+	public static final String TAG_CONCEAL = "concealDocs";
+	public static final String TAG_DOC = "doc";
 	
 }

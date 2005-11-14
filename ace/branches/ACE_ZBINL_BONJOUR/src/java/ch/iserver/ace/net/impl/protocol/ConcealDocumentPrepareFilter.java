@@ -27,6 +27,7 @@ import org.apache.log4j.Logger;
 import org.beepcore.beep.core.ReplyListener;
 
 import ch.iserver.ace.net.impl.PublishedDocument;
+import ch.iserver.ace.util.ParameterValidator;
 
 /**
  *
@@ -40,6 +41,7 @@ public class ConcealDocumentPrepareFilter extends AbstractRequestFilter {
 	
 	public ConcealDocumentPrepareFilter(RequestFilter successor, Serializer serializer, ReplyListener listener) {
 		super(successor);
+		ParameterValidator.notNull("serializer", serializer);
 		this.serializer = serializer;
 		this.listener = listener;
 		//TODO: how about a NullReplyListener for notifications where no answer is expected?

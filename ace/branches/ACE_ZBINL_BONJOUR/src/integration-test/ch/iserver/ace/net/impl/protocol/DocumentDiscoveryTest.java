@@ -41,7 +41,8 @@ public class DocumentDiscoveryTest extends TestCase {
 		Serializer serializer = SerializerImpl.getInstance();
 		DocumentDiscoveryCallback docCallback = new DocumentDiscoveryCallbackImpl(callback);
 		Deserializer deserializer = DeserializerImpl.getInstance();
-		ReplyListener listener = new ResponseListener(docCallback, deserializer);
+//		ReplyListener listener = new ResponseListener(docCallback, deserializer);
+		ReplyListener listener = null;
 		DocumentDiscovery discovery = new DocumentDiscoveryImpl(serializer, listener);
 
 		callback.documentDiscovered(docs);

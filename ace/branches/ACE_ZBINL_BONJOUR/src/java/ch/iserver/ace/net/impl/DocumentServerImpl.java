@@ -29,6 +29,12 @@ import ch.iserver.ace.net.DocumentServer;
  */
 public class DocumentServerImpl implements DocumentServer {
 
+	private DocumentDetails details;
+	
+	public DocumentServerImpl(DocumentDetails details) {
+		this.details = details;
+	}
+	
 	/**
 	 * @see ch.iserver.ace.net.DocumentServer#setDocumentDetails(ch.iserver.ace.DocumentDetails)
 	 */

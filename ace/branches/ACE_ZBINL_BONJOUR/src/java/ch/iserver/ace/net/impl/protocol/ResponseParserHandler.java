@@ -21,62 +21,79 @@
 
 package ch.iserver.ace.net.impl.protocol;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+
+import ch.iserver.ace.net.impl.protocol.DocumentDiscoveryPrepareFilter.QueryInfo;
+import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
 
 /**
  *
  */
 public class ResponseParserHandler extends ParserHandler {
 	
-	private Map result;
-	private boolean isReady;
-	private int type;
+	private static Logger LOG = Logger.getLogger(ResponseParserHandler.class);
+	
+	private Request response;
+	private int responseType, currentType;
+	private QueryInfo info;
+	private List requestPayload;
 	
 	public ResponseParserHandler() {
-		isReady = false;
 	}
 
 	public void startDocument() throws SAXException {
-		result = new HashMap();
+		requestPayload = new ArrayList();
+		response = null;
+		responseType = -1;
+		currentType = -1;
+		info = (info == null) ? new QueryInfo("", -1) : info;
 	}
 	
 	public void endDocument() throws SAXException {
-		//TODO: create Request
+		if (getType() == PUBLISHED_DOCUMENTS) {
+			response = new RequestImpl(getType(), requestPayload);
+		}
 	}
 	
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {	
-		if (isReady) {
+		if (currentType == PUBLISHED_DOCUMENTS) {
 			String id = attributes.getValue(DOCUMENT_ID);
 			String name = attributes.getValue(DOCUMENT_NAME);
-			result.put(id, name);
+			DocumentInfo doc = new DocumentInfo(id, name, info.getId());
+			requestPayload.add(doc);
 		} else if (qName.equals(RESPONSE_PUBLISHED_DOCUMENTS)) {
-			isReady = true;
-			type = PUBLISHED_DOCUMENTS;
+			responseType = PUBLISHED_DOCUMENTS;
+			currentType = responseType;
 		}
-
 	}
 	
 	public void endElement(String uri, String localName, String qName) throws SAXException {
 		if (qName.equals(RESPONSE_PUBLISHED_DOCUMENTS)) {
-			isReady = false;
+			currentType = -1;
 		}
 	}
 	
 	/**
-	 * Returns a Map with document id's and document names.
+	 * 
 	 */
 	public Object getResult() {
-//		Map tmp = result;
-//		result = null;
-//		return tmp;
-		throw new UnsupportedOperationException();
+		return response;
 	}
 	
 	public int getType() {
-		return type;
+		return responseType;
+	}
+
+	public void setMetaData(Object metadata) {
+		if (metadata instanceof QueryInfo) {
+			info = (QueryInfo) metadata;
+		} else {
+			LOG.warn("unknown metadata type ["+metadata+"]");
+		}
 	}
 }

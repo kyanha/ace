@@ -27,6 +27,11 @@ package ch.iserver.ace.net.impl.protocol;
  */
 public interface Deserializer {
 
-	//TODO: get better method name
+	/**
+	 * 
+	 * @param data		the data to be parsed
+	 * @param handler	the handler to process the parsed data
+	 * @throws DeserializeException
+	 */
 	public void deserialize(byte[] data, ParserHandler handler) throws DeserializeException; 
 }

@@ -21,6 +21,11 @@
 
 package ch.iserver.ace.net.impl.protocol;
 
+import ch.iserver.ace.net.NetworkServiceCallback;
+import ch.iserver.ace.net.RemoteDocumentProxy;
+import ch.iserver.ace.net.impl.NetworkServiceImpl;
+import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
+
 /**
  *
  */
@@ -32,8 +37,13 @@ public class ConcealDocumentReceiveFilter extends AbstractRequestFilter {
 	
 	public void process(Request request) {
 		if (request.getType() == ProtocolConstants.CONCEAL) {
-			//TODO: remove/conceal users document
-			
+			DocumentInfo info = (DocumentInfo) request.getPayload();
+			String userId = info.getUserId();
+			RemoteUserSession session = SessionManager.getInstance().getSession(userId);
+			RemoteDocumentProxy doc = session.getUser().removeSharedDocument(info.getDocId());
+			NetworkServiceCallback callback = NetworkServiceImpl.getInstance().getCallback();
+			RemoteDocumentProxy[] docs = new RemoteDocumentProxy[] { doc };
+			callback.documentDiscarded(docs);
 		} else { //Forward
 			super.process(request);
 		}

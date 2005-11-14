@@ -31,14 +31,14 @@ public class RequestFilterFactory {
 		RequestFilter filter = new FailureFilter(null);
 		ResponseListener listener = ResponseListener.getInstance();
 		Deserializer deserializer = DeserializerImpl.getInstance();
-		listener.init(deserializer, createIncomingClientChain());
+		listener.init(deserializer, createClientChainForResponses());
 		Serializer serializer = SerializerImpl.getInstance();
 		filter = new PublishDocumentPrepareFilter(filter, serializer, listener); 
 		filter = new DocumentDiscoveryPrepareFilter(filter, serializer, listener);
 		return filter;
 	}
 	
-	private static RequestFilter createIncomingClientChain() {
+	private static RequestFilter createClientChainForResponses() {
 		RequestFilter filter = new FailureFilter(null);
 		filter = new DocumentDiscoveryResponseFilter(filter);
 		return filter;

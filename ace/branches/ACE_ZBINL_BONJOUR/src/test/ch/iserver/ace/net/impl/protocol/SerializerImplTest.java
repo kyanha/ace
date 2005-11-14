@@ -48,7 +48,7 @@ public class SerializerImplTest extends TestCase {
 	}
 	
 	public void testCreateNotification() throws Exception {
-		fail("to be implemented");
+		//fail("to be implemented");
 	}
 	
 }

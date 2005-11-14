@@ -21,45 +21,74 @@
 
 package ch.iserver.ace.net.impl.protocol;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import org.apache.log4j.Logger;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+
+import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
 
 /**
  *
  */
 public class RequestParserHandler extends ParserHandler {
 	
+	private static Logger LOG = Logger.getLogger(RequestParserHandler.class);
+	
 	private Request result;
-	private int type;
+	private int requestType;
+	private String userId;
+	private DocumentInfo info;
 	
 	public RequestParserHandler() {
 	}
 
 	public void startDocument() throws SAXException {
+		requestType = -1;
 	}
 	
 	public void endDocument() throws SAXException {
-		if (type == PUBLISHED_DOCUMENTS) {
-			result = new RequestImpl(type, null);
+		if (getType() == PUBLISHED_DOCUMENTS) {
+			result = new RequestImpl(getType(), null);
+		} else if (getType() == PUBLISH || getType() == CONCEAL) {
+			result = new RequestImpl(getType(), info);
 		}
 		
 	}
 	
-	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {	
-		if (qName.equals(QUERY)) {
-			if (attributes.getValue(QUERY_TYPE).equals(QUERY_TYPE_PUBLISHED_DOCUMENTS)) {
-				type = PUBLISHED_DOCUMENTS;
+	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+		if (requestType == PUBLISH) {
+			if (qName.equals(TAG_DOC)) {
+				String id = attributes.getValue(DOCUMENT_ID);
+				String name = attributes.getValue(DOCUMENT_NAME);
+				info = new DocumentInfo(id, name, userId);
+			} else {
+				LOG.warn("unkown tag in "+TAG_PUBLISH+" tag.");
 			}
+		} else if (requestType == CONCEAL) {
+			if (qName.equals(TAG_DOC)) {
+				String id = attributes.getValue(DOCUMENT_ID);
+				info = new DocumentInfo(id, null, userId);
+			} else {
+				LOG.warn("unkown tag in "+TAG_CONCEAL+" tag.");
+			}
+		} else if (qName.equals(TAG_QUERY)) {
+			if (attributes.getValue(QUERY_TYPE).equals(QUERY_TYPE_PUBLISHED_DOCUMENTS)) {
+				requestType = PUBLISHED_DOCUMENTS;
+			} else {
+				LOG.warn("unkown query type "+attributes.getValue(QUERY_TYPE));
+			}
+		} else if (qName.equals(TAG_PUBLISH)) {
+			userId = attributes.getValue(USER_ID);
+			requestType = PUBLISH;
+		} else if (qName.equals(TAG_CONCEAL)) {
+			userId = attributes.getValue(USER_ID);
+			requestType = CONCEAL;
 		}
 
 	}
 	
 	public void endElement(String uri, String localName, String qName) throws SAXException {
 	}
-	
 	
 	
 	/* (non-Javadoc)
@@ -70,7 +99,11 @@ public class RequestParserHandler extends ParserHandler {
 	}
 
 	public int getType() {
-		return type;
+		return requestType;
 	}
 
+	public void setMetaData(Object metadata) {
+		throw new UnsupportedOperationException("to be implemented");
+		
+	}
 }

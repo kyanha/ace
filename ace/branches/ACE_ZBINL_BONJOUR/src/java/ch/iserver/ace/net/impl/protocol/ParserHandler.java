@@ -29,6 +29,18 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public abstract class ParserHandler extends DefaultHandler implements ProtocolConstants {
 
+	//TODO: return value could be of type Result
+	/**
+	 * 
+	 * @return 
+	 */
 	public abstract Object getResult();
+	
+	/**
+	 * Sets the meta data to create the result.
+	 * 
+	 * @param metadata the metadata to create the result
+	 */
+	public abstract void setMetaData(Object metadata);
 	
 }

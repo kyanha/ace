@@ -193,13 +193,13 @@ public class SerializerImpl implements Serializer, ProtocolConstants {
 		handler.startElement("", "", "notification", attrs);
 		String userid = NetworkServiceImpl.getInstance().getUserId();
 		attrs.addAttribute("", "", "userid", "", userid);	
-		handler.startElement("", "", NOTIFICATION_PUBLISH, attrs);
+		handler.startElement("", "", TAG_PUBLISH, attrs);
 		attrs = new AttributesImpl();
 		attrs.addAttribute("", "", "id", "", doc.getId());
 		attrs.addAttribute("", "", "name", "", doc.getDocumentDetails().getTitle());
 		handler.startElement("", "", "doc", attrs);
 		handler.endElement("", "", "doc");
-		handler.endElement("", "", NOTIFICATION_PUBLISH);
+		handler.endElement("", "", TAG_PUBLISH);
 		handler.endElement("", "", "notification");
 	}
 	
@@ -208,12 +208,12 @@ public class SerializerImpl implements Serializer, ProtocolConstants {
 		handler.startElement("", "", "notification", attrs);
 		String userid = NetworkServiceImpl.getInstance().getUserId();
 		attrs.addAttribute("", "", "userid", "", userid);
-		handler.startElement("", "", NOTIFICATION_CONCEAL, attrs);
+		handler.startElement("", "", TAG_CONCEAL, attrs);
 		attrs = new AttributesImpl();
 		attrs.addAttribute("", "", "id", "", doc.getId());
 		handler.startElement("", "", "doc", attrs);
 		handler.endElement("", "", "doc");
-		handler.endElement("", "", NOTIFICATION_CONCEAL);
+		handler.endElement("", "", TAG_CONCEAL);
 		handler.endElement("", "", "notification");
 	}
 }

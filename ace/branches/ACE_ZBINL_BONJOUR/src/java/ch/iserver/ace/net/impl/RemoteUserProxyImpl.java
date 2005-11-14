@@ -21,7 +21,9 @@
 package ch.iserver.ace.net.impl;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.net.DocumentServerLogic;
@@ -32,7 +34,7 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 	
 	private String id;
 	private UserDetails details;
-	private Collection sharedDocuments;
+	private Map documents;
 	private String sharedDocs;
 	
 	public RemoteUserProxyImpl(String id, UserDetails details) {
@@ -41,6 +43,7 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 		this.id = id;
 		this.details = details;
 		this.sharedDocs = null;
+		this.documents = new HashMap();
 	}
 
 	public String getId() {
@@ -52,7 +55,7 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 	}
 
 	public Collection getSharedDocuments() {
-		return sharedDocuments;
+		return documents.values();
 	}
 
 	public void invite(DocumentServerLogic logic) {
@@ -65,15 +68,20 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 		this.details = details;
 	}
 	
-	public void setSharedDocuments(Collection docs) {
-		this.sharedDocuments = docs;
+	public void addSharedDocument(RemoteDocumentProxy doc) {
+		documents.put(doc.getId(), doc);
+	}
+	
+	public RemoteDocumentProxy removeSharedDocument(String id) {
+		RemoteDocumentProxy doc = (RemoteDocumentProxy) documents.remove(id);
+		return doc;
 	}
 	
 	//TODO: toString() method has to be improved, consider: add/remove of documents
 	public String toString() {
 		if (sharedDocs == null) {
 			sharedDocs = "{ ";
-			Iterator docs = sharedDocuments.iterator();
+			Iterator docs = documents.values().iterator();
 			while (docs.hasNext()) {
 				RemoteDocumentProxy r = (RemoteDocumentProxy)docs.next();
 				sharedDocs += r.getDocumentDetails().getTitle()+"; ";

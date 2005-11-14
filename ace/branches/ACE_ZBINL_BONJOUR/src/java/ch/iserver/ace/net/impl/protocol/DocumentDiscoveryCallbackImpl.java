@@ -63,9 +63,10 @@ public class DocumentDiscoveryCallbackImpl implements DocumentDiscoveryCallback 
 			String docName = (String)result.get(docId);
 			DocumentDetails details = new DocumentDetails(docName);
 			RemoteDocumentProxy newDoc = new RemoteDocumentProxyImpl(docId, details, user);
+			user.addSharedDocument(newDoc);
 			docs.add(newDoc);
 		}
-		user.setSharedDocuments(docs);
+//		user.setSharedDocuments(docs);
 		return (RemoteDocumentProxy[])docs.toArray(new RemoteDocumentProxy[0]);
 	}
 

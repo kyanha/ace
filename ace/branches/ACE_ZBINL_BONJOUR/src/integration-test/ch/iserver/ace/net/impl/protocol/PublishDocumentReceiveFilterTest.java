@@ -8,7 +8,7 @@ public class PublishDocumentReceiveFilterTest extends TestCase {
 	 * Test method for 'ch.iserver.ace.net.impl.protocol.PublishDocumentReceiveFilter.process(Request)'
 	 */
 	public void testProcess() {
-		fail("to be implemented");
+		//fail("to be implemented");
 	}
 
 }

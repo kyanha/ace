@@ -31,6 +31,7 @@ import org.beepcore.beep.core.MessageMSG;
 import org.beepcore.beep.core.ReplyListener;
 import org.beepcore.beep.util.BufferSegment;
 
+import ch.iserver.ace.net.impl.protocol.DocumentDiscoveryPrepareFilter.QueryInfo;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
@@ -79,11 +80,14 @@ public class ResponseListener implements ReplyListener {
 	 */
 	public void receiveRPY(Message message) throws AbortChannelException {
 		byte[] data = read(message);
+		
 		try {
+			QueryInfo info = (QueryInfo) message.getChannel().getAppData();
+			handler.setMetaData(info);
 			deserializer.deserialize(data, handler);
-			Request request = (Request)handler.getResult();
+			Request request = (Request) handler.getResult();
 			if (message.getMessageType() == Message.MESSAGE_TYPE_MSG) {
-				request.setMessage((MessageMSG)message);
+				request.setMessage((MessageMSG) message);
 			} else {
 				LOG.warn("message not set in request, type is ["+message.getMessageType()+"]");
 			}
