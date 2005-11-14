@@ -25,4 +25,8 @@ package ch.iserver.ace.application.editor;
 
 public interface Editor {
 
+	//public void setDocument(Document document);
+
+	public void setTitle(String title);
+
 }

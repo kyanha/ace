@@ -47,7 +47,7 @@ public class DummyEditorFactory implements EditorFactory, ApplicationContextAwar
 		JPanel innerEditorPane = new JPanel();
 		innerEditorPane.setLayout(new BorderLayout());
 		// add components
-		innerEditorPane.add(new JScrollPane(new DummyEditor()));
+		innerEditorPane.add(new JScrollPane((DummyEditor)context.getBean("dummyEditor")));
 		SimpleInternalFrame editorFrame = new SimpleInternalFrame(null, " ", null, innerEditorPane);
 		JPanel editorPane = new JPanel();
 		editorPane.setLayout(new BorderLayout());

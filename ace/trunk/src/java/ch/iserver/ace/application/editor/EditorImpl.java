@@ -27,4 +27,7 @@ import javax.swing.JTextPane;
 
 public class EditorImpl extends JTextPane {
 
+	public void setTitle(String title) {
+	}
+
 }

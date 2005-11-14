@@ -22,21 +22,33 @@
 package ch.iserver.ace.application.editor;
 
 import ch.iserver.ace.application.*;
+import javax.swing.text.*;
 
 
 
 public class DummyEditorController implements ItemSelectionChangeListener {
 
-	public DummyEditorController(LocaleMessageSource messageSource, Editor editor, DocumentViewController viewController) {
+	private DummyEditor editor;
+
+	public DummyEditorController(DummyEditor editor, DocumentViewController documentViewController) {
 		//this.messageSource = messageSource;
-		viewController.addItemSelectionChangeListener(this);
+		this.editor = editor;
+		documentViewController.addItemSelectionChangeListener(this);
 	}
 	
-	public void itemSelectionChanged(ItemSelectionChangeEvent event) {
-		// set editor document
-		// event.get
+	public void itemSelectionChanged(ItemSelectionChangeEvent e) {
+		if(e.getItem() != null) {
+			// enable editor
+			// set title
+			// set editor document
+			editor.setDocument(((DocumentItem)e.getItem()).getEditorDocument());
+			editor.setEnabled(true);
+		} else {
+			// disable editor
+			// set title to ""
+			editor.setDocument(new DefaultStyledDocument());
+			editor.setEnabled(false);
+		}
 	}
 	
-	public void setEditor(DummyEditor editor) {
-	}
 }
