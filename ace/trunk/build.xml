@@ -306,7 +306,7 @@
 	<target name="dist" depends="clean,javadoc,jar,copy-dependencies,test,integration-test">
         <description>creates the distribution tar.gz and zip files</description>
 	    <tstamp/>
-	    <property name="dist.dir.current" value="${dist.dir}/ace-${DSTAMP}"/>
+	    <property name="dist.dir.current" value="${dist.dir}/target/ace-${DSTAMP}"/>
 	    <delete dir="${dist.dir.current}"/>
 	    <mkdir dir="${dist.dir.current}/"/>
 	    <mkdir dir="${dist.dir.current}/api"/>
@@ -319,7 +319,9 @@
 	    <copy todir="${dist.dir.current}/build">
 	       <fileset dir="${build.dir}">
 	           <exclude name="api/**"/>
-	           <exclude name="testreports"/>
+	           <exclude name="testreports/**"/>
+	           <exclude name="build-dependencies.xml"/>
+	           <exclude name="ant-graph.*"/>
 	       </fileset>
 	    </copy>
 	    <copy todir="${dist.dir.current}/api">
@@ -335,11 +337,11 @@
 	    </copy>
 		
 		<!-- create tar.gz and zip archive -->
-		<tar basedir="${dist.dir}/ace-${DSTAMP}" 
+		<tar basedir="${dist.dir}/target/" 
 		     tarfile="${dist.dir}/ace-${DSTAMP}.tar"/>
 		<gzip src="${dist.dir}/ace-${DSTAMP}.tar" 
 		      zipfile="${dist.dir}/ace-${DSTAMP}.tar.gz"/>
-		<zip basedir="${dist.dir}/ace-${DSTAMP}" 
+		<zip basedir="${dist.dir}/target/" 
 		     destfile="${dist.dir}/ace-${DSTAMP}.zip"/>
 		
 		<!-- os x double-clickable application -->
@@ -347,7 +349,7 @@
 		
 		<!-- cleanup -->
 		<delete file="${dist.dir}/ace-${DSTAMP}.tar"/>
-		<delete dir="${dist.dir}/ace-${DSTAMP}"/>
+		<delete dir="${dist.dir}/target"/>
 	</target>
 	
 	<target name="copy-dependencies">
@@ -433,7 +435,7 @@
             <filter name="isolatednode"/>
         </grand>
         <exec executable="dot">
-            <arg line="-Tps -Gsize=10,7 -Grotate=90 -Gcenter=1 -o ${build.dir}/${name}.ps ${build.dir}/${name}.dot"/>
+            <arg line="-Tsvg -Gsize=10,7 -Gcenter=1 -o ${build.dir}/${name}.svg ${build.dir}/${name}.dot"/>
         </exec>
     </target>
 

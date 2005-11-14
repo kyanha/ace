@@ -19,7 +19,7 @@ pdfcreator={pdftex},
 \include{titlepage}
 
 \tableofcontents
-
+\newpage
 
 \section{Introduction}
 
@@ -48,10 +48,10 @@ download these Ant tasks from
 \href{http://maven.apache.org/download.html}{http://maven.apache.org/download.html}.
 
 \subsubsection{Installation}
-To install these Ant tasks you have to do the following:
+To install the Maven Ant tasks you have to do the following:
 \begin{itemize}
  \item download the maven-artifact-ant-2.0-dep.jar from the Maven download site
- \item copy the downloaded jar file to the directory \texttt{ANT_HOME/lib} where \texttt{ANT_HOME} is where Ant is installed
+ \item copy the downloaded jar file to the directory \texttt{ANTHOME/lib} where \texttt{ANTHOME} is where Ant is installed
 \end{itemize}
 
 \subsubsection{Maven Repositories}
@@ -65,7 +65,8 @@ http://repo1.maven.org/maven2/.
 \subsubsection{Dependencies}
 In the \texttt{build.xml} you find the declaration of the dependencies.
 
-\small{\begin{verbatim}
+\small{
+\begin{verbatim}
 <artifact:dependencies pathId="dependency.classpath">
 		<dependency groupId="jdom" 
 		            artifactId="jdom" 
@@ -75,7 +76,8 @@ In the \texttt{build.xml} you find the declaration of the dependencies.
 		            version="1.7.0"/>
         ...
 </artifact:dependencies>
-\end{verbatim}}
+\end{verbatim}
+}
 
 A dependency has a group id, an artifact id, and a version. You have to know
 these in order to add dependencies (browse the Maven repositories to find
@@ -93,12 +95,14 @@ To find out more about the Maven Ant tasks visit
 \subsubsection{First Time Build}
 When you run the build the first time you will get a couple of messages like:
 
-\small{\begin{verbatim}
-[artifact:dependencies] Downloading: log4j/log4j/1.2.12/log4j-1.2.12.pom
-[artifact:dependencies] Transferring 0K
-[artifact:dependencies] Downloading: log4j/log4j/1.2.12/log4j-1.2.12.jar
-[artifact:dependencies] Transferring 349K
-\end{varbatim}}
+%\small{
+%\begin{verbatim}
+%[artifact:dependencies] Downloading: log4j/log4j/1.2.12/log4j-1.2.12.pom
+%[artifact:dependencies] Transferring 0K
+%[artifact:dependencies] Downloading: log4j/log4j/1.2.12/log4j-1.2.12.jar
+%[artifact:dependencies] Transferring 349K
+%\end{varbatim}
+%}
 
 You will get also some warnings, because the task first checks the custom
 repository of ACE, which does not contain all the dependencies of the project.
@@ -108,127 +112,105 @@ repository of ACE, which does not contain all the dependencies of the project.
 
 ACE has the following contents in the top-level directory:
 
-\begin{table}[H]
- \begin{tabular}{|l|l|}
-  \hline
-  /.classpath         &  Eclipse classpath file    \\
-  \hline
-  /.project           &  Eclipse project file      \\
-  \hline
-  /build              &  build products            \\
-  \hline
-  /build.xml          &  Ant build file            \\
-  \hline
-  /dist               &  distribution directory    \\
-  \hline
-  /doc                &  documentation             \\
-  \hline
-  /project.properties &  Maven project properties  \\
-  \hline
-  /project.xml        &  Maven project model       \\
-  \hline
-  /src                &  source files              \\
-  \hline
-  /www                &  the project website       \\
-  \hline
- \end{tabular}
- \caption{Top-level directory structure}
-\end{table}
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=7.1cm,height=8.2cm]{../images/developersguide/dir-toplevel.eps}
+ \caption{top-level directory structure}
+\end{figure}
+
+\begin{itemize}
+ \item build: the build directory
+ \item build.xml: the main build file
+ \item dist: distributions
+ \item doc: documentation
+ \item LICENSE.txt: ACE project license
+ \item project.properties: used by Maven
+ \item project.xml: Maven project.xml
+ \item src: the sources of the project
+ \item www: the project website
+\end{itemize}
 
 \subsection{Build Products}
 The \texttt{build} folder contains the build results of the project:
 
-\begin{table}[H]
- \begin{tabular}{|l|l|}
-  \hline
-  /build/api             &  generated Javadoc API  \\
-  \hline
-  /build/classes         &  class files            \\
-  \hline
-  /build/resources       &  resource files         \\
-  \hline
-  /build/testreports     &  JUnit test reports     \\
-  \hline
- \end{tabular}
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=8.8cm,height=10.9cm]{../images/developersguide/dir-build.eps}
  \caption{build directory structure}
-\end{table}
+\end{figure}
+
+\begin{itemize}
+ \item ant-graph.*: dependency graph of Ant build file
+ \item api: javadoc API documentation
+ \item build-dependencies.xml: generated build file to copy dependencies
+ \item classes: compiled classes from src/java
+ \item integration-test: compiled classes from src/integration-test
+ \item lib: copied dependency jar files
+ \item osx: compiled classes from src/osx as well as built application bundle
+ \item resources: copied resources from src/resources
+ \item resources-test: copied resources from src/resources-test
+ \item stubs: compiled classes from src/stub
+ \item test: compiled classes from src/test
+ \item testreports: JUnit testreports
+\end{itemize}
 
 \subsection{Sources}
-The \texttt{src} folder contains the sources of the project:
+The \texttt{src} folder contains the sources of the project.
 
-\begin{table}[H]
- \begin{tabular}{|l|l|}
-  \hline
-  /src/installer
-  &  NSIS Windows installer        \\
-  \hline
-  /src/integration-test
-  &  integration tests     \\
-  \hline
-  /src/java
-  &  Java source files \\
-  \hline
-  /src/resources
-  &  resources used by the application \\
-  \hline
-  /src/stubs 
-  &  stub classes used for testing \\
-  \hline
-  /src/test
-  &  JUnit tests \\
-  \hline
-  /src/test-app
-  &  simple test applications to quickly test parts of the application \\
-  \hline
- \end{tabular}
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=8.0cm,height=8.9cm]{../images/developersguide/dir-src.eps}
  \caption{source directory structure}
-\end{table}
+\end{figure}
+
+\begin{itemize}
+ \item installer: windows NSIS installer scripts
+ \item integration-test: integration tests
+ \item java: java sources
+ \item osx: OS X customization java code and template for application bundle
+ \item resources: runtime resources (images, property files, ...)
+ \item resources-test: test resources
+ \item stubs: stub classes for testing purpose
+ \item test: JUnit tests
+ \item test-app: test applications
+ \item xsl: XSL stylesheets (used to extract dependencies from build.xml)
+\end{itemize}
 
 \subsection{Documentation}
 The \texttt{doc} folder contains the sources of the project:
 
-\begin{table}[H]
- \begin{tabular}{|l|l|}
-  \hline
-  /doc/developersguide
-  &  the \LaTeX{} source for the developers guide \\
-  \hline
-  /doc/finalreport
-  &  the \LaTeX{} source for the final report \\
-  \hline
-  /doc/images
-  &  images used in the documentation \\
-  \hline
-  /doc/latex
-  &  the \LaTeX{} templates \\
-  \hline
-  /doc/projectmanual
-  &  the \LaTeX{} source for the project manual \\
-  \hline
-  /doc/systemrequirements
-  &  the \LaTeX{} source for the system requirements \\
-  \hline
-  /doc/templates
-  &  source code templates \\
-  \hline
-  /doc/usermanual
-  &  the \LaTeX{} source for the system user manual \\
-  \hline
- \end{tabular}
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=8.4cm,height=6.3cm]{../images/developersguide/dir-doc.eps}
  \caption{documentation directory structure}
-\end{table}
+\end{figure}
 
+\begin{itemize}
+ \item developersguide: the \LaTeX{} sources of the developers guide
+ \item finalreport: thd \LaTeX{} sources of the final report
+ \item images: images for the documentation
+ \item latex: \LaTeX{} templates
+ \item projectmanual: the \LaTeX{} sources of the project manual
+ \item systemrequirements: the \LaTeX{} sources of the system requirements
+ \item templates: source code header
+ \item usermanual: the \LaTeX{} sources of the user manual
+\end{itemize}
 
 \section{Build File}
 
-The Ant build file contains the all the relevant targets. The main targets
-are:
+The Ant build file contains the all the relevant targets.
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=15cm,height=11.6cm]{../images/developersguide/ant-graph.eps}
+ \caption{Ant build file dependencies}
+\end{figure}
 
+The main targets are:
 \begin{itemize}
  \item \texttt{compile}
  \item \texttt{test}
  \item \texttt{integration-test}
- \item \texttt{run-gui}
+ \item \texttt{run}
  \item \texttt{clean}
  \item \texttt{javadoc}
  \item \texttt{dist}
@@ -248,9 +230,9 @@ Integration tests test large parts of the system and thus run slower than
 the pure unit tests.
 
 \subsection{Running the Application}
-You can run the application by calling the \texttt{run-gui} task. This starts
+You can run the application by calling the \texttt{run} task. This starts
 the main class of the whole application. If you want to run another class
-with the main argument, you can start it with by calling the \texttt{run}
+with the main argument, you can start it with by calling the \texttt{run-class}
 task with a system property \texttt{class} set to the correct class name.
 You do this from the command line with an additional argument 
 \texttt{-Dclass=...}.
@@ -271,5 +253,15 @@ sources, the javadoc, and all the necessary jar files into the directory
 
 \section{Building the Installers}
 
+The build file has some targets to create OS specific installers. Currently,
+there are installers for OS X and Windows.
+
+\subsection{OS X}
+The OS X installer is built by the target \texttt{dist-osx}, which is 
+called by the standard \texttt{dist} target. The OS X installer can only
+be built on OS X for two reasons. First, the targets use a command line
+utility only available on OS X and second, the customization Java code
+for OS X relies on Apple Java extensions, which are not available on
+other systems.
 
 \end{document}
