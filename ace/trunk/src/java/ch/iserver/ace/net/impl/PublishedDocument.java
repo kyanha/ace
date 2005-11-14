@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:PublishedDocument.java 1205 2005-11-14 07:57:10Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -21,9 +21,18 @@
 
 package ch.iserver.ace.net.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.net.DocumentServer;
 import ch.iserver.ace.net.DocumentServerLogic;
+import ch.iserver.ace.net.ParticipantPort;
+import ch.iserver.ace.net.impl.protocol.ParticipantConnectionExt;
+import ch.iserver.ace.net.impl.protocol.ProtocolConstants;
+import ch.iserver.ace.net.impl.protocol.Request;
+import ch.iserver.ace.net.impl.protocol.RequestFilter;
+import ch.iserver.ace.net.impl.protocol.RequestImpl;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
@@ -34,24 +43,43 @@ public class PublishedDocument implements DocumentServer {
 	private String docId;
 	private DocumentServerLogic logic;
 	private DocumentDetails details;
+	private RequestFilter filter;
+	private List joinedParticipants;
+	private boolean isConcealed;
 	
-	public PublishedDocument(String id, DocumentServerLogic logic, DocumentDetails details) {
+	public PublishedDocument(String id, DocumentServerLogic logic, DocumentDetails details, RequestFilter filter) {
 		ParameterValidator.notNull("id", id);
 		this.docId = id;
 		this.logic = logic;
 		this.details = details;
+		this.filter = filter;
+		this.isConcealed = false;
+		joinedParticipants = new ArrayList();
 	}
 
 	public DocumentDetails getDocumentDetails() {
 		return details;
 	}
 	
-	public DocumentServerLogic getDocumentServerLogic() {
-		return logic;
+	public synchronized ParticipantPort join(ParticipantConnectionExt connection) throws JoinException {
+		if (!isConcealed()) {
+			//TODO: joinedParticipants.add(connection);
+			return logic.join(connection);
+		} else {
+			throw new JoinException();
+		}
 	}
 
 	public String getId() {
 		return docId;
+	}
+	
+	public boolean isConcealed() {
+		return isConcealed;
+	}
+	
+	public String toString() {
+		return "PublishedDocument("+docId+", "+details.getTitle()+")";
 	}
 
 	/********************************************/
@@ -63,16 +91,14 @@ public class PublishedDocument implements DocumentServer {
 	}
 
 	public void shutdown() {
-		// TODO Auto-generated method stub
-		
+		//notify all participants about shutdown
+		//TODO: consider doing this task in ParticipantConnection.close()
+		Request request = new RequestImpl(ProtocolConstants.CONCEAL, this);
+		filter.process(request);
 	}
 
-	public void prepareShutdown() {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	public String toString() {
-		return "PublishedDocument("+docId+", "+details.getTitle()+")";
+	public synchronized void prepareShutdown() {
+		//stop accepting joins
+		isConcealed = true;
 	}
 }

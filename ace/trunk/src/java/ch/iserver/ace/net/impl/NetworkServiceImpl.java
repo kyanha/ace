@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:NetworkServiceImpl.java 1205 2005-11-14 07:57:10Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -53,7 +53,7 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	
 	private TimestampFactory timestampFactory;
 	private NetworkServiceCallback networkCallback;
-	private RequestFilter filterChain;
+	private RequestFilter requestChain;
 	private BEEPServer server;
 	
 	private Discovery discovery;
@@ -67,7 +67,7 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	private NetworkServiceImpl() {
 		userId = UUID.nextUUID();
 		publishedDocs = new ArrayList();
-		filterChain = RequestFilterFactory.createClientChain();
+		requestChain = RequestFilterFactory.createClientChain();
 		server = BEEPServerFactory.create();
 		//TODO: when is it appropriate to start the server?
 		server.start();
@@ -130,13 +130,14 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	}
 
 	public synchronized DocumentServer publish(DocumentServerLogic logic, DocumentDetails details) {
-		PublishedDocument doc = new PublishedDocument(UUID.nextUUID(), logic, details);
+		PublishedDocument doc = new PublishedDocument(UUID.nextUUID(), logic, details, requestChain);
+		
 		//TODO: maybe I need a map id-doc, get published docs at GetPDFilter
 		publishedDocs.add(doc);
 		
 		//TODO: threading?
 		Request request = new RequestImpl(ProtocolConstants.PUBLISH, doc);
-		filterChain.process(request);
+		requestChain.process(request);
 		
 		return doc;
 	}
@@ -150,6 +151,6 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 		LOG.info("--> start document discovery for ["+proxy.getUserDetails().getUsername()+"]");
 		
 		Request request = new RequestImpl(ProtocolConstants.PUBLISHED_DOCUMENTS, proxy);
-		filterChain.process(request);
+		requestChain.process(request);
 	}
 }
