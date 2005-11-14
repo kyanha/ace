@@ -27,6 +27,6 @@ import javax.swing.JPanel;
 
 public interface EditorFactory {
 
-	JPanel createDummyEditor();
+	JPanel createEditor();
 
 }

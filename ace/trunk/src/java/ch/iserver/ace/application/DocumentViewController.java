@@ -61,6 +61,19 @@ public class DocumentViewController extends ViewControllerImpl {
 		}
 	}
 	
+	public int indexOf(DocumentItem document) {
+		documentSourceList.getReadWriteLock().readLock().lock();
+		try {
+			return documentSourceList.indexOf(document);
+		} finally {
+			documentSourceList.getReadWriteLock().readLock().unlock();
+		}
+	}
+	
+	public void setSelectedIndex(int index) {
+		getDocumentView().setSelectedIndex(index);
+	}
+	
 	private DocumentView getDocumentView() {
 		if(view == null) throw new IllegalStateException("View have to be set before using getView()!");
 		return (DocumentView)view;

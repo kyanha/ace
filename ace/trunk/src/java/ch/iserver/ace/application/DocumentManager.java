@@ -25,18 +25,39 @@ package ch.iserver.ace.application;
 
 public class DocumentManager {
 
-	//private DocumentViewController documentViewController;
+	private DocumentViewController controller;
 
-	//public DocumentManager(DocumentViewController controller) {
-	//	documentViewController = controller;
-	//}
-	public DocumentManager() {
+	public DocumentManager(DocumentViewController controller) {
+		this.controller = controller;
+	}
+	
+	public void closeDocument() {
+		controller.removeDocument(controller.getSelectedDocumentItem());
+		controller.setSelectedIndex(controller.getDocumentSourceList().size()-1);
+	}
+	
+	public void newDocument() {
+		System.out.println("new");
+		DocumentItem newItem = new DocumentItem("New Document");
+		controller.addDocument(newItem);
+		controller.setSelectedIndex(controller.indexOf(newItem));
+	}
+	
+	public void openDocument() {
+		System.out.println("open");
+	}
+	
+	public void exitApplication() {
+		System.out.println("exit application");
+	}
+	
+/*	public void DocumentManager() {
 	}
 	
 	public void publishDocument() {
 	}
 	
 	public void concealDocument() {
-	}
+	}*/
 
 }

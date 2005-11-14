@@ -42,43 +42,43 @@ public class ApplicationFactoryImpl implements ApplicationFactory, ApplicationCo
 
 	public JMenuBar createMenuBar() {
 		JMenuBar menuBar = new JMenuBar();
-		// add components
-		
+
+		// add components		
 		JMenu mFile = new JMenu(messageSource.getMessage("mFile"));
-		mFile.add((AbstractAction)context.getBean("fileNewAction"));
-		mFile.add((AbstractAction)context.getBean("fileOpenAction"));
+		mFile.add((AbstractAction)context.getBean("fileNewAction")).setToolTipText(null);
+		mFile.add((AbstractAction)context.getBean("fileOpenAction")).setToolTipText(null);
 		mFile.addSeparator();
-		mFile.add((AbstractAction)context.getBean("fileSaveAction"));
-		mFile.add((AbstractAction)context.getBean("fileSaveAllAction"));
-		mFile.add((AbstractAction)context.getBean("fileSaveAsAction"));
-		mFile.add((AbstractAction)context.getBean("fileCloseAction"));
+		mFile.add((AbstractAction)context.getBean("fileSaveAction")).setToolTipText(null);
+		mFile.add((AbstractAction)context.getBean("fileSaveAllAction")).setToolTipText(null);
+		mFile.add((AbstractAction)context.getBean("fileSaveAsAction")).setToolTipText(null);
+		mFile.add((AbstractAction)context.getBean("fileCloseAction")).setToolTipText(null);
 		mFile.addSeparator();
-		mFile.add((AbstractAction)context.getBean("appSettingsAction"));
-		mFile.add((AbstractAction)context.getBean("appExitAction"));
+		mFile.add((AbstractAction)context.getBean("appSettingsAction")).setToolTipText(null);
+		mFile.add((AbstractAction)context.getBean("appExitAction")).setToolTipText(null);
 		menuBar.add(mFile);
 
 		JMenu mEdit = new JMenu(messageSource.getMessage("mEdit"));
-		mEdit.add((AbstractAction)context.getBean("editCutAction"));
-		mEdit.add((AbstractAction)context.getBean("editCopyAction"));
-		mEdit.add((AbstractAction)context.getBean("editPasteAction"));
-		mEdit.add((AbstractAction)context.getBean("editSelectAllAction"));
+		mEdit.add((AbstractAction)context.getBean("editCutAction")).setToolTipText(null);
+		mEdit.add((AbstractAction)context.getBean("editCopyAction")).setToolTipText(null);
+		mEdit.add((AbstractAction)context.getBean("editPasteAction")).setToolTipText(null);
+		mEdit.add((AbstractAction)context.getBean("editSelectAllAction")).setToolTipText(null);
 		menuBar.add(mEdit);
 
 		JMenu mNet = new JMenu(messageSource.getMessage("mNet"));
-		mNet.add((AbstractAction)context.getBean("netPublishDocumentAction"));
-		mNet.add((AbstractAction)context.getBean("netConcealDocumentAction"));
+		mNet.add((AbstractAction)context.getBean("netPublishDocumentAction")).setToolTipText(null);
+		mNet.add((AbstractAction)context.getBean("netConcealDocumentAction")).setToolTipText(null);
 		mNet.addSeparator();
-		mNet.add((AbstractAction)context.getBean("netJoinSessionAction"));
-		mNet.add((AbstractAction)context.getBean("netLeaveSessionAction"));
+		mNet.add((AbstractAction)context.getBean("netJoinSessionAction")).setToolTipText(null);
+		mNet.add((AbstractAction)context.getBean("netLeaveSessionAction")).setToolTipText(null);
 		mNet.addSeparator();
-		mNet.add((AbstractAction)context.getBean("netDiscoverUserAction"));
-		mNet.add((AbstractAction)context.getBean("netInviteUserAction"));
-		mNet.add((AbstractAction)context.getBean("netKickParticipantAction"));
+		mNet.add((AbstractAction)context.getBean("netDiscoverUserAction")).setToolTipText(null);
+		mNet.add((AbstractAction)context.getBean("netInviteUserAction")).setToolTipText(null);
+		mNet.add((AbstractAction)context.getBean("netKickParticipantAction")).setToolTipText(null);
 		menuBar.add(mNet);
 
 		JMenu mHelp = new JMenu(messageSource.getMessage("mHelp"));
-		mHelp.add((AbstractAction)context.getBean("helpDebugAction"));
-		mHelp.add((AbstractAction)context.getBean("helpAboutAction"));
+		mHelp.add((AbstractAction)context.getBean("helpDebugAction")).setToolTipText(null);
+		mHelp.add((AbstractAction)context.getBean("helpAboutAction")).setToolTipText(null);
 		menuBar.add(mHelp);
 
 		return menuBar;
@@ -116,8 +116,8 @@ public class ApplicationFactoryImpl implements ApplicationFactory, ApplicationCo
 
 		// create editor
 		EditorFactory editorFactory = (EditorFactory)context.getBean("editorFactory");
-		JPanel editorPane = editorFactory.createDummyEditor();
-		
+		JPanel editorPane = editorFactory.createEditor();
+
 		JSplitPane dvSbv = createStrippedSplitPane(JSplitPane.VERTICAL_SPLIT, documentView, browseView, 0.0);
 		JSplitPane pvSuv = createStrippedSplitPane(JSplitPane.VERTICAL_SPLIT, participantView,  userView, 0.0);
 		JSplitPane dvbvSce = createStrippedSplitPane(JSplitPane.HORIZONTAL_SPLIT, dvSbv, editorPane, 0.0);

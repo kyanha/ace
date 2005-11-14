@@ -42,6 +42,7 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 	//private Document editorDocument;
 	private RemoteDocument document;
 	private Session session;
+//	private Document editorDocument;
 	//private SessionCallback sessionCallback;
 
 	public DocumentItem(String title) {
