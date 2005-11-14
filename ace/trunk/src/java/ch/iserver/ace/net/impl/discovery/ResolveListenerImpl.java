@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:ResolveListenerImpl.java 1205 2005-11-14 07:57:10Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -79,14 +79,6 @@ class ResolveListenerImpl extends BaseListenerImpl implements ResolveListener {
 		} catch (DNSSDUnavailable du) {
 			Bonjour.writeErrorLog(du);
 		}
-//		try {
-//			
-//			// Start a record query to obtain IP address from hostname
-//			DNSSD.queryRecord(0, ifIndex, hostName, Bonjour.T_HOST_ADDRESS, 1 /* ns_c_in */, ipQueryListener);
-//		} catch (Exception e) {
-//			//TODO: retry strategy
-//			LOG.error("Query record failed ["+e.getMessage()+"]");
-//		}
 	}
 	
 	/**
@@ -105,16 +97,6 @@ class ResolveListenerImpl extends BaseListenerImpl implements ResolveListener {
 		} catch (DNSSDUnavailable du) {
 			Bonjour.writeErrorLog(du);
 		}
-		
-//		try {
-//			//16=txt record, 1 = ns_c_in; cf. nameser.h
-//			//TODO: do we have to keep the return value of the queryRecord call, so that on shutdown
-//			//we can stop that service too?
-//			DNSSD.queryRecord(flags, ifIndex, fullName, Bonjour.T_TXT, 1, txtQueryListener);
-//		} catch (Exception e) {
-//			//TODO: retry strategy
-//			LOG.error("Query record failed ["+e.getMessage()+"]");
-//		}
 	}
 
 }

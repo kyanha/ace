@@ -56,20 +56,6 @@ class UserRegistrationImpl implements UserRegistration {
 		} catch (DNSSDUnavailable du) {
 			Bonjour.writeErrorLog(du);
 		}
-		
-//		try {
-//			registration = DNSSD.register(0, 0, 
-//				serviceName, 
-//				(String)props.get(Bonjour.KEY_REGISTRATION_TYPE), 
-//				"",
-//				"", 
-//				getPort(props),
-//				TXTRecordProxy.create(props), 
-//				this);
-//		} catch (Exception e) {
-//			//TODO: retry strategy
-//			LOG.error("Registration failed ["+e.getMessage()+"]");
-//		}
 	}	
 	
 	private int getPort(Properties props) {
@@ -99,13 +85,6 @@ class UserRegistrationImpl implements UserRegistration {
 		} catch (DNSSDUnavailable du) {
 			Bonjour.writeErrorLog(du);
 		}
-
-//		try {
-//			DNSSD.resolve(flags, 0, serviceName, regType, domain, this);
-//		} catch (Exception e) {
-//			//TODO: retry strategy
-//			LOG.error("QueryRecord failed ["+e.getMessage()+"]");
-//		}
 	}
 	
 	/**
@@ -122,7 +101,7 @@ class UserRegistrationImpl implements UserRegistration {
 	 */
 	public void operationFailed(DNSSDService service, int errorCode) {
 		//TODO: error handling
-		LOG.error("operationFailed ["+errorCode+"]");
+		LOG.error("operationFailed("+service+", "+errorCode+")");
 	}
 	
 	public String getServiceName() {
@@ -151,14 +130,6 @@ class UserRegistrationImpl implements UserRegistration {
 		} catch (DNSSDUnavailable du) {
 			Bonjour.writeErrorLog(du);
 		}
-		
-//		try {
-//			TXTRecordProxy.set(TXTRecordProxy.TXT_USER, details.getUsername(), txtRecord);
-//			DNSRecord record = registration.getTXTRecord();
-//			record.update(0, txtRecord.getRawBytes(), 0);
-//		} catch (Exception e) {
-//			LOG.error("could not modify TXT record: "+e);
-//		}
 	}
 	
 	public void stop() {

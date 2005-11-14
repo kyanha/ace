@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:BrowseListenerImpl.java 1205 2005-11-14 07:57:10Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -55,12 +55,6 @@ class BrowseListenerImpl extends BaseListenerImpl implements BrowseListener {
 			} catch (DNSSDUnavailable du) {
 				Bonjour.writeErrorLog(du);
 			}
-//			try {
-//				DNSSD.resolve(flags, ifIndex, serviceName, regType, domain, resolver);
-//			} catch (Exception e) {
-//				//TODO: retry strategy
-//				LOG.error("QueryRecord failed ["+e.getMessage()+"]");
-//			}
 		}
 	}
 

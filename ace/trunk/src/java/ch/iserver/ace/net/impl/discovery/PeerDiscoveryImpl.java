@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:PeerDiscoveryImpl.java 1205 2005-11-14 07:57:10Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -63,15 +63,6 @@ class PeerDiscoveryImpl implements PeerDiscovery {
 		} catch (DNSSDUnavailable du) {
 			Bonjour.writeErrorLog(du);
 		}
-		//		try {
-//			browser = DNSSD.browse(0, 0, 
-//					(String)props.get(Bonjour.KEY_REGISTRATION_TYPE), 
-//					"", 
-//					listener);
-//		} catch (Exception e) {
-//			//TODO: retry strategy
-//			LOG.error("Browsing failed ["+e.getMessage()+"]");
-//		}
 	}
 
 	/**

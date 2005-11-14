@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:BaseListenerImpl.java 1205 2005-11-14 07:57:10Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -21,6 +21,8 @@
 
 package ch.iserver.ace.net.impl.discovery;
 
+import org.apache.log4j.Logger;
+
 import com.apple.dnssd.BaseListener;
 import com.apple.dnssd.DNSSDService;
 
@@ -29,6 +31,8 @@ import com.apple.dnssd.DNSSDService;
  */
 abstract class BaseListenerImpl implements BaseListener {
 
+	private static Logger LOG = Logger.getLogger(BaseListenerImpl.class);
+	
 	protected DiscoveryCallbackAdapter adapter;
 	
 	public BaseListenerImpl(DiscoveryCallbackAdapter adapter) {
@@ -40,7 +44,7 @@ abstract class BaseListenerImpl implements BaseListener {
 	 */
 	public void operationFailed(DNSSDService arg0, int arg1) {
 		// TODO: error handling
-
+		LOG.error("operationFailed("+arg0+", "+arg1+")");
 	}
 
 }
