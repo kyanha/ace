@@ -32,6 +32,7 @@ public class HelpAboutAction extends AbstractAction {
 
 	public HelpAboutAction(LocaleMessageSource messageSource) {
 		super(messageSource.getMessage("mHelpAbout"), messageSource.getIcon("iMenuHelpAbout"));
+		setEnabled(false);
 	}
 	
 	public void actionPerformed(ActionEvent e) {

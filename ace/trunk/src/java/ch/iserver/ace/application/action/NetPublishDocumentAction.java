@@ -26,22 +26,23 @@ import ch.iserver.ace.application.LocaleMessageSource;
 import ch.iserver.ace.application.ViewController;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
+import java.util.List;
 
 
 
 public class NetPublishDocumentAction extends ItemSelectionChangeAction {
 
-	public NetPublishDocumentAction(LocaleMessageSource messageSource, ViewController controller) {
-		super(messageSource.getMessage("mNetPublish"), messageSource.getIcon("iMenuNetPublish"), controller);
-		setEnabled(true);
+	public NetPublishDocumentAction(LocaleMessageSource messageSource, List viewControllers) {
+		super(messageSource.getMessage("mNetPublish"), messageSource.getIcon("iMenuNetPublish"), viewControllers);
+		setEnabled(false);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		System.out.println("NetPublishDocumentAction");
+		//System.out.println("NetPublishDocumentAction");
 	}
 
 	public void itemSelectionChanged(ItemSelectionChangeEvent e) {
-		System.out.println("ItemSelectionChangeEvent: " + e);
+		//System.out.println("ItemSelectionChangeEvent: " + e);
 	}
 
 }

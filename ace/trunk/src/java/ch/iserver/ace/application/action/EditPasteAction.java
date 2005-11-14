@@ -25,14 +25,18 @@ import ch.iserver.ace.application.ItemSelectionChangeEvent;
 import ch.iserver.ace.application.LocaleMessageSource;
 import ch.iserver.ace.application.ViewController;
 import java.awt.event.ActionEvent;
+import java.util.List;
+import java.awt.Toolkit;
+import javax.swing.KeyStroke;
 
 
 
 public class EditPasteAction extends ItemSelectionChangeAction {
 
-	public EditPasteAction(LocaleMessageSource messageSource, ViewController controller) {
-		super(messageSource.getMessage("mEditPaste"), messageSource.getIcon("iMenuEditPaste"), controller);
-		setEnabled(true);
+	public EditPasteAction(LocaleMessageSource messageSource, List viewControllers) {
+		super(messageSource.getMessage("mEditPaste"), messageSource.getIcon("iMenuEditPaste"), viewControllers);
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke('V', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+		setEnabled(false);
 	}
 	
 	public void actionPerformed(ActionEvent e) {

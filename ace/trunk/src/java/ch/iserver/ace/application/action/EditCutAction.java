@@ -25,22 +25,26 @@ import ch.iserver.ace.application.ItemSelectionChangeEvent;
 import ch.iserver.ace.application.LocaleMessageSource;
 import ch.iserver.ace.application.ViewController;
 import java.awt.event.ActionEvent;
+import java.util.List;
+import java.awt.Toolkit;
+import javax.swing.KeyStroke;
 
 
 
 public class EditCutAction extends ItemSelectionChangeAction {
 
-	public EditCutAction(LocaleMessageSource messageSource, ViewController controller) {
-		super(messageSource.getMessage("mEditCut"), messageSource.getIcon("iMenuEditCut"), controller);
-		setEnabled(true);
+	public EditCutAction(LocaleMessageSource messageSource, List viewControllers) {
+		super(messageSource.getMessage("mEditCut"), messageSource.getIcon("iMenuEditCut"), viewControllers);
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke('X', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+		setEnabled(false);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		System.out.println("EditCutAction");
+		//System.out.println("EditCutAction");
 	}
 
 	public void itemSelectionChanged(ItemSelectionChangeEvent e) {
-		System.out.println("ItemSelectionChangeEvent: " + e);
+		//System.out.println("ItemSelectionChangeEvent: " + e);
 	}
 
 }

@@ -25,14 +25,18 @@ import ch.iserver.ace.application.ItemSelectionChangeEvent;
 import ch.iserver.ace.application.LocaleMessageSource;
 import ch.iserver.ace.application.ViewController;
 import java.awt.event.ActionEvent;
+import java.util.List;
+import java.awt.Toolkit;
+import javax.swing.KeyStroke;
 
 
 
 public class EditSelectAllAction extends ItemSelectionChangeAction {
 
-	public EditSelectAllAction(LocaleMessageSource messageSource, ViewController controller) {
-		super(messageSource.getMessage("mEditSelectAll"), controller);
-		setEnabled(true);
+	public EditSelectAllAction(LocaleMessageSource messageSource, List viewControllers) {
+		super(messageSource.getMessage("mEditSelectAll"), viewControllers);
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke('A', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+		setEnabled(false);
 	}
 	
 	public void actionPerformed(ActionEvent e) {

@@ -32,6 +32,7 @@ public class HelpDebugAction extends AbstractAction {
 
 	public HelpDebugAction(LocaleMessageSource messageSource) {
 		super(messageSource.getMessage("mHelpDebug"), messageSource.getIcon("iMenuHelpDebug"));
+		setEnabled(false);
 	}
 	
 	public void actionPerformed(ActionEvent e) {

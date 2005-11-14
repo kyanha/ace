@@ -26,14 +26,15 @@ import ch.iserver.ace.application.LocaleMessageSource;
 import ch.iserver.ace.application.ViewController;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
+import java.util.List;
 
 
 
 public class NetConcealDocumentAction extends ItemSelectionChangeAction {
 
-	public NetConcealDocumentAction(LocaleMessageSource messageSource, ViewController controller) {
-		super(messageSource.getMessage("mNetConceal"), messageSource.getIcon("iMenuNetConceal"), controller);
-		setEnabled(true);
+	public NetConcealDocumentAction(LocaleMessageSource messageSource, List viewControllers) {
+		super(messageSource.getMessage("mNetConceal"), messageSource.getIcon("iMenuNetConceal"), viewControllers);
+		setEnabled(false);
 	}
 	
 	public void actionPerformed(ActionEvent e) {

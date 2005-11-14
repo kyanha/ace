@@ -21,11 +21,12 @@
 
 package ch.iserver.ace.application.action;
 
+import ch.iserver.ace.application.DocumentManager;
 import ch.iserver.ace.application.ItemSelectionChangeEvent;
 import ch.iserver.ace.application.LocaleMessageSource;
 import ch.iserver.ace.application.ViewController;
 import java.awt.event.ActionEvent;
-
+import java.util.List;
 import java.awt.Toolkit;
 import javax.swing.KeyStroke;
 
@@ -33,19 +34,26 @@ import javax.swing.KeyStroke;
 
 public class FileCloseAction extends ItemSelectionChangeAction {
 
-	public FileCloseAction(LocaleMessageSource messageSource, ViewController controller) {
-		super(messageSource.getMessage("mFileClose"), messageSource.getIcon("iMenuFileClose"), controller);
+	DocumentManager documentManager;
+
+	public FileCloseAction(LocaleMessageSource messageSource, List viewControllers, DocumentManager documentManager) {
+		super(messageSource.getMessage("mFileClose"), messageSource.getIcon("iMenuFileClose"), viewControllers);
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke('W', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
-		putValue(SHORT_DESCRIPTION, messageSource.getMessage("mFileClose"));
-		setEnabled(true);
+		putValue(SHORT_DESCRIPTION, messageSource.getMessage("mFileCloseTT"));
+		this.documentManager = documentManager;
+		setEnabled(false);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		System.out.println("FileCloseAction");
+		documentManager.closeDocument();
 	}
 	
 	public void itemSelectionChanged(ItemSelectionChangeEvent e) {
-		System.out.println("ItemSelectionChangeEvent: " + e);
+		if(e.getItem() == null) {
+			setEnabled(false);
+		} else {
+			setEnabled(true);
+		}
 	}
 
 }

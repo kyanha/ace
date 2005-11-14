@@ -25,14 +25,18 @@ import ch.iserver.ace.application.ItemSelectionChangeEvent;
 import ch.iserver.ace.application.LocaleMessageSource;
 import ch.iserver.ace.application.ViewController;
 import java.awt.event.ActionEvent;
+import java.util.List;
+import java.awt.Toolkit;
+import javax.swing.KeyStroke;
 
 
 
 public class EditCopyAction extends ItemSelectionChangeAction {
 
-	public EditCopyAction(LocaleMessageSource messageSource, ViewController controller) {
-		super(messageSource.getMessage("mEditCopy"), messageSource.getIcon("iMenuEditCopy"), controller);
-		setEnabled(true);
+	public EditCopyAction(LocaleMessageSource messageSource, List viewControllers) {
+		super(messageSource.getMessage("mEditCopy"), messageSource.getIcon("iMenuEditCopy"), viewControllers);
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke('C', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+		setEnabled(false);
 	}
 	
 	public void actionPerformed(ActionEvent e) {

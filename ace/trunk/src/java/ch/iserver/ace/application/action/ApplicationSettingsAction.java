@@ -32,6 +32,7 @@ public class ApplicationSettingsAction extends AbstractAction {
 
 	public ApplicationSettingsAction(LocaleMessageSource messageSource) {
 		super(messageSource.getMessage("mAppSettings"), messageSource.getIcon("iMenuAppSettings"));
+		setEnabled(false);
 	}
 	
 	public void actionPerformed(ActionEvent e) {

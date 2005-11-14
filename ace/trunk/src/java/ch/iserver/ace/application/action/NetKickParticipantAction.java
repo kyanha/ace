@@ -21,23 +21,29 @@
 
 package ch.iserver.ace.application.action;
 
+import ch.iserver.ace.application.ItemSelectionChangeEvent;
 import ch.iserver.ace.application.LocaleMessageSource;
+import ch.iserver.ace.application.ViewController;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
-import javax.swing.Icon;
+import java.util.List;
 
 
 
-public class NetKickParticipantAction extends AbstractAction {
+public class NetKickParticipantAction extends ItemSelectionChangeAction {
 
-	public NetKickParticipantAction(LocaleMessageSource messageSource) {
-		super(messageSource.getMessage("mNetKick"), messageSource.getIcon("iMenuNetKick"));
-		setEnabled(true);
+	public NetKickParticipantAction(LocaleMessageSource messageSource, List viewControllers) {
+		super(messageSource.getMessage("mNetKick"), messageSource.getIcon("iMenuNetKick"), viewControllers);
+		putValue(SHORT_DESCRIPTION, messageSource.getMessage("mNetKickTT"));
+		setEnabled(false);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		System.out.println("NetKickParticipantAction");
 	}
 
-}
+	public void itemSelectionChanged(ItemSelectionChangeEvent e) {
+		System.out.println("ItemSelectionChangeEvent: " + e);
+	}
 
+}

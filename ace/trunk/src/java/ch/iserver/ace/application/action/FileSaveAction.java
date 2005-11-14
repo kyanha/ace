@@ -21,9 +21,11 @@
 
 package ch.iserver.ace.application.action;
 
+import ch.iserver.ace.application.DocumentManager;
 import ch.iserver.ace.application.ItemSelectionChangeEvent;
 import ch.iserver.ace.application.LocaleMessageSource;
 import ch.iserver.ace.application.ViewController;
+import java.util.List;
 import java.awt.event.ActionEvent;
 
 import java.awt.Toolkit;
@@ -33,19 +35,22 @@ import javax.swing.KeyStroke;
 
 public class FileSaveAction extends ItemSelectionChangeAction {
 
-	public FileSaveAction(LocaleMessageSource messageSource, ViewController controller) {
-		super(messageSource.getMessage("mFileSave"), messageSource.getIcon("iMenuFileSave"), controller);
+	private DocumentManager documentManager;
+
+	public FileSaveAction(LocaleMessageSource messageSource, DocumentManager documentManager, List viewControllers) {
+		super(messageSource.getMessage("mFileSave"), messageSource.getIcon("iMenuFileSave"), viewControllers);
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke('S', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
-		putValue(SHORT_DESCRIPTION, messageSource.getMessage("mFileSave"));
-		setEnabled(true);
+		putValue(SHORT_DESCRIPTION, messageSource.getMessage("mFileSaveTT"));
+		this.documentManager = documentManager;
+		setEnabled(false);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		System.out.println("FileSaveAction");
+		//System.out.println("FileSaveAction");
 	}
 	
 	public void itemSelectionChanged(ItemSelectionChangeEvent e) {
-		System.out.println("ItemSelectionChangeEvent: " + e);
+		//System.out.println("ItemSelectionChangeEvent: " + e);
 	}
 
 }

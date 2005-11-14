@@ -21,23 +21,29 @@
 
 package ch.iserver.ace.application.action;
 
+import ch.iserver.ace.application.ItemSelectionChangeEvent;
 import ch.iserver.ace.application.LocaleMessageSource;
+import ch.iserver.ace.application.ViewController;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
-import javax.swing.Icon;
+import java.util.List;
 
 
 
-public class NetInviteUserAction extends AbstractAction {
+public class NetInviteUserAction extends ItemSelectionChangeAction {
 
-	public NetInviteUserAction(LocaleMessageSource messageSource) {
-		super(messageSource.getMessage("mNetInvite"), messageSource.getIcon("iMenuNetInvite"));
-		setEnabled(true);
+	public NetInviteUserAction(LocaleMessageSource messageSource, List viewControllers) {
+		super(messageSource.getMessage("mNetInvite"), messageSource.getIcon("iMenuNetInvite"), viewControllers);
+		putValue(SHORT_DESCRIPTION, messageSource.getMessage("mNetInviteTT"));
+		setEnabled(false);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		System.out.println("NetInviteUserAction");
+		//System.out.println("NetInviteUserAction");
+	}
+
+	public void itemSelectionChanged(ItemSelectionChangeEvent e) {
+		//System.out.println("ItemSelectionChangeEvent: " + e);
 	}
 
 }
-

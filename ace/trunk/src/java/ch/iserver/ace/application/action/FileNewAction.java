@@ -21,6 +21,7 @@
 
 package ch.iserver.ace.application.action;
 
+import ch.iserver.ace.application.DocumentManager;
 import ch.iserver.ace.application.LocaleMessageSource;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
@@ -33,14 +34,17 @@ import javax.swing.KeyStroke;
 
 public class FileNewAction extends AbstractAction {
 
-	public FileNewAction(LocaleMessageSource messageSource) {
+	private DocumentManager documentManager;
+
+	public FileNewAction(LocaleMessageSource messageSource, DocumentManager documentManager) {
 		super(messageSource.getMessage("mFileNew"), messageSource.getIcon("iMenuFileNew"));
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke('N', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
-		putValue(SHORT_DESCRIPTION, messageSource.getMessage("mFileNew"));
+		putValue(SHORT_DESCRIPTION, messageSource.getMessage("mFileNewTT"));
+		this.documentManager = documentManager;
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		System.out.println("FileNewAction");
+		documentManager.newDocument();
 	}
 
 }

@@ -21,23 +21,29 @@
 
 package ch.iserver.ace.application.action;
 
+import ch.iserver.ace.application.ItemSelectionChangeEvent;
 import ch.iserver.ace.application.LocaleMessageSource;
+import ch.iserver.ace.application.ViewController;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
-import javax.swing.Icon;
+import java.util.List;
 
 
 
-public class NetJoinSessionAction extends AbstractAction {
+public class NetJoinSessionAction extends ItemSelectionChangeAction {
 
-	public NetJoinSessionAction(LocaleMessageSource messageSource) {
-		super(messageSource.getMessage("mNetJoin"), messageSource.getIcon("iMenuNetJoin"));
-		setEnabled(true);
+	public NetJoinSessionAction(LocaleMessageSource messageSource, List viewControllers) {
+		super(messageSource.getMessage("mNetJoin"), messageSource.getIcon("iMenuNetJoin"), viewControllers);
+		putValue(SHORT_DESCRIPTION, messageSource.getMessage("mNetJoinTT"));
+		setEnabled(false);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		System.out.println("NetJoinSessionAction");
+		//System.out.println("NetJoinSessionAction");
+	}
+
+	public void itemSelectionChanged(ItemSelectionChangeEvent e) {
+		//System.out.println("ItemSelectionChangeEvent: " + e);
 	}
 
 }
-
