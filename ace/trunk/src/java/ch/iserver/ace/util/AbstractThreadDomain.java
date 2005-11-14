@@ -28,7 +28,7 @@ import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
 /**
  * Abstract base class for ThreadDomain implementations.
  */
-public abstract class AbstractThreadDomain implements ThreadDomain {
+abstract class AbstractThreadDomain implements ThreadDomain {
 		
 	/**
 	 * Wraps the given <var>target</var> object and returns a proxy that
