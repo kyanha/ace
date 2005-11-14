@@ -9,7 +9,7 @@ import org.easymock.MockControl;
 import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
 
-public class GetPublishedDocumentsFilterTest extends TestCase {
+public class PublishedDocumentsRequestFilterTest extends TestCase {
 
 	/*
 	 * Test method for 'ch.iserver.ace.net.impl.protocol.GetPublishedDocumentsFilter.process(Request)'
