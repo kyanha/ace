@@ -39,20 +39,14 @@ public class DocumentDiscoveryTest extends TestCase {
 		NetworkServiceCallback callback = (NetworkServiceCallback)callbackCtrl.getMock();
 		
 		Serializer serializer = SerializerImpl.getInstance();
-		DocumentDiscoveryCallback docCallback = new DocumentDiscoveryCallbackImpl(callback);
-		Deserializer deserializer = DeserializerImpl.getInstance();
-//		ReplyListener listener = new ResponseListener(docCallback, deserializer);
-		ReplyListener listener = null;
-		DocumentDiscovery discovery = new DocumentDiscoveryImpl(serializer, listener);
 
-		callback.documentDiscovered(docs);
 		//TODO: finish class RemoteDocumentProxyArrayMatcher()
 		fail("finish class RemoteDocumentProxyArrayMatcher() first.");
 		callbackCtrl.setDefaultMatcher(new RemoteDocumentProxyArrayMatcher());
 		
 		callbackCtrl.replay();
 		
-		discovery.execute(user);
+		//discovery.execute(user);
 		
 		callbackCtrl.verify();
 	}

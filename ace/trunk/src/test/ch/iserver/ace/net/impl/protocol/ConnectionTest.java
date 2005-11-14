@@ -11,7 +11,7 @@ import org.easymock.MockControl;
 
 import ch.iserver.ace.net.NetworkServiceCallback;
 import ch.iserver.ace.net.impl.NetworkConstants;
-import ch.iserver.ace.net.impl.protocol.DocumentDiscoveryImpl.QueryInfo;
+import ch.iserver.ace.net.impl.protocol.DocumentDiscoveryPrepareFilter.QueryInfo;
 
 public class ConnectionTest extends TestCase {
 
@@ -21,7 +21,7 @@ public class ConnectionTest extends TestCase {
 		MockControl channelCtrl = MockControl.createControl(Channel.class);
 		Channel channel = (Channel)channelCtrl.getMock();
 		
-		Connection connection = new Connection(channel);
+		ParticipantConnectionImpl connection = new ParticipantConnectionImpl(channel);
 		byte[] data = DATA.getBytes(NetworkConstants.DEFAULT_ENCODING);
 		
 		QueryInfo queryInfo = new QueryInfo("test-id", 0);
