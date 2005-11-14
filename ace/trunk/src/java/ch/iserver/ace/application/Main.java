@@ -21,7 +21,11 @@
 
 package ch.iserver.ace.application;
 
+import ch.iserver.ace.application.action.*;
 import java.awt.Component;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.ActionEvent;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 
@@ -41,7 +45,7 @@ public class Main {
 	};
 	
 	public static void main(String[] args) {
-		ApplicationContext context = new ClassPathXmlApplicationContext(CONTEXT_FILES);
+		final ApplicationContext context = new ClassPathXmlApplicationContext(CONTEXT_FILES);
 		LocaleMessageSource messageSource = new LocaleMessageSourceImpl(context);
 
 		// set look & feel
@@ -49,9 +53,15 @@ public class Main {
 			UIManager.setLookAndFeel("com.jgoodies.looks.plastic.PlasticXPLookAndFeel");
 		} catch(Exception e) {}*/
 
+
 		// create frame
 		JFrame frame = new JFrame();
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				// check for unsaved documents				
+				((ApplicationExitAction)context.getBean("appExitAction")).actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "Exit"));
+			}
+		});
 		frame.setSize(640, 480);
 		ApplicationFactory applicationFactory = (ApplicationFactory)context.getBean("appFactory");
 		frame.setJMenuBar(applicationFactory.createMenuBar());
