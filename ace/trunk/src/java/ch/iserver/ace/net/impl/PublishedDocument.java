@@ -46,7 +46,7 @@ public class PublishedDocument implements DocumentServer {
 	private DocumentDetails details;
 	private RequestFilter filter;
 	private List joinedParticipants;
-	private boolean isConcealed;
+	private boolean isConcealed, isShutdown;
 	
 	public PublishedDocument(String id, DocumentServerLogic logic, DocumentDetails details, RequestFilter filter) {
 		ParameterValidator.notNull("id", id);
@@ -55,6 +55,7 @@ public class PublishedDocument implements DocumentServer {
 		this.details = details;
 		this.filter = (filter != null) ? filter : NullRequestFilter.getInstance();
 		this.isConcealed = false;
+		this.isShutdown = false;
 		joinedParticipants = new ArrayList();
 	}
 
@@ -79,6 +80,10 @@ public class PublishedDocument implements DocumentServer {
 		return isConcealed;
 	}
 	
+	public boolean isShutdown() {
+		return isShutdown;
+	}
+	
 	public String toString() {
 		return "PublishedDocument("+docId+", "+details.getTitle()+")";
 	}
@@ -87,18 +92,24 @@ public class PublishedDocument implements DocumentServer {
 	/** methods from interface DocumentServer  **/
 	/********************************************/
 	public void setDocumentDetails(DocumentDetails details) {
-		this.details = details;
-		//TODO: notify participants
+		if (isShutdown()) { 
+			throw new IllegalStateException("document has been shutdown");
+		} else if (!isConcealed()) {
+			this.details = details;
+			//TODO: notify participants
+		}
 	}
 
 	public void shutdown() {
-		//notify all participants about shutdown
+		if (isShutdown()) throw new IllegalStateException("document has been shutdown already");
 		//TODO: consider doing this task in ParticipantConnection.close()
 		Request request = new RequestImpl(ProtocolConstants.CONCEAL, this);
 		filter.process(request);
+		isShutdown = true;
 	}
 
 	public synchronized void prepareShutdown() {
+		if (isShutdown()) throw new IllegalStateException("document has been shutdown already");
 		//stop accepting joins
 		isConcealed = true;
 	}
