@@ -107,6 +107,7 @@
 
   <bean id="netPublishDocumentAction" class="ch.iserver.ace.application.action.NetPublishDocumentAction">
     <constructor-arg><ref bean="localeMessageSource"/></constructor-arg>
+    <constructor-arg><ref bean="documentManager"/></constructor-arg>
     <constructor-arg>
       <list>
         <ref bean="documentViewController"/>
@@ -116,6 +117,7 @@
 
   <bean id="netConcealDocumentAction" class="ch.iserver.ace.application.action.NetConcealDocumentAction">
     <constructor-arg><ref bean="localeMessageSource"/></constructor-arg>
+    <constructor-arg><ref bean="documentManager"/></constructor-arg>
     <constructor-arg>
       <list>
         <ref bean="documentViewController"/>

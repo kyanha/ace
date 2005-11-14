@@ -22,7 +22,14 @@
     <property name="messageSource"><ref local="localeMessageSource"/></property>
   </bean>
 
+  <bean id="dummyEditor" class="ch.iserver.ace.application.editor.DummyEditor">
+    <!--property name="messageSource"><ref local="localeMessageSource"/></property-->
+  </bean>
 
+  <bean id="dummyEditorController" class="ch.iserver.ace.application.editor.DummyEditorController">
+    <constructor-arg><ref local="dummyEditor"/></constructor-arg>
+    <constructor-arg><ref local="documentViewController"/></constructor-arg>
+  </bean>
 
 
 
