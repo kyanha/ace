@@ -28,6 +28,7 @@ import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.net.DocumentServer;
 import ch.iserver.ace.net.DocumentServerLogic;
 import ch.iserver.ace.net.ParticipantPort;
+import ch.iserver.ace.net.impl.protocol.NullRequestFilter;
 import ch.iserver.ace.net.impl.protocol.ParticipantConnectionExt;
 import ch.iserver.ace.net.impl.protocol.ProtocolConstants;
 import ch.iserver.ace.net.impl.protocol.Request;
@@ -52,7 +53,7 @@ public class PublishedDocument implements DocumentServer {
 		this.docId = id;
 		this.logic = logic;
 		this.details = details;
-		this.filter = filter;
+		this.filter = (filter != null) ? filter : NullRequestFilter.getInstance();
 		this.isConcealed = false;
 		joinedParticipants = new ArrayList();
 	}
