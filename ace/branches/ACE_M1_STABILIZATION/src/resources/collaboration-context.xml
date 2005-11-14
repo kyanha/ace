@@ -3,7 +3,7 @@
 <beans>
 
   <bean id="collaborationService" class="ch.iserver.ace.collaboration.jupiter.CollaborationServiceImpl">
-    <constructor-arg><ref local="networkService"/></constructor-arg>
+    <constructor-arg><ref bean="networkService"/></constructor-arg>
     <property name="userRegistry"><ref local="userRegistry"/></property>
     <property name="documentRegistry"><ref local="documentRegistry"/></property>
     <property name="publisherThreadDomain"><ref local="threadDomain"/></property>
@@ -24,7 +24,5 @@
      <constructor-arg index="0"><ref local="userRegistry"/></constructor-arg>
      <property name="sessionFactory"><ref local="sessionFactory"/></property>
   </bean>
-  
-  <bean id="networkService" class="ch.iserver.ace.collaboration.jupiter.NullNetworkService" factory-method="getInstance"/>
   
 </beans>

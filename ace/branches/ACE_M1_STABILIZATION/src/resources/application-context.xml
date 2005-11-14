@@ -83,6 +83,7 @@
 
   <bean id="documentManager" class="ch.iserver.ace.application.DocumentManager">
     <constructor-arg><ref local="documentViewController"/></constructor-arg>
+    <property name="collaborationService"><ref bean="collaborationService"/></property>
   </bean>
 
 
