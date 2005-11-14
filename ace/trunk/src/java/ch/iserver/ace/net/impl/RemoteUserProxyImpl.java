@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:RemoteUserProxyImpl.java 1205 2005-11-14 07:57:10Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -22,7 +22,6 @@ package ch.iserver.ace.net.impl;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import ch.iserver.ace.UserDetails;
@@ -35,14 +34,12 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 	private String id;
 	private UserDetails details;
 	private Map documents;
-	private String sharedDocs;
 	
 	public RemoteUserProxyImpl(String id, UserDetails details) {
 		ParameterValidator.notNull("id", id);
 		ParameterValidator.notNull("details", details);
 		this.id = id;
 		this.details = details;
-		this.sharedDocs = null;
 		this.documents = new HashMap();
 	}
 
@@ -77,20 +74,36 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 		return doc;
 	}
 	
-	//TODO: toString() method has to be improved, consider: add/remove of documents
+	/**
+	 * @inheritDoc
+	 */
 	public String toString() {
-		if (sharedDocs == null) {
-			sharedDocs = "{ ";
-			Iterator docs = documents.values().iterator();
-			while (docs.hasNext()) {
-				RemoteDocumentProxy r = (RemoteDocumentProxy)docs.next();
-				sharedDocs += r.getDocumentDetails().getTitle()+"; ";
-			}
-			sharedDocs += " }";
-		}
-		
-		return "RemoteUserProxyImpl( "+id+", "+details+", "+sharedDocs+" )";
+		return "RemoteUserProxyImpl( "+id+", "+details+", "+documents+" )";
 	}
-
-
+	
+	/**
+	 * @inheritDoc
+	 */
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		} else if (obj instanceof RemoteUserProxyImpl) {
+			RemoteUserProxyImpl proxy = (RemoteUserProxyImpl) obj;
+			return this.getId().equals(proxy.getId()) && 
+				this.getUserDetails().equals(proxy.getUserDetails()) && 
+				this.getSharedDocuments().equals(proxy.getSharedDocuments());
+		}
+		return false;
+	}
+	
+	/**
+	 * @inheritDoc
+	 */
+	public int hashCode() {
+		int hash = 13;
+		hash += id.hashCode();
+		hash += details.hashCode();
+		hash += documents.hashCode();
+		return hash;
+	}
 }

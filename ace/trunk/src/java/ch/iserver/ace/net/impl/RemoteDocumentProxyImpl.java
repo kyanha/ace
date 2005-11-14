@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:RemoteDocumentProxyImpl.java 1205 2005-11-14 07:57:10Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -69,6 +69,39 @@ public class RemoteDocumentProxyImpl implements RemoteDocumentProxy {
 		throw new UnsupportedOperationException();
 	}
 	
-	//TODO: implement equals and hashCode methods!!
+	/**
+	 * @inheritDoc
+	 */
+	public String toString() {
+		return "RemoteDocumentProxyImpl("+getId()+", "+getDocumentDetails()+", "+publisher.getId()+")";
+	}
+	
+	
+	/**
+	 * @inheritDoc
+	 */
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		} else if (obj instanceof RemoteDocumentProxyImpl) {
+			RemoteDocumentProxyImpl proxy = (RemoteDocumentProxyImpl) obj;
+			return this.getId().equals(proxy.getId()) &&
+				this.getDocumentDetails().equals(proxy.getDocumentDetails()) &&
+				this.getPublisher().getId().equals(proxy.getPublisher().getId());
+		}
+		return false;
+	}
+	
+	/**
+	 * @inheritDoc
+	 */
+	public int hashCode() {
+		int hash = 13;
+		hash += id.hashCode();
+		hash += details.hashCode();
+		hash += publisher.hashCode();		
+		return hash;
+		
+	}
 
 }

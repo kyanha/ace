@@ -47,4 +47,26 @@ public class DocumentDetails {
 		return title;
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
+	public boolean equals(Object obj) {
+		if (obj == null ) {
+			return false;
+		} else if (obj instanceof DocumentDetails) {
+			DocumentDetails det = (DocumentDetails) obj;
+			return this.getTitle().equals(det.getTitle());
+		}
+		return false;
+	}
+	
+	/**
+	 * @inheritDoc
+	 */
+	public int hashCode() {
+		int hash = 13;
+		hash += title.hashCode();
+		return hash;
+	}
+	
 }

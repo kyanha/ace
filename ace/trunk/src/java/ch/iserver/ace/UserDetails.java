@@ -113,9 +113,8 @@ public class UserDetails {
 			InetAddress a1 = getAddress();
 			InetAddress a2 = details.getAddress();
 			return result && ( (a1 != null && a2 != null) && a1.equals(a2) || a1 == null && a2 == null );
-		} else {
-			return false;
 		}
+		return false;
 	}
 	
 	/**
