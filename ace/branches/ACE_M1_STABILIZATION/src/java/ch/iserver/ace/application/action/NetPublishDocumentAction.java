@@ -43,7 +43,7 @@ public class NetPublishDocumentAction extends ItemSelectionChangeAction {
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		System.out.println("NetPublishDocumentAction");
+		//System.out.println("NetPublishDocumentAction");
 		documentManager.publishDocument();
 	}
 

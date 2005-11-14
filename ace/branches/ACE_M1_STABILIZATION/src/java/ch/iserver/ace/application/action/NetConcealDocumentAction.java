@@ -43,7 +43,7 @@ public class NetConcealDocumentAction extends ItemSelectionChangeAction {
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		System.out.println("NetConcealDocumentAction");
+		//System.out.println("NetConcealDocumentAction");
 		documentManager.concealDocument();
 	}
 
@@ -53,6 +53,7 @@ public class NetConcealDocumentAction extends ItemSelectionChangeAction {
 		} else {
 			setEnabled(false);
 		}
+		System.out.println("NetConcealDocumentAction::conceal(): " + e);
 	}
 
 }
