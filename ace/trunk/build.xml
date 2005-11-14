@@ -87,6 +87,9 @@
 		<dependency groupId="beepcore"
                     artifactId="beepcore"
                     version="0.9.08"/>
+		<dependency groupId="dnssd"
+                    artifactId="dnssd"
+                    version="107.1"/>
 		<remoteRepository refid="remote.repository.ace" />
 		<remoteRepository refid="remote.repository.maven" />
 	</artifact:dependencies>
