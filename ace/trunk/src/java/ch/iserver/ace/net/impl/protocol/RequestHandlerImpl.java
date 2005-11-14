@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:RequestHandlerImpl.java 1205 2005-11-14 07:57:10Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -51,7 +51,7 @@ public class RequestHandlerImpl implements RequestHandler {
 	 * @see org.beepcore.beep.core.RequestHandler#receiveMSG(org.beepcore.beep.core.MessageMSG)
 	 */
 	public void receiveMSG(MessageMSG message) {
-		LOG.debug("receiveMSG");
+		LOG.debug("--> receiveMSG");
 		Object data = message.getChannel().getAppData();
 		LOG.debug("appData: "+data);
 		
@@ -66,6 +66,7 @@ public class RequestHandlerImpl implements RequestHandler {
 			//TODO: is that appropriate??
 			message.getChannel().getSession().terminate(e.getMessage());
 		}
+		LOG.debug("<-- receiveMSG");
 	}
 
 	private byte[] readData(InputDataStream stream) throws Exception {

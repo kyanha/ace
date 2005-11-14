@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:PublishedDocumentsRequestFilter.java 1205 2005-11-14 07:57:10Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -61,7 +61,6 @@ public class PublishedDocumentsRequestFilter extends AbstractRequestFilter {
 			byte[] result = serializer.createResponse(ProtocolConstants.PUBLISHED_DOCUMENTS, publishedDocs);
 			OutputDataStream output = prepare(result);
 			message.sendRPY(output);
-			//TODO: should channel.close() be called here?
 		} catch (Exception e) {
 			LOG.error("process problem ["+e.getMessage()+"]");
 			//TODO: perhaps create a central ErrorHandler for all beep exceptions

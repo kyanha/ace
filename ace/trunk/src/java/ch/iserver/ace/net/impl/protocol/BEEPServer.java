@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:BEEPServer.java 1205 2005-11-14 07:57:10Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -53,7 +53,7 @@ public class BEEPServer extends Thread {
 			registry.addStartChannelListener(ProtocolConstants.PROFILE_URI, listener, null);
 			
 			while (!terminate) {
-				//TODO: error handling, e.g. when port is already in use
+				//TODO: error handling, e.g. when port is already in use -> retry strategy
 				TCPSessionCreator.listen(ProtocolConstants.LISTENING_PORT, registry);
 			}
 			

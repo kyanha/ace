@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:ConcealDocumentReceiveFilter.java 1205 2005-11-14 07:57:10Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -21,6 +21,8 @@
 
 package ch.iserver.ace.net.impl.protocol;
 
+import org.apache.log4j.Logger;
+
 import ch.iserver.ace.net.NetworkServiceCallback;
 import ch.iserver.ace.net.RemoteDocumentProxy;
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
@@ -31,6 +33,8 @@ import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
  */
 public class ConcealDocumentReceiveFilter extends AbstractRequestFilter {
 
+	private Logger LOG = Logger.getLogger(ConcealDocumentReceiveFilter.class);
+	
 	public ConcealDocumentReceiveFilter(RequestFilter successor) {
 		super(successor);
 	}
@@ -44,6 +48,13 @@ public class ConcealDocumentReceiveFilter extends AbstractRequestFilter {
 			NetworkServiceCallback callback = NetworkServiceImpl.getInstance().getCallback();
 			RemoteDocumentProxy[] docs = new RemoteDocumentProxy[] { doc };
 			callback.documentDiscarded(docs);
+			
+			try {
+				//confirm reception of msg				
+				request.getMessage().sendNUL();
+			} catch (Exception e) {
+				LOG.error("could not send Nul confirmation ["+e.getMessage()+"]");
+			}
 		} else { //Forward
 			super.process(request);
 		}

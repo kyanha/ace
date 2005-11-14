@@ -41,20 +41,11 @@ public class ResponseListener implements ReplyListener {
 
 	private static Logger LOG = Logger.getLogger(ResponseListener.class);
 
-//	private DocumentDiscoveryCallback callback;
 	private Deserializer deserializer;
 	private ResponseParserHandler handler;
 	private RequestFilter filter;
 	
 	private static ResponseListener instance;
-	
-//	public ResponseListener(DocumentDiscoveryCallback callback, Deserializer deserializer) {
-//		ParameterValidator.notNull("callback", callback);
-//		ParameterValidator.notNull("deserializer", deserializer);
-//		this.callback = callback;
-//		this.deserializer = deserializer;
-//		handler = new ResponseParserHandler();
-//	}
 	
 	private ResponseListener() {
 		handler = new ResponseParserHandler();
@@ -96,7 +87,6 @@ public class ResponseListener implements ReplyListener {
 			//TODO: handling
 			LOG.error("could not deserialize ["+de.getMessage()+"]");
 		}
-//			callback.documentsDiscovered(info.getId(), result);
 	}
 
 
@@ -125,13 +115,14 @@ public class ResponseListener implements ReplyListener {
 	}
 	
 	private byte[] read(Message message) throws AbortChannelException {
+		LOG.debug("--> read("+message+")");
 		InputDataStream input = message.getDataStream();
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		do {
 			try {
-//				System.out.println("waitForNextSegment");
+				LOG.debug("waitForNextSegment()");
 				BufferSegment b = input.waitForNextSegment();
-//				System.out.println("ok " + b.getLength());
+				LOG.debug("ok " + b.getLength());
 				if (b == null) {
 					out.flush();
 					break;
@@ -143,7 +134,8 @@ public class ResponseListener implements ReplyListener {
 			}
 		} while (!input.isComplete());
 
-//		System.out.println("S: read " + out.size() + " bytes from input.");
+		LOG.debug("read " + out.size() + " bytes from input.");
+		LOG.debug("<-- read("+message+")");
 		return out.toByteArray();
 	}
 

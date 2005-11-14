@@ -21,6 +21,7 @@
 
 package ch.iserver.ace.net.impl.protocol;
 
+import org.apache.log4j.Logger;
 import org.beepcore.beep.core.BEEPException;
 import org.beepcore.beep.core.Channel;
 import org.beepcore.beep.core.OutputDataStream;
@@ -38,6 +39,8 @@ import ch.iserver.ace.net.RemoteUserProxy;
  * @see org.beepcore.beep.core.Channel
  */
 public class ParticipantConnectionImpl implements ParticipantConnectionExt {
+	
+	private Logger LOG = Logger.getLogger(ParticipantConnectionImpl.class);
 
 	private Channel channel;
 	
@@ -50,8 +53,9 @@ public class ParticipantConnectionImpl implements ParticipantConnectionExt {
 			OutputDataStream output = prepare(message);
 			//AppData is only kept in-process
 			channel.setAppData(data);
-			//TODO: make shure that sendMSG does not block
+			LOG.debug("--> sendMSG");
 			channel.sendMSG(output, listener);
+			LOG.debug("<-- sendMSG (is it non-blocking?)");
 		} catch (BEEPException be) {
 			throw new ProtocolException(be.getMessage());
 		}

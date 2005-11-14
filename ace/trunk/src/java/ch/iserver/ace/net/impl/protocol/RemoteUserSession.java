@@ -23,6 +23,7 @@ package ch.iserver.ace.net.impl.protocol;
 
 import java.net.InetAddress;
 
+import org.apache.log4j.Logger;
 import org.beepcore.beep.core.BEEPException;
 import org.beepcore.beep.core.Channel;
 import org.beepcore.beep.transport.tcp.TCPSession;
@@ -36,6 +37,8 @@ import ch.iserver.ace.util.ParameterValidator;
  */
 public class RemoteUserSession {
 
+	private static Logger LOG = Logger.getLogger(RemoteUserSession.class);
+	
 	private InetAddress host;
 	private int port;
 	private TCPSession session;
@@ -60,7 +63,8 @@ public class RemoteUserSession {
 				session =  TCPSessionCreator.initiate(host, port);
 				isInitiated = true;
 			} catch (BEEPException be) {
-				//TODO: 
+				//TODO: retry strategy?
+				LOG.error("could not initiate session ["+be+"]");
 			}
 		}
 	}
@@ -75,7 +79,8 @@ public class RemoteUserSession {
 			channelNo = channel.getNumber();
 			connection = new ParticipantConnectionImpl(channel);
 			} catch (BEEPException be) {
-				//TODO:
+				//TODO: retry strategy?
+				LOG.error("could not initiate session ["+be+"]");
 			}
 		}
 		return connection;

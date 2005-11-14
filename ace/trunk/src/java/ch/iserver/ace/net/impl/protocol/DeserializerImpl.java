@@ -22,7 +22,6 @@
 package ch.iserver.ace.net.impl.protocol;
 
 import java.io.ByteArrayInputStream;
-import java.util.Map;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -51,7 +50,8 @@ public class DeserializerImpl implements Deserializer {
 		try {
 			ByteArrayInputStream input = new ByteArrayInputStream(data);
 			SAXParserFactory factory;
-			//TODO: add xml validating if possible
+			//TODO: add xml validating, write xml schema
+			//factory.setValidating(true)
 			factory = SAXParserFactory.newInstance();
 			SAXParser saxParser = factory.newSAXParser();
 			saxParser.parse( input, handler );
