@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+
+  <bean id="fileNewAction" class="ch.iserver.ace.application.action.FileNewAction">
+    <constructor-arg><ref bean="localeMessageSource"/></constructor-arg>
+    <constructor-arg><ref bean="documentManager"/></constructor-arg>
+  </bean>
+
+  <bean id="fileOpenAction" class="ch.iserver.ace.application.action.FileOpenAction">
+    <constructor-arg><ref bean="localeMessageSource"/></constructor-arg>
+    <constructor-arg><ref bean="documentManager"/></constructor-arg>
+  </bean>
+
+  <bean id="fileSaveAction" class="ch.iserver.ace.application.action.FileSaveAction">
+    <constructor-arg><ref bean="localeMessageSource"/></constructor-arg>
+    <constructor-arg><ref bean="documentManager"/></constructor-arg>
+    <constructor-arg>
+      <list>
+        <ref bean="documentViewController"/>
+      </list>
+    </constructor-arg>
+  </bean>
+
+  <bean id="fileSaveAllAction" class="ch.iserver.ace.application.action.FileSaveAllAction">
+    <constructor-arg><ref bean="localeMessageSource"/></constructor-arg>
+    <constructor-arg><ref bean="documentManager"/></constructor-arg>
+    <constructor-arg>
+      <list>
+        <ref bean="documentViewController"/>
+      </list>
+    </constructor-arg>
+  </bean>
+
+  <bean id="fileSaveAsAction" class="ch.iserver.ace.application.action.FileSaveAsAction">
+    <constructor-arg><ref bean="localeMessageSource"/></constructor-arg>
+    <constructor-arg><ref bean="documentManager"/></constructor-arg>
+    <constructor-arg>
+      <list>
+        <ref bean="documentViewController"/>
+      </list>
+    </constructor-arg>
+  </bean>
+
+  <bean id="fileCloseAction" class="ch.iserver.ace.application.action.FileCloseAction">
+    <constructor-arg><ref bean="localeMessageSource"/></constructor-arg>
+    <constructor-arg>
+      <list>
+        <ref bean="documentViewController"/>
+      </list>
+    </constructor-arg>
+    <constructor-arg><ref bean="documentManager"/></constructor-arg>
+  </bean>
+
+  <bean id="appSettingsAction" class="ch.iserver.ace.application.action.ApplicationSettingsAction">
+    <constructor-arg><ref bean="localeMessageSource"/></constructor-arg>
+  </bean>
+
+  <bean id="appExitAction" class="ch.iserver.ace.application.action.ApplicationExitAction">
+    <constructor-arg><ref bean="localeMessageSource"/></constructor-arg>
+    <constructor-arg><ref bean="documentManager"/></constructor-arg>
+  </bean>
+
+
+
+
+
+  <bean id="editCutAction" class="ch.iserver.ace.application.action.EditCutAction">
+    <constructor-arg><ref bean="localeMessageSource"/></constructor-arg>
+    <constructor-arg>
+      <list>
+        <ref bean="documentViewController"/>
+      </list>
+    </constructor-arg>
+  </bean>
+
+  <bean id="editCopyAction" class="ch.iserver.ace.application.action.EditCopyAction">
+    <constructor-arg><ref bean="localeMessageSource"/></constructor-arg>
+    <constructor-arg>
+      <list>
+        <ref bean="documentViewController"/>
+      </list>
+    </constructor-arg>
+  </bean>
+
+  <bean id="editPasteAction" class="ch.iserver.ace.application.action.EditPasteAction">
+    <constructor-arg><ref bean="localeMessageSource"/></constructor-arg>
+    <constructor-arg>
+      <list>
+        <ref bean="documentViewController"/>
+      </list>
+    </constructor-arg>
+  </bean>
+
+  <bean id="editSelectAllAction" class="ch.iserver.ace.application.action.EditSelectAllAction">
+    <constructor-arg><ref bean="localeMessageSource"/></constructor-arg>
+    <constructor-arg>
+      <list>
+        <ref bean="documentViewController"/>
+      </list>
+    </constructor-arg>
+  </bean>
+
+
+
+
+
+  <bean id="netPublishDocumentAction" class="ch.iserver.ace.application.action.NetPublishDocumentAction">
+    <constructor-arg><ref bean="localeMessageSource"/></constructor-arg>
+    <constructor-arg><ref bean="documentManager"/></constructor-arg>
+    <constructor-arg>
+      <list>
+        <ref bean="documentViewController"/>
+      </list>
+    </constructor-arg>
+  </bean>
+
+  <bean id="netConcealDocumentAction" class="ch.iserver.ace.application.action.NetConcealDocumentAction">
+    <constructor-arg><ref bean="localeMessageSource"/></constructor-arg>
+    <constructor-arg><ref bean="documentManager"/></constructor-arg>
+    <constructor-arg>
+      <list>
+        <ref bean="documentViewController"/>
+      </list>
+    </constructor-arg>
+  </bean>
+
+  <bean id="netJoinSessionAction" class="ch.iserver.ace.application.action.NetJoinSessionAction">
+    <constructor-arg><ref bean="localeMessageSource"/></constructor-arg>
+    <constructor-arg>
+      <list>
+        <ref bean="browseViewController"/>
+      </list>
+    </constructor-arg>
+  </bean>
+
+  <bean id="netLeaveSessionAction" class="ch.iserver.ace.application.action.NetLeaveSessionAction">
+    <constructor-arg><ref bean="localeMessageSource"/></constructor-arg>
+    <constructor-arg>
+      <list>
+        <ref bean="documentViewController"/>
+      </list>
+    </constructor-arg>
+  </bean>
+
+  <bean id="netDiscoverUserAction" class="ch.iserver.ace.application.action.NetDiscoverUserAction">
+    <constructor-arg><ref bean="localeMessageSource"/></constructor-arg>
+  </bean>
+
+  <bean id="netInviteUserAction" class="ch.iserver.ace.application.action.NetInviteUserAction">
+    <constructor-arg><ref bean="localeMessageSource"/></constructor-arg>
+    <constructor-arg>
+      <list>
+        <ref bean="userViewController"/>
+      </list>
+    </constructor-arg>
+  </bean>
+
+  <bean id="netKickParticipantAction" class="ch.iserver.ace.application.action.NetKickParticipantAction">
+    <constructor-arg><ref bean="localeMessageSource"/></constructor-arg>
+    <constructor-arg>
+      <list>
+        <ref bean="participantViewController"/>
+      </list>
+    </constructor-arg>
+  </bean>
+
+
+
+
+  <bean id="helpDebugAction" class="ch.iserver.ace.application.action.HelpDebugAction">
+    <constructor-arg><ref bean="localeMessageSource"/></constructor-arg>
+  </bean>
+
+  <bean id="helpAboutAction" class="ch.iserver.ace.application.action.HelpAboutAction">
+    <constructor-arg><ref bean="localeMessageSource"/></constructor-arg>
+  </bean>
+
+
+</beans>

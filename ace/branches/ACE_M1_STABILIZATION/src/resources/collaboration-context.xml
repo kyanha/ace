@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+
+  <bean id="collaborationService" class="ch.iserver.ace.collaboration.jupiter.CollaborationServiceImpl">
+    <constructor-arg><ref local="networkService"/></constructor-arg>
+    <property name="userRegistry"><ref local="userRegistry"/></property>
+    <property name="documentRegistry"><ref local="documentRegistry"/></property>
+    <property name="publisherThreadDomain"><ref local="threadDomain"/></property>
+  </bean>
+  
+  <bean id="sessionFactory" class="ch.iserver.ace.collaboration.jupiter.SessionFactoryImpl">
+    <property name="threadDomain"><ref local="threadDomain"/></property>
+    <property name="userRegistry"><ref local="userRegistry"/></property>
+  </bean>
+  
+  <bean id="threadDomain" class="ch.iserver.ace.util.BoundedThreadDomain">
+    <constructor-arg><value>5</value></constructor-arg>
+  </bean>
+  
+  <bean id="userRegistry" class="ch.iserver.ace.collaboration.jupiter.UserRegistryImpl"/>
+  
+  <bean id="documentRegistry" class="ch.iserver.ace.collaboration.jupiter.DocumentRegistryImpl">
+     <constructor-arg index="0"><ref local="userRegistry"/></constructor-arg>
+     <property name="sessionFactory"><ref local="sessionFactory"/></property>
+  </bean>
+  
+  <bean id="networkService" class="ch.iserver.ace.collaboration.jupiter.NullNetworkService" factory-method="getInstance"/>
+  
+</beans>
