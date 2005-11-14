@@ -33,7 +33,7 @@
 	<artifact:remoteRepository id="remote.repository.ace" url="http://ace.iserver.ch/maven2/" />
 	<artifact:remoteRepository id="remote.repository.maven" url="http://repo1.maven.org/maven2"/>
 	
-	<artifact:dependencies pathId="dependency.classpath">
+	<artifact:dependencies pathId="dependency.classpath" filesetid="dependency.fileset">
 		<dependency groupId="jdom" 
 		            artifactId="jdom" 
 		            version="1.0"/>
@@ -47,14 +47,6 @@
 		<dependency groupId="glazedlists"
 		            artifactId="glazedlists"
 		            version="1.0.0"/>
-		<dependency groupId="junit" 
-		            artifactId="junit" 
-		            version="3.8.1"
-		            scope="test"/>
-		<dependency groupId="easymock"
-		            artifactId="easymock"
-		            version="1.1"
-		            scope="test"/>
 		<dependency groupId="xml-apis" 
 		            artifactId="xml-apis" 
 		            version="2.0.2"
@@ -90,6 +82,14 @@
 		<dependency groupId="dnssd"
                     artifactId="dnssd"
                     version="107.1"/>
+		<dependency groupId="junit" 
+		            artifactId="junit" 
+		            version="3.8.1"
+		            scope="test"/>
+		<dependency groupId="easymock"
+		            artifactId="easymock"
+		            version="1.1"
+		            scope="test"/>
 		<remoteRepository refid="remote.repository.ace" />
 		<remoteRepository refid="remote.repository.maven" />
 	</artifact:dependencies>
@@ -97,7 +97,7 @@
 	<artifact:dependencies pathId="enhancer.classpath">
 		<dependency groupId="ace"
 		            artifactId="enhancer-task"
-		            version="1.0.0"/>
+		            version="1.0.1"/>
 		<remoteRepository refid="remote.repository.ace"/>
 	</artifact:dependencies>
 
@@ -352,12 +352,16 @@
 	
 	<target name="copy-dependencies">
         <description>copies all dependencies to the build directory</description>
-		<xslt in="build.xml" 
-		      out="${build.dir}/build-dependencies.xml" style="${src.dir}/xsl/dependencies.xsl"/>
-		<ant antfile="${build.dir}/build-dependencies.xml" inheritAll="false">
-			<property name="maven.repo" value="${maven.repo}"/>
-			<property name="target.dir" value="lib"/>
-		</ant>
+		<copy flatten="true" todir="${build.dir}/lib">
+			<fileset refid="dependency.fileset"/>
+		</copy>
+		<delete>
+			<fileset dir="${build.dir}/lib">
+				<include name="junit*.jar"/>
+				<include name="easymock*.jar"/>
+				<include name="jamon*.jar"/>
+			</fileset>
+		</delete>
 	</target>
 	
 	<!-- OS X specific distribution -->
@@ -389,7 +393,7 @@
 	<target name="build-osx" depends="jar-osx" if="osx">
         <description>builds the OS X application bundle</description>
 		<typedef name="enhance" 
-			     classname="ch.iserver.ace.ant.dependency.DependencyTask"
+			     classname="ch.iserver.ace.ant.dependency.EnhancerTask"
 			     classpathref="enhancer.classpath"/>
 		<mkdir dir="${build.osx}/application/ACE.app/Contents"/>
 		<copy todir="${build.osx}/application/ACE.app/Contents">
@@ -399,10 +403,13 @@
 			</fileset>
 		</copy>
 		<chmod file="${build.osx}/application/ACE.app/Contents/MacOS/JavaApplicationStub" perm="+x" />
-		<enhance dependencies="build.xml"
-		         pathId="dependency.classpath"
-		         plist="${src.osx}/application/Info.plist"
-		         target="${build.osx}/application/ACE.app/Contents/Info.plist"/>
+		<enhance source="${src.osx}/application/Info.plist"
+		         target="${build.osx}/application/ACE.app/Contents/Info.plist">
+			<fileset refid="dependency.fileset"/>
+			<exclude name="junit*.jar"/>
+			<exclude name="easymock*.jar"/>
+			<exclude name="jamon*.jar"/>
+		</enhance>
 		<mkdir dir="${build.osx}/application/ACE.app/Contents/Resources/Java"/>
 		<copy todir="${build.osx}/application/ACE.app/Contents/Resources/Java">
 			<fileset dir="${build.dir}/lib"/>
