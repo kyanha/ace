@@ -41,8 +41,8 @@ public class ShutdownCommand implements SerializerCommand {
 	 * @see ch.iserver.ace.collaboration.jupiter.server.serializer.SerializerCommand#execute(ch.iserver.ace.collaboration.jupiter.server.Forwarder)
 	 */
 	public void execute(Forwarder forwarder) {
-		logic.shutdown();
 		forwarder.close();
+		logic.shutdown();
 	}
 
 }
