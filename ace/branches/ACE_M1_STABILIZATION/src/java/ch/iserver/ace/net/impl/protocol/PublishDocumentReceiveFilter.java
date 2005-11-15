@@ -49,6 +49,7 @@ public class PublishDocumentReceiveFilter extends AbstractRequestFilter {
 			DocumentInfo info = (DocumentInfo) request.getPayload();
 			String userId = info.getUserId();
 			RemoteUserSession session = SessionManager.getInstance().getSession(userId);
+			LOG.info("found session ["+session.getUser().getUserDetails().getUsername()+"] for request");
 			RemoteUserProxyExt publisher = session.getUser();
 			RemoteDocumentProxy doc = new RemoteDocumentProxyImpl(
 					info.getDocId(), new DocumentDetails(info.getName()), publisher);

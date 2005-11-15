@@ -53,11 +53,11 @@ public class ParticipantConnectionImpl implements ParticipantConnectionExt {
 			OutputDataStream output = prepare(message);
 			//AppData is only kept in-process
 			channel.setAppData(data);
-			LOG.debug("--> sendMSG "+message.length+" bytes.");
+			LOG.debug("--> sendMSG() with "+message.length+" bytes");
 			channel.sendMSG(output, listener);
-			LOG.debug("<-- sendMSG");
-		} catch (BEEPException be) {
-			throw new ProtocolException(be.getMessage());
+			LOG.debug("<-- sendMSG()");
+		} catch (Exception e) {
+			throw new ProtocolException(e.getMessage());
 		}
 	}
 	

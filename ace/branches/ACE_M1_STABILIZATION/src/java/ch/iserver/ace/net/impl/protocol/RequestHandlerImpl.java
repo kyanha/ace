@@ -63,7 +63,8 @@ public class RequestHandlerImpl implements RequestHandler {
 			filter.process(request);
 		} catch (Exception e) {
 			//TODO: is that appropriate??
-			message.getChannel().getSession().terminate(e.getMessage());
+//			message.getChannel().getSession().terminate(e.getMessage());
+			LOG.error("could not process request ["+e+"]");
 		}
 		LOG.debug("<-- receiveMSG");
 	}
