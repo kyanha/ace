@@ -51,11 +51,14 @@ public class Main {
 		frame.setStatusBar(applicationFactory.createStatusBar());
 		frame.setVisible(true);
 		
+		// get application controller
+		ApplicationController controller = (ApplicationController) context.getBean("applicationController");
+		
 		// customizing for operating system specific stuff
-//		String classname = System.getProperty("ch.iserver.ace.customizer");
-//		if (classname != null) {
-//			customize(classname, controller);
-//		}
+		String classname = System.getProperty("ch.iserver.ace.customizer");
+		if (classname != null) {
+			customize(classname, controller);
+		}
 		
 		// get the preferences store
 		PreferencesStore preferencesStore = (PreferencesStore) context.getBean("preferencesStore");
