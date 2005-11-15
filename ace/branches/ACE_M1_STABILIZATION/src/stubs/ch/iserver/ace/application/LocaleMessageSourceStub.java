@@ -21,6 +21,8 @@
 
 package ch.iserver.ace.application;
 
+import java.net.URL;
+
 import javax.swing.ImageIcon;
 
 /**
@@ -39,6 +41,13 @@ public class LocaleMessageSourceStub implements LocaleMessageSource {
 	 * @see ch.iserver.ace.application.LocaleMessageSource#getIcon(java.lang.String)
 	 */
 	public ImageIcon getIcon(String code) {
+		return null;
+	}
+	
+	/**
+	 * @see ch.iserver.ace.application.LocaleMessageSource#getResource(java.lang.String)
+	 */
+	public URL getResource(String code) {
 		return null;
 	}
 
