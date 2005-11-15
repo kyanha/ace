@@ -22,6 +22,7 @@
 package ch.iserver.ace.application;
 
 import ch.iserver.ace.application.action.*;
+import ch.iserver.ace.collaboration.*;
 import java.awt.Component;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -53,6 +54,7 @@ public class Main {
 			UIManager.setLookAndFeel("com.jgoodies.looks.plastic.PlasticXPLookAndFeel");
 		} catch(Exception e) {}*/
 
+		((CollaborationService)context.getBean("collaborationService")).addUserListener((UserViewController)context.getBean("userViewController"));
 
 		// create frame
 		JFrame frame = new JFrame();
