@@ -50,6 +50,8 @@ public class DiscoveryCallbackImpl implements DiscoveryCallback {
 	 * 
 	 */
 	public void userDiscovered(RemoteUserProxyExt proxy) {
+		LOG.debug("userDiscovered("+proxy+")");
+		System.out.println("userDiscovered("+proxy+")");
 		callback.userDiscovered(proxy);
 	}
 
@@ -57,6 +59,7 @@ public class DiscoveryCallbackImpl implements DiscoveryCallback {
 	 * 
 	 */
 	public void userDiscarded(RemoteUserProxyExt proxy) {
+		LOG.debug("userDiscarded("+proxy+")");
 		callback.userDiscarded(proxy);
 		//TODO: clean up session manager etc.
 	}
@@ -65,6 +68,7 @@ public class DiscoveryCallbackImpl implements DiscoveryCallback {
 	 * 
 	 */
 	public void userDetailsChanged(RemoteUserProxyExt proxy) {
+		LOG.debug("userDetailsChanged("+proxy+")");
 		callback.userDetailsChanged(proxy);
 	}
 
@@ -72,6 +76,7 @@ public class DiscoveryCallbackImpl implements DiscoveryCallback {
 	 * 
 	 */
 	public void userDiscoveryCompleted(RemoteUserProxyExt proxy) {
+		LOG.debug("userDiscoveryCompleted("+proxy+")");
 		service.discoverDocuments(proxy);
 	}
 

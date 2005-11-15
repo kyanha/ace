@@ -81,7 +81,9 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	}
 	
 	public void start() {
-		// launch discovery
+		//since the callback to the upper layer is available now, 
+		//start discovery process
+		launchDiscovery();
 	}
 	
 	
@@ -103,9 +105,6 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	public void setCallback(NetworkServiceCallback callback) {
 		ParameterValidator.notNull("callback", callback);
 		this.networkCallback = callback;
-		//since the callback to the upper layer is available now, 
-		//start discovery process
-		//launchDiscovery();
 	}
 
 	/**
