@@ -18,12 +18,18 @@
     <property name="messageSource"><ref local="localeMessageSource"/></property>
   </bean>
 
-  <bean id="editorFactory" class="ch.iserver.ace.application.editor.DummyEditorFactory">
+  <!--bean id="editorFactory" class="ch.iserver.ace.application.editor.DummyEditorFactory">
     <property name="messageSource"><ref local="localeMessageSource"/></property>
-  </bean>
+  </bean-->
 
   <bean id="dummyEditor" class="ch.iserver.ace.application.editor.DummyEditor">
-    <!--property name="messageSource"><ref local="localeMessageSource"/></property-->
+    <constructor-arg><ref local="localeMessageSource"/></constructor-arg>
+    <constructor-arg>
+      <list>
+        <ref bean="netPublishDocumentAction"/>
+        <ref bean="netConcealDocumentAction"/>
+      </list>
+    </constructor-arg>
   </bean>
 
   <bean id="dummyEditorController" class="ch.iserver.ace.application.editor.DummyEditorController">
