@@ -21,21 +21,10 @@
 
 package ch.iserver.ace.application;
 
-import ch.iserver.ace.application.action.*;
-import ch.iserver.ace.collaboration.*;
-import java.awt.Component;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.ActionEvent;
-import javax.swing.JFrame;
-import javax.swing.UIManager;
-
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import java.awt.BorderLayout;
-import javax.swing.*;
-import javax.swing.event.*;
+import ch.iserver.ace.collaboration.CollaborationService;
 
 
 
@@ -45,7 +34,7 @@ public class Main {
 		"application-context.xml", "actions-context.xml" ,"collaboration-context.xml", "network-context.xml"
 	};
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) {		
 		ApplicationContext context = new ClassPathXmlApplicationContext(CONTEXT_FILES);
 		LocaleMessageSource messageSource = new LocaleMessageSourceImpl(context);
 
@@ -58,7 +47,13 @@ public class Main {
 		frame.setToolBar(applicationFactory.createToolBar());
 		frame.setContentPane(applicationFactory.createPersistentContentPane());
 		frame.setStatusBar(applicationFactory.createStatusBar());
-		frame.show();
+		frame.setVisible(true);
+		
+		// customizing for operating system specific stuff
+//		String classname = System.getProperty("ch.iserver.ace.customizer");
+//		if (classname != null) {
+//			customize(classname, controller);
+//		}
 		
 		// get collaboration service
 		CollaborationService collaborationService = (CollaborationService)context.getBean("collaborationService");
@@ -67,6 +62,20 @@ public class Main {
 		collaborationService.addUserListener((UserViewController)context.getBean("userViewController"));
 		collaborationService.addDocumentListener((BrowseViewController)context.getBean("browseViewController"));
 		collaborationService.start();
+	}
+	
+	private static void customize(String classname, ApplicationController controller) {
+		try {
+			Class clazz = Class.forName(classname);
+			Customizer customizer = (Customizer) clazz.newInstance();
+			customizer.init(controller);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
 	}
 	
 }
