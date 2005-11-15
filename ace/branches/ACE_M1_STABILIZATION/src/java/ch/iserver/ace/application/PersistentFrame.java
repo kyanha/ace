@@ -27,23 +27,22 @@ import java.awt.BorderLayout;
 
 import javax.swing.Action;
 import javax.swing.JFrame;
+import javax.swing.JMenuBar;
+import javax.swing.JToolBar;
+import javax.swing.JPanel;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 
 
+public class PersistentFrame extends JFrame {
 
-
-public class PersistentFrame extends JFrame implements ApplicationContextAware {
-
-	private ApplicationContext context;
 	private LocaleMessageSource messageSource;
 
 	public PersistentFrame(final Action exitAction) {
+		setSize(800, 480);
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				//
@@ -52,21 +51,24 @@ public class PersistentFrame extends JFrame implements ApplicationContextAware {
 		});
 	}
 	
-	public void initFrame() {
-		setSize(800, 480);
-		ApplicationFactory applicationFactory = (ApplicationFactory)context.getBean("appFactory");
-		setJMenuBar(applicationFactory.createMenuBar());
-		getContentPane().add(applicationFactory.createToolBar(), BorderLayout.PAGE_START);
-		getContentPane().add(applicationFactory.createComponentPane(), BorderLayout.CENTER);
-		getContentPane().add(applicationFactory.createStatusBar(), BorderLayout.PAGE_END);
+	public void setMenuBar(JMenuBar menuBar) {
+		setJMenuBar(menuBar);
+	}
+	
+	public void setToolBar(JToolBar toolBar) {
+		getContentPane().add(toolBar, BorderLayout.PAGE_START);
+	}
+	
+	public void setContentPane(JPanel contentPane) {
+		getContentPane().add(contentPane, BorderLayout.CENTER);
+	}
+	
+	public void setStatusBar(JPanel statusBar) {
+		getContentPane().add(statusBar, BorderLayout.PAGE_END);
 	}
 
 	public void setMessageSource(LocaleMessageSource messageSource) {
 		this.messageSource = messageSource;
 	}
 	
-	public void setApplicationContext(ApplicationContext context) {
-		this.context = context;
-	}
-
 }
