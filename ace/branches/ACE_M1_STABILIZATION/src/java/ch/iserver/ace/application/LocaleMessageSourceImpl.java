@@ -21,8 +21,10 @@
 
 package ch.iserver.ace.application;
 
+import ch.iserver.ace.ApplicationError;
 import java.util.Locale;
 
+import java.net.URL;
 import javax.swing.ImageIcon;
 
 import org.springframework.context.MessageSource;
@@ -47,7 +49,11 @@ public class LocaleMessageSourceImpl implements LocaleMessageSource {
 	}
 	
 	public ImageIcon getIcon(String code) {
-		return new ImageIcon(getClass().getResource(getMessage("uImagePath") + getMessage(code)));
+		URL iconURL = getClass().getResource(getMessage("uImagePath") + getMessage(code));
+		if(iconURL == null) {
+			throw new ApplicationError("icon with code \"" + code + "\" not found.");
+		}
+		return new ImageIcon(iconURL);
 	}
 
 }
