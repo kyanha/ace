@@ -107,4 +107,5 @@ public class BrowseView extends ViewImpl {
 		} catch(ArrayIndexOutOfBoundsException e) {}
 		return selectedItem;
 	}
+	
 }

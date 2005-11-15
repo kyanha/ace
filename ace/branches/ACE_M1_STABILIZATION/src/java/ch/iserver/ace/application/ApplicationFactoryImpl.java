@@ -21,6 +21,7 @@
 
 package ch.iserver.ace.application;
 
+import ch.iserver.ace.application.editor.Editor;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -115,8 +116,10 @@ public class ApplicationFactoryImpl implements ApplicationFactory, ApplicationCo
 		UserView userView = (UserView)context.getBean("userView");
 
 		// create editor
-		EditorFactory editorFactory = (EditorFactory)context.getBean("editorFactory");
-		JPanel editorPane = editorFactory.createEditor();
+		//EditorFactory editorFactory = (EditorFactory)context.getBean("editorFactory");
+		//JPanel editorPane = editorFactory.createEditor();
+		//EditorFactory editorFactory = (EditorFactory)context.getBean("editorFactory");
+		JPanel editorPane = (JPanel)context.getBean("dummyEditor");
 
 		JSplitPane dvSbv = createStrippedSplitPane(JSplitPane.VERTICAL_SPLIT, documentView, browseView, 0.0);
 		JSplitPane pvSuv = createStrippedSplitPane(JSplitPane.VERTICAL_SPLIT, participantView,  userView, 0.0);
