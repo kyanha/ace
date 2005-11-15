@@ -24,6 +24,8 @@ package ch.iserver.ace.application;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import ch.iserver.ace.UserDetails;
+import ch.iserver.ace.application.preferences.PreferencesStore;
 import ch.iserver.ace.collaboration.CollaborationService;
 
 
@@ -55,9 +57,16 @@ public class Main {
 //			customize(classname, controller);
 //		}
 		
+		// get the preferences store
+		PreferencesStore preferencesStore = (PreferencesStore) context.getBean("preferencesStore");
+		
 		// get collaboration service
 		CollaborationService collaborationService = (CollaborationService)context.getBean("collaborationService");
 
+		// preference listeners
+		collaborationService.setUserDetails(getUserDetails(preferencesStore));
+		preferencesStore.addPreferenceChangeListener(new UserDetailsUpdater(collaborationService));
+		
 		// register listeners & start
 		collaborationService.addUserListener((UserViewController)context.getBean("userViewController"));
 		collaborationService.addDocumentListener((BrowseViewController)context.getBean("browseViewController"));
@@ -76,6 +85,11 @@ public class Main {
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private static UserDetails getUserDetails(PreferencesStore preferences) {
+		return new UserDetails(preferences.get(PreferencesStore.NICKNAME_KEY, 
+				System.getProperty("user.name")));
 	}
 	
 }
