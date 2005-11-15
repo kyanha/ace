@@ -119,8 +119,8 @@ public class ParticipantConnectionImpl implements ParticipantConnectionExt {
 		//invocation
 		try {
 			channel.close();
-		} catch (BEEPException be) {
-			LOG.warn("could not close channel ["+be.getMessage()+"]");
+		} catch (Exception e) {
+			LOG.warn("could not close channel ["+e.getMessage()+"]");
 		}
 	}
 	

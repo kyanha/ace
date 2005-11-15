@@ -78,8 +78,8 @@ public class RemoteUserSession {
 		connection.close();
 		try {
 			session.close();
-		} catch (BEEPException be) {
-			LOG.warn("could not close session ["+be.getMessage()+"]");
+		} catch (Exception e) {
+			LOG.warn("could not close session ["+e.getMessage()+"]");
 		}
 		connection = null;
 		session = null;
