@@ -64,7 +64,7 @@ public class BrowseView extends ViewImpl {
 		TextFilterator browseFilterator = new TextFilterator() {
 			public void getFilterStrings(List baseList, Object element) {
 				BrowseItem item = (BrowseItem)element;
-				baseList.add(item.getTitle());
+				baseList.add(item.getPublisher());
 			}
 		};
 		MatcherEditor browseMatcherEditor = new TextComponentMatcherEditor(browseFilterField, browseFilterator);
