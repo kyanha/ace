@@ -22,17 +22,38 @@
 package ch.iserver.ace.application.editor;
 
 import ch.iserver.ace.application.*;
+import ch.iserver.ace.application.preferences.PreferenceChangeEvent;
+import ch.iserver.ace.application.preferences.PreferenceChangeListener;
+import ch.iserver.ace.application.preferences.PreferencesStore;
+
 import javax.swing.text.*;
 
+import org.apache.log4j.Logger;
 
 
-public class DummyEditorController implements ItemSelectionChangeListener {
 
+public class DummyEditorController implements ItemSelectionChangeListener, PreferenceChangeListener {
+
+	private static final Logger LOG = Logger.getLogger(DummyEditorController.class);
+	
 	private DummyEditor editor;
 
-	public DummyEditorController(DummyEditor editor, DocumentViewController documentViewController) {
+	public DummyEditorController(DummyEditor editor, 
+			                    DocumentViewController documentViewController,
+			                    PreferencesStore preferences) {
 		this.editor = editor;
+		this.editor.setFontSize(getFontSize(preferences, 12));
 		documentViewController.addItemSelectionChangeListener(this);
+		preferences.addPreferenceChangeListener(this);
+	}
+	
+	private int getFontSize(PreferencesStore preferences, int def) {
+		try {
+			return Integer.parseInt(preferences.get(PreferencesStore.FONTSIZE_KEY, "" + def));
+		} catch (NumberFormatException e) {
+			LOG.debug("failed to set font size from preferences: " + e.getMessage());
+			return def;
+		}
 	}
 	
 	public void itemSelectionChanged(ItemSelectionChangeEvent e) {
@@ -46,6 +67,16 @@ public class DummyEditorController implements ItemSelectionChangeListener {
 			editor.setDocument(new DefaultStyledDocument());
 			editor.setTitle("");
 			editor.setEnabled(false);
+		}
+	}
+	
+	public void preferenceChanged(PreferenceChangeEvent event) {
+		if (PreferencesStore.FONTSIZE_KEY.equals(event.getKey())) {
+			try {
+				editor.setFontSize(Integer.parseInt(event.getValue()));
+			} catch (NumberFormatException e) {
+				LOG.debug("failed to set font size from preferences: " + e.getMessage());
+			}
 		}
 	}
 	

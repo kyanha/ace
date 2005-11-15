@@ -56,6 +56,7 @@
   <bean id="dummyEditorController" class="ch.iserver.ace.application.editor.DummyEditorController">
     <constructor-arg><ref local="dummyEditor"/></constructor-arg>
     <constructor-arg><ref local="documentViewController"/></constructor-arg>
+    <constructor-arg><ref local="preferencesStore"/></constructor-arg>
   </bean>
 
 

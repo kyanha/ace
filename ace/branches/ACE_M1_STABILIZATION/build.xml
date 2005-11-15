@@ -29,6 +29,9 @@
 	<!-- compiler settings javac (override on command line if desired) -->
     <property name="debug" value="true"/>
     <property name="optimize" value="false"/>
+    
+    <!-- debugger settings (override on command line if desired) -->
+    <property name="suspend" value="n"/>
 	
 	<artifact:remoteRepository id="remote.repository.ace" url="http://ace.iserver.ch/maven2/" />
 	<artifact:remoteRepository id="remote.repository.maven" url="http://repo1.maven.org/maven2"/>
@@ -230,7 +233,19 @@
 	
 	<target name="run" depends="compile,resources">
         <description>runs the main class</description>
-		<java classname="ch.iserver.ace.application.Main" fork="true" classpathref="classpath.run"/>
+		<java classname="ch.iserver.ace.application.Main" 
+		      fork="true" 
+		      classpathref="classpath.run"/>
+	</target>
+	
+	<target name="debug" depends="compile,resources">
+        <description>debug the application</description>
+        <java classname="ch.iserver.ace.application.Main"
+              fork="true"
+              classpathref="classpath.run">
+            <jvmarg value="-Xdebug"/>
+            <jvmarg value="-Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=${suspend}"/>
+        </java>
 	</target>
 
 	<target name="javadoc">
@@ -365,6 +380,8 @@
 				<include name="junit*.jar"/>
 				<include name="easymock*.jar"/>
 				<include name="jamon*.jar"/>
+				<include name="cglib*.jar"/>
+				<include name="commons-attributes*.jar"/>
 			</fileset>
 		</delete>
 	</target>
@@ -407,13 +424,15 @@
 				<exclude name="Info.plist"/>
 			</fileset>
 		</copy>
-		<chmod file="${build.osx}/application/ACE.app/Contents/MacOS/JavaApplicationStub" perm="+x" />
+		<chmod file="${build.osx}/application/ACE.app/Contents/MacOS/JavaApplicationStub" perm="+x"/>
 		<enhance source="${src.osx}/application/Info.plist"
 		         target="${build.osx}/application/ACE.app/Contents/Info.plist">
 			<fileset refid="dependency.fileset"/>
 			<exclude name="junit*.jar"/>
 			<exclude name="easymock*.jar"/>
 			<exclude name="jamon*.jar"/>
+            <exclude name="cglib*.jar"/>
+			<exclude name="commons-attributes*.jar"/>
 		</enhance>
 		<mkdir dir="${build.osx}/application/ACE.app/Contents/Resources/Java"/>
 		<copy todir="${build.osx}/application/ACE.app/Contents/Resources/Java">
