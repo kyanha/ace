@@ -81,6 +81,10 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 		this.service.setTimestampFactory(new JupiterTimestampFactory());
 	}
 	
+	public void start() {
+		service.start();
+	}
+	
 	public UserRegistry getUserRegistry() {
 		return userRegistry;
 	}

@@ -51,6 +51,13 @@ public final class NullNetworkService implements NetworkService {
 	}
 	
 	/**
+	 * @see ch.iserver.ace.net.NetworkService#start()
+	 */
+	public void start() {
+		// ignore
+	}
+	
+	/**
 	 * @see ch.iserver.ace.net.NetworkService#setUserDetails(ch.iserver.ace.UserDetails)
 	 */
 	public void setUserDetails(UserDetails details) {

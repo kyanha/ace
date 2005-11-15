@@ -39,6 +39,11 @@ import ch.iserver.ace.algorithm.TimestampFactory;
 public interface NetworkService {
 	
 	/**
+	 * Called by the collaboration layer to start the network layer.
+	 */
+	void start();
+	
+	/**
 	 * Sets the UserDetails for the local user.
 	 * 
 	 * @param details the UserDetails for the local user

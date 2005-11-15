@@ -80,6 +80,10 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 		return instance;
 	}
 	
+	public void start() {
+		// launch discovery
+	}
+	
 	
 	public void setUserDetails(UserDetails details) {
 		//TOOD: verify that: return immediately
@@ -101,7 +105,7 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 		this.networkCallback = callback;
 		//since the callback to the upper layer is available now, 
 		//start discovery process
-		launchDiscovery();
+		//launchDiscovery();
 	}
 
 	/**

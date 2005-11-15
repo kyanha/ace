@@ -48,6 +48,13 @@ public class NetworkServiceStub implements NetworkService {
 	private List documentServers = new ArrayList();
 	
 	/**
+	 * @see ch.iserver.ace.net.NetworkService#start()
+	 */
+	public void start() {
+		// ignore
+	}
+	
+	/**
 	 * @return
 	 */
 	public List getDocumentServers() {
