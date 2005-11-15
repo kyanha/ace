@@ -54,6 +54,7 @@ public class BEEPServer extends Thread {
 			
 			while (!terminate) {
 				//TODO: error handling, e.g. when port is already in use -> retry strategy
+				LOG.debug("start listening at port "+ProtocolConstants.LISTENING_PORT);
 				TCPSessionCreator.listen(ProtocolConstants.LISTENING_PORT, registry);
 			}
 			
