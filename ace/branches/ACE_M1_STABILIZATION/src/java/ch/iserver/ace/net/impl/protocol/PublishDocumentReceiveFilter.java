@@ -43,6 +43,7 @@ public class PublishDocumentReceiveFilter extends AbstractRequestFilter {
 	}
 
 	public void process(Request request) {
+		try {
 		LOG.info("--> process("+request+")");
 		if (request.getType() == ProtocolConstants.PUBLISH) {
 			
@@ -68,6 +69,9 @@ public class PublishDocumentReceiveFilter extends AbstractRequestFilter {
 			super.process(request);
 		}
 		LOG.info("<-- process()");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 }

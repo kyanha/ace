@@ -70,7 +70,7 @@ public class DocumentDetails {
 	}
 	
 	public String toString() {
-		return "DocumentDetails("+title+")";
+		return "DocumentDetails('"+title+"')";
 	}
 	
 }

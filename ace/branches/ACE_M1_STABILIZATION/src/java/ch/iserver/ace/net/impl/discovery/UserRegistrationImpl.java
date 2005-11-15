@@ -54,7 +54,7 @@ class UserRegistrationImpl implements UserRegistration {
 				TXTRecordProxy.create(props), 
 				this);
 		try {
-			registration = (DNSSDRegistration)call.execute();
+			registration = (DNSSDRegistration) call.execute();
 		} catch (DNSSDUnavailable du) {
 			Bonjour.writeErrorLog(du);
 		}
