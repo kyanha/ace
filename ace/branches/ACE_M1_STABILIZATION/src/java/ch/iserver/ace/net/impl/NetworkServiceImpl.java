@@ -66,6 +66,7 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	
 	private NetworkServiceImpl() {
 		userId = UUID.nextUUID();
+		LOG.debug("userId: "+userId);
 		publishedDocs = new ArrayList();
 		requestChain = RequestFilterFactory.createClientChain();
 		server = BEEPServerFactory.create();

@@ -172,6 +172,7 @@ public class SerializerImpl implements Serializer, ProtocolConstants {
 		AttributesImpl attrs = new AttributesImpl();
 		handler.startElement("", "", "notification", attrs);
 		String userid = NetworkServiceImpl.getInstance().getUserId();
+		LOG.info("set userId for publish xml: "+userid);
 		attrs.addAttribute("", "", "userid", "", userid);	
 		handler.startElement("", "", TAG_PUBLISH, attrs);
 		attrs = new AttributesImpl();

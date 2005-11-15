@@ -68,7 +68,7 @@ public class PublishDocumentPrepareFilter extends AbstractRequestFilter {
 					//TODO: handling
 					LOG.error(e);
 				}
-			}
+			} 
 		} else { //Forward
 			super.process(request);
 		}

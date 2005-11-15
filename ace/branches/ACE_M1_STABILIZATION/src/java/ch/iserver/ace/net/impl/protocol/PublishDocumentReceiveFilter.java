@@ -22,6 +22,7 @@
 package ch.iserver.ace.net.impl.protocol;
 
 import org.apache.log4j.Logger;
+import org.beepcore.beep.core.BEEPError;
 
 import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.net.NetworkServiceCallback;
@@ -43,35 +44,34 @@ public class PublishDocumentReceiveFilter extends AbstractRequestFilter {
 	}
 
 	public void process(Request request) {
-		try {
 		LOG.info("--> process("+request+")");
-		if (request.getType() == ProtocolConstants.PUBLISH) {
-			
-			DocumentInfo info = (DocumentInfo) request.getPayload();
-			String userId = info.getUserId();
-			RemoteUserSession session = SessionManager.getInstance().getSession(userId);
-			LOG.info("found session ["+session.getUser().getUserDetails().getUsername()+"] for request");
-			RemoteUserProxyExt publisher = session.getUser();
-			RemoteDocumentProxy doc = new RemoteDocumentProxyImpl(
-					info.getDocId(), new DocumentDetails(info.getName()), publisher);
-			publisher.addSharedDocument(doc);
-			NetworkServiceCallback callback = NetworkServiceImpl.getInstance().getCallback();
-			RemoteDocumentProxy[] docs = new RemoteDocumentProxy[]{ doc };
-			callback.documentDiscovered(docs);
-
-			try {
-				//confirm reception of msg				
-				request.getMessage().sendNUL();
-			} catch (Exception e) {
-				LOG.error("could not send Nul confirmation ["+e.getMessage()+"]");
+		try {
+			if (request.getType() == ProtocolConstants.PUBLISH) {
+				DocumentInfo info = (DocumentInfo) request.getPayload();
+				String userId = info.getUserId();
+				RemoteUserSession session = SessionManager.getInstance().getSession(userId);
+				if (session != null) {
+					LOG.info("found session ["+session.getUser().getUserDetails().getUsername()+"] for request");
+					RemoteUserProxyExt publisher = session.getUser();
+					RemoteDocumentProxy doc = new RemoteDocumentProxyImpl(
+							info.getDocId(), new DocumentDetails(info.getName()), publisher);
+					publisher.addSharedDocument(doc);
+					NetworkServiceCallback callback = NetworkServiceImpl.getInstance().getCallback();
+					RemoteDocumentProxy[] docs = new RemoteDocumentProxy[]{ doc };
+					callback.documentDiscovered(docs);
+					//confirm reception of msg				
+					request.getMessage().sendNUL();
+				} else {
+					LOG.error("session not found for id ["+userId+"]");
+					request.getMessage().sendERR(BEEPError.CODE_PARAMETER_INVALID, "userId unknown");
+				}
+			} else {
+				super.process(request);
 			}
-		} else {
-			super.process(request);
+		} catch (Exception e) {
+			LOG.error("exception processing request ["+e+", "+e.getMessage()+"]");
 		}
 		LOG.info("<-- process()");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 	
 }

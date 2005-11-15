@@ -21,6 +21,8 @@
 
 package ch.iserver.ace.net.impl;
 
+import org.apache.log4j.Logger;
+
 import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.net.DocumentServer;
 import ch.iserver.ace.net.DocumentServerLogic;
@@ -38,6 +40,8 @@ import ch.iserver.ace.util.ParameterValidator;
  */
 public class PublishedDocument implements DocumentServer {
 
+	private static Logger LOG = Logger.getLogger(PublishedDocument.class);
+	
 	private String docId;
 	private DocumentServerLogic logic;
 	private DocumentDetails details;
@@ -46,6 +50,7 @@ public class PublishedDocument implements DocumentServer {
 	
 	public PublishedDocument(String id, DocumentServerLogic logic, DocumentDetails details, RequestFilter filter) {
 		ParameterValidator.notNull("id", id);
+		LOG.debug("new PublishedDocument("+id+", "+details+")");
 		this.docId = id;
 		this.logic = logic;
 		this.details = details;

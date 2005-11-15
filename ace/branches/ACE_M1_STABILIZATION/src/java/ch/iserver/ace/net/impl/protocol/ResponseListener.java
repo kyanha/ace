@@ -94,7 +94,7 @@ public class ResponseListener implements ReplyListener {
 	 * @see org.beepcore.beep.core.ReplyListener#receiveERR(org.beepcore.beep.core.Message)
 	 */
 	public void receiveERR(Message message) throws AbortChannelException {
-		// TODO Auto-generated method stub
+		LOG.error("receiveERR("+message+")");
 
 	}
 
