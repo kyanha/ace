@@ -231,6 +231,7 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	 * @see ch.iserver.ace.net.NetworkServiceCallback#documentDiscarded(ch.iserver.ace.net.RemoteDocumentProxy[])
 	 */
 	public void documentDiscarded(RemoteDocumentProxy[] proxies) {
+		System.out.println("collaboration layer: document discarded");
 		List tmp = new ArrayList();
 		for (int i = 0; i < proxies.length; i++) {
 			RemoteDocument doc = getDocumentRegistry().removeDocument(proxies[i]);
@@ -242,6 +243,7 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 		RemoteDocument[] documents = (RemoteDocument[]) tmp.toArray(new RemoteDocument[tmp.size()]);
 		DocumentListener[] list = (DocumentListener[]) listeners.getListeners(DocumentListener.class);
 		for (int i = 0; i < list.length; i++) {
+			System.out.println("collaboration layer: document discarded, notifying listeners");
 			DocumentListener listener = list[i];
 			listener.documentsDiscarded(documents);
 		}
