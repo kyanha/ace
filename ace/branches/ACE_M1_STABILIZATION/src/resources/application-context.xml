@@ -32,12 +32,6 @@
     <constructor-arg><ref bean="userView"/></constructor-arg>
   </bean-->
 
-
-
-
-
-
-
   <!--bean id="editorFactory" class="ch.iserver.ace.application.editor.DummyEditorFactory">
     <property name="messageSource"><ref local="localeMessageSource"/></property>
   </bean-->
