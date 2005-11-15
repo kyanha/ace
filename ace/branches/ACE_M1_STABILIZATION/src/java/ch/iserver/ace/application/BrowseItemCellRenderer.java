@@ -72,16 +72,15 @@ public class BrowseItemCellRenderer extends JPanel implements ListCellRenderer {
 
 		// draw document title
 		g.drawString(value.getTitle(), 20, 10);
-		Font blubb = g.getFont();
-		blubb.deriveFont(8);
-		g.setFont(blubb);
-		g.drawString(value.getPublisher(), 30, 22);
+		g.setFont(g.getFont().deriveFont(10.0f));
+		g.setFont(g.getFont().deriveFont(Font.PLAIN & Font.BOLD));
+		g.drawString(" " + value.getPublisher(), 20, 20);
 		
 		// draw owner		
 	}
 
 	public Dimension getPreferredSize() {
-		return new Dimension(0, 30);
+		return new Dimension(0, 24);
 	}
 	
 }
