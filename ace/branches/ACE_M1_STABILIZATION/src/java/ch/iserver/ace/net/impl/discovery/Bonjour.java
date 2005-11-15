@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:Bonjour.java 1205 2005-11-14 07:57:10Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -24,9 +24,9 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
+import ch.iserver.ace.ApplicationError;
 import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.net.impl.Discovery;
-import ch.iserver.ace.net.impl.discovery.dnssd.DNSSDUnavailable;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
@@ -134,6 +134,7 @@ public class Bonjour implements Discovery {
 	
 	public static void writeErrorLog(Exception e) {
 		APP_LOG.fatal("fatal discovery error ["+e.getMessage()+"]");
+		throw new ApplicationError(e);
 	}
 	
 
