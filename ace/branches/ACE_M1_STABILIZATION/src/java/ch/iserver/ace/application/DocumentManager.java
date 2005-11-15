@@ -38,6 +38,7 @@ public class DocumentManager implements ItemSelectionChangeListener {
 	}
 	
 	public void closeDocument() {
+		// if document = published -> conceal first
 		controller.removeDocument(controller.getSelectedDocumentItem());
 		controller.setSelectedIndex(controller.getDocumentSourceList().size()-1);
 	}
