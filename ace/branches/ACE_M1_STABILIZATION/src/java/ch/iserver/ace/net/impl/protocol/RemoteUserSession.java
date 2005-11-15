@@ -77,9 +77,10 @@ public class RemoteUserSession {
 	public void cleanup() {
 		connection.close();
 		try {
+			//TOOD: perhaps close is not appropriate 
 			session.close();
 		} catch (Exception e) {
-			LOG.warn("could not close session ["+e.getMessage()+"]");
+			LOG.warn("could not close session for "+user.getUserDetails().getUsername()+" ["+e.getMessage()+"]");
 		}
 		connection = null;
 		session = null;

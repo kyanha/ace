@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:RequestParserHandler.java 1205 2005-11-14 07:57:10Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -95,6 +95,7 @@ public class RequestParserHandler extends ParserHandler {
 	 * @see ch.iserver.ace.net.impl.protocol.ParserHandler#getResult()
 	 */
 	public Object getResult() {
+		LOG.debug("getResult("+result+")");
 		return result;
 	}
 

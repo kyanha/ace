@@ -82,6 +82,7 @@ public class ResponseParserHandler extends ParserHandler {
 	 * 
 	 */
 	public Object getResult() {
+		LOG.debug("getResult("+response+")");
 		return response;
 	}
 	

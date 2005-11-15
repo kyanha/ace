@@ -52,12 +52,11 @@ public class RequestHandlerImpl implements RequestHandler {
 	 */
 	public void receiveMSG(MessageMSG message) {
 		LOG.debug("--> receiveMSG");
-		Object data = message.getChannel().getAppData();
-		LOG.debug("appData: "+data);
 		
 		InputDataStream input = message.getDataStream();
 		try {
 			byte[] rawData = readData(input);
+			LOG.debug("received "+rawData.length+" bytes.");
 			deserializer.deserialize(rawData, handler);
 			Request request = (Request)handler.getResult();
 			request.setMessage(message);
