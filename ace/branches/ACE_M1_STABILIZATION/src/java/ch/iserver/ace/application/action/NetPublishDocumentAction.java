@@ -38,6 +38,7 @@ public class NetPublishDocumentAction extends ItemSelectionChangeAction {
 
 	public NetPublishDocumentAction(LocaleMessageSource messageSource, DocumentManager documentManager, List viewControllers) {
 		super(messageSource.getMessage("mNetPublish"), messageSource.getIcon("iMenuNetPublish"), viewControllers);
+		putValue(SHORT_DESCRIPTION, messageSource.getMessage("mNetPublishTT"));
 		this.documentManager = documentManager;
 		setEnabled(false);
 	}

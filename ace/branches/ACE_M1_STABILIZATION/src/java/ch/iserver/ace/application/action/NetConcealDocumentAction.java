@@ -38,6 +38,7 @@ public class NetConcealDocumentAction extends ItemSelectionChangeAction {
 
 	public NetConcealDocumentAction(LocaleMessageSource messageSource, DocumentManager documentManager, List viewControllers) {
 		super(messageSource.getMessage("mNetConceal"), messageSource.getIcon("iMenuNetConceal"), viewControllers);
+		putValue(SHORT_DESCRIPTION, messageSource.getMessage("mNetConcealTT"));
 		this.documentManager = documentManager;
 		setEnabled(false);
 	}
@@ -53,7 +54,6 @@ public class NetConcealDocumentAction extends ItemSelectionChangeAction {
 		} else {
 			setEnabled(false);
 		}
-		System.out.println("NetConcealDocumentAction::conceal(): " + e);
 	}
 
 }
