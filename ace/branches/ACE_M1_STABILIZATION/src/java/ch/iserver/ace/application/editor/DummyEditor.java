@@ -71,5 +71,9 @@ public class DummyEditor extends JPanel implements Editor {
 	public void setFontSize(int size) {
 		textPane.setFont(new Font("Courier", Font.PLAIN, size));
 	}
+	
+	public JPanel getEditorComponent() {
+		return this;
+	}
 
 }
