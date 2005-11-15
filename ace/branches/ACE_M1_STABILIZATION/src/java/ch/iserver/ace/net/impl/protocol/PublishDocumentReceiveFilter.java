@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:PublishDocumentReceiveFilter.java 1205 2005-11-14 07:57:10Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -43,6 +43,7 @@ public class PublishDocumentReceiveFilter extends AbstractRequestFilter {
 	}
 
 	public void process(Request request) {
+		LOG.info("--> process("+request+")");
 		if (request.getType() == ProtocolConstants.PUBLISH) {
 			
 			DocumentInfo info = (DocumentInfo) request.getPayload();
@@ -65,6 +66,7 @@ public class PublishDocumentReceiveFilter extends AbstractRequestFilter {
 		} else {
 			super.process(request);
 		}
+		LOG.info("<-- process()");
 	}
 	
 }

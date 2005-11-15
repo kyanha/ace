@@ -75,7 +75,6 @@ public class RemoteUserSession {
 	 * after a call to <code>cleanup()</code>.
 	 */
 	public void cleanup() {
-		connection.close();
 		connection = null;
 		session = null;
 		user = null;

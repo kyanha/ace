@@ -47,11 +47,13 @@ public class PublishedDocumentsRequestFilter extends AbstractRequestFilter {
 	}
 	
 	public void process(Request request) {
+		LOG.info("--> process("+request+")");
 		if (request.getType() == ProtocolConstants.PUBLISHED_DOCUMENTS) {
 			processImpl(request);
 		} else { //forward
 			super.process(request);
 		}
+		LOG.info("<-- process()");
 	}
 
 	private void processImpl(Request request) {

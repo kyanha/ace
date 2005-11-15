@@ -40,6 +40,7 @@ public class ConcealDocumentReceiveFilter extends AbstractRequestFilter {
 	}
 	
 	public void process(Request request) {
+		LOG.info("--> process("+request+")");
 		if (request.getType() == ProtocolConstants.CONCEAL) {
 			DocumentInfo info = (DocumentInfo) request.getPayload();
 			String userId = info.getUserId();
@@ -58,6 +59,7 @@ public class ConcealDocumentReceiveFilter extends AbstractRequestFilter {
 		} else { //Forward
 			super.process(request);
 		}
+		LOG.info("<-- process()");
 	}
 
 }

@@ -115,14 +115,11 @@ public class ResponseListener implements ReplyListener {
 	}
 	
 	private byte[] read(Message message) throws AbortChannelException {
-		LOG.debug("--> read("+message+")");
 		InputDataStream input = message.getDataStream();
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		do {
 			try {
-				LOG.debug("waitForNextSegment()");
 				BufferSegment b = input.waitForNextSegment();
-				LOG.debug("ok " + b.getLength());
 				if (b == null) {
 					out.flush();
 					break;
@@ -134,8 +131,7 @@ public class ResponseListener implements ReplyListener {
 			}
 		} while (!input.isComplete());
 
-		LOG.debug("read " + out.size() + " bytes from input.");
-		LOG.debug("<-- read("+message+")");
+		LOG.debug("read " + out.size() + " bytes from input stream.");
 		return out.toByteArray();
 	}
 

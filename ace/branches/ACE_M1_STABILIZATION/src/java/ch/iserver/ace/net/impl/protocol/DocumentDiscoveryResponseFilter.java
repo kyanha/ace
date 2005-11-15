@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.net.NetworkServiceCallback;
 import ch.iserver.ace.net.RemoteDocumentProxy;
@@ -38,6 +40,8 @@ import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
  */
 public class DocumentDiscoveryResponseFilter extends AbstractRequestFilter {
 
+	private static Logger LOG = Logger.getLogger(DocumentDiscoveryPrepareFilter.class);
+	
 	public DocumentDiscoveryResponseFilter(RequestFilter successor) {
 		super(successor);
 	}
@@ -45,17 +49,21 @@ public class DocumentDiscoveryResponseFilter extends AbstractRequestFilter {
 	public void process(Request request) {
 		if (request.getType() == ProtocolConstants.PUBLISHED_DOCUMENTS) {
 			List docs = (List) request.getPayload();
-			Iterator iter = docs.iterator();
-			List proxies = new ArrayList(docs.size());
-			while (iter.hasNext()) {
-				DocumentInfo doc = (DocumentInfo) iter.next();
-				RemoteDocumentProxy proxy = createProxy(doc);
-				proxies.add(proxy);
+			if (docs.size() > 0) {
+				Iterator iter = docs.iterator();
+				List proxies = new ArrayList(docs.size());
+				while (iter.hasNext()) {
+					DocumentInfo doc = (DocumentInfo) iter.next();
+					RemoteDocumentProxy proxy = createProxy(doc);
+					proxies.add(proxy);
+				}
+				NetworkServiceCallback callback = NetworkServiceImpl.getInstance().getCallback();
+				RemoteDocumentProxy[] proxyArr = (RemoteDocumentProxy[]) proxies.toArray(new RemoteDocumentProxy[0]);
+				callback.documentDiscovered(proxyArr);
+				//TODO: ensure that no further MessageMSG processing is necessary here
+			} else {
+				LOG.debug("no documents in request");
 			}
-			NetworkServiceCallback callback = NetworkServiceImpl.getInstance().getCallback();
-			RemoteDocumentProxy[] proxyArr = (RemoteDocumentProxy[]) proxies.toArray(new RemoteDocumentProxy[0]);
-			callback.documentDiscovered(proxyArr);
-			//TODO: ensure that no further MessageMSG processing is necessary here
 		} else { //Forward
 			super.process(request);
 		}
