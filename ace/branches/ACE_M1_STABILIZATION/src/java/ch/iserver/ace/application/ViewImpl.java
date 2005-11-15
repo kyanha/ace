@@ -24,6 +24,7 @@ package ch.iserver.ace.application;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.event.EventListenerList;
+import java.awt.Dimension;
 
 import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.swing.EventListModel;
@@ -46,6 +47,7 @@ public abstract class ViewImpl extends JPanel implements View {
 		this.messageSource = messageSource;
 		eventListenerList = new EventListenerList();
 		addItemSelectionChangeListener(controller);
+		setPreferredSize(new Dimension(180, 150));
 	}
 
 	public void addItemSelectionChangeListener(ItemSelectionChangeListener listener) {
