@@ -79,6 +79,9 @@
 		<dependency groupId="beepcore"
                     artifactId="beepcore"
                     version="0.9.08"/>
+		<dependency groupId="concurrent"
+                    artifactId="concurrent"
+                    version="1.3.4"/>
 		<dependency groupId="dnssd"
                     artifactId="dnssd"
                     version="107.1"/>
