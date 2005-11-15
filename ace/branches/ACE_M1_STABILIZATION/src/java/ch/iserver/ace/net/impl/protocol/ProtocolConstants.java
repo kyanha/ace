@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:ProtocolConstants.java 1205 2005-11-14 07:57:10Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -28,7 +28,7 @@ public interface ProtocolConstants {
 
 	public static final String PROFILE_URI = "http://ace.iserver.ch/profiles/ACE";
 	//TODO: get port from config file
-	public static final int LISTENING_PORT = 41234;
+	public static final int LISTENING_PORT = 4123;
 	
 	/** constants for serialization **/
 	public static final int PUBLISHED_DOCUMENTS = 0;
