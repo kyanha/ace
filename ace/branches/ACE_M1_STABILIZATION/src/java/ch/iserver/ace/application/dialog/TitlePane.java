@@ -37,14 +37,14 @@ public class TitlePane extends JPanel {
 	public TitlePane(String title, Icon icon) {
 		setLayout(new BorderLayout());
 		setBackground(Color.WHITE);
-		setBorder(new TestBorder());
-		JLabel textLbl = new JLabel(title);
+		setBorder(new TitleBorder());
+		JLabel textLbl = new JLabel("<html><b>" + title + "</b></html>");
 		JLabel iconLbl = new JLabel(icon);
 		add(textLbl, BorderLayout.LINE_START);
 		add(iconLbl, BorderLayout.LINE_END);
 	}
 	
-	private class TestBorder extends AbstractBorder {
+	private class TitleBorder extends AbstractBorder {
 		public Insets getBorderInsets(Component c) {
 			return new Insets(0, 15, 1, 1);
 		}

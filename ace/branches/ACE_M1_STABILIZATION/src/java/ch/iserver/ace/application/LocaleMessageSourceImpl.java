@@ -50,10 +50,18 @@ public class LocaleMessageSourceImpl implements LocaleMessageSource {
 	
 	public ImageIcon getIcon(String code) {
 		URL iconURL = getClass().getResource(getMessage("uImagePath") + getMessage(code));
-		if(iconURL == null) {
+		if (iconURL == null) {
 			throw new ApplicationError("icon with code \"" + code + "\" not found.");
 		}
 		return new ImageIcon(iconURL);
+	}
+	
+	public URL getResource(String code) {
+		URL result = getClass().getResource(getMessage("uResourcePath") + getMessage(code));
+		if (result == null) {
+			throw new ApplicationError("resource with code \"" + code + "\" not found.");
+		}
+		return result;
 	}
 
 }

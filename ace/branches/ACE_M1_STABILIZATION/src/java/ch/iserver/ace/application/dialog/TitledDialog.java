@@ -22,13 +22,12 @@
 package ch.iserver.ace.application.dialog;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.Frame;
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
@@ -38,13 +37,14 @@ import ch.iserver.ace.util.ParameterValidator;
 
 public abstract class TitledDialog extends JDialog {
 	
-	private final LocaleMessageSource messages;
+	private LocaleMessageSource messages;
 	
-	public TitledDialog(LocaleMessageSource messages, String titleText, Icon icon) {
+	public TitledDialog(Frame owner, LocaleMessageSource messages, String titleText, Icon icon) {
+		super(owner);
 		ParameterValidator.notNull("messages", messages);
 		this.messages = messages;
 		
-		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(HIDE_ON_CLOSE);
 		TitlePane title = new TitlePane(titleText, icon);
 		getContentPane().add(title, BorderLayout.NORTH);
 		
@@ -55,42 +55,38 @@ public abstract class TitledDialog extends JDialog {
 		getContentPane().add(content, BorderLayout.CENTER);
 		
 		JPanel buttonPane = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		buttonPane.add(createButtonPane());
 		buttonPane.setBorder(BorderFactory.createCompoundBorder(
 				new EtchedLineBorder(),
 				BorderFactory.createEmptyBorder(8,8,8,8)));
-		JButton cancelButton = new JButton(messages.getMessage("dCancel"));
-		buttonPane.add(cancelButton);
-		JButton finishButton = new JButton(messages.getMessage("dFinish"));
-		buttonPane.add(finishButton);
 		getContentPane().add(buttonPane, BorderLayout.SOUTH);
 		
-		getRootPane().setDefaultButton(finishButton);
-		
-		cancelButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				setVisible(false);
-				dispose();
-			}
-		});
-		
-		finishButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (onFinish()) {
-					setVisible(false);
-					dispose();
-				}
-			}
-		});		
+		// pack it together
+		pack();
+		setResizable(false);
+	}
+	
+	protected void finish() {
+		if (onFinish()) {
+			hideDialog();
+		}
 	}
 	
 	protected LocaleMessageSource getMessages() {
 		return messages;
 	}
 	
+	public Dimension getMinimumSize() {
+		return getPreferredSize();
+	}
+	
 	public void showDialog() {
 		init();
-		setSize(500, 300);
 		setVisible(true);
+	}
+	
+	public void hideDialog() {
+		setVisible(false);
 	}
 	
 	protected void init() {
@@ -98,6 +94,8 @@ public abstract class TitledDialog extends JDialog {
 	}
 	
 	protected abstract JComponent createContent();
+	
+	protected abstract JPanel createButtonPane();
 	
 	protected boolean onFinish() {
 		return true;

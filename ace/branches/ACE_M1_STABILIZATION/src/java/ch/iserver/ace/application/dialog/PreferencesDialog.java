@@ -21,10 +21,15 @@
 
 package ch.iserver.ace.application.dialog;
 
+import java.awt.FlowLayout;
+import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -42,10 +47,11 @@ public class PreferencesDialog extends TitledDialog {
 	
 	private JComboBox sizeCombo;
 
-	public PreferencesDialog(LocaleMessageSource messages, PreferencesStore preferences) {
-		super(messages, 
-				messages.getMessage("dPreferencesTitle"),
-				messages.getIcon("iPreferencesTitle"));
+	public PreferencesDialog(Frame owner, LocaleMessageSource messages, PreferencesStore preferences) {
+		super(owner,
+			  messages, 
+			  messages.getMessage("dPreferencesTitle"),
+			  messages.getIcon("iPreferencesTitle"));
 		if (preferences == null) {
 			throw new IllegalArgumentException("preferences cannot be null");
 		}
@@ -63,9 +69,10 @@ public class PreferencesDialog extends TitledDialog {
 		JPanel pane = new JPanel(new GridBagLayout());
 		
 		JLabel name = new JLabel(getMessages().getMessage("dPreferencesNickname"));
-		nameField = new JTextField(30);
+		nameField = new JTextField(20);
 		JLabel size = new JLabel(getMessages().getMessage("dPreferencesFontsize"));
 		sizeCombo = new JComboBox(getSizeArray());
+		
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.anchor = GridBagConstraints.EAST;
@@ -74,22 +81,45 @@ public class PreferencesDialog extends TitledDialog {
 		
 		gbc.gridx = 1;
 		gbc.gridy = 0;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets(2, 5, 2, 2);
 		pane.add(nameField, gbc);
-		
+
 		gbc.gridx = 0;
 		gbc.gridy = 1;
+		gbc.fill = GridBagConstraints.NONE;
 		gbc.anchor = GridBagConstraints.EAST;
 		gbc.insets = new Insets(2, 2, 2, 5);
 		pane.add(size, gbc);
 		
 		gbc.gridx = 1;
 		gbc.gridy = 1;
+		gbc.fill = GridBagConstraints.NONE;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets(2, 5, 2, 2);
 		pane.add(sizeCombo, gbc);
 		
+		return pane;
+	}
+	
+	protected JPanel createButtonPane() {
+		JPanel pane = new JPanel(new FlowLayout());
+		JButton cancel = new JButton(getMessages().getMessage("dCancel"));
+		cancel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				hideDialog();
+			}
+		});
+		JButton ok = new JButton(getMessages().getMessage("dOk"));
+		ok.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				finish();
+			}
+		});
+		pane.add(cancel);
+		pane.add(ok);
+		getRootPane().setDefaultButton(ok);
 		return pane;
 	}
 	

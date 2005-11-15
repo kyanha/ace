@@ -21,6 +21,7 @@
 
 package ch.iserver.ace.application.action;
 
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
@@ -33,23 +34,18 @@ import ch.iserver.ace.application.preferences.PreferencesStore;
 
 
 public class ApplicationSettingsAction extends AbstractAction {
-
-	private final LocaleMessageSource messages;
+		
+	private final TitledDialog dialog;
 	
-	private final PreferencesStore preferences;
-	
-	public ApplicationSettingsAction(LocaleMessageSource messageSource, PreferencesStore preferences) {
+	public ApplicationSettingsAction(LocaleMessageSource messageSource, 
+			PreferencesStore preferences,
+			Frame owner) {
 		super(messageSource.getMessage("mAppSettings"), messageSource.getIcon("iMenuAppSettings"));
-		this.messages = messageSource;
-		this.preferences = preferences;
+		this.dialog = new PreferencesDialog(owner, messageSource, preferences);
+		this.dialog.setLocationRelativeTo(owner);
 	}
-	
-	protected PreferencesStore getPreferencesStore() {
-		return preferences;
-	}
-	
+			
 	public void actionPerformed(ActionEvent e) {
-		TitledDialog dialog = new PreferencesDialog(messages, getPreferencesStore());
 		dialog.showDialog();
 	}
 
