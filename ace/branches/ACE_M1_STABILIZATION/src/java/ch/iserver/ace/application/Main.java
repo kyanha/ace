@@ -55,19 +55,8 @@ public class Main {
 		} catch(Exception e) {}*/
 
 		// create frame
-		JFrame frame = new JFrame();
-		frame.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				// check for unsaved documents				
-				((ApplicationExitAction)context.getBean("appExitAction")).actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "Exit"));
-			}
-		});
-		frame.setSize(800, 480);
-		ApplicationFactory applicationFactory = (ApplicationFactory)context.getBean("appFactory");
-		frame.setJMenuBar(applicationFactory.createMenuBar());
-		frame.getContentPane().add(BorderLayout.PAGE_START, applicationFactory.createToolBar());
-		frame.getContentPane().add(BorderLayout.CENTER, applicationFactory.createComponentPane());
-		frame.getContentPane().add(BorderLayout.PAGE_END, applicationFactory.createStatusBar());		
+		PersistentFrame frame = (PersistentFrame)context.getBean("mainFrame");
+		frame.initFrame();
 		frame.show();
 		
 		// register listeners & start
