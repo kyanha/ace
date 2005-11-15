@@ -150,7 +150,7 @@ public class ApplicationFactoryImpl implements ApplicationFactory, ApplicationCo
 	private static JSplitPane createStrippedSplitPane(int orientation, Component leftComponent, Component rightComponent, double value) {
 		JSplitPane splitPane = new JSplitPane(orientation, leftComponent, rightComponent);
 		splitPane.setBorder(BorderFactory.createEmptyBorder());
-		splitPane.setOneTouchExpandable(false);
+		splitPane.setOneTouchExpandable(true);
 		splitPane.setResizeWeight(value);
 		return splitPane;
 	}
