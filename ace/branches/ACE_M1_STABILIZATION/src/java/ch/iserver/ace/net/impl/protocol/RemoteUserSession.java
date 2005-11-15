@@ -58,7 +58,7 @@ public class RemoteUserSession {
 	}
 	
 	public void initiate() {
-		if ( session != null ) {
+		if ( session == null ) {
 			try {
 				session =  TCPSessionCreator.initiate(host, port);
 				isInitiated = true;
