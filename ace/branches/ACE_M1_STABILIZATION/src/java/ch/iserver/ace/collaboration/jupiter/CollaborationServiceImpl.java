@@ -243,7 +243,7 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 		DocumentListener[] list = (DocumentListener[]) listeners.getListeners(DocumentListener.class);
 		for (int i = 0; i < list.length; i++) {
 			DocumentListener listener = list[i];
-			listener.documentsDiscovered(documents);
+			listener.documentsDiscarded(documents);
 		}
 	}
 	
