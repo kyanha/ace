@@ -13,6 +13,13 @@
   <bean id="localeMessageSource" class="ch.iserver.ace.application.LocaleMessageSourceImpl">
     <constructor-arg><ref local="messageSource"/></constructor-arg>
   </bean>
+  
+  <bean id="applicationController" class="ch.iserver.ace.application.ApplicationControllerImpl">
+    <property name="mainFrame" ref="persistentMainFrame"/>
+    <property name="preferences" ref="preferencesStore"/>
+    <property name="messages" ref="localeMessageSource"/>
+    <property name="documentManager" ref="documentManager"/>
+  </bean>
 
   <bean id="appFactory" class="ch.iserver.ace.application.ApplicationFactoryImpl">
     <property name="messageSource"><ref local="localeMessageSource"/></property>

@@ -54,13 +54,12 @@
 
   <bean id="appSettingsAction" class="ch.iserver.ace.application.action.ApplicationSettingsAction">
     <constructor-arg index="0"><ref bean="localeMessageSource"/></constructor-arg>
-    <constructor-arg index="1"><ref bean="preferencesStore"/></constructor-arg>
-    <constructor-arg index="2"><ref bean="persistentMainFrame"/></constructor-arg>
+    <constructor-arg index="1"><ref bean="applicationController"/></constructor-arg>
   </bean>
 
   <bean id="appExitAction" class="ch.iserver.ace.application.action.ApplicationExitAction">
     <constructor-arg><ref bean="localeMessageSource"/></constructor-arg>
-    <constructor-arg><ref bean="documentManager"/></constructor-arg>
+    <constructor-arg><ref bean="applicationController"/></constructor-arg>
   </bean>
 
 
@@ -176,7 +175,7 @@
 
   <bean id="helpAboutAction" class="ch.iserver.ace.application.action.HelpAboutAction">
     <constructor-arg index="0"><ref bean="localeMessageSource"/></constructor-arg>
-    <constructor-arg index="1"><ref bean="persistentMainFrame"/></constructor-arg>
+    <constructor-arg index="1"><ref bean="applicationController"/></constructor-arg>
   </bean>
 
 

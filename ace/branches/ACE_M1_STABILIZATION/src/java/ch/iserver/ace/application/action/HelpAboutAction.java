@@ -21,31 +21,28 @@
 
 package ch.iserver.ace.application.action;
 
-import java.awt.Frame;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
+import ch.iserver.ace.application.ApplicationController;
 import ch.iserver.ace.application.LocaleMessageSource;
-import ch.iserver.ace.application.dialog.AboutDialog;
-import ch.iserver.ace.application.dialog.TitledDialog;
+import ch.iserver.ace.util.ParameterValidator;
 
 
 
 public class HelpAboutAction extends AbstractAction {
-		
-	private final LocaleMessageSource messages;
 	
-	private final TitledDialog dialog;
+	private ApplicationController controller;
 	
-	public HelpAboutAction(LocaleMessageSource messageSource, Frame owner) {
+	public HelpAboutAction(LocaleMessageSource messageSource, ApplicationController controller) {
 		super(messageSource.getMessage("mHelpAbout"), messageSource.getIcon("iMenuHelpAbout"));
-		this.messages = messageSource;
-		this.dialog = new AboutDialog(owner, messages);
+		ParameterValidator.notNull("controller", controller);
+		this.controller = controller;
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		dialog.showDialog();
+		controller.showAbout();
 	}
 
 }

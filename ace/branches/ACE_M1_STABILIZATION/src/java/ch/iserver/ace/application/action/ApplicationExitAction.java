@@ -21,38 +21,29 @@
 
 package ch.iserver.ace.application.action;
 
-import ch.iserver.ace.application.DocumentManager;
-import ch.iserver.ace.application.LocaleMessageSource;
-import java.awt.event.ActionEvent;
-import javax.swing.AbstractAction;
-import javax.swing.Icon;
-
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+
+import javax.swing.AbstractAction;
 import javax.swing.KeyStroke;
+
+import ch.iserver.ace.application.ApplicationController;
+import ch.iserver.ace.application.LocaleMessageSource;
 
 
 
 public class ApplicationExitAction extends AbstractAction {
 
-	private DocumentManager documentManager;
+	private ApplicationController controller;
 
-	public ApplicationExitAction(LocaleMessageSource messageSource, DocumentManager documentManager) {
+	public ApplicationExitAction(LocaleMessageSource messageSource, ApplicationController controller) {
 		super(messageSource.getMessage("mAppExit"));
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke('Q', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
-		this.documentManager = documentManager;
+		this.controller = controller;
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		System.out.println("ApplicationExitAction: ");
-		/*System.out.println("ActionCommand: " + e.getActionCommand());
-		System.out.println("Modifiers: " + e.getModifiers());
-		System.out.println("getWhen: " + e.getWhen());
-		System.out.println("paramString: " + e.paramString());
-		System.out.println("source: " + e.getSource());
-		// check for unsaved documents
-		*/
-		documentManager.exitApplication();
-		System.exit(0);
+		controller.quit();
 	}
 
 }

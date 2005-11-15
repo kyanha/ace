@@ -21,32 +21,28 @@
 
 package ch.iserver.ace.application.action;
 
-import java.awt.Frame;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
+import ch.iserver.ace.application.ApplicationController;
 import ch.iserver.ace.application.LocaleMessageSource;
-import ch.iserver.ace.application.dialog.PreferencesDialog;
-import ch.iserver.ace.application.dialog.TitledDialog;
-import ch.iserver.ace.application.preferences.PreferencesStore;
+import ch.iserver.ace.util.ParameterValidator;
 
 
 
 public class ApplicationSettingsAction extends AbstractAction {
 		
-	private final TitledDialog dialog;
+	private final ApplicationController controller;
 	
-	public ApplicationSettingsAction(LocaleMessageSource messageSource, 
-			PreferencesStore preferences,
-			Frame owner) {
+	public ApplicationSettingsAction(LocaleMessageSource messageSource, ApplicationController controller) {
 		super(messageSource.getMessage("mAppSettings"), messageSource.getIcon("iMenuAppSettings"));
-		this.dialog = new PreferencesDialog(owner, messageSource, preferences);
-		this.dialog.setLocationRelativeTo(owner);
+		ParameterValidator.notNull("controller", controller);
+		this.controller = controller;
 	}
 			
 	public void actionPerformed(ActionEvent e) {
-		dialog.showDialog();
+		controller.showPreferences();
 	}
 
 }
