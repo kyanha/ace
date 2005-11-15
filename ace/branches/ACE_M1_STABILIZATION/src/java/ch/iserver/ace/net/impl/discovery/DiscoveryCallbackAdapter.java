@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:DiscoveryCallbackAdapter.java 1205 2005-11-14 07:57:10Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -145,7 +145,7 @@ class DiscoveryCallbackAdapter {
 			RemoteUserProxyExt proxy = (RemoteUserProxyExt)remoteUserProxies.get(userId);
 			MutableUserDetails details = (MutableUserDetails)proxy.getUserDetails();
 			details.setAddress(address);
-			forward.userDetailsChanged(proxy);
+			forward.userDiscoveryCompleted(proxy);
 		} else {
 			LOG.warn("Host address received for unknown user ["+serviceName+"]");
 		}

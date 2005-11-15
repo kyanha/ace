@@ -57,6 +57,7 @@ class ResolveListenerImpl extends BaseListenerImpl implements ResolveListener {
 			String fullName, String hostName, int port, TXTRecord txtRecord) {
 		String serviceName = Bonjour.getServiceName(fullName);
 		String userName = TXTRecordProxy.get(TXTRecordProxy.TXT_USER, txtRecord);
+		LOG.debug("serviceResolved("+serviceName+", "+userName+")");
 		String userId = TXTRecordProxy.get(TXTRecordProxy.TXT_USERID, txtRecord);
 		adapter.userDiscovered(serviceName, userName, userId, port);
 		resolver.stop();

@@ -50,24 +50,25 @@ public class PublishDocumentPrepareFilter extends AbstractRequestFilter {
 	 */
 	public void process(Request request) {
 		if (request.getType() == ProtocolConstants.PUBLISH) {
-			Object doc = request.getPayload();
-			try {
-				byte[] data = serializer.createNotification(ProtocolConstants.PUBLISH, doc);
-				
-				//send data to each known remote user
-				SessionManager manager = SessionManager.getInstance();
-				Iterator iter = manager.getSessions().iterator();
-				while (iter.hasNext()) {
-					RemoteUserSession session = (RemoteUserSession)iter.next();
-					ParticipantConnectionExt connection = session.getConnection();
-					connection.send(data, doc.toString(), listener);
+			if (SessionManager.getInstance().size() > 0) {
+				Object doc = request.getPayload();
+				try {
+					byte[] data = serializer.createNotification(ProtocolConstants.PUBLISH, doc);
+					
+					//send data to each known remote user
+					SessionManager manager = SessionManager.getInstance();
+					Iterator iter = manager.getSessions().iterator();
+					while (iter.hasNext()) {
+						RemoteUserSession session = (RemoteUserSession)iter.next();
+						ParticipantConnectionExt connection = session.getConnection();
+						connection.send(data, doc.toString(), listener);
+					}
+					
+				} catch (Exception e) {
+					//TODO: handling
+					LOG.error(e);
 				}
-				
-			} catch (Exception e) {
-				//TODO: handling
-				LOG.error(e);
 			}
-			
 		} else { //Forward
 			super.process(request);
 		}

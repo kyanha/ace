@@ -34,6 +34,7 @@ public class DiscoveryCallbackImplTest extends TestCase {
 		discoveryCallback.userDetailsChanged(proxy);
 		discoveryCallback.userDiscarded(proxy);
 		discoveryCallback.userDiscovered(proxy);
+		discoveryCallback.userDiscoveryCompleted(proxy);
 		
 		
 		// verify

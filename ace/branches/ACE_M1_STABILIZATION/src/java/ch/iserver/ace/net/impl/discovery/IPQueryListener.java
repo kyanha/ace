@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:IPQueryListener.java 1205 2005-11-14 07:57:10Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -54,6 +54,7 @@ public class IPQueryListener extends AbstractQueryListener {
 			LOG.error("Could not resolve address ["+e.getMessage()+"]");
 		}
 		String serviceName = getNextService();
+		LOG.info("userAddressResolved("+serviceName+", "+address);
 		adapter.userAddressResolved(serviceName, address);
 		query.stop();
 	}

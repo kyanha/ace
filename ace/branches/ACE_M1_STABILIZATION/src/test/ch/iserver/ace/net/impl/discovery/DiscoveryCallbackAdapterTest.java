@@ -85,7 +85,7 @@ public class DiscoveryCallbackAdapterTest extends TestCase {
 		InetAddress addr = InetAddress.getByName("147.87.14.145");
 		details.setAddress(addr);
 		proxy.setUserDetails(details);
-		callback.userDetailsChanged(proxy);
+		callback.userDiscoveryCompleted(proxy);
 		
 		callbackCtrl.replay();
 		

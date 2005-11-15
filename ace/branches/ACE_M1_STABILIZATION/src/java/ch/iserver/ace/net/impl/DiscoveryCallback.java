@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:DiscoveryCallback.java 1205 2005-11-14 07:57:10Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -39,6 +39,15 @@ public interface DiscoveryCallback {
 	 * @param proxy
 	 */
 	void userDiscarded(RemoteUserProxyExt proxy);
+	
+	/**
+	 * Called when the user discovery completed, i.e.
+	 * when all information for a user has been gathered, 
+	 * including its host address.
+	 * 
+	 * @param proxy
+	 */
+	void userDiscoveryCompleted(RemoteUserProxyExt proxy); 
 	
 	/**
 	 * 

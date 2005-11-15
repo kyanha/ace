@@ -58,7 +58,6 @@ public class DocumentDiscoveryPrepareFilter extends AbstractRequestFilter {
 				LOG.error("could no serialize ["+e.getMessage()+"]");
 			}
 			
-			
 		} else {
 			super.process(request);
 		}

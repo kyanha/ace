@@ -130,6 +130,7 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	}
 
 	public synchronized DocumentServer publish(DocumentServerLogic logic, DocumentDetails details) {
+		LOG.info("--> publish("+details+")");
 		PublishedDocument doc = new PublishedDocument(UUID.nextUUID(), logic, details, requestChain);
 		
 		//TODO: maybe I need a map id-doc, get published docs at GetPDFilter
@@ -138,7 +139,7 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 		//TODO: threading?
 		Request request = new RequestImpl(ProtocolConstants.PUBLISH, doc);
 		requestChain.process(request);
-		
+		LOG.info("<-- publish()");
 		return doc;
 	}
 	
@@ -148,9 +149,11 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	
 	public void discoverDocuments(RemoteUserProxyExt proxy) {
 		//TODO: possibly include SingleThreadDomain between DiscoveryCallbackImpl and DocumentDiscovery?
-		LOG.info("--> start document discovery for ["+proxy.getUserDetails().getUsername()+"]");
+		LOG.info("--> discoverDocuments() for ["+proxy.getUserDetails().getUsername()+"]");
 		
 		Request request = new RequestImpl(ProtocolConstants.PUBLISHED_DOCUMENTS, proxy);
 		requestChain.process(request);
+		
+		LOG.info("<-- discoverDocuments()");
 	}
 }
