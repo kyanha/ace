@@ -284,7 +284,7 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 			UserListener[] listeners = (UserListener[]) this.listeners.getListeners(UserListener.class);
 			for (int i = 0; i < listeners.length; i++) {
 				UserListener listener = listeners[i];
-				listener.userDiscovered(user);
+				listener.userDiscarded(user);
 			}
 		}
 	}
