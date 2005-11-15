@@ -21,6 +21,7 @@
 
 package ch.iserver.ace.net.impl.protocol;
 
+import java.util.Collection;
 import java.util.Iterator;
 
 import org.apache.log4j.Logger;
@@ -56,7 +57,9 @@ public class ConcealDocumentPrepareFilter extends AbstractRequestFilter {
 			
 				//send data to each known remote user
 				SessionManager manager = SessionManager.getInstance();
-				Iterator iter = manager.getSessions().iterator();
+				Collection sessions = manager.getSessions();
+				LOG.info("conceal at "+sessions.size()+" users.");
+				Iterator iter = sessions.iterator();
 				while (iter.hasNext()) {
 					RemoteUserSession session = (RemoteUserSession)iter.next();
 					ParticipantConnectionExt connection = session.getConnection();
