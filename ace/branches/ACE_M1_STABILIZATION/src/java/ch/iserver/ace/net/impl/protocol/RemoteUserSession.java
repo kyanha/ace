@@ -45,7 +45,7 @@ public class RemoteUserSession {
 	private ParticipantConnectionExt connection;
 	private RemoteUserProxyExt user;
 	private boolean isInitiated;
-	private int channelNo;
+	private boolean isAlive;
 	
 	public RemoteUserSession(InetAddress address, int port, RemoteUserProxyExt user) {
 		ParameterValidator.notNull("address", address);
@@ -55,39 +55,25 @@ public class RemoteUserSession {
 		this.session = null;
 		this.user = user;
 		isInitiated = false;
-	}
-	
-	public void initiate() {
-		if ( session == null ) {
-			try {
-				session =  TCPSessionCreator.initiate(host, port);
-				LOG.info("initiated session to "+host+":"+port);
-				isInitiated = true;
-			} catch (BEEPException be) {
-				//TODO: retry strategy?
-				LOG.error("could not initiate session ["+be+"]");
-			}
-		}
+		isAlive = true;
 	}
 	
 	/**
-	 * Cleans up the session. No methods may be called
-	 * after a call to <code>cleanup()</code>.
+	 * 
+	 * If the session has been cleaned up, an <code>IllegalStateExeption</code>
+	 * is thrown.
+	 * 
+	 * @return
 	 */
-	public void cleanup() {
-		connection = null;
-		session = null;
-		user = null;
-	}
-	
-	public ParticipantConnectionExt getConnection() {
-		if (!isInitiated()) {
+	public synchronized ParticipantConnectionExt getConnection() {
+		if (!isAlive)
+			throw new IllegalStateException("session has been ended");
+		
+		if (!isInitiated())
 			initiate();
-		}
 		if (connection == null) {
 			try {
 			Channel channel = session.startChannel(ProtocolConstants.PROFILE_URI);
-			channelNo = channel.getNumber();
 			connection = new ParticipantConnectionImpl(channel);
 			} catch (BEEPException be) {
 				//TODO: retry strategy?
@@ -95,6 +81,38 @@ public class RemoteUserSession {
 			}
 		}
 		return connection;
+	}
+	
+	/**
+	 * Helper method to initiate the TCPSession for this 
+	 * RemoteUserSession.
+	 *
+	 * @see TCPSession
+	 */
+	private void initiate() {
+		try {
+			session =  TCPSessionCreator.initiate(host, port);
+			LOG.info("initiated session to "+host+":"+port);
+			isInitiated = true;
+		} catch (BEEPException be) {
+			//TODO: retry strategy?
+			LOG.error("could not initiate session ["+be+"]");
+		}
+	}
+	
+	/**
+	 * Cleans up the session. No methods may be called
+	 * after a call to <code>cleanup()</code>.
+	 */
+	public synchronized void cleanup() {
+		connection = null;
+		session = null;
+		user = null;
+		isAlive = false;
+	}
+	
+	public synchronized boolean isAlive() {
+		return isAlive;
 	}
 	
 	public boolean isInitiated() {
@@ -112,18 +130,4 @@ public class RemoteUserSession {
 	public int getPort() {
 		return port;
 	}
-	
-	/**
-	 * Returns -1 if no channel has been started yet,
-	 * otherwise the channel's number.
-	 * 
-	 * @return int 	the number of the channel or -1 
-	 * 				if no channel has been started
-	 */
-	public int getChannelNo() {
-		return (isInitiated()) ? channelNo : -1;
-	}
-	
-	
-	
 }
