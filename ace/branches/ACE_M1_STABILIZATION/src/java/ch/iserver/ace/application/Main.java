@@ -54,8 +54,6 @@ public class Main {
 			UIManager.setLookAndFeel("com.jgoodies.looks.plastic.PlasticXPLookAndFeel");
 		} catch(Exception e) {}*/
 
-		((CollaborationService)context.getBean("collaborationService")).addUserListener((UserViewController)context.getBean("userViewController"));
-
 		// create frame
 		JFrame frame = new JFrame();
 		frame.addWindowListener(new WindowAdapter() {
@@ -64,13 +62,19 @@ public class Main {
 				((ApplicationExitAction)context.getBean("appExitAction")).actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "Exit"));
 			}
 		});
-		frame.setSize(640, 480);
+		frame.setSize(800, 480);
 		ApplicationFactory applicationFactory = (ApplicationFactory)context.getBean("appFactory");
 		frame.setJMenuBar(applicationFactory.createMenuBar());
 		frame.getContentPane().add(BorderLayout.PAGE_START, applicationFactory.createToolBar());
 		frame.getContentPane().add(BorderLayout.CENTER, applicationFactory.createComponentPane());
 		frame.getContentPane().add(BorderLayout.PAGE_END, applicationFactory.createStatusBar());		
 		frame.show();
+		
+		// register listeners & start
+		CollaborationService collaborationService = (CollaborationService)context.getBean("collaborationService");
+		collaborationService.addUserListener((UserViewController)context.getBean("userViewController"));
+		collaborationService.addDocumentListener((BrowseViewController)context.getBean("browseViewController"));
+		collaborationService.start();
 	}
 	
 }
