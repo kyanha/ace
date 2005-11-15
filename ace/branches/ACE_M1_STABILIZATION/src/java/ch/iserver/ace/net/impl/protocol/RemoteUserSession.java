@@ -61,6 +61,7 @@ public class RemoteUserSession {
 		if ( session == null ) {
 			try {
 				session =  TCPSessionCreator.initiate(host, port);
+				LOG.info("initiated session to "+host+":"+port);
 				isInitiated = true;
 			} catch (BEEPException be) {
 				//TODO: retry strategy?

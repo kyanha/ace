@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:RequestFilterFactory.java 1205 2005-11-14 07:57:10Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -33,6 +33,7 @@ public class RequestFilterFactory {
 		Deserializer deserializer = DeserializerImpl.getInstance();
 		listener.init(deserializer, createClientChainForResponses());
 		Serializer serializer = SerializerImpl.getInstance();
+		filter = new ConcealDocumentPrepareFilter(filter, serializer, listener);
 		filter = new PublishDocumentPrepareFilter(filter, serializer, listener); 
 		filter = new DocumentDiscoveryPrepareFilter(filter, serializer, listener);
 		return filter;

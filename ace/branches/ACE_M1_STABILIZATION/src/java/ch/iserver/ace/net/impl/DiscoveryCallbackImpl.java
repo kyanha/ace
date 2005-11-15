@@ -62,6 +62,9 @@ public class DiscoveryCallbackImpl implements DiscoveryCallback {
 		LOG.debug("userDiscarded("+proxy+")");
 		callback.userDiscarded(proxy);
 		//TODO: clean up session manager etc.
+		
+		//TODO: remove documents, call documents discarded
+		
 	}
 
 	/**
