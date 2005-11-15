@@ -22,13 +22,54 @@
 package ch.iserver.ace.application.editor;
 
 import ch.iserver.ace.application.*;
+import java.awt.*;
 import javax.swing.*;
+import javax.swing.text.DefaultStyledDocument;
+import javax.swing.text.StyledDocument;
+import java.util.List;
+import com.jgoodies.uif_lite.panel.SimpleInternalFrame;
 
 
-public class DummyEditor extends EditorImpl {
 
-	public DummyEditor() {
-		setEnabled(false);
+public class DummyEditor extends JPanel implements Editor {
+
+	JTextPane textPane;
+	SimpleInternalFrame editorFrame;
+	LocaleMessageSource messageSource;
+
+	public DummyEditor(LocaleMessageSource messageSource, List toolBarActions) {
+		this.messageSource = messageSource;
+		// create toolbar
+		JToolBar editorToolBar = new JToolBar();
+		for(int i = 0; i < toolBarActions.size(); i++) {
+			editorToolBar.add(((AbstractAction)toolBarActions.get(i)));
+		}
+		// create editor
+		//JPanel innerEditorPane = new JPanel();
+		textPane = new JTextPane();
+		setFontSize(12);
+		
+		// add components
+		editorFrame = new SimpleInternalFrame(null, " ", editorToolBar, new JScrollPane(textPane));
+		setLayout(new BorderLayout());
+		add(editorFrame);
+	}
+	
+	public void setTitle(String title) {
+		editorFrame.setTitle(title);
+	}
+	
+	public void setDocument(StyledDocument document) {
+		textPane.setDocument(document);
+	}
+	
+	public void setEnabled(boolean enabled) {
+		//
+		textPane.setEnabled(enabled);
+	}
+	
+	public void setFontSize(int size) {
+		textPane.setFont(new Font("Courier", Font.PLAIN, size));
 	}
 
 }

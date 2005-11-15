@@ -21,13 +21,10 @@
 
 package ch.iserver.ace.application.editor;
 
-import javax.swing.JTextPane;
+import javax.swing.JPanel;
 
 
 
-public class EditorImpl extends JTextPane {
-
-	public void setTitle(String title) {
-	}
+public abstract class EditorImpl extends JPanel {
 
 }

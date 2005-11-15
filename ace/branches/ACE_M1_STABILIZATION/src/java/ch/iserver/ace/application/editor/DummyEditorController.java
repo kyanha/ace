@@ -31,7 +31,6 @@ public class DummyEditorController implements ItemSelectionChangeListener {
 	private DummyEditor editor;
 
 	public DummyEditorController(DummyEditor editor, DocumentViewController documentViewController) {
-		//this.messageSource = messageSource;
 		this.editor = editor;
 		documentViewController.addItemSelectionChangeListener(this);
 	}
@@ -39,14 +38,13 @@ public class DummyEditorController implements ItemSelectionChangeListener {
 	public void itemSelectionChanged(ItemSelectionChangeEvent e) {
 		if(e.getItem() != null) {
 			// enable editor
-			// set title
-			// set editor document
 			editor.setDocument(((DocumentItem)e.getItem()).getEditorDocument());
+			editor.setTitle(((DocumentItem)e.getItem()).getTitle());
 			editor.setEnabled(true);
 		} else {
 			// disable editor
-			// set title to ""
 			editor.setDocument(new DefaultStyledDocument());
+			editor.setTitle("");
 			editor.setEnabled(false);
 		}
 	}
