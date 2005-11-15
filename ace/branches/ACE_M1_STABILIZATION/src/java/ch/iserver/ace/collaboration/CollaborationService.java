@@ -35,6 +35,12 @@ import ch.iserver.ace.UserDetails;
 public interface CollaborationService {
 	
 	/**
+	 * Starts the CollaborationService. No events are fired before this
+	 * method is called.
+	 */
+	void start();
+	
+	/**
 	 * Sets the UserDetails for the local user.
 	 * 
 	 * @param details the new UserDetails

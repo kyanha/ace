@@ -3,8 +3,7 @@
 <beans>
 
   <bean id="collaborationService" 
-        class="ch.iserver.ace.collaboration.jupiter.CollaborationServiceImpl"
-        init-method="start">
+        class="ch.iserver.ace.collaboration.jupiter.CollaborationServiceImpl">
     <constructor-arg><ref bean="networkService"/></constructor-arg>
     <property name="userRegistry"><ref local="userRegistry"/></property>
     <property name="documentRegistry"><ref local="documentRegistry"/></property>
