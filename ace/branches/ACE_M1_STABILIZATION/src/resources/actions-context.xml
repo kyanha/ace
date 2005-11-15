@@ -53,7 +53,8 @@
   </bean>
 
   <bean id="appSettingsAction" class="ch.iserver.ace.application.action.ApplicationSettingsAction">
-    <constructor-arg><ref bean="localeMessageSource"/></constructor-arg>
+    <constructor-arg index="0"><ref bean="localeMessageSource"/></constructor-arg>
+    <constructor-arg index="1"><ref bean="preferencesStore"/></constructor-arg>
   </bean>
 
   <bean id="appExitAction" class="ch.iserver.ace.application.action.ApplicationExitAction">

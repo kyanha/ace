@@ -21,22 +21,36 @@
 
 package ch.iserver.ace.application.action;
 
-import ch.iserver.ace.application.LocaleMessageSource;
 import java.awt.event.ActionEvent;
+
 import javax.swing.AbstractAction;
-import javax.swing.Icon;
+
+import ch.iserver.ace.application.LocaleMessageSource;
+import ch.iserver.ace.application.dialog.PreferencesDialog;
+import ch.iserver.ace.application.dialog.TitledDialog;
+import ch.iserver.ace.application.preferences.PreferencesStore;
 
 
 
 public class ApplicationSettingsAction extends AbstractAction {
 
-	public ApplicationSettingsAction(LocaleMessageSource messageSource) {
+	private final LocaleMessageSource messages;
+	
+	private final PreferencesStore preferences;
+	
+	public ApplicationSettingsAction(LocaleMessageSource messageSource, PreferencesStore preferences) {
 		super(messageSource.getMessage("mAppSettings"), messageSource.getIcon("iMenuAppSettings"));
-		setEnabled(false);
+		this.messages = messageSource;
+		this.preferences = preferences;
+	}
+	
+	protected PreferencesStore getPreferencesStore() {
+		return preferences;
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		System.out.println("ApplicationSettingsAction");
+		TitledDialog dialog = new PreferencesDialog(messages, getPreferencesStore());
+		dialog.showDialog();
 	}
 
 }

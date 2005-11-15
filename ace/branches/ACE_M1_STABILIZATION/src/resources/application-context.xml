@@ -91,6 +91,11 @@
     <constructor-arg><ref local="documentViewController"/></constructor-arg>
     <property name="collaborationService"><ref bean="collaborationService"/></property>
   </bean>
+  
+  
+  <bean id="preferencesStore" class="ch.iserver.ace.application.preferences.JDKPreferencesStore">
+    <constructor-arg><value>ch/iserver/ace</value></constructor-arg>
+  </bean>
 
 
 </beans>
