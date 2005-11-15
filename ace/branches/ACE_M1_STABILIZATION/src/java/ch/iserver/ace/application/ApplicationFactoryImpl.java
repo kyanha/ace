@@ -130,6 +130,18 @@ public class ApplicationFactoryImpl implements ApplicationFactory, ApplicationCo
 		return componentPane;
 	}
 	
+	public JPanel createPersistentContentPane() {
+		//return (PersistentContentPane)context.getBean("persistentContentPane");
+
+		DocumentView documentView = (DocumentView)context.getBean("documentView");
+		BrowseView browseView = (BrowseView)context.getBean("browseView");
+		Editor editor = (Editor)context.getBean("dummyEditor");
+		ParticipantView participantView = (ParticipantView)context.getBean("participantView");
+		UserView userView = (UserView)context.getBean("userView");
+
+		return new PersistentContentPane(documentView, browseView, editor, participantView, userView);
+	}
+	
 	public JPanel createStatusBar() {
 		JPanel statusBar = new JPanel();
 		statusBar.setPreferredSize(new Dimension(0, 16));

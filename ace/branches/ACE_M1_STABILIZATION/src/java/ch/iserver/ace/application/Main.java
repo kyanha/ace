@@ -46,21 +46,24 @@ public class Main {
 	};
 	
 	public static void main(String[] args) {
-		final ApplicationContext context = new ClassPathXmlApplicationContext(CONTEXT_FILES);
+		ApplicationContext context = new ClassPathXmlApplicationContext(CONTEXT_FILES);
 		LocaleMessageSource messageSource = new LocaleMessageSourceImpl(context);
 
-		// set look & feel
-		/*try {
-			UIManager.setLookAndFeel("com.jgoodies.looks.plastic.PlasticXPLookAndFeel");
-		} catch(Exception e) {}*/
+		// get application factory
+		ApplicationFactory applicationFactory = (ApplicationFactory)context.getBean("appFactory");
 
 		// create frame
-		PersistentFrame frame = (PersistentFrame)context.getBean("mainFrame");
-		frame.initFrame();
+		PersistentFrame frame = (PersistentFrame)context.getBean("persistentMainFrame");
+		frame.setMenuBar(applicationFactory.createMenuBar());
+		frame.setToolBar(applicationFactory.createToolBar());
+		frame.setContentPane(applicationFactory.createPersistentContentPane());
+		frame.setStatusBar(applicationFactory.createStatusBar());
 		frame.show();
 		
-		// register listeners & start
+		// get collaboration service
 		CollaborationService collaborationService = (CollaborationService)context.getBean("collaborationService");
+
+		// register listeners & start
 		collaborationService.addUserListener((UserViewController)context.getBean("userViewController"));
 		collaborationService.addDocumentListener((BrowseViewController)context.getBean("browseViewController"));
 		collaborationService.start();

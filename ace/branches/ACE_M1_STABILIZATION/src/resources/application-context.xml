@@ -19,11 +19,18 @@
   </bean>
 
 
-  <bean id="mainFrame" class="ch.iserver.ace.application.PersistentFrame">
+  <bean id="persistentMainFrame" class="ch.iserver.ace.application.PersistentFrame">
     <constructor-arg><ref bean="appExitAction"/></constructor-arg>
     <property name="messageSource"><ref local="localeMessageSource"/></property>
   </bean>
 
+  <!--bean id="persistentContentPane" class="ch.iserver.ace.application.PersistentContentPane">
+    <constructor-arg><ref bean="documentView"/></constructor-arg>
+    <constructor-arg><ref bean="browseView"/></constructor-arg>
+    <constructor-arg><ref bean="dummyEditor"/></constructor-arg>
+    <constructor-arg><ref bean="participantView"/></constructor-arg>
+    <constructor-arg><ref bean="userView"/></constructor-arg>
+  </bean-->
 
 
 
