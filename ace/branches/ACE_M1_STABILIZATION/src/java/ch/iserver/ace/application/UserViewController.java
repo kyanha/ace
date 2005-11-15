@@ -37,7 +37,6 @@ public class UserViewController extends ViewControllerImpl implements UserListen
 	}
 	
 	public void userDiscarded(RemoteUser user) {
-System.out.println("userDiscarded");
 		// remove discarded user from the list
 		userSourceList.getReadWriteLock().writeLock().lock();
 		try {
@@ -48,7 +47,6 @@ System.out.println("userDiscarded");
 	}
 	
 	public void userDiscovered(RemoteUser user) {
-System.out.println("userDiscovered");
 		// add discovered user to the list
 		userSourceList.getReadWriteLock().writeLock().lock();
 		try {
