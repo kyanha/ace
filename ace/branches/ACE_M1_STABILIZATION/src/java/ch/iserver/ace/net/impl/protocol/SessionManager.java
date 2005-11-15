@@ -59,6 +59,10 @@ public class SessionManager {
 		return newSession;
 	}
 	
+	public synchronized RemoteUserSession removeSession(String userid) {
+		return (RemoteUserSession) sessions.remove(userid);
+	}
+	
 	/**
 	 * Gets the session for the user.
 	 * 

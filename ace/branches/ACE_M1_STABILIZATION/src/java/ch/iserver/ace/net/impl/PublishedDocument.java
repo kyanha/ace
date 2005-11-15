@@ -21,9 +21,6 @@
 
 package ch.iserver.ace.net.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.net.DocumentServer;
 import ch.iserver.ace.net.DocumentServerLogic;
@@ -45,7 +42,6 @@ public class PublishedDocument implements DocumentServer {
 	private DocumentServerLogic logic;
 	private DocumentDetails details;
 	private RequestFilter filter;
-	private List joinedParticipants;
 	private boolean isConcealed, isShutdown;
 	
 	public PublishedDocument(String id, DocumentServerLogic logic, DocumentDetails details, RequestFilter filter) {
@@ -56,7 +52,6 @@ public class PublishedDocument implements DocumentServer {
 		this.filter = (filter != null) ? filter : NullRequestFilter.getInstance();
 		this.isConcealed = false;
 		this.isShutdown = false;
-		joinedParticipants = new ArrayList();
 	}
 
 	public DocumentDetails getDocumentDetails() {
@@ -65,7 +60,6 @@ public class PublishedDocument implements DocumentServer {
 	
 	public synchronized ParticipantPort join(ParticipantConnectionExt connection) throws JoinException {
 		if (!isConcealed()) {
-			//TODO: joinedParticipants.add(connection);
 			return logic.join(connection);
 		} else {
 			throw new JoinException();

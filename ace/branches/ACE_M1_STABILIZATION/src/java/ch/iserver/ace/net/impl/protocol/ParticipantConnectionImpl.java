@@ -117,6 +117,11 @@ public class ParticipantConnectionImpl implements ParticipantConnectionExt {
 		//TODO: consider if on session shutdown it is more appropriate to 
 		//notify the participant on close() invocation or on DocumentServer.shutdown()
 		//invocation
+		try {
+			channel.close();
+		} catch (BEEPException be) {
+			LOG.warn("could not close channel ["+be.getMessage()+"]");
+		}
 	}
 	
 }

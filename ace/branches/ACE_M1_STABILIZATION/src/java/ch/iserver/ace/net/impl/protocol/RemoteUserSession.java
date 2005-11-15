@@ -70,6 +70,22 @@ public class RemoteUserSession {
 		}
 	}
 	
+	/**
+	 * Cleans up the session. No methods may be called
+	 * after a call to <code>cleanup()</code>.
+	 */
+	public void cleanup() {
+		connection.close();
+		try {
+			session.close();
+		} catch (BEEPException be) {
+			LOG.warn("could not close session ["+be.getMessage()+"]");
+		}
+		connection = null;
+		session = null;
+		user = null;
+	}
+	
 	public ParticipantConnectionExt getConnection() {
 		if (!isInitiated()) {
 			initiate();

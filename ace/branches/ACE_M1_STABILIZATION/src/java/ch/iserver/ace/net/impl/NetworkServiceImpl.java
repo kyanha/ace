@@ -80,8 +80,10 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 		return instance;
 	}
 	
-	public void start() {
-		//since the callback to the upper layer is available now, 
+	/**
+	 * @inheritDoc
+	 */
+	public void start() { 
 		//start discovery process
 		launchDiscovery();
 	}

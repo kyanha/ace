@@ -23,6 +23,9 @@ package ch.iserver.ace.net.impl;
 import org.apache.log4j.Logger;
 
 import ch.iserver.ace.net.NetworkServiceCallback;
+import ch.iserver.ace.net.RemoteDocumentProxy;
+import ch.iserver.ace.net.impl.protocol.RemoteUserSession;
+import ch.iserver.ace.net.impl.protocol.SessionManager;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
@@ -59,12 +62,20 @@ public class DiscoveryCallbackImpl implements DiscoveryCallback {
 	 * 
 	 */
 	public void userDiscarded(RemoteUserProxyExt proxy) {
-		LOG.debug("userDiscarded("+proxy+")");
+		LOG.debug("--> userDiscarded("+proxy+")");
+		
+		RemoteDocumentProxy[] docs = (RemoteDocumentProxy[]) 
+					proxy.getSharedDocuments().toArray(new RemoteDocumentProxy[0]);
+		
+		callback.documentDiscarded(docs);
 		callback.userDiscarded(proxy);
-		//TODO: clean up session manager etc.
 		
-		//TODO: remove documents, call documents discarded
+		RemoteUserSession session = 
+				SessionManager.getInstance().removeSession(proxy.getId());
+		session.cleanup();
+		//--> session and user proxy ready to be garbage collected
 		
+		LOG.debug("<-- userDiscarded()");
 	}
 
 	/**
