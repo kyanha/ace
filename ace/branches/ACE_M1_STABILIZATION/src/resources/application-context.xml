@@ -18,6 +18,19 @@
     <property name="messageSource"><ref local="localeMessageSource"/></property>
   </bean>
 
+
+  <bean id="mainFrame" class="ch.iserver.ace.application.PersistentFrame">
+    <constructor-arg><ref bean="appExitAction"/></constructor-arg>
+    <property name="messageSource"><ref local="localeMessageSource"/></property>
+  </bean>
+
+
+
+
+
+
+
+
   <!--bean id="editorFactory" class="ch.iserver.ace.application.editor.DummyEditorFactory">
     <property name="messageSource"><ref local="localeMessageSource"/></property>
   </bean-->
