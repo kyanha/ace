@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:DiscoveryLauncher.java 1205 2005-11-14 07:57:10Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -23,12 +23,12 @@ package ch.iserver.ace.net.impl.protocol;
 
 import org.apache.log4j.Logger;
 
-import ch.iserver.ace.net.NetworkServiceCallback;
+import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.net.impl.Discovery;
 import ch.iserver.ace.net.impl.DiscoveryCallback;
 import ch.iserver.ace.net.impl.DiscoveryCallbackImpl;
 import ch.iserver.ace.net.impl.DiscoveryFactory;
-import ch.iserver.ace.net.impl.NetworkServiceExt;
+import ch.iserver.ace.net.impl.NetworkServiceImpl;
 
 /**
  *
@@ -37,22 +37,21 @@ public class DiscoveryLauncher extends Thread {
 
 	private static Logger LOG = Logger.getLogger(DiscoveryLauncher.class);
 	
-	private NetworkServiceCallback callback;
-	private NetworkServiceExt service;
-	private String userId;
+	private NetworkServiceImpl service;
 	
-	public DiscoveryLauncher(String userId, NetworkServiceCallback callback, NetworkServiceExt service) {
-		this.userId = userId;
-		this.callback = callback;
+	public DiscoveryLauncher(NetworkServiceImpl service) {
 		this.service = service;
 	}
 	
 	public void run() {
 		LOG.info("--> run()");
 		DiscoveryFactory factory = DiscoveryFactory.getInstance();
-		DiscoveryCallback discCallback = new DiscoveryCallbackImpl(callback, service);
+		DiscoveryCallback discCallback = new DiscoveryCallbackImpl(service.getCallback(), service);
 		Discovery discovery = factory.createDiscovery(discCallback);
-		discovery.setUserId(userId);
+		discovery.setUserId(service.getUserId());
+		UserDetails details = service.getUserDetails();
+		if (details != null)
+			discovery.setUserDetails(details);
 		service.setDiscovery(discovery);
 		discovery.execute();
 		LOG.info("<-- run()");

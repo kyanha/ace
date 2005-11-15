@@ -65,13 +65,13 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	private static NetworkServiceImpl instance;
 	
 	private NetworkServiceImpl() {
+		//TODO: generate a userid only once and then reuse it! ->  avoid caching problems with dnssd
 		userId = UUID.nextUUID();
+		details = null;
 		LOG.debug("userId: "+userId);
 		publishedDocs = new ArrayList();
 		requestChain = RequestFilterFactory.createClientChain();
 		server = BEEPServerFactory.create();
-		//TODO: when is it appropriate to start the server?
-		server.start();
 	}
 	
 	public static NetworkServiceImpl getInstance() {
@@ -85,8 +85,12 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	 * @inheritDoc
 	 */
 	public void start() { 
+		//TODO: when is it appropriate to start the server?
+		//start protocol server
+		server.start();
 		//start discovery process
-		launchDiscovery();
+		DiscoveryLauncher launcher = new DiscoveryLauncher(this);
+		launcher.start();
 	}
 	
 	
@@ -109,14 +113,6 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 		ParameterValidator.notNull("callback", callback);
 		this.networkCallback = callback;
 	}
-
-	/**
-	 * Launches the discovery process.
-	 */
-	private void launchDiscovery() {
-		DiscoveryLauncher launcher = new DiscoveryLauncher(getUserId(), getCallback(), this);
-		launcher.start();
-	}
 	
 	public void setDiscovery(Discovery discovery) {
 		this.discovery = discovery;
@@ -129,6 +125,10 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	public String getUserId() {
 		return userId;
 	}
+	
+	public UserDetails getUserDetails() {
+		return details;
+	}
 
 	//immediate return
 	public void discoverUser(DiscoveryNetworkCallback callback, InetAddress addr, int port) {
@@ -138,8 +138,6 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	public synchronized DocumentServer publish(DocumentServerLogic logic, DocumentDetails details) {
 		LOG.info("--> publish("+details+")");
 		PublishedDocument doc = new PublishedDocument(UUID.nextUUID(), logic, details, requestChain);
-		
-		//TODO: maybe I need a map id-doc, get published docs at GetPDFilter
 		publishedDocs.add(doc);
 		
 		//TODO: threading?
