@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:TXTRecordProxy.java 1205 2005-11-14 07:57:10Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -40,6 +40,7 @@ class TXTRecordProxy {
 	private static Logger LOG = Logger.getLogger(TXTRecordProxy.class);
 	
 	public static TXTRecord create(final Properties props) {
+		LOG.debug("create("+props+")");
 		TXTRecord r = new TXTRecord();
 		r.set(TXT_VERSION, (String)props.get(Bonjour.KEY_TXT_VERSION));
 		r.set(TXT_USER, (String)props.get(Bonjour.KEY_USER));
