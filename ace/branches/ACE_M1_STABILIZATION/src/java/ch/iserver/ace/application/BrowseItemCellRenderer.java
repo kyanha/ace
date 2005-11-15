@@ -23,6 +23,7 @@ package ch.iserver.ace.application;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 
 import javax.swing.ImageIcon;
@@ -70,13 +71,17 @@ public class BrowseItemCellRenderer extends JPanel implements ListCellRenderer {
 		g.drawImage(iconRemote.getImage(), 2, 1, 14, 14, this);
 
 		// draw document title
-		g.drawString(value.getTitle() + "(" + value.getPublisher() + ")", 20, 10);
+		g.drawString(value.getTitle(), 20, 10);
+		Font blubb = g.getFont();
+		blubb.deriveFont(8);
+		g.setFont(blubb);
+		g.drawString(value.getPublisher(), 30, 22);
 		
 		// draw owner		
 	}
 
 	public Dimension getPreferredSize() {
-		return new Dimension(0, 16);
+		return new Dimension(0, 30);
 	}
 	
 }
