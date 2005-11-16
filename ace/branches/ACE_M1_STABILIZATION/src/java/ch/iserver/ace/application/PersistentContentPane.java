@@ -34,6 +34,20 @@ public class PersistentContentPane extends JPanel {
 	private boolean fullScreenMode = false;
 	private int lastDivider, lastDivider2;
 
+	/*public PersistentContentPane() {
+	}
+	
+	public void setDocumentView(DocumentView documentView) {
+	}
+	public void setBrowseView(BrowseView browseView) {
+	}
+	public void setEditor(Editor editor) {
+	}
+	public void setParticipantView(ParticipantView participantView) {
+	}
+	public void setUserView(UserView userView) {
+	}*/
+
 	public PersistentContentPane(DocumentView documentView, BrowseView browseView,
 			Editor editor, ParticipantView participantView, UserView userView) {
 		setLayout(new BorderLayout());
