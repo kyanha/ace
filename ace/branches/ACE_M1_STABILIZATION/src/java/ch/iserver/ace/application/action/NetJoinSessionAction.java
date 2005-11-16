@@ -21,20 +21,26 @@
 
 package ch.iserver.ace.application.action;
 
+import ch.iserver.ace.application.DocumentManager;
 import ch.iserver.ace.application.ItemSelectionChangeEvent;
+import ch.iserver.ace.application.ItemSelectionChangeListener;
 import ch.iserver.ace.application.LocaleMessageSource;
-import ch.iserver.ace.application.ViewController;
+import ch.iserver.ace.application.BrowseViewController;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
-import java.util.List;
 
 
 
-public class NetJoinSessionAction extends ItemSelectionChangeAction {
+public class NetJoinSessionAction extends AbstractAction implements ItemSelectionChangeListener {
+	
+	private DocumentManager documentManager;
 
-	public NetJoinSessionAction(LocaleMessageSource messageSource, List viewControllers) {
-		super(messageSource.getMessage("mNetJoin"), messageSource.getIcon("iMenuNetJoin"), viewControllers);
+	public NetJoinSessionAction(LocaleMessageSource messageSource, DocumentManager documentManager,
+			BrowseViewController browseController) {
+		super(messageSource.getMessage("mNetJoin"), messageSource.getIcon("iMenuNetJoin"));
 		putValue(SHORT_DESCRIPTION, messageSource.getMessage("mNetJoinTT"));
+		browseController.addItemSelectionChangeListener(this);
+		this.documentManager = documentManager;
 		setEnabled(false);
 	}
 	

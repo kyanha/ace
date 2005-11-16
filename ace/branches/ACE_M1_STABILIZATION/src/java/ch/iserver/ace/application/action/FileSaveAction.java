@@ -24,21 +24,20 @@ package ch.iserver.ace.application.action;
 import ch.iserver.ace.application.DocumentManager;
 import ch.iserver.ace.application.ItemSelectionChangeEvent;
 import ch.iserver.ace.application.LocaleMessageSource;
-import ch.iserver.ace.application.ViewController;
-import java.util.List;
+import ch.iserver.ace.application.DocumentViewController;
 import java.awt.event.ActionEvent;
-
 import java.awt.Toolkit;
 import javax.swing.KeyStroke;
 
 
 
-public class FileSaveAction extends ItemSelectionChangeAction {
+public class FileSaveAction extends DocumentItemSelectionChangeAction {
 
 	private DocumentManager documentManager;
 
-	public FileSaveAction(LocaleMessageSource messageSource, DocumentManager documentManager, List viewControllers) {
-		super(messageSource.getMessage("mFileSave"), messageSource.getIcon("iMenuFileSave"), viewControllers);
+	public FileSaveAction(LocaleMessageSource messageSource, DocumentManager documentManager,
+			DocumentViewController viewController) {
+		super(messageSource.getMessage("mFileSave"), messageSource.getIcon("iMenuFileSave"), viewController);
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke('S', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 		putValue(SHORT_DESCRIPTION, messageSource.getMessage("mFileSaveTT"));
 		this.documentManager = documentManager;

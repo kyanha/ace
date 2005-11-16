@@ -21,20 +21,26 @@
 
 package ch.iserver.ace.application.action;
 
+import ch.iserver.ace.application.DocumentManager;
 import ch.iserver.ace.application.ItemSelectionChangeEvent;
 import ch.iserver.ace.application.LocaleMessageSource;
-import ch.iserver.ace.application.ViewController;
+import ch.iserver.ace.application.DocumentViewController;
+import ch.iserver.ace.application.UserViewController;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
-import java.util.List;
 
 
 
-public class NetInviteUserAction extends ItemSelectionChangeAction {
+public class NetInviteUserAction extends DocumentItemSelectionChangeAction {
 
-	public NetInviteUserAction(LocaleMessageSource messageSource, List viewControllers) {
-		super(messageSource.getMessage("mNetInvite"), messageSource.getIcon("iMenuNetInvite"), viewControllers);
+	private DocumentManager documentManager;
+
+	public NetInviteUserAction(LocaleMessageSource messageSource, DocumentManager documentManager,
+			DocumentViewController viewController, UserViewController userController) {
+		super(messageSource.getMessage("mNetInvite"), messageSource.getIcon("iMenuNetInvite"), viewController);
 		putValue(SHORT_DESCRIPTION, messageSource.getMessage("mNetInviteTT"));
+		userController.addItemSelectionChangeListener(this);
+		this.documentManager = documentManager;
 		setEnabled(false);
 	}
 	

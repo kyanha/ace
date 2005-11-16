@@ -24,18 +24,18 @@ package ch.iserver.ace.application.action;
 import ch.iserver.ace.application.DocumentManager;
 import ch.iserver.ace.application.ItemSelectionChangeEvent;
 import ch.iserver.ace.application.LocaleMessageSource;
-import ch.iserver.ace.application.ViewController;
+import ch.iserver.ace.application.DocumentViewController;
 import java.awt.event.ActionEvent;
-import java.util.List;
 
 
 
-public class FileSaveAllAction extends ItemSelectionChangeAction {
+public class FileSaveAllAction extends DocumentItemSelectionChangeAction {
 
 	private DocumentManager documentManager;
 
-	public FileSaveAllAction(LocaleMessageSource messageSource, DocumentManager documentManager, List viewControllers) {
-		super(messageSource.getMessage("mFileSaveAll"), messageSource.getIcon("iMenuFileSaveAll"), viewControllers);
+	public FileSaveAllAction(LocaleMessageSource messageSource, DocumentManager documentManager,
+			DocumentViewController viewController) {
+		super(messageSource.getMessage("mFileSaveAll"), messageSource.getIcon("iMenuFileSaveAll"), viewController);
 		this.documentManager = documentManager;
 		setEnabled(false);
 	}

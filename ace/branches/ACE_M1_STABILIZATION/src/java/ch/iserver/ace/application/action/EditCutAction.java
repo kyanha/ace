@@ -21,21 +21,25 @@
 
 package ch.iserver.ace.application.action;
 
+import ch.iserver.ace.application.DocumentManager;
 import ch.iserver.ace.application.ItemSelectionChangeEvent;
 import ch.iserver.ace.application.LocaleMessageSource;
-import ch.iserver.ace.application.ViewController;
+import ch.iserver.ace.application.DocumentViewController;
 import java.awt.event.ActionEvent;
-import java.util.List;
 import java.awt.Toolkit;
 import javax.swing.KeyStroke;
 
 
 
-public class EditCutAction extends ItemSelectionChangeAction {
+public class EditCutAction extends DocumentItemSelectionChangeAction {
 
-	public EditCutAction(LocaleMessageSource messageSource, List viewControllers) {
-		super(messageSource.getMessage("mEditCut"), messageSource.getIcon("iMenuEditCut"), viewControllers);
+	private DocumentManager documentManager;
+
+	public EditCutAction(LocaleMessageSource messageSource, DocumentManager documentManager,
+			DocumentViewController viewController) {
+		super(messageSource.getMessage("mEditCut"), messageSource.getIcon("iMenuEditCut"), viewController);
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke('X', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+		this.documentManager = documentManager;
 		setEnabled(false);
 	}
 	

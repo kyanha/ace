@@ -24,20 +24,20 @@ package ch.iserver.ace.application.action;
 import ch.iserver.ace.application.DocumentManager;
 import ch.iserver.ace.application.ItemSelectionChangeEvent;
 import ch.iserver.ace.application.LocaleMessageSource;
-import ch.iserver.ace.application.ViewController;
+import ch.iserver.ace.application.DocumentViewController;
 import java.awt.event.ActionEvent;
-import java.util.List;
 import java.awt.Toolkit;
 import javax.swing.KeyStroke;
 
 
 
-public class FileCloseAction extends ItemSelectionChangeAction {
+public class FileCloseAction extends DocumentItemSelectionChangeAction {
 
 	DocumentManager documentManager;
 
-	public FileCloseAction(LocaleMessageSource messageSource, List viewControllers, DocumentManager documentManager) {
-		super(messageSource.getMessage("mFileClose"), messageSource.getIcon("iMenuFileClose"), viewControllers);
+	public FileCloseAction(LocaleMessageSource messageSource, DocumentManager documentManager,
+			DocumentViewController viewController) {
+		super(messageSource.getMessage("mFileClose"), messageSource.getIcon("iMenuFileClose"), viewController);
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke('W', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 		putValue(SHORT_DESCRIPTION, messageSource.getMessage("mFileCloseTT"));
 		this.documentManager = documentManager;

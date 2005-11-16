@@ -23,27 +23,28 @@ package ch.iserver.ace.application.action;
 
 import ch.iserver.ace.application.ItemSelectionChangeEvent;
 import ch.iserver.ace.application.ItemSelectionChangeListener;
-import ch.iserver.ace.application.ViewController;
-import java.util.List;
+import ch.iserver.ace.application.DocumentViewController;
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
 
 
 
-public abstract class ItemSelectionChangeAction extends AbstractAction implements ItemSelectionChangeListener {
+public abstract class DocumentItemSelectionChangeAction extends AbstractAction implements ItemSelectionChangeListener {
 
-	public ItemSelectionChangeAction(String name, List viewControllers) {
+	public DocumentItemSelectionChangeAction(String name, DocumentViewController viewController) {
 		super(name);
-		for(int i = 0; i < viewControllers.size(); i++) {
+		/*for(int i = 0; i < viewControllers.size(); i++) {
 			((ViewController)viewControllers.get(i)).addItemSelectionChangeListener(this);
-		}
+		}*/
+		viewController.addItemSelectionChangeListener(this);
 	}
 
-	public ItemSelectionChangeAction(String name, Icon icon, List viewControllers) {
+	public DocumentItemSelectionChangeAction(String name, Icon icon, DocumentViewController viewController) {
 		super(name, icon);
-		for(int i = 0; i < viewControllers.size(); i++) {
+		/*for(int i = 0; i < viewControllers.size(); i++) {
 			((ViewController)viewControllers.get(i)).addItemSelectionChangeListener(this);
-		}
+		}*/
+		viewController.addItemSelectionChangeListener(this);
 	}
 	
 	public abstract void itemSelectionChanged(ItemSelectionChangeEvent e);

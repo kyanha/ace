@@ -21,20 +21,26 @@
 
 package ch.iserver.ace.application.action;
 
+import ch.iserver.ace.application.DocumentManager;
 import ch.iserver.ace.application.ItemSelectionChangeEvent;
 import ch.iserver.ace.application.LocaleMessageSource;
-import ch.iserver.ace.application.ViewController;
+import ch.iserver.ace.application.DocumentViewController;
+import ch.iserver.ace.application.ParticipantViewController;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
-import java.util.List;
 
 
 
-public class NetKickParticipantAction extends ItemSelectionChangeAction {
+public class NetKickParticipantAction extends DocumentItemSelectionChangeAction {
 
-	public NetKickParticipantAction(LocaleMessageSource messageSource, List viewControllers) {
-		super(messageSource.getMessage("mNetKick"), messageSource.getIcon("iMenuNetKick"), viewControllers);
+	private DocumentManager documentManager;
+
+	public NetKickParticipantAction(LocaleMessageSource messageSource, DocumentManager documentManager,
+			DocumentViewController viewController, ParticipantViewController participantController) {
+		super(messageSource.getMessage("mNetKick"), messageSource.getIcon("iMenuNetKick"), viewController);
 		putValue(SHORT_DESCRIPTION, messageSource.getMessage("mNetKickTT"));
+		participantController.addItemSelectionChangeListener(this);
+		this.documentManager = documentManager;
 		setEnabled(false);
 	}
 	

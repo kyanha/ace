@@ -25,19 +25,19 @@ import ch.iserver.ace.application.DocumentManager;
 import ch.iserver.ace.application.DocumentItem;
 import ch.iserver.ace.application.ItemSelectionChangeEvent;
 import ch.iserver.ace.application.LocaleMessageSource;
-import ch.iserver.ace.application.ViewController;
+import ch.iserver.ace.application.DocumentViewController;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
-import java.util.List;
 
 
 
-public class NetConcealDocumentAction extends ItemSelectionChangeAction {
+public class NetConcealDocumentAction extends DocumentItemSelectionChangeAction {
 
 	private DocumentManager documentManager;
 
-	public NetConcealDocumentAction(LocaleMessageSource messageSource, DocumentManager documentManager, List viewControllers) {
-		super(messageSource.getMessage("mNetConceal"), messageSource.getIcon("iMenuNetConceal"), viewControllers);
+	public NetConcealDocumentAction(LocaleMessageSource messageSource, DocumentManager documentManager,
+			DocumentViewController viewController) {
+		super(messageSource.getMessage("mNetConceal"), messageSource.getIcon("iMenuNetConceal"), viewController);
 		putValue(SHORT_DESCRIPTION, messageSource.getMessage("mNetConcealTT"));
 		this.documentManager = documentManager;
 		setEnabled(false);
