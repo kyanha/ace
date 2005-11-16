@@ -36,6 +36,7 @@ import ch.iserver.ace.algorithm.jupiter.JupiterTimestampFactory;
 import ch.iserver.ace.collaboration.CollaborationService;
 import ch.iserver.ace.collaboration.DiscoveryCallback;
 import ch.iserver.ace.collaboration.DocumentListener;
+import ch.iserver.ace.collaboration.ServiceFailureHandler;
 import ch.iserver.ace.collaboration.InvitationCallback;
 import ch.iserver.ace.collaboration.PublishedSession;
 import ch.iserver.ace.collaboration.PublishedSessionCallback;
@@ -66,6 +67,8 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	private final EventListenerList listeners = new EventListenerList();
 	
 	private InvitationCallback callback = NullInvitationCallback.getInstance();
+	
+	private ServiceFailureHandler failureHandler;
 	
 	private UserRegistry userRegistry;
 	
@@ -124,7 +127,12 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	protected InvitationCallback getInvitationCallback() {
 		return callback;
 	}
+
+	// --> CollaborationService interface methods <--
 	
+	/**
+	 * @see ch.iserver.ace.collaboration.CollaborationService#getServerInfo()
+	 */
 	public ServerInfo getServerInfo() {
 		return getNetworkService().getServerInfo();
 	}
@@ -186,6 +194,13 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	public void setInvitationCallback(InvitationCallback callback) {
 		this.callback = callback == null ? NullInvitationCallback.getInstance() : callback;
 	}
+	
+	/**
+	 * @see ch.iserver.ace.collaboration.CollaborationService#setFailureHandler(ch.iserver.ace.collaboration.ServiceFailureHandler)
+	 */
+	public void setFailureHandler(ServiceFailureHandler handler) {
+		this.failureHandler = handler;
+	}
 
 	/**
 	 * @see ch.iserver.ace.collaboration.CollaborationService#publish(ch.iserver.ace.collaboration.PublishedSessionCallback, ch.iserver.ace.DocumentModel)
@@ -214,6 +229,15 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	}
 	
 	// --> network service callback methods <--
+	
+	/**
+	 * @see ch.iserver.ace.net.NetworkServiceCallback#serviceFailure(int, java.lang.String, java.lang.Exception)
+	 */
+	public void serviceFailure(int code, String msg, Exception e) {
+		if (failureHandler != null) {
+			failureHandler.serviceFailed(code, msg, e);
+		}
+	}
 	
 	/**
 	 * @see ch.iserver.ace.net.NetworkServiceCallback#documentDiscovered(ch.iserver.ace.net.RemoteDocumentProxy[])

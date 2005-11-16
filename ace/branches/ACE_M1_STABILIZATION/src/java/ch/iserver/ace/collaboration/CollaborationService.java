@@ -100,6 +100,14 @@ public interface CollaborationService {
 	void setInvitationCallback(InvitationCallback processor);
 	
 	/**
+	 * Sets the ServiceFailureHandler for the service. This handler gets
+	 * notified about failures in the collaboration and network layers.
+	 * 
+	 * @param handler the new failure handler
+	 */
+	void setFailureHandler(ServiceFailureHandler handler);
+	
+	/**
 	 * Publishes a document so that other users can join editing it
 	 * over the network.
 	 *
