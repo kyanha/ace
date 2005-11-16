@@ -53,7 +53,6 @@ public class DiscoveryCallbackImpl implements DiscoveryCallback {
 	 * 
 	 */
 	public void userDiscovered(RemoteUserProxyExt proxy) {
-		System.out.println("userDiscovered: "+Thread.currentThread().getName());
 		LOG.debug("--> userDiscovered("+proxy+")");
 		callback.userDiscovered(proxy);
 		LOG.debug("<-- userDiscovered()");
@@ -63,7 +62,6 @@ public class DiscoveryCallbackImpl implements DiscoveryCallback {
 	 * 
 	 */
 	public void userDiscarded(RemoteUserProxyExt proxy) {
-		System.out.println("userDiscarded: "+Thread.currentThread().getName());
 		LOG.debug("--> userDiscarded("+proxy+")");
 		
 		RemoteDocumentProxy[] docs = (RemoteDocumentProxy[]) 
@@ -84,7 +82,6 @@ public class DiscoveryCallbackImpl implements DiscoveryCallback {
 	 * 
 	 */
 	public void userDetailsChanged(RemoteUserProxyExt proxy) {
-		System.out.println("userDetailsChanged: "+Thread.currentThread().getName());
 		LOG.debug("--> userDetailsChanged("+proxy+")");
 		callback.userDetailsChanged(proxy);
 		LOG.debug("<-- userDetailsChanged()");
@@ -94,7 +91,6 @@ public class DiscoveryCallbackImpl implements DiscoveryCallback {
 	 * 
 	 */
 	public void userDiscoveryCompleted(RemoteUserProxyExt proxy) {
-		System.out.println("userDiscoveryCompleted: "+Thread.currentThread().getName());
 		LOG.debug("--> userDiscoveryCompleted("+proxy+")");
 		service.discoverDocuments(proxy);
 		LOG.debug("<-- userDiscoveryCompleted()");
