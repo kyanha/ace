@@ -25,6 +25,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
+import java.awt.GridLayout;
 import java.awt.Insets;
 
 import javax.swing.Icon;
@@ -34,14 +35,30 @@ import javax.swing.border.AbstractBorder;
 
 public class TitlePane extends JPanel {
 	
+	private JLabel titleLabel;
+	private JLabel messageLabel;
+
 	public TitlePane(String title, Icon icon) {
 		setLayout(new BorderLayout());
 		setBackground(Color.WHITE);
 		setBorder(new TitleBorder());
-		JLabel textLbl = new JLabel("<html><b>" + title + "</b></html>");
+		
+		titleLabel = new JLabel("<html><b>" + title + "</b></html>");
+		messageLabel = new JLabel();
+		messageLabel.setFont(messageLabel.getFont().deriveFont(messageLabel.getFont().getSize2D() * 0.8f));
+		
+		JPanel leftPane = new JPanel(new GridLayout(2, 1));
+		leftPane.setBackground(Color.WHITE);
+		leftPane.add(titleLabel);
+		leftPane.add(messageLabel);
+		
 		JLabel iconLbl = new JLabel(icon);
-		add(textLbl, BorderLayout.LINE_START);
+		add(leftPane, BorderLayout.LINE_START);
 		add(iconLbl, BorderLayout.LINE_END);
+	}
+	
+	public void setMessage(String message) {
+		messageLabel.setText(message);
 	}
 	
 	private class TitleBorder extends AbstractBorder {

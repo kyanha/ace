@@ -23,6 +23,8 @@ package ch.iserver.ace.application;
 
 import ch.iserver.ace.application.*;
 import ch.iserver.ace.collaboration.*;
+
+import java.io.File;
 import java.util.List;
 
 
@@ -63,11 +65,11 @@ public class DocumentManager implements ItemSelectionChangeListener {
 		documentController.setSelectedIndex(documentController.indexOf(newItem));
 	}
 
-	public void openDocument(String filename) {
+	public void openDocument(File filename) {
 		// open a file
 	}
 
-	public void openDocuments(String[] filenames) {
+	public void openDocuments(File[] filenames) {
 		// open a list of files
 	}
 
@@ -78,12 +80,8 @@ public class DocumentManager implements ItemSelectionChangeListener {
 	public void saveDocument(DocumentItem item) {
 		// save the given document
 	}
-
-	public void saveAllDocuments() {
-		// save all local & published files
-	}
 	
-	public void saveAsDocument(String filename) {
+	public void saveAsDocument(File file) {
 		// saves the current document with the new filename
 	}
 	

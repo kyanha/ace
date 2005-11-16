@@ -37,7 +37,15 @@ import ch.iserver.ace.util.ParameterValidator;
 
 public abstract class TitledDialog extends JDialog {
 	
+	public static int OK_OPTION = 1;
+	
+	public static int CANCEL_OPTION = 2;
+	
 	private LocaleMessageSource messages;
+	
+	private TitlePane titlePane;
+	
+	private int option;
 	
 	public TitledDialog(Frame owner, LocaleMessageSource messages, String titleText, Icon icon) {
 		super(owner);
@@ -45,8 +53,8 @@ public abstract class TitledDialog extends JDialog {
 		this.messages = messages;
 		
 		setDefaultCloseOperation(HIDE_ON_CLOSE);
-		TitlePane title = new TitlePane(titleText, icon);
-		getContentPane().add(title, BorderLayout.NORTH);
+		titlePane = new TitlePane(titleText, icon);
+		getContentPane().add(titlePane, BorderLayout.NORTH);
 		
 		JComponent content = createContent();
 		content.setBorder(BorderFactory.createCompoundBorder(
@@ -66,9 +74,14 @@ public abstract class TitledDialog extends JDialog {
 		setResizable(false);
 	}
 	
+	public void setMessage(String message) {
+		titlePane.setMessage(message);
+	}
+	
 	protected void finish() {
 		if (onFinish()) {
 			hideDialog();
+			option = OK_OPTION;
 		}
 	}
 	
@@ -78,6 +91,10 @@ public abstract class TitledDialog extends JDialog {
 	
 	public Dimension getMinimumSize() {
 		return getPreferredSize();
+	}
+	
+	public int getOption() {
+		return option;
 	}
 	
 	public void showDialog() {

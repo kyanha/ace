@@ -22,11 +22,21 @@
 package ch.iserver.ace.application;
 
 import java.awt.Frame;
+import java.io.File;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+
+import sun.security.action.GetLongAction;
 
 import ch.iserver.ace.application.dialog.AboutDialog;
 import ch.iserver.ace.application.dialog.PreferencesDialog;
 import ch.iserver.ace.application.dialog.TitledDialog;
 import ch.iserver.ace.application.preferences.PreferencesStore;
+import ch.iserver.ace.application.preferences.SaveFilesDialog;
 
 /**
  *
@@ -92,8 +102,12 @@ public class ApplicationControllerImpl implements ApplicationController {
 	}
 	
 	public void openFile(String filename) {
-		// TODO Auto-generated method stub
-		
+		File file = new File(filename);
+		if (!file.exists() || file.isDirectory()) {
+			// TODO: warning?
+		} else {
+			getDocumentManager().openDocument(new File(filename));
+		}
 	}
 	
 	public void quit() {
@@ -102,33 +116,50 @@ public class ApplicationControllerImpl implements ApplicationController {
 	}
 	
 	public void closeDocument() {
-		// TODO Auto-generated method stub
-		
+		if (getDocumentManager().isSelectedDocumentDirty()) {
+			// TODO: save/dirty
+		}
 	}
 	
 	public void openDocument() {
-		// TODO Auto-generated method stub
-		
+		JFileChooser chooser = new JFileChooser();
+		if (JFileChooser.APPROVE_OPTION == chooser.showOpenDialog(getMainFrame())) {
+			File[] files = chooser.getSelectedFiles();
+			getDocumentManager().openDocuments(files);
+		}
 	}
 	
 	public void saveDocument() {
-		// TODO Auto-generated method stub
-		
+		if (getDocumentManager().isSelectedDocumentDirty()) {
+			// TODO: save/dirty
+		}
 	}
 	
 	public void saveDocumentAs() {
-		// TODO Auto-generated method stub
-		
+		JFileChooser chooser = new JFileChooser();
+		if (JFileChooser.APPROVE_OPTION == chooser.showSaveDialog(getMainFrame())) {
+			File file = chooser.getSelectedFile();
+			getDocumentManager().saveAsDocument(file);
+		}
 	}
 	
 	public void saveAllDocuments() {
-		// TODO Auto-generated method stub
-		
+		List dirty = getDocumentManager().getDirtyDocuments();
+		SaveFilesDialog saveFilesDialog = new SaveFilesDialog(getMainFrame(), getMessages(), dirty);
+		saveFilesDialog.showDialog();
+		if (saveFilesDialog.getOption() == SaveFilesDialog.OK_OPTION) {
+			Set saveSet = saveFilesDialog.getCheckedFiles();
+			Iterator it = saveSet.iterator();
+			while (it.hasNext()) {
+				DocumentItem item = (DocumentItem) it.next();
+				// TODO: untitled documents
+				getDocumentManager().saveDocument(item);
+			}
+		}
 	}
 	
 	public void discoverUser() {
-		// TODO Auto-generated method stub
-		
+		// TODO: unimplemented method: discoverUser()		
 	}
 
 }
