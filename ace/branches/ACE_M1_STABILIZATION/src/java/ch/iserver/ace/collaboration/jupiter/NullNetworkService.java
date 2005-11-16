@@ -58,6 +58,13 @@ public final class NullNetworkService implements NetworkService {
 	}
 	
 	/**
+	 * @see ch.iserver.ace.net.NetworkService#setUserId(java.lang.String)
+	 */
+	public void setUserId(String id) {
+		// ignore
+	}
+	
+	/**
 	 * @see ch.iserver.ace.net.NetworkService#setUserDetails(ch.iserver.ace.UserDetails)
 	 */
 	public void setUserDetails(UserDetails details) {

@@ -27,6 +27,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.application.preferences.PreferencesStore;
 import ch.iserver.ace.collaboration.CollaborationService;
+import ch.iserver.ace.util.UUID;
 
 
 
@@ -63,11 +64,12 @@ public class Main {
 		PreferencesStore preferencesStore = (PreferencesStore) context.getBean("preferencesStore");
 		
 		// get collaboration service
-		CollaborationService collaborationService = (CollaborationService)context.getBean("collaborationService");
-
-		// preference listeners
+		CollaborationService collaborationService = (CollaborationService) context.getBean("collaborationService");
+		collaborationService.setUserId(preferencesStore.get(PreferencesStore.USER_ID, UUID.nextUUID()));
 		UserDetails details = getUserDetails(preferencesStore);
 		collaborationService.setUserDetails(details);
+
+		// preference listeners
 		preferencesStore.addPreferenceChangeListener(
 						new UserDetailsUpdater(collaborationService, details.getUsername()));
 		

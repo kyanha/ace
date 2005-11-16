@@ -22,7 +22,9 @@
 package ch.iserver.ace.application.preferences;
 
 public interface PreferencesStore {
-	
+
+	String USER_ID = "user.id";
+
 	String NICKNAME_KEY = "user.nickname";
 	
 	String FONTSIZE_KEY = "font.size";

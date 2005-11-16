@@ -54,6 +54,10 @@ public class NetworkServiceStub implements NetworkService {
 		// ignore
 	}
 	
+	public void setUserId(String id) {
+		
+	}
+	
 	/**
 	 * @return
 	 */

@@ -80,11 +80,7 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 		this.service.setCallback(this);
 		this.service.setTimestampFactory(new JupiterTimestampFactory());
 	}
-	
-	public void start() {
-		service.start();
-	}
-	
+		
 	public UserRegistry getUserRegistry() {
 		return userRegistry;
 	}
@@ -128,6 +124,20 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 		return callback;
 	}
 	
+	/**
+	 * @see ch.iserver.ace.collaboration.CollaborationService#start()
+	 */
+	public void start() {
+		service.start();
+	}
+	
+	/**
+	 * @see ch.iserver.ace.collaboration.CollaborationService#setUserId(java.lang.String)
+	 */
+	public void setUserId(String id) {
+		getNetworkService().setUserId(id);
+	}
+
 	/**
 	 * @see ch.iserver.ace.collaboration.CollaborationService#setUserDetails(ch.iserver.ace.UserDetails)
 	 */

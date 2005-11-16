@@ -65,10 +65,6 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	private static NetworkServiceImpl instance;
 	
 	private NetworkServiceImpl() {
-		//TODO: generate a userid only once and then reuse it! ->  avoid caching problems with dnssd
-		userId = UUID.nextUUID();
-		details = null;
-		LOG.debug("userId: "+userId);
 		publishedDocs = new ArrayList();
 		requestChain = RequestFilterFactory.createClientChain();
 		server = BEEPServerFactory.create();
@@ -93,6 +89,10 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 		launcher.start();
 	}
 	
+	public void setUserId(String id) {
+		this.userId = id;
+		LOG.debug("userId: " + userId);
+	}
 	
 	public void setUserDetails(UserDetails details) {
 		//TOOD: verify that: return immediately

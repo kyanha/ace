@@ -41,6 +41,15 @@ public interface CollaborationService {
 	void start();
 	
 	/**
+	 * Sets the user id of the local user. This method has to be called before
+	 * starting the service with the {@link #start()} method. Note, it is
+	 * an error to set the user id twice!
+	 * 
+	 * @param id the id of the local user
+	 */
+	void setUserId(String id);
+	
+	/**
 	 * Sets the UserDetails for the local user.
 	 * 
 	 * @param details the new UserDetails
