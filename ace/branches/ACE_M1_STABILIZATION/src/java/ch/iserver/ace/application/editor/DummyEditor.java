@@ -22,6 +22,7 @@
 package ch.iserver.ace.application.editor;
 
 import ch.iserver.ace.application.*;
+import ch.iserver.ace.application.action.ToggleFullScreenEditingAction;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -37,7 +38,7 @@ public class DummyEditor extends JPanel implements Editor {
 	private JTextPane textPane;
 	private SimpleInternalFrame editorFrame;
 	private LocaleMessageSource messageSource;
-	private PersistentContentPane persistentContentPane;
+	private ToggleFullScreenEditingAction toggleFullScreenEditingAction;
 
 	public DummyEditor(LocaleMessageSource messageSource, List toolBarActions) {
 		this.messageSource = messageSource;
@@ -61,7 +62,7 @@ public class DummyEditor extends JPanel implements Editor {
 		editorFrame.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				if(e.getClickCount() == 2) {
-					persistentContentPane.switchFullScreenEditing();
+					toggleFullScreenEditingAction.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "ToggleEditingMode"));
 				}
 			}
 		});
@@ -90,8 +91,8 @@ public class DummyEditor extends JPanel implements Editor {
 		return this;
 	}
 	
-	public void setPersistentContentPane(PersistentContentPane persistentContentPane) {
-		this.persistentContentPane = persistentContentPane;
+	public void setToggleFullScreenEditingAction(ToggleFullScreenEditingAction toggleFullScreenEditingAction) {
+		this.toggleFullScreenEditingAction = toggleFullScreenEditingAction;
 	}
 	
 	public class DummyTextPane extends JTextPane {
