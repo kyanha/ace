@@ -36,6 +36,7 @@ import ch.iserver.ace.util.UUID;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.text.*;
+import java.io.File;
 
 
 
@@ -47,10 +48,10 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 	public final static String TYPE_PROPERTY = "type";
 	public final static String DIRTY_PROPERTY = "dirty";
 
-	private String id;
-	private String title;
+	private String id, title, extendedTitle, toolTip;
 	private int type;
 	private boolean isDirty = false;
+	private File file;
 
 	private StyledDocument editorDocument;
 	private RemoteDocument remoteDocument;
@@ -63,7 +64,91 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 		// create local document
 		id = UUID.nextUUID();
 		this.title = title;
-		type = LOCAL; 
+		extendedTitle = title;
+		toolTip = title;
+		createEditorDocument();
+	}
+	
+	public DocumentItem(File file) {
+		// create local document
+		id = UUID.nextUUID();
+		this.file = file;
+		title = file.getName();
+		extendedTitle = file.getAbsolutePath() + " - " + file.getName();
+		toolTip = file.getAbsolutePath();
+		createEditorDocument();
+	}
+	
+	public DocumentItem(RemoteDocument document) {
+		// create remote document
+		id = document.getId();
+		title = document.getTitle();
+		extendedTitle = document.getPublisher().getName() + " - " + document.getTitle();
+		toolTip = document.getPublisher().getName() + " - " + document.getTitle();
+		type = REMOTE;
+		document.addPropertyChangeListener(this);
+		document.getPublisher().addPropertyChangeListener(this);
+	}
+
+	public String getId() {
+		return id;
+	}
+	
+	public String getTitle() {
+		return title;
+	}
+	
+	public String getExtendedTitle() {
+		return extendedTitle;
+	}
+	
+	public String getToolTip() {
+		return toolTip;
+	}
+	
+	public int getType() {
+		return type;
+	}
+	
+	public boolean isDirty() {
+		return isDirty;
+	}
+	
+	public void setClean() {
+		isDirty = false;
+		firePropertyChange(DIRTY_PROPERTY, "DIRTY", "CLEAN");
+	}
+	
+	public boolean hasBeenSaved() {
+		return (file == null);
+	}
+	
+	public RemoteDocument getRemoteDocument() {
+		return remoteDocument;
+	}
+	
+	public StyledDocument getEditorDocument() {
+		return editorDocument;
+	}
+	
+	public Session getSession() {
+		return session;
+	}
+	
+	public File getFile() {
+		return file;
+	}
+	
+	public void setFile(File file) {
+		this.file = file;
+	}
+	
+	
+	
+	
+	
+	private void createEditorDocument() {
+		type = LOCAL;
 		editorDocument = new DefaultStyledDocument();
 		editorDocument.addDocumentListener(new DocumentListener() {
 			public void changedUpdate(DocumentEvent e) {
@@ -89,49 +174,8 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 		});
 	}
 	
-	public DocumentItem(RemoteDocument document) {
-		// create remote document
-		id = document.getId();
-		title = document.getTitle();
-		type = REMOTE;
-		//editorDocument();
-		document.addPropertyChangeListener(this);
-		document.getPublisher().addPropertyChangeListener(this);
-	}
-
-	public String getId() {
-		return id;
-	}
-	
-	public String getTitle() {
-		return title;
-	}
-	
-	public int getType() {
-		return type;
-	}
-	
-	public boolean isDirty() {
-		return isDirty;
-	}
-	
-	public void setClean() {
-		isDirty = false;
-		firePropertyChange(DIRTY_PROPERTY, "DIRTY", "CLEAN");
-	}
 	
 	
-	public RemoteDocument getRemoteDocument() {
-		return remoteDocument;
-	}
-	
-	public StyledDocument getEditorDocument() {
-		return editorDocument;
-	}
-	
-	public Session getSession() {
-		return session;
-	}
 	
 	
 	
