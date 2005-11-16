@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:UserRegistration.java 1205 2005-11-14 07:57:10Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -24,6 +24,7 @@ import java.util.Properties;
 
 import ch.iserver.ace.UserDetails;
 
+import com.apple.dnssd.QueryListener;
 import com.apple.dnssd.RegisterListener;
 import com.apple.dnssd.ResolveListener;
 
@@ -31,7 +32,7 @@ import com.apple.dnssd.ResolveListener;
  * 
  *
  */
-public interface UserRegistration extends RegisterListener, ResolveListener {
+public interface UserRegistration extends RegisterListener, ResolveListener, QueryListener {
 	
 	/**
 	 * Registers the user for dynamic discovery.

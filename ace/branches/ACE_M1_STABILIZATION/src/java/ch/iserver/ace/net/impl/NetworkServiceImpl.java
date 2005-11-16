@@ -58,6 +58,7 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	private BEEPServer server;
 	
 	private Discovery discovery;
+	private ServerInfo info;
 	private UserDetails details;
 	private String userId;
 	
@@ -79,8 +80,11 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	}
 	
 	public ServerInfo getServerInfo() {
-		// TODO: get the server info
-		return null;
+		return info;
+	}
+	
+	public void setServerInfo(ServerInfo info) {
+		this.info = info;
 	}
 	
 	/**
@@ -97,7 +101,6 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	
 	public void setUserId(String id) {
 		this.userId = id;
-		LOG.debug("userId: " + userId);
 	}
 	
 	public void setUserDetails(UserDetails details) {
