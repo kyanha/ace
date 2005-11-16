@@ -51,6 +51,7 @@
         <ref bean="netConcealDocumentAction"/>
       </list>
     </constructor-arg>
+    <!--property name="persistentContentPane"><ref local="persistentContentPane"/></property-->
   </bean>
 
   <bean id="dummyEditorController" class="ch.iserver.ace.application.editor.DummyEditorController">
