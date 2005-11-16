@@ -126,8 +126,7 @@ class UserRegistrationImpl implements UserRegistration {
 	 * @inheritDoc
 	 */
 	public void operationFailed(DNSSDService service, int errorCode) {
-		//TODO: error handling
-		LOG.error("operationFailed("+service+", "+errorCode+")");
+		Bonjour.writeErrorLog(new Exception("operationFailed("+service+", "+errorCode+")"));
 	}
 	
 	public String getServiceName() {
