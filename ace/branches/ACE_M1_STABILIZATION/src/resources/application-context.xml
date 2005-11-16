@@ -32,11 +32,16 @@
   </bean>
 
   <!--bean id="persistentContentPane" class="ch.iserver.ace.application.PersistentContentPane">
-    <constructor-arg><ref bean="documentView"/></constructor-arg>
-    <constructor-arg><ref bean="browseView"/></constructor-arg>
-    <constructor-arg><ref bean="dummyEditor"/></constructor-arg>
-    <constructor-arg><ref bean="participantView"/></constructor-arg>
-    <constructor-arg><ref bean="userView"/></constructor-arg>
+    <constructor-arg><ref local="documentView"/></constructor-arg>
+    <constructor-arg><ref local="browseView"/></constructor-arg>
+    <constructor-arg><ref local="dummyEditor"/></constructor-arg>
+    <constructor-arg><ref local="participantView"/></constructor-arg>
+    <constructor-arg><ref local="userView"/></constructor-arg>
+    <property name="documentView"><ref bean="documentView"/></property>
+    <property name="browseView"><ref bean="browseView"/></property>
+    <property name="dummyEditor"><ref bean="dummyEditor"/></property>
+    <property name="participantView"><ref bean="participantView"/></property>
+    <property name="userView"><ref bean="userView"/></property>
   </bean-->
 
   <!--bean id="editorFactory" class="ch.iserver.ace.application.editor.DummyEditorFactory">
@@ -47,10 +52,13 @@
     <constructor-arg><ref local="localeMessageSource"/></constructor-arg>
     <constructor-arg>
       <list>
-        <ref bean="netPublishDocumentAction"/>
-        <ref bean="netConcealDocumentAction"/>
+        <!--ref bean="netPublishDocumentAction"/>
+        <ref bean="netConcealDocumentAction"/-->
+        <ref bean="netPublishConcealDocumentToggleAction"/>
+        <ref bean="toggleFullScreenEditingAction"/>
       </list>
     </constructor-arg>
+    <property name="toggleFullScreenEditingAction"><ref bean="toggleFullScreenEditingAction"/></property>
     <!--property name="persistentContentPane"><ref local="persistentContentPane"/></property-->
   </bean>
 
