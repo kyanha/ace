@@ -30,6 +30,10 @@ import javax.swing.*;
 
 public class PersistentContentPane extends JPanel {
 
+	private JSplitPane dvbv, pvuv, dvbvce, dvbvcepvuv;
+	private boolean fullScreenMode = false;
+	private int lastDivider, lastDivider2;
+
 	public PersistentContentPane(DocumentView documentView, BrowseView browseView,
 			Editor editor, ParticipantView participantView, UserView userView) {
 		setLayout(new BorderLayout());
@@ -37,19 +41,33 @@ public class PersistentContentPane extends JPanel {
 		//getDividerLocation
 		
 		// splitPane (DocumentView | BrowseView)
-		JSplitPane dvbv = createStrippedSplitPane(JSplitPane.VERTICAL_SPLIT, documentView, browseView, 0.0);
+		dvbv = createStrippedSplitPane(JSplitPane.VERTICAL_SPLIT, documentView, browseView, 0.0);
 
 		// splitPane (ParticipantView | UserView)
-		JSplitPane pvuv = createStrippedSplitPane(JSplitPane.VERTICAL_SPLIT, participantView,  userView, 0.0);
+		pvuv = createStrippedSplitPane(JSplitPane.VERTICAL_SPLIT, participantView,  userView, 0.0);
 		
 		// splitPane (DocumentView/BrowseView | Editor)
-		JSplitPane dvbvce = createStrippedSplitPane(JSplitPane.HORIZONTAL_SPLIT, dvbv, editor.getEditorComponent(), 0.0);
+		dvbvce = createStrippedSplitPane(JSplitPane.HORIZONTAL_SPLIT, dvbv, editor.getEditorComponent(), 0.0);
 		
 		// splitPane (DocumentView/BrowseView/Editor | ParticipantView/UserView)
-		JSplitPane dvbvcepvuv = createStrippedSplitPane(JSplitPane.HORIZONTAL_SPLIT, dvbvce, pvuv, 1.0);
+		dvbvcepvuv = createStrippedSplitPane(JSplitPane.HORIZONTAL_SPLIT, dvbvce, pvuv, 1.0);
 
 		// add
 		add(dvbvcepvuv);
+	}
+	
+	public void switchFullScreenEditing() {
+		if(fullScreenMode) {
+			// set last divider location
+			dvbvce.setDividerLocation(dvbvce.getLastDividerLocation());
+			dvbvcepvuv.setDividerLocation(dvbvcepvuv.getLastDividerLocation());
+			fullScreenMode = false;
+		} else {
+			// set full screen mode
+			dvbvce.setDividerLocation(0);
+			dvbvcepvuv.setDividerLocation(10000);
+			fullScreenMode = true;
+		}
 	}
 
 	private JSplitPane createStrippedSplitPane(int orientation, Component leftComponent,
