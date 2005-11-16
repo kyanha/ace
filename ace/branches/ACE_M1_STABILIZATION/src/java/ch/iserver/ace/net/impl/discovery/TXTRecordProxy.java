@@ -26,6 +26,7 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 
 import ch.iserver.ace.net.impl.NetworkConstants;
+import ch.iserver.ace.util.ParameterValidator;
 
 import com.apple.dnssd.TXTRecord;
 
@@ -50,6 +51,8 @@ class TXTRecordProxy {
 	}
 	
 	public static String get(final String key, final TXTRecord txt) {
+		ParameterValidator.notNull("key", key);
+		ParameterValidator.notNull("txtrecord", txt);
 		byte[] data = txt.getValue(key);
 		String result = null;
 		if (data != null) {
@@ -66,7 +69,10 @@ class TXTRecordProxy {
 		return result;
 	}
 	
-	public static void set(String key, String value, TXTRecord txt) {
+	public static void set(final String key, final String value, TXTRecord txt) {
+		ParameterValidator.notNull("key", key);
+		ParameterValidator.notNull("value", value);
+		ParameterValidator.notNull("txtrecord", txt);
 		try {
 			txt.set(key, value.getBytes(NetworkConstants.DEFAULT_ENCODING));
 		} catch (UnsupportedEncodingException uee) {
