@@ -24,6 +24,7 @@ package ch.iserver.ace.application;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import ch.iserver.ace.application.action.ToggleFullScreenEditingAction;
 import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.application.editor.DummyEditor;
 import ch.iserver.ace.application.preferences.PreferencesStore;
@@ -54,7 +55,8 @@ public class Main {
 		frame.setVisible(true);
 		
 		// TODO: define persistentPane in spring
-		((DummyEditor)context.getBean("dummyEditor")).setPersistentContentPane(pane);
+		//((DummyEditor)context.getBean("dummyEditor")).setPersistentContentPane(pane);
+		((ToggleFullScreenEditingAction)context.getBean("toggleFullScreenEditingAction")).setPersistentContentPane(pane);
 		
 		// get application controller
 		ApplicationController controller = (ApplicationController) context.getBean("applicationController");
