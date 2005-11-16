@@ -48,6 +48,7 @@ class BrowseListenerImpl extends BaseListenerImpl implements BrowseListener {
 	 * @inheritDoc
 	 */
 	public void serviceFound(DNSSDService browser, int flags, int ifIndex, String serviceName, String regType, String domain) {
+		LOG.debug("DNSSD.serviceFound("+serviceName+", "+regType+", "+domain);
 		if (!Bonjour.getLocalServiceName().equals(serviceName)) {
 			LOG.debug("serviceFound("+serviceName+")");
 			try {
@@ -64,6 +65,7 @@ class BrowseListenerImpl extends BaseListenerImpl implements BrowseListener {
 	 */
 	public void serviceLost(DNSSDService browser, int flags, int ifIndex,
 			String serviceName, String regType, String domain) {
+		LOG.debug("DNSSD.serviceLost("+serviceName+", "+regType+", "+domain);
 		adapter.userDiscarded(serviceName);
 	}
 

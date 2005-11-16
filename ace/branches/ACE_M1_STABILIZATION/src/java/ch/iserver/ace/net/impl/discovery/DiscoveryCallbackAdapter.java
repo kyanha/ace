@@ -98,14 +98,16 @@ class DiscoveryCallbackAdapter {
 	 * @param serviceName
 	 */
 	public void userDiscarded(String serviceName) {
-		ParameterValidator.notNull("serviceName", serviceName);
-		
-		String userId = (String)services.remove(serviceName);
-		if (userId != null) {
-			RemoteUserProxyExt user = (RemoteUserProxyExt)remoteUserProxies.remove(userId);
-			forward.userDiscarded(user);	
-		} else { 
-			LOG.warn("userid for service ["+serviceName+"] not found");
+		if (serviceName != null) {
+			String userId = (String)services.remove(serviceName);
+			if (userId != null) {
+				RemoteUserProxyExt user = (RemoteUserProxyExt)remoteUserProxies.remove(userId);
+				forward.userDiscarded(user);	
+			} else { 
+				LOG.warn("userid for service ["+serviceName+"] not found");
+			}
+		} else {
+			LOG.warn("serviceName null");
 		}
 	}
 
