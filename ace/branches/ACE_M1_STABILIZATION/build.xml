@@ -40,6 +40,9 @@
 		<dependency groupId="jdom" 
 		            artifactId="jdom" 
 		            version="1.0"/>
+		<dependency groupId="commons-io" 
+		            artifactId="commons-io" 
+		            version="1.1"/>
 		<dependency groupId="commons-beanutils" 
 		            artifactId="commons-beanutils" 
 		            version="1.7.0"/>

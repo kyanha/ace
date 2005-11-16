@@ -29,6 +29,8 @@ public interface PreferencesStore {
 	
 	String FONTSIZE_KEY = "font.size";
 	
+	String CHARSET_KEY = "text.charset";
+	
 	void addPreferenceChangeListener(PreferenceChangeListener listener);
 
 	void removePreferenceChangeListener(PreferenceChangeListener listener);

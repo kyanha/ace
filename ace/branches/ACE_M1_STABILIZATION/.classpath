@@ -26,5 +26,6 @@
 	<classpathentry kind="var" path="MAVEN2/springframework/spring-aop/1.2.5/spring-aop-1.2.5.jar"/>
 	<classpathentry kind="src" path="src/stubs"/>
 	<classpathentry kind="var" path="MAVEN2/dnssd/dnssd/107.1/dnssd-107.1.jar"/>
+	<classpathentry kind="var" path="MAVEN2/commons-io/commons-io/1.1/commons-io-1.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -48,6 +48,8 @@ public class PreferencesDialog extends TitledDialog {
 	private JTextField nameField;
 	
 	private JComboBox sizeCombo;
+	
+	private JComboBox charsetCombo; 
 
 	public PreferencesDialog(Frame owner, LocaleMessageSource messages, PreferencesStore preferences) {
 		super(owner,
@@ -77,9 +79,12 @@ public class PreferencesDialog extends TitledDialog {
 		nameField = new JTextField(20);
 		JLabel size = new JLabel(getMessages().getMessage("dPreferencesFontsize"));
 		sizeCombo = new JComboBox(getSizeArray());
+		JLabel charset = new JLabel(getMessages().getMessage("dPreferencesCharset"));
+		charsetCombo = new JComboBox(new CharsetComboBoxModel());
 		
 		gbc.gridx  = 0;
 		gbc.gridy  = 0;
+		gbc.fill   = GridBagConstraints.NONE;
 		gbc.anchor = GridBagConstraints.EAST;
 		gbc.insets = new Insets(2, 2, 2, 5);
 		pane.add(idLabel, gbc);
@@ -92,6 +97,7 @@ public class PreferencesDialog extends TitledDialog {
 		
 		gbc.gridx  = 0;
 		gbc.gridy += 1;
+		gbc.fill   = GridBagConstraints.NONE;
 		gbc.anchor = GridBagConstraints.EAST;
 		gbc.insets = new Insets(2, 2, 2, 5);
 		pane.add(name, gbc);
@@ -114,7 +120,20 @@ public class PreferencesDialog extends TitledDialog {
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets(2, 5, 2, 2);
 		pane.add(sizeCombo, gbc);
+
+		gbc.gridx  = 0;
+		gbc.gridy += 1;
+		gbc.fill   = GridBagConstraints.NONE;
+		gbc.anchor = GridBagConstraints.EAST;
+		gbc.insets = new Insets(2, 2, 2, 5);
+		pane.add(charset, gbc);
 		
+		gbc.gridx += 1;
+		gbc.fill   = GridBagConstraints.NONE;
+		gbc.anchor = GridBagConstraints.WEST;
+		gbc.insets = new Insets(2, 5, 2, 2);
+		pane.add(charsetCombo, gbc);
+
 		return pane;
 	}
 	
@@ -145,6 +164,8 @@ public class PreferencesDialog extends TitledDialog {
 		nameField.setText(nickname);
 		String size = preferences.get(PreferencesStore.FONTSIZE_KEY, "10");
 		sizeCombo.setSelectedItem(size);
+		String charset = preferences.get(PreferencesStore.CHARSET_KEY, "ISO-8859-1");
+		charsetCombo.setSelectedItem(charset);
 	}
 	
 	protected boolean onFinish() {
@@ -161,6 +182,8 @@ public class PreferencesDialog extends TitledDialog {
 		} catch (NumberFormatException e) {
 			// ignore, not an integer
 		}
+		String charset = (String) charsetCombo.getSelectedItem();
+		preferences.put(PreferencesStore.CHARSET_KEY, charset);
 		return true;
 	}
 

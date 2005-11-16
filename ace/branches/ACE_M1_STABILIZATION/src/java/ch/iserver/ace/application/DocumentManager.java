@@ -21,16 +21,23 @@
 
 package ch.iserver.ace.application;
 
-import ch.iserver.ace.application.*;
-import ch.iserver.ace.collaboration.*;
-
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
+
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.BadLocationException;
+
+import org.apache.commons.io.FileUtils;
+
+import ch.iserver.ace.collaboration.CollaborationService;
 
 
 
 public class DocumentManager implements ItemSelectionChangeListener {
-
+	
+	private static int counter = 1;
+	
 	private DocumentViewController documentController;
 	private CollaborationService collaborationService;
 	private DocumentItem currentDocumentItem;
@@ -42,7 +49,9 @@ public class DocumentManager implements ItemSelectionChangeListener {
 
 
 
-
+	public DocumentItem getSelectedDocument() {
+		return currentDocumentItem;
+	}
 
 	public boolean isSelectedDocumentDirty() {
 		// return if the selected document is dirty
@@ -54,23 +63,39 @@ public class DocumentManager implements ItemSelectionChangeListener {
 		return null;
 	}
 
-
-
-
-
 	public void newDocument() {
 		// create new local document
-		DocumentItem newItem = new DocumentItem("New Document");
+		DocumentItem newItem = new DocumentItem("Untitled Document " + counter++);
 		documentController.addDocument(newItem);
 		documentController.setSelectedIndex(documentController.indexOf(newItem));
 	}
 
-	public void openDocument(File filename) {
-		// open a file
+	public void openDocument(File file) throws IOException {
+		DocumentItem item = new DocumentItem(file.getAbsolutePath());
+		// TODO: encoding
+		String content = FileUtils.readFileToString(file, null);
+		try {
+			item.getEditorDocument().insertString(0, content, null);
+		} catch (BadLocationException e) {
+			throw new RuntimeException("unexpected code path exception");
+		}
+		documentController.addDocument(item);
+		documentController.setSelectedIndex(documentController.indexOf(item));
 	}
 
-	public void openDocuments(File[] filenames) {
-		// open a list of files
+	public void openDocuments(File[] filenames) throws IOException {
+		for (int i = 0; i < filenames.length; i++) {
+			File file = filenames[i];
+			DocumentItem item = new DocumentItem(file.getAbsolutePath());
+			String content = FileUtils.readFileToString(file, null);
+			try {
+				item.getEditorDocument().insertString(0, content, null);
+			} catch (BadLocationException e) {
+				throw new RuntimeException("unexpected code path exception");
+			}
+			documentController.addDocument(item);
+			documentController.setSelectedIndex(documentController.indexOf(item));
+		}
 	}
 
 	public void saveDocument() {
@@ -81,8 +106,22 @@ public class DocumentManager implements ItemSelectionChangeListener {
 		// save the given document
 	}
 	
-	public void saveAsDocument(File file) {
-		// saves the current document with the new filename
+	public void saveAsDocument(File file) throws IOException {
+		DocumentItem item = getSelectedDocument();
+		if (item != null) {
+			AbstractDocument doc = (AbstractDocument) item.getEditorDocument();
+			String content;
+			doc.readLock();
+			try {
+				content = doc.getText(0, doc.getLength());
+			} catch (BadLocationException e) {
+				throw new RuntimeException("unexpected code path exception");
+			} finally {
+				doc.readUnlock();
+			}
+			// TODO: encoding
+			FileUtils.writeStringToFile(file, content, null);
+		}
 	}
 	
 	public void closeDocument() {

@@ -23,6 +23,7 @@ package ch.iserver.ace.application;
 
 import java.awt.Frame;
 import java.io.File;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -30,13 +31,11 @@ import java.util.Set;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
-import sun.security.action.GetLongAction;
-
 import ch.iserver.ace.application.dialog.AboutDialog;
 import ch.iserver.ace.application.dialog.PreferencesDialog;
+import ch.iserver.ace.application.dialog.SaveFilesDialog;
 import ch.iserver.ace.application.dialog.TitledDialog;
 import ch.iserver.ace.application.preferences.PreferencesStore;
-import ch.iserver.ace.application.preferences.SaveFilesDialog;
 
 /**
  *
@@ -100,16 +99,7 @@ public class ApplicationControllerImpl implements ApplicationController {
 		}
 		preferencesDialog.showDialog();
 	}
-	
-	public void openFile(String filename) {
-		File file = new File(filename);
-		if (!file.exists() || file.isDirectory()) {
-			// TODO: warning?
-		} else {
-			getDocumentManager().openDocument(new File(filename));
-		}
-	}
-	
+		
 	public void quit() {
 		getDocumentManager().exitApplication();
 		System.exit(0);
@@ -119,19 +109,46 @@ public class ApplicationControllerImpl implements ApplicationController {
 		if (getDocumentManager().isSelectedDocumentDirty()) {
 			// TODO: save/dirty
 		}
+		getDocumentManager().closeDocument();
 	}
 	
 	public void openDocument() {
 		JFileChooser chooser = new JFileChooser();
+		chooser.setMultiSelectionEnabled(true);
 		if (JFileChooser.APPROVE_OPTION == chooser.showOpenDialog(getMainFrame())) {
 			File[] files = chooser.getSelectedFiles();
-			getDocumentManager().openDocuments(files);
+			try {
+				getDocumentManager().openDocuments(files);
+			} catch (IOException e) {
+				JOptionPane.showMessageDialog(getMainFrame(), 
+								getMessages().getMessage("mOpenFailedTitle"), 
+								getMessages().getMessage("mOpenFailedTitle"),
+								JOptionPane.ERROR_MESSAGE);
+			}
+		}
+	}
+	
+	public void openFile(String filename) {
+		File file = new File(filename);
+		if (!file.exists() || file.isDirectory()) {
+			// TODO: warning?
+		} else {
+			try {
+				getDocumentManager().openDocument(new File(filename));
+			} catch (IOException e) {
+				JOptionPane.showMessageDialog(getMainFrame(), 
+								getMessages().getMessage("mOpenFailedTitle"), 
+								getMessages().getMessage("mOpenFailedTitle"),
+								JOptionPane.ERROR_MESSAGE);
+			}
 		}
 	}
 	
 	public void saveDocument() {
+		DocumentItem item = getDocumentManager().getSelectedDocument();
 		if (getDocumentManager().isSelectedDocumentDirty()) {
 			// TODO: save/dirty
+			
 		}
 	}
 	
@@ -139,7 +156,11 @@ public class ApplicationControllerImpl implements ApplicationController {
 		JFileChooser chooser = new JFileChooser();
 		if (JFileChooser.APPROVE_OPTION == chooser.showSaveDialog(getMainFrame())) {
 			File file = chooser.getSelectedFile();
-			getDocumentManager().saveAsDocument(file);
+			try {
+				getDocumentManager().saveAsDocument(file);
+			} catch (IOException e) {
+				// TODO: error message
+			}
 		}
 	}
 	

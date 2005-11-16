@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.application.preferences;
+package ch.iserver.ace.application.dialog;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -44,7 +44,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 import ch.iserver.ace.application.DocumentItem;
 import ch.iserver.ace.application.LocaleMessageSource;
-import ch.iserver.ace.application.dialog.TitledDialog;
 
 /**
  *
