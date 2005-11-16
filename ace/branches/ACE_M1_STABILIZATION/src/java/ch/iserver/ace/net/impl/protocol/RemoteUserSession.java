@@ -69,7 +69,6 @@ public class RemoteUserSession {
 	 * @return
 	 */
 	public synchronized ParticipantConnectionExt getConnection() throws ConnectionException {
-		//TODO: consider to return a NullParticipantConnection if the session has ended
 		if (!isAlive)
 			throw new ConnectionException("session has been ended");
 		

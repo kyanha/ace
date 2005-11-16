@@ -26,7 +26,6 @@ import org.beepcore.beep.core.BEEPException;
 import org.beepcore.beep.core.ProfileRegistry;
 import org.beepcore.beep.core.StartChannelListener;
 import org.beepcore.beep.profile.Profile;
-import org.beepcore.beep.transport.tcp.TCPSession;
 import org.beepcore.beep.transport.tcp.TCPSessionCreator;
 
 /**

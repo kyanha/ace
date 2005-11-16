@@ -60,8 +60,7 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 	}
 
 	public void invite(DocumentServerLogic logic) {
-		// TODO Auto-generated method stub
-
+		throw new UnsupportedOperationException();
 	}
 
 	public void setUserDetails(UserDetails details) {

@@ -53,7 +53,6 @@ public class PublishDocumentPrepareFilter extends AbstractRequestFilter {
 				Object doc = request.getPayload();
 				try {
 					byte[] data = serializer.createNotification(ProtocolConstants.PUBLISH, doc);
-					//send data to each known remote user
 					SessionManager manager = SessionManager.getInstance();
 					Map sessions = manager.getSessions();
 					LOG.info("publish to "+sessions.size()+" users.");

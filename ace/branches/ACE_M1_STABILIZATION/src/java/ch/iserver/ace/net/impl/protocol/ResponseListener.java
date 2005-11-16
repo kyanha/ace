@@ -109,7 +109,7 @@ public class ResponseListener implements ReplyListener {
 	 */
 	public void receiveNUL(Message message) throws AbortChannelException {
 		Object appData = message.getChannel().getAppData();
-		LOG.debug("received NUL message for ["+appData+"] from ["+message.getChannel().getSession().toString()+"]");
+		LOG.debug("received confirmation message for ["+appData+"] from ["+message.getChannel().getSession().toString()+"]");
 	}
 	
 	private byte[] read(Message message) throws AbortChannelException {

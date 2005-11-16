@@ -42,9 +42,8 @@ abstract class BaseListenerImpl implements BaseListener {
 	/**
 	 * @see com.apple.dnssd.BaseListener#operationFailed(com.apple.dnssd.DNSSDService, int)
 	 */
-	public void operationFailed(DNSSDService arg0, int arg1) {
-		// TODO: error handling
-		LOG.error("operationFailed("+arg0+", "+arg1+")");
+	public void operationFailed(DNSSDService service, int errorCode) {
+		Bonjour.writeErrorLog(new Exception("operationFailed("+service+", "+errorCode+")"));
 	}
 
 }

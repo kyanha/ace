@@ -79,54 +79,6 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 		return instance;
 	}
 	
-	public ServerInfo getServerInfo() {
-		return info;
-	}
-	
-	public void setServerInfo(ServerInfo info) {
-		this.info = info;
-	}
-	
-	/**
-	 * @inheritDoc
-	 */
-	public void start() { 
-		//TODO: when is it appropriate to start the server?
-		//start protocol server
-		server.start();
-		//start discovery process
-		DiscoveryLauncher launcher = new DiscoveryLauncher(this);
-		launcher.start();
-	}
-	
-	public void setUserId(String id) {
-		this.userId = id;
-	}
-	
-	public void setUserDetails(UserDetails details) {
-		//TOOD: verify that: return immediately
-		this.details = details;
-		//update user details in sessions
-		if (discovery != null) {
-			//TODO: how is threading here?
-			discovery.setUserDetails(details);
-		}
-	}
-
-	public void setTimestampFactory(TimestampFactory factory) {
-		this.timestampFactory = factory;
-	}
-
-	//TODO: how is threading here?
-	public void setCallback(NetworkServiceCallback callback) {
-		ParameterValidator.notNull("callback", callback);
-		this.networkCallback = callback;
-	}
-	
-	public void setDiscovery(Discovery discovery) {
-		this.discovery = discovery;
-	}
-	
 	public NetworkServiceCallback getCallback() {
 		return networkCallback;
 	}
@@ -138,8 +90,51 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	public UserDetails getUserDetails() {
 		return details;
 	}
+	
+	
+	public synchronized List getPublishedDocuments() {
+		return publishedDocs;
+	}
+	
+	
+	/*******************************************/
+	/** Methods from interface NetworkService **/
+	/*******************************************/
+	public ServerInfo getServerInfo() {
+		return info;
+	} 
+	
+	public void setUserId(String id) {
+		this.userId = id;
+	}
+	
+	/**
+	 * @inheritDoc
+	 */
+	public void start() { 
+		//start protocol server
+		server.start();
+		//start discovery process
+		DiscoveryLauncher launcher = new DiscoveryLauncher(this);
+		launcher.start();
+	}
+	
+	public void setUserDetails(UserDetails details) {
+		this.details = details;
+		if (discovery != null) {
+			discovery.setUserDetails(details);
+		}
+	}
 
-	//immediate return
+	public void setTimestampFactory(TimestampFactory factory) {
+		this.timestampFactory = factory;
+	}
+
+	public void setCallback(NetworkServiceCallback callback) {
+		ParameterValidator.notNull("callback", callback);
+		this.networkCallback = callback;
+	}
+
 	public void discoverUser(DiscoveryNetworkCallback callback, InetAddress addr, int port) {
 		throw new UnsupportedOperationException();
 	}
@@ -148,16 +143,22 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 		LOG.info("--> publish("+details+")");
 		PublishedDocument doc = new PublishedDocument(UUID.nextUUID(), logic, details, requestChain);
 		publishedDocs.add(doc);
-		
-		//TODO: threading?
 		Request request = new RequestImpl(ProtocolConstants.PUBLISH, doc);
 		requestChain.process(request);
 		LOG.info("<-- publish()");
 		return doc;
 	}
 	
-	public synchronized List getPublishedDocuments() {
-		return publishedDocs;
+	/**********************************************/
+	/** Methods from interface NetworkServiceExt **/
+	/**********************************************/
+	
+	public void setDiscovery(Discovery discovery) {
+		this.discovery = discovery;
+	}
+	
+	public void setServerInfo(ServerInfo info) {
+		this.info = info;
 	}
 	
 	public void discoverDocuments(RemoteUserProxyExt proxy) {

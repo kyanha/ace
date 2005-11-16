@@ -53,14 +53,17 @@ public class DiscoveryCallbackImpl implements DiscoveryCallback {
 	 * 
 	 */
 	public void userDiscovered(RemoteUserProxyExt proxy) {
-		LOG.debug("userDiscovered("+proxy+")");
+		System.out.println("userDiscovered: "+Thread.currentThread().getName());
+		LOG.debug("--> userDiscovered("+proxy+")");
 		callback.userDiscovered(proxy);
+		LOG.debug("<-- userDiscovered()");
 	}
 
 	/**
 	 * 
 	 */
 	public void userDiscarded(RemoteUserProxyExt proxy) {
+		System.out.println("userDiscarded: "+Thread.currentThread().getName());
 		LOG.debug("--> userDiscarded("+proxy+")");
 		
 		RemoteDocumentProxy[] docs = (RemoteDocumentProxy[]) 
@@ -81,17 +84,19 @@ public class DiscoveryCallbackImpl implements DiscoveryCallback {
 	 * 
 	 */
 	public void userDetailsChanged(RemoteUserProxyExt proxy) {
-		LOG.debug("userDetailsChanged("+proxy+")");
+		System.out.println("userDetailsChanged: "+Thread.currentThread().getName());
+		LOG.debug("--> userDetailsChanged("+proxy+")");
 		callback.userDetailsChanged(proxy);
+		LOG.debug("<-- userDetailsChanged()");
 	}
 
 	/**
 	 * 
 	 */
 	public void userDiscoveryCompleted(RemoteUserProxyExt proxy) {
-		LOG.debug("userDiscoveryCompleted("+proxy+")");
+		System.out.println("userDiscoveryCompleted: "+Thread.currentThread().getName());
+		LOG.debug("--> userDiscoveryCompleted("+proxy+")");
 		service.discoverDocuments(proxy);
+		LOG.debug("<-- userDiscoveryCompleted()");
 	}
-
-
 }

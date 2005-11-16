@@ -46,7 +46,6 @@ public class ConcealDocumentPrepareFilter extends AbstractRequestFilter {
 		ParameterValidator.notNull("listener", listener);
 		this.serializer = serializer;
 		this.listener = listener;
-		//TODO: how about a NullReplyListener for notifications where no answer is expected?
 	}
 
 	public void process(Request request) {

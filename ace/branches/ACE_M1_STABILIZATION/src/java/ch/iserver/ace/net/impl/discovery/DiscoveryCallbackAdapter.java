@@ -21,7 +21,9 @@
 package ch.iserver.ace.net.impl.discovery;
 
 import java.net.InetAddress;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -42,7 +44,6 @@ class DiscoveryCallbackAdapter {
 	private DiscoveryCallback forward;
 	private Map remoteUserProxies; 	//id to proxy
 	private Map services;				//service name to id
-	//TODO: service to proxy??
 	
 	/**
 	 * 
@@ -58,8 +59,8 @@ class DiscoveryCallbackAdapter {
 	 *
 	 */
 	public DiscoveryCallbackAdapter() {
-		remoteUserProxies = new HashMap();
-		services = new HashMap();
+		remoteUserProxies = Collections.synchronizedMap(new LinkedHashMap());
+		services = Collections.synchronizedMap(new LinkedHashMap());
 	}
 	
 	/**

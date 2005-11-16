@@ -134,6 +134,7 @@ public class Bonjour implements Discovery {
 	
 	public static void writeErrorLog(Exception e) {
 		APP_LOG.fatal("fatal discovery error ["+e.getMessage()+"]");
+		//TODO: invoke serviceFailure on NetworkServiceCallback
 		throw new ApplicationError(e);
 	}
 	
