@@ -38,7 +38,6 @@ public class BEEPServer extends Thread {
 	
 	private ProfileRegistry registry;
 	private Profile profile;
-	private TCPSession server;
 	
 	private boolean terminate;
 	
@@ -59,11 +58,9 @@ public class BEEPServer extends Thread {
 				//TODO: error handling, e.g. when port is already in use -> retry strategy
 				LOG.debug("start listening at port "+ProtocolConstants.LISTENING_PORT);
 				try {
-					server = TCPSessionCreator.listen(ProtocolConstants.LISTENING_PORT, registry);
+					TCPSessionCreator.listen(ProtocolConstants.LISTENING_PORT, registry);
 				} catch (BEEPException be) {
 					LOG.warn("server stopped, restart ["+be.getMessage()+"]");
-					if (server!=null) 
-						server.terminate(be.getMessage());
 				} catch (Exception e) {
 					LOG.error("server stopped, shutdown ["+e.getMessage()+"]");
 					exitStatus = e.getMessage();
