@@ -100,5 +100,35 @@ public class ApplicationControllerImpl implements ApplicationController {
 		getDocumentManager().exitApplication();
 		System.exit(0);
 	}
+	
+	public void closeDocument() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public void openDocument() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public void saveDocument() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public void saveDocumentAs() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public void saveAllDocuments() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public void discoverUser() {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

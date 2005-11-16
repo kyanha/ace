@@ -34,4 +34,16 @@ public interface ApplicationController {
 	
 	void quit();
 	
+	void closeDocument();
+	
+	void openDocument();
+	
+	void saveDocument();
+	
+	void saveDocumentAs();
+	
+	void saveAllDocuments();
+	
+	void discoverUser();
+	
 }
