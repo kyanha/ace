@@ -23,6 +23,7 @@ package ch.iserver.ace.application.editor;
 
 import ch.iserver.ace.application.*;
 import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.StyledDocument;
@@ -33,9 +34,10 @@ import com.jgoodies.uif_lite.panel.SimpleInternalFrame;
 
 public class DummyEditor extends JPanel implements Editor {
 
-	JTextPane textPane;
-	SimpleInternalFrame editorFrame;
-	LocaleMessageSource messageSource;
+	private JTextPane textPane;
+	private SimpleInternalFrame editorFrame;
+	private LocaleMessageSource messageSource;
+	private PersistentContentPane persistentContentPane;
 
 	public DummyEditor(LocaleMessageSource messageSource, List toolBarActions) {
 		this.messageSource = messageSource;
@@ -54,9 +56,15 @@ public class DummyEditor extends JPanel implements Editor {
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		
-		
 		// add components
 		editorFrame = new SimpleInternalFrame(null, " ", editorToolBar, scrollPane);
+		editorFrame.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				if(e.getClickCount() > 1) {
+					persistentContentPane.switchFullScreenEditing();
+				}
+			}
+		});
 		setLayout(new BorderLayout());
 		add(editorFrame);
 	}
@@ -80,6 +88,10 @@ public class DummyEditor extends JPanel implements Editor {
 	
 	public JPanel getEditorComponent() {
 		return this;
+	}
+	
+	public void setPersistentContentPane(PersistentContentPane persistentContentPane) {
+		this.persistentContentPane = persistentContentPane;
 	}
 	
 	public class DummyTextPane extends JTextPane {
