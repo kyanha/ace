@@ -54,7 +54,6 @@ public class DiscoveryCallbackImpl implements DiscoveryCallback {
 	 */
 	public void userDiscovered(RemoteUserProxyExt proxy) {
 		LOG.debug("userDiscovered("+proxy+")");
-		System.out.println("userDiscovered("+proxy+")");
 		callback.userDiscovered(proxy);
 	}
 

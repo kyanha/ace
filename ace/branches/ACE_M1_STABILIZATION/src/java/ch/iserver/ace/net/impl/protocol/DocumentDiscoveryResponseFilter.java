@@ -62,7 +62,7 @@ public class DocumentDiscoveryResponseFilter extends AbstractRequestFilter {
 				callback.documentDiscovered(proxyArr);
 				//TODO: ensure that no further MessageMSG processing is necessary here
 			} else {
-				LOG.debug("no documents in request");
+				LOG.debug("no documents in response");
 			}
 		} else { //Forward
 			super.process(request);

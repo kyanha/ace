@@ -79,8 +79,6 @@ public class ResponseListener implements ReplyListener {
 			Request request = (Request) handler.getResult();
 			if (message.getMessageType() == Message.MESSAGE_TYPE_MSG) {
 				request.setMessage((MessageMSG) message);
-			} else {
-				LOG.warn("message not set in request, type is ["+message.getMessageType()+"]");
 			}
 			filter.process(request);
 		} catch (DeserializeException de) {
@@ -111,7 +109,7 @@ public class ResponseListener implements ReplyListener {
 	 */
 	public void receiveNUL(Message message) throws AbortChannelException {
 		Object appData = message.getChannel().getAppData();
-		LOG.debug("received NUL message for ["+appData+"] from ["+message.toString()+"]");
+		LOG.debug("received NUL message for ["+appData+"] from ["+message.getChannel().getSession().toString()+"]");
 	}
 	
 	private byte[] read(Message message) throws AbortChannelException {
