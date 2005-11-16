@@ -21,8 +21,8 @@
 
 package ch.iserver.ace.net.impl.protocol;
 
-import java.util.Collection;
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import ch.iserver.ace.net.impl.MutableUserDetails;
@@ -41,7 +41,7 @@ public class SessionManager {
 	private static SessionManager theInstance;
 	
 	private SessionManager() {
-		sessions = new HashMap();
+		sessions = Collections.synchronizedMap(new LinkedHashMap());
 	}
 	
 	public static SessionManager getInstance() {
@@ -51,7 +51,7 @@ public class SessionManager {
 		return theInstance;
 	}
 	
-	public synchronized RemoteUserSession createSession(RemoteUserProxyExt user) {
+	public RemoteUserSession createSession(RemoteUserProxyExt user) {
 		String id = user.getId();
 		MutableUserDetails details = user.getMutableUserDetails();
 		RemoteUserSession newSession = new RemoteUserSession(details.getAddress(), details.getPort(), user);
@@ -60,7 +60,9 @@ public class SessionManager {
 	}
 	
 	public synchronized RemoteUserSession removeSession(String userid) {
-		return (RemoteUserSession) sessions.remove(userid);
+		RemoteUserSession session = null;
+		session = (RemoteUserSession) sessions.remove(userid);
+		return session;
 	}
 	
 	/**
@@ -77,8 +79,13 @@ public class SessionManager {
 		return sessions.size();
 	}
 	
-	public Collection getSessions() {
-		return sessions.values();
+	/**
+	 * Gets the sessions as a id-session map.
+	 * 
+	 * @return the sessions as a id-session map
+	 */
+	public Map getSessions() {
+		return sessions;
 	}
 	
 	

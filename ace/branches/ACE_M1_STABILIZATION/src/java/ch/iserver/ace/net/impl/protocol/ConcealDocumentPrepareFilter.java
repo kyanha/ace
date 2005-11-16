@@ -21,8 +21,8 @@
 
 package ch.iserver.ace.net.impl.protocol;
 
-import java.util.Collection;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.beepcore.beep.core.ReplyListener;
@@ -57,16 +57,18 @@ public class ConcealDocumentPrepareFilter extends AbstractRequestFilter {
 			
 				//send data to each known remote user
 				SessionManager manager = SessionManager.getInstance();
-				Collection sessions = manager.getSessions();
+				Map sessions = manager.getSessions();
 				LOG.info("conceal to "+sessions.size()+" users.");
-				Iterator iter = sessions.iterator();
-				while (iter.hasNext()) {
-					RemoteUserSession session = (RemoteUserSession)iter.next();
-					try {
-						ParticipantConnectionExt connection = session.getConnection();
-						connection.send(data, doc.toString(), listener);
-					} catch (ConnectionException ce) {
-						LOG.warn("connection failure for session ["+session.getUser().getUserDetails()+"] "+ce.getMessage());
+				synchronized(sessions) {
+					Iterator iter = sessions.values().iterator();
+					while (iter.hasNext()) {
+						RemoteUserSession session = (RemoteUserSession)iter.next();
+						try {
+							ParticipantConnectionExt connection = session.getConnection();
+							connection.send(data, doc.toString(), listener);
+						} catch (ConnectionException ce) {
+							LOG.warn("connection failure for session ["+session.getUser().getUserDetails()+"] "+ce.getMessage());
+						}
 					}
 				}
 				
