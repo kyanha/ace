@@ -22,9 +22,11 @@
 package ch.iserver.ace.net.impl.protocol;
 
 import org.apache.log4j.Logger;
+import org.beepcore.beep.core.BEEPException;
 import org.beepcore.beep.core.ProfileRegistry;
 import org.beepcore.beep.core.StartChannelListener;
 import org.beepcore.beep.profile.Profile;
+import org.beepcore.beep.transport.tcp.TCPSession;
 import org.beepcore.beep.transport.tcp.TCPSessionCreator;
 
 /**
@@ -36,6 +38,7 @@ public class BEEPServer extends Thread {
 	
 	private ProfileRegistry registry;
 	private Profile profile;
+	private TCPSession server;
 	
 	private boolean terminate;
 	
@@ -55,13 +58,23 @@ public class BEEPServer extends Thread {
 			while (!terminate) {
 				//TODO: error handling, e.g. when port is already in use -> retry strategy
 				LOG.debug("start listening at port "+ProtocolConstants.LISTENING_PORT);
-				TCPSessionCreator.listen(ProtocolConstants.LISTENING_PORT, registry);
+				try {
+					server = TCPSessionCreator.listen(ProtocolConstants.LISTENING_PORT, registry);
+				} catch (BEEPException be) {
+					LOG.warn("server stopped, restart ["+be.getMessage()+"]");
+					if (server!=null) 
+						server.terminate(be.getMessage());
+				} catch (Exception e) {
+					LOG.error("server stopped, shutdown ["+e.getMessage()+"]");
+					exitStatus = e.getMessage();
+					terminate = true;
+				}
 			}
 			
 		} catch (Exception e) {
 			exitStatus = e.getMessage();
 		}
-		LOG.debug("stopped ["+exitStatus+"]");
+		LOG.debug("terminate ["+exitStatus+"]");
 	}
 	
 	public void terminate() {
