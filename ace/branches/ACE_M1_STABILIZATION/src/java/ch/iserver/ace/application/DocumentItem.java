@@ -63,7 +63,7 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 		// create local document
 		id = UUID.nextUUID();
 		this.title = title;
-		type = LOCAL;
+		type = LOCAL; 
 		editorDocument = new DefaultStyledDocument();
 		editorDocument.addDocumentListener(new DocumentListener() {
 			public void changedUpdate(DocumentEvent e) {
