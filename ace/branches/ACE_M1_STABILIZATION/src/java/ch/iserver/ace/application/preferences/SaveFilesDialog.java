@@ -29,7 +29,6 @@ import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -45,7 +44,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 import ch.iserver.ace.application.DocumentItem;
 import ch.iserver.ace.application.LocaleMessageSource;
-import ch.iserver.ace.application.LocaleMessageSourceStub;
 import ch.iserver.ace.application.dialog.TitledDialog;
 
 /**
@@ -200,26 +198,4 @@ public class SaveFilesDialog extends TitledDialog {
 		
 	}
 	
-	
-	public static void main(String[] args) {
-		List files = new LinkedList();
-		files.add(new DocumentItem("test 1"));
-		files.add(new DocumentItem("test 2"));
-		files.add(new DocumentItem("test 3"));
-		files.add(new DocumentItem("test 4"));
-		
-		LocaleMessageSource messages = new LocaleMessageSourceStub();
-		SaveFilesDialog dialog = new SaveFilesDialog(null, messages, files);
-		dialog.setModal(true);
-		dialog.showDialog();
-		dialog.dispose();
-		
-		Set checked = dialog.getCheckedFiles();
-		Iterator it = checked.iterator();
-		while (it.hasNext()) {
-			DocumentItem item = (DocumentItem) it.next();
-			System.out.println(item.getTitle());
-		}
-	}
-
 }
