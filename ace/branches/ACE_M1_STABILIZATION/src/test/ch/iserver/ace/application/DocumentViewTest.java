@@ -106,10 +106,11 @@ public class DocumentViewTest extends TestCase {
 		
 		// test
 		document.setTitle("collab.txt");
+		Thread.sleep(100);
 		user.setName("a");
 				
 		// verify
-		Thread.sleep(5);
+		Thread.sleep(50);
 		listenerCtrl.verify();
 	}
 	
