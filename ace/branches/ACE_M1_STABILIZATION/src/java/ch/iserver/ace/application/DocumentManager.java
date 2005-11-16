@@ -23,61 +23,130 @@ package ch.iserver.ace.application;
 
 import ch.iserver.ace.application.*;
 import ch.iserver.ace.collaboration.*;
+import java.util.List;
 
 
 
 public class DocumentManager implements ItemSelectionChangeListener {
 
-	private DocumentViewController controller;
+	private DocumentViewController documentController;
 	private CollaborationService collaborationService;
 	private DocumentItem currentDocumentItem;
 
-	public DocumentManager(DocumentViewController controller) {
-		controller.addItemSelectionChangeListener(this);
-		this.controller = controller;
+	public DocumentManager(DocumentViewController documentController) {
+		documentController.addItemSelectionChangeListener(this);
+		this.documentController = documentController;
+	}
+
+
+
+
+
+	public boolean isSelectedDocumentDirty() {
+		// return if the selected document is dirty
+		return false;
+	}
+	
+	public List getDirtyDocuments() {
+		// returns a list of local & published documents (DocumentItem) that have changes
+		return null;
+	}
+
+
+
+
+
+	public void newDocument() {
+		// create new local document
+		DocumentItem newItem = new DocumentItem("New Document");
+		documentController.addDocument(newItem);
+		documentController.setSelectedIndex(documentController.indexOf(newItem));
+	}
+
+	public void openDocument(String filename) {
+		// open a file
+	}
+
+	public void openDocuments(String[] filenames) {
+		// open a list of files
+	}
+
+	public void saveDocument() {
+		// save the current document
+	}
+
+	public void saveDocument(DocumentItem item) {
+		// save the given document
+	}
+
+	public void saveAllDocuments() {
+		// save all local & published files
+	}
+	
+	public void saveAsDocument(String filename) {
+		// saves the current document with the new filename
 	}
 	
 	public void closeDocument() {
-		// if document = published -> conceal first
-		controller.removeDocument(controller.getSelectedDocumentItem());
-		controller.setSelectedIndex(controller.getDocumentSourceList().size()-1);
+		// closes the current document
+		if(currentDocumentItem.getType() == DocumentItem.PUBLISHED) {
+			// conceal a published document before closing
+			concealDocument();
+		}
+		documentController.removeDocument(documentController.getSelectedDocumentItem());
+		documentController.setSelectedIndex(documentController.getDocumentSourceList().size()-1);
 	}
-	
-	public void newDocument() {
-		//System.out.println("new");
-		DocumentItem newItem = new DocumentItem("New Document");
-		controller.addDocument(newItem);
-		controller.setSelectedIndex(controller.indexOf(newItem));
-	}
-	
-	public void openDocument() {
-		System.out.println("open");
-	}
-	
+
 	public void exitApplication() {
-		System.out.println("exit application");
+		// all documents are allready saved -> conceal all published documents
 	}
+
+
 	
 	
 	public void publishDocument() {
+		// publish the selected document
 		currentDocumentItem.publish(collaborationService);
 	}
 	
 	public void concealDocument() {
+		// conceal the selected document
 		currentDocumentItem.conceal();
 	}
 	
+	public void sessionJoined(DocumentItem item) {
+		// called from JoinCallbackImpl when join request is accepted
+		
+	}
+	
+	public void leaveSession() {
+		// leave the current session
+
+		// 1. document
+		//currentDocumentItem.leave();
+	}
+	
+	public void inviteUser() {
+		// invite the selected user
+		
+		// 1. user allready in session?
+	}
+	
+	public void kickParticipant() {
+		// kick the selected participant
+	}
+	
+	
+	
+	
+		
 	public void itemSelectionChanged(ItemSelectionChangeEvent e) {
-		// set actual document
-		//System.out.println("DM: set current item");
+		// set the actual document
 		currentDocumentItem = (DocumentItem)e.getItem();
 	}
-
-
 
 	public void setCollaborationService(CollaborationService collaborationService) {
 		this.collaborationService = collaborationService;
 	}
-
 
 }
