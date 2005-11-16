@@ -34,16 +34,16 @@ import ch.iserver.ace.application.LocaleMessageSource;
 
 public class ApplicationExitAction extends AbstractAction {
 
-	private ApplicationController controller;
+	private ApplicationController appController;
 
-	public ApplicationExitAction(LocaleMessageSource messageSource, ApplicationController controller) {
+	public ApplicationExitAction(LocaleMessageSource messageSource, ApplicationController appController) {
 		super(messageSource.getMessage("mAppExit"));
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke('Q', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
-		this.controller = controller;
+		this.appController = appController;
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		controller.quit();
+		appController.quit();
 	}
 
 }

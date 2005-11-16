@@ -21,6 +21,7 @@
 
 package ch.iserver.ace.application.action;
 
+import ch.iserver.ace.application.ApplicationController;
 import ch.iserver.ace.application.DocumentManager;
 import ch.iserver.ace.application.LocaleMessageSource;
 import java.awt.event.ActionEvent;
@@ -34,17 +35,17 @@ import javax.swing.KeyStroke;
 
 public class FileOpenAction extends AbstractAction {
 
-	private DocumentManager documentManager;
+	private ApplicationController appController;
 
-	public FileOpenAction(LocaleMessageSource messageSource, DocumentManager documentManager) {
+	public FileOpenAction(LocaleMessageSource messageSource, ApplicationController appController) {
 		super(messageSource.getMessage("mFileOpen"), messageSource.getIcon("iMenuFileOpen"));
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke('O', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 		putValue(SHORT_DESCRIPTION, messageSource.getMessage("mFileOpenTT"));
-		this.documentManager = documentManager;
+		this.appController = appController;
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		documentManager.openDocument();
+		appController.openDocument();
 	}
 
 }

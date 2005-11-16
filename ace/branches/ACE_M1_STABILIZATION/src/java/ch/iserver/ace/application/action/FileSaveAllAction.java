@@ -21,6 +21,7 @@
 
 package ch.iserver.ace.application.action;
 
+import ch.iserver.ace.application.ApplicationController;
 import ch.iserver.ace.application.DocumentManager;
 import ch.iserver.ace.application.ItemSelectionChangeEvent;
 import ch.iserver.ace.application.LocaleMessageSource;
@@ -31,21 +32,29 @@ import java.awt.event.ActionEvent;
 
 public class FileSaveAllAction extends DocumentItemSelectionChangeAction {
 
+	private ApplicationController appController;
 	private DocumentManager documentManager;
 
 	public FileSaveAllAction(LocaleMessageSource messageSource, DocumentManager documentManager,
-			DocumentViewController viewController) {
+			DocumentViewController viewController, ApplicationController appController) {
 		super(messageSource.getMessage("mFileSaveAll"), messageSource.getIcon("iMenuFileSaveAll"), viewController);
 		this.documentManager = documentManager;
+		this.appController = appController;
 		setEnabled(false);
 	}
 	
+	// TODO: ask document manager for list of unsaved documents. if list->size == 0 then disable
+
 	public void actionPerformed(ActionEvent e) {
-		//System.out.println("FileSaveAllAction");
+		appController.saveAllDocuments();
 	}
 
 	public void itemSelectionChanged(ItemSelectionChangeEvent e) {
-		//System.out.println("ItemSelectionChangeEvent: " + e);
+		if(e.getItem() == null) {
+			setEnabled(false);
+		} else {
+			setEnabled(true);
+		}
 	}
 
 }

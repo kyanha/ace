@@ -33,16 +33,16 @@ import ch.iserver.ace.util.ParameterValidator;
 
 public class HelpAboutAction extends AbstractAction {
 	
-	private ApplicationController controller;
+	private ApplicationController appController;
 	
-	public HelpAboutAction(LocaleMessageSource messageSource, ApplicationController controller) {
+	public HelpAboutAction(LocaleMessageSource messageSource, ApplicationController appController) {
 		super(messageSource.getMessage("mHelpAbout"), messageSource.getIcon("iMenuHelpAbout"));
-		ParameterValidator.notNull("controller", controller);
-		this.controller = controller;
+		ParameterValidator.notNull("controller", appController);
+		this.appController = appController;
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		controller.showAbout();
+		appController.showAbout();
 	}
 
 }

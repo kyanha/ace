@@ -21,6 +21,7 @@
 
 package ch.iserver.ace.application.action;
 
+import ch.iserver.ace.application.ApplicationController;
 import ch.iserver.ace.application.DocumentManager;
 import ch.iserver.ace.application.ItemSelectionChangeEvent;
 import ch.iserver.ace.application.LocaleMessageSource;
@@ -33,21 +34,28 @@ import javax.swing.KeyStroke;
 
 public class FileSaveAsAction extends DocumentItemSelectionChangeAction {
 
+	private ApplicationController appController;
 	private DocumentManager documentManager;
 
 	public FileSaveAsAction(LocaleMessageSource messageSource, DocumentManager documentManager,
-			DocumentViewController viewController) {
+			DocumentViewController viewController, ApplicationController appController) {
 		super(messageSource.getMessage("mFileSaveAs"), messageSource.getIcon("iMenuFileSaveAs"), viewController);
 		this.documentManager = documentManager;
+		this.appController = appController;
 		setEnabled(false);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		//System.out.println("FileSaveAsAction");
+		appController.saveDocumentAs();
 	}
 
 	public void itemSelectionChanged(ItemSelectionChangeEvent e) {
-		//System.out.println("ItemSelectionChangeEvent: " + e);
+		// TODO: maybe disable when document hasnt been saved yet?
+		if(e.getItem() == null) {
+			setEnabled(false);
+		} else {
+			setEnabled(true);
+		}
 	}
 
 }

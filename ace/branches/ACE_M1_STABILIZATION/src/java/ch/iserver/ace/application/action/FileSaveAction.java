@@ -21,6 +21,7 @@
 
 package ch.iserver.ace.application.action;
 
+import ch.iserver.ace.application.ApplicationController;
 import ch.iserver.ace.application.DocumentManager;
 import ch.iserver.ace.application.ItemSelectionChangeEvent;
 import ch.iserver.ace.application.LocaleMessageSource;
@@ -33,23 +34,30 @@ import javax.swing.KeyStroke;
 
 public class FileSaveAction extends DocumentItemSelectionChangeAction {
 
+	private ApplicationController appController;
 	private DocumentManager documentManager;
 
 	public FileSaveAction(LocaleMessageSource messageSource, DocumentManager documentManager,
-			DocumentViewController viewController) {
+			DocumentViewController viewController, ApplicationController appController) {
 		super(messageSource.getMessage("mFileSave"), messageSource.getIcon("iMenuFileSave"), viewController);
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke('S', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 		putValue(SHORT_DESCRIPTION, messageSource.getMessage("mFileSaveTT"));
 		this.documentManager = documentManager;
+		this.appController = appController;
 		setEnabled(false);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		//System.out.println("FileSaveAction");
+		appController.saveDocument();
 	}
 	
 	public void itemSelectionChanged(ItemSelectionChangeEvent e) {
-		//System.out.println("ItemSelectionChangeEvent: " + e);
+		// TODO: disable when document is not dirty
+		if(e.getItem() == null) {
+			setEnabled(false);
+		} else {
+			setEnabled(true);
+		}
 	}
 
 }

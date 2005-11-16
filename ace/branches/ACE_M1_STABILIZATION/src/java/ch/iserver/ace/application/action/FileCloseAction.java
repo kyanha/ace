@@ -21,6 +21,7 @@
 
 package ch.iserver.ace.application.action;
 
+import ch.iserver.ace.application.ApplicationController;
 import ch.iserver.ace.application.DocumentManager;
 import ch.iserver.ace.application.ItemSelectionChangeEvent;
 import ch.iserver.ace.application.LocaleMessageSource;
@@ -33,19 +34,21 @@ import javax.swing.KeyStroke;
 
 public class FileCloseAction extends DocumentItemSelectionChangeAction {
 
-	DocumentManager documentManager;
+	private ApplicationController appController;
+	private DocumentManager documentManager;
 
 	public FileCloseAction(LocaleMessageSource messageSource, DocumentManager documentManager,
-			DocumentViewController viewController) {
+			DocumentViewController viewController, ApplicationController appController) {
 		super(messageSource.getMessage("mFileClose"), messageSource.getIcon("iMenuFileClose"), viewController);
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke('W', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 		putValue(SHORT_DESCRIPTION, messageSource.getMessage("mFileCloseTT"));
 		this.documentManager = documentManager;
+		this.appController = appController;
 		setEnabled(false);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		documentManager.closeDocument();
+		appController.closeDocument();
 	}
 	
 	public void itemSelectionChanged(ItemSelectionChangeEvent e) {

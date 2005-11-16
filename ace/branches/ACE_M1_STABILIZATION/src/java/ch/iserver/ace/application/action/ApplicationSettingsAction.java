@@ -33,16 +33,16 @@ import ch.iserver.ace.util.ParameterValidator;
 
 public class ApplicationSettingsAction extends AbstractAction {
 		
-	private final ApplicationController controller;
+	private final ApplicationController appController;
 	
-	public ApplicationSettingsAction(LocaleMessageSource messageSource, ApplicationController controller) {
+	public ApplicationSettingsAction(LocaleMessageSource messageSource, ApplicationController appController) {
 		super(messageSource.getMessage("mAppSettings"), messageSource.getIcon("iMenuAppSettings"));
-		ParameterValidator.notNull("controller", controller);
-		this.controller = controller;
+		ParameterValidator.notNull("controller", appController);
+		this.appController = appController;
 	}
 			
 	public void actionPerformed(ActionEvent e) {
-		controller.showPreferences();
+		appController.showPreferences();
 	}
 
 }
