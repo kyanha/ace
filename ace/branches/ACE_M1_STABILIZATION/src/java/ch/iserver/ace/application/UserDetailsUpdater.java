@@ -26,6 +26,7 @@ import ch.iserver.ace.application.preferences.PreferenceChangeEvent;
 import ch.iserver.ace.application.preferences.PreferenceChangeListener;
 import ch.iserver.ace.application.preferences.PreferencesStore;
 import ch.iserver.ace.collaboration.CollaborationService;
+import ch.iserver.ace.util.CompareUtil;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
@@ -36,10 +37,13 @@ import ch.iserver.ace.util.ParameterValidator;
 public class UserDetailsUpdater implements PreferenceChangeListener {
 	
 	private final CollaborationService service;
+
+	private String nickname;
 	
-	public UserDetailsUpdater(CollaborationService service) {
+	public UserDetailsUpdater(CollaborationService service, String nickname) {
 		ParameterValidator.notNull("service", service);
 		this.service = service;
+		this.nickname = nickname;
 	}
 	
 	/**
@@ -47,7 +51,10 @@ public class UserDetailsUpdater implements PreferenceChangeListener {
 	 */
 	public void preferenceChanged(PreferenceChangeEvent event) {
 		if (PreferencesStore.NICKNAME_KEY.equals(event.getKey())) {
-			service.setUserDetails(new UserDetails(event.getValue()));
+			if (!CompareUtil.nullSafeEquals(nickname, event.getValue())) {
+				service.setUserDetails(new UserDetails(event.getValue()));
+				this.nickname = event.getValue();
+			}
 		}
 	}
 

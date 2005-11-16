@@ -38,7 +38,6 @@ public class Main {
 	
 	public static void main(String[] args) {		
 		ApplicationContext context = new ClassPathXmlApplicationContext(CONTEXT_FILES);
-		LocaleMessageSource messageSource = new LocaleMessageSourceImpl(context);
 
 		// get application factory
 		ApplicationFactory applicationFactory = (ApplicationFactory)context.getBean("appFactory");
@@ -67,8 +66,10 @@ public class Main {
 		CollaborationService collaborationService = (CollaborationService)context.getBean("collaborationService");
 
 		// preference listeners
-		collaborationService.setUserDetails(getUserDetails(preferencesStore));
-		preferencesStore.addPreferenceChangeListener(new UserDetailsUpdater(collaborationService));
+		UserDetails details = getUserDetails(preferencesStore);
+		collaborationService.setUserDetails(details);
+		preferencesStore.addPreferenceChangeListener(
+						new UserDetailsUpdater(collaborationService, details.getUsername()));
 		
 		// register listeners & start
 		collaborationService.addUserListener((UserViewController)context.getBean("userViewController"));
