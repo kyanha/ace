@@ -81,5 +81,37 @@ public class MutableUserDetails extends UserDetails {
 	public int getPort() {
 		return port;
 	}
+	
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		} else if (obj instanceof MutableUserDetails) {
+			MutableUserDetails details = (MutableUserDetails) obj;
+			boolean result = getUsername().equals(details.getUsername()) &&
+					getPort() == details.getPort();
+			InetAddress a1 = getAddress();
+			InetAddress a2 = details.getAddress();
+			return result && ( (a1 != null && a2 != null) && a1.equals(a2) || a1 == null && a2 == null );
+		}
+		return false;
+	}
+	
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	public int hashCode() {
+		int val = 13;
+		val += getUsername().hashCode();
+		val += getPort();
+		val += getAddress().hashCode();
+		return val;
+	}
+	
+	public String toString() {
+		return "MutableUserDetails('"+getUsername()+"', "+getAddress()+", "+getPort()+")";
+	}
 
 }
