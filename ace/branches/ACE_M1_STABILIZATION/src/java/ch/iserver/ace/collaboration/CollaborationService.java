@@ -24,6 +24,7 @@ package ch.iserver.ace.collaboration;
 import java.net.InetAddress;
 
 import ch.iserver.ace.DocumentModel;
+import ch.iserver.ace.ServerInfo;
 import ch.iserver.ace.UserDetails;
 
 /**
@@ -33,6 +34,11 @@ import ch.iserver.ace.UserDetails;
  * local documents.
  */
 public interface CollaborationService {
+	
+	/**
+	 * @return
+	 */
+	ServerInfo getServerInfo();
 	
 	/**
 	 * Starts the CollaborationService. No events are fired before this

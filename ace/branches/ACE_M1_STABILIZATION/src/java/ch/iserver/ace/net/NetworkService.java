@@ -24,6 +24,7 @@ package ch.iserver.ace.net;
 import java.net.InetAddress;
 
 import ch.iserver.ace.DocumentDetails;
+import ch.iserver.ace.ServerInfo;
 import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.algorithm.TimestampFactory;
 
@@ -38,6 +39,11 @@ import ch.iserver.ace.algorithm.TimestampFactory;
  */
 public interface NetworkService {
 	
+	/**
+	 * @return
+	 */
+	ServerInfo getServerInfo();
+
 	/**
 	 * Called by the collaboration layer to start the network layer.
 	 */

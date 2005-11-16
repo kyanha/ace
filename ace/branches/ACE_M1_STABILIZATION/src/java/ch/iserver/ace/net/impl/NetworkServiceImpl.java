@@ -27,6 +27,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import ch.iserver.ace.DocumentDetails;
+import ch.iserver.ace.ServerInfo;
 import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.algorithm.TimestampFactory;
 import ch.iserver.ace.net.DiscoveryNetworkCallback;
@@ -75,6 +76,11 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 			instance = new NetworkServiceImpl();
 		}
 		return instance;
+	}
+	
+	public ServerInfo getServerInfo() {
+		// TODO: get the server info
+		return null;
 	}
 	
 	/**

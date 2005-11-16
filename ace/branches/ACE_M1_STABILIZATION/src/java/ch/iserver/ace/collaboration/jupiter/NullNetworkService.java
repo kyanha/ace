@@ -24,6 +24,7 @@ package ch.iserver.ace.collaboration.jupiter;
 import java.net.InetAddress;
 
 import ch.iserver.ace.DocumentDetails;
+import ch.iserver.ace.ServerInfo;
 import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.algorithm.TimestampFactory;
 import ch.iserver.ace.net.DiscoveryNetworkCallback;
@@ -48,6 +49,10 @@ public final class NullNetworkService implements NetworkService {
 			instance = new NullNetworkService();
 		}
 		return instance;
+	}
+	
+	public ServerInfo getServerInfo() {
+		return null;
 	}
 	
 	/**

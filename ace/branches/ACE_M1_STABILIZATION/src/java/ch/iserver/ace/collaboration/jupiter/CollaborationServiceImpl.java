@@ -30,6 +30,7 @@ import javax.swing.event.EventListenerList;
 import org.apache.log4j.Logger;
 
 import ch.iserver.ace.DocumentModel;
+import ch.iserver.ace.ServerInfo;
 import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.algorithm.jupiter.JupiterTimestampFactory;
 import ch.iserver.ace.collaboration.CollaborationService;
@@ -124,11 +125,15 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 		return callback;
 	}
 	
+	public ServerInfo getServerInfo() {
+		return getNetworkService().getServerInfo();
+	}
+	
 	/**
 	 * @see ch.iserver.ace.collaboration.CollaborationService#start()
 	 */
 	public void start() {
-		service.start();
+		getNetworkService().start();
 	}
 	
 	/**
@@ -209,7 +214,7 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	}
 	
 	// --> network service callback methods <--
-
+	
 	/**
 	 * @see ch.iserver.ace.net.NetworkServiceCallback#documentDiscovered(ch.iserver.ace.net.RemoteDocumentProxy[])
 	 */

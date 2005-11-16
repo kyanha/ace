@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.iserver.ace.DocumentDetails;
+import ch.iserver.ace.ServerInfo;
 import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.algorithm.TimestampFactory;
 import ch.iserver.ace.net.DiscoveryNetworkCallback;
@@ -46,6 +47,10 @@ public class NetworkServiceStub implements NetworkService {
 	private TimestampFactory factory;
 	
 	private List documentServers = new ArrayList();
+	
+	public ServerInfo getServerInfo() {
+		return null;
+	}
 	
 	/**
 	 * @see ch.iserver.ace.net.NetworkService#start()
