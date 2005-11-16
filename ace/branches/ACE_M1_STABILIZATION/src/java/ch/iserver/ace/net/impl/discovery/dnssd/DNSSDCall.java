@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:DNSSDCall.java 1205 2005-11-14 07:57:10Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -46,7 +46,7 @@ abstract class DNSSDCall {
 				try {
 					strategy.exceptionOccurred();
 				} catch (RetryException re) {
-					throw new DNSSDUnavailable("repeated attempts to communicate with DNNSD failed.");
+					throw new DNSSDUnavailable("repeated attempts to communicate with DNSSD failed.");
 				}
 			}	
 		}
