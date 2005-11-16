@@ -25,6 +25,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import ch.iserver.ace.UserDetails;
+import ch.iserver.ace.application.editor.DummyEditor;
 import ch.iserver.ace.application.preferences.PreferencesStore;
 import ch.iserver.ace.collaboration.CollaborationService;
 import ch.iserver.ace.util.UUID;
@@ -47,9 +48,13 @@ public class Main {
 		PersistentFrame frame = (PersistentFrame)context.getBean("persistentMainFrame");
 		frame.setMenuBar(applicationFactory.createMenuBar());
 		frame.setToolBar(applicationFactory.createToolBar());
-		frame.setContentPane(applicationFactory.createPersistentContentPane());
+		PersistentContentPane pane = (PersistentContentPane)applicationFactory.createPersistentContentPane();
+		frame.setContentPane(pane);
 		frame.setStatusBar(applicationFactory.createStatusBar());
 		frame.setVisible(true);
+		
+		// TODO: define persistentPane in spring
+		((DummyEditor)context.getBean("dummyEditor")).setPersistentContentPane(pane);
 		
 		// get application controller
 		ApplicationController controller = (ApplicationController) context.getBean("applicationController");
