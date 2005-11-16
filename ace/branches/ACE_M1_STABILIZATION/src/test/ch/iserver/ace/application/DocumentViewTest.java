@@ -21,6 +21,7 @@
 
 package ch.iserver.ace.application;
 
+import javax.swing.SwingUtilities;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
@@ -85,8 +86,8 @@ public class DocumentViewTest extends TestCase {
 		DocumentViewController controller = new DocumentViewController();
 		DocumentView view = new DocumentView(controller, new LocaleMessageSourceStub());
 
-		MutableRemoteUser user = new RemoteUserStub("X", "X");
-		MutableRemoteDocument document = new RemoteDocumentStub("0", "z", user);
+		final MutableRemoteUser user = new RemoteUserStub("X", "X");
+		final MutableRemoteDocument document = new RemoteDocumentStub("0", "z", user);
 		Item item = new DocumentItem(document);
 
 		controller.getDocumentSourceList().getReadWriteLock().writeLock().lock();
@@ -105,12 +106,14 @@ public class DocumentViewTest extends TestCase {
 		listenerCtrl.replay();
 		
 		// test
-		document.setTitle("collab.txt");
-		Thread.sleep(100);
-		user.setName("a");
-				
+		SwingUtilities.invokeAndWait(new Runnable() {
+			public void run() {
+				document.setTitle("collab.txt");
+				user.setName("a");
+			}
+		});
+		
 		// verify
-		Thread.sleep(50);
 		listenerCtrl.verify();
 	}
 	
