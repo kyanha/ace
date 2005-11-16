@@ -65,10 +65,10 @@ public class RemoteUserSession {
 	 * 
 	 * @return
 	 */
-	public synchronized ParticipantConnectionExt getConnection() {
+	public synchronized ParticipantConnectionExt getConnection() throws ConnectionException {
 		//TODO: consider to return a NullParticipantConnection if the session has ended
 		if (!isAlive)
-			throw new IllegalStateException("session has been ended");
+			throw new ConnectionException("session has been ended");
 		
 		if (!isInitiated())
 			initiate();
@@ -78,7 +78,7 @@ public class RemoteUserSession {
 			connection = new ParticipantConnectionImpl(channel);
 			} catch (BEEPException be) {
 				//TODO: retry strategy?
-				LOG.error("could not initiate session ["+be+"]");
+				LOG.error("could not start channel ["+be+"]");
 			}
 		}
 		return connection;

@@ -53,7 +53,6 @@ public class PublishDocumentPrepareFilter extends AbstractRequestFilter {
 				Object doc = request.getPayload();
 				try {
 					byte[] data = serializer.createNotification(ProtocolConstants.PUBLISH, doc);
-					
 					//send data to each known remote user
 					SessionManager manager = SessionManager.getInstance();
 					Collection sessions = manager.getSessions();
@@ -61,10 +60,13 @@ public class PublishDocumentPrepareFilter extends AbstractRequestFilter {
 					Iterator iter = sessions.iterator();
 					while (iter.hasNext()) {
 						RemoteUserSession session = (RemoteUserSession)iter.next();
-						ParticipantConnectionExt connection = session.getConnection();
-						connection.send(data, doc.toString(), listener);
+						try {
+							ParticipantConnectionExt connection = session.getConnection();
+							connection.send(data, doc.toString(), listener);
+						} catch (ConnectionException ce) {
+							LOG.warn("connection failure for session ["+session.getUser().getUserDetails()+"] "+ce.getMessage());
+						}
 					}
-					
 				} catch (Exception e) {
 					//TODO: handling
 					LOG.error(e);
@@ -74,5 +76,4 @@ public class PublishDocumentPrepareFilter extends AbstractRequestFilter {
 			super.process(request);
 		}
 	}
-
 }
