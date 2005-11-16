@@ -21,6 +21,7 @@
 
 package ch.iserver.ace.net.impl.protocol;
 
+import java.net.ConnectException;
 import java.net.InetAddress;
 
 import org.apache.log4j.Logger;
@@ -29,6 +30,8 @@ import org.beepcore.beep.core.Channel;
 import org.beepcore.beep.transport.tcp.TCPSession;
 import org.beepcore.beep.transport.tcp.TCPSessionCreator;
 
+import ch.iserver.ace.FailureCodes;
+import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;
 import ch.iserver.ace.util.ParameterValidator;
 
@@ -60,7 +63,7 @@ public class RemoteUserSession {
 	
 	/**
 	 * 
-	 * If the session has been cleaned up, an <code>IllegalStateExeption</code>
+	 * If the session has been cleaned up, a <code>ConnectionExeption</code>
 	 * is thrown.
 	 * 
 	 * @return
@@ -98,6 +101,10 @@ public class RemoteUserSession {
 		} catch (BEEPException be) {
 			//TODO: retry strategy?
 			LOG.error("could not initiate session ["+be+"]");
+			if (be.getCause() instanceof ConnectException) {
+				String msg = "connection refused to host [" + host + ":" + port + "]";
+				NetworkServiceImpl.getInstance().getCallback().serviceFailure(FailureCodes.CONNECTION_REFUSED, msg, be);
+			}
 			throw new ConnectionException("session init failed ["+be.getMessage()+"]");
 		}
 	}
