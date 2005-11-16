@@ -53,8 +53,8 @@ public class DocumentDiscoveryPrepareFilter extends AbstractRequestFilter {
 				byte[] query = serializer.createQuery(ProtocolConstants.PUBLISHED_DOCUMENTS);
 				connection.send(query, new QueryInfo(user.getId(), ProtocolConstants.PUBLISHED_DOCUMENTS), listener);
 			} catch (ConnectionException ce) {
-				LOG.warn("connection failure for session ["+session.getUser().getUserDetails()+"] "+ce.getMessage());
-				LOG.warn("abort document discovery for this session.");
+				LOG.warn("connection failure for session ["+session.getUser().getUserDetails().getUsername()+"] "+ce.getMessage());
+				LOG.warn("abort document discovery.");
 			} catch (Exception e) {
 				//TODO: handling
 				LOG.error("could no serialize request ["+e.getMessage()+"]");
