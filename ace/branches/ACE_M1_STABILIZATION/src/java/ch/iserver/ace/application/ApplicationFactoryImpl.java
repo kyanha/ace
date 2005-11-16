@@ -103,6 +103,8 @@ public class ApplicationFactoryImpl implements ApplicationFactory, ApplicationCo
 		toolBar.addSeparator(new Dimension(8, 0));
 		toolBar.add((AbstractAction)context.getBean("netInviteUserAction"));
 		toolBar.add((AbstractAction)context.getBean("netKickParticipantAction"));
+		//toolBar.addSeparator(new Dimension(8, 0));
+		//toolBar.add((AbstractAction)context.getBean("toggleFullScreenEditingAction"));
 
 		return toolBar;
 	}
