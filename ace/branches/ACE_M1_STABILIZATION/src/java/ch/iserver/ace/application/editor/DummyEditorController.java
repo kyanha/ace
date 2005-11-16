@@ -26,6 +26,9 @@ import ch.iserver.ace.application.preferences.PreferenceChangeEvent;
 import ch.iserver.ace.application.preferences.PreferenceChangeListener;
 import ch.iserver.ace.application.preferences.PreferencesStore;
 
+import javax.swing.event.DocumentListener;
+import javax.swing.event.DocumentEvent;
+
 import javax.swing.text.*;
 
 import org.apache.log4j.Logger;
@@ -64,13 +67,14 @@ public class DummyEditorController implements ItemSelectionChangeListener, Prefe
 				System.out.println("DocumentItem");
 			}*/
 			// enable editor
-			editor.setDocument(((DocumentItem)e.getItem()).getEditorDocument());
+			StyledDocument doc = ((DocumentItem)e.getItem()).getEditorDocument();
+			editor.setDocument(doc);
 			editor.setTitle(((DocumentItem)e.getItem()).getTitle());
 			editor.setEnabled(true);
 		} else {
 			// disable editor
 			editor.setDocument(new DefaultStyledDocument());
-			editor.setTitle("");
+			editor.setTitle(" ");
 			editor.setEnabled(false);
 		}
 	}
