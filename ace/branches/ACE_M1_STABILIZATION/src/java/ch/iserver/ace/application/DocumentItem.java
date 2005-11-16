@@ -31,6 +31,10 @@ import ch.iserver.ace.collaboration.RemoteDocument;
 import ch.iserver.ace.collaboration.RemoteUser;
 import ch.iserver.ace.collaboration.Session;
 
+import ch.iserver.ace.util.UUID;
+
+import javax.swing.event.DocumentListener;
+import javax.swing.event.DocumentEvent;
 import javax.swing.text.*;
 
 
@@ -41,10 +45,12 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 	public final static int REMOTE		= 2;
 	public final static int PUBLISHED	= 3;
 	public final static String TYPE_PROPERTY = "type";
+	public final static String DIRTY_PROPERTY = "dirty";
 
 	private String id;
 	private String title;
 	private int type;
+	private boolean isDirty = false;
 
 	private StyledDocument editorDocument;
 	private RemoteDocument remoteDocument;
@@ -55,11 +61,32 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 
 	public DocumentItem(String title) {
 		// create local document
-		// TODO: id-generator
-		id = "" + Math.round(1000000 * Math.random());
+		id = UUID.nextUUID();
 		this.title = title;
 		type = LOCAL;
 		editorDocument = new DefaultStyledDocument();
+		editorDocument.addDocumentListener(new DocumentListener() {
+			public void changedUpdate(DocumentEvent e) {
+				if(!isDirty) {
+					isDirty = true;
+					firePropertyChange(DIRTY_PROPERTY, "CLEAN", "DIRTY");
+				}
+			}
+
+			public void insertUpdate(DocumentEvent e) {
+				if(!isDirty) {
+					isDirty = true;
+					firePropertyChange(DIRTY_PROPERTY, "CLEAN", "DIRTY");
+				}
+			}
+
+			public void removeUpdate(DocumentEvent e) {
+				if(!isDirty) {
+					isDirty = true;
+					firePropertyChange(DIRTY_PROPERTY, "CLEAN", "DIRTY");
+				}
+			}
+		});
 	}
 	
 	public DocumentItem(RemoteDocument document) {
@@ -67,6 +94,7 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 		id = document.getId();
 		title = document.getTitle();
 		type = REMOTE;
+		//editorDocument();
 		document.addPropertyChangeListener(this);
 		document.getPublisher().addPropertyChangeListener(this);
 	}
@@ -83,7 +111,14 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 		return type;
 	}
 	
+	public boolean isDirty() {
+		return isDirty;
+	}
 	
+	public void setClean() {
+		isDirty = false;
+		firePropertyChange(DIRTY_PROPERTY, "DIRTY", "CLEAN");
+	}
 	
 	
 	public RemoteDocument getRemoteDocument() {
@@ -105,14 +140,12 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 		sessionCallback = new SessionCallbackImpl();
 		session = collaborationService.publish(sessionCallback, new DocumentModel("", 0, 0, new DocumentDetails(title)));
 		type = PUBLISHED;
-		//TODO: firePropertyChange();
 		firePropertyChange(TYPE_PROPERTY, "LOCAL", "PUBLISHED");
 	}
 	
 	public void conceal() {
 		session.leave();
 		type = LOCAL;
-		//TODO: firePropertyChange();
 		firePropertyChange(TYPE_PROPERTY, "PUBLISHED", "LOCAL");
 	}
 	
