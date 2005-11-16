@@ -90,7 +90,7 @@ public class RemoteUserSession {
 	 *
 	 * @see TCPSession
 	 */
-	private void initiate() {
+	private void initiate() throws ConnectionException {
 		try {
 			session =  TCPSessionCreator.initiate(host, port);
 			LOG.info("initiated session to "+host+":"+port);
@@ -98,6 +98,7 @@ public class RemoteUserSession {
 		} catch (BEEPException be) {
 			//TODO: retry strategy?
 			LOG.error("could not initiate session ["+be+"]");
+			throw new ConnectionException("session init failed ["+be.getMessage()+"]");
 		}
 	}
 	
