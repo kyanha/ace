@@ -23,6 +23,8 @@ package ch.iserver.ace.application;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.text.AbstractDocument;
@@ -30,7 +32,9 @@ import javax.swing.text.BadLocationException;
 
 import org.apache.commons.io.FileUtils;
 
+import ca.odell.glazedlists.EventList;
 import ch.iserver.ace.collaboration.CollaborationService;
+import ch.iserver.ace.util.ParameterValidator;
 
 
 
@@ -46,8 +50,10 @@ public class DocumentManager implements ItemSelectionChangeListener {
 		documentController.addItemSelectionChangeListener(this);
 		this.documentController = documentController;
 	}
-
-
+	
+	public EventList getDocuments() {
+		return documentController.getDocumentSourceList();
+	}
 
 	public DocumentItem getSelectedDocument() {
 		return currentDocumentItem;
@@ -59,8 +65,23 @@ public class DocumentManager implements ItemSelectionChangeListener {
 	}
 	
 	public List getDirtyDocuments() {
-		// returns a list of local & published documents (DocumentItem) that have changes
-		return null;
+		List result = new LinkedList();
+		
+		EventList source = getDocuments();
+		source.getReadWriteLock().readLock().lock();
+		try {
+			Iterator it = source.iterator();
+			while (it.hasNext()) {
+				DocumentItem item = (DocumentItem) it.next();
+				if (item.isDirty()) {
+					result.add(item);
+				}
+			}
+		} finally {
+			source.getReadWriteLock().readLock().unlock();
+		}
+		
+		return result;
 	}
 
 	public void newDocument() {
@@ -71,7 +92,7 @@ public class DocumentManager implements ItemSelectionChangeListener {
 	}
 
 	public void openDocument(File file) throws IOException {
-		DocumentItem item = new DocumentItem(file.getAbsolutePath());
+		DocumentItem item = new DocumentItem(file);
 		// TODO: encoding
 		String content = FileUtils.readFileToString(file, null);
 		try {
@@ -81,12 +102,13 @@ public class DocumentManager implements ItemSelectionChangeListener {
 		}
 		documentController.addDocument(item);
 		documentController.setSelectedIndex(documentController.indexOf(item));
+		item.setClean();
 	}
 
 	public void openDocuments(File[] filenames) throws IOException {
 		for (int i = 0; i < filenames.length; i++) {
 			File file = filenames[i];
-			DocumentItem item = new DocumentItem(file.getAbsolutePath());
+			DocumentItem item = new DocumentItem(file);
 			String content = FileUtils.readFileToString(file, null);
 			try {
 				item.getEditorDocument().insertString(0, content, null);
@@ -95,38 +117,41 @@ public class DocumentManager implements ItemSelectionChangeListener {
 			}
 			documentController.addDocument(item);
 			documentController.setSelectedIndex(documentController.indexOf(item));
+			item.setClean();
 		}
 	}
 
-	public void saveDocument() {
-		// save the current document
-	}
-
-	public void saveDocument(DocumentItem item) {
-		// save the given document
-	}
-	
-	public void saveAsDocument(File file) throws IOException {
-		DocumentItem item = getSelectedDocument();
-		if (item != null) {
-			AbstractDocument doc = (AbstractDocument) item.getEditorDocument();
-			String content;
-			doc.readLock();
-			try {
-				content = doc.getText(0, doc.getLength());
-			} catch (BadLocationException e) {
-				throw new RuntimeException("unexpected code path exception");
-			} finally {
-				doc.readUnlock();
-			}
-			// TODO: encoding
-			FileUtils.writeStringToFile(file, content, null);
+	public void saveDocument(DocumentItem item) throws IOException {
+		ParameterValidator.notNull("item", item);
+		if (!item.hasBeenSaved()) {
+			throw new IllegalArgumentException("item has no fail name, save impossible");
 		}
+		saveAsDocument(item.getFile(), item);
 	}
 	
-	public void closeDocument() {
+	public void saveAsDocument(File file, DocumentItem item) throws IOException {
+		ParameterValidator.notNull("file", file);
+		ParameterValidator.notNull("item", item);
+		
+		AbstractDocument doc = (AbstractDocument) item.getEditorDocument();
+		String content;
+		doc.readLock();
+		try {
+			content = doc.getText(0, doc.getLength());
+		} catch (BadLocationException e) {
+			throw new RuntimeException("unexpected code path exception");
+		} finally {
+			doc.readUnlock();
+		}
+		// TODO: encoding
+		FileUtils.writeStringToFile(file, content, null);
+		item.setFile(file);
+		item.setClean();
+	}
+	
+	public void closeDocument(DocumentItem item) {
 		// closes the current document
-		if(currentDocumentItem.getType() == DocumentItem.PUBLISHED) {
+		if (item.getType() == DocumentItem.PUBLISHED) {
 			// conceal a published document before closing
 			concealDocument();
 		}
@@ -134,8 +159,18 @@ public class DocumentManager implements ItemSelectionChangeListener {
 		documentController.setSelectedIndex(documentController.getDocumentSourceList().size()-1);
 	}
 
-	public void exitApplication() {
-		// all documents are allready saved -> conceal all published documents
+	public void closeAllDocuments() {
+		EventList documents = getDocuments();
+		documents.getReadWriteLock().readLock().lock();
+		try {
+			Iterator it = documents.iterator();
+			while (it.hasNext()) {
+				DocumentItem item = (DocumentItem) it.next();
+				documentController.removeDocument(item);
+			}
+		} finally {
+			documents.getReadWriteLock().readLock().unlock();
+		}
 	}
 
 

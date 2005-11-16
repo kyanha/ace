@@ -38,30 +38,30 @@ import ch.iserver.ace.application.dialog.TitledDialog;
 import ch.iserver.ace.application.preferences.PreferencesStore;
 
 /**
- *
+ * 
  */
 public class ApplicationControllerImpl implements ApplicationController {
-	
+
 	private TitledDialog aboutDialog;
-	
+
 	private TitledDialog preferencesDialog;
-	
+
 	private Frame mainFrame;
-	
+
 	private LocaleMessageSource messages;
-	
+
 	private PreferencesStore preferences;
-	
+
 	private DocumentManager documentManager;
-	
+
 	public void setMainFrame(Frame mainFrame) {
 		this.mainFrame = mainFrame;
 	}
-	
+
 	public Frame getMainFrame() {
 		return mainFrame;
 	}
-	
+
 	public void setMessages(LocaleMessageSource messages) {
 		this.messages = messages;
 	}
@@ -69,15 +69,15 @@ public class ApplicationControllerImpl implements ApplicationController {
 	public LocaleMessageSource getMessages() {
 		return messages;
 	}
-	
+
 	public PreferencesStore getPreferences() {
 		return preferences;
 	}
-	
+
 	public void setPreferences(PreferencesStore preferences) {
 		this.preferences = preferences;
 	}
-	
+
 	public void setDocumentManager(DocumentManager documentManager) {
 		this.documentManager = documentManager;
 	}
@@ -92,42 +92,73 @@ public class ApplicationControllerImpl implements ApplicationController {
 		}
 		aboutDialog.showDialog();
 	}
-	
+
 	public void showPreferences() {
 		if (preferencesDialog == null) {
-			preferencesDialog = new PreferencesDialog(getMainFrame(), getMessages(), getPreferences());
+			preferencesDialog = new PreferencesDialog(getMainFrame(),
+							getMessages(), getPreferences());
 		}
 		preferencesDialog.showDialog();
 	}
-		
+
 	public void quit() {
-		getDocumentManager().exitApplication();
-		System.exit(0);
-	}
-	
-	public void closeDocument() {
-		if (getDocumentManager().isSelectedDocumentDirty()) {
-			// TODO: save/dirty
+		List dirty = getDocumentManager().getDirtyDocuments();
+		
+		if (dirty.size() > 0) {
+			try {
+				// TODO: call save all on each document
+				if (saveAllItems()) {
+					getDocumentManager().closeAllDocuments();
+					System.exit(0);
+				}
+			} catch (IOException e) {
+				// handle exceptions
+			}
+		} else {
+			System.exit(0);
 		}
-		getDocumentManager().closeDocument();
 	}
-	
+
+	public void closeDocument() {
+		DocumentItem item = getDocumentManager().getSelectedDocument();
+		if (item != null && item.isDirty()) {
+			String title = getMessages().getMessage("dConfirmCloseDirtyTitle");
+			String message = getMessages().getMessage("dConfirmCloseDirtyMessage");
+			
+			int option = JOptionPane.showConfirmDialog(
+							getMainFrame(), 
+							message, 
+							title, 
+							JOptionPane.YES_NO_CANCEL_OPTION);
+			
+			if (option == JOptionPane.YES_OPTION) {
+				try {
+					if (saveItem(item)) {
+						getDocumentManager().closeDocument(item);
+					}
+				} catch (IOException e) {
+					saveFailed(item, e);
+				}
+			} else if (option == JOptionPane.NO_OPTION) {
+				getDocumentManager().closeDocument(item);
+			}			
+		}
+	}
+
 	public void openDocument() {
 		JFileChooser chooser = new JFileChooser();
 		chooser.setMultiSelectionEnabled(true);
 		if (JFileChooser.APPROVE_OPTION == chooser.showOpenDialog(getMainFrame())) {
 			File[] files = chooser.getSelectedFiles();
 			try {
+				// TODO: call open document on each document
 				getDocumentManager().openDocuments(files);
 			} catch (IOException e) {
-				JOptionPane.showMessageDialog(getMainFrame(), 
-								getMessages().getMessage("mOpenFailedTitle"), 
-								getMessages().getMessage("mOpenFailedTitle"),
-								JOptionPane.ERROR_MESSAGE);
+				//openFailed(files, e);
 			}
 		}
 	}
-	
+
 	public void openFile(String filename) {
 		File file = new File(filename);
 		if (!file.exists() || file.isDirectory()) {
@@ -136,51 +167,104 @@ public class ApplicationControllerImpl implements ApplicationController {
 			try {
 				getDocumentManager().openDocument(new File(filename));
 			} catch (IOException e) {
-				JOptionPane.showMessageDialog(getMainFrame(), 
-								getMessages().getMessage("mOpenFailedTitle"), 
-								getMessages().getMessage("mOpenFailedTitle"),
-								JOptionPane.ERROR_MESSAGE);
+				openFailed(file, e);
 			}
 		}
 	}
-	
+
 	public void saveDocument() {
 		DocumentItem item = getDocumentManager().getSelectedDocument();
-		if (getDocumentManager().isSelectedDocumentDirty()) {
-			// TODO: save/dirty
-			
+		if (item.isDirty()) {
+			try {
+				saveItem(item);
+			} catch (IOException e) {
+				saveFailed(item, e);
+			}
+		}
+	}
+
+	public void saveDocumentAs() {
+		DocumentItem item = getDocumentManager().getSelectedDocument();
+		if (item != null) {
+			try {
+				saveItemAs(item);
+			} catch (IOException e) {
+				saveFailed(item, e);
+			}
+		}
+	}
+
+	public void saveAllDocuments() {
+	}
+
+	public void discoverUser() {
+		// TODO: unimplemented method: discoverUser()
+	}
+	
+	// --> internal methods <--
+	
+	protected boolean saveItem(DocumentItem item) throws IOException {
+		if (item.hasBeenSaved()) {
+			getDocumentManager().saveDocument(item);
+			return true;
+		} else {
+			return saveItemAs(item);
 		}
 	}
 	
-	public void saveDocumentAs() {
+	protected boolean saveItemAs(DocumentItem item) throws IOException {
 		JFileChooser chooser = new JFileChooser();
 		if (JFileChooser.APPROVE_OPTION == chooser.showSaveDialog(getMainFrame())) {
 			File file = chooser.getSelectedFile();
-			try {
-				getDocumentManager().saveAsDocument(file);
-			} catch (IOException e) {
-				// TODO: error message
-			}
+			getDocumentManager().saveAsDocument(file, item);
+			return true;
+		} else {
+			return false;
 		}
 	}
 	
-	public void saveAllDocuments() {
+	protected boolean saveAllItems() throws IOException {
 		List dirty = getDocumentManager().getDirtyDocuments();
-		SaveFilesDialog saveFilesDialog = new SaveFilesDialog(getMainFrame(), getMessages(), dirty);
+		SaveFilesDialog saveFilesDialog = new SaveFilesDialog(
+						getMainFrame(),
+						getMessages(), 
+						dirty);
 		saveFilesDialog.showDialog();
 		if (saveFilesDialog.getOption() == SaveFilesDialog.OK_OPTION) {
 			Set saveSet = saveFilesDialog.getCheckedFiles();
 			Iterator it = saveSet.iterator();
 			while (it.hasNext()) {
 				DocumentItem item = (DocumentItem) it.next();
-				// TODO: untitled documents
-				getDocumentManager().saveDocument(item);
+				try {
+					saveItem(item);
+				} catch (IOException e) {
+					saveFailed(item, e);
+				}
 			}
+			return true;
+		} else {
+			return false;
 		}
 	}
 	
-	public void discoverUser() {
-		// TODO: unimplemented method: discoverUser()		
+	private void openFailed(File file, Exception e) {
+		String title = getMessages().getMessage("dLoadFailedTitle");
+		String message = "";
+		JOptionPane.showMessageDialog(
+						getMainFrame(),
+						title,
+						message,
+						JOptionPane.ERROR);
+	}
+	
+	private void saveFailed(DocumentItem item, Exception e) {
+		String title = getMessages().getMessage("dSaveFailedTitle");
+		String message = "";
+		JOptionPane.showMessageDialog(
+						getMainFrame(),
+						title,
+						message,
+						JOptionPane.ERROR);
 	}
 
 }
