@@ -37,16 +37,6 @@ public class UserDetails {
 	protected String username;
 	
 	/**
-	 * The address of the user.
-	 */
-	protected InetAddress address;
-	
-	/**
-	 * The port of the user.
-	 */
-	protected int port;
-	
-	/**
 	 * Creates a new UserDetails object.
 	 * 
 	 * @param username the username of the user
@@ -56,16 +46,16 @@ public class UserDetails {
 		this.username = username;
 	}
 	
-	/**
-	 * Creates a new UserDetails object.
-	 * 
-	 * @param username the username of the user
-	 */
-	public UserDetails(String username, InetAddress address, int port) {
-		this(username);
-		this.address = address;
-		this.port = port;
-	}
+//	/**
+//	 * Creates a new UserDetails object.
+//	 * 
+//	 * @param username the username of the user
+//	 */
+//	public UserDetails(String username, InetAddress address, int port) {
+//		this(username);
+//		this.address = address;
+//		this.port = port;
+//	}
 	
 	/**
 	 * @return gets the username of the user
@@ -82,53 +72,35 @@ public class UserDetails {
 		this.username = username;
 	}
 	
-	/**
-	 * Gets the address of this user.
-	 * 
-	 * @return the address
-	 */
-	public InetAddress getAddress() {
-		return address;
-	}
-	
-	/**
-	 * Gets the port.
-	 * 
-	 * @return the port of the user
-	 */
-	public int getPort() {
-		return port;
-	}
-	
-	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		} else if (obj instanceof UserDetails) {
-			UserDetails details = (UserDetails) obj;
-			boolean result = getUsername().equals(details.getUsername()) &&
-					getPort() == details.getPort();
-			InetAddress a1 = getAddress();
-			InetAddress a2 = details.getAddress();
-			return result && ( (a1 != null && a2 != null) && a1.equals(a2) || a1 == null && a2 == null );
-		}
-		return false;
-	}
-	
-	/**
-	 * @see java.lang.Object#hashCode()
-	 */
-	public int hashCode() {
-		int val = 13;
-		val += getUsername().hashCode();
-		val += getPort();
-		val += getAddress().hashCode();
-		return val;
-	}
-	
-	public String toString() {
-		return "UserDetails("+getUsername()+", "+getAddress()+", "+getPort()+")";
-	}
+//	/**
+//	 * @see java.lang.Object#equals(java.lang.Object)
+//	 */
+//	public boolean equals(Object obj) {
+//		if (this == obj) {
+//			return true;
+//		} else if (obj instanceof UserDetails) {
+//			UserDetails details = (UserDetails) obj;
+//			boolean result = getUsername().equals(details.getUsername()) &&
+//					getPort() == details.getPort();
+//			InetAddress a1 = getAddress();
+//			InetAddress a2 = details.getAddress();
+//			return result && ( (a1 != null && a2 != null) && a1.equals(a2) || a1 == null && a2 == null );
+//		}
+//		return false;
+//	}
+//	
+//	/**
+//	 * @see java.lang.Object#hashCode()
+//	 */
+//	public int hashCode() {
+//		int val = 13;
+//		val += getUsername().hashCode();
+//		val += getPort();
+//		val += getAddress().hashCode();
+//		return val;
+//	}
+//	
+//	public String toString() {
+//		return "UserDetails("+getUsername()+", "+getAddress()+", "+getPort()+")";
+//	}
 }

@@ -25,7 +25,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import ch.iserver.ace.UserDetails;
+import ch.iserver.ace.net.impl.MutableUserDetails;
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;
 
 /**
@@ -53,7 +53,7 @@ public class SessionManager {
 	
 	public synchronized RemoteUserSession createSession(RemoteUserProxyExt user) {
 		String id = user.getId();
-		UserDetails details = user.getUserDetails();
+		MutableUserDetails details = user.getMutableUserDetails();
 		RemoteUserSession newSession = new RemoteUserSession(details.getAddress(), details.getPort(), user);
 		sessions.put(id, newSession);
 		return newSession;

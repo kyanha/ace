@@ -10,9 +10,9 @@ import org.easymock.AbstractMatcher;
 import org.easymock.MockControl;
 
 import ch.iserver.ace.DocumentDetails;
-import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.net.NetworkServiceCallback;
 import ch.iserver.ace.net.RemoteDocumentProxy;
+import ch.iserver.ace.net.impl.MutableUserDetails;
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.RemoteDocumentProxyImpl;
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;
@@ -30,7 +30,7 @@ public class DocumentDiscoveryResponseFilterTest extends TestCase {
 		
 		NetworkServiceImpl.getInstance().setCallback(callback);
 		
-		RemoteUserProxyExt user = new RemoteUserProxyImpl("userid1", new UserDetails("user1", InetAddress.getLocalHost(), 41234));
+		RemoteUserProxyExt user = new RemoteUserProxyImpl("userid1", new MutableUserDetails("user1", InetAddress.getLocalHost(), 41234));
 		SessionManager.getInstance().createSession(user);
 		
 		RemoteDocumentProxy[] proxies = new RemoteDocumentProxy[4];

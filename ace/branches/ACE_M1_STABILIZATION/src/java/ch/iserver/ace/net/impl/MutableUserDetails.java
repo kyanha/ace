@@ -27,12 +27,23 @@ import ch.iserver.ace.UserDetails;
 public class MutableUserDetails extends UserDetails {
 
 	
+	/**
+	 * The address of the user.
+	 */
+	protected InetAddress address;
+	/**
+	 * The port of the user.
+	 */
+	protected int port;
+
 	public MutableUserDetails(String username) {
 		super(username);
 	}
 	
 	public MutableUserDetails(String username, InetAddress address, int port) {
-		super(username, address, port);
+		super(username);
+		this.address = address;
+		this.port = port;
 	}
 	
 	/**
@@ -51,6 +62,24 @@ public class MutableUserDetails extends UserDetails {
 	 */
 	public void setPort(int port) {
 		this.port = port;
+	}
+
+	/**
+	 * Gets the address of this user.
+	 * 
+	 * @return the address
+	 */
+	public InetAddress getAddress() {
+		return address;
+	}
+
+	/**
+	 * Gets the port.
+	 * 
+	 * @return the port of the user
+	 */
+	public int getPort() {
+		return port;
 	}
 
 }

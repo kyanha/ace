@@ -32,10 +32,10 @@ import ch.iserver.ace.util.ParameterValidator;
 public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 	
 	private String id;
-	private UserDetails details;
+	private MutableUserDetails details;
 	private Map documents;
 	
-	public RemoteUserProxyImpl(String id, UserDetails details) {
+	public RemoteUserProxyImpl(String id, MutableUserDetails details) {
 		ParameterValidator.notNull("id", id);
 		ParameterValidator.notNull("details", details);
 		this.id = id;
@@ -50,6 +50,10 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 	public UserDetails getUserDetails() {
 		return details;
 	}
+	
+	public MutableUserDetails getMutableUserDetails() {
+		return details;
+	}
 
 	public Collection getSharedDocuments() {
 		return documents.values();
@@ -62,7 +66,7 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 
 	public void setUserDetails(UserDetails details) {
 		ParameterValidator.notNull("details", details);
-		this.details = details;
+		this.details = new MutableUserDetails(details.getUsername(), null, 4123);
 	}
 	
 	public void addSharedDocument(RemoteDocumentProxy doc) {

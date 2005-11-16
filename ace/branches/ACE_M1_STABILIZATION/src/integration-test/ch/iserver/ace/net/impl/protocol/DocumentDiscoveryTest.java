@@ -4,15 +4,14 @@ import java.net.InetAddress;
 
 import junit.framework.TestCase;
 
-import org.beepcore.beep.core.ReplyListener;
 import org.easymock.ArgumentsMatcher;
 import org.easymock.MockControl;
 
 import ch.iserver.ace.DocumentDetails;
-import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.net.NetworkServiceCallback;
 import ch.iserver.ace.net.RemoteDocumentProxy;
 import ch.iserver.ace.net.RemoteUserProxy;
+import ch.iserver.ace.net.impl.MutableUserDetails;
 import ch.iserver.ace.net.impl.RemoteDocumentProxyImpl;
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;
 import ch.iserver.ace.net.impl.RemoteUserProxyImpl;
@@ -26,7 +25,7 @@ public class DocumentDiscoveryTest extends TestCase {
 	
 	public DocumentDiscoveryTest() throws Exception {
 		user = new RemoteUserProxyImpl(UUID.nextUUID(), 
-				new UserDetails("test-user", InetAddress.getLocalHost(), 54321));
+				new MutableUserDetails("test-user", InetAddress.getLocalHost(), 54321));
 		docs = new RemoteDocumentProxy[NUM_DOCS];
 		for (int i=0; i < NUM_DOCS; i++) {
 			DocumentDetails details = new DocumentDetails("doc"+i);

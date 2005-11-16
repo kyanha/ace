@@ -34,6 +34,8 @@ public interface RemoteUserProxyExt extends RemoteUserProxy {
 
 	void setUserDetails(UserDetails details);
 	
+	MutableUserDetails getMutableUserDetails();
+	
 	void addSharedDocument(RemoteDocumentProxy doc);
 	
 	RemoteDocumentProxy removeSharedDocument(String id);

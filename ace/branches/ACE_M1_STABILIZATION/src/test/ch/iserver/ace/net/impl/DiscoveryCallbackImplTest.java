@@ -4,7 +4,6 @@ import junit.framework.TestCase;
 
 import org.easymock.MockControl;
 
-import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.net.NetworkServiceCallback;
 
 public class DiscoveryCallbackImplTest extends TestCase {
@@ -17,7 +16,7 @@ public class DiscoveryCallbackImplTest extends TestCase {
 		
 		DiscoveryCallbackImpl discoveryCallback = new DiscoveryCallbackImpl(callback, service);
 		
-		RemoteUserProxyExt proxy = new RemoteUserProxyImpl("testid", new UserDetails("testuser"));
+		RemoteUserProxyExt proxy = new RemoteUserProxyImpl("testid", new MutableUserDetails("testuser"));
 		
 		//define mock behavior
 		callback.userDetailsChanged(proxy);
