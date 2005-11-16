@@ -81,8 +81,12 @@ public class DocumentItemCellRenderer extends JPanel implements ListCellRenderer
 			break;
 		}
 		
-		// draw document title
-		g.drawString(value.getTitle(), 20, 10);
+		// draw document title & dirty flag
+		if(value.isDirty()) {
+			g.drawString(value.getTitle() + " *", 20, 10);
+		} else {
+			g.drawString(value.getTitle(), 20, 10);
+		}
 	}
 
 	public Dimension getPreferredSize() {
