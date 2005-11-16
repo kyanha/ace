@@ -65,7 +65,9 @@ public class Main {
 		
 		// get collaboration service
 		CollaborationService collaborationService = (CollaborationService) context.getBean("collaborationService");
-		collaborationService.setUserId(preferencesStore.get(PreferencesStore.USER_ID, UUID.nextUUID()));
+		String id = preferencesStore.get(PreferencesStore.USER_ID, UUID.nextUUID());
+		preferencesStore.put(PreferencesStore.USER_ID, id);
+		collaborationService.setUserId(id);
 		UserDetails details = getUserDetails(preferencesStore);
 		collaborationService.setUserDetails(details);
 

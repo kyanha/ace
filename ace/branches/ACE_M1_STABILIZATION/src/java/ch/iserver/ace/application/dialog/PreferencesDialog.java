@@ -43,6 +43,8 @@ public class PreferencesDialog extends TitledDialog {
 	
 	private final PreferencesStore preferences;
 	
+	private JLabel idField;
+	
 	private JTextField nameField;
 	
 	private JComboBox sizeCombo;
@@ -68,34 +70,47 @@ public class PreferencesDialog extends TitledDialog {
 		GridBagConstraints gbc = new GridBagConstraints();
 		JPanel pane = new JPanel(new GridBagLayout());
 		
+		JLabel idLabel = new JLabel(getMessages().getMessage("dPreferencesUserId"));
+		idField = new JLabel();
+		idField.setFont(idField.getFont().deriveFont(idField.getFont().getSize() * 0.8f));
 		JLabel name = new JLabel(getMessages().getMessage("dPreferencesNickname"));
 		nameField = new JTextField(20);
 		JLabel size = new JLabel(getMessages().getMessage("dPreferencesFontsize"));
 		sizeCombo = new JComboBox(getSizeArray());
 		
-		gbc.gridx = 0;
-		gbc.gridy = 0;
+		gbc.gridx  = 0;
+		gbc.gridy  = 0;
+		gbc.anchor = GridBagConstraints.EAST;
+		gbc.insets = new Insets(2, 2, 2, 5);
+		pane.add(idLabel, gbc);
+		
+		gbc.gridx += 1;
+		gbc.fill   = GridBagConstraints.HORIZONTAL;
+		gbc.anchor = GridBagConstraints.WEST;
+		gbc.insets = new Insets(2, 5, 2, 2);
+		pane.add(idField, gbc);
+		
+		gbc.gridx  = 0;
+		gbc.gridy += 1;
 		gbc.anchor = GridBagConstraints.EAST;
 		gbc.insets = new Insets(2, 2, 2, 5);
 		pane.add(name, gbc);
 		
-		gbc.gridx = 1;
-		gbc.gridy = 0;
-		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.gridx += 1;
+		gbc.fill   = GridBagConstraints.HORIZONTAL;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets(2, 5, 2, 2);
 		pane.add(nameField, gbc);
 
-		gbc.gridx = 0;
-		gbc.gridy = 1;
-		gbc.fill = GridBagConstraints.NONE;
+		gbc.gridx  = 0;
+		gbc.gridy += 1;
+		gbc.fill   = GridBagConstraints.NONE;
 		gbc.anchor = GridBagConstraints.EAST;
 		gbc.insets = new Insets(2, 2, 2, 5);
 		pane.add(size, gbc);
 		
-		gbc.gridx = 1;
-		gbc.gridy = 1;
-		gbc.fill = GridBagConstraints.NONE;
+		gbc.gridx += 1;
+		gbc.fill   = GridBagConstraints.NONE;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets(2, 5, 2, 2);
 		pane.add(sizeCombo, gbc);
@@ -124,6 +139,8 @@ public class PreferencesDialog extends TitledDialog {
 	}
 	
 	protected void init() {
+		String id = preferences.get(PreferencesStore.USER_ID, "");
+		idField.setText(id);
 		String nickname = preferences.get(PreferencesStore.NICKNAME_KEY, System.getProperty("user.name"));
 		nameField.setText(nickname);
 		String size = preferences.get(PreferencesStore.FONTSIZE_KEY, "10");
