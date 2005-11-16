@@ -120,7 +120,7 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 	}
 	
 	public boolean hasBeenSaved() {
-		return (file == null);
+		return (file != null);
 	}
 	
 	public RemoteDocument getRemoteDocument() {
