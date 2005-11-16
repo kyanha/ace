@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:QueryRecord.java 1205 2005-11-14 07:57:10Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -21,10 +21,9 @@
 
 package ch.iserver.ace.net.impl.discovery.dnssd;
 
-import ch.iserver.ace.net.impl.discovery.AbstractQueryListener;
-
 import com.apple.dnssd.DNSSD;
 import com.apple.dnssd.DNSSDException;
+import com.apple.dnssd.QueryListener;
 
 /**
  *
@@ -33,7 +32,7 @@ public class QueryRecord extends DNSSDCall {
 
 	private int ifIndex, rrtype;
 	private String hostName;
-	private AbstractQueryListener listener;
+	private QueryListener listener;
 	
 	/**
 	 * Constructor. 
@@ -43,7 +42,7 @@ public class QueryRecord extends DNSSDCall {
 	 * @param rrtype
 	 * @param listener
 	 */
-	public QueryRecord(int ifIndex, String hostName, int rrtype, AbstractQueryListener listener) {
+	public QueryRecord(int ifIndex, String hostName, int rrtype, QueryListener listener) {
 		this.ifIndex = ifIndex;
 		this.hostName = hostName;
 		this.rrtype = rrtype;
