@@ -44,6 +44,7 @@ public class DummyEditorController implements ItemSelectionChangeListener, Prefe
 		this.editor = editor;
 		this.editor.setFontSize(getFontSize(preferences, 12));
 		documentViewController.addItemSelectionChangeListener(this);
+		this.editor.setEnabled(false);
 		preferences.addPreferenceChangeListener(this);
 	}
 	
@@ -58,6 +59,10 @@ public class DummyEditorController implements ItemSelectionChangeListener, Prefe
 	
 	public void itemSelectionChanged(ItemSelectionChangeEvent e) {
 		if(e.getItem() != null) {
+			/*System.out.print("Item:   ");
+			if(e.getItem() instanceof DocumentItem) {
+				System.out.println("DocumentItem");
+			}*/
 			// enable editor
 			editor.setDocument(((DocumentItem)e.getItem()).getEditorDocument());
 			editor.setTitle(((DocumentItem)e.getItem()).getTitle());

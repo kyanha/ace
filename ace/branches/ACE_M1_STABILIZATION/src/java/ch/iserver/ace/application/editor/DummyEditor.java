@@ -42,15 +42,21 @@ public class DummyEditor extends JPanel implements Editor {
 		// create toolbar
 		JToolBar editorToolBar = new JToolBar();
 		for(int i = 0; i < toolBarActions.size(); i++) {
-			editorToolBar.add(((AbstractAction)toolBarActions.get(i)));
+			JButton toolBarButton = editorToolBar.add(((AbstractAction)toolBarActions.get(i)));
+			toolBarButton.setBorder(BorderFactory.createEmptyBorder());
 		}
 		// create editor
 		//JPanel innerEditorPane = new JPanel();
-		textPane = new JTextPane();
+		textPane = new DummyTextPane();
 		setFontSize(12);
 		
+		JScrollPane scrollPane = new JScrollPane(textPane);
+		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		
+		
 		// add components
-		editorFrame = new SimpleInternalFrame(null, " ", editorToolBar, new JScrollPane(textPane));
+		editorFrame = new SimpleInternalFrame(null, " ", editorToolBar, scrollPane);
 		setLayout(new BorderLayout());
 		add(editorFrame);
 	}
@@ -74,6 +80,24 @@ public class DummyEditor extends JPanel implements Editor {
 	
 	public JPanel getEditorComponent() {
 		return this;
+	}
+	
+	public class DummyTextPane extends JTextPane {
+		public DummyTextPane() {
+			//super();
+		}
+
+		/*public Dimension getPreferredScrollableViewportSize() {
+			return new Dimension(1000, 1000);//getSize();
+		}
+
+		public boolean getScrollableTracksViewportHeight() {
+        	return false;
+    	}*/
+		
+		/*public boolean getScrollableTracksViewportWidth() {
+        	return true;
+    	}*/
 	}
 
 }
