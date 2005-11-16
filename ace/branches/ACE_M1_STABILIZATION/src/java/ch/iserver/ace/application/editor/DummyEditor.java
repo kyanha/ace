@@ -60,7 +60,7 @@ public class DummyEditor extends JPanel implements Editor {
 		editorFrame = new SimpleInternalFrame(null, " ", editorToolBar, scrollPane);
 		editorFrame.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				if(e.getClickCount() > 1) {
+				if(e.getClickCount() == 2) {
 					persistentContentPane.switchFullScreenEditing();
 				}
 			}
