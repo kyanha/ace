@@ -88,6 +88,9 @@
 		<dependency groupId="dnssd"
                     artifactId="dnssd"
                     version="107.1"/>
+		<dependency groupId="spin" 
+		            artifactId="spin" 
+		            version="1.4"/>
 		<dependency groupId="junit" 
 		            artifactId="junit" 
 		            version="3.8.1"
