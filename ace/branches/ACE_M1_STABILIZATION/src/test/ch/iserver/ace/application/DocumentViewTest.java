@@ -46,7 +46,7 @@ public class DocumentViewTest extends TestCase {
 
 		// test fixture
 		DocumentViewController controller = new DocumentViewController();
-		View view = new DocumentView(controller, new LocaleMessageSourceStub());
+		View view = new DocumentView(new LocaleMessageSourceStub(), controller);
 		
 		Item[] items = new Item[3];
 		
@@ -84,7 +84,7 @@ public class DocumentViewTest extends TestCase {
 		
 		// test fixture
 		DocumentViewController controller = new DocumentViewController();
-		DocumentView view = new DocumentView(controller, new LocaleMessageSourceStub());
+		DocumentView view = new DocumentView(new LocaleMessageSourceStub(), controller);
 
 		final MutableRemoteUser user = new RemoteUserStub("X", "X");
 		final MutableRemoteDocument document = new RemoteDocumentStub("0", "z", user);

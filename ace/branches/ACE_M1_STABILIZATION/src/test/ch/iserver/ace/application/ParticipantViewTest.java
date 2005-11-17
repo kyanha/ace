@@ -48,7 +48,7 @@ public class ParticipantViewTest extends TestCase {
 		// test fixture
 		ParticipantViewController controller = new ParticipantViewController();
 		EventList participantList = controller.getParticipantSourceList().createMemberList();
-		View view = new ParticipantView(controller, new LocaleMessageSourceStub());
+		View view = new ParticipantView(new LocaleMessageSourceStub(), controller);
 		controller.setParticipantList(participantList);
 		
 		Item[] items = new Item[3];
@@ -88,7 +88,7 @@ public class ParticipantViewTest extends TestCase {
 		// test fixture
 		ParticipantViewController controller = new ParticipantViewController();
 		EventList participantList = controller.getParticipantSourceList().createMemberList();
-		ParticipantView view = new ParticipantView(controller, new LocaleMessageSourceStub());
+		ParticipantView view = new ParticipantView(new LocaleMessageSourceStub(), controller);
 		controller.setParticipantList(participantList);
 
 		MutableRemoteUser user = new RemoteUserStub("X", "X");

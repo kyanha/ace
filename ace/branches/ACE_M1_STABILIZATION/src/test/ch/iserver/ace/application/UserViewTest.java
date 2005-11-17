@@ -44,7 +44,7 @@ public class UserViewTest extends TestCase {
 
 		// test fixture
 		UserViewController controller = new UserViewController();
-		View view = new UserView(controller, new LocaleMessageSourceStub());
+		View view = new UserView(new LocaleMessageSourceStub(), controller);
 		
 		RemoteUser[] users = new RemoteUser[3];
 		Item[] items = new Item[3];
@@ -84,7 +84,7 @@ public class UserViewTest extends TestCase {
 		
 		// test fixture
 		UserViewController controller = new UserViewController();
-		UserView view = new UserView(controller, new LocaleMessageSourceStub());
+		UserView view = new UserView(new LocaleMessageSourceStub(), controller);
 
 		MutableRemoteUser user = new RemoteUserStub("X", "X");
 		Item item = new UserItem(user);
