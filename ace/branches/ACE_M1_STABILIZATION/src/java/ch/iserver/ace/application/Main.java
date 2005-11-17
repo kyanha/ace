@@ -52,6 +52,7 @@ public class Main {
 		PersistentContentPane pane = (PersistentContentPane)applicationFactory.createPersistentContentPane();
 		frame.setContentPane(pane);
 		frame.setStatusBar(applicationFactory.createStatusBar());
+		frame.setTitle("ACE - a collaborative editor");
 		frame.setVisible(true);
 		
 		// TODO: define persistentPane in spring
