@@ -91,7 +91,7 @@ public class BrowseItemCellRenderer extends JPanel implements ListCellRenderer {
 		int textPublisherPosY = textTitlePosY + 10;
 		g.setFont(g.getFont().deriveFont(10.0f));
 		g.setFont(g.getFont().deriveFont(Font.PLAIN & Font.BOLD));
-		g.drawString(" " + value.getPublisher(), textPosX, textPublisherPosY);
+		g.drawString(value.getPublisher(), textPosX, textPublisherPosY);
 		
 	}
 
