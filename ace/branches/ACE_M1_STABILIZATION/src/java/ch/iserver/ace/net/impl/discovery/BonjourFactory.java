@@ -44,7 +44,7 @@ public class BonjourFactory extends DiscoveryFactory {
 	
 	private PeerDiscovery createPeerDiscovery(DiscoveryCallback callback) {
 		//TODO: load classes via spring framework?
-		DiscoveryCallbackAdapter adapter = new DiscoveryCallbackAdapter(callback);
+		DiscoveryCallbackAdapter adapter = new DiscoveryManagerImpl(callback);
 		AbstractQueryListener ipListener = new IPQueryListener(adapter);
 		AbstractQueryListener txtListener = new TXTQueryListener(adapter);
 		ResolveListener resolveListener = new ResolveListenerImpl(adapter, ipListener, txtListener);

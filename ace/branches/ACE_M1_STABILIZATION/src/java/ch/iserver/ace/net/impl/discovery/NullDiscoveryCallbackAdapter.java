@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:NullDiscoveryCallbackAdapter.java 1205 2005-11-14 07:57:10Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -31,7 +31,7 @@ import ch.iserver.ace.util.ParameterValidator;
  * Null object pattern.
  *
  */
-class NullDiscoveryCallbackAdapter extends DiscoveryCallbackAdapter {
+class NullDiscoveryCallbackAdapter extends DiscoveryManagerImpl {
 	
 	private static Logger LOG = Logger.getLogger(NullDiscoveryCallbackAdapter.class);
 	

@@ -22,7 +22,6 @@ package ch.iserver.ace.net.impl.discovery;
 
 import java.net.InetAddress;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -37,18 +36,19 @@ import ch.iserver.ace.util.ParameterValidator;
 /**
  * 
  */
-class DiscoveryCallbackAdapter {
+class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager {
 	
-	private static Logger LOG = Logger.getLogger(DiscoveryCallbackAdapter.class);
+	private static Logger LOG = Logger.getLogger(DiscoveryManagerImpl.class);
 
 	private DiscoveryCallback forward;
 	private Map remoteUserProxies; 	//id to proxy
 	private Map services;				//service name to id
+	private Map peersWithEstablishedSession; //id to proxy
 	
 	/**
 	 * 
 	 */
-	public DiscoveryCallbackAdapter(DiscoveryCallback forward) {
+	public DiscoveryManagerImpl(DiscoveryCallback forward) {
 		this();
 		ParameterValidator.notNull("forward", forward);
 		this.forward = forward;
@@ -58,14 +58,36 @@ class DiscoveryCallbackAdapter {
 	 * 
 	 *
 	 */
-	public DiscoveryCallbackAdapter() {
+	public DiscoveryManagerImpl() {
 		remoteUserProxies = Collections.synchronizedMap(new LinkedHashMap());
 		services = Collections.synchronizedMap(new LinkedHashMap());
+		peersWithEstablishedSession = Collections.synchronizedMap(new LinkedHashMap());
 	}
 	
+	/*********************************************/
+	/** Methods from interface DiscoveryManager **/
+	/*********************************************/
+	public RemoteUserProxyExt[] getPeersWithNoSession() {
+		return (RemoteUserProxyExt[]) peersWithEstablishedSession.values().toArray(new RemoteUserProxyExt[0]);
+	}
+
+	public void setSessionEstablished(String userId) {
+		peersWithEstablishedSession.put(userId, remoteUserProxies.get(userId));
+		
+	}
+
+	public void setSessionTerminated(String userId) {
+		peersWithEstablishedSession.remove(userId);
+		
+	}
+	
+	
+	/*****************************************************/
+	/** Methods from interface DiscoveryCallbackAdapter **/
+	/*****************************************************/
+	
 	/**
-	 * 
-	 * @param forward
+	 * @see ch.iserver.ace.net.impl.discovery.DiscoveryCallbackAdapter#setDiscoveryCallback(ch.iserver.ace.net.impl.DiscoveryCallback)
 	 */
 	public void setDiscoveryCallback(DiscoveryCallback forward) {
 		ParameterValidator.notNull("forward", forward);
@@ -73,11 +95,7 @@ class DiscoveryCallbackAdapter {
 	}
 	
 	/**
-	 * 
-	 * @param serviceName
-	 * @param username
-	 * @param userId
-	 * @param port
+	 * @see ch.iserver.ace.net.impl.discovery.DiscoveryCallbackAdapter#userDiscovered(java.lang.String, java.lang.String, java.lang.String, int)
 	 */
 	public void userDiscovered(String serviceName, String username, String userId, int port) {
 		ParameterValidator.notNull("serviceName", serviceName);
@@ -95,8 +113,7 @@ class DiscoveryCallbackAdapter {
 	}
 
 	/**
-	 * 
-	 * @param serviceName
+	 * @see ch.iserver.ace.net.impl.discovery.DiscoveryCallbackAdapter#userDiscarded(java.lang.String)
 	 */
 	public void userDiscarded(String serviceName) {
 		if (serviceName != null) {
@@ -113,9 +130,7 @@ class DiscoveryCallbackAdapter {
 	}
 
 	/**
-	 * 
-	 * @param serviceName
-	 * @param userName
+	 * @see ch.iserver.ace.net.impl.discovery.DiscoveryCallbackAdapter#userNameChanged(java.lang.String, java.lang.String)
 	 */
 	public void userNameChanged(String serviceName, String userName) {
 		ParameterValidator.notNull("serviceName", serviceName);
@@ -135,9 +150,7 @@ class DiscoveryCallbackAdapter {
 	}
 	
 	/**
-	 * 
-	 * @param serviceName
-	 * @param address
+	 * @see ch.iserver.ace.net.impl.discovery.DiscoveryCallbackAdapter#userAddressResolved(java.lang.String, java.net.InetAddress)
 	 */
 	public void userAddressResolved(String serviceName, InetAddress address) {
 		ParameterValidator.notNull("serviceName", serviceName);
@@ -155,9 +168,7 @@ class DiscoveryCallbackAdapter {
 	}
 	
 	/**
-	 * 
-	 * @param serviceName
-	 * @return boolean true iff 
+	 * @see ch.iserver.ace.net.impl.discovery.DiscoveryCallbackAdapter#isServiceKnown(java.lang.String)
 	 */
 	public boolean isServiceKnown(String serviceName) {
 		return services.containsKey(serviceName);
