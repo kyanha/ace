@@ -1,7 +1,7 @@
 package ch.iserver.ace.net.impl.protocol;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import junit.framework.TestCase;
 import ch.iserver.ace.DocumentDetails;
@@ -23,13 +23,13 @@ public class SerializerImplTest extends TestCase {
 	public void testCreateResponseForPublishedDocuments() throws Exception {
 		Serializer serializer = SerializerImpl.getInstance();
 		
-		List docs = new ArrayList();
-		PublishedDocument doc = new PublishedDocument("WERS24-RE2", null, new DocumentDetails("testfile.txt"), null);
-		docs.add(doc);
-		doc = new PublishedDocument("ADSFBW-45S", null, new DocumentDetails("meeting2.txt"), null);
-		docs.add(doc);
-		doc = new PublishedDocument("23SSWD-3ED", null, new DocumentDetails("notes232.txt"), null);
-		docs.add(doc);
+		Map docs = new LinkedHashMap();
+		PublishedDocument doc = new PublishedDocument("WERS24-RE2", null, new DocumentDetails("testfile.txt"), null, null);
+		docs.put("WERS24-RE2", doc);
+		doc = new PublishedDocument("ADSFBW-45S", null, new DocumentDetails("meeting2.txt"), null, null);
+		docs.put("ADSFBW-45S",doc);
+		doc = new PublishedDocument("23SSWD-3ED", null, new DocumentDetails("notes232.txt"), null, null);
+		docs.put("23SSWD-3ED", doc);
 		
 		byte[] data = serializer.createResponse(ProtocolConstants.PUBLISHED_DOCUMENTS, docs);
 		String actual = new String(data, NetworkConstants.DEFAULT_ENCODING);
@@ -39,13 +39,13 @@ public class SerializerImplTest extends TestCase {
 	
 	public void testCreateNotificationPublish() throws Exception {
 		Serializer serializer = SerializerImpl.getInstance();
-		
-		PublishedDocument doc = new PublishedDocument("WERS24-RE2", null, new DocumentDetails("testfile.txt"), null);
+		String userId = "asdfadsf-23";
+		NetworkServiceImpl.getInstance().setUserId(userId);
+		PublishedDocument doc = new PublishedDocument("WERS24-RE2", null, new DocumentDetails("testfile.txt"), null, null);
 		
 		byte[] data = serializer.createNotification(ProtocolConstants.PUBLISH, doc);
 		String actual = new String(data, NetworkConstants.DEFAULT_ENCODING);
 
-		String userId = NetworkServiceImpl.getInstance().getUserId();
 		String xmlPublish = XML_PUBLISH_1+userId+XML_PUBLISH_2;
 		
 		assertEquals(xmlPublish, actual);
@@ -54,13 +54,13 @@ public class SerializerImplTest extends TestCase {
 	
 	public void testCreateNotificationConceal() throws Exception {
 		Serializer serializer = SerializerImpl.getInstance();
-		
-		PublishedDocument doc = new PublishedDocument("WERS24-RE2", null, new DocumentDetails("testfile.txt"), null);
+		String userId = "asdfadsf-23";
+		NetworkServiceImpl.getInstance().setUserId(userId);
+		PublishedDocument doc = new PublishedDocument("WERS24-RE2", null, new DocumentDetails("testfile.txt"), null, null);
 		
 		byte[] data = serializer.createNotification(ProtocolConstants.CONCEAL, doc);
 		String actual = new String(data, NetworkConstants.DEFAULT_ENCODING);
 
-		String userId = NetworkServiceImpl.getInstance().getUserId();
 		String xmlPublish = XML_CONCEAL_1+userId+XML_CONCEAL_2;
 		
 		assertEquals(xmlPublish, actual);
