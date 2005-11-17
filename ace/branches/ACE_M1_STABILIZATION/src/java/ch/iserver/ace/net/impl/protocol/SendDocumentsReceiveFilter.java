@@ -38,11 +38,11 @@ import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
 /**
  *
  */
-public class PublishedDocumentsReceiveFilter extends AbstractRequestFilter {
+public class SendDocumentsReceiveFilter extends AbstractRequestFilter {
 
-	private static Logger LOG = Logger.getLogger(PublishedDocumentsReceiveFilter.class);
+	private static Logger LOG = Logger.getLogger(SendDocumentsReceiveFilter.class);
 	
-	public PublishedDocumentsReceiveFilter(RequestFilter successor) {
+	public SendDocumentsReceiveFilter(RequestFilter successor) {
 		super(successor);
 	}
 	

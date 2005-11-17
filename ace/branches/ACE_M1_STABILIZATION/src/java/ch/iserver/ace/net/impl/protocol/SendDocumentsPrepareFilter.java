@@ -28,25 +28,22 @@ import org.beepcore.beep.core.ReplyListener;
 
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;
-import ch.iserver.ace.net.impl.protocol.DocumentDiscoveryPrepareFilter.QueryInfo;
 
 /**
  *
  */
-public class PublishedDocumentsPrepareFilter extends AbstractRequestFilter {
+public class SendDocumentsPrepareFilter extends AbstractRequestFilter {
 
-private static Logger LOG = Logger.getLogger(PublishedDocumentsPrepareFilter.class);
+private static Logger LOG = Logger.getLogger(SendDocumentsPrepareFilter.class);
 	
 	private Serializer serializer;
-	private SessionManager manager;
 	private ReplyListener listener;
 	
-	public PublishedDocumentsPrepareFilter(RequestFilter successor, Serializer serializer, ReplyListener listener) {
+	public SendDocumentsPrepareFilter(RequestFilter successor, Serializer serializer, ReplyListener listener) {
 		super(successor);
 		this.serializer = serializer;
 		//TODO: could use NullReplyListener here
 		this.listener = listener;
-		manager = SessionManager.getInstance();
 	}
 	
 	public void process(Request request) {
@@ -62,7 +59,7 @@ private static Logger LOG = Logger.getLogger(PublishedDocumentsPrepareFilter.cla
 	private void processImpl(Request request) {
 		try {			
 			RemoteUserProxyExt user = (RemoteUserProxyExt)request.getPayload(); 
-			RemoteUserSession session = manager.createSession(user); 
+			RemoteUserSession session = SessionManager.getInstance().createSession(user); 
 			ParticipantConnectionExt connection = session.getConnection();
 			Map publishedDocs = NetworkServiceImpl.getInstance().getPublishedDocuments();
 			byte[] message = serializer.createNotification(ProtocolConstants.SEND_DOCUMENTS, publishedDocs);	
