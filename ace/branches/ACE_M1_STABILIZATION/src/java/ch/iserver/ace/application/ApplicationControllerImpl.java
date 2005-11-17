@@ -32,7 +32,6 @@ import java.util.TreeMap;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
-import ch.iserver.ace.ServerInfo;
 import ch.iserver.ace.application.dialog.DialogResult;
 import ch.iserver.ace.application.dialog.SaveFilesDialog;
 import ch.iserver.ace.collaboration.CollaborationService;
@@ -181,7 +180,7 @@ public class ApplicationControllerImpl implements ApplicationController {
 
 	public void saveDocument() {
 		DocumentItem item = getDocumentManager().getSelectedDocument();
-		if (item.isDirty()) {
+		if (item.isDirty() || !item.hasBeenSaved()) {
 			try {
 				saveItem(item);
 			} catch (IOException e) {
