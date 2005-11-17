@@ -21,6 +21,9 @@
 
 package ch.iserver.ace.net.impl.protocol;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -38,6 +41,7 @@ public class RequestParserHandler extends ParserHandler {
 	private int requestType;
 	private String userId;
 	private DocumentInfo info;
+	private List requestPayload;
 	
 	public RequestParserHandler() {
 	}
@@ -51,12 +55,19 @@ public class RequestParserHandler extends ParserHandler {
 			result = new RequestImpl(getType(), null);
 		} else if (getType() == PUBLISH || getType() == CONCEAL) {
 			result = new RequestImpl(getType(), info);
+		} else if (getType() == SEND_DOCUMENTS) {
+			result = new RequestImpl(getType(), requestPayload);
 		}
 		
 	}
 	
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-		if (requestType == PUBLISH) {
+		if (requestType == SEND_DOCUMENTS) {
+			String id = attributes.getValue(DOCUMENT_ID);
+			String name = attributes.getValue(DOCUMENT_NAME);
+			DocumentInfo doc = new DocumentInfo(id, name, userId);
+			requestPayload.add(doc);
+		} else if (requestType == PUBLISH) {
 			if (qName.equals(TAG_DOC)) {
 				String id = attributes.getValue(DOCUMENT_ID);
 				String name = attributes.getValue(DOCUMENT_NAME);
@@ -77,6 +88,10 @@ public class RequestParserHandler extends ParserHandler {
 			} else {
 				LOG.warn("unkown query type "+attributes.getValue(QUERY_TYPE));
 			}
+		} else if (qName.equals(TAG_PUBLISHED_DOCS)) {
+			userId = attributes.getValue(USER_ID);
+			requestType = SEND_DOCUMENTS;
+			requestPayload = new ArrayList();
 		} else if (qName.equals(TAG_PUBLISH)) {
 			userId = attributes.getValue(USER_ID);
 			requestType = PUBLISH;

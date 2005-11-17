@@ -52,7 +52,8 @@ public class ParticipantConnectionImpl implements ParticipantConnectionExt {
 		try {
 			OutputDataStream output = prepare(message);
 			//AppData is only kept in-process
-			channel.setAppData(data);
+			if (data != null)
+				channel.setAppData(data);
 			LOG.debug("--> sendMSG() with "+message.length+" bytes");
 			channel.sendMSG(output, listener);
 			LOG.debug("<-- sendMSG()");

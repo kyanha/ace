@@ -21,7 +21,7 @@
 
 package ch.iserver.ace.net.impl.protocol;
 
-import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.beepcore.beep.core.BEEPError;
@@ -57,7 +57,7 @@ public class PublishedDocumentsRequestFilter extends AbstractRequestFilter {
 	}
 
 	private void processImpl(Request request) {
-		List publishedDocs = NetworkServiceImpl.getInstance().getPublishedDocuments();
+		Map publishedDocs = NetworkServiceImpl.getInstance().getPublishedDocuments();
 		MessageMSG message = request.getMessage();
 		try {
 			byte[] result = serializer.createResponse(ProtocolConstants.PUBLISHED_DOCUMENTS, publishedDocs);

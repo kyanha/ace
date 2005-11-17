@@ -57,7 +57,31 @@ public class DiscoveryCallbackImpl implements DiscoveryCallback {
 		callback.userDiscovered(proxy);
 		LOG.debug("<-- userDiscovered()");
 	}
+	
+	/**
+	 * 
+	 */
+	public void userDiscoveryCompleted(RemoteUserProxyExt proxy) {
+		LOG.debug("--> userDiscoveryCompleted("+proxy+")");
 
+		if (service.hasPublishedDocuments()) {
+			service.sendDocuments(proxy);
+		} else {
+			LOG.debug("no published documents, thus do not yet establish session with ["+proxy.getUserDetails().getUsername()+"]");
+		}
+//		service.discoverDocuments(proxy);
+		LOG.debug("<-- userDiscoveryCompleted()");
+	}
+
+	/**
+	 * 
+	 */
+	public void userDetailsChanged(RemoteUserProxyExt proxy) {
+		LOG.debug("--> userDetailsChanged("+proxy+")");
+		callback.userDetailsChanged(proxy);
+		LOG.debug("<-- userDetailsChanged()");
+	}
+	
 	/**
 	 * 
 	 */
@@ -76,23 +100,5 @@ public class DiscoveryCallbackImpl implements DiscoveryCallback {
 		//--> session and user proxy ready to be garbage collected
 		
 		LOG.debug("<-- userDiscarded()");
-	}
-
-	/**
-	 * 
-	 */
-	public void userDetailsChanged(RemoteUserProxyExt proxy) {
-		LOG.debug("--> userDetailsChanged("+proxy+")");
-		callback.userDetailsChanged(proxy);
-		LOG.debug("<-- userDetailsChanged()");
-	}
-
-	/**
-	 * 
-	 */
-	public void userDiscoveryCompleted(RemoteUserProxyExt proxy) {
-		LOG.debug("--> userDiscoveryCompleted("+proxy+")");
-		service.discoverDocuments(proxy);
-		LOG.debug("<-- userDiscoveryCompleted()");
 	}
 }

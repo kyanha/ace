@@ -46,14 +46,16 @@ public class PublishedDocument implements DocumentServer {
 	private DocumentServerLogic logic;
 	private DocumentDetails details;
 	private RequestFilter filter;
+	private NetworkServiceExt service;
 	private boolean isConcealed, isShutdown;
 	
-	public PublishedDocument(String id, DocumentServerLogic logic, DocumentDetails details, RequestFilter filter) {
+	public PublishedDocument(String id, DocumentServerLogic logic, DocumentDetails details, RequestFilter filter, NetworkServiceExt service) {
 		ParameterValidator.notNull("id", id);
 		LOG.debug("new PublishedDocument("+id+", "+details+")");
 		this.docId = id;
 		this.logic = logic;
 		this.details = details;
+		this.service = service;
 		this.filter = (filter != null) ? filter : NullRequestFilter.getInstance();
 		this.isConcealed = false;
 		this.isShutdown = false;
@@ -102,8 +104,10 @@ public class PublishedDocument implements DocumentServer {
 	public void shutdown() {
 		if (isShutdown()) throw new IllegalStateException("document has been shutdown already");
 		//TODO: consider doing this task in ParticipantConnection.close()
+		
 		Request request = new RequestImpl(ProtocolConstants.CONCEAL, this);
 		filter.process(request);
+		service.conceal(getId());
 		isShutdown = true;
 	}
 

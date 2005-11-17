@@ -52,7 +52,7 @@ public class RequestHandlerImpl implements RequestHandler {
 	 */
 	public void receiveMSG(MessageMSG message) {
 		LOG.debug("--> receiveMSG");
-		
+
 		InputDataStream input = message.getDataStream();
 		try {
 			byte[] rawData = readData(input);

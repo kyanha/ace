@@ -21,8 +21,10 @@
 package ch.iserver.ace.net.impl;
 
 import java.net.InetAddress;
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 
@@ -34,8 +36,8 @@ import ch.iserver.ace.net.DiscoveryNetworkCallback;
 import ch.iserver.ace.net.DocumentServer;
 import ch.iserver.ace.net.DocumentServerLogic;
 import ch.iserver.ace.net.NetworkServiceCallback;
-import ch.iserver.ace.net.impl.protocol.BEEPServer;
-import ch.iserver.ace.net.impl.protocol.BEEPServerFactory;
+import ch.iserver.ace.net.impl.protocol.BEEPSessionListener;
+import ch.iserver.ace.net.impl.protocol.BEEPSessionListenerFactory;
 import ch.iserver.ace.net.impl.protocol.DiscoveryLauncher;
 import ch.iserver.ace.net.impl.protocol.ProtocolConstants;
 import ch.iserver.ace.net.impl.protocol.Request;
@@ -55,21 +57,21 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	private TimestampFactory timestampFactory;
 	private NetworkServiceCallback networkCallback;
 	private RequestFilter requestChain;
-	private BEEPServer server;
+	private BEEPSessionListener sessionListener;
 	
 	private Discovery discovery;
 	private ServerInfo info;
 	private UserDetails details;
 	private String userId;
 	
-	private List publishedDocs;
+	private Map publishedDocs;
 	
 	private static NetworkServiceImpl instance;
 	
 	private NetworkServiceImpl() {
-		publishedDocs = new ArrayList();
+		publishedDocs = Collections.synchronizedMap(new LinkedHashMap());
 		requestChain = RequestFilterFactory.createClientChain();
-		server = BEEPServerFactory.create();
+		sessionListener = BEEPSessionListenerFactory.create();
 	}
 	
 	public static NetworkServiceImpl getInstance() {
@@ -92,7 +94,7 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	}
 	
 	
-	public synchronized List getPublishedDocuments() {
+	public Map getPublishedDocuments() {
 		return publishedDocs;
 	}
 	
@@ -113,7 +115,7 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	 */
 	public void start() { 
 		//start protocol server
-		server.start();
+		sessionListener.start();
 		//start discovery process
 		DiscoveryLauncher launcher = new DiscoveryLauncher(this);
 		launcher.start();
@@ -141,8 +143,8 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 
 	public synchronized DocumentServer publish(DocumentServerLogic logic, DocumentDetails details) {
 		LOG.info("--> publish("+details+")");
-		PublishedDocument doc = new PublishedDocument(UUID.nextUUID(), logic, details, requestChain);
-		publishedDocs.add(doc);
+		PublishedDocument doc = new PublishedDocument(UUID.nextUUID(), logic, details, requestChain, this);
+		publishedDocs.put(doc.getId(), doc);
 		Request request = new RequestImpl(ProtocolConstants.PUBLISH, doc);
 		requestChain.process(request);
 		LOG.info("<-- publish()");
@@ -153,6 +155,11 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	/** Methods from interface NetworkServiceExt **/
 	/**********************************************/
 	
+	public void conceal(String docId) {
+		publishedDocs.remove(docId);
+	}
+	
+	
 	public void setDiscovery(Discovery discovery) {
 		this.discovery = discovery;
 	}
@@ -161,6 +168,7 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 		this.info = info;
 	}
 	
+	//TODO: discarded
 	public void discoverDocuments(RemoteUserProxyExt proxy) {
 		//TODO: possibly include SingleThreadDomain between DiscoveryCallbackImpl and DocumentDiscovery?
 		LOG.info("--> discoverDocuments() for ["+proxy.getUserDetails().getUsername()+"]");
@@ -169,5 +177,18 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 		requestChain.process(request);
 		
 		LOG.info("<-- discoverDocuments()");
+	}
+	
+	public void sendDocuments(RemoteUserProxyExt proxy) {
+		LOG.info("--> sendDocuments() to ["+proxy.getUserDetails().getUsername()+"]");
+		
+		Request request = new RequestImpl(ProtocolConstants.SEND_DOCUMENTS, proxy);
+		requestChain.process(request);
+		
+		LOG.info("<-- sendDocuments()");
+	}
+	
+	public boolean hasPublishedDocuments() {
+		return !publishedDocs.isEmpty();
 	}
 }

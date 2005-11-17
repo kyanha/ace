@@ -66,6 +66,25 @@ public class SerializerImplTest extends TestCase {
 		assertEquals(xmlPublish, actual);
 	}
 	
+	public void testCreateNotificationSendDocuments() throws Exception {
+		Serializer serializer = SerializerImpl.getInstance();
+		String userId = "asdfadsf-23";
+		NetworkServiceImpl.getInstance().setUserId(userId);
+		
+		Map docs = new LinkedHashMap();
+		PublishedDocument doc = new PublishedDocument("WERS24-RE2", null, new DocumentDetails("testfile.txt"), null, null);
+		docs.put("WERS24-RE2", doc);
+		doc = new PublishedDocument("ADSFBW-45S", null, new DocumentDetails("meeting2.txt"), null, null);
+		docs.put("ADSFBW-45S",doc);
+		doc = new PublishedDocument("23SSWD-3ED", null, new DocumentDetails("notes232.txt"), null, null);
+		docs.put("23SSWD-3ED", doc);
+		
+		byte[] data = serializer.createNotification(ProtocolConstants.SEND_DOCUMENTS, docs);
+		String actual = new String(data, NetworkConstants.DEFAULT_ENCODING);
+
+		assertEquals(XML_SEND_DOCUMENTS, actual);
+	}
+	
 	private static final String EXPECTED_QUERY = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
 			"<ace><request>" +
 			"<query type=\"docs\"/>" +
@@ -94,5 +113,14 @@ public class SerializerImplTest extends TestCase {
 	
 	private static final String XML_CONCEAL_2 = "\"><doc id=\"WERS24-RE2\"/>" +
 			"</concealDocs>" +
+			"</notification></ace>";
+	
+	private static final String XML_SEND_DOCUMENTS = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+			"<ace><notification>" +
+			"<publishedDocs userid=\"asdfadsf-23\">" +
+			"<doc id=\"WERS24-RE2\" name=\"testfile.txt\"/>" +
+			"<doc id=\"ADSFBW-45S\" name=\"meeting2.txt\"/>" +
+			"<doc id=\"23SSWD-3ED\" name=\"notes232.txt\"/>" +
+			"</publishedDocs>" +
 			"</notification></ace>";
 }
