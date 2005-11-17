@@ -63,9 +63,9 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 		throw new UnsupportedOperationException();
 	}
 
-	public void setUserDetails(UserDetails details) {
+	public void setMutableUserDetails(MutableUserDetails details) {
 		ParameterValidator.notNull("details", details);
-		this.details = new MutableUserDetails(details.getUsername(), null, 4123);
+		this.details = details;
 	}
 	
 	public void addSharedDocument(RemoteDocumentProxy doc) {

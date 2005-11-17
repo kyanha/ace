@@ -1,10 +1,13 @@
 package ch.iserver.ace.net.impl;
 
+import java.net.InetAddress;
+
 import junit.framework.TestCase;
 
 import org.easymock.MockControl;
 
 import ch.iserver.ace.net.NetworkServiceCallback;
+import ch.iserver.ace.net.impl.protocol.SessionManager;
 
 public class DiscoveryCallbackImplTest extends TestCase {
 	
@@ -16,14 +19,19 @@ public class DiscoveryCallbackImplTest extends TestCase {
 		
 		DiscoveryCallbackImpl discoveryCallback = new DiscoveryCallbackImpl(callback, service);
 		
-		RemoteUserProxyExt proxy = new RemoteUserProxyImpl("testid", new MutableUserDetails("testuser"));
+		RemoteUserProxyExt proxy = new RemoteUserProxyImpl("testid", new MutableUserDetails("testuser", InetAddress.getLocalHost(), 4123));
+		SessionManager.getInstance().createSession(proxy);
 		
 		//define mock behavior
+		callbackCtrl.setDefaultMatcher(MockControl.ALWAYS_MATCHER);
 		callback.userDetailsChanged(proxy);
+		callback.documentDiscarded(null);
 		callback.userDiscarded(proxy);
 		callback.userDiscovered(proxy);
 		
-		service.discoverDocuments(proxy);
+		service.hasPublishedDocuments();
+		serviceCtrl.setReturnValue(false);
+//		service.discoverDocuments(proxy);
 		
 		// replay
 		callbackCtrl.replay();
