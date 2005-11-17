@@ -46,6 +46,7 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 	public final static int REMOTE		= 2;
 	public final static int PUBLISHED	= 3;
 	public final static String TYPE_PROPERTY = "type";
+	public final static String TITLE_PROPERTY = "title";
 	public final static String DIRTY_PROPERTY = "dirty";
 
 	private String id, title, extendedTitle, toolTip;
@@ -74,7 +75,7 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 		id = UUID.nextUUID();
 		this.file = file;
 		title = file.getName();
-		extendedTitle = file.getAbsolutePath() + " - " + file.getName();
+		extendedTitle = file.getAbsolutePath();// + " - " + file.getName();
 		toolTip = file.getAbsolutePath();
 		createEditorDocument();
 	}
@@ -98,10 +99,18 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 		return title;
 	}
 	
+/*	public void setTitle(String title) {
+		this.title = title;
+	}*/
+	
 	public String getExtendedTitle() {
 		return extendedTitle;
 	}
-	
+
+/*	public void setExtendedTitle(String extendedTitle) {
+		this.extendedTitle = extendedTitle;
+	}*/
+		
 	public String getToolTip() {
 		return toolTip;
 	}
@@ -141,6 +150,11 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 	
 	public void setFile(File file) {
 		this.file = file;
+		String oldTitle = title;
+		title = file.getName();
+		extendedTitle = file.getAbsolutePath();// + " - " + file.getName();
+		toolTip = file.getAbsolutePath();
+		firePropertyChange(TITLE_PROPERTY, oldTitle, title);
 	}
 	
 	
