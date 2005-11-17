@@ -81,16 +81,16 @@ public class PeerDiscoveryTest extends TestCase {
 		RemoteUserProxyExt rem1 = new RemoteUserProxyImpl("peer1"+ports[0], new MutableUserDetails("peer1", null, ports[0]));
 		callback.userDiscovered(rem1);
 		//note: InetAddress will not be compared in comparison, c.f. RemoteUserProxyMatcher
-		callback.userDetailsChanged(rem1);
+		callback.userDiscoveryCompleted(rem1);
 		RemoteUserProxyExt rem2 = new RemoteUserProxyImpl("peer2"+ports[1], new MutableUserDetails("peer2", null, ports[1]));
 		callback.userDiscovered(rem2);
-		callback.userDetailsChanged(rem2);
+		callback.userDiscoveryCompleted(rem2);
 		RemoteUserProxyExt rem3 = new RemoteUserProxyImpl("peer3"+ports[2], new MutableUserDetails("peer3", null, ports[2]));
 		callback.userDiscovered(rem3);
-		callback.userDetailsChanged(rem3);
+		callback.userDiscoveryCompleted(rem3);
 		RemoteUserProxyExt rem4 = new RemoteUserProxyImpl("peer4"+ports[3], new MutableUserDetails("peer4", null, ports[3]));
 		callback.userDiscovered(rem4);
-		callback.userDetailsChanged(rem4);
+		callback.userDiscoveryCompleted(rem4);
 		
 		discoveryCallbackCtrl.replay();
 		

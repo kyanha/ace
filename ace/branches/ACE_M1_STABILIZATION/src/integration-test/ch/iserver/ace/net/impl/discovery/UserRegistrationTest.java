@@ -45,7 +45,7 @@ public class UserRegistrationTest extends TestCase {
 	private UserRegistration registration;
 	private Properties props;
 	
-	public void testUserRegistrationAndUserDetailsUpdate() {
+	public void testUserRegistrationAndUserDetailsUpdate() throws Exception {
 		final String USER = "testuser";
 		final String USER_ID = "test-id_1";
 		
@@ -60,11 +60,9 @@ public class UserRegistrationTest extends TestCase {
 		discovery.execute();
 		
 		peerDiscoveryCtrl.verify();
-		
-		try {
-			Thread.sleep(5000);
-		} catch (Exception e) {}
-		
+
+		Thread.sleep(3000);
+
 		assertTrue(registration.isRegistered());
 		TXTRecord rec = ((UserRegistrationImpl)registration).getTXTRecord();
 		assertEquals(props.get(Bonjour.KEY_TXT_VERSION), TXTRecordProxy.get(TXTRecordProxy.TXT_VERSION, rec));
