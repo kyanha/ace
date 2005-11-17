@@ -80,8 +80,13 @@
   </bean>
 
   <bean id="documentView" class="ch.iserver.ace.application.DocumentView">
-    <constructor-arg><ref local="documentViewController"/></constructor-arg>
-    <constructor-arg><ref local="localeMessageSource"/></constructor-arg>
+    <constructor-arg index="0"><ref local="localeMessageSource"/></constructor-arg>
+    <constructor-arg index="1"><ref local="documentViewController"/></constructor-arg>
+    <!--property name="toolBarActions">
+      <list>
+        <ref bean="netPublishDocumentAction"/>
+      </list>
+    </property-->
   </bean>
 
 
@@ -91,8 +96,13 @@
   </bean>
 
   <bean id="browseView" class="ch.iserver.ace.application.BrowseView">
-    <constructor-arg><ref local="browseViewController"/></constructor-arg>
     <constructor-arg><ref local="localeMessageSource"/></constructor-arg>
+    <constructor-arg><ref local="browseViewController"/></constructor-arg>
+    <!--property name="toolBarActions">
+      <list>
+        <ref bean="netPublishDocumentAction"/>
+      </list>
+    </property-->
   </bean>
 
 
@@ -102,8 +112,13 @@
   </bean>
 
   <bean id="participantView" class="ch.iserver.ace.application.ParticipantView">
-    <constructor-arg><ref local="participantViewController"/></constructor-arg>
     <constructor-arg><ref local="localeMessageSource"/></constructor-arg>
+    <constructor-arg><ref local="participantViewController"/></constructor-arg>
+    <!--property name="toolBarActions">
+      <list>
+        <ref bean="netPublishDocumentAction"/>
+      </list>
+    </property-->
   </bean>
 
 
@@ -113,8 +128,13 @@
   </bean>
 
   <bean id="userView" class="ch.iserver.ace.application.UserView">
-    <constructor-arg><ref local="userViewController"/></constructor-arg>
     <constructor-arg><ref local="localeMessageSource"/></constructor-arg>
+    <constructor-arg><ref local="userViewController"/></constructor-arg>
+    <!--property name="toolBarActions">
+      <list>
+        <ref bean="netPublishDocumentAction"/>
+      </list>
+    </property-->
   </bean>
 
 
