@@ -86,7 +86,9 @@ public class PublishDocumentPrepareFilter extends AbstractRequestFilter {
 					//TODO: handling
 					LOG.error("caught exception ["+e.getMessage()+"]");
 				}
-			} 
+			} else {
+				LOG.debug("no sessions available for publish.");
+			}
 		} else { //Forward
 			super.process(request);
 		}
