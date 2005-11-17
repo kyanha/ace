@@ -52,9 +52,13 @@ public class DocumentManager implements ItemSelectionChangeListener, PreferenceC
 	
 	private String defaultEncoding;
 
-	public DocumentManager(DocumentViewController documentController) {
+	public DocumentManager(DocumentViewController documentController, PreferencesStore preferences) {
 		documentController.addItemSelectionChangeListener(this);
 		this.documentController = documentController;
+		
+		// get default encoding
+		defaultEncoding = preferences.get(PreferencesStore.CHARSET_KEY, "ISO-8859-1");
+		preferences.addPreferenceChangeListener(this);
 	}
 	
 	public void setDefaultEncoding(String defaultEncoding) {
