@@ -42,7 +42,7 @@ import ch.iserver.ace.util.ParameterValidator;
 
 
 
-public class DocumentManager implements ItemSelectionChangeListener, PreferenceChangeListener {
+public class DocumentManagerImpl implements ItemSelectionChangeListener, PreferenceChangeListener, DocumentManager {
 	
 	private static int counter = 1;
 	
@@ -52,7 +52,7 @@ public class DocumentManager implements ItemSelectionChangeListener, PreferenceC
 	
 	private String defaultEncoding;
 
-	public DocumentManager(DocumentViewController documentController, PreferencesStore preferences) {
+	public DocumentManagerImpl(DocumentViewController documentController, PreferencesStore preferences) {
 		documentController.addItemSelectionChangeListener(this);
 		this.documentController = documentController;
 		
@@ -69,10 +69,16 @@ public class DocumentManager implements ItemSelectionChangeListener, PreferenceC
 		return defaultEncoding;
 	}
 	
+	/* (non-Javadoc)
+	 * @see ch.iserver.ace.application.DocumentManager#getDocuments()
+	 */
 	public EventList getDocuments() {
 		return documentController.getDocumentSourceList();
 	}
 
+	/* (non-Javadoc)
+	 * @see ch.iserver.ace.application.DocumentManager#getSelectedDocument()
+	 */
 	public DocumentItem getSelectedDocument() {
 		return currentDocumentItem;
 	}
@@ -81,6 +87,9 @@ public class DocumentManager implements ItemSelectionChangeListener, PreferenceC
 		return currentDocumentItem.isDirty();
 	}
 	
+	/* (non-Javadoc)
+	 * @see ch.iserver.ace.application.DocumentManager#getDirtyDocuments()
+	 */
 	public List getDirtyDocuments() {
 		List result = new LinkedList();
 		
@@ -101,12 +110,18 @@ public class DocumentManager implements ItemSelectionChangeListener, PreferenceC
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see ch.iserver.ace.application.DocumentManager#newDocument()
+	 */
 	public void newDocument() {
 		DocumentItem newItem = new DocumentItem("Untitled Document " + counter++);
 		documentController.addDocument(newItem);
 		documentController.setSelectedIndex(documentController.indexOf(newItem));
 	}
 
+	/* (non-Javadoc)
+	 * @see ch.iserver.ace.application.DocumentManager#openDocument(java.io.File)
+	 */
 	public void openDocument(File file) throws IOException {
 		DocumentItem existing = findDocumentForFile(file);
 		if (existing != null) {
@@ -151,6 +166,9 @@ public class DocumentManager implements ItemSelectionChangeListener, PreferenceC
 		return null;
 	}
 	
+	/* (non-Javadoc)
+	 * @see ch.iserver.ace.application.DocumentManager#saveDocument(ch.iserver.ace.application.DocumentItem)
+	 */
 	public void saveDocument(DocumentItem item) throws IOException {
 		ParameterValidator.notNull("item", item);
 		if (!item.hasBeenSaved()) {
@@ -159,6 +177,9 @@ public class DocumentManager implements ItemSelectionChangeListener, PreferenceC
 		saveAsDocument(item.getFile(), item);
 	}
 	
+	/* (non-Javadoc)
+	 * @see ch.iserver.ace.application.DocumentManager#saveAsDocument(java.io.File, ch.iserver.ace.application.DocumentItem)
+	 */
 	public void saveAsDocument(File file, DocumentItem item) throws IOException {
 		ParameterValidator.notNull("file", file);
 		ParameterValidator.notNull("item", item);
@@ -178,6 +199,9 @@ public class DocumentManager implements ItemSelectionChangeListener, PreferenceC
 		item.setClean();
 	}
 	
+	/* (non-Javadoc)
+	 * @see ch.iserver.ace.application.DocumentManager#closeDocument(ch.iserver.ace.application.DocumentItem)
+	 */
 	public void closeDocument(DocumentItem item) {
 		if (item.getType() == DocumentItem.PUBLISHED) {
 			// conceal a published document before closing
@@ -187,6 +211,9 @@ public class DocumentManager implements ItemSelectionChangeListener, PreferenceC
 		documentController.setSelectedIndex(documentController.getDocumentSourceList().size()-1);
 	}
 
+	/* (non-Javadoc)
+	 * @see ch.iserver.ace.application.DocumentManager#closeAllDocuments()
+	 */
 	public void closeAllDocuments() {
 		EventList documents = getDocuments();
 		documents.getReadWriteLock().readLock().lock();
@@ -203,21 +230,33 @@ public class DocumentManager implements ItemSelectionChangeListener, PreferenceC
 
 
 
+	/* (non-Javadoc)
+	 * @see ch.iserver.ace.application.DocumentManager#publishDocument()
+	 */
 	public void publishDocument() {
 		// publish the selected document
 		currentDocumentItem.publish(collaborationService);
 	}
 	
+	/* (non-Javadoc)
+	 * @see ch.iserver.ace.application.DocumentManager#concealDocument()
+	 */
 	public void concealDocument() {
 		// conceal the selected document
 		currentDocumentItem.conceal();
 	}
 	
+	/* (non-Javadoc)
+	 * @see ch.iserver.ace.application.DocumentManager#sessionJoined(ch.iserver.ace.application.DocumentItem)
+	 */
 	public void sessionJoined(DocumentItem item) {
 		// called from JoinCallbackImpl when join request is accepted
 		
 	}
 	
+	/* (non-Javadoc)
+	 * @see ch.iserver.ace.application.DocumentManager#leaveSession()
+	 */
 	public void leaveSession() {
 		// leave the current session
 
@@ -225,12 +264,18 @@ public class DocumentManager implements ItemSelectionChangeListener, PreferenceC
 		//currentDocumentItem.leave();
 	}
 	
+	/* (non-Javadoc)
+	 * @see ch.iserver.ace.application.DocumentManager#inviteUser()
+	 */
 	public void inviteUser() {
 		// invite the selected user
 		
 		// 1. user allready in session?
 	}
 	
+	/* (non-Javadoc)
+	 * @see ch.iserver.ace.application.DocumentManager#kickParticipant()
+	 */
 	public void kickParticipant() {
 		// kick the selected participant
 	}

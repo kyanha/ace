@@ -21,15 +21,14 @@
 
 package ch.iserver.ace.application.action;
 
-import ch.iserver.ace.application.ApplicationController;
-import ch.iserver.ace.application.DocumentManager;
-import ch.iserver.ace.application.LocaleMessageSource;
-import java.awt.event.ActionEvent;
-import javax.swing.AbstractAction;
-import javax.swing.Icon;
-
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+
+import javax.swing.AbstractAction;
 import javax.swing.KeyStroke;
+
+import ch.iserver.ace.application.ApplicationController;
+import ch.iserver.ace.application.LocaleMessageSource;
 
 
 
