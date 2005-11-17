@@ -105,7 +105,7 @@ public class PublishedDocument implements DocumentServer {
 		if (isShutdown()) throw new IllegalStateException("document has been shutdown already");
 		//TODO: consider doing this task in ParticipantConnection.close()
 		
-		Request request = new RequestImpl(ProtocolConstants.CONCEAL, this);
+		Request request = new RequestImpl(ProtocolConstants.CONCEAL, null, this);
 		filter.process(request);
 		service.conceal(getId());
 		isShutdown = true;

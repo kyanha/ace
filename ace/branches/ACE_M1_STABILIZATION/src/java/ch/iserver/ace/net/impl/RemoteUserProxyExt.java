@@ -38,4 +38,8 @@ public interface RemoteUserProxyExt extends RemoteUserProxy {
 	void addSharedDocument(RemoteDocumentProxy doc);
 	
 	RemoteDocumentProxy removeSharedDocument(String id);
+	
+	void setSessionEstablished(boolean value);
+	
+	boolean isSessionEstablished();
 }

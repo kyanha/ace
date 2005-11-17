@@ -34,6 +34,7 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 	private String id;
 	private MutableUserDetails details;
 	private Map documents;
+	private boolean isSessionEstablished;
 	
 	public RemoteUserProxyImpl(String id, MutableUserDetails details) {
 		ParameterValidator.notNull("id", id);
@@ -41,6 +42,7 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 		this.id = id;
 		this.details = details;
 		this.documents = new HashMap();
+		isSessionEstablished = false;
 	}
 
 	public String getId() {
@@ -108,5 +110,13 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 		hash += details.hashCode();
 		hash += documents.hashCode();
 		return hash;
+	}
+
+	public void setSessionEstablished(boolean value) {
+		isSessionEstablished = value;
+	}
+
+	public boolean isSessionEstablished() {
+		return isSessionEstablished;
 	}
 }

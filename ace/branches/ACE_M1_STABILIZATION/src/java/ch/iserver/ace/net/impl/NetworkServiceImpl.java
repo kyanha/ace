@@ -122,7 +122,7 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	}
 	
 	public void stop() {
-		// TODO: implement stop method	
+		LOG.debug("network service stopped.");
 	}
 	
 	public void setUserDetails(UserDetails details) {
@@ -149,7 +149,7 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 		LOG.info("--> publish("+details+")");
 		PublishedDocument doc = new PublishedDocument(UUID.nextUUID(), logic, details, requestChain, this);
 		publishedDocs.put(doc.getId(), doc);
-		Request request = new RequestImpl(ProtocolConstants.PUBLISH, doc);
+		Request request = new RequestImpl(ProtocolConstants.PUBLISH, null, doc);
 		requestChain.process(request);
 		LOG.info("<-- publish()");
 		return doc;
@@ -177,7 +177,7 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 		//TODO: possibly include SingleThreadDomain between DiscoveryCallbackImpl and DocumentDiscovery?
 		LOG.info("--> discoverDocuments() for ["+proxy.getUserDetails().getUsername()+"]");
 		
-		Request request = new RequestImpl(ProtocolConstants.PUBLISHED_DOCUMENTS, proxy);
+		Request request = new RequestImpl(ProtocolConstants.PUBLISHED_DOCUMENTS, null, proxy);
 		requestChain.process(request);
 		
 		LOG.info("<-- discoverDocuments()");
@@ -186,7 +186,7 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	public void sendDocuments(RemoteUserProxyExt proxy) {
 		LOG.info("--> sendDocuments() to ["+proxy.getUserDetails().getUsername()+"]");
 		
-		Request request = new RequestImpl(ProtocolConstants.SEND_DOCUMENTS, proxy);
+		Request request = new RequestImpl(ProtocolConstants.SEND_DOCUMENTS, null, proxy);
 		requestChain.process(request);
 		
 		LOG.info("<-- sendDocuments()");

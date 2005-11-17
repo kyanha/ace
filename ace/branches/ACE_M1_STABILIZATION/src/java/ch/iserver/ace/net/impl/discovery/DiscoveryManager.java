@@ -34,4 +34,8 @@ public interface DiscoveryManager {
 	
 	public void setSessionTerminated(String userId);
 	
+	public boolean hasSessionEstablished(String userId);
+	
+	public RemoteUserProxyExt getUser(String userId);
+	
 }

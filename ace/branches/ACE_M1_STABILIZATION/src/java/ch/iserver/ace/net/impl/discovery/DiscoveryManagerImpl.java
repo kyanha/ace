@@ -81,6 +81,14 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 		
 	}
 	
+	public boolean hasSessionEstablished(String userid) {
+		return peersWithEstablishedSession.containsKey(userid);
+	}
+	
+	public RemoteUserProxyExt getUser(String userid) {
+		return (RemoteUserProxyExt) remoteUserProxies.get(userid);
+	}
+	
 	
 	/*****************************************************/
 	/** Methods from interface DiscoveryCallbackAdapter **/
