@@ -60,8 +60,7 @@ public class DocumentManager implements ItemSelectionChangeListener {
 	}
 
 	public boolean isSelectedDocumentDirty() {
-		// return if the selected document is dirty
-		return false;
+		return currentDocumentItem.isDirty();
 	}
 	
 	public List getDirtyDocuments() {
@@ -85,7 +84,6 @@ public class DocumentManager implements ItemSelectionChangeListener {
 	}
 
 	public void newDocument() {
-		// create new local document
 		DocumentItem newItem = new DocumentItem("Untitled Document " + counter++);
 		documentController.addDocument(newItem);
 		documentController.setSelectedIndex(documentController.indexOf(newItem));

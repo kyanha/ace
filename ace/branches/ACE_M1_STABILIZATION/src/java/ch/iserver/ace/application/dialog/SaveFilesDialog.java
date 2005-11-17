@@ -62,7 +62,7 @@ public class SaveFilesDialog extends TitledDialog {
 		tableModel = new SaveFilesTableModel(files);
 	}
 	
-	public Set getCheckedFiles() {
+	public Set getSelectedFiles() {
 		return tableModel.getCheckedFiles();
 	}
 	

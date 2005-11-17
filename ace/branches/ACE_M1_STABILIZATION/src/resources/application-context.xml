@@ -15,10 +15,14 @@
   </bean>
   
   <bean id="applicationController" class="ch.iserver.ace.application.ApplicationControllerImpl">
-    <property name="mainFrame" ref="persistentMainFrame"/>
+    <property name="dialogController" ref="dialogController"/>
+    <property name="documentManager" ref="documentManager"/>
+  </bean>
+  
+  <bean id="dialogController" class="ch.iserver.ace.application.DialogControllerImpl">
     <property name="preferences" ref="preferencesStore"/>
     <property name="messages" ref="localeMessageSource"/>
-    <property name="documentManager" ref="documentManager"/>
+    <property name="mainFrame" ref="persistentMainFrame"/>
   </bean>
 
   <bean id="appFactory" class="ch.iserver.ace.application.ApplicationFactoryImpl">
