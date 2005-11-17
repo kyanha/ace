@@ -1,8 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
-
+  
+  <bean id="loggingInterceptor"
+        class="ch.iserver.ace.util.LoggingInterceptor">
+    <constructor-arg><value>ch.iserver.ace.collaboration.CollaborationService</value></constructor-arg>
+  </bean>
+  
   <bean id="collaborationService" 
+    class="org.springframework.aop.framework.ProxyFactoryBean">
+    <property name="proxyInterfaces">
+      <value>ch.iserver.ace.collaboration.CollaborationService,ch.iserver.ace.net.NetworkServiceCallback</value>
+    </property>
+    <property name="target"><ref local="collaborationServiceTarget"/></property>
+    <property name="interceptorNames">
+        <list>
+            <value>loggingInterceptor</value>
+        </list>
+    </property>
+  </bean>
+
+  <bean id="collaborationServiceTarget" 
         class="ch.iserver.ace.collaboration.jupiter.CollaborationServiceImpl"
         destroy-method="stop">
     <constructor-arg><ref bean="networkService"/></constructor-arg>

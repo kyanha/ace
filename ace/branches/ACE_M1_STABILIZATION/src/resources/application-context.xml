@@ -19,7 +19,9 @@
     <property name="documentManager" ref="documentManager"/>
   </bean>
   
-  <bean id="dialogController" class="ch.iserver.ace.application.DialogControllerImpl">
+  <bean id="dialogController" 
+        class="ch.iserver.ace.application.DialogControllerImpl"
+        destroy-method="destroy">
     <property name="preferences" ref="preferencesStore"/>
     <property name="messages" ref="localeMessageSource"/>
     <property name="mainFrame" ref="persistentMainFrame"/>

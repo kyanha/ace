@@ -49,6 +49,8 @@ public class DialogControllerImpl implements DialogController {
 	
 	private PreferencesDialog preferencesDialog;
 	
+	private SaveFilesDialog saveFilesDialog;
+	
 	private PreferencesStore preferences;
 	
 	private Frame mainFrame;
@@ -151,10 +153,12 @@ public class DialogControllerImpl implements DialogController {
 	}
 
 	public DialogResult showSaveFilesDialog(List candidates) {
-		SaveFilesDialog saveFilesDialog = new SaveFilesDialog(
+		if (saveFilesDialog == null) {
+			saveFilesDialog = new SaveFilesDialog(
 						getMainFrame(),
 						getMessages(), 
 						candidates);
+		}
 		saveFilesDialog.showDialog();
 		return new DialogResult(saveFilesDialog.getOption(), saveFilesDialog.getSelectedFiles());
 	}
@@ -266,6 +270,21 @@ public class DialogControllerImpl implements DialogController {
 			}
 		} else {
 			return new DialogResult(JOptionPane.CANCEL_OPTION);
+		}
+	}
+	
+	
+	// --> dispose dialogs <--
+	
+	public void destroy() {
+		if (aboutDialog != null) {
+			aboutDialog.dispose();
+		}
+		if (preferencesDialog != null) {
+			preferencesDialog.dispose();
+		}
+		if (saveFilesDialog != null) {
+			saveFilesDialog.dispose();
 		}
 	}
 
