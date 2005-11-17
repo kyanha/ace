@@ -27,28 +27,42 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.SwingUtilities;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.BadLocationException;
 
 import org.apache.commons.io.FileUtils;
 
 import ca.odell.glazedlists.EventList;
+import ch.iserver.ace.application.preferences.PreferenceChangeEvent;
+import ch.iserver.ace.application.preferences.PreferenceChangeListener;
+import ch.iserver.ace.application.preferences.PreferencesStore;
 import ch.iserver.ace.collaboration.CollaborationService;
 import ch.iserver.ace.util.ParameterValidator;
 
 
 
-public class DocumentManager implements ItemSelectionChangeListener {
+public class DocumentManager implements ItemSelectionChangeListener, PreferenceChangeListener {
 	
 	private static int counter = 1;
 	
 	private DocumentViewController documentController;
 	private CollaborationService collaborationService;
 	private DocumentItem currentDocumentItem;
+	
+	private String defaultEncoding;
 
 	public DocumentManager(DocumentViewController documentController) {
 		documentController.addItemSelectionChangeListener(this);
 		this.documentController = documentController;
+	}
+	
+	public void setDefaultEncoding(String defaultEncoding) {
+		this.defaultEncoding = defaultEncoding;
+	}
+	
+	public String getDefaultEncoding() {
+		return defaultEncoding;
 	}
 	
 	public EventList getDocuments() {
@@ -90,21 +104,30 @@ public class DocumentManager implements ItemSelectionChangeListener {
 	}
 
 	public void openDocument(File file) throws IOException {
-		DocumentItem item = findDocumentForFile(file);
-		if (item != null) {
-			documentController.setSelectedItem(item);
+		DocumentItem existing = findDocumentForFile(file);
+		if (existing != null) {
+			documentController.setSelectedItem(existing);
 		} else {
-			item = new DocumentItem(file);
-			// TODO: encoding
-			String content = FileUtils.readFileToString(file, null);
+			final DocumentItem item = new DocumentItem(file);
+			String content = FileUtils.readFileToString(file, getDefaultEncoding());
+			
 			try {
 				item.getEditorDocument().insertString(0, content, null);
 			} catch (BadLocationException e) {
 				throw new RuntimeException("unexpected code path exception");
 			}
+			
 			documentController.addDocument(item);
 			documentController.setSelectedIndex(documentController.indexOf(item));
-			item.setClean();
+			
+			// make sure the document is set as clean
+			// - needs to use invokeLater, because otherwise a pending document
+			//   change event makes the document dirty
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					item.setClean();
+				}
+			});
 		}
 	}
 
@@ -146,14 +169,12 @@ public class DocumentManager implements ItemSelectionChangeListener {
 		} finally {
 			doc.readUnlock();
 		}
-		// TODO: encoding
-		FileUtils.writeStringToFile(file, content, null);
+		FileUtils.writeStringToFile(file, content, getDefaultEncoding());
 		item.setFile(file);
 		item.setClean();
 	}
 	
 	public void closeDocument(DocumentItem item) {
-		// closes the current document
 		if (item.getType() == DocumentItem.PUBLISHED) {
 			// conceal a published document before closing
 			concealDocument();
@@ -177,8 +198,7 @@ public class DocumentManager implements ItemSelectionChangeListener {
 	}
 
 
-	
-	
+
 	public void publishDocument() {
 		// publish the selected document
 		currentDocumentItem.publish(collaborationService);
@@ -222,6 +242,14 @@ public class DocumentManager implements ItemSelectionChangeListener {
 
 	public void setCollaborationService(CollaborationService collaborationService) {
 		this.collaborationService = collaborationService;
+	}
+	
+	// --> PreferenceChangeListener methods <--
+	
+	public void preferenceChanged(PreferenceChangeEvent event) {
+		if (PreferencesStore.CHARSET_KEY.equals(event.getKey())) {
+			setDefaultEncoding(event.getValue());
+		}
 	}
 
 }
