@@ -55,7 +55,6 @@ public class Main {
 		frame.setVisible(true);
 		
 		// TODO: define persistentPane in spring
-		//((DummyEditor)context.getBean("dummyEditor")).setPersistentContentPane(pane);
 		((ToggleFullScreenEditingAction)context.getBean("toggleFullScreenEditingAction")).setPersistentContentPane(pane);
 		
 		// get application controller
