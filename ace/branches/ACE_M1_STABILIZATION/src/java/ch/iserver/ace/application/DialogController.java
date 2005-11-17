@@ -57,5 +57,7 @@ public interface DialogController {
 	void showAbout();
 
 	void showPreferences();
+
+	DialogResult showDiscoverUser();
 	
 }

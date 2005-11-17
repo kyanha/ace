@@ -32,18 +32,30 @@ import java.util.TreeMap;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
+import ch.iserver.ace.ServerInfo;
 import ch.iserver.ace.application.dialog.DialogResult;
 import ch.iserver.ace.application.dialog.SaveFilesDialog;
+import ch.iserver.ace.collaboration.CollaborationService;
 
 /**
  * 
  */
 public class ApplicationControllerImpl implements ApplicationController {
-
+	
+	private CollaborationService collaborationService;
+	
 	private DocumentManager documentManager;
 
 	private DialogController dialogController;
 
+	public void setCollaborationService(CollaborationService collaborationService) {
+		this.collaborationService = collaborationService;
+	}
+	
+	public CollaborationService getCollaborationService() {
+		return collaborationService;
+	}
+	
 	public void setDocumentManager(DocumentManager documentManager) {
 		this.documentManager = documentManager;
 	}
@@ -208,7 +220,12 @@ public class ApplicationControllerImpl implements ApplicationController {
 	}
 
 	public void discoverUser() {
-		// TODO: unimplemented method: discoverUser()
+		DialogResult result = getDialogController().showDiscoverUser();
+		
+		if (result.getOption() == JOptionPane.OK_OPTION) {
+			/*ServerInfo info = (ServerInfo)*/ result.getResult();
+			// TODO: implement discovery
+		}
 	}
 	
 	// --> internal methods <--

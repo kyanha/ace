@@ -24,6 +24,8 @@ package ch.iserver.ace.application;
 import java.awt.Frame;
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +33,7 @@ import java.util.Map;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
+import ch.iserver.ace.ServerInfo;
 import ch.iserver.ace.application.dialog.AboutDialog;
 import ch.iserver.ace.application.dialog.DialogResult;
 import ch.iserver.ace.application.dialog.PreferencesDialog;
@@ -225,6 +228,30 @@ public class DialogControllerImpl implements DialogController {
 							getMessages(), getPreferences());
 		}
 		preferencesDialog.showDialog();
+	}
+	
+	public DialogResult showDiscoverUser() {
+		String title = getMessages().getMessage("dDiscoverUserTitle");
+		String message = getMessages().getMessage("dDiscoverUserMessage");
+		String host = JOptionPane.showInputDialog(getMainFrame(), message, title);
+		if (host != null) {
+			try {
+				InetAddress addr = InetAddress.getByName(host);
+				return new DialogResult(JOptionPane.OK_OPTION, new ServerInfo(addr, 0));
+			} catch (UnknownHostException e) {
+				title = getMessages().getMessage("dDisocverUserFailedTitle");
+				message = getMessages().getMessage("dDiscoverUserFailedMessage", new Object[] { e.getMessage() });
+				JOptionPane.showMessageDialog(
+								getMainFrame(),
+								message,
+								title,
+								JOptionPane.WARNING_MESSAGE
+				);
+				return new DialogResult(JOptionPane.CANCEL_OPTION);
+			}
+		} else {
+			return new DialogResult(JOptionPane.CANCEL_OPTION);
+		}
 	}
 
 }
