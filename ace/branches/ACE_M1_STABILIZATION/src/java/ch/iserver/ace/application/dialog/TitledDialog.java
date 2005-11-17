@@ -48,7 +48,7 @@ public abstract class TitledDialog extends JDialog {
 	private int option;
 	
 	public TitledDialog(Frame owner, LocaleMessageSource messages, String titleText, Icon icon) {
-		super(owner);
+		super(owner, titleText);
 		ParameterValidator.notNull("messages", messages);
 		this.messages = messages;
 		

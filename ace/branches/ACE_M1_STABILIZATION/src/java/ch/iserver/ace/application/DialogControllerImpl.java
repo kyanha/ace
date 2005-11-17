@@ -155,7 +155,6 @@ public class DialogControllerImpl implements DialogController {
 						getMainFrame(),
 						getMessages(), 
 						candidates);
-		saveFilesDialog.setModal(true);
 		saveFilesDialog.showDialog();
 		return new DialogResult(saveFilesDialog.getOption(), saveFilesDialog.getSelectedFiles());
 	}

@@ -23,6 +23,7 @@ package ch.iserver.ace.application.dialog;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -75,7 +76,7 @@ public class SaveFilesDialog extends TitledDialog {
 		table.setBackground(Color.WHITE);
 		JScrollPane pane = new JScrollPane(table);
 		pane.getViewport().setBackground(Color.WHITE);
-		pane.setSize(400, 200);
+		pane.setPreferredSize(new Dimension(500, 150));		
 		return pane;
 	}
 	
@@ -85,28 +86,57 @@ public class SaveFilesDialog extends TitledDialog {
 		table.getColumnModel().getColumn(0).setResizable(false);
 		table.getColumnModel().getColumn(0).setMaxWidth(20);
 	}
-
+	
+	protected void selectAll() {
+		tableModel.selectAll();
+	}
+	
+	protected void deselectAll() {
+		tableModel.deselectAll();
+	}
+	
 	/**
 	 * @see ch.iserver.ace.application.dialog.TitledDialog#createButtonPane()
 	 */
 	protected JPanel createButtonPane() {
 		JPanel pane = new JPanel();
-		JButton okButton = new JButton(getMessages().getMessage("dOk"));
-		okButton.addActionListener(new ActionListener() {
+
+		JButton saveAll = new JButton(getMessages().getMessage("dSaveAll"));
+		saveAll.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				selectAll();
+				finish();
+			}
+		});
+		
+		JButton saveNone = new JButton(getMessages().getMessage("dSaveNone"));
+		saveNone.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				deselectAll();
+				finish();
+			}
+		});
+		
+		JButton saveSelected = new JButton(getMessages().getMessage("dSaveSelected"));
+		saveSelected.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				finish();
 			}
 		});
-		JButton cancelButton = new JButton(getMessages().getMessage("dCancel"));
-		cancelButton.addActionListener(new ActionListener() {
+		
+		JButton cancel = new JButton(getMessages().getMessage("dCancel"));
+		cancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				cancel();
 			}
 		});
 		
-		pane.add(cancelButton);
-		pane.add(okButton);
-		getRootPane().setDefaultButton(okButton);
+		pane.add(cancel);
+		pane.add(saveAll);
+		pane.add(saveNone);
+		pane.add(saveSelected);
+		
+		getRootPane().setDefaultButton(saveSelected);
 		
 		return pane;
 	}
@@ -136,6 +166,22 @@ public class SaveFilesDialog extends TitledDialog {
 			while (it.hasNext()) {
 				DocumentItem file = (DocumentItem) it.next();
 				checked.put(file, Boolean.TRUE);
+			}
+		}
+		
+		public void selectAll() {
+			Iterator it = checked.keySet().iterator();
+			while (it.hasNext()) {
+				DocumentItem item = (DocumentItem) it.next();
+				checked.put(item, Boolean.TRUE);
+			}
+		}
+		
+		public void deselectAll() {
+			Iterator it = checked.keySet().iterator();
+			while (it.hasNext()) {
+				DocumentItem item = (DocumentItem) it.next();
+				checked.put(item, Boolean.FALSE);
 			}
 		}
 		
