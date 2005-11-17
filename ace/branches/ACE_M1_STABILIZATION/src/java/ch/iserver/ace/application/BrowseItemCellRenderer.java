@@ -25,11 +25,13 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Color;
 
 import javax.swing.ImageIcon;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
+import javax.swing.BorderFactory;
 
 
 
@@ -55,11 +57,11 @@ public class BrowseItemCellRenderer extends JPanel implements ListCellRenderer {
 		if(isSelected) {
 			setForeground(list.getSelectionForeground());
 			setBackground(list.getSelectionBackground());
-			//setBorder(BorderFactory.createLineBorder(Color.black, 1));
+			setBorder(BorderFactory.createLineBorder(list.getSelectionBackground().darker(), 1));
 		} else {
 			setForeground(list.getForeground());
 			setBackground(list.getBackground());
-			//setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+			setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 		}
 		
 		return this;
@@ -67,20 +69,34 @@ public class BrowseItemCellRenderer extends JPanel implements ListCellRenderer {
 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		// draw document icon
-		g.drawImage(iconRemote.getImage(), 2, 1, 14, 14, this);
 
-		// draw document title
-		g.drawString(value.getTitle(), 20, 10);
+		int itemHeight = (int)g.getClipBounds().getHeight();
+		int itemWidth = (int)g.getClipBounds().getWidth();
+		
+		// draw document icon
+		int imageHeight = 16; //iconLocal.getIconHeight();
+		int imageWidth = 16; //iconLocal.getIconWidth();
+		int imagePosX = 1;
+		int imagePosY = (itemHeight / 2) - (imageHeight / 2);
+		g.drawImage(iconRemote.getImage(), imagePosX, imagePosY, imageHeight, imageWidth, this);
+
+		// draw document title (TODO: dynamic border)
+		int textAscent = g.getFontMetrics().getAscent();
+		int textDescent = g.getFontMetrics().getDescent();		
+		int textPosX = imagePosX + imageWidth + 5;
+		int textTitlePosY = (itemHeight / 2) + (textAscent / 2) - textDescent - 3;
+		g.drawString(value.getTitle(), textPosX, textTitlePosY);
+
+		// draw owner
+		int textPublisherPosY = textTitlePosY + 10;
 		g.setFont(g.getFont().deriveFont(10.0f));
 		g.setFont(g.getFont().deriveFont(Font.PLAIN & Font.BOLD));
-		g.drawString(" " + value.getPublisher(), 20, 20);
+		g.drawString(" " + value.getPublisher(), textPosX, textPublisherPosY);
 		
-		// draw owner		
 	}
 
 	public Dimension getPreferredSize() {
-		return new Dimension(0, 24);
+		return new Dimension(0, 28);
 	}
 	
 }

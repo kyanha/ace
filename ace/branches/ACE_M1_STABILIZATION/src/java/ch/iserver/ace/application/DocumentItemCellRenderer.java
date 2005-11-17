@@ -29,6 +29,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
+import javax.swing.BorderFactory;
+import javax.swing.BorderFactory;
 
 
 
@@ -56,11 +58,11 @@ public class DocumentItemCellRenderer extends JPanel implements ListCellRenderer
 		if(isSelected) {
 			setForeground(list.getSelectionForeground());
 			setBackground(list.getSelectionBackground());
-			//setBorder(BorderFactory.createLineBorder(Color.black, 1));
+			setBorder(BorderFactory.createLineBorder(list.getSelectionBackground().darker(), 1));
 		} else {
 			setForeground(list.getForeground());
 			setBackground(list.getBackground());
-			//setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+			setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 		}
 		
 		return this;
@@ -68,29 +70,44 @@ public class DocumentItemCellRenderer extends JPanel implements ListCellRenderer
 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		
+		int itemHeight = (int)g.getClipBounds().getHeight();
+		int itemWidth = (int)g.getClipBounds().getWidth();
+		
 		// draw document icon
+		int imageHeight = 16; //iconLocal.getIconHeight();
+		int imageWidth = 16; //iconLocal.getIconWidth();
+		int imagePosX = 1;
+		int imagePosY = (itemHeight / 2) - (imageHeight / 2);
+
 		switch(value.getType()) {
 			case DocumentItem.LOCAL:
-				g.drawImage(iconLocal.getImage(), 2, 1, 14, 14, this);
+				g.drawImage(iconLocal.getImage(), imagePosX, imagePosY, imageHeight, imageWidth, this);
 			break;
 			case DocumentItem.PUBLISHED:
-				g.drawImage(iconPublished.getImage(), 2, 1, 14, 14, this);
+				g.drawImage(iconPublished.getImage(), imagePosX, imagePosY, imageHeight, imageWidth, this);
 			break;			
 			case DocumentItem.REMOTE:
-				g.drawImage(iconRemote.getImage(), 2, 1, 14, 14, this);
+				g.drawImage(iconRemote.getImage(), imagePosX, imagePosY, imageHeight, imageWidth, this);
 			break;
 		}
 		
-		// draw document title & dirty flag
+		// draw document title & dirty flag (TODO: dynamic border)
+		int textAscent = g.getFontMetrics().getAscent();
+		int textDescent = g.getFontMetrics().getDescent();		
+		int textPosX = imagePosX + imageWidth + 5;
+		int textPosY = (itemHeight / 2) + (textAscent / 2) - textDescent + 1;
+		
 		if(value.isDirty()) {
-			g.drawString(value.getTitle() + " *", 20, 10);
+			g.drawString(value.getTitle() + " *", textPosX, textPosY);
 		} else {
-			g.drawString(value.getTitle(), 20, 10);
+			g.drawString(value.getTitle(), textPosX, textPosY);
 		}
+
 	}
 
 	public Dimension getPreferredSize() {
-		return new Dimension(0, 16);
+		return new Dimension(0, 18);
 	}
 	
 }
