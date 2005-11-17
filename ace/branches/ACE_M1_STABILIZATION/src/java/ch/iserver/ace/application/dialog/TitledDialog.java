@@ -104,6 +104,7 @@ public abstract class TitledDialog extends JDialog {
 	
 	public void showDialog() {
 		init();
+		setLocationRelativeTo(getOwner());
 		setVisible(true);
 	}
 	
