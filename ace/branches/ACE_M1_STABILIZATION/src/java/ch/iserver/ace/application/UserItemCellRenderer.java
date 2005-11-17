@@ -87,6 +87,10 @@ public class UserItemCellRenderer extends JPanel implements ListCellRenderer {
 
 	}
 
+	public String getToolTipText() {
+		return value.getName();
+	}
+	
 	public Dimension getPreferredSize() {
 		return new Dimension(0, 18);
 	}

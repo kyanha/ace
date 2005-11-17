@@ -25,7 +25,10 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 
+import java.awt.Color;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
@@ -34,7 +37,7 @@ import javax.swing.BorderFactory;
 
 
 
-public class DocumentItemCellRenderer extends JPanel implements ListCellRenderer {
+public class DocumentItemCellRenderer extends DefaultListCellRenderer {// implements ListCellRenderer {
 
 	private DocumentItem value;
 	private LocaleMessageSource messageSource;
@@ -64,8 +67,9 @@ public class DocumentItemCellRenderer extends JPanel implements ListCellRenderer
 			setBackground(list.getBackground());
 			setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 		}
-		
+
 		return this;
+
 	}
 
 	public void paintComponent(Graphics g) {
@@ -93,6 +97,7 @@ public class DocumentItemCellRenderer extends JPanel implements ListCellRenderer
 		}
 		
 		// draw document title & dirty flag (TODO: dynamic border)
+		g.setColor(Color.BLACK);
 		int textAscent = g.getFontMetrics().getAscent();
 		int textDescent = g.getFontMetrics().getDescent();		
 		int textPosX = imagePosX + imageWidth + 5;
@@ -104,6 +109,10 @@ public class DocumentItemCellRenderer extends JPanel implements ListCellRenderer
 			g.drawString(value.getTitle(), textPosX, textPosY);
 		}
 
+	}
+	
+	public String getToolTipText() {
+		return value.getToolTip();
 	}
 
 	public Dimension getPreferredSize() {

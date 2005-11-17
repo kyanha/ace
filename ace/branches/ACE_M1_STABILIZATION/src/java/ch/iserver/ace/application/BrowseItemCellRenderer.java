@@ -28,14 +28,17 @@ import java.awt.Graphics;
 import java.awt.Color;
 
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 import javax.swing.BorderFactory;
+import javax.swing.Scrollable;
+import java.awt.Rectangle;
 
 
 
-public class BrowseItemCellRenderer extends JPanel implements ListCellRenderer {
+public class BrowseItemCellRenderer extends JPanel implements ListCellRenderer {//, Scrollable {
 
 	private BrowseItem value;
 	private LocaleMessageSource messageSource;
@@ -64,12 +67,13 @@ public class BrowseItemCellRenderer extends JPanel implements ListCellRenderer {
 			setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 		}
 		
-		return this;
+		return new JLabel(this.value.getTitle());
+		//return this;
 	}
 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-
+/*
 		int itemHeight = (int)g.getClipBounds().getHeight();
 		int itemWidth = (int)g.getClipBounds().getWidth();
 		
@@ -92,11 +96,40 @@ public class BrowseItemCellRenderer extends JPanel implements ListCellRenderer {
 		g.setFont(g.getFont().deriveFont(10.0f));
 		g.setFont(g.getFont().deriveFont(Font.PLAIN & Font.BOLD));
 		g.drawString(value.getPublisher(), textPosX, textPublisherPosY);
-		
+*/		
 	}
 
 	public Dimension getPreferredSize() {
 		return new Dimension(0, 28);
 	}
+	
+	public String getToolTipText() {
+		return value.getTitle() + "(" + value.getPublisher() + ")";
+	}
+
+
+
+	/*public Dimension getPreferredScrollableViewportSize() {
+		return new Dimension(0, 28);
+	}
+	
+	public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {
+		return 100;
+	}
+	
+	public boolean getScrollableTracksViewportHeight() {
+		return true;
+	}
+	
+	public boolean getScrollableTracksViewportWidth() {
+		return true;
+	}
+	
+	public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
+		//if(SwingConstants.VERTICAL) {
+			System.out.println(orientation);
+		//}
+		return 28;
+	}*/
 	
 }

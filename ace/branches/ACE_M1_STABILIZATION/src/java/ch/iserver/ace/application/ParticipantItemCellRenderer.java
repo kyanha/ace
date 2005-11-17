@@ -96,6 +96,10 @@ public class ParticipantItemCellRenderer extends JPanel implements ListCellRende
 		g.drawRect(colorPosX, colorPosY, colorWidth, colorHeight);
 		
 	}
+	
+	public String getToolTipText() {
+		return value.getName();
+	}
 
 	public Dimension getPreferredSize() {
 		return new Dimension(0, 18);
