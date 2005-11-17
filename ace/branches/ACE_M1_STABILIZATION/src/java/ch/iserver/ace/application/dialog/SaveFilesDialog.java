@@ -100,7 +100,7 @@ public class SaveFilesDialog extends TitledDialog {
 		JButton cancelButton = new JButton(getMessages().getMessage("dCancel"));
 		cancelButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				hideDialog();
+				cancel();
 			}
 		});
 		

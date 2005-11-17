@@ -48,6 +48,10 @@ public class LocaleMessageSourceImpl implements LocaleMessageSource {
 		return source.getMessage(code, null, "message not defined", locale);
 	}
 	
+	public String getMessage(String code, Object[] values) {
+		return source.getMessage(code, values, "message not defined", locale);
+	}
+	
 	public ImageIcon getIcon(String code) {
 		URL iconURL = getClass().getResource(getMessage("uImagePath") + getMessage(code));
 		if (iconURL == null) {

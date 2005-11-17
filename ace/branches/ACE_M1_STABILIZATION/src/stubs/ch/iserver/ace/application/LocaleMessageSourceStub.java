@@ -36,6 +36,10 @@ public class LocaleMessageSourceStub implements LocaleMessageSource {
 	public String getMessage(String code) {
 		return code.toUpperCase();
 	}
+	
+	public String getMessage(String code, Object[] values) {
+		return code.toUpperCase();
+	}
 
 	/**
 	 * @see ch.iserver.ace.application.LocaleMessageSource#getIcon(java.lang.String)

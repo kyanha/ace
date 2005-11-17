@@ -85,6 +85,11 @@ public abstract class TitledDialog extends JDialog {
 		}
 	}
 	
+	protected void cancel() {
+		option = CANCEL_OPTION;
+		hideDialog();
+	}
+	
 	protected LocaleMessageSource getMessages() {
 		return messages;
 	}

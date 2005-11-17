@@ -31,6 +31,8 @@ public interface LocaleMessageSource {
 
 	String getMessage(String code);
 	
+	String getMessage(String code, Object[] values);
+	
 	ImageIcon getIcon(String code);
 	
 	URL getResource(String code);

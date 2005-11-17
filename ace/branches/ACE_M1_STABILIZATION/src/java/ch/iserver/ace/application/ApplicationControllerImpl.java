@@ -26,7 +26,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -102,20 +104,45 @@ public class ApplicationControllerImpl implements ApplicationController {
 	}
 
 	public void quit() {
-		List dirty = getDocumentManager().getDirtyDocuments();
+		Map failed = new TreeMap();
+		List dirty = getDocumentManager().getDirtyDocuments();	
 		
-		if (dirty.size() > 0) {
-			try {
-				// TODO: call save all on each document
-				if (saveAllItems()) {
-					getDocumentManager().closeAllDocuments();
-					System.exit(0);
-				}
-			} catch (IOException e) {
-				// handle exceptions
+		if (dirty.size() == 0) {
+			shutdown();
+		}
+		
+		SaveFilesDialog saveFilesDialog = new SaveFilesDialog(
+						getMainFrame(),
+						getMessages(), 
+						dirty);
+		saveFilesDialog.showDialog();
+		if (saveFilesDialog.getOption() == SaveFilesDialog.OK_OPTION) {
+			Set saveSet = saveFilesDialog.getCheckedFiles();
+			
+			if (saveSet.size() == 0) {
+				shutdown();
 			}
-		} else {
-			System.exit(0);
+			
+			Iterator it = saveSet.iterator();
+			while (it.hasNext()) {
+				DocumentItem item = (DocumentItem) it.next();
+				try {
+					if (saveItem(item)) {
+						getDocumentManager().closeDocument(item);
+					}
+				} catch (IOException e) {
+					failed.put(item, e);
+				}
+			}
+			
+			// display files that cannot be saved
+			if (failed.size() > 0) {
+				showSaveFilesFailed(failed);
+				
+			// only if there are no more open documents... 
+			} else if (getDocumentManager().getDocuments().size() == 0) {
+				shutdown();
+			}
 		}
 	}
 
@@ -149,25 +176,71 @@ public class ApplicationControllerImpl implements ApplicationController {
 		JFileChooser chooser = new JFileChooser();
 		chooser.setMultiSelectionEnabled(true);
 		if (JFileChooser.APPROVE_OPTION == chooser.showOpenDialog(getMainFrame())) {
+			Map failed = new TreeMap();
 			File[] files = chooser.getSelectedFiles();
-			try {
-				// TODO: call open document on each document
-				getDocumentManager().openDocuments(files);
-			} catch (IOException e) {
-				//openFailed(files, e);
+			for (int i = 0; i < files.length; i++) {
+				File file = files[i];
+				try {
+					getDocumentManager().openDocument(file);
+				} catch (IOException e) {
+					failed.put(file.getAbsolutePath(), e);
+				}
+			}
+			
+			// display files that cannot be opened
+			if (failed.size() > 0) {
+				String title = getMessages().getMessage("dOpenFileFailedTitle");
+				String header = getMessages().getMessage("dOpenFileFailedHeader");
+				StringBuffer buf = new StringBuffer();
+				buf.append("<html>");
+				buf.append(header);
+				buf.append("<ul>");
+				Iterator it = failed.keySet().iterator();
+				while (it.hasNext()) {
+					String name = (String) it.next();
+					IOException e = (IOException) failed.get(name);
+					buf.append("<li>");
+					buf.append(getMessages().getMessage("dOpenFileFailedMessage", new Object[] { name, e.getMessage() }));
+					buf.append("</li>");
+				}
+				buf.append("</ul></html>");
+				JOptionPane.showMessageDialog(
+								getMainFrame(),
+								buf.toString(),
+								title,
+								JOptionPane.ERROR_MESSAGE
+				);
 			}
 		}
 	}
 
 	public void openFile(String filename) {
 		File file = new File(filename);
-		if (!file.exists() || file.isDirectory()) {
-			// TODO: warning?
+		if (!file.exists()) {
+			JOptionPane.showMessageDialog(
+							getMainFrame(),
+							getMessages().getMessage("dOpenFileFailedTitle"),
+							getMessages().getMessage("dOpenFileFailedExists", new Object[] { file.getName() }),
+							JOptionPane.ERROR_MESSAGE
+			);
+		} else if (!file.isDirectory()) {
+			JOptionPane.showMessageDialog(
+							getMainFrame(),
+							getMessages().getMessage("dOpenFileFailedTitle"),
+							getMessages().getMessage("dOpenFileFailedDirectory", new Object[] { file.getName() }),
+							JOptionPane.ERROR_MESSAGE
+			);
 		} else {
 			try {
 				getDocumentManager().openDocument(new File(filename));
 			} catch (IOException e) {
-				openFailed(file, e);
+				String title = getMessages().getMessage("dLoadFailedTitle");
+				String message = getMessages().getMessage("dOpenSingleFailedMessage");
+				JOptionPane.showMessageDialog(
+								getMainFrame(),
+								title,
+								message,
+								JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}
@@ -195,6 +268,21 @@ public class ApplicationControllerImpl implements ApplicationController {
 	}
 
 	public void saveAllDocuments() {
+		Map failed = new TreeMap();
+		Iterator it = getDocumentManager().getDirtyDocuments().iterator();
+		while (it.hasNext()) {
+			DocumentItem item = (DocumentItem) it.next();
+			try {
+				saveItem(item);
+			} catch (IOException e) {
+				failed.put(item, e);
+			}
+		}
+		
+		// display files that cannot be saved
+		if (failed.size() > 0) {
+			showSaveFilesFailed(failed);
+		}
 	}
 
 	public void discoverUser() {
@@ -202,6 +290,15 @@ public class ApplicationControllerImpl implements ApplicationController {
 	}
 	
 	// --> internal methods <--
+	
+	/**
+	 * Initiates the shutdown of the application. This method will call
+	 * System.exit. There is no way to stop that!
+	 */
+	protected void shutdown() {
+		getDocumentManager().closeAllDocuments();
+		System.exit(0);
+	}
 	
 	protected boolean saveItem(DocumentItem item) throws IOException {
 		if (item.hasBeenSaved()) {
@@ -222,49 +319,48 @@ public class ApplicationControllerImpl implements ApplicationController {
 			return false;
 		}
 	}
-	
-	protected boolean saveAllItems() throws IOException {
-		List dirty = getDocumentManager().getDirtyDocuments();
-		SaveFilesDialog saveFilesDialog = new SaveFilesDialog(
-						getMainFrame(),
-						getMessages(), 
-						dirty);
-		saveFilesDialog.showDialog();
-		if (saveFilesDialog.getOption() == SaveFilesDialog.OK_OPTION) {
-			Set saveSet = saveFilesDialog.getCheckedFiles();
-			Iterator it = saveSet.iterator();
-			while (it.hasNext()) {
-				DocumentItem item = (DocumentItem) it.next();
-				try {
-					saveItem(item);
-				} catch (IOException e) {
-					saveFailed(item, e);
-				}
-			}
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
-	private void openFailed(File file, Exception e) {
-		String title = getMessages().getMessage("dLoadFailedTitle");
-		String message = "";
-		JOptionPane.showMessageDialog(
-						getMainFrame(),
-						title,
-						message,
-						JOptionPane.ERROR);
-	}
-	
+		
 	private void saveFailed(DocumentItem item, Exception e) {
-		String title = getMessages().getMessage("dSaveFailedTitle");
-		String message = "";
+		String title = getMessages().getMessage("dSaveFileFailedTitle");
+		String message = getMessages().getMessage(
+						"dSaveFileFailedMessage", 
+						new Object[] { item.getFile().getAbsolutePath(), e.getMessage() });
 		JOptionPane.showMessageDialog(
 						getMainFrame(),
 						title,
 						message,
-						JOptionPane.ERROR);
+						JOptionPane.ERROR_MESSAGE);
+	}
+	
+	/**
+	 * Show a message dialog displaying a list of documents that could not be
+	 * saved.
+	 * 
+	 * @param failed a Map containing DocumentItem keys and IOException values
+	 */
+	protected void showSaveFilesFailed(Map failed) {
+		String title = getMessages().getMessage("dSaveFilesFailedTitle");
+		String header = getMessages().getMessage("dSaveFilesFailedHeader");
+		StringBuffer buf = new StringBuffer();
+		buf.append("<html>");
+		buf.append(header);
+		buf.append("<ul>");
+		Iterator it = failed.keySet().iterator();
+		while (it.hasNext()) {
+			DocumentItem item = (DocumentItem) it.next();
+			String name = item.getFile().getAbsolutePath();
+			IOException e = (IOException) failed.get(name);
+			buf.append("<li>");
+			buf.append(getMessages().getMessage("dSaveFilesFailedMessage", new Object[] { name, e.getMessage() }));
+			buf.append("</li>");
+		}
+		buf.append("</ul></html>");
+		JOptionPane.showMessageDialog(
+						getMainFrame(),
+						buf.toString(),
+						title,
+						JOptionPane.ERROR_MESSAGE
+		);
 	}
 
 }
