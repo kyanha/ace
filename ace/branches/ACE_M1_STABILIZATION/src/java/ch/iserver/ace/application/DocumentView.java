@@ -23,6 +23,9 @@ package ch.iserver.ace.application;
 
 import java.awt.BorderLayout;
 
+import javax.swing.AbstractAction;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -35,6 +38,7 @@ import ca.odell.glazedlists.ObservableElementList;
 import ca.odell.glazedlists.SortedList;
 import ca.odell.glazedlists.swing.EventListModel;
 import ca.odell.glazedlists.swing.EventSelectionModel;
+import java.util.List;
 
 import com.jgoodies.uif_lite.panel.SimpleInternalFrame;
 
@@ -42,15 +46,16 @@ import com.jgoodies.uif_lite.panel.SimpleInternalFrame;
 
 public class DocumentView extends ViewImpl {
 
+	private JToolBar documentToolBar;
 	private SortedList documentSortedList;
 	
-	public DocumentView(DocumentViewController controller, LocaleMessageSource messageSource) {
+	public DocumentView(LocaleMessageSource messageSource, DocumentViewController controller) {
 		super(controller, messageSource);
 		// get view source
 		setSourceList(controller.getDocumentSourceList());
 		
 		// create view toolbar & actions
-		JToolBar viewToolBar = new JToolBar();
+		documentToolBar = new JToolBar();
 
 		// create list
 		documentSortedList = new SortedList(new ObservableElementList(getSourceList(), GlazedLists.beanConnector(DocumentItem.class)));
@@ -58,6 +63,7 @@ public class DocumentView extends ViewImpl {
 		setEventSelectionModel(new EventSelectionModel(documentSortedList));
 
 		setList(new JList(getEventListModel()));
+		getList().setBorder(BorderFactory.createEmptyBorder());
 		getList().setCellRenderer(new DocumentItemCellRenderer(messageSource));
 		getList().setSelectionModel(getEventSelectionModel());
 		getList().setSelectionMode(EventSelectionModel.SINGLE_SELECTION);
@@ -79,7 +85,7 @@ public class DocumentView extends ViewImpl {
 		// create frame
 		JPanel documentViewContent = new JPanel(new BorderLayout());
 		documentViewContent.add(new JScrollPane(getList()), BorderLayout.CENTER);
-		SimpleInternalFrame documentView = new SimpleInternalFrame(null, messageSource.getMessage("vDocumentTitle"), viewToolBar, documentViewContent);
+		SimpleInternalFrame documentView = new SimpleInternalFrame(null, messageSource.getMessage("vDocumentTitle"), documentToolBar, documentViewContent);
 		setLayout(new BorderLayout());
 		add(documentView);		
 	}
@@ -102,4 +108,11 @@ public class DocumentView extends ViewImpl {
 		}
 	}
 
+	public void setToolBarActions(List toolBarActions) {
+		for(int i = 0; i < toolBarActions.size(); i++) {
+			JButton toolBarButton = documentToolBar.add(((AbstractAction)toolBarActions.get(i)));
+			toolBarButton.setBorder(BorderFactory.createEmptyBorder());
+			documentToolBar.addSeparator();
+		}
+	}
 }

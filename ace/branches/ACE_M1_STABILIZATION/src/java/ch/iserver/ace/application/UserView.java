@@ -24,11 +24,15 @@ package ch.iserver.ace.application;
 import java.awt.BorderLayout;
 import java.util.List;
 
+import javax.swing.AbstractAction;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
+import java.awt.event.ActionEvent;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -41,21 +45,23 @@ import ca.odell.glazedlists.matchers.MatcherEditor;
 import ca.odell.glazedlists.swing.EventListModel;
 import ca.odell.glazedlists.swing.EventSelectionModel;
 import ca.odell.glazedlists.swing.TextComponentMatcherEditor;
-
+import java.util.List;
 import com.jgoodies.uif_lite.panel.SimpleInternalFrame;
 
 
 
 public class UserView extends ViewImpl {
 	
-	public UserView(UserViewController controller, LocaleMessageSource messageSource) {
+	private JToolBar userToolBar;
+
+	public UserView(LocaleMessageSource messageSource, UserViewController controller) {
 		super(controller, messageSource);
 		// get view source
 		setSourceList(controller.getUserSourceList());
 		
 		// create view toolbar & actions
-		JToolBar userToolBar = new JToolBar();
-
+		userToolBar = new JToolBar();
+		
 		// create list
 		JTextField userFilterField = new JTextField();
 		TextFilterator userFilterator = new TextFilterator() {
@@ -70,6 +76,7 @@ public class UserView extends ViewImpl {
 		setEventSelectionModel(new EventSelectionModel(userSortedList));
 
 		setList(new JList(getEventListModel()));
+		getList().setBorder(BorderFactory.createEmptyBorder());
 		getList().setCellRenderer(new UserItemCellRenderer(messageSource));
 		getList().setSelectionModel(getEventSelectionModel());
 		getList().setSelectionMode(EventSelectionModel.SINGLE_SELECTION);
@@ -104,5 +111,13 @@ public class UserView extends ViewImpl {
 		} catch(ArrayIndexOutOfBoundsException e) {}
 		return selectedItem;
 	}	
+
+	public void setToolBarActions(List toolBarActions) {
+		for(int i = 0; i < toolBarActions.size(); i++) {
+			JButton toolBarButton = userToolBar.add(((AbstractAction)toolBarActions.get(i)));
+			toolBarButton.setBorder(BorderFactory.createEmptyBorder());
+			userToolBar.addSeparator();
+		}
+	}
 
 }

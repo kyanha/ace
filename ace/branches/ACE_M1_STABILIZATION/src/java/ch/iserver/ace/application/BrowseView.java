@@ -24,6 +24,9 @@ package ch.iserver.ace.application;
 import java.awt.BorderLayout;
 import java.util.List;
 
+import javax.swing.AbstractAction;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -48,16 +51,15 @@ import com.jgoodies.uif_lite.panel.SimpleInternalFrame;
 
 public class BrowseView extends ViewImpl {
 
-	public BrowseView(BrowseViewController controller, LocaleMessageSource messageSource) {//, List toolBarActions) {
+	private JToolBar browseToolBar;
+
+	public BrowseView(LocaleMessageSource messageSource, BrowseViewController controller) {
 		super(controller, messageSource);
 		// get view source
 		setSourceList(controller.getBrowseSourceList());
 		
 		// create view toolbar & actions
-		JToolBar browseToolBar = new JToolBar();
-		//for(int i = 0; i < toolBarActions.size(); i++) {
-			//browseToolBar.add()toolBarActions.get(i));
-		//}
+		browseToolBar = new JToolBar();
 
 		// create list
 		JTextField browseFilterField = new JTextField();
@@ -73,6 +75,7 @@ public class BrowseView extends ViewImpl {
 		setEventSelectionModel(new EventSelectionModel(browseSortedList));
 
 		setList(new JList(getEventListModel()));
+		getList().setBorder(BorderFactory.createEmptyBorder());
 		getList().setCellRenderer(new BrowseItemCellRenderer(messageSource));
 		getList().setSelectionModel(getEventSelectionModel());
 		getList().setSelectionMode(EventSelectionModel.SINGLE_SELECTION);
@@ -106,6 +109,14 @@ public class BrowseView extends ViewImpl {
 			selectedItem = (BrowseItem)getEventListModel().getElementAt(getEventSelectionModel().getMinSelectionIndex());
 		} catch(ArrayIndexOutOfBoundsException e) {}
 		return selectedItem;
+	}
+
+	public void setToolBarActions(List toolBarActions) {
+		for(int i = 0; i < toolBarActions.size(); i++) {
+			JButton toolBarButton = browseToolBar.add(((AbstractAction)toolBarActions.get(i)));
+			toolBarButton.setBorder(BorderFactory.createEmptyBorder());
+			browseToolBar.addSeparator();
+		}
 	}
 	
 }
