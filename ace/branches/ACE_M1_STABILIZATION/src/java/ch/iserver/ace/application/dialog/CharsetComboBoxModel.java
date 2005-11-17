@@ -43,8 +43,9 @@ public class CharsetComboBoxModel extends AbstractListModel implements ComboBoxM
 	public CharsetComboBoxModel() {
 		charsets = Charset.availableCharsets();
 		charsetNames = new ArrayList();
-		charsetNames.addAll(charsets.entrySet());
-		selectedItem = charsets.get("ISO-8859-1");
+		charsetNames.addAll(charsets.keySet());
+		Charset charset = (Charset) charsets.get("ISO-8859-1");
+		selectedItem = charset != null ? charset.name() : null;
 	}
 	
 	public Object getSelectedItem() {
