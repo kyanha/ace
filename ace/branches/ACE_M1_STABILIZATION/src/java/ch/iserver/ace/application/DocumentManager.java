@@ -92,23 +92,12 @@ public class DocumentManager implements ItemSelectionChangeListener {
 	}
 
 	public void openDocument(File file) throws IOException {
-		DocumentItem item = new DocumentItem(file);
-		// TODO: encoding
-		String content = FileUtils.readFileToString(file, null);
-		try {
-			item.getEditorDocument().insertString(0, content, null);
-		} catch (BadLocationException e) {
-			throw new RuntimeException("unexpected code path exception");
-		}
-		documentController.addDocument(item);
-		documentController.setSelectedIndex(documentController.indexOf(item));
-		item.setClean();
-	}
-
-	public void openDocuments(File[] filenames) throws IOException {
-		for (int i = 0; i < filenames.length; i++) {
-			File file = filenames[i];
-			DocumentItem item = new DocumentItem(file);
+		DocumentItem item = findDocumentForFile(file);
+		if (item != null) {
+			documentController.setSelectedItem(item);
+		} else {
+			item = new DocumentItem(file);
+			// TODO: encoding
 			String content = FileUtils.readFileToString(file, null);
 			try {
 				item.getEditorDocument().insertString(0, content, null);
@@ -121,6 +110,22 @@ public class DocumentManager implements ItemSelectionChangeListener {
 		}
 	}
 
+	protected DocumentItem findDocumentForFile(File file) {
+		getDocuments().getReadWriteLock().readLock().lock();
+		try {
+			Iterator it = getDocuments().iterator();
+			while (it.hasNext()) {
+				DocumentItem item = (DocumentItem) it.next();
+				if (item.hasBeenSaved() && file.equals(item.getFile())) {
+					return item;
+				}
+			}
+		} finally {
+			getDocuments().getReadWriteLock().readLock().unlock();
+		}
+		return null;
+	}
+	
 	public void saveDocument(DocumentItem item) throws IOException {
 		ParameterValidator.notNull("item", item);
 		if (!item.hasBeenSaved()) {

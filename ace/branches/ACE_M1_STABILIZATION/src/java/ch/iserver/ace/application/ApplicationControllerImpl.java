@@ -169,6 +169,8 @@ public class ApplicationControllerImpl implements ApplicationController {
 			} else if (option == JOptionPane.NO_OPTION) {
 				getDocumentManager().closeDocument(item);
 			}			
+		} else {
+			getDocumentManager().closeDocument(item);
 		}
 	}
 
@@ -311,10 +313,28 @@ public class ApplicationControllerImpl implements ApplicationController {
 	
 	protected boolean saveItemAs(DocumentItem item) throws IOException {
 		JFileChooser chooser = new JFileChooser();
+		chooser.setDialogTitle(item.getTitle());
 		if (JFileChooser.APPROVE_OPTION == chooser.showSaveDialog(getMainFrame())) {
 			File file = chooser.getSelectedFile();
-			getDocumentManager().saveAsDocument(file, item);
-			return true;
+			if (file.exists()) {
+				String title = getMessages().getMessage("dSaveFileOverwriteTitle");
+				String message = getMessages().getMessage("dSaveFileOverwriteMessage", new Object[] { file.getAbsoluteFile() });
+				int option = JOptionPane.showConfirmDialog(
+								getMainFrame(),
+								message,
+								title,
+								JOptionPane.YES_NO_OPTION
+				);
+				if (option == JOptionPane.YES_OPTION) {
+					getDocumentManager().saveAsDocument(file, item);
+					return true;
+				} else {
+					return false;
+				}
+			} else {
+				getDocumentManager().saveAsDocument(file, item);
+				return true;
+			}
 		} else {
 			return false;
 		}

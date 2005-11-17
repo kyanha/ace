@@ -42,6 +42,8 @@ import com.jgoodies.uif_lite.panel.SimpleInternalFrame;
 
 public class DocumentView extends ViewImpl {
 
+	private SortedList documentSortedList;
+	
 	public DocumentView(DocumentViewController controller, LocaleMessageSource messageSource) {
 		super(controller, messageSource);
 		// get view source
@@ -51,7 +53,7 @@ public class DocumentView extends ViewImpl {
 		JToolBar viewToolBar = new JToolBar();
 
 		// create list
-		SortedList documentSortedList = new SortedList(new ObservableElementList(getSourceList(), GlazedLists.beanConnector(DocumentItem.class)));
+		documentSortedList = new SortedList(new ObservableElementList(getSourceList(), GlazedLists.beanConnector(DocumentItem.class)));
 		setEventListModel(new EventListModel(documentSortedList));
 		setEventSelectionModel(new EventSelectionModel(documentSortedList));
 
@@ -88,6 +90,16 @@ public class DocumentView extends ViewImpl {
 			selectedItem = (DocumentItem)getEventListModel().getElementAt(getEventSelectionModel().getMinSelectionIndex());
 		} catch(ArrayIndexOutOfBoundsException e) {}
 		return selectedItem;
+	}
+	
+	public void setSelectedItem(Item item) {
+		getSourceList().getReadWriteLock().readLock().lock();
+		try {
+			int pos = documentSortedList.indexOf(item);
+			getEventSelectionModel().setSelectionInterval(pos, pos);
+		} finally {
+			getSourceList().getReadWriteLock().readLock().unlock();
+		}
 	}
 
 }
