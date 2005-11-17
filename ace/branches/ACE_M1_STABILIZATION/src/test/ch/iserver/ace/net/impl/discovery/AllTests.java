@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:AllTests.java 1205 2005-11-14 07:57:10Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -31,7 +31,7 @@ public class AllTests extends TestCase {
 		TestSuite suite = new TestSuite("Test for ch.iserver.ace.net.impl.discovery");
 		//$JUnit-BEGIN$
 		suite.addTestSuite(BonjourTest.class);
-		suite.addTestSuite(DiscoveryCallbackAdapter.class);
+		suite.addTestSuite(DiscoveryManagerImpl.class);
 		suite.addTestSuite(TXTRecordProxyTest.class);
 		//$JUnit-END$
 		return suite;

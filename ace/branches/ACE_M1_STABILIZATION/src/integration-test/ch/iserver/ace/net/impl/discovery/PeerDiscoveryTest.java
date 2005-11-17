@@ -138,7 +138,7 @@ public class PeerDiscoveryTest extends TestCase {
 	
 	
 	private PeerDiscovery createPeerDiscovery(DiscoveryCallback callback) {
-		DiscoveryCallbackAdapter adapter = new DiscoveryCallbackAdapter(callback);
+		DiscoveryCallbackAdapter adapter = new DiscoveryManagerImpl(callback);
 		AbstractQueryListener ipListener = new IPQueryListener(adapter);
 		AbstractQueryListener txtListener = new TXTQueryListener(adapter);
 		ResolveListener resolveListener = new ResolveListenerImpl(adapter, ipListener, txtListener);

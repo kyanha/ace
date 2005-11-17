@@ -28,7 +28,7 @@ public class DiscoveryCallbackAdapterTest extends TestCase {
 		callbackCtrl = MockControl.createControl(DiscoveryCallback.class);
 		callbackCtrl.setDefaultMatcher(new RemoteUserProxyMatcher());
 		callback = (DiscoveryCallback)callbackCtrl.getMock();
-		adapter = new DiscoveryCallbackAdapter(callback);
+		adapter = new DiscoveryManagerImpl(callback);
 	}
 	
 	/**
