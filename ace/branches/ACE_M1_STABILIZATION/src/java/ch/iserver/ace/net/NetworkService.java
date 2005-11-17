@@ -50,6 +50,11 @@ public interface NetworkService {
 	void start();
 	
 	/**
+	 * Called by the collaboration layer to stop the network layer.
+	 */
+	void stop();
+	
+	/**
 	 * Sets the user id of the local user. This method has to be called before
 	 * starting the service with the {@link #start()} method. Note, it is
 	 * an error to set the user id twice!

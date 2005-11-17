@@ -55,6 +55,16 @@ public class DialogControllerImpl implements DialogController {
 	
 	private LocaleMessageSource messages;
 	
+	/**
+	 * 
+	 */
+	private JFileChooser openFileChooser;
+	
+	/**
+	 * 
+	 */
+	private JFileChooser saveFileChooser;
+	
 	public void setMainFrame(Frame mainFrame) {
 		this.mainFrame = mainFrame;
 	}
@@ -179,20 +189,24 @@ public class DialogControllerImpl implements DialogController {
 	}
 
 	public DialogResult showOpenDocuments() {
-		JFileChooser chooser = new JFileChooser();
-		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		chooser.setMultiSelectionEnabled(true);
-		int option = chooser.showOpenDialog(getMainFrame());
-		File[] files = chooser.getSelectedFiles();
+		if (openFileChooser == null) {
+			openFileChooser = new JFileChooser();
+			openFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+			openFileChooser.setMultiSelectionEnabled(true);
+		}
+		int option = openFileChooser.showOpenDialog(getMainFrame());
+		File[] files = openFileChooser.getSelectedFiles();
 		return new DialogResult(option, files);
 	}
 	
 	public DialogResult showSaveDocument(String title) {
-		JFileChooser chooser = new JFileChooser();
-		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		chooser.setDialogTitle(title);
-		int option = chooser.showSaveDialog(getMainFrame());
-		return new DialogResult(option, chooser.getSelectedFile());
+		if (saveFileChooser == null) {
+			saveFileChooser = new JFileChooser();
+			saveFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		}
+		saveFileChooser.setDialogTitle(title);
+		int option = saveFileChooser.showSaveDialog(getMainFrame());
+		return new DialogResult(option, saveFileChooser.getSelectedFile());
 	}
 
 	public void showOpenFailed(File file) {

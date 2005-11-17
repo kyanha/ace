@@ -145,6 +145,13 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	}
 	
 	/**
+	 * @see ch.iserver.ace.collaboration.CollaborationService#stop()
+	 */
+	public void stop() {
+		getNetworkService().stop();
+	}
+	
+	/**
 	 * @see ch.iserver.ace.collaboration.CollaborationService#setUserId(java.lang.String)
 	 */
 	public void setUserId(String id) {

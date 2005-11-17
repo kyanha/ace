@@ -32,6 +32,11 @@ import java.util.TreeMap;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ConfigurableApplicationContext;
+
 import ch.iserver.ace.application.dialog.DialogResult;
 import ch.iserver.ace.application.dialog.SaveFilesDialog;
 import ch.iserver.ace.collaboration.CollaborationService;
@@ -39,7 +44,9 @@ import ch.iserver.ace.collaboration.CollaborationService;
 /**
  * 
  */
-public class ApplicationControllerImpl implements ApplicationController {
+public class ApplicationControllerImpl implements ApplicationController, ApplicationContextAware {
+	
+	private ConfigurableApplicationContext context;
 	
 	private CollaborationService collaborationService;
 	
@@ -47,6 +54,10 @@ public class ApplicationControllerImpl implements ApplicationController {
 
 	private DialogController dialogController;
 
+	public void setApplicationContext(ApplicationContext context) throws BeansException {
+		this.context = (ConfigurableApplicationContext) context;
+	}
+	
 	public void setCollaborationService(CollaborationService collaborationService) {
 		this.collaborationService = collaborationService;
 	}
@@ -235,6 +246,7 @@ public class ApplicationControllerImpl implements ApplicationController {
 	 */
 	protected void shutdown() {
 		getDocumentManager().closeAllDocuments();
+		context.close();
 		System.exit(0);
 	}
 	

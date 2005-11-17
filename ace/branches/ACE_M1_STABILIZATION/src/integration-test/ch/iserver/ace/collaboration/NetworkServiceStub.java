@@ -59,6 +59,13 @@ public class NetworkServiceStub implements NetworkService {
 		// ignore
 	}
 	
+	/**
+	 * @see ch.iserver.ace.net.NetworkService#stop()
+	 */
+	public void stop() {
+		// ignore
+	}
+	
 	public void setUserId(String id) {
 		
 	}

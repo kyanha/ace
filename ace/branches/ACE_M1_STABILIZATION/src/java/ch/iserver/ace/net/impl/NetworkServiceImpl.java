@@ -121,6 +121,10 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 		launcher.start();
 	}
 	
+	public void stop() {
+		// TODO: implement stop method	
+	}
+	
 	public void setUserDetails(UserDetails details) {
 		this.details = details;
 		if (discovery != null) {
