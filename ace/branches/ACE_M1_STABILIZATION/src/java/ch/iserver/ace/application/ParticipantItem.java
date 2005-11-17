@@ -45,8 +45,8 @@ public class ParticipantItem extends ItemImpl implements Comparable, PropertyCha
 
 	public String getName() {
 		return name;
-		
 	}
+	
 	public Color getColor() {
 		return color;
 	}
