@@ -22,8 +22,6 @@
 package ch.iserver.ace.net.impl.protocol;
 
 import org.beepcore.beep.core.ProfileRegistry;
-import org.beepcore.beep.core.RequestHandler;
-import org.beepcore.beep.core.StartChannelListener;
 
 /**
  *

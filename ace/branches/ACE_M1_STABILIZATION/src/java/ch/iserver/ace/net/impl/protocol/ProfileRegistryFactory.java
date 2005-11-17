@@ -42,7 +42,7 @@ public class ProfileRegistryFactory {
 			DefaultProfile profile = new DefaultProfile(listener);
 			StartChannelListener channelListener = null;
 			try {
-			channelListener = profile.init(ProtocolConstants.PROFILE_URI, null);
+				channelListener = profile.init(ProtocolConstants.PROFILE_URI, null);
 			} catch (BEEPException be) {}
 			instance = new ProfileRegistry();
 			instance.addStartChannelListener(ProtocolConstants.PROFILE_URI, channelListener, null);

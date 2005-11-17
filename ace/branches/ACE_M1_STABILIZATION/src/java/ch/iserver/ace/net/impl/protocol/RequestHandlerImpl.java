@@ -68,9 +68,9 @@ public class RequestHandlerImpl implements RequestHandler {
 			String userid = request.getUserId();
 			DiscoveryManager discoveryManager = DiscoveryManagerFactory.getDiscoveryManager(null);
 			if (!discoveryManager.hasSessionEstablished(userid)) {
-				SessionManager manager = SessionManager.getInstance();
 				RemoteUserProxyExt user = discoveryManager.getUser(userid);
 				LOG.debug("create new session for ["+user.getMutableUserDetails().getUsername()+"]");
+				SessionManager manager = SessionManager.getInstance();
 				manager.createSession(user, (TCPSession) message.getChannel().getSession());
 			}
 			request.setMessage(message);

@@ -21,10 +21,6 @@
 
 package ch.iserver.ace.net.impl.protocol;
 
-import org.beepcore.beep.lib.NullReplyListener;
-
-import ch.iserver.ace.net.impl.discovery.DiscoveryManager;
-import ch.iserver.ace.net.impl.discovery.DiscoveryManagerFactory;
 
 /**
  *
@@ -42,15 +38,14 @@ public class RequestFilterFactory {
 		filter = new PublishDocumentPrepareFilter(filter, serializer, listener); 
 //		filter = new DocumentDiscoveryPrepareFilter(filter, serializer, listener);
 		//TODO: could write an own NullReplyListener with logging
-		filter = new PublishedDocumentsPrepareFilter(filter, serializer, NullReplyListener.getListener());
+		filter = new SendDocumentsPrepareFilter(filter, serializer, listener);
 		return filter;
 	}
 	
 	private static RequestFilter createClientChainForResponses() {
 		RequestFilter filter = new FailureFilter(null);
 //		filter = new DocumentDiscoveryResponseFilter(filter);
-		boolean doForward = false;
-		filter = new LogFilter(filter, doForward);
+		filter = new LogFilter(filter, false);
 		return filter;
 	}
 	
@@ -59,7 +54,7 @@ public class RequestFilterFactory {
 		filter = new ConcealDocumentReceiveFilter(filter);
 		filter = new PublishDocumentReceiveFilter(filter);
 //		filter = new PublishedDocumentsRequestFilter(filter);
-		filter = new PublishedDocumentsReceiveFilter(filter);
+		filter = new SendDocumentsReceiveFilter(filter);
 		return filter;
 	}
 	

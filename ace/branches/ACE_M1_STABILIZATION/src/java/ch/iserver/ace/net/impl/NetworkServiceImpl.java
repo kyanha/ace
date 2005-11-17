@@ -23,7 +23,6 @@ package ch.iserver.ace.net.impl;
 import java.net.InetAddress;
 import java.util.Collections;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;

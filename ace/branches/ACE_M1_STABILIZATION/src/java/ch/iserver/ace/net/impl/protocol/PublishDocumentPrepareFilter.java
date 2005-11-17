@@ -58,9 +58,9 @@ public class PublishDocumentPrepareFilter extends AbstractRequestFilter {
 				try {
 					byte[] data = serializer.createNotification(ProtocolConstants.PUBLISH, doc);
 					
-					SessionManager manager = SessionManager.getInstance();
 					DiscoveryManager discoveryManager = DiscoveryManagerFactory.getDiscoveryManager(null);
 					RemoteUserProxyExt[] peers = discoveryManager.getPeersWithNoSession();
+					SessionManager manager = SessionManager.getInstance();
 					LOG.debug("no session for "+peers.length+" peers; session initiated with "+manager.size()+" peers.");
 					for (int i = 0; i < peers.length; i++) {
 						RemoteUserProxyExt next = peers[i];
