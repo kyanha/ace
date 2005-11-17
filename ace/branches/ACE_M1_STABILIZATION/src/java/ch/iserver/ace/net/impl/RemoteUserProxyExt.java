@@ -20,7 +20,6 @@
  */
 package ch.iserver.ace.net.impl;
 
-import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.net.RemoteDocumentProxy;
 import ch.iserver.ace.net.RemoteUserProxy;
 
@@ -32,7 +31,7 @@ import ch.iserver.ace.net.RemoteUserProxy;
  */
 public interface RemoteUserProxyExt extends RemoteUserProxy {
 
-	void setUserDetails(UserDetails details);
+	void setMutableUserDetails(MutableUserDetails details);
 	
 	MutableUserDetails getMutableUserDetails();
 	
