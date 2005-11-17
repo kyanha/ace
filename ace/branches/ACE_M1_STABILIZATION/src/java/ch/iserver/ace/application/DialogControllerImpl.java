@@ -180,6 +180,7 @@ public class DialogControllerImpl implements DialogController {
 
 	public DialogResult showOpenDocuments() {
 		JFileChooser chooser = new JFileChooser();
+		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		chooser.setMultiSelectionEnabled(true);
 		int option = chooser.showOpenDialog(getMainFrame());
 		File[] files = chooser.getSelectedFiles();
@@ -188,6 +189,7 @@ public class DialogControllerImpl implements DialogController {
 	
 	public DialogResult showSaveDocument(String title) {
 		JFileChooser chooser = new JFileChooser();
+		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		chooser.setDialogTitle(title);
 		int option = chooser.showSaveDialog(getMainFrame());
 		return new DialogResult(option, chooser.getSelectedFile());

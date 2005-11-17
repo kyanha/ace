@@ -167,7 +167,7 @@ public class ApplicationControllerImpl implements ApplicationController {
 		File file = new File(filename);
 		if (!file.exists()) {
 			getDialogController().showFileDoesNotExist(file);
-		} else if (!file.isDirectory()) {
+		} else if (file.isDirectory()) {
 			getDialogController().showFileIsDirectory(file);
 		} else {
 			try {

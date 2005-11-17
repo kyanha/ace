@@ -124,8 +124,17 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 	}
 	
 	public void setClean() {
-		isDirty = false;
-		firePropertyChange(DIRTY_PROPERTY, "DIRTY", "CLEAN");
+		if (isDirty) {
+			isDirty = false;
+			firePropertyChange(DIRTY_PROPERTY, Boolean.TRUE, Boolean.FALSE);
+		}
+	}
+	
+	public void setDirty() {
+		if (!isDirty) {
+			isDirty = true;
+			firePropertyChange(DIRTY_PROPERTY, Boolean.FALSE, Boolean.TRUE);
+		}
 	}
 	
 	public boolean hasBeenSaved() {
