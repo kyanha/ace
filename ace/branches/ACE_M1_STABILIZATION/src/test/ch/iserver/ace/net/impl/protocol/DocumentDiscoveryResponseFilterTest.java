@@ -12,11 +12,13 @@ import org.easymock.MockControl;
 import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.net.NetworkServiceCallback;
 import ch.iserver.ace.net.RemoteDocumentProxy;
+import ch.iserver.ace.net.impl.DiscoveryCallbackImpl;
 import ch.iserver.ace.net.impl.MutableUserDetails;
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.RemoteDocumentProxyImpl;
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;
 import ch.iserver.ace.net.impl.RemoteUserProxyImpl;
+import ch.iserver.ace.net.impl.discovery.DiscoveryManagerFactory;
 import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
 
 public class DocumentDiscoveryResponseFilterTest extends TestCase {
@@ -31,6 +33,8 @@ public class DocumentDiscoveryResponseFilterTest extends TestCase {
 		NetworkServiceImpl.getInstance().setCallback(callback);
 		
 		RemoteUserProxyExt user = new RemoteUserProxyImpl("userid1", new MutableUserDetails("user1", InetAddress.getLocalHost(), 41234));
+		DiscoveryCallbackImpl discoveryCallback = new DiscoveryCallbackImpl(callback, NetworkServiceImpl.getInstance());
+		DiscoveryManagerFactory.getDiscoveryManager(discoveryCallback);
 		SessionManager.getInstance().createSession(user);
 		
 		RemoteDocumentProxy[] proxies = new RemoteDocumentProxy[4];
@@ -54,7 +58,7 @@ public class DocumentDiscoveryResponseFilterTest extends TestCase {
 		docs.add(new DocumentInfo("docid3", "file3.txt", "userid1"));
 		docs.add(new DocumentInfo("docid4", "file4.txt", "userid1"));
 		
-		Request request = new RequestImpl(ProtocolConstants.PUBLISHED_DOCUMENTS, docs);
+		Request request = new RequestImpl(ProtocolConstants.PUBLISHED_DOCUMENTS, null, docs);
 		
 		callback.documentDiscovered(proxies);
 		callbackCtrl.setDefaultMatcher(new RemoteDocumentProxyMatcher());

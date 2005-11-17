@@ -41,12 +41,10 @@ public class BEEPSessionListener extends Thread implements SessionListener {
 	private static Logger LOG = Logger.getLogger(BEEPSessionListener.class);
 	
 	private ProfileRegistry registry;
-	private Profile profile;
 	
 	private boolean terminate;
 	
-	public BEEPSessionListener(Profile profile) {
-		this.profile = profile;
+	public BEEPSessionListener(ProfileRegistry registry) {
 		this.registry = new ProfileRegistry();
 		terminate = false;
 	}
@@ -55,16 +53,12 @@ public class BEEPSessionListener extends Thread implements SessionListener {
 	public void run() {
 		String exitStatus = "normal";
 		try {
-			StartChannelListener listener = profile.init(ProtocolConstants.PROFILE_URI, null);
-			registry.addStartChannelListener(ProtocolConstants.PROFILE_URI, listener, null);
-			
 			while (!terminate) {
 				//TODO: error handling, e.g. when port is already in use -> retry strategy
 				LOG.debug("start listening at port "+ProtocolConstants.LISTENING_PORT+" again");
 				try {
 					TCPSession session = TCPSessionCreator.listen(ProtocolConstants.LISTENING_PORT, registry);
-					LOG.debug("accepted session with ["+session+"]");
-					session.addSessionListener(this);
+					LOG.debug("accepted session with ["+session.getSocket()+"]");
 				} catch (BEEPException be) {
 					LOG.warn("server stopped, restart ["+be.getMessage()+"]");
 				} catch (Exception e) {

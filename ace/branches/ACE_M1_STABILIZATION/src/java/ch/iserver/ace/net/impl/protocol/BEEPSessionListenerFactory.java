@@ -21,6 +21,7 @@
 
 package ch.iserver.ace.net.impl.protocol;
 
+import org.beepcore.beep.core.ProfileRegistry;
 import org.beepcore.beep.core.RequestHandler;
 import org.beepcore.beep.core.StartChannelListener;
 
@@ -31,12 +32,8 @@ public class BEEPSessionListenerFactory {
 
 	
 	public static BEEPSessionListener create() {
-		Deserializer deserializer = DeserializerImpl.getInstance();
-		RequestFilter filter = RequestFilterFactory.createServerChain();
-		RequestHandler handler = new RequestHandlerImpl(deserializer, filter);
-		StartChannelListener listener = new StartChannelListenerImpl(handler);
-		DefaultProfile profile = new DefaultProfile(listener);
-		BEEPSessionListener server = new BEEPSessionListener(profile);
+		ProfileRegistry registry = ProfileRegistryFactory.getProfileRegistry();
+		BEEPSessionListener server = new BEEPSessionListener(registry);
 		return server;
 	}
 }

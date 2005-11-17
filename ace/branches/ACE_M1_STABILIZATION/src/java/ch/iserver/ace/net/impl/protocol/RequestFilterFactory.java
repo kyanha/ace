@@ -23,6 +23,9 @@ package ch.iserver.ace.net.impl.protocol;
 
 import org.beepcore.beep.lib.NullReplyListener;
 
+import ch.iserver.ace.net.impl.discovery.DiscoveryManager;
+import ch.iserver.ace.net.impl.discovery.DiscoveryManagerFactory;
+
 /**
  *
  */

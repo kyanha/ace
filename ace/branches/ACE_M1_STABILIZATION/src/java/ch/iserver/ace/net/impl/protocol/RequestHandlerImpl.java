@@ -27,7 +27,12 @@ import org.apache.log4j.Logger;
 import org.beepcore.beep.core.InputDataStream;
 import org.beepcore.beep.core.MessageMSG;
 import org.beepcore.beep.core.RequestHandler;
+import org.beepcore.beep.transport.tcp.TCPSession;
 import org.beepcore.beep.util.BufferSegment;
+
+import ch.iserver.ace.net.impl.RemoteUserProxyExt;
+import ch.iserver.ace.net.impl.discovery.DiscoveryManager;
+import ch.iserver.ace.net.impl.discovery.DiscoveryManagerFactory;
 
 /**
  *
@@ -54,11 +59,20 @@ public class RequestHandlerImpl implements RequestHandler {
 		LOG.debug("--> receiveMSG");
 
 		InputDataStream input = message.getDataStream();
+		
 		try {
 			byte[] rawData = readData(input);
 			LOG.debug("received "+rawData.length+" bytes.");
 			deserializer.deserialize(rawData, handler);
 			Request request = (Request)handler.getResult();
+			String userid = request.getUserId();
+			DiscoveryManager discoveryManager = DiscoveryManagerFactory.getDiscoveryManager(null);
+			if (!discoveryManager.hasSessionEstablished(userid)) {
+				SessionManager manager = SessionManager.getInstance();
+				RemoteUserProxyExt user = discoveryManager.getUser(userid);
+				LOG.debug("create new session for ["+user.getMutableUserDetails().getUsername()+"]");
+				manager.createSession(user, (TCPSession) message.getChannel().getSession());
+			}
 			request.setMessage(message);
 			filter.process(request);
 		} catch (Exception e) {

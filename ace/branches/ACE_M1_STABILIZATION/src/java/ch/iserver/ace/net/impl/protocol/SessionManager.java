@@ -25,8 +25,12 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.beepcore.beep.transport.tcp.TCPSession;
+
 import ch.iserver.ace.net.impl.MutableUserDetails;
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;
+import ch.iserver.ace.net.impl.discovery.DiscoveryManager;
+import ch.iserver.ace.net.impl.discovery.DiscoveryManagerFactory;
 
 /**
  *
@@ -56,12 +60,21 @@ public class SessionManager {
 		MutableUserDetails details = user.getMutableUserDetails();
 		RemoteUserSession newSession = new RemoteUserSession(details.getAddress(), details.getPort(), user);
 		sessions.put(id, newSession);
+		DiscoveryManagerFactory.getDiscoveryManager(null).setSessionEstablished(user.getId());
+		return newSession;
+	}
+	
+	public RemoteUserSession createSession(RemoteUserProxyExt user, TCPSession session) {
+		RemoteUserSession newSession = new RemoteUserSession(session, user);
+		sessions.put(user.getId(), newSession);
+		DiscoveryManagerFactory.getDiscoveryManager(null).setSessionEstablished(user.getId());
 		return newSession;
 	}
 	
 	public synchronized RemoteUserSession removeSession(String userid) {
 		RemoteUserSession session = null;
 		session = (RemoteUserSession) sessions.remove(userid);
+		DiscoveryManagerFactory.getDiscoveryManager(null).setSessionTerminated(userid);
 		return session;
 	}
 	

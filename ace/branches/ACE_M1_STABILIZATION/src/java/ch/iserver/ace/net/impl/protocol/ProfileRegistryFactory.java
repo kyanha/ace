@@ -26,9 +26,6 @@ import org.beepcore.beep.core.ProfileRegistry;
 import org.beepcore.beep.core.RequestHandler;
 import org.beepcore.beep.core.StartChannelListener;
 
-import ch.iserver.ace.net.impl.discovery.DiscoveryManager;
-import ch.iserver.ace.net.impl.discovery.DiscoveryManagerFactory;
-
 /**
  *
  */
@@ -40,15 +37,14 @@ public class ProfileRegistryFactory {
 		if (instance == null) {
 			Deserializer deserializer = DeserializerImpl.getInstance();
 			RequestFilter filter = RequestFilterFactory.createServerChain();
-			instance = new ProfileRegistry();
-			DiscoveryManager manager = DiscoveryManagerFactory.getDiscoveryManager(null);
-			RequestHandler handler = new RequestHandlerImpl(deserializer, filter, manager);
+			RequestHandler handler = new RequestHandlerImpl(deserializer, filter);
 			StartChannelListener listener = new StartChannelListenerImpl(handler);
 			DefaultProfile profile = new DefaultProfile(listener);
 			StartChannelListener channelListener = null;
 			try {
 			channelListener = profile.init(ProtocolConstants.PROFILE_URI, null);
 			} catch (BEEPException be) {}
+			instance = new ProfileRegistry();
 			instance.addStartChannelListener(ProtocolConstants.PROFILE_URI, channelListener, null);
 		}
 		return instance;

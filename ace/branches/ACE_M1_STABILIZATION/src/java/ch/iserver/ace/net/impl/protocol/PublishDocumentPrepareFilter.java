@@ -27,6 +27,10 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.beepcore.beep.core.ReplyListener;
 
+import ch.iserver.ace.net.impl.RemoteUserProxyExt;
+import ch.iserver.ace.net.impl.discovery.DiscoveryManager;
+import ch.iserver.ace.net.impl.discovery.DiscoveryManagerFactory;
+
 /**
  *
  */
@@ -53,8 +57,17 @@ public class PublishDocumentPrepareFilter extends AbstractRequestFilter {
 				Object doc = request.getPayload();
 				try {
 					byte[] data = serializer.createNotification(ProtocolConstants.PUBLISH, doc);
+					
 					SessionManager manager = SessionManager.getInstance();
+					DiscoveryManager discoveryManager = DiscoveryManagerFactory.getDiscoveryManager(null);
+					RemoteUserProxyExt[] peers = discoveryManager.getPeersWithNoSession();
+					LOG.debug("no session for "+peers.length+" peers; session initiated with "+manager.size()+" peers.");
+					for (int i = 0; i < peers.length; i++) {
+						RemoteUserProxyExt next = peers[i];
+						manager.createSession(next);
+					}
 					Map sessions = manager.getSessions();
+					
 					LOG.info("publish to "+sessions.size()+" users.");
 					synchronized(sessions) {
 						Iterator iter = sessions.values().iterator();

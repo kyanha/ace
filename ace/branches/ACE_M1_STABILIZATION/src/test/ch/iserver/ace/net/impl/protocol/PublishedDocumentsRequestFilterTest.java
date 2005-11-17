@@ -29,7 +29,7 @@ public class PublishedDocumentsRequestFilterTest extends TestCase {
 		
 		PublishedDocumentsRequestFilter filter = new PublishedDocumentsRequestFilter(successor);
 		
-		Request request = new RequestImpl(ProtocolConstants.PUBLISHED_DOCUMENTS, null);
+		Request request = new RequestImpl(ProtocolConstants.PUBLISHED_DOCUMENTS, null, null);
 		MockControl msgCtrl = MockControl.createControl(MessageMSG.class);
 		MessageMSG msg = (MessageMSG)msgCtrl.getMock();
 		request.setMessage(msg);
@@ -50,7 +50,7 @@ public class PublishedDocumentsRequestFilterTest extends TestCase {
 		
 		PublishedDocumentsRequestFilter filter = new PublishedDocumentsRequestFilter(successor);
 		
-		Request request = new RequestImpl(ProtocolConstants.PUBLISH, null);
+		Request request = new RequestImpl(ProtocolConstants.PUBLISH, null, null);
 		successor.process(request);
 		succCtrl.setDefaultMatcher(new RequestMatcher());
 		succCtrl.replay();

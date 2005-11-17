@@ -52,11 +52,11 @@ public class RequestParserHandler extends ParserHandler {
 	
 	public void endDocument() throws SAXException {
 		if (getType() == PUBLISHED_DOCUMENTS) {
-			result = new RequestImpl(getType(), null);
+			result = new RequestImpl(getType(), userId, null);
 		} else if (getType() == PUBLISH || getType() == CONCEAL) {
-			result = new RequestImpl(getType(), info);
+			result = new RequestImpl(getType(), userId, info);
 		} else if (getType() == SEND_DOCUMENTS) {
-			result = new RequestImpl(getType(), requestPayload);
+			result = new RequestImpl(getType(), userId, requestPayload);
 		}
 		
 	}
@@ -65,6 +65,7 @@ public class RequestParserHandler extends ParserHandler {
 		if (requestType == SEND_DOCUMENTS) {
 			String id = attributes.getValue(DOCUMENT_ID);
 			String name = attributes.getValue(DOCUMENT_NAME);
+			//TODO: userid not needed in documentinfo since we have it in the request
 			DocumentInfo doc = new DocumentInfo(id, name, userId);
 			requestPayload.add(doc);
 		} else if (requestType == PUBLISH) {

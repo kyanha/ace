@@ -27,6 +27,7 @@ import java.net.InetAddress;
 import org.apache.log4j.Logger;
 import org.beepcore.beep.core.BEEPException;
 import org.beepcore.beep.core.Channel;
+import org.beepcore.beep.core.ProfileRegistry;
 import org.beepcore.beep.transport.tcp.TCPSession;
 import org.beepcore.beep.transport.tcp.TCPSessionCreator;
 
@@ -58,6 +59,15 @@ public class RemoteUserSession {
 		this.session = null;
 		this.user = user;
 		isInitiated = false;
+		isAlive = true;
+	}
+	
+	public RemoteUserSession(TCPSession session, RemoteUserProxyExt user) {
+		ParameterValidator.notNull("session", session);
+		ParameterValidator.notNull("user", user);
+		this.session = session;
+		this.user = user;
+		isInitiated = true;
 		isAlive = true;
 	}
 	
@@ -94,7 +104,8 @@ public class RemoteUserSession {
 	 */
 	private void initiate() throws ConnectionException {
 		try {
-			session =  TCPSessionCreator.initiate(host, port);
+			ProfileRegistry registry = ProfileRegistryFactory.getProfileRegistry();
+			session =  TCPSessionCreator.initiate(host, port, registry);
 			LOG.info("initiated session to "+host+":"+port);
 			isInitiated = true;
 		} catch (BEEPException be) {
