@@ -21,6 +21,7 @@
 
 package ch.iserver.ace;
 
+import ch.iserver.ace.util.CompareUtil;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
@@ -42,18 +43,7 @@ public class UserDetails {
 		ParameterValidator.notNull("username", username);
 		this.username = username;
 	}
-	
-//	/**
-//	 * Creates a new UserDetails object.
-//	 * 
-//	 * @param username the username of the user
-//	 */
-//	public UserDetails(String username, InetAddress address, int port) {
-//		this(username);
-//		this.address = address;
-//		this.port = port;
-//	}
-	
+		
 	/**
 	 * @return gets the username of the user
 	 */
@@ -69,35 +59,34 @@ public class UserDetails {
 		this.username = username;
 	}
 	
-//	/**
-//	 * @see java.lang.Object#equals(java.lang.Object)
-//	 */
-//	public boolean equals(Object obj) {
-//		if (this == obj) {
-//			return true;
-//		} else if (obj instanceof UserDetails) {
-//			UserDetails details = (UserDetails) obj;
-//			boolean result = getUsername().equals(details.getUsername()) &&
-//					getPort() == details.getPort();
-//			InetAddress a1 = getAddress();
-//			InetAddress a2 = details.getAddress();
-//			return result && ( (a1 != null && a2 != null) && a1.equals(a2) || a1 == null && a2 == null );
-//		}
-//		return false;
-//	}
-//	
-//	/**
-//	 * @see java.lang.Object#hashCode()
-//	 */
-//	public int hashCode() {
-//		int val = 13;
-//		val += getUsername().hashCode();
-//		val += getPort();
-//		val += getAddress().hashCode();
-//		return val;
-//	}
-//	
-//	public String toString() {
-//		return "UserDetails("+getUsername()+", "+getAddress()+", "+getPort()+")";
-//	}
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString() {
+		return "UserDetails[username=" + getUsername() + "]";
+	}
+	
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		} else if (obj == null) {
+			return false;
+		} else if (getClass().equals(obj.getClass())) {
+			UserDetails ud = (UserDetails) obj;
+			return CompareUtil.nullSafeEquals(username, ud.username);
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	public int hashCode() {
+		return username != null ? username.hashCode() : 0;
+	}
+
 }
