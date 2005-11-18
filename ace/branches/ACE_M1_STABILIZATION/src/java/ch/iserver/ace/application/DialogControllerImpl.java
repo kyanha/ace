@@ -274,6 +274,20 @@ public class DialogControllerImpl implements DialogController {
 		}
 	}
 	
+	/**
+	 * @see ch.iserver.ace.application.DialogController#showDocumentWithSameNameExists(java.lang.String, java.io.File)
+	 */
+	public void showDocumentWithSameNameExists(String docTitle, File file) {
+		String title = getMessages().getMessage("dDocumentWithSameNameTitle");
+		String message = getMessages().getMessage("dDocumentWithSameNameMessage",
+						new Object[] { docTitle, file.getAbsolutePath() });
+		JOptionPane.showMessageDialog(
+						getMainFrame(),
+						message,
+						title,
+						JOptionPane.ERROR_MESSAGE);
+	}
+	
 	
 	// --> dispose dialogs <--
 	

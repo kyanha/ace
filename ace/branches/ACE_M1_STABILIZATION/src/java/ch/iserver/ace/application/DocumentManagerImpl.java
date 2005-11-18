@@ -150,7 +150,14 @@ public class DocumentManagerImpl implements ItemSelectionChangeListener, Prefere
 			});
 		}
 	}
-
+	
+	/**
+	 * @see ch.iserver.ace.application.DocumentManager#getDocumentForFile(java.io.File)
+	 */
+	public DocumentItem getDocumentForFile(File file) {
+		return findDocumentForFile(file);
+	}
+	
 	/**
 	 * Finds the document item for a given file.
 	 * 
@@ -191,6 +198,10 @@ public class DocumentManagerImpl implements ItemSelectionChangeListener, Prefere
 		ParameterValidator.notNull("file", file);
 		ParameterValidator.notNull("item", item);
 		
+		if (!file.equals(item.getFile()) && findDocumentForFile(file) != null) {
+			throw new IllegalArgumentException("file with that name already open");
+		}
+		
 		AbstractDocument doc = (AbstractDocument) item.getEditorDocument();
 		String content;
 		doc.readLock();
@@ -208,6 +219,7 @@ public class DocumentManagerImpl implements ItemSelectionChangeListener, Prefere
 			session.setDocumentDetails(new DocumentDetails(item.getTitle()));
 		}
 		item.setClean();
+		setSelectedDocument(item);
 	}
 	
 	/**

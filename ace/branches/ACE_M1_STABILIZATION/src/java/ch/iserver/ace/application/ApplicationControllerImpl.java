@@ -318,6 +318,12 @@ public class ApplicationControllerImpl implements ApplicationController, Applica
 		DialogResult result = getDialogController().showSaveDocument(item.getTitle());
 		if (JFileChooser.APPROVE_OPTION == result.getOption()) {
 			File file = (File) result.getResult();
+			
+			if (getDocumentManager().getDocumentForFile(file) != null) {
+				getDialogController().showDocumentWithSameNameExists(item.getTitle(), file);
+				return false;
+			}
+			
 			if (file.exists()) {
 				int option = getDialogController().showConfirmOverwrite(file);
 				if (option == JOptionPane.YES_OPTION) {

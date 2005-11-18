@@ -37,6 +37,14 @@ public interface DocumentManager {
 	EventList getDocuments();
 
 	/**
+	 * Gets the document for the given file.
+	 * 
+	 * @param file
+	 * @return
+	 */
+	DocumentItem getDocumentForFile(File file);
+	
+	/**
 	 * @return
 	 */
 	DocumentItem getSelectedDocument();
