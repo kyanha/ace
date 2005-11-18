@@ -62,7 +62,7 @@ public class PublishDocumentPrepareFilter extends AbstractRequestFilter {
 					
 					RemoteUserProxyExt[] peers = discoveryManager.getPeersWithNoSession();
 					SessionManager manager = SessionManager.getInstance();
-					LOG.debug("no session for "+peers.length+" peers; session initiated with "+manager.size()+" peers.");
+					LOG.debug("initiate sessions with "+peers.length+" peers; "+manager.size()+"sessions already initiated.");
 					for (int i = 0; i < peers.length; i++) {
 						RemoteUserProxyExt next = peers[i];
 						manager.createSession(next);
@@ -88,7 +88,7 @@ public class PublishDocumentPrepareFilter extends AbstractRequestFilter {
 					LOG.error("caught exception ["+e.getMessage()+"]");
 				}
 			} else {
-				LOG.debug("no sessions available for publish.");
+				LOG.debug("no discovered peers available for publish.");
 			}
 			LOG.info("<-- process()");
 		} else { //Forward

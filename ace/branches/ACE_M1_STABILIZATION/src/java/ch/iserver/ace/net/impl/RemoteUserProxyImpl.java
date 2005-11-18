@@ -26,7 +26,6 @@ import java.util.Map;
 
 import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.net.DocumentServerLogic;
-import ch.iserver.ace.net.RemoteDocumentProxy;
 import ch.iserver.ace.util.ParameterValidator;
 
 public class RemoteUserProxyImpl implements RemoteUserProxyExt {
@@ -70,13 +69,17 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 		this.details = details;
 	}
 	
-	public void addSharedDocument(RemoteDocumentProxy doc) {
+	public void addSharedDocument(RemoteDocumentProxyExt doc) {
 		documents.put(doc.getId(), doc);
 	}
 	
-	public RemoteDocumentProxy removeSharedDocument(String id) {
-		RemoteDocumentProxy doc = (RemoteDocumentProxy) documents.remove(id);
+	public RemoteDocumentProxyExt removeSharedDocument(String id) {
+		RemoteDocumentProxyExt doc = (RemoteDocumentProxyExt) documents.remove(id);
 		return doc;
+	}
+	
+	public RemoteDocumentProxyExt getSharedDocument(String id) {
+		return (RemoteDocumentProxyExt) documents.get(id);
 	}
 	
 	public void setSessionEstablished(boolean value) {

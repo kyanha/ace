@@ -20,7 +20,6 @@
  */
 package ch.iserver.ace.net.impl;
 
-import ch.iserver.ace.net.RemoteDocumentProxy;
 import ch.iserver.ace.net.RemoteUserProxy;
 
 /**
@@ -35,9 +34,11 @@ public interface RemoteUserProxyExt extends RemoteUserProxy {
 	
 	MutableUserDetails getMutableUserDetails();
 	
-	void addSharedDocument(RemoteDocumentProxy doc);
+	void addSharedDocument(RemoteDocumentProxyExt doc);
 	
-	RemoteDocumentProxy removeSharedDocument(String id);
+	RemoteDocumentProxyExt removeSharedDocument(String id);
+	
+	RemoteDocumentProxyExt getSharedDocument(String id);
 	
 	void setSessionEstablished(boolean value);
 	

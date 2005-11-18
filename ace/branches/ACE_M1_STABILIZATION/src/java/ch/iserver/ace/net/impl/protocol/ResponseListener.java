@@ -72,7 +72,7 @@ public class ResponseListener implements ReplyListener {
 	 */
 	public void receiveRPY(Message message) throws AbortChannelException {
 		byte[] data = read(message);
-		
+		//TODO: no message responses yet, only NUL replies, clean up ResponseParserHandler
 		try {
 			QueryInfo info = (QueryInfo) message.getChannel().getAppData();
 			handler.setMetaData(info);

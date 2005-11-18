@@ -97,7 +97,8 @@ public class PublishedDocument implements DocumentServer {
 			throw new IllegalStateException("document has been shutdown");
 		} else if (!isConcealed()) {
 			this.details = details;
-			//TODO: notify participants
+			Request request = new RequestImpl(ProtocolConstants.DOCUMENT_DETAILS_CHANGED, null, this);
+			filter.process(request);
 		}
 	}
 

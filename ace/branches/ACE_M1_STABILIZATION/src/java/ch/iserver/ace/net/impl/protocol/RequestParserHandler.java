@@ -57,8 +57,9 @@ public class RequestParserHandler extends ParserHandler {
 			result = new RequestImpl(getType(), userId, info);
 		} else if (getType() == SEND_DOCUMENTS) {
 			result = new RequestImpl(getType(), userId, requestPayload);
+		} else if (getType() == DOCUMENT_DETAILS_CHANGED) {
+			result = new RequestImpl(getType(), userId, info);
 		}
-		
 	}
 	
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
@@ -74,16 +75,24 @@ public class RequestParserHandler extends ParserHandler {
 				String name = attributes.getValue(DOCUMENT_NAME);
 				info = new DocumentInfo(id, name, userId);
 			} else {
-				LOG.warn("unkown tag in "+TAG_PUBLISH+" tag.");
+				LOG.warn("unkown tag in <"+TAG_PUBLISH+"> tag.");
 			}
 		} else if (requestType == CONCEAL) {
 			if (qName.equals(TAG_DOC)) {
 				String id = attributes.getValue(DOCUMENT_ID);
 				info = new DocumentInfo(id, null, userId);
 			} else {
-				LOG.warn("unkown tag in "+TAG_CONCEAL+" tag.");
+				LOG.warn("unkown tag in <"+TAG_CONCEAL+"> tag.");
 			}
-		} else if (qName.equals(TAG_QUERY)) {
+		} else if (requestType == DOCUMENT_DETAILS_CHANGED) {
+			if (qName.equals(TAG_DOC)) {
+				String id = attributes.getValue(DOCUMENT_ID);
+				String name = attributes.getValue(DOCUMENT_NAME);
+				info = new DocumentInfo(id, name, userId);
+			} else {
+				LOG.warn("unkown tag in <"+TAG_DOCUMENT_DETAILS_CHANGED+"> tag.");
+			}
+		} else if (qName.equals(TAG_QUERY)) { //TODO: remove tag query, is discarded
 			if (attributes.getValue(QUERY_TYPE).equals(QUERY_TYPE_PUBLISHED_DOCUMENTS)) {
 				requestType = PUBLISHED_DOCUMENTS;
 			} else {
@@ -99,6 +108,9 @@ public class RequestParserHandler extends ParserHandler {
 		} else if (qName.equals(TAG_CONCEAL)) {
 			userId = attributes.getValue(USER_ID);
 			requestType = CONCEAL;
+		} else if (qName.equals(TAG_DOCUMENT_DETAILS_CHANGED)) {
+			userId = attributes.getValue(USER_ID);
+			requestType = DOCUMENT_DETAILS_CHANGED;
 		}
 
 	}

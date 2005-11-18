@@ -29,7 +29,7 @@ import ch.iserver.ace.net.RemoteUserProxy;
 /**
  *
  */
-public class RemoteDocumentProxyImpl implements RemoteDocumentProxy {
+public class RemoteDocumentProxyImpl implements RemoteDocumentProxyExt {
 
 	private String id;
 	private DocumentDetails details;
@@ -53,6 +53,13 @@ public class RemoteDocumentProxyImpl implements RemoteDocumentProxy {
 	 */
 	public DocumentDetails getDocumentDetails() {
 		return details;
+	}
+	
+	/**
+	 * @see ch.iserver.ace.net.impl.RemoteDocumentProxyExt#setDocumentDetails(DocumentDetails)
+	 */
+	public void setDocumentDetails(DocumentDetails details) {
+		this.details = details;
 	}
 
 	/**

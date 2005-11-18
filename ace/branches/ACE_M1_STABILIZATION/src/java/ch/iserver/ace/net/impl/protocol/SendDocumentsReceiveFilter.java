@@ -31,6 +31,7 @@ import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.net.NetworkServiceCallback;
 import ch.iserver.ace.net.RemoteDocumentProxy;
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
+import ch.iserver.ace.net.impl.RemoteDocumentProxyExt;
 import ch.iserver.ace.net.impl.RemoteDocumentProxyImpl;
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;
 import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
@@ -84,7 +85,7 @@ public class SendDocumentsReceiveFilter extends AbstractRequestFilter {
 		RemoteUserProxyExt user = SessionManager.getInstance().getSession(
 				userId).getUser();
 		DocumentDetails details = new DocumentDetails(docName);
-		RemoteDocumentProxy proxy = new RemoteDocumentProxyImpl(docId, details,
+		RemoteDocumentProxyExt proxy = new RemoteDocumentProxyImpl(docId, details,
 				user);
 		user.addSharedDocument(proxy);
 		return proxy;

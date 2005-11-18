@@ -35,6 +35,7 @@ public class RequestFilterFactory {
 		listener.init(deserializer, createClientChainForResponses());
 		Serializer serializer = SerializerImpl.getInstance();
 		filter = new ConcealDocumentPrepareFilter(filter, serializer, listener);
+		filter = new DocumentDetailsChangedPrepareFilter(filter, serializer, listener);
 		filter = new PublishDocumentPrepareFilter(filter, serializer, listener); 
 //		filter = new DocumentDiscoveryPrepareFilter(filter, serializer, listener);
 		//TODO: could write an own NullReplyListener with logging
