@@ -54,6 +54,7 @@ public class RequestFilterFactory {
 	public static RequestFilter createServerChain() {
 		RequestFilter filter = new FailureFilter(null);
 		filter = new ConcealDocumentReceiveFilter(filter);
+		filter = new DocumentDetailsChangedReceiveFilter(filter);
 		filter = new PublishDocumentReceiveFilter(filter);
 //		filter = new PublishedDocumentsRequestFilter(filter);
 		filter = new SendDocumentsReceiveFilter(filter);
