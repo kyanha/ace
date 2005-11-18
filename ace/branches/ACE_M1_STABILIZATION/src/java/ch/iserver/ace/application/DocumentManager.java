@@ -41,6 +41,11 @@ public interface DocumentManager {
 	 * @return
 	 */
 	DocumentItem getSelectedDocument();
+	
+	/**
+	 * 
+	 */
+	void setSelectedDocument(DocumentItem item);
 
 	/**
 	 * @return

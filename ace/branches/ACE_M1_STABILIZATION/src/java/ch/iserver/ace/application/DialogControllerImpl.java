@@ -182,9 +182,9 @@ public class DialogControllerImpl implements DialogController {
 		);
 	}
 
-	public int showConfirmCloseDirty() {
+	public int showConfirmCloseDirty(String documentTitle) {
 		String title = getMessages().getMessage("dConfirmCloseDirtyTitle");
-		String message = getMessages().getMessage("dConfirmCloseDirtyMessage");
+		String message = getMessages().getMessage("dConfirmCloseDirtyMessage", new Object[] { documentTitle });
 		return JOptionPane.showConfirmDialog(
 						getMainFrame(), 
 						message, 

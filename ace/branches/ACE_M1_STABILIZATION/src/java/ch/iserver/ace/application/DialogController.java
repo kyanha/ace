@@ -109,9 +109,10 @@ public interface DialogController {
 	 * the user's desired action, i.e. either closing the document anyway or
 	 * not closing the document.
 	 * 
+	 * @param title the title of the dirty document about to be closed
 	 * @return JOptionPane.OK_OPTION or JOptionPane.CANCEL_OPTION
 	 */
-	int showConfirmCloseDirty();
+	int showConfirmCloseDirty(String title);
 	
 	/**
 	 * Shows a file chooser that allows the user to open one or more documents.

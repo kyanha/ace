@@ -23,6 +23,7 @@ package ch.iserver.ace.application;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -134,27 +135,65 @@ public class ApplicationControllerImpl implements ApplicationController, Applica
 
 	public void closeDocument() {
 		DocumentItem item = getDocumentManager().getSelectedDocument();
-		if (item != null && item.isDirty()) {			
-			int option = getDialogController().showConfirmCloseDirty();
-			
-			if (option == JOptionPane.YES_OPTION) {
-				try {
+		try {
+			if (item != null && item.isDirty()) {
+				getDocumentManager().setSelectedDocument(item);
+				int option = getDialogController().showConfirmCloseDirty(item.getTitle());
+				
+				if (option == JOptionPane.YES_OPTION) {
 					if (saveItem(item)) {
 						getDocumentManager().closeDocument(item);
 					}
-				} catch (IOException e) {
-					getDialogController().showSaveFailed(item, e);
+				} else if (option == JOptionPane.NO_OPTION) {
+					getDocumentManager().closeDocument(item);
 				}
-			} else if (option == JOptionPane.NO_OPTION) {
+			} else {
 				getDocumentManager().closeDocument(item);
-			}			
-		} else {
-			getDocumentManager().closeDocument(item);
+			}
+		} catch (IOException e) {
+			getDialogController().showSaveFailed(item, e);
 		}
 	}
 	
+	/**
+	 * @see ch.iserver.ace.application.ApplicationController#closeAllDocuments()
+	 */
 	public void closeAllDocuments() {
-		System.out.println("method has to be implemented in appcontroller (TODO: rasss)");
+		List closeList = new ArrayList();
+		getDocumentManager().getDocuments().getReadWriteLock().readLock().lock();
+		
+		try {
+			Iterator it = getDocumentManager().getDocuments().iterator();
+			while (it.hasNext()) {
+				DocumentItem item = (DocumentItem) it.next();
+				if (item.isDirty()) {
+					try {
+						getDocumentManager().setSelectedDocument(item);
+						int option = getDialogController().showConfirmCloseDirty(item.getTitle());
+						
+						if (option == JOptionPane.YES_OPTION) {
+							if (saveItem(item)) {
+								closeList.add(item);
+							}
+						} else if (option == JOptionPane.NO_OPTION) {
+							closeList.add(item);
+						}
+					} catch (IOException e) {
+						getDialogController().showSaveFailed(item, e);
+					}
+				} else {
+					closeList.add(item);
+				}
+			}
+		} finally {
+			getDocumentManager().getDocuments().getReadWriteLock().readLock().unlock();
+		}
+		
+		Iterator it = closeList.iterator();
+		while (it.hasNext()) {
+			DocumentItem item = (DocumentItem) it.next();
+			getDocumentManager().closeDocument(item);
+		}
 	}
 
 	public void openDocument() {
@@ -284,5 +323,5 @@ public class ApplicationControllerImpl implements ApplicationController, Applica
 			return false;
 		}
 	}
-
+	
 }

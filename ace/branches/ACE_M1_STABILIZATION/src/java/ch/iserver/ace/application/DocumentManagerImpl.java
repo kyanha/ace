@@ -93,6 +93,13 @@ public class DocumentManagerImpl implements ItemSelectionChangeListener, Prefere
 	}
 	
 	/**
+	 * @see ch.iserver.ace.application.DocumentManager#setSelectedDocument(ch.iserver.ace.application.DocumentItem)
+	 */
+	public void setSelectedDocument(DocumentItem item) {
+		documentController.setSelectedItem(item);
+	}
+	
+	/**
 	 * @see ch.iserver.ace.application.DocumentManager#getDirtyDocuments()
 	 */
 	public List getDirtyDocuments() {
@@ -221,8 +228,8 @@ public class DocumentManagerImpl implements ItemSelectionChangeListener, Prefere
 		if (item.getType() == DocumentItem.PUBLISHED) {
 			item.conceal();
 		}
-		int index = documentController.getSelectedIndex();
-		documentController.removeDocument(documentController.getSelectedDocumentItem());
+		int index = documentController.indexOf(item);
+		documentController.removeDocument(item);
 		if (documentController.getDocumentSourceList().size() > 0) {
 			documentController.setSelectedIndex(index == 0 ? 0 : index - 1);
 		}
