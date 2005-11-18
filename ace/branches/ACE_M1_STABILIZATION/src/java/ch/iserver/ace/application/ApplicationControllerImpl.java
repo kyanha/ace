@@ -42,6 +42,7 @@ import ca.odell.glazedlists.EventList;
 import ch.iserver.ace.application.dialog.DialogResult;
 import ch.iserver.ace.application.dialog.SaveFilesDialog;
 import ch.iserver.ace.collaboration.CollaborationService;
+import ch.iserver.ace.util.CompareUtil;
 
 /**
  * 
@@ -319,12 +320,13 @@ public class ApplicationControllerImpl implements ApplicationController, Applica
 		if (JFileChooser.APPROVE_OPTION == result.getOption()) {
 			File file = (File) result.getResult();
 			
-			if (getDocumentManager().getDocumentForFile(file) != null) {
+			boolean renamed = !CompareUtil.nullSafeEquals(file, item.getFile());
+			if (renamed && getDocumentManager().getDocumentForFile(file) != null) {
 				getDialogController().showDocumentWithSameNameExists(item.getTitle(), file);
 				return false;
 			}
 			
-			if (file.exists()) {
+			if (renamed && file.exists()) {
 				int option = getDialogController().showConfirmOverwrite(file);
 				if (option == JOptionPane.YES_OPTION) {
 					getDocumentManager().saveAsDocument(file, item);
