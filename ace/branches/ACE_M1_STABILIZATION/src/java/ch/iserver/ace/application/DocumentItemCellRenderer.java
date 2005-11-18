@@ -21,30 +21,23 @@
 
 package ch.iserver.ace.application;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 
-import java.awt.Color;
-import javax.swing.DefaultListCellRenderer;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
-import javax.swing.BorderFactory;
-import javax.swing.BorderFactory;
-import java.awt.BorderLayout;
-import javax.swing.*;
 
 public class DocumentItemCellRenderer extends JPanel implements ListCellRenderer {
 
 	private DocumentItem value;
-	private LocaleMessageSource messageSource;
 	protected ImageIcon iconLocal, iconPublished, iconRemote;
 
 	public DocumentItemCellRenderer(LocaleMessageSource messageSource) {
-		this.messageSource = messageSource;
 		iconLocal = messageSource.getIcon("iViewFileLocal");
 		iconPublished = messageSource.getIcon("iViewFilePublic");
 		iconRemote = messageSource.getIcon("iViewFileRemote");
@@ -76,7 +69,6 @@ public class DocumentItemCellRenderer extends JPanel implements ListCellRenderer
 		super.paintComponent(g);
 
 		int itemHeight = getHeight();
-		int itemWidth = getWidth();
 		
 		// draw document icon
 		int imageHeight = 16; //iconLocal.getIconHeight();
