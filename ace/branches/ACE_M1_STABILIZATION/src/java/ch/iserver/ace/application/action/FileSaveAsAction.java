@@ -27,6 +27,7 @@ import ch.iserver.ace.application.ItemSelectionChangeEvent;
 import ch.iserver.ace.application.LocaleMessageSource;
 import ch.iserver.ace.application.DocumentViewController;
 import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
 import java.awt.Toolkit;
 import javax.swing.KeyStroke;
 
@@ -40,6 +41,7 @@ public class FileSaveAsAction extends DocumentItemSelectionChangeAction {
 	public FileSaveAsAction(LocaleMessageSource messageSource, DocumentManager documentManager,
 			DocumentViewController viewController, ApplicationController appController) {
 		super(messageSource.getMessage("mFileSaveAs"), messageSource.getIcon("iMenuFileSaveAs"), viewController);
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke('S', InputEvent.SHIFT_MASK | Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 		this.documentManager = documentManager;
 		this.appController = appController;
 		setEnabled(false);
