@@ -53,6 +53,7 @@ public class ApplicationFactoryImpl implements ApplicationFactory, ApplicationCo
 		mFile.add((AbstractAction)context.getBean("fileSaveAllAction")).setToolTipText(null);
 		mFile.add((AbstractAction)context.getBean("fileSaveAsAction")).setToolTipText(null);
 		mFile.add((AbstractAction)context.getBean("fileCloseAction")).setToolTipText(null);
+		mFile.add((AbstractAction)context.getBean("fileCloseAllAction")).setToolTipText(null);
 		mFile.addSeparator();
 		mFile.add((AbstractAction)context.getBean("appSettingsAction")).setToolTipText(null);
 		mFile.addSeparator();
