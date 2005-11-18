@@ -40,6 +40,7 @@ import ch.iserver.ace.application.preferences.PreferenceChangeListener;
 import ch.iserver.ace.application.preferences.PreferencesStore;
 import ch.iserver.ace.collaboration.CollaborationService;
 import ch.iserver.ace.collaboration.PublishedSession;
+import ch.iserver.ace.util.CompareUtil;
 import ch.iserver.ace.util.ParameterValidator;
 
 
@@ -198,7 +199,9 @@ public class DocumentManagerImpl implements ItemSelectionChangeListener, Prefere
 		ParameterValidator.notNull("file", file);
 		ParameterValidator.notNull("item", item);
 		
-		if (!file.equals(item.getFile()) && findDocumentForFile(file) != null) {
+		boolean renamed = !CompareUtil.nullSafeEquals(file, item.getFile());
+		
+		if (renamed && findDocumentForFile(file) != null) {
 			throw new IllegalArgumentException("file with that name already open");
 		}
 		
@@ -214,7 +217,7 @@ public class DocumentManagerImpl implements ItemSelectionChangeListener, Prefere
 		}
 		FileUtils.writeStringToFile(file, content, getDefaultEncoding());
 		item.setFile(file);
-		if (item.getType() == DocumentItem.PUBLISHED) {
+		if (renamed && item.getType() == DocumentItem.PUBLISHED) {
 			PublishedSession session = (PublishedSession) item.getSession();
 			session.setDocumentDetails(new DocumentDetails(item.getTitle()));
 		}

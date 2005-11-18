@@ -212,6 +212,13 @@ public class ApplicationControllerImplTest extends TestCase {
 		documentManagerCtrl.verify();
 		dialogControllerCtrl.verify();
 	}
+	
+	
+	// --> test close all documents <--
+	
+	public void testCloseAllDocuments() throws Exception {
+		// TODO: implement tests for closeAllDocuments method
+	}
 
 	
 	// --> test open document <--
@@ -734,6 +741,8 @@ public class ApplicationControllerImplTest extends TestCase {
 	
 	
 	// --> test save item as <--
+	
+	// TODO: test new check for existing document for file
 	
 	public void testSaveItemAsExistingFileOverwrite() throws Exception {
 		File file = new File("src/resources/application-context.xml");
