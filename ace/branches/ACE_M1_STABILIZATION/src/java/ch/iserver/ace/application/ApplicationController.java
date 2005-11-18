@@ -36,6 +36,8 @@ public interface ApplicationController {
 	
 	void closeDocument();
 	
+	void closeAllDocuments();
+
 	void openDocument();
 	
 	void saveDocument();
