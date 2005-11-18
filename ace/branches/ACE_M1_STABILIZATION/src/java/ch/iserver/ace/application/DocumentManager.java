@@ -32,30 +32,40 @@ import ca.odell.glazedlists.EventList;
 public interface DocumentManager {
 
 	/**
-	 * @return
+	 * Gets the list of open documents.
+	 * 
+	 * @return the list of open documents
 	 */
 	EventList getDocuments();
 
 	/**
-	 * Gets the document for the given file.
+	 * Gets the document for the given file. If there is no document open
+	 * for the given file, this method returns null.
 	 * 
-	 * @param file
-	 * @return
+	 * @param file the file for which to look for an open document
+	 * @return the DocumentItem containing the file's content or null if
+	 *         there is none
 	 */
 	DocumentItem getDocumentForFile(File file);
 	
 	/**
-	 * @return
+	 * Gets the currently selected document. This method returns null if
+	 * there is no currently selected document.
+	 * 
+	 * @return the currently selected document or null if there is no document
+	 *         selected
 	 */
 	DocumentItem getSelectedDocument();
 	
 	/**
-	 * 
+	 * Sets the currently selected document.
 	 */
 	void setSelectedDocument(DocumentItem item);
 
 	/**
-	 * @return
+	 * Gets a list containing all the dirty documents.
+	 * 
+	 * @return the list of dirty documents
 	 */
 	EventList getDirtyDocuments();
 
