@@ -746,6 +746,8 @@ public class ApplicationControllerImplTest extends TestCase {
 		dialogController.showConfirmOverwrite(file);
 		dialogControllerCtrl.setReturnValue(JOptionPane.OK_OPTION);
 		documentManager.setSelectedDocument(item);
+		documentManager.getDocumentForFile(file);
+		documentManagerCtrl.setReturnValue(null);
 		documentManager.saveAsDocument(file, item);
 		
 		// replay
@@ -771,6 +773,8 @@ public class ApplicationControllerImplTest extends TestCase {
 		dialogController.showConfirmOverwrite(file);
 		dialogControllerCtrl.setReturnValue(JOptionPane.CANCEL_OPTION);
 		documentManager.setSelectedDocument(item);
+		documentManager.getDocumentForFile(file);
+		documentManagerCtrl.setReturnValue(null);
 		
 		// replay
 		documentManagerCtrl.replay();
@@ -794,6 +798,8 @@ public class ApplicationControllerImplTest extends TestCase {
 		dialogControllerCtrl.setReturnValue(result);
 		
 		documentManager.setSelectedDocument(item);
+		documentManager.getDocumentForFile(file);
+		documentManagerCtrl.setReturnValue(null);
 		documentManager.saveAsDocument(file, item);
 		
 		// replay
