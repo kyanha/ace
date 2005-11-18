@@ -31,6 +31,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JEditorPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import ch.iserver.ace.application.LocaleMessageSource;
 
@@ -57,7 +58,7 @@ public class AboutDialog extends TitledDialog {
 	protected JComponent createContent() {
 		editor = new JEditorPane();
 		editor.setEditable(false);
-		return editor;
+		return new JScrollPane(editor);
 	}
 	
 	/**
@@ -76,7 +77,7 @@ public class AboutDialog extends TitledDialog {
 	}
 	
 	protected void init() {
-		setSize(400, 400);
+		setSize(700, 500);
 		try {
 			editor.setPage(getURL());
 		} catch (Exception e) {
