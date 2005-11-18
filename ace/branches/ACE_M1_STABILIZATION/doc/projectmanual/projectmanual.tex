@@ -99,7 +99,7 @@ is implemented by a different team member for which he is responsible. If one
 team member finishes a layer earlier, he helps another team member. The 
 following table shows who is responsible for which layer. The layer lead 
 developer is responsible that his layer is completed in time and fully
-functioning. However this does not mean that a layer is implemented 100 percent
+functioning. However this does not mean that a layer is implemented a 100 percent
 by one person.
 
 \begin{table}[H]
@@ -181,6 +181,7 @@ it is not yet possible to join the shared documents.
  \item conceal published documents
  \item automatic discovery of other running instances of ACE on a local area network (user discovery)
  \item automatic discovery of published documents of other running instances of ACE (document discovery)
+ \item update to all running instances of ACE on user name or document name change
 \end{itemize}
 
 \subsubsection{Milestone M2}
@@ -347,7 +348,7 @@ usability improvements based on feedback from testing.
     \multicolumn{2}{|p{4.5in}|}{Design of Layer Interfaces} \\
   \hline
     \multicolumn{1}{|p{1in}|}{\bfseries{\textsf{Output}}} &
-    \multicolumn{2}{|p{4.5in}|}{Collaboration Layer Implementation} \\    
+    \multicolumn{2}{|p{4.5in}|}{Implementation Collaboration Layer} \\    
   \hline \hline
     \multicolumn{1}{|>{\columncolor[gray]{0.82}}p{1in}|}{} &
     \multicolumn{1}{|>{\columncolor[gray]{0.82}}p{3.5in}|}{\bfseries{\textsf{Description}}} &
@@ -392,7 +393,7 @@ usability improvements based on feedback from testing.
     \multicolumn{2}{|p{4.5in}|}{Design of GUI Components} \\ 
   \hline
     \multicolumn{1}{|p{1in}|}{\bfseries{\textsf{Output}}} &
-    \multicolumn{2}{|p{4.5in}|}{Implementation Version M1} \\    
+    \multicolumn{2}{|p{4.5in}|}{Implementation GUI M1} \\    
   \hline \hline
     \multicolumn{1}{|>{\columncolor[gray]{0.82}}p{1in}|}{} &
     \multicolumn{1}{|>{\columncolor[gray]{0.82}}p{3.5in}|}{\bfseries{\textsf{Description}}} &
@@ -438,25 +439,28 @@ usability improvements based on feedback from testing.
     \multicolumn{2}{|p{4.5in}|}{Design of Layer Interfaces} \\
   \hline
     \multicolumn{1}{|p{1in}|}{\bfseries{\textsf{Output}}} &
-    \multicolumn{2}{|p{4.5in}|}{Implementation Version M1} \\    
+    \multicolumn{2}{|p{4.5in}|}{Implementation Network M1} \\    
   \hline \hline
     \multicolumn{1}{|>{\columncolor[gray]{0.82}}p{1in}|}{} &
     \multicolumn{1}{|>{\columncolor[gray]{0.82}}p{3.5in}|}{\bfseries{\textsf{Description}}} &
     \multicolumn{1}{|>{\columncolor[gray]{0.82}}p{1in}|}{\bfseries{\textsf{Time}}} \\
   \hline
     \multicolumn{1}{|p{1in}|}{\bfseries{\textsf{Activities}}} &
-    \multicolumn{1}{|p{3.5in}|}{} &
-    \multicolumn{1}{|p{1in}|}{} \\
+    \multicolumn{1}{|p{3.5in}|}{Studying DNS-Based Service Discovery} &
+    \multicolumn{1}{|p{1in}|}{0.5 Days} \\
     \multicolumn{1}{|p{1in}|}{} &
-    \multicolumn{1}{|p{3.5in}|}{} &
-    \multicolumn{1}{|p{1in}|}{} \\
+    \multicolumn{1}{|p{3.5in}|}{Designing and Implementing Service Discovery} &
+    \multicolumn{1}{|p{1in}|}{2.5 Days} \\
     \multicolumn{1}{|p{1in}|}{} &
-    \multicolumn{1}{|p{3.5in}|}{} &
-    \multicolumn{1}{|p{1in}|}{} \\
+    \multicolumn{1}{|p{3.5in}|}{Studying BEEP Core} &
+    \multicolumn{1}{|p{1in}|}{0.5 Days} \\
+    \multicolumn{1}{|p{1in}|}{} &
+    \multicolumn{1}{|p{3.5in}|}{Designing and Implementing Protocol with BEEP} &
+    \multicolumn{1}{|p{1in}|}{3.5 Days} \\
   \hline
     \multicolumn{1}{|p{1in}|}{\bfseries{\textsf{QA}}} &
-    \multicolumn{1}{|p{3.5in}|}{} &
-    \multicolumn{1}{|p{1in}|}{} \\
+    \multicolumn{1}{|p{3.5in}|}{Testing} &
+    \multicolumn{1}{|p{1in}|}{1 Day} \\
   \hline \hline
     \multicolumn{1}{|p{1in}|}{\bfseries{\textsf{Total}}} &
     \multicolumn{1}{|p{3.5in}|}{} &
@@ -483,9 +487,9 @@ usability improvements based on feedback from testing.
     \multicolumn{1}{|p{1in}|}{\bfseries{\textsf{Input}}} &
     \multicolumn{2}{|p{4.5in}|}{Implementation Collaboration Layer} \\
     \multicolumn{1}{|p{1in}|}{} &
-    \multicolumn{2}{|p{4.5in}|}{GUI 1} \\
+    \multicolumn{2}{|p{4.5in}|}{Implementation GUI M1} \\
     \multicolumn{1}{|p{1in}|}{} &
-    \multicolumn{2}{|p{4.5in}|}{Network 1} \\
+    \multicolumn{2}{|p{4.5in}|}{Implementation Network M1} \\
   \hline
     \multicolumn{1}{|p{1in}|}{\bfseries{\textsf{Output}}} &
     \multicolumn{2}{|p{4.5in}|}{Product Release Milestone 1} \\    
@@ -531,7 +535,7 @@ usability improvements based on feedback from testing.
     \multicolumn{2}{|p{4.5in}|}{Project Team} \\
   \hline
     \multicolumn{1}{|p{1in}|}{\bfseries{\textsf{Input}}} &
-    \multicolumn{2}{|p{4.5in}|}{Layer Implementations} \\
+    \multicolumn{2}{|p{4.5in}|}{Layer Implementations GUI M1, Network M1 and Collaboration} \\
   \hline
     \multicolumn{1}{|p{1in}|}{\bfseries{\textsf{Output}}} &
     \multicolumn{2}{|p{4.5in}|}{Documentation Iteration 1} \\    
@@ -573,10 +577,10 @@ usability improvements based on feedback from testing.
     \multicolumn{2}{|p{4.5in}|}{Simon Raess (50\%)} \\
   \hline
     \multicolumn{1}{|p{1in}|}{\bfseries{\textsf{Input}}} &
-    \multicolumn{2}{|p{4.5in}|}{Milestone M1} \\
+    \multicolumn{2}{|p{4.5in}|}{Product Release Milestone 1} \\
   \hline
     \multicolumn{1}{|p{1in}|}{\bfseries{\textsf{Output}}} &
-    \multicolumn{2}{|p{4.5in}|}{Implementation Version M2} \\
+    \multicolumn{2}{|p{4.5in}|}{Implementation GUI M2} \\
   \hline \hline
     \multicolumn{1}{|>{\columncolor[gray]{0.82}}p{1in}|}{} &
     \multicolumn{1}{|>{\columncolor[gray]{0.82}}p{3.5in}|}{\bfseries{\textsf{Description}}} &
@@ -584,20 +588,20 @@ usability improvements based on feedback from testing.
   \hline
     \multicolumn{1}{|p{1in}|}{\bfseries{\textsf{Activities}}} &
     \multicolumn{1}{|p{3.5in}|}{Design Collaborative Text Component} &
-    \multicolumn{1}{|p{1in}|}{2.5} \\
+    \multicolumn{1}{|p{1in}|}{2.5 Days} \\
     \multicolumn{1}{|p{1in}|}{} &
     \multicolumn{1}{|p{3.5in}|}{Implementing Join and Kick Functionality} &
-    \multicolumn{1}{|p{1in}|}{1} \\
+    \multicolumn{1}{|p{1in}|}{1 Days} \\
     \multicolumn{1}{|p{1in}|}{} &
     \multicolumn{1}{|p{3.5in}|}{Implementing Awarness Information Component} &
-    \multicolumn{1}{|p{1in}|}{1.5} \\
+    \multicolumn{1}{|p{1in}|}{1.5 Days} \\
     \multicolumn{1}{|p{1in}|}{} &
     \multicolumn{1}{|p{3.5in}|}{Implementing Collaborative Text Component} &
-    \multicolumn{1}{|p{1in}|}{4.5} \\
+    \multicolumn{1}{|p{1in}|}{4.5 Days} \\
   \hline
     \multicolumn{1}{|p{1in}|}{\bfseries{\textsf{QA}}} &
     \multicolumn{1}{|p{3.5in}|}{Testing} &
-    \multicolumn{1}{|p{1in}|}{2.5} \\
+    \multicolumn{1}{|p{1in}|}{2.5 Days} \\
   \hline \hline
     \multicolumn{1}{|p{1in}|}{\bfseries{\textsf{Total}}} &
     \multicolumn{1}{|p{3.5in}|}{} &
@@ -624,33 +628,30 @@ usability improvements based on feedback from testing.
     \multicolumn{2}{|p{4.5in}|}{Simon Raess (50\%)} \\
   \hline
     \multicolumn{1}{|p{1in}|}{\bfseries{\textsf{Input}}} &
-    \multicolumn{2}{|p{4.5in}|}{} \\
+    \multicolumn{2}{|p{4.5in}|}{Product Release Milestone 1} \\
   \hline
     \multicolumn{1}{|p{1in}|}{\bfseries{\textsf{Output}}} &
-    \multicolumn{2}{|p{4.5in}|}{} \\
-    \multicolumn{1}{|p{1in}|}{} &
-    \multicolumn{2}{|p{4.5in}|}{} \\
-    \multicolumn{1}{|p{1in}|}{} &
-    \multicolumn{2}{|p{4.5in}|}{} \\
-    
+    \multicolumn{2}{|p{4.5in}|}{Implementation Network M2} \\
   \hline \hline
     \multicolumn{1}{|>{\columncolor[gray]{0.82}}p{1in}|}{} &
     \multicolumn{1}{|>{\columncolor[gray]{0.82}}p{3.5in}|}{\bfseries{\textsf{Description}}} &
     \multicolumn{1}{|>{\columncolor[gray]{0.82}}p{1in}|}{\bfseries{\textsf{Time}}} \\
   \hline
     \multicolumn{1}{|p{1in}|}{\bfseries{\textsf{Activities}}} &
-    \multicolumn{1}{|p{3.5in}|}{} &
-    \multicolumn{1}{|p{1in}|}{} \\
+    \multicolumn{1}{|p{3.5in}|}{Designing Protocol for Collaboration} &
+    \multicolumn{1}{|p{1in}|}{2 Days} \\
     \multicolumn{1}{|p{1in}|}{} &
-    \multicolumn{1}{|p{3.5in}|}{} &
-    \multicolumn{1}{|p{1in}|}{} \\
+    
+    \multicolumn{1}{|p{3.5in}|}{Implementing Protocol for Collaboration} &
+    \multicolumn{1}{|p{1in}|}{5 Days} \\
     \multicolumn{1}{|p{1in}|}{} &
-    \multicolumn{1}{|p{3.5in}|}{} &
-    \multicolumn{1}{|p{1in}|}{} \\
+    
+    \multicolumn{1}{|p{3.5in}|}{Implementing Network Exception handling} &
+    \multicolumn{1}{|p{1in}|}{2 Days} \\
   \hline
     \multicolumn{1}{|p{1in}|}{\bfseries{\textsf{QA}}} &
-    \multicolumn{1}{|p{3.5in}|}{} &
-    \multicolumn{1}{|p{1in}|}{} \\
+    \multicolumn{1}{|p{3.5in}|}{Testing} &
+    \multicolumn{1}{|p{1in}|}{3 Days} \\
   \hline \hline
     \multicolumn{1}{|p{1in}|}{\bfseries{\textsf{Total}}} &
     \multicolumn{1}{|p{3.5in}|}{} &
@@ -675,9 +676,9 @@ usability improvements based on feedback from testing.
     \multicolumn{2}{|p{4.5in}|}{Project Team} \\
   \hline
     \multicolumn{1}{|p{1in}|}{\bfseries{\textsf{Input}}} &
-    \multicolumn{2}{|p{4.5in}|}{GUI 2} \\
+    \multicolumn{2}{|p{4.5in}|}{Implementation GUI M2} \\
     \multicolumn{1}{|p{1in}|}{} &
-    \multicolumn{2}{|p{4.5in}|}{Network 2} \\
+    \multicolumn{2}{|p{4.5in}|}{Implementation Network M2} \\
   \hline
     \multicolumn{1}{|p{1in}|}{\bfseries{\textsf{Output}}} &
     \multicolumn{2}{|p{4.5in}|}{Product Release Milestone 2} \\
@@ -723,10 +724,10 @@ usability improvements based on feedback from testing.
     \multicolumn{2}{|p{4.5in}|}{Project Team} \\
   \hline
     \multicolumn{1}{|p{1in}|}{\bfseries{\textsf{Input}}} &
-    \multicolumn{2}{|p{4.5in}|}{Product Release M2} \\
+    \multicolumn{2}{|p{4.5in}|}{Product Release Milestone 2} \\
   \hline
     \multicolumn{1}{|p{1in}|}{\bfseries{\textsf{Output}}} &
-    \multicolumn{2}{|p{4.5in}|}{Product Release M3} \\    
+    \multicolumn{2}{|p{4.5in}|}{Product Release Milestone 3} \\    
   \hline \hline
     \multicolumn{1}{|>{\columncolor[gray]{0.82}}p{1in}|}{} &
     \multicolumn{1}{|>{\columncolor[gray]{0.82}}p{3.5in}|}{\bfseries{\textsf{Description}}} &
@@ -872,17 +873,17 @@ usability improvements based on feedback from testing.
  \begin{center}
  \begin{tabular}{|l|l|l|l|}
  \hline
- Contractor             &  J.-P. Dubois     & \href{mailto:doj@bfh.ch}{doj@bfh.ch} \\
+ Contractor             &  J.-P. Dubois     & \href{mailto:doj@bfh.ch}{jean-paul.dubois@hti.bfh.ch} \\
                         &                   &  +41 32 321 62 82 \\
  \hline
  Project Lead           &  S. Raess         & \href{mailto:rasss@bfh.ch}{rasss@bfh.ch} \\
  \hline
- Project Team           &  M. Bigler        & \href{mailto:biglm2@bfh.ch}{biglm2@bfh.ch} \\ 
-                        &  S. Raess         & \href{mailto:rasss@bfh.ch}{rasss@bfh.ch} \\
-                        &  L. Zbinden       & \href{mailto:zbinl@bfh.ch}{zbinl@bfh.ch} \\
+ Project Team           &  M. Bigler        & \href{mailto:biglm2@bfh.ch}{biglm2@hti.bfh.ch} \\ 
+                        &  S. Raess         & \href{mailto:rasss@bfh.ch}{rasss@hti.bfh.ch} \\
+                        &  L. Zbinden       & \href{mailto:zbinl@bfh.ch}{zbinl@hti.bfh.ch} \\
  \hline
- Project Coach          &  J.-P. Dubois     & \href{mailto:doj@bfh.ch}{doj@bfh.ch} \\
-                        &  C. Fuhrer        & \href{frc@bfh.ch}{frc@bfh.ch} \\
+ Project Coach          &  J.-P. Dubois     & \href{mailto:doj@bfh.ch}{jean-paul.dubois@hti.bfh.ch} \\
+                        &  C. Fuhrer        & \href{frc@bfh.ch}{claude.fuhrer@hti.bfh.ch} \\
  \hline
  \end{tabular}
  \end{center}
