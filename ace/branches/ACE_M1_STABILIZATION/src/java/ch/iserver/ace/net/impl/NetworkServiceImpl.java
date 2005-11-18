@@ -122,6 +122,7 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	
 	public void stop() {
 		LOG.debug("network service stopped.");
+		//TODO: implement
 	}
 	
 	public void setUserDetails(UserDetails details) {

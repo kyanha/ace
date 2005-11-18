@@ -79,6 +79,14 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 		return doc;
 	}
 	
+	public void setSessionEstablished(boolean value) {
+		isSessionEstablished = value;
+	}
+
+	public boolean isSessionEstablished() {
+		return isSessionEstablished;
+	}
+	
 	/**
 	 * @inheritDoc
 	 */
@@ -110,13 +118,5 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 		hash += details.hashCode();
 		hash += documents.hashCode();
 		return hash;
-	}
-
-	public void setSessionEstablished(boolean value) {
-		isSessionEstablished = value;
-	}
-
-	public boolean isSessionEstablished() {
-		return isSessionEstablished;
 	}
 }

@@ -63,7 +63,7 @@ private static Logger LOG = Logger.getLogger(SendDocumentsPrepareFilter.class);
 			ParticipantConnectionExt connection = session.getConnection();
 			Map publishedDocs = NetworkServiceImpl.getInstance().getPublishedDocuments();
 			byte[] message = serializer.createNotification(ProtocolConstants.SEND_DOCUMENTS, publishedDocs);	
-			connection.send(message, null, listener);
+			connection.send(message, user.getUserDetails().getUsername(), listener);
 		} catch (Exception e) {
 			LOG.error("process problem ["+e.getMessage()+"]");
 		}

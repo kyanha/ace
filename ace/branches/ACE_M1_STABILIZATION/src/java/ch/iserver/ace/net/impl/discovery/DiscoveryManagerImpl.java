@@ -22,11 +22,15 @@ package ch.iserver.ace.net.impl.discovery;
 
 import java.net.InetAddress;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
+import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.net.impl.DiscoveryCallback;
 import ch.iserver.ace.net.impl.MutableUserDetails;
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;
@@ -68,7 +72,22 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 	/** Methods from interface DiscoveryManager **/
 	/*********************************************/
 	public RemoteUserProxyExt[] getPeersWithNoSession() {
-		return (RemoteUserProxyExt[]) peersWithEstablishedSession.values().toArray(new RemoteUserProxyExt[0]);
+		Set ids = remoteUserProxies.keySet();
+		Set allUsers = new LinkedHashSet();
+		allUsers.addAll(ids);
+		Set sessionIds = peersWithEstablishedSession.keySet();
+		Set sessionUsers = new LinkedHashSet();
+		sessionUsers.addAll(sessionIds);
+		allUsers.removeAll(sessionUsers);
+		
+		RemoteUserProxyExt[] proxies = new RemoteUserProxyExt[allUsers.size()];
+		Iterator iter = allUsers.iterator();
+		int i = 0;
+		while (iter.hasNext()) {
+			String id = (String) iter.next();
+			proxies[i++] = (RemoteUserProxyExt) remoteUserProxies.get(id);
+		}
+		return proxies;
 	}
 
 	public void setSessionEstablished(String userId) {

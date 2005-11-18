@@ -29,6 +29,7 @@ import org.beepcore.beep.core.InputDataStream;
 import org.beepcore.beep.core.Message;
 import org.beepcore.beep.core.MessageMSG;
 import org.beepcore.beep.core.ReplyListener;
+import org.beepcore.beep.transport.tcp.TCPSession;
 import org.beepcore.beep.util.BufferSegment;
 
 import ch.iserver.ace.net.impl.protocol.DocumentDiscoveryPrepareFilter.QueryInfo;
@@ -109,7 +110,8 @@ public class ResponseListener implements ReplyListener {
 	 */
 	public void receiveNUL(Message message) throws AbortChannelException {
 		Object appData = message.getChannel().getAppData();
-		LOG.debug("received confirmation message for ["+appData+"] from ["+message.getChannel().getSession().toString()+"]");
+		TCPSession session = (TCPSession) message.getChannel().getSession();
+		LOG.debug("received confirmation message from ["+appData+", "+session.getSocket()+"]");
 	}
 	
 	private byte[] read(Message message) throws AbortChannelException {

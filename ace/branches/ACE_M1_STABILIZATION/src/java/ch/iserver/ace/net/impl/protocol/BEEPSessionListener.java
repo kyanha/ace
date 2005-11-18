@@ -25,11 +25,9 @@ import org.apache.log4j.Logger;
 import org.beepcore.beep.core.BEEPException;
 import org.beepcore.beep.core.ProfileRegistry;
 import org.beepcore.beep.core.Session;
-import org.beepcore.beep.core.StartChannelListener;
 import org.beepcore.beep.core.event.SessionEvent;
 import org.beepcore.beep.core.event.SessionListener;
 import org.beepcore.beep.core.event.SessionResetEvent;
-import org.beepcore.beep.profile.Profile;
 import org.beepcore.beep.transport.tcp.TCPSession;
 import org.beepcore.beep.transport.tcp.TCPSessionCreator;
 
@@ -45,7 +43,7 @@ public class BEEPSessionListener extends Thread implements SessionListener {
 	private boolean terminate;
 	
 	public BEEPSessionListener(ProfileRegistry registry) {
-		this.registry = new ProfileRegistry();
+		this.registry = registry;
 		terminate = false;
 	}
 	
@@ -58,6 +56,7 @@ public class BEEPSessionListener extends Thread implements SessionListener {
 				LOG.debug("start listening at port "+ProtocolConstants.LISTENING_PORT+" again");
 				try {
 					TCPSession session = TCPSessionCreator.listen(ProtocolConstants.LISTENING_PORT, registry);
+					session.addSessionListener(this);
 					LOG.debug("accepted session with ["+session.getSocket()+"]");
 				} catch (BEEPException be) {
 					LOG.warn("server stopped, restart ["+be.getMessage()+"]");
