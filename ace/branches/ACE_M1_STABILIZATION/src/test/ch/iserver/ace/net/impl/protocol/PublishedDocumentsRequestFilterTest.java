@@ -7,7 +7,9 @@ import org.easymock.AbstractMatcher;
 import org.easymock.MockControl;
 
 import ch.iserver.ace.DocumentDetails;
+import ch.iserver.ace.net.impl.DiscoveryCallback;
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
+import ch.iserver.ace.net.impl.discovery.DiscoveryManagerFactory;
 
 public class PublishedDocumentsRequestFilterTest extends TestCase {
 
@@ -18,6 +20,11 @@ public class PublishedDocumentsRequestFilterTest extends TestCase {
 		MockControl succCtrl = MockControl.createControl(RequestFilter.class);
 		RequestFilter successor = (RequestFilter)succCtrl.getMock();
 		succCtrl.replay();
+		
+		//init discovery manager, so that NetworkServiceImpl can be initalized properly
+		MockControl callbackCtrl = MockControl.createControl(DiscoveryCallback.class);
+		DiscoveryCallback callback = (DiscoveryCallback) callbackCtrl.getMock();
+		DiscoveryManagerFactory.getDiscoveryManager(callback);
 		
 		NetworkServiceImpl service = NetworkServiceImpl.getInstance();
 		DocumentDetails details = new DocumentDetails("file1.txt");

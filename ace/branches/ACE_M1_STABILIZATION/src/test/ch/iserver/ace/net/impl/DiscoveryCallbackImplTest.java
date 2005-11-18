@@ -26,10 +26,8 @@ public class DiscoveryCallbackImplTest extends TestCase {
 		//define mock behavior
 		callbackCtrl.setDefaultMatcher(MockControl.ALWAYS_MATCHER);
 		callback.userDetailsChanged(proxy);
-		callback.documentDiscarded(null);
 		callback.userDiscarded(proxy);
 		callback.userDiscovered(proxy);
-		
 		service.hasPublishedDocuments();
 		serviceCtrl.setReturnValue(false);
 //		service.discoverDocuments(proxy);
@@ -41,6 +39,7 @@ public class DiscoveryCallbackImplTest extends TestCase {
 		// test
 		discoveryCallback.userDetailsChanged(proxy);
 		discoveryCallback.userDiscarded(proxy);
+		//TODO: write test where proxy has documents and documentDiscarded(..) is invoked
 		discoveryCallback.userDiscovered(proxy);
 		discoveryCallback.userDiscoveryCompleted(proxy);
 		

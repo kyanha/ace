@@ -114,7 +114,6 @@ public class PeerDiscoveryTest extends TestCase {
 		
 		discoveryCallbackCtrl.replay();
 		
-		System.out.println("stop registered peers.");
 		registrar.stop();
 		
 		try {
