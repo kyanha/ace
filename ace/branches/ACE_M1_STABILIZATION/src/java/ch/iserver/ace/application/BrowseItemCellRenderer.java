@@ -92,7 +92,7 @@ public class BrowseItemCellRenderer extends JPanel implements ListCellRenderer {
 		g.drawString(value.getTitle(), textPosX, textTitlePosY);
 
 		// draw owner
-		int textPublisherPosY = textTitlePosY + 10;
+		int textPublisherPosY = textTitlePosY + 12;
 		g.setFont(g.getFont().deriveFont(10.0f));
 		g.setFont(g.getFont().deriveFont(Font.PLAIN & Font.BOLD));
 		g.drawString(value.getPublisher(), textPosX, textPublisherPosY);
@@ -104,7 +104,7 @@ public class BrowseItemCellRenderer extends JPanel implements ListCellRenderer {
 	}
 	
 	public Dimension getPreferredSize() {
-		return new Dimension(0, 28);
+		return new Dimension(0, 30);
 	}
 	
 }

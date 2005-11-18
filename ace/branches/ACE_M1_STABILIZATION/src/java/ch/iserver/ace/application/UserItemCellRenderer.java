@@ -94,7 +94,7 @@ public class UserItemCellRenderer extends JPanel implements ListCellRenderer {
 	}
 	
 	public Dimension getPreferredSize() {
-		return new Dimension(0, 18);
+		return new Dimension(0, 20);
 	}
 	
 }
