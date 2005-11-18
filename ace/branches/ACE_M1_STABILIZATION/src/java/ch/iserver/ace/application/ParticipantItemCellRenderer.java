@@ -99,9 +99,9 @@ public class ParticipantItemCellRenderer extends JPanel implements ListCellRende
 		
 	}
 	
-	public String getToolTipText() {
+/*	public String getToolTipText() {
 		return value.getName();
-	}
+	}*/
 
 	public Dimension getPreferredSize() {
 		return new Dimension(0, 20);
