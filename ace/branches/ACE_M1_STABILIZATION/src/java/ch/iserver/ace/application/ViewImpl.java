@@ -47,7 +47,7 @@ public abstract class ViewImpl extends JPanel implements View {
 		this.messageSource = messageSource;
 		eventListenerList = new EventListenerList();
 		addItemSelectionChangeListener(controller);
-		setPreferredSize(new Dimension(180, 150));
+		setPreferredSize(new Dimension(200, 180));
 	}
 
 	public void addItemSelectionChangeListener(ItemSelectionChangeListener listener) {
