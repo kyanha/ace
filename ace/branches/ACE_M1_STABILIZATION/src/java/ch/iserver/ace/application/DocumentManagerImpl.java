@@ -24,7 +24,6 @@ package ch.iserver.ace.application;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.List;
 
 import javax.swing.SwingUtilities;
 import javax.swing.text.AbstractDocument;
@@ -51,8 +50,6 @@ import ch.iserver.ace.util.ParameterValidator;
 public class DocumentManagerImpl implements ItemSelectionChangeListener, PreferenceChangeListener, DocumentManager {
 	
 	private static int counter = 1;
-	
-	private EventList dirtyList;
 	
 	private DocumentViewController documentController;
 	private CollaborationService collaborationService;
@@ -105,16 +102,13 @@ public class DocumentManagerImpl implements ItemSelectionChangeListener, Prefere
 	/**
 	 * @see ch.iserver.ace.application.DocumentManager#getDirtyDocuments()
 	 */
-	public List getDirtyDocuments() {
-		if (dirtyList == null) {
-			Matcher matcher = new Matcher() {
-				public boolean matches(Object item) {
-					return ((DocumentItem) item).isDirty();
-				}
-			};
-			dirtyList = new FilterList(getDocuments(), matcher);
-		}
-		return dirtyList;
+	public EventList getDirtyDocuments() {
+		Matcher matcher = new Matcher() {
+			public boolean matches(Object item) {
+				return ((DocumentItem) item).isDirty();
+			}
+		};
+		return new FilterList(getDocuments(), matcher);
 	}
 
 	/**

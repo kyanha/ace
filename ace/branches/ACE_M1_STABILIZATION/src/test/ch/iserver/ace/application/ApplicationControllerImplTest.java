@@ -37,6 +37,8 @@ import junit.framework.TestCase;
 
 import org.easymock.MockControl;
 
+import ca.odell.glazedlists.BasicEventList;
+import ca.odell.glazedlists.GlazedLists;
 import ch.iserver.ace.application.dialog.DialogResult;
 
 /**
@@ -55,9 +57,9 @@ public class ApplicationControllerImplTest extends TestCase {
 	private DocumentManager documentManager;
 	
 	protected void setUp() throws Exception {
-		dialogControllerCtrl = MockControl.createControl(DialogController.class);
+		dialogControllerCtrl = MockControl.createStrictControl(DialogController.class);
 		dialogController = (DialogController) dialogControllerCtrl.getMock();
-		documentManagerCtrl = MockControl.createControl(DocumentManager.class);
+		documentManagerCtrl = MockControl.createStrictControl(DocumentManager.class);
 		documentManager = (DocumentManager) documentManagerCtrl.getMock();
 		
 		controller = new ApplicationControllerImpl();
@@ -375,7 +377,7 @@ public class ApplicationControllerImplTest extends TestCase {
 	public void testSaveAllDocumentsNoneDirty() throws Exception {		
 		// define mock behavior
 		documentManager.getDirtyDocuments();
-		documentManagerCtrl.setReturnValue(new ArrayList());
+		documentManagerCtrl.setReturnValue(new BasicEventList());
 		
 		// replay
 		documentManagerCtrl.replay();
@@ -394,7 +396,7 @@ public class ApplicationControllerImplTest extends TestCase {
 		DocumentItem[] items = new DocumentItem[2];
 		items[0] = new DocumentItem("XYZ");
 		items[1] = new DocumentItem("ABC");
-		List dirty = Arrays.asList(items);
+		List dirty = GlazedLists.eventList(Arrays.asList(items));
 		
 		// define mock behavior
 		documentManager.getDirtyDocuments();
@@ -432,7 +434,7 @@ public class ApplicationControllerImplTest extends TestCase {
 		final DocumentItem[] items = new DocumentItem[2];
 		items[0] = new DocumentItem("XYZ");
 		items[1] = new DocumentItem("ABC");
-		List dirty = Arrays.asList(items);
+		List dirty = GlazedLists.eventList(Arrays.asList(items));
 		Map failed = new HashMap();
 		failed.put(items[1], e);
 		
@@ -743,6 +745,7 @@ public class ApplicationControllerImplTest extends TestCase {
 		dialogControllerCtrl.setReturnValue(result);
 		dialogController.showConfirmOverwrite(file);
 		dialogControllerCtrl.setReturnValue(JOptionPane.OK_OPTION);
+		documentManager.setSelectedDocument(item);
 		documentManager.saveAsDocument(file, item);
 		
 		// replay
@@ -767,6 +770,7 @@ public class ApplicationControllerImplTest extends TestCase {
 		dialogControllerCtrl.setReturnValue(result);
 		dialogController.showConfirmOverwrite(file);
 		dialogControllerCtrl.setReturnValue(JOptionPane.CANCEL_OPTION);
+		documentManager.setSelectedDocument(item);
 		
 		// replay
 		documentManagerCtrl.replay();
@@ -789,6 +793,7 @@ public class ApplicationControllerImplTest extends TestCase {
 		dialogController.showSaveDocument("XYZ");
 		dialogControllerCtrl.setReturnValue(result);
 		
+		documentManager.setSelectedDocument(item);
 		documentManager.saveAsDocument(file, item);
 		
 		// replay
@@ -810,6 +815,8 @@ public class ApplicationControllerImplTest extends TestCase {
 		// define mock behavior
 		dialogController.showSaveDocument("XYZ");
 		dialogControllerCtrl.setReturnValue(result);
+		
+		documentManager.setSelectedDocument(item);
 		
 		// replay
 		documentManagerCtrl.replay();

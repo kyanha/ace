@@ -23,7 +23,6 @@ package ch.iserver.ace.application;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 import ca.odell.glazedlists.EventList;
 
@@ -50,7 +49,7 @@ public interface DocumentManager {
 	/**
 	 * @return
 	 */
-	List getDirtyDocuments();
+	EventList getDirtyDocuments();
 
 	/**
 	 * Creates a new untitled document.

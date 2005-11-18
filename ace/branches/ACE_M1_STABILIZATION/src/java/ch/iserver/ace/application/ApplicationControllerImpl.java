@@ -38,6 +38,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ConfigurableApplicationContext;
 
+import ca.odell.glazedlists.EventList;
 import ch.iserver.ace.application.dialog.DialogResult;
 import ch.iserver.ace.application.dialog.SaveFilesDialog;
 import ch.iserver.ace.collaboration.CollaborationService;
@@ -93,43 +94,47 @@ public class ApplicationControllerImpl implements ApplicationController, Applica
 
 	public void quit() {
 		Map failed = new TreeMap();
-		List dirty = getDocumentManager().getDirtyDocuments();	
+		EventList dirty = getDocumentManager().getDirtyDocuments();	
 		
-		if (dirty.size() == 0) {
-			shutdown();
+		try {
+			if (dirty.size() == 0) {
+				shutdown();
 			
-		} else {			
-			DialogResult result = getDialogController().showSaveFilesDialog(dirty);
+			} else {			
+				DialogResult result = getDialogController().showSaveFilesDialog(dirty);
 			
-			if (result.getOption() == SaveFilesDialog.OK_OPTION) {
-				Set saveSet = (Set) result.getResult();
+				if (result.getOption() == SaveFilesDialog.OK_OPTION) {
+					Set saveSet = (Set) result.getResult();
 			
-				if (saveSet.size() == 0) {
-					shutdown();
-				}
+					if (saveSet.size() == 0) {
+						shutdown();
+					}
 			
-				Iterator it = saveSet.iterator();
-				while (it.hasNext()) {
-					DocumentItem item = (DocumentItem) it.next();
-					try {
-						if (saveItem(item)) {
-							getDocumentManager().closeDocument(item);
-							it.remove();
+					Iterator it = saveSet.iterator();
+					while (it.hasNext()) {
+						DocumentItem item = (DocumentItem) it.next();
+						try {
+							if (saveItem(item)) {
+								getDocumentManager().closeDocument(item);
+								it.remove();
+							}
+						} catch (IOException e) {
+							failed.put(item, e);
 						}
-					} catch (IOException e) {
-						failed.put(item, e);
+					}
+			
+					// display files that cannot be saved
+					if (failed.size() > 0) {
+						getDialogController().showSaveFilesFailed(failed);
+				
+					// only if there are no more open documents... 
+					} else if (saveSet.size() == 0){
+						shutdown();
 					}
 				}
-			
-				// display files that cannot be saved
-				if (failed.size() > 0) {
-					getDialogController().showSaveFilesFailed(failed);
-				
-				// only if there are no more open documents... 
-				} else if (saveSet.size() == 0){
-					shutdown();
-				}
 			}
+		} finally {
+			dirty.getReadWriteLock().writeLock().unlock();
 		}
 	}
 
@@ -256,14 +261,20 @@ public class ApplicationControllerImpl implements ApplicationController, Applica
 
 	public void saveAllDocuments() {
 		Map failed = new TreeMap();
-		Iterator it = getDocumentManager().getDirtyDocuments().iterator();
-		while (it.hasNext()) {
-			DocumentItem item = (DocumentItem) it.next();
-			try {
-				saveItem(item);
-			} catch (IOException e) {
-				failed.put(item, e);
+		EventList dirty = getDocumentManager().getDirtyDocuments();
+		dirty.getReadWriteLock().readLock().lock();
+		try {
+			Iterator it = dirty.iterator();
+			while (it.hasNext()) {
+				DocumentItem item = (DocumentItem) it.next();
+				try {
+					saveItem(item);
+				} catch (IOException e) {
+					failed.put(item, e);
+				}
 			}
+		} finally {
+			dirty.getReadWriteLock().readLock().unlock();
 		}
 		
 		// display files that cannot be saved
@@ -303,6 +314,7 @@ public class ApplicationControllerImpl implements ApplicationController, Applica
 	}
 	
 	protected boolean saveItemAs(DocumentItem item) throws IOException {
+		getDocumentManager().setSelectedDocument(item);
 		DialogResult result = getDialogController().showSaveDocument(item.getTitle());
 		if (JFileChooser.APPROVE_OPTION == result.getOption()) {
 			File file = (File) result.getResult();
