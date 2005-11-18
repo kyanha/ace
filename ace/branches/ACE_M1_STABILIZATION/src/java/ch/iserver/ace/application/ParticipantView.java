@@ -61,7 +61,6 @@ public class ParticipantView extends ViewImpl {
 		setEventSelectionModel(new EventSelectionModel(participantSortedList));
 
 		setList(new JList(getEventListModel()));
-		getList().setBorder(BorderFactory.createEmptyBorder());
 		getList().setCellRenderer(new ParticipantItemCellRenderer(messageSource));
 		getList().setSelectionModel(getEventSelectionModel());
 		getList().setSelectionMode(EventSelectionModel.SINGLE_SELECTION);

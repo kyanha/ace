@@ -76,7 +76,6 @@ public class UserView extends ViewImpl {
 		setEventSelectionModel(new EventSelectionModel(userSortedList));
 
 		setList(new JList(getEventListModel()));
-		getList().setBorder(BorderFactory.createEmptyBorder());
 		getList().setCellRenderer(new UserItemCellRenderer(messageSource));
 		getList().setSelectionModel(getEventSelectionModel());
 		getList().setSelectionMode(EventSelectionModel.SINGLE_SELECTION);

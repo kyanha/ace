@@ -63,7 +63,6 @@ public class DocumentView extends ViewImpl {
 		setEventSelectionModel(new EventSelectionModel(documentSortedList));
 
 		setList(new JList(getEventListModel()));
-		getList().setBorder(BorderFactory.createEmptyBorder());
 		getList().setCellRenderer(new DocumentItemCellRenderer(messageSource));
 		getList().setSelectionModel(getEventSelectionModel());
 		getList().setSelectionMode(EventSelectionModel.SINGLE_SELECTION);

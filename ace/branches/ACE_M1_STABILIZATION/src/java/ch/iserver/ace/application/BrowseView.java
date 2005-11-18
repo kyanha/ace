@@ -75,7 +75,6 @@ public class BrowseView extends ViewImpl {
 		setEventSelectionModel(new EventSelectionModel(browseSortedList));
 
 		setList(new JList(getEventListModel()));
-		getList().setBorder(BorderFactory.createEmptyBorder());
 		getList().setCellRenderer(new BrowseItemCellRenderer(messageSource));
 		getList().setSelectionModel(getEventSelectionModel());
 		getList().setSelectionMode(EventSelectionModel.SINGLE_SELECTION);
