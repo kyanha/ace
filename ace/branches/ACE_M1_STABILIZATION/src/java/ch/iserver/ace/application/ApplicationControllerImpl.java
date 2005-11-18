@@ -137,7 +137,6 @@ public class ApplicationControllerImpl implements ApplicationController, Applica
 		DocumentItem item = getDocumentManager().getSelectedDocument();
 		try {
 			if (item != null && item.isDirty()) {
-				getDocumentManager().setSelectedDocument(item);
 				int option = getDialogController().showConfirmCloseDirty(item.getTitle());
 				
 				if (option == JOptionPane.YES_OPTION) {

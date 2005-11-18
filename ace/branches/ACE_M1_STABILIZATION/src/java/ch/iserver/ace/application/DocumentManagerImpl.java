@@ -23,7 +23,6 @@ package ch.iserver.ace.application;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -34,6 +33,8 @@ import javax.swing.text.BadLocationException;
 import org.apache.commons.io.FileUtils;
 
 import ca.odell.glazedlists.EventList;
+import ca.odell.glazedlists.FilterList;
+import ca.odell.glazedlists.matchers.Matcher;
 import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.application.preferences.PreferenceChangeEvent;
 import ch.iserver.ace.application.preferences.PreferenceChangeListener;
@@ -50,6 +51,8 @@ import ch.iserver.ace.util.ParameterValidator;
 public class DocumentManagerImpl implements ItemSelectionChangeListener, PreferenceChangeListener, DocumentManager {
 	
 	private static int counter = 1;
+	
+	private EventList dirtyList;
 	
 	private DocumentViewController documentController;
 	private CollaborationService collaborationService;
@@ -103,23 +106,15 @@ public class DocumentManagerImpl implements ItemSelectionChangeListener, Prefere
 	 * @see ch.iserver.ace.application.DocumentManager#getDirtyDocuments()
 	 */
 	public List getDirtyDocuments() {
-		List result = new ArrayList();
-		
-		EventList source = getDocuments();
-		source.getReadWriteLock().readLock().lock();
-		try {
-			Iterator it = source.iterator();
-			while (it.hasNext()) {
-				DocumentItem item = (DocumentItem) it.next();
-				if (item.isDirty()) {
-					result.add(item);
+		if (dirtyList == null) {
+			Matcher matcher = new Matcher() {
+				public boolean matches(Object item) {
+					return ((DocumentItem) item).isDirty();
 				}
-			}
-		} finally {
-			source.getReadWriteLock().readLock().unlock();
+			};
+			dirtyList = new FilterList(getDocuments(), matcher);
 		}
-		
-		return result;
+		return dirtyList;
 	}
 
 	/**

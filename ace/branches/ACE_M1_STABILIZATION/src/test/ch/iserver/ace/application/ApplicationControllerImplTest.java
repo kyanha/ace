@@ -122,7 +122,7 @@ public class ApplicationControllerImplTest extends TestCase {
 		documentManagerCtrl.setReturnValue(item);
 		documentManager.closeDocument(item);
 		
-		dialogController.showConfirmCloseDirty("test");
+		dialogController.showConfirmCloseDirty("test.txt");
 		dialogControllerCtrl.setReturnValue(JOptionPane.YES_OPTION);
 				
 		// replay
@@ -154,7 +154,7 @@ public class ApplicationControllerImplTest extends TestCase {
 		documentManager.getSelectedDocument();
 		documentManagerCtrl.setReturnValue(item);
 		
-		dialogController.showConfirmCloseDirty("test");
+		dialogController.showConfirmCloseDirty("test.txt");
 		dialogControllerCtrl.setReturnValue(JOptionPane.YES_OPTION);
 				
 		// replay
@@ -187,7 +187,7 @@ public class ApplicationControllerImplTest extends TestCase {
 		documentManager.getSelectedDocument();
 		documentManagerCtrl.setReturnValue(item);
 		
-		dialogController.showConfirmCloseDirty("test");
+		dialogController.showConfirmCloseDirty("test.txt");
 		dialogControllerCtrl.setReturnValue(JOptionPane.YES_OPTION);
 		dialogController.showSaveFailed(item, e);
 				
