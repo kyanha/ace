@@ -249,7 +249,7 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	/**
 	 * @see ch.iserver.ace.net.NetworkServiceCallback#documentDiscovered(ch.iserver.ace.net.RemoteDocumentProxy[])
 	 */
-	public void documentDiscovered(RemoteDocumentProxy[] proxies) {
+	public synchronized void documentDiscovered(RemoteDocumentProxy[] proxies) {
 		List tmp = new ArrayList(proxies.length);
 		for (int i = 0; i < proxies.length; i++) {
 			if (getDocumentRegistry().getDocument(proxies[i].getId()) != null) {
@@ -275,7 +275,7 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	/**
 	 * @see ch.iserver.ace.net.NetworkServiceCallback#documentDetailsChanged(ch.iserver.ace.net.RemoteDocumentProxy)
 	 */
-	public void documentDetailsChanged(RemoteDocumentProxy proxy) {
+	public synchronized void documentDetailsChanged(RemoteDocumentProxy proxy) {
 		MutableRemoteDocument doc = getDocumentRegistry().getDocument(proxy.getId());
 		if (doc == null) {
 			LOG.error("documentDetailsChanged called with an unknown document id (i.e. documentDiscovered not called)");
@@ -287,7 +287,7 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	/**
 	 * @see ch.iserver.ace.net.NetworkServiceCallback#documentDiscarded(ch.iserver.ace.net.RemoteDocumentProxy[])
 	 */
-	public void documentDiscarded(RemoteDocumentProxy[] proxies) {
+	public synchronized void documentDiscarded(RemoteDocumentProxy[] proxies) {
 		List tmp = new ArrayList();
 		for (int i = 0; i < proxies.length; i++) {
 			RemoteDocument doc = getDocumentRegistry().removeDocument(proxies[i]);
@@ -307,7 +307,7 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	/**
 	 * @see ch.iserver.ace.net.NetworkServiceCallback#userDiscovered(ch.iserver.ace.net.RemoteUserProxy)
 	 */
-	public void userDiscovered(RemoteUserProxy proxy) {
+	public synchronized void userDiscovered(RemoteUserProxy proxy) {
 		if (getUserRegistry().getUser(proxy.getId()) != null) {
 			LOG.warn("user with id " + proxy.getId() + " discovered before: discarding notification");
 			return;
@@ -323,7 +323,7 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	/**
 	 * @see ch.iserver.ace.net.NetworkServiceCallback#userDetailsChanged(ch.iserver.ace.net.RemoteUserProxy)
 	 */
-	public void userDetailsChanged(RemoteUserProxy proxy) {
+	public synchronized void userDetailsChanged(RemoteUserProxy proxy) {
 		MutableRemoteUser user = getUserRegistry().getUser(proxy.getId());
 		if (user == null) {
 			// TODO: throw exception
@@ -336,7 +336,7 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	/**
 	 * @see ch.iserver.ace.net.NetworkServiceCallback#userDiscarded(ch.iserver.ace.net.RemoteUserProxy)
 	 */
-	public void userDiscarded(RemoteUserProxy proxy) {
+	public synchronized void userDiscarded(RemoteUserProxy proxy) {
 		RemoteUser user = getUserRegistry().removeUser(proxy);
 		if (user == null) {
 			// TODO: throw exception
