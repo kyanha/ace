@@ -37,7 +37,7 @@ public class ApplicationExitAction extends AbstractAction {
 	private ApplicationController appController;
 
 	public ApplicationExitAction(LocaleMessageSource messageSource, ApplicationController appController) {
-		super(messageSource.getMessage("mAppExit"));
+		super(messageSource.getMessage("mAppExit"), messageSource.getIcon("iMenuAppExit"));
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke('Q', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 		this.appController = appController;
 	}

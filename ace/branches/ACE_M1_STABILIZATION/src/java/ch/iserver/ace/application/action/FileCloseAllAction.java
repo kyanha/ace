@@ -40,7 +40,7 @@ public class FileCloseAllAction extends DocumentItemSelectionChangeAction {
 
 	public FileCloseAllAction(LocaleMessageSource messageSource, DocumentManager documentManager,
 			DocumentViewController viewController, ApplicationController appController) {
-		super(messageSource.getMessage("mFileCloseAll"), /*messageSource.getIcon("iMenuFileCloseAll"),*/ viewController);
+		super(messageSource.getMessage("mFileCloseAll"), messageSource.getIcon("iMenuFileCloseAll"), viewController);
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke('W', InputEvent.SHIFT_MASK | Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 		putValue(SHORT_DESCRIPTION, messageSource.getMessage("mFileCloseAllTT"));
 		this.documentManager = documentManager;
