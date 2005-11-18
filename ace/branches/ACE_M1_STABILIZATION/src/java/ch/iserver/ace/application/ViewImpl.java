@@ -72,6 +72,9 @@ public abstract class ViewImpl extends JPanel implements View {
 	
 	public void setSelectedIndex(int index) {
 		getList().setSelectedIndex(index);
+		if (index != -1) {
+			getList().ensureIndexIsVisible(index);
+		}
 	}
 	
 	public int getSelectedIndex() {

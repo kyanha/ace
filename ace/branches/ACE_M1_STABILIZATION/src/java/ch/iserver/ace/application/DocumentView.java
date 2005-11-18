@@ -22,11 +22,11 @@
 package ch.iserver.ace.application;
 
 import java.awt.BorderLayout;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -39,7 +39,6 @@ import ca.odell.glazedlists.ObservableElementList;
 import ca.odell.glazedlists.SortedList;
 import ca.odell.glazedlists.swing.EventListModel;
 import ca.odell.glazedlists.swing.EventSelectionModel;
-import java.util.List;
 
 import com.jgoodies.uif_lite.panel.SimpleInternalFrame;
 
@@ -104,6 +103,7 @@ public class DocumentView extends ViewImpl {
 		try {
 			int pos = documentSortedList.indexOf(item);
 			getEventSelectionModel().setSelectionInterval(pos, pos);
+			getList().ensureIndexIsVisible(pos);
 		} finally {
 			getSourceList().getReadWriteLock().readLock().unlock();
 		}
