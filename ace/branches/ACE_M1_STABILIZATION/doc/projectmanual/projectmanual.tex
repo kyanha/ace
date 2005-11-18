@@ -22,6 +22,8 @@ pdfcreator={pdftex},
 
 \tableofcontents
 
+\setlength{\parskip}{6pt}
+
 \newpage
 
 
@@ -72,8 +74,9 @@ The \emph{Final Report} contains all the technical documentation of the project.
  \item Description of Goals and Scope of the Project
  \item Implementation Decisions and Justification
  \item Application Architecture and Design
- \item Description of Implemented Solution (Implementation Decisions)
+ \item Description of Implemented Solution
  \item Tests and Results
+ \item Short Overview of Used Technologies
  \item References
  \item Glossary
 \end{itemize}
@@ -154,7 +157,7 @@ and/or a different protocol.
 
 \begin{figure}[H]
  \centering
- \includegraphics[height=379pt,width=585pt,angle=90]{../images/projectmanagement/gantt.eps}
+ \includegraphics[height=350pt,width=540pt,angle=90]{../images/projectmanagement/gantt.eps}
  \caption{Project Plan}
 \end{figure}
 \newpage
@@ -205,7 +208,7 @@ usability improvements based on feedback from testing.
 \begin{itemize}
  \item bug fixes
  \item usability improvements
- \item design
+ \item refactorings
  \item optional goals
 \end{itemize}
 
@@ -252,9 +255,12 @@ usability improvements based on feedback from testing.
     \multicolumn{1}{|p{1in}|}{1 Day} \\
     \multicolumn{1}{|p{1in}|}{} &
     \multicolumn{1}{|p{3.5in}|}{Creating Installers} &
-    \multicolumn{1}{|p{1in}|}{3 Days} \\
+    \multicolumn{1}{|p{1in}|}{2 Days} \\
     \multicolumn{1}{|p{1in}|}{} &
-    \multicolumn{1}{|p{3.5in}|}{Project Plan} &
+    \multicolumn{1}{|p{3.5in}|}{Project Manual} &
+    \multicolumn{1}{|p{1in}|}{1 Day} \\
+    \multicolumn{1}{|p{1in}|}{} &
+    \multicolumn{1}{|p{3.5in}|}{System Requirements} &
     \multicolumn{1}{|p{1in}|}{1 Day} \\
     \multicolumn{1}{|p{1in}|}{} &
     \multicolumn{1}{|p{3.5in}|}{Absolventenbuch} &
@@ -393,7 +399,7 @@ usability improvements based on feedback from testing.
     \multicolumn{2}{|p{4.5in}|}{Design of GUI Components} \\ 
   \hline
     \multicolumn{1}{|p{1in}|}{\bfseries{\textsf{Output}}} &
-    \multicolumn{2}{|p{4.5in}|}{Implementation GUI M1} \\    
+    \multicolumn{2}{|p{4.5in}|}{Implementation GUI Milestone 1} \\    
   \hline \hline
     \multicolumn{1}{|>{\columncolor[gray]{0.82}}p{1in}|}{} &
     \multicolumn{1}{|>{\columncolor[gray]{0.82}}p{3.5in}|}{\bfseries{\textsf{Description}}} &
@@ -439,7 +445,7 @@ usability improvements based on feedback from testing.
     \multicolumn{2}{|p{4.5in}|}{Design of Layer Interfaces} \\
   \hline
     \multicolumn{1}{|p{1in}|}{\bfseries{\textsf{Output}}} &
-    \multicolumn{2}{|p{4.5in}|}{Implementation Network M1} \\    
+    \multicolumn{2}{|p{4.5in}|}{Implementation Network Milestone 1} \\    
   \hline \hline
     \multicolumn{1}{|>{\columncolor[gray]{0.82}}p{1in}|}{} &
     \multicolumn{1}{|>{\columncolor[gray]{0.82}}p{3.5in}|}{\bfseries{\textsf{Description}}} &
@@ -487,9 +493,9 @@ usability improvements based on feedback from testing.
     \multicolumn{1}{|p{1in}|}{\bfseries{\textsf{Input}}} &
     \multicolumn{2}{|p{4.5in}|}{Implementation Collaboration Layer} \\
     \multicolumn{1}{|p{1in}|}{} &
-    \multicolumn{2}{|p{4.5in}|}{Implementation GUI M1} \\
+    \multicolumn{2}{|p{4.5in}|}{Implementation GUI Milestone 1} \\
     \multicolumn{1}{|p{1in}|}{} &
-    \multicolumn{2}{|p{4.5in}|}{Implementation Network M1} \\
+    \multicolumn{2}{|p{4.5in}|}{Implementation Network Milestone 1} \\
   \hline
     \multicolumn{1}{|p{1in}|}{\bfseries{\textsf{Output}}} &
     \multicolumn{2}{|p{4.5in}|}{Product Release Milestone 1} \\    
@@ -535,7 +541,11 @@ usability improvements based on feedback from testing.
     \multicolumn{2}{|p{4.5in}|}{Project Team} \\
   \hline
     \multicolumn{1}{|p{1in}|}{\bfseries{\textsf{Input}}} &
-    \multicolumn{2}{|p{4.5in}|}{Layer Implementations GUI M1, Network M1 and Collaboration} \\
+    \multicolumn{2}{|p{4.5in}|}{Implementation Collaboration Layer} \\
+    \multicolumn{1}{|p{1in}|}{} &
+    \multicolumn{2}{|p{4.5in}|}{Implementation GUI Milestone 1} \\
+    \multicolumn{1}{|p{1in}|}{} &
+    \multicolumn{2}{|p{4.5in}|}{Implementation Network Milestone 1} \\
   \hline
     \multicolumn{1}{|p{1in}|}{\bfseries{\textsf{Output}}} &
     \multicolumn{2}{|p{4.5in}|}{Documentation Iteration 1} \\    
@@ -580,7 +590,7 @@ usability improvements based on feedback from testing.
     \multicolumn{2}{|p{4.5in}|}{Product Release Milestone 1} \\
   \hline
     \multicolumn{1}{|p{1in}|}{\bfseries{\textsf{Output}}} &
-    \multicolumn{2}{|p{4.5in}|}{Implementation GUI M2} \\
+    \multicolumn{2}{|p{4.5in}|}{Implementation GUI Milestone 2} \\
   \hline \hline
     \multicolumn{1}{|>{\columncolor[gray]{0.82}}p{1in}|}{} &
     \multicolumn{1}{|>{\columncolor[gray]{0.82}}p{3.5in}|}{\bfseries{\textsf{Description}}} &
@@ -631,7 +641,7 @@ usability improvements based on feedback from testing.
     \multicolumn{2}{|p{4.5in}|}{Product Release Milestone 1} \\
   \hline
     \multicolumn{1}{|p{1in}|}{\bfseries{\textsf{Output}}} &
-    \multicolumn{2}{|p{4.5in}|}{Implementation Network M2} \\
+    \multicolumn{2}{|p{4.5in}|}{Implementation Network Milestone 2} \\
   \hline \hline
     \multicolumn{1}{|>{\columncolor[gray]{0.82}}p{1in}|}{} &
     \multicolumn{1}{|>{\columncolor[gray]{0.82}}p{3.5in}|}{\bfseries{\textsf{Description}}} &
@@ -676,9 +686,9 @@ usability improvements based on feedback from testing.
     \multicolumn{2}{|p{4.5in}|}{Project Team} \\
   \hline
     \multicolumn{1}{|p{1in}|}{\bfseries{\textsf{Input}}} &
-    \multicolumn{2}{|p{4.5in}|}{Implementation GUI M2} \\
+    \multicolumn{2}{|p{4.5in}|}{Implementation GUI Milestone 2} \\
     \multicolumn{1}{|p{1in}|}{} &
-    \multicolumn{2}{|p{4.5in}|}{Implementation Network M2} \\
+    \multicolumn{2}{|p{4.5in}|}{Implementation Network Milestone 2} \\
   \hline
     \multicolumn{1}{|p{1in}|}{\bfseries{\textsf{Output}}} &
     \multicolumn{2}{|p{4.5in}|}{Product Release Milestone 2} \\
@@ -792,7 +802,10 @@ usability improvements based on feedback from testing.
     \multicolumn{1}{|p{1in}|}{10 Days} \\
     \multicolumn{1}{|p{1in}|}{} &
     \multicolumn{1}{|p{3.5in}|}{Writing User Manual} &
-    \multicolumn{1}{|p{1in}|}{3 Days} \\
+    \multicolumn{1}{|p{1in}|}{2 Days} \\
+    \multicolumn{1}{|p{1in}|}{} &
+    \multicolumn{1}{|p{3.5in}|}{Writing Developers Guide} &
+    \multicolumn{1}{|p{1in}|}{1 Days} \\
   \hline
     \multicolumn{1}{|p{1in}|}{\bfseries{\textsf{QA}}} &
     \multicolumn{1}{|p{3.5in}|}{Review} &
@@ -865,6 +878,7 @@ usability improvements based on feedback from testing.
 \end{table}
 
 
+\newpage
 \appendix
 
 \section{Persons and Associated Roles}
