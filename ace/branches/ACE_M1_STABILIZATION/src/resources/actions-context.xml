@@ -42,6 +42,13 @@
     <constructor-arg index="3"><ref bean="applicationController"/></constructor-arg>
   </bean>
 
+  <bean id="fileCloseAllAction" class="ch.iserver.ace.application.action.FileCloseAllAction">
+    <constructor-arg index="0"><ref bean="localeMessageSource"/></constructor-arg>
+    <constructor-arg index="1"><ref bean="documentManager"/></constructor-arg>
+    <constructor-arg index="2"><ref bean="documentViewController"/></constructor-arg>
+    <constructor-arg index="3"><ref bean="applicationController"/></constructor-arg>
+  </bean>
+
   <bean id="appSettingsAction" class="ch.iserver.ace.application.action.ApplicationSettingsAction">
     <constructor-arg index="0"><ref bean="localeMessageSource"/></constructor-arg>
     <constructor-arg index="1"><ref bean="applicationController"/></constructor-arg>
