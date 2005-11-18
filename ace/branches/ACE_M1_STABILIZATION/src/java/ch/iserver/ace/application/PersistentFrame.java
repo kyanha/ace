@@ -42,7 +42,7 @@ public class PersistentFrame extends JFrame {
 	private LocaleMessageSource messageSource;
 
 	public PersistentFrame(final Action exitAction) {
-		setSize(800, 480);
+		setSize(920, 560);
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				//
