@@ -72,7 +72,6 @@ public class ResponseListener implements ReplyListener {
 	 */
 	public void receiveRPY(Message message) throws AbortChannelException {
 		byte[] data = read(message);
-		//TODO: no message responses yet, only NUL replies, clean up ResponseParserHandler
 		try {
 			QueryInfo info = (QueryInfo) message.getChannel().getAppData();
 			handler.setMetaData(info);
@@ -94,15 +93,14 @@ public class ResponseListener implements ReplyListener {
 	 */
 	public void receiveERR(Message message) throws AbortChannelException {
 		LOG.error("receiveERR("+message+")");
-
 	}
 
 	/* (non-Javadoc)
 	 * @see org.beepcore.beep.core.ReplyListener#receiveANS(org.beepcore.beep.core.Message)
 	 */
 	public void receiveANS(Message message) throws AbortChannelException {
-		// TODO Auto-generated method stub
-
+		//should not receive any ANS message
+		LOG.debug("receivedANS() -> not intended!");
 	}
 
 	/* (non-Javadoc)
@@ -111,7 +109,7 @@ public class ResponseListener implements ReplyListener {
 	public void receiveNUL(Message message) throws AbortChannelException {
 		Object appData = message.getChannel().getAppData();
 		TCPSession session = (TCPSession) message.getChannel().getSession();
-		LOG.debug("received confirmation message from ["+appData+", "+session.getSocket()+"]");
+		LOG.debug("received confirmation from ["+appData+", "+session.getSocket()+"]");
 	}
 	
 	private byte[] read(Message message) throws AbortChannelException {

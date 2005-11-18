@@ -67,6 +67,7 @@ public class RequestHandlerImpl implements RequestHandler {
 			byte[] rawData = readData(input);
 			LOG.debug("received "+rawData.length+" bytes. ["+(new String(rawData))+"]");
 			Request request = null;
+			//TODO: use SingleThreadedDomain instead of synchronized
 			synchronized (MUTEX) {
 				deserializer.deserialize(rawData, handler);
 				request = (Request)handler.getResult();
