@@ -34,10 +34,10 @@ import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 import javax.swing.BorderFactory;
 import javax.swing.BorderFactory;
+import java.awt.BorderLayout;
+import javax.swing.*;
 
-
-
-public class DocumentItemCellRenderer extends DefaultListCellRenderer {// implements ListCellRenderer {
+public class DocumentItemCellRenderer extends JPanel implements ListCellRenderer {
 
 	private DocumentItem value;
 	private LocaleMessageSource messageSource;
@@ -55,9 +55,10 @@ public class DocumentItemCellRenderer extends DefaultListCellRenderer {// implem
 							int index,
 							boolean isSelected,
 							boolean cellHasFocus) {
+
 		setOpaque(true);
 		this.value = (DocumentItem)value;
-		
+
 		if(isSelected) {
 			setForeground(list.getSelectionForeground());
 			setBackground(list.getSelectionBackground());
@@ -69,14 +70,13 @@ public class DocumentItemCellRenderer extends DefaultListCellRenderer {// implem
 		}
 
 		return this;
-
 	}
 
-	public void paintComponent(Graphics g) {
+	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		
-		int itemHeight = (int)g.getClipBounds().getHeight();
-		int itemWidth = (int)g.getClipBounds().getWidth();
+
+		int itemHeight = getHeight();
+		int itemWidth = getWidth();
 		
 		// draw document icon
 		int imageHeight = 16; //iconLocal.getIconHeight();
@@ -95,14 +95,13 @@ public class DocumentItemCellRenderer extends DefaultListCellRenderer {// implem
 				g.drawImage(iconRemote.getImage(), imagePosX, imagePosY, imageHeight, imageWidth, this);
 			break;
 		}
-		
+
 		// draw document title & dirty flag (TODO: dynamic border)
 		g.setColor(Color.BLACK);
 		int textAscent = g.getFontMetrics().getAscent();
 		int textDescent = g.getFontMetrics().getDescent();		
 		int textPosX = imagePosX + imageWidth + 5;
 		int textPosY = (itemHeight / 2) + (textAscent / 2) - textDescent + 1;
-		
 		if(value.isDirty()) {
 			g.drawString(value.getTitle() + " *", textPosX, textPosY);
 		} else {

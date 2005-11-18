@@ -24,6 +24,7 @@ package ch.iserver.ace.application;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Color;
 
 import javax.swing.ImageIcon;
 import javax.swing.JList;
@@ -68,8 +69,8 @@ public class UserItemCellRenderer extends JPanel implements ListCellRenderer {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
-		int itemHeight = (int)g.getClipBounds().getHeight();
-		int itemWidth = (int)g.getClipBounds().getWidth();
+		int itemHeight = getHeight();
+		int itemWidth = getWidth();
 
 		// draw user icon
 		int imageHeight = 16; //iconLocal.getIconHeight();
@@ -79,6 +80,7 @@ public class UserItemCellRenderer extends JPanel implements ListCellRenderer {
 		g.drawImage(iconUser.getImage(), imagePosX, imagePosY, imageHeight, imageWidth, this);
 		
 		// draw user name (TODO: dynamic border)
+		g.setColor(Color.BLACK);
 		int textAscent = g.getFontMetrics().getAscent();
 		int textDescent = g.getFontMetrics().getDescent();		
 		int textPosX = imagePosX + imageWidth + 5;

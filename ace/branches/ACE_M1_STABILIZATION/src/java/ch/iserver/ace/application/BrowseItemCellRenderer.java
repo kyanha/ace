@@ -38,7 +38,7 @@ import java.awt.Rectangle;
 
 
 
-public class BrowseItemCellRenderer extends JPanel implements ListCellRenderer {//, Scrollable {
+public class BrowseItemCellRenderer extends JPanel implements ListCellRenderer {
 
 	private BrowseItem value;
 	private LocaleMessageSource messageSource;
@@ -67,15 +67,14 @@ public class BrowseItemCellRenderer extends JPanel implements ListCellRenderer {
 			setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 		}
 		
-		return new JLabel(this.value.getTitle());
-		//return this;
+		return this;
 	}
 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-/*
-		int itemHeight = (int)g.getClipBounds().getHeight();
-		int itemWidth = (int)g.getClipBounds().getWidth();
+
+		int itemHeight = getHeight();
+		int itemWidth = getWidth();
 		
 		// draw document icon
 		int imageHeight = 16; //iconLocal.getIconHeight();
@@ -85,6 +84,7 @@ public class BrowseItemCellRenderer extends JPanel implements ListCellRenderer {
 		g.drawImage(iconRemote.getImage(), imagePosX, imagePosY, imageHeight, imageWidth, this);
 
 		// draw document title (TODO: dynamic border)
+		g.setColor(Color.BLACK);
 		int textAscent = g.getFontMetrics().getAscent();
 		int textDescent = g.getFontMetrics().getDescent();		
 		int textPosX = imagePosX + imageWidth + 5;
@@ -96,40 +96,15 @@ public class BrowseItemCellRenderer extends JPanel implements ListCellRenderer {
 		g.setFont(g.getFont().deriveFont(10.0f));
 		g.setFont(g.getFont().deriveFont(Font.PLAIN & Font.BOLD));
 		g.drawString(value.getPublisher(), textPosX, textPublisherPosY);
-*/		
+
 	}
 
-	public Dimension getPreferredSize() {
-		return new Dimension(0, 28);
-	}
-	
 	public String getToolTipText() {
 		return value.getTitle() + "(" + value.getPublisher() + ")";
 	}
-
-
-
-	/*public Dimension getPreferredScrollableViewportSize() {
+	
+	public Dimension getPreferredSize() {
 		return new Dimension(0, 28);
 	}
-	
-	public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {
-		return 100;
-	}
-	
-	public boolean getScrollableTracksViewportHeight() {
-		return true;
-	}
-	
-	public boolean getScrollableTracksViewportWidth() {
-		return true;
-	}
-	
-	public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
-		//if(SwingConstants.VERTICAL) {
-			System.out.println(orientation);
-		//}
-		return 28;
-	}*/
 	
 }
