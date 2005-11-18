@@ -21,6 +21,7 @@
 
 package ch.iserver.ace.application.action;
 
+import ch.iserver.ace.application.DocumentItem;
 import ch.iserver.ace.application.ApplicationController;
 import ch.iserver.ace.application.DocumentManager;
 import ch.iserver.ace.application.ItemSelectionChangeEvent;
@@ -56,7 +57,11 @@ public class FileSaveAction extends DocumentItemSelectionChangeAction {
 		if(e.getItem() == null) {
 			setEnabled(false);
 		} else {
-			setEnabled(true);
+			if(!((DocumentItem)e.getItem()).hasBeenSaved() || ((DocumentItem)e.getItem()).isDirty()) {
+				setEnabled(true);
+			} else {
+				setEnabled(false);
+			}
 		}
 	}
 
