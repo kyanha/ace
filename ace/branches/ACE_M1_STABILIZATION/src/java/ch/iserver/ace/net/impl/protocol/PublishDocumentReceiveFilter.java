@@ -44,9 +44,9 @@ public class PublishDocumentReceiveFilter extends AbstractRequestFilter {
 	}
 
 	public void process(Request request) {
-		LOG.info("--> process("+request+")");
 		try {
 			if (request.getType() == ProtocolConstants.PUBLISH) {
+				LOG.info("--> process()");
 				DocumentInfo info = (DocumentInfo) request.getPayload();
 				String userId = info.getUserId();
 				RemoteUserSession session = SessionManager.getInstance().getSession(userId);
@@ -65,13 +65,13 @@ public class PublishDocumentReceiveFilter extends AbstractRequestFilter {
 					LOG.error("session not found for id ["+userId+"]");
 					request.getMessage().sendERR(BEEPError.CODE_PARAMETER_INVALID, "userId unknown");
 				}
+				LOG.info("<-- process()");
 			} else {
 				super.process(request);
 			}
 		} catch (Exception e) {
 			LOG.error("exception processing request ["+e+", "+e.getMessage()+"]");
 		}
-		LOG.info("<-- process()");
 	}
 	
 }

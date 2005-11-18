@@ -39,13 +39,14 @@ public class RequestFilterFactory {
 //		filter = new DocumentDiscoveryPrepareFilter(filter, serializer, listener);
 		//TODO: could write an own NullReplyListener with logging
 		filter = new SendDocumentsPrepareFilter(filter, serializer, listener);
+		filter = new LogFilter(filter, true);
 		return filter;
 	}
 	
 	private static RequestFilter createClientChainForResponses() {
-		RequestFilter filter = new FailureFilter(null);
+//		RequestFilter filter = new FailureFilter(null);
 //		filter = new DocumentDiscoveryResponseFilter(filter);
-		filter = new LogFilter(filter, false);
+		RequestFilter filter = new LogFilter(null, false);
 		return filter;
 	}
 	
@@ -55,6 +56,7 @@ public class RequestFilterFactory {
 		filter = new PublishDocumentReceiveFilter(filter);
 //		filter = new PublishedDocumentsRequestFilter(filter);
 		filter = new SendDocumentsReceiveFilter(filter);
+		filter = new LogFilter(filter, true);
 		return filter;
 	}
 	

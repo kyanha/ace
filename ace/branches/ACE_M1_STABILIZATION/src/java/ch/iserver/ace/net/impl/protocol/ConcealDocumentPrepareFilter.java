@@ -50,6 +50,7 @@ public class ConcealDocumentPrepareFilter extends AbstractRequestFilter {
 
 	public void process(Request request) {
 		if (request.getType() == ProtocolConstants.CONCEAL) {
+			LOG.info("--> process()");
 			PublishedDocument doc = (PublishedDocument)request.getPayload();
 			try {
 				byte[] data = serializer.createNotification(ProtocolConstants.CONCEAL, doc);
@@ -64,7 +65,7 @@ public class ConcealDocumentPrepareFilter extends AbstractRequestFilter {
 						RemoteUserSession session = (RemoteUserSession)iter.next();
 						try {
 							ParticipantConnectionExt connection = session.getConnection();
-							connection.send(data, doc.toString(), listener);
+							connection.send(data, session.getUser().getUserDetails().getUsername(), listener);
 						} catch (ConnectionException ce) {
 							LOG.warn("connection failure for session ["+session.getUser().getUserDetails()+"] "+ce.getMessage());
 						}
@@ -74,7 +75,7 @@ public class ConcealDocumentPrepareFilter extends AbstractRequestFilter {
 			} catch (Exception e) {
 				LOG.error(e);
 			}
-			
+			LOG.info("<-- process()");
 		} else {
 			super.process(request);
 		}

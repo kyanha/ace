@@ -93,7 +93,7 @@ public class RequestImpl implements Request {
 		}
 		
 		public String toString() {
-			return "DocumentInfo("+docId+", "+name+", "+userId+")";
+			return "DocumentInfo("+docId+", '"+name+"', "+userId+")";
 		}
 	}
 	

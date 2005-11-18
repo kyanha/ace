@@ -53,6 +53,7 @@ public class PublishDocumentPrepareFilter extends AbstractRequestFilter {
 	 */
 	public void process(Request request) {
 		if (request.getType() == ProtocolConstants.PUBLISH) {
+			LOG.info("--> process()");
 			if (SessionManager.getInstance().size() > 0) {
 				Object doc = request.getPayload();
 				try {
@@ -75,7 +76,7 @@ public class PublishDocumentPrepareFilter extends AbstractRequestFilter {
 							RemoteUserSession session = (RemoteUserSession)iter.next();
 							try {
 								ParticipantConnectionExt connection = session.getConnection();
-								connection.send(data, doc.toString(), listener);
+								connection.send(data, session.getUser().getUserDetails().getUsername(), listener);
 							} catch (ConnectionException ce) {
 								LOG.warn("connection failure for session ["+session.getUser().getUserDetails().getUsername()+"] "+ce.getMessage());
 								LOG.debug("continue with next user.");
@@ -89,6 +90,7 @@ public class PublishDocumentPrepareFilter extends AbstractRequestFilter {
 			} else {
 				LOG.debug("no sessions available for publish.");
 			}
+			LOG.info("<-- process()");
 		} else { //Forward
 			super.process(request);
 		}

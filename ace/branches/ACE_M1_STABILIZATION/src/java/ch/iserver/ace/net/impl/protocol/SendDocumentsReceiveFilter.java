@@ -48,6 +48,7 @@ public class SendDocumentsReceiveFilter extends AbstractRequestFilter {
 	
 	public void process(Request request) {
 		if (request.getType() == ProtocolConstants.SEND_DOCUMENTS) {
+			LOG.info("--> process()");
 			List docs = (List) request.getPayload();
 			if (docs.size() > 0) {
 				Iterator iter = docs.iterator();
@@ -67,8 +68,9 @@ public class SendDocumentsReceiveFilter extends AbstractRequestFilter {
 				//confirm reception of msg				
 				request.getMessage().sendNUL();
 			} catch (Exception e) {
-				LOG.error("could not send Nul confirmation ["+e.getMessage()+"]");
+				LOG.error("could not send confirmation ["+e.getMessage()+"]");
 			}
+			LOG.info("<-- process()");
 		} else { //Forward
 			super.process(request);
 		}

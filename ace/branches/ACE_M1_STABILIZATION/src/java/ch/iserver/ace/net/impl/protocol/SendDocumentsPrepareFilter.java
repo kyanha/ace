@@ -47,13 +47,13 @@ private static Logger LOG = Logger.getLogger(SendDocumentsPrepareFilter.class);
 	}
 	
 	public void process(Request request) {
-		LOG.info("--> process("+request+")");
 		if (request.getType() == ProtocolConstants.SEND_DOCUMENTS) {
+			LOG.info("--> process()");
 			processImpl(request);
+			LOG.info("<-- process()");
 		} else { //forward
 			super.process(request);
 		}
-		LOG.info("<-- process()");
 	}
 
 	private void processImpl(Request request) {
