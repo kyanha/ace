@@ -260,7 +260,7 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 		}
 		
 		if (tmp.size() == 0) {
-			LOG.warn("all discovered documents discarded");
+			LOG.warn("all discovered documents discovered before");
 			return;
 		}
 		
