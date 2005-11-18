@@ -250,15 +250,26 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	 * @see ch.iserver.ace.net.NetworkServiceCallback#documentDiscovered(ch.iserver.ace.net.RemoteDocumentProxy[])
 	 */
 	public void documentDiscovered(RemoteDocumentProxy[] proxies) {
-		RemoteDocument[] documents = new RemoteDocument[proxies.length];
+		List tmp = new ArrayList(proxies.length);
 		for (int i = 0; i < proxies.length; i++) {
-			documents[i] = getDocumentRegistry().addDocument(proxies[i]);
+			if (getDocumentRegistry().getDocument(proxies[i].getId()) != null) {
+				LOG.warn("document with id " + proxies[i].getId() + " discovered before");
+			} else {
+				tmp.add(getDocumentRegistry().addDocument(proxies[i]));
+			}
 		}
+		
+		if (tmp.size() == 0) {
+			LOG.warn("all discovered documents discarded");
+			return;
+		}
+		
+		RemoteDocument[] documents = (RemoteDocument[]) tmp.toArray(new RemoteDocument[tmp.size()]);
 		DocumentListener[] list = (DocumentListener[]) listeners.getListeners(DocumentListener.class);
 		for (int i = 0; i < list.length; i++) {
 			DocumentListener listener = list[i];
 			listener.documentsDiscovered(documents);
-		}		
+		}
 	}
 	
 	/**
@@ -281,7 +292,7 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 		for (int i = 0; i < proxies.length; i++) {
 			RemoteDocument doc = getDocumentRegistry().removeDocument(proxies[i]);
 			if (doc == null) {
-				LOG.error("documentDiscarded called without previos documentDiscovered call");
+				LOG.error("documentDiscarded called without previous documentDiscovered call");
 			}
 			tmp.add(doc);
 		}
@@ -297,6 +308,10 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	 * @see ch.iserver.ace.net.NetworkServiceCallback#userDiscovered(ch.iserver.ace.net.RemoteUserProxy)
 	 */
 	public void userDiscovered(RemoteUserProxy proxy) {
+		if (getUserRegistry().getUser(proxy.getId()) != null) {
+			LOG.warn("user with id " + proxy.getId() + " discovered before: discarding notification");
+			return;
+		}
 		RemoteUser user = getUserRegistry().addUser(proxy);
 		UserListener[] listeners = (UserListener[]) this.listeners.getListeners(UserListener.class);
 		for (int i = 0; i < listeners.length; i++) {
