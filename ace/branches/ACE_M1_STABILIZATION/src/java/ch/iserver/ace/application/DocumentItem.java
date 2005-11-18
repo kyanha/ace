@@ -55,6 +55,7 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 	private File file;
 
 	private StyledDocument editorDocument;
+//	private SyntaxDocument editorDocument;
 	private RemoteDocument remoteDocument;
 	private Session session;
 	private SessionCallback sessionCallback;
@@ -173,6 +174,7 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 	private void createEditorDocument() {
 		type = LOCAL;
 		editorDocument = new DefaultStyledDocument();
+//		editorDocument = new SyntaxDocument();
 		editorDocument.addDocumentListener(new DocumentListener() {
 			public void changedUpdate(DocumentEvent e) {
 			}
@@ -225,6 +227,8 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 	public void propertyChange(PropertyChangeEvent evt) {
 		if(evt.getPropertyName().equals(RemoteDocument.TITLE_PROPERTY)) {
 			title = (String)evt.getNewValue();
+			extendedTitle = getRemoteDocument().getPublisher().getName() + " - " + title;
+			toolTip = getRemoteDocument().getPublisher().getName() + " - " + title;
 			firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.getNewValue());
 		} else if (RemoteUser.NAME_PROPERTY.equals(evt.getPropertyName())) {
 			firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.getNewValue());
