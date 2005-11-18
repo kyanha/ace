@@ -86,7 +86,7 @@ public class PublishedDocument implements DocumentServer {
 	}
 	
 	public String toString() {
-		return "PublishedDocument("+docId+", "+details.getTitle()+")";
+		return "PublishedDocument("+docId+", '"+details.getTitle()+"')";
 	}
 
 	/********************************************/

@@ -86,13 +86,13 @@ public class BEEPSessionListener extends Thread implements SessionListener {
 
 
 	public void sessionClosed(SessionEvent arg0) {
-		LOG.debug("sesion closed");
+		LOG.debug("session closed");
 		
 	}
 
 
 	public void sessionReset(SessionResetEvent arg0) {
-		LOG.debug("sesion reset");
+		LOG.debug("session reset");
 		
 	}
 }

@@ -62,7 +62,7 @@ public class PublishDocumentPrepareFilter extends AbstractRequestFilter {
 					
 					RemoteUserProxyExt[] peers = discoveryManager.getPeersWithNoSession();
 					SessionManager manager = SessionManager.getInstance();
-					LOG.debug("initiate sessions with "+peers.length+" peers; "+manager.size()+"sessions already initiated.");
+					LOG.debug("initiate sessions with "+peers.length+" peers; "+manager.size()+" sessions already initiated.");
 					for (int i = 0; i < peers.length; i++) {
 						RemoteUserProxyExt next = peers[i];
 						manager.createSession(next);
