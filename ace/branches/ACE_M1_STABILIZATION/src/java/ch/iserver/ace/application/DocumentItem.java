@@ -175,10 +175,6 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 		editorDocument = new DefaultStyledDocument();
 		editorDocument.addDocumentListener(new DocumentListener() {
 			public void changedUpdate(DocumentEvent e) {
-				if(!isDirty) {
-					isDirty = true;
-					firePropertyChange(DIRTY_PROPERTY, "CLEAN", "DIRTY");
-				}
 			}
 
 			public void insertUpdate(DocumentEvent e) {
