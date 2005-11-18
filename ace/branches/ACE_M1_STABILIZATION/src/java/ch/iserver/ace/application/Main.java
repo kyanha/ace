@@ -21,12 +21,15 @@
 
 package ch.iserver.ace.application;
 
+import java.lang.reflect.InvocationTargetException;
+
+import javax.swing.SwingUtilities;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import ch.iserver.ace.application.action.ToggleFullScreenEditingAction;
 import ch.iserver.ace.UserDetails;
-import ch.iserver.ace.application.editor.DummyEditor;
+import ch.iserver.ace.application.action.ToggleFullScreenEditingAction;
 import ch.iserver.ace.application.preferences.PreferencesStore;
 import ch.iserver.ace.collaboration.CollaborationService;
 import ch.iserver.ace.util.UUID;
@@ -40,7 +43,7 @@ public class Main {
 	};
 	
 	public static void main(String[] args) {		
-		ApplicationContext context = new ClassPathXmlApplicationContext(CONTEXT_FILES);
+		final ApplicationContext context = new ClassPathXmlApplicationContext(CONTEXT_FILES);
 
 		// get application factory
 		ApplicationFactory applicationFactory = (ApplicationFactory)context.getBean("appFactory");
@@ -87,7 +90,17 @@ public class Main {
 		collaborationService.addDocumentListener((BrowseViewController)context.getBean("browseViewController"));
 		collaborationService.start();
 		
-		((DocumentManager) context.getBean("documentManager")).newDocument();
+		try {
+			SwingUtilities.invokeAndWait(new Runnable() {
+				public void run() {
+					((DocumentManager) context.getBean("documentManager")).newDocument();
+				}
+			});
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private static void customize(String classname, ApplicationController controller) {

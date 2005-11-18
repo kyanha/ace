@@ -23,7 +23,6 @@ package ch.iserver.ace.application;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 
 import javax.swing.SwingUtilities;
@@ -117,21 +116,9 @@ public class DocumentManagerImpl implements ItemSelectionChangeListener, Prefere
 	 * @see ch.iserver.ace.application.DocumentManager#newDocument()
 	 */
 	public void newDocument() {
-		try {
-			SwingUtilities.invokeAndWait(new Runnable() {
-				public void run() {
-					DocumentItem newItem = new DocumentItem("Untitled Document " + counter++);
-					documentController.addDocument(newItem);
-					documentController.setSelectedItem(newItem);
-				}
-			});
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		DocumentItem newItem = new DocumentItem("Untitled Document " + counter++);
+		documentController.addDocument(newItem);
+		documentController.setSelectedItem(newItem);
 	}
 
 	/**
