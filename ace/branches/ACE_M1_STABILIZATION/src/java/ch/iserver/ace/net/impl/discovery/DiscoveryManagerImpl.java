@@ -108,6 +108,10 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 		return (RemoteUserProxyExt) remoteUserProxies.get(userid);
 	}
 	
+	public int getSize() {
+		return remoteUserProxies.size();
+	}
+	
 	
 	/*****************************************************/
 	/** Methods from interface DiscoveryCallbackAdapter **/

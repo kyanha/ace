@@ -54,12 +54,12 @@ public class PublishDocumentPrepareFilter extends AbstractRequestFilter {
 	public void process(Request request) {
 		if (request.getType() == ProtocolConstants.PUBLISH) {
 			LOG.info("--> process()");
-			if (SessionManager.getInstance().size() > 0) {
+			DiscoveryManager discoveryManager = DiscoveryManagerFactory.getDiscoveryManager(null);
+			if (discoveryManager.getSize() > 0) {
 				Object doc = request.getPayload();
 				try {
 					byte[] data = serializer.createNotification(ProtocolConstants.PUBLISH, doc);
 					
-					DiscoveryManager discoveryManager = DiscoveryManagerFactory.getDiscoveryManager(null);
 					RemoteUserProxyExt[] peers = discoveryManager.getPeersWithNoSession();
 					SessionManager manager = SessionManager.getInstance();
 					LOG.debug("no session for "+peers.length+" peers; session initiated with "+manager.size()+" peers.");

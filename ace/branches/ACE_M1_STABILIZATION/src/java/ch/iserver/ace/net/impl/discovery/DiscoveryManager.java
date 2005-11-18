@@ -38,4 +38,11 @@ public interface DiscoveryManager {
 	
 	public RemoteUserProxyExt getUser(String userId);
 	
+	/**
+	 * Gets the number of discovered users.
+	 * 
+	 * @return the number of discovered users
+	 */
+	public int getSize();
+	
 }
