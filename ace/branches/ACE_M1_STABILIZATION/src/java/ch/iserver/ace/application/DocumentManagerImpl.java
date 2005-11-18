@@ -23,8 +23,8 @@ package ch.iserver.ace.application;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.SwingUtilities;
@@ -96,7 +96,7 @@ public class DocumentManagerImpl implements ItemSelectionChangeListener, Prefere
 	 * @see ch.iserver.ace.application.DocumentManager#getDirtyDocuments()
 	 */
 	public List getDirtyDocuments() {
-		List result = new LinkedList();
+		List result = new ArrayList();
 		
 		EventList source = getDocuments();
 		source.getReadWriteLock().readLock().lock();

@@ -113,6 +113,7 @@ public class ApplicationControllerImpl implements ApplicationController, Applica
 					try {
 						if (saveItem(item)) {
 							getDocumentManager().closeDocument(item);
+							it.remove();
 						}
 					} catch (IOException e) {
 						failed.put(item, e);
@@ -124,7 +125,7 @@ public class ApplicationControllerImpl implements ApplicationController, Applica
 					getDialogController().showSaveFilesFailed(failed);
 				
 				// only if there are no more open documents... 
-				} else if (getDocumentManager().getDocuments().size() == 0) {
+				} else if (saveSet.size() == 0){
 					shutdown();
 				}
 			}

@@ -27,6 +27,7 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -54,17 +55,22 @@ public class SaveFilesDialog extends TitledDialog {
 	private JTable table;
 	private SaveFilesTableModel tableModel;
 	
-	public SaveFilesDialog(Frame owner, LocaleMessageSource messages, List files) {
+	public SaveFilesDialog(Frame owner, LocaleMessageSource messages) {
 		super(owner, messages,
 		           messages.getMessage("dSaveFilesTitle"),
 		           messages.getIcon("iSaveFilesTitle"));
 		setModal(true);
 		setMessage(messages.getMessage("dSaveFilesMessage"));
-		tableModel = new SaveFilesTableModel(files);
+		tableModel = new SaveFilesTableModel(new ArrayList());
 	}
 	
 	public Set getSelectedFiles() {
 		return tableModel.getCheckedFiles();
+	}
+	
+	public void setCandidates(List candidates) {
+		tableModel = new SaveFilesTableModel(candidates);
+		table.setModel(tableModel);
 	}
 	
 	/**
