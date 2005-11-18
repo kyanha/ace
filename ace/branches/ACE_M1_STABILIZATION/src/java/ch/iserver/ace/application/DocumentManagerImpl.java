@@ -65,13 +65,6 @@ public class DocumentManagerImpl implements ItemSelectionChangeListener, Prefere
 		// get default encoding
 		defaultEncoding = preferences.get(PreferencesStore.CHARSET_KEY, "ISO-8859-1");
 		preferences.addPreferenceChangeListener(this);
-		
-		// create new empty document
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				newDocument();
-			}
-		});
 	}
 	
 	public void setCollaborationService(CollaborationService collaborationService) {
