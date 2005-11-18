@@ -151,6 +151,10 @@ public class ApplicationControllerImpl implements ApplicationController, Applica
 			getDocumentManager().closeDocument(item);
 		}
 	}
+	
+	public void closeAllDocuments() {
+		System.out.println("method has to be implemented in appcontroller (TODO: rasss)");
+	}
 
 	public void openDocument() {
 		DialogResult result = getDialogController().showOpenDocuments();
