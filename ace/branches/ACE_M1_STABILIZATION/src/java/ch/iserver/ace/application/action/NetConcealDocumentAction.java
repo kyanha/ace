@@ -22,12 +22,15 @@
 package ch.iserver.ace.application.action;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
 
 import ch.iserver.ace.application.DocumentItem;
 import ch.iserver.ace.application.DocumentManager;
 import ch.iserver.ace.application.DocumentViewController;
 import ch.iserver.ace.application.ItemSelectionChangeEvent;
 import ch.iserver.ace.application.LocaleMessageSource;
+import java.awt.Toolkit;
+import javax.swing.KeyStroke;
 
 
 
@@ -38,6 +41,7 @@ public class NetConcealDocumentAction extends DocumentItemSelectionChangeAction 
 	public NetConcealDocumentAction(LocaleMessageSource messageSource, DocumentManager documentManager,
 			DocumentViewController viewController) {
 		super(messageSource.getMessage("mNetConceal"), messageSource.getIcon("iMenuNetConceal"), viewController);
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke('C', InputEvent.SHIFT_MASK | Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 		putValue(SHORT_DESCRIPTION, messageSource.getMessage("mNetConcealTT"));
 		this.documentManager = documentManager;
 		setEnabled(false);
