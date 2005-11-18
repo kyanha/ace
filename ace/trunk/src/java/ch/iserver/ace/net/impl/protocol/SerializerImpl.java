@@ -24,6 +24,7 @@ package ch.iserver.ace.net.impl.protocol;
 import java.io.ByteArrayOutputStream;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -110,21 +111,23 @@ public class SerializerImpl implements Serializer, ProtocolConstants {
 			ByteArrayOutputStream output = new ByteArrayOutputStream();
 			StreamResult result = new StreamResult(output);
 			if (type == PUBLISHED_DOCUMENTS) {
-				List docs = (List)data;
 				handler.setResult(result);
 				handler.startDocument();
 				AttributesImpl attrs = new AttributesImpl();
 				handler.startElement("", "", "ace", attrs);
 				handler.startElement("", "", "response", attrs);
 				handler.startElement("", "", RESPONSE_PUBLISHED_DOCUMENTS, attrs);
-				Iterator docIter = docs.iterator();
-				while (docIter.hasNext()) {
-					PublishedDocument doc = (PublishedDocument)docIter.next();
-					attrs = new AttributesImpl();
-					attrs.addAttribute("", "", "id", "", doc.getId());
-					attrs.addAttribute("", "", "name", "", doc.getDocumentDetails().getTitle());
-					handler.startElement("", "", "doc", attrs);
-					handler.endElement("", "", "doc");
+				Map docs = (Map)data;
+				synchronized(docs) {
+					Iterator docIter = docs.values().iterator();
+					while (docIter.hasNext()) {
+						PublishedDocument doc = (PublishedDocument)docIter.next();
+						attrs = new AttributesImpl();
+						attrs.addAttribute("", "", "id", "", doc.getId());
+						attrs.addAttribute("", "", "name", "", doc.getDocumentDetails().getTitle());
+						handler.startElement("", "", "doc", attrs);
+						handler.endElement("", "", "doc");
+					}
 				}
 				handler.endElement("", "", RESPONSE_PUBLISHED_DOCUMENTS);
 				handler.endElement("", "", "response");
@@ -149,12 +152,18 @@ public class SerializerImpl implements Serializer, ProtocolConstants {
 			AttributesImpl attrs = new AttributesImpl();
 			handler.startElement("", "", "ace", attrs);
 			
-			if (type == PUBLISH) {
+			if (type == SEND_DOCUMENTS) {
+				Map docs = (Map) data;
+				generateSendDocumentsXML(handler, docs);
+			} else if (type == PUBLISH) {
 				PublishedDocument doc = (PublishedDocument)data;	
 				generatePublishXML(handler, doc);
 			} else if (type == CONCEAL) {
 				PublishedDocument doc = (PublishedDocument)data;	
 				generateConcealXML(handler, doc);
+			} else if (type == DOCUMENT_DETAILS_CHANGED) {
+				PublishedDocument doc = (PublishedDocument)data;
+				generateDocumentDetailsChangedXML(handler, doc);
 			} else {
 				LOG.error("unknown notification type ["+type+"]");
 			}
@@ -167,7 +176,44 @@ public class SerializerImpl implements Serializer, ProtocolConstants {
 			throw new SerializeException(e.getMessage());
 		}
 	}
-	
+	//TODO: write unit test
+	private void generateDocumentDetailsChangedXML(TransformerHandler handler, PublishedDocument doc) throws Exception {
+		AttributesImpl attrs = new AttributesImpl();
+		handler.startElement("", "", "notification", attrs);
+		String userid = NetworkServiceImpl.getInstance().getUserId();
+		attrs.addAttribute("", "", "userid", "", userid);	
+		handler.startElement("", "", TAG_DOCUMENT_DETAILS_CHANGED, attrs);
+		attrs = new AttributesImpl();
+		attrs.addAttribute("", "", "id", "", doc.getId());
+		attrs.addAttribute("", "", "name", "", doc.getDocumentDetails().getTitle());
+		handler.startElement("", "", "doc", attrs);
+		handler.endElement("", "", "doc");
+		handler.endElement("", "", TAG_DOCUMENT_DETAILS_CHANGED);
+		handler.endElement("", "", "notification");
+	}
+
+	private void generateSendDocumentsXML(TransformerHandler handler, Map docs) throws Exception {
+		AttributesImpl attrs = new AttributesImpl();
+		handler.startElement("", "", "notification", attrs);
+		String userid = NetworkServiceImpl.getInstance().getUserId();
+		attrs.addAttribute("", "", "userid", "", userid);	
+		handler.startElement("", "", TAG_PUBLISHED_DOCS, attrs);
+		synchronized(docs) {
+			Iterator docIter = docs.values().iterator();
+			while (docIter.hasNext()) {
+				PublishedDocument doc = (PublishedDocument)docIter.next();
+				attrs = new AttributesImpl();
+				attrs.addAttribute("", "", "id", "", doc.getId());
+				attrs.addAttribute("", "", "name", "", doc.getDocumentDetails().getTitle());
+				handler.startElement("", "", "doc", attrs);
+				handler.endElement("", "", "doc");
+			}
+		}
+		handler.endElement("", "", TAG_PUBLISHED_DOCS);
+		handler.endElement("", "", "notification");
+		handler.endDocument();
+	}
+
 	private void generatePublishXML(TransformerHandler handler, PublishedDocument doc) throws Exception {
 		AttributesImpl attrs = new AttributesImpl();
 		handler.startElement("", "", "notification", attrs);

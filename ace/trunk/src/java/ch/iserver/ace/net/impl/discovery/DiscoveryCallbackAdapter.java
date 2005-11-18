@@ -21,56 +21,17 @@
 package ch.iserver.ace.net.impl.discovery;
 
 import java.net.InetAddress;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.log4j.Logger;
 
 import ch.iserver.ace.net.impl.DiscoveryCallback;
-import ch.iserver.ace.net.impl.MutableUserDetails;
-import ch.iserver.ace.net.impl.RemoteUserProxyExt;
-import ch.iserver.ace.net.impl.RemoteUserProxyImpl;
-import ch.iserver.ace.util.ParameterValidator;
 
-/**
- * 
- */
-class DiscoveryCallbackAdapter {
-	
-	private static Logger LOG = Logger.getLogger(DiscoveryCallbackAdapter.class);
+interface DiscoveryCallbackAdapter {
 
-	private DiscoveryCallback forward;
-	private Map remoteUserProxies; 	//id to proxy
-	private Map services;				//service name to id
-	//TODO: service to proxy??
-	
-	/**
-	 * 
-	 */
-	public DiscoveryCallbackAdapter(DiscoveryCallback forward) {
-		this();
-		ParameterValidator.notNull("forward", forward);
-		this.forward = forward;
-	}
-	
-	/**
-	 * 
-	 *
-	 */
-	public DiscoveryCallbackAdapter() {
-		remoteUserProxies = new HashMap();
-		services = new HashMap();
-	}
-	
 	/**
 	 * 
 	 * @param forward
 	 */
-	public void setDiscoveryCallback(DiscoveryCallback forward) {
-		ParameterValidator.notNull("forward", forward);
-		this.forward = forward;
-	}
-	
+	public void setDiscoveryCallback(DiscoveryCallback forward);
+
 	/**
 	 * 
 	 * @param serviceName
@@ -78,86 +39,34 @@ class DiscoveryCallbackAdapter {
 	 * @param userId
 	 * @param port
 	 */
-	public void userDiscovered(String serviceName, String username, String userId, int port) {
-		ParameterValidator.notNull("serviceName", serviceName);
-		ParameterValidator.notNull("username", username);
-		ParameterValidator.notNull("userId", userId);
-		
-		MutableUserDetails details = new MutableUserDetails(username);
-		details.setPort(port);
-		
-		RemoteUserProxyImpl proxy = new RemoteUserProxyImpl(userId, details);
-		remoteUserProxies.put(userId, proxy);
-		services.put(serviceName, userId);
-		
-		forward.userDiscovered(proxy);
-	}
+	public void userDiscovered(String serviceName, String username,
+			String userId, int port);
 
 	/**
 	 * 
 	 * @param serviceName
 	 */
-	public void userDiscarded(String serviceName) {
-		ParameterValidator.notNull("serviceName", serviceName);
-		
-		String userId = (String)services.remove(serviceName);
-		if (userId != null) {
-			RemoteUserProxyExt user = (RemoteUserProxyExt)remoteUserProxies.remove(userId);
-			forward.userDiscarded(user);	
-		} else { 
-			LOG.warn("userid for service ["+serviceName+"] not found");
-		}
-	}
+	public void userDiscarded(String serviceName);
 
 	/**
 	 * 
 	 * @param serviceName
 	 * @param userName
 	 */
-	public void userNameChanged(String serviceName, String userName) {
-		ParameterValidator.notNull("serviceName", serviceName);
-		ParameterValidator.notNull("userName", userName);
-		
-		String userId = (String)services.get(serviceName);
-		if (userId != null) {
-			RemoteUserProxyExt proxy = (RemoteUserProxyExt)remoteUserProxies.get(userId);
-			String oldName = proxy.getUserDetails().getUsername();
-			if (!oldName.equals(userName)) {
-				proxy.getUserDetails().setUsername(userName);
-				forward.userDetailsChanged(proxy);
-			}
-		} else {
-			LOG.warn("username change received for unknown user ["+serviceName+"]");
-		}
-	}
-	
+	public void userNameChanged(String serviceName, String userName);
+
 	/**
 	 * 
 	 * @param serviceName
 	 * @param address
 	 */
-	public void userAddressResolved(String serviceName, InetAddress address) {
-		ParameterValidator.notNull("serviceName", serviceName);
-		ParameterValidator.notNull("address", address);
-		
-		String userId = (String)services.get(serviceName);
-		if (userId != null) {
-			RemoteUserProxyExt proxy = (RemoteUserProxyExt)remoteUserProxies.get(userId);
-			MutableUserDetails details = (MutableUserDetails)proxy.getUserDetails();
-			details.setAddress(address);
-			forward.userDetailsChanged(proxy);
-		} else {
-			LOG.warn("Host address received for unknown user ["+serviceName+"]");
-		}
-	}
-	
+	public void userAddressResolved(String serviceName, InetAddress address);
+
 	/**
 	 * 
 	 * @param serviceName
 	 * @return boolean true iff 
 	 */
-	public boolean isServiceKnown(String serviceName) {
-		return services.containsKey(serviceName);
-	}
+	public boolean isServiceKnown(String serviceName);
 
 }

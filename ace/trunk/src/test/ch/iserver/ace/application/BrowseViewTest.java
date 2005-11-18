@@ -45,7 +45,7 @@ public class BrowseViewTest extends TestCase {
 
 		// test fixture
 		BrowseViewController controller = new BrowseViewController();
-		View view = new BrowseView(controller, new LocaleMessageSourceStub());
+		View view = new BrowseView(new LocaleMessageSourceStub(), controller);
 		
 		Item[] items = new Item[3];
 		
@@ -83,7 +83,7 @@ public class BrowseViewTest extends TestCase {
 		
 		// test fixture
 		BrowseViewController controller = new BrowseViewController();
-		BrowseView view = new BrowseView(controller, new LocaleMessageSourceStub());
+		BrowseView view = new BrowseView(new LocaleMessageSourceStub(), controller);
 
 		RemoteUser user = new RemoteUserStub("X", "X");
 		MutableRemoteDocument document = new RemoteDocumentStub("X", "X", user);

@@ -24,6 +24,7 @@ package ch.iserver.ace.net;
 import java.net.InetAddress;
 
 import ch.iserver.ace.DocumentDetails;
+import ch.iserver.ace.ServerInfo;
 import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.algorithm.TimestampFactory;
 
@@ -37,6 +38,30 @@ import ch.iserver.ace.algorithm.TimestampFactory;
  * layer and the application should only access that layer.</p>
  */
 public interface NetworkService {
+	
+	/**
+	 * @return
+	 */
+	ServerInfo getServerInfo();
+
+	/**
+	 * Called by the collaboration layer to start the network layer.
+	 */
+	void start();
+	
+	/**
+	 * Called by the collaboration layer to stop the network layer.
+	 */
+	void stop();
+	
+	/**
+	 * Sets the user id of the local user. This method has to be called before
+	 * starting the service with the {@link #start()} method. Note, it is
+	 * an error to set the user id twice!
+	 * 
+	 * @param id the id of the local user
+	 */
+	void setUserId(String id);
 	
 	/**
 	 * Sets the UserDetails for the local user.

@@ -54,8 +54,8 @@ public class OSXCustomizer extends ApplicationAdapter implements Customizer {
 	}
 
 	public void handlePreferences(ApplicationEvent e) {
-		getController().showPreferences();
 		e.setHandled(true);
+		getController().showPreferences();
 	}
 	
 	public void handleQuit(ApplicationEvent e) {

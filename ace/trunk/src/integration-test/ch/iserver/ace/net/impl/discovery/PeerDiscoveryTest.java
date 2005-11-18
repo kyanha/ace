@@ -35,6 +35,7 @@ import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.net.impl.Discovery;
 import ch.iserver.ace.net.impl.DiscoveryCallback;
+import ch.iserver.ace.net.impl.MutableUserDetails;
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;
 import ch.iserver.ace.net.impl.RemoteUserProxyImpl;
 
@@ -77,19 +78,19 @@ public class PeerDiscoveryTest extends TestCase {
 		discovery.setUserId("user-id");
 		
 		//problem: ordering of userDiscovered calls not predictable
-		RemoteUserProxyExt rem1 = new RemoteUserProxyImpl("peer1"+ports[0], new UserDetails("peer1", null, ports[0]));
+		RemoteUserProxyExt rem1 = new RemoteUserProxyImpl("peer1"+ports[0], new MutableUserDetails("peer1", null, ports[0]));
 		callback.userDiscovered(rem1);
 		//note: InetAddress will not be compared in comparison, c.f. RemoteUserProxyMatcher
-		callback.userDetailsChanged(rem1);
-		RemoteUserProxyExt rem2 = new RemoteUserProxyImpl("peer2"+ports[1], new UserDetails("peer2", null, ports[1]));
+		callback.userDiscoveryCompleted(rem1);
+		RemoteUserProxyExt rem2 = new RemoteUserProxyImpl("peer2"+ports[1], new MutableUserDetails("peer2", null, ports[1]));
 		callback.userDiscovered(rem2);
-		callback.userDetailsChanged(rem2);
-		RemoteUserProxyExt rem3 = new RemoteUserProxyImpl("peer3"+ports[2], new UserDetails("peer3", null, ports[2]));
+		callback.userDiscoveryCompleted(rem2);
+		RemoteUserProxyExt rem3 = new RemoteUserProxyImpl("peer3"+ports[2], new MutableUserDetails("peer3", null, ports[2]));
 		callback.userDiscovered(rem3);
-		callback.userDetailsChanged(rem3);
-		RemoteUserProxyExt rem4 = new RemoteUserProxyImpl("peer4"+ports[3], new UserDetails("peer4", null, ports[3]));
+		callback.userDiscoveryCompleted(rem3);
+		RemoteUserProxyExt rem4 = new RemoteUserProxyImpl("peer4"+ports[3], new MutableUserDetails("peer4", null, ports[3]));
 		callback.userDiscovered(rem4);
-		callback.userDetailsChanged(rem4);
+		callback.userDiscoveryCompleted(rem4);
 		
 		discoveryCallbackCtrl.replay();
 		
@@ -113,7 +114,6 @@ public class PeerDiscoveryTest extends TestCase {
 		
 		discoveryCallbackCtrl.replay();
 		
-		System.out.println("stop registered peers.");
 		registrar.stop();
 		
 		try {
@@ -137,7 +137,7 @@ public class PeerDiscoveryTest extends TestCase {
 	
 	
 	private PeerDiscovery createPeerDiscovery(DiscoveryCallback callback) {
-		DiscoveryCallbackAdapter adapter = new DiscoveryCallbackAdapter(callback);
+		DiscoveryCallbackAdapter adapter = new DiscoveryManagerImpl(callback);
 		AbstractQueryListener ipListener = new IPQueryListener(adapter);
 		AbstractQueryListener txtListener = new TXTQueryListener(adapter);
 		ResolveListener resolveListener = new ResolveListenerImpl(adapter, ipListener, txtListener);
@@ -160,11 +160,11 @@ class RemoteUserProxyMatcher implements ArgumentsMatcher {
 
 		//InetAddresss of UserDetails is ignored because of portability for this integration test
 		public boolean matches(Object[] arg0, Object[] arg1) {
-			RemoteUserProxy proxy0 = (RemoteUserProxy)arg0[0];
-			RemoteUserProxy proxy1 = (RemoteUserProxy)arg1[0];
+			RemoteUserProxyExt proxy0 = (RemoteUserProxyExt) arg0[0];
+			RemoteUserProxyExt proxy1 = (RemoteUserProxyExt) arg1[0];
 			boolean result = proxy0.getId().equals(proxy1.getId()) &&
-				proxy0.getUserDetails().getUsername().equals(proxy1.getUserDetails().getUsername()) &&
-				proxy0.getUserDetails().getPort() == proxy1.getUserDetails().getPort();
+				proxy0.getMutableUserDetails().getUsername().equals(proxy1.getMutableUserDetails().getUsername()) &&
+				proxy0.getMutableUserDetails().getPort() == proxy1.getMutableUserDetails().getPort();
 			return result;
 		}
 

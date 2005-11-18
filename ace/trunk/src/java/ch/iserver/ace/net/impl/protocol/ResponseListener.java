@@ -29,6 +29,7 @@ import org.beepcore.beep.core.InputDataStream;
 import org.beepcore.beep.core.Message;
 import org.beepcore.beep.core.MessageMSG;
 import org.beepcore.beep.core.ReplyListener;
+import org.beepcore.beep.transport.tcp.TCPSession;
 import org.beepcore.beep.util.BufferSegment;
 
 import ch.iserver.ace.net.impl.protocol.DocumentDiscoveryPrepareFilter.QueryInfo;
@@ -71,7 +72,6 @@ public class ResponseListener implements ReplyListener {
 	 */
 	public void receiveRPY(Message message) throws AbortChannelException {
 		byte[] data = read(message);
-		
 		try {
 			QueryInfo info = (QueryInfo) message.getChannel().getAppData();
 			handler.setMetaData(info);
@@ -79,8 +79,6 @@ public class ResponseListener implements ReplyListener {
 			Request request = (Request) handler.getResult();
 			if (message.getMessageType() == Message.MESSAGE_TYPE_MSG) {
 				request.setMessage((MessageMSG) message);
-			} else {
-				LOG.warn("message not set in request, type is ["+message.getMessageType()+"]");
 			}
 			filter.process(request);
 		} catch (DeserializeException de) {
@@ -94,16 +92,15 @@ public class ResponseListener implements ReplyListener {
 	 * @see org.beepcore.beep.core.ReplyListener#receiveERR(org.beepcore.beep.core.Message)
 	 */
 	public void receiveERR(Message message) throws AbortChannelException {
-		// TODO Auto-generated method stub
-
+		LOG.error("receiveERR("+message+")");
 	}
 
 	/* (non-Javadoc)
 	 * @see org.beepcore.beep.core.ReplyListener#receiveANS(org.beepcore.beep.core.Message)
 	 */
 	public void receiveANS(Message message) throws AbortChannelException {
-		// TODO Auto-generated method stub
-
+		//should not receive any ANS message
+		LOG.debug("receivedANS() -> not intended!");
 	}
 
 	/* (non-Javadoc)
@@ -111,18 +108,16 @@ public class ResponseListener implements ReplyListener {
 	 */
 	public void receiveNUL(Message message) throws AbortChannelException {
 		Object appData = message.getChannel().getAppData();
-		LOG.debug("received NUL message for ["+appData+"] from ["+message.toString()+"]");
+		TCPSession session = (TCPSession) message.getChannel().getSession();
+		LOG.debug("received confirmation from ["+appData+", "+session.getSocket()+"]");
 	}
 	
 	private byte[] read(Message message) throws AbortChannelException {
-		LOG.debug("--> read("+message+")");
 		InputDataStream input = message.getDataStream();
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		do {
 			try {
-				LOG.debug("waitForNextSegment()");
 				BufferSegment b = input.waitForNextSegment();
-				LOG.debug("ok " + b.getLength());
 				if (b == null) {
 					out.flush();
 					break;
@@ -134,8 +129,7 @@ public class ResponseListener implements ReplyListener {
 			}
 		} while (!input.isComplete());
 
-		LOG.debug("read " + out.size() + " bytes from input.");
-		LOG.debug("<-- read("+message+")");
+		LOG.debug("read " + out.size() + " bytes from input stream.");
 		return out.toByteArray();
 	}
 

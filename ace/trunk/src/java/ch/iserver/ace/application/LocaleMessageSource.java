@@ -21,6 +21,8 @@
 
 package ch.iserver.ace.application;
 
+import java.net.URL;
+
 import javax.swing.ImageIcon;
 
 
@@ -29,5 +31,10 @@ public interface LocaleMessageSource {
 
 	String getMessage(String code);
 	
+	String getMessage(String code, Object[] values);
+	
 	ImageIcon getIcon(String code);
+	
+	URL getResource(String code);
+	
 }

@@ -23,6 +23,9 @@ package ch.iserver.ace.application;
 
 import java.awt.BorderLayout;
 
+import javax.swing.AbstractAction;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -35,20 +38,22 @@ import ca.odell.glazedlists.ObservableElementList;
 import ca.odell.glazedlists.SortedList;
 import ca.odell.glazedlists.swing.EventListModel;
 import ca.odell.glazedlists.swing.EventSelectionModel;
-
+import java.util.List;
 import com.jgoodies.uif_lite.panel.SimpleInternalFrame;
 
 
 
 public class ParticipantView extends ViewImpl {
 
-	public ParticipantView(ParticipantViewController controller, LocaleMessageSource messageSource) {
+	private JToolBar participantToolBar;
+	
+	public ParticipantView(LocaleMessageSource messageSource, ParticipantViewController controller) {
 		super(controller, messageSource);
 		// get view source
 		setSourceList(controller.getParticipantSourceList());
 		
 		// create view toolbar & actions
-		JToolBar participantToolBar = new JToolBar();
+		participantToolBar = new JToolBar();
 
 		// create list
 		SortedList participantSortedList = new SortedList(new ObservableElementList(getSourceList(), GlazedLists.beanConnector(ParticipantItem.class)));
@@ -88,6 +93,14 @@ public class ParticipantView extends ViewImpl {
 			selectedItem = (ParticipantItem)getEventListModel().getElementAt(getEventSelectionModel().getMinSelectionIndex());
 		} catch(ArrayIndexOutOfBoundsException e) {}
 		return selectedItem;
+	}
+
+	public void setToolBarActions(List toolBarActions) {
+		for(int i = 0; i < toolBarActions.size(); i++) {
+			JButton toolBarButton = participantToolBar.add(((AbstractAction)toolBarActions.get(i)));
+			toolBarButton.setBorder(BorderFactory.createEmptyBorder());
+			participantToolBar.addSeparator();
+		}
 	}
 
 }

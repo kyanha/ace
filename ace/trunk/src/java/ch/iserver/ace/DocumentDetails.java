@@ -69,4 +69,8 @@ public class DocumentDetails {
 		return hash;
 	}
 	
+	public String toString() {
+		return "DocumentDetails('"+title+"')";
+	}
+	
 }

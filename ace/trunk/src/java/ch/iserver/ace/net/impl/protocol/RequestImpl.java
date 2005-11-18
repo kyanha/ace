@@ -30,10 +30,12 @@ public class RequestImpl implements Request {
 
 	private int type;
 	private Object payload;
+	private String userid;
 	private MessageMSG message;
 	
-	public RequestImpl(int type, Object payload) {
+	public RequestImpl(int type, String userid, Object payload) {
 		this.type = type;
+		this.userid = userid;
 		this.payload = payload;
 	}
 
@@ -53,8 +55,13 @@ public class RequestImpl implements Request {
 		return message;
 	}
 	
+
+	public String getUserId() {
+		return userid;
+	}
+	
 	public String toString() {
-		return "RequestImpl("+type+", "+payload+", "+message+")";
+		return "RequestImpl(" + type + ", " + userid + ", " + payload + ")";
 	}
 	
 	/**
@@ -64,7 +71,7 @@ public class RequestImpl implements Request {
 	 * @see Request
 	 */
 	static class DocumentInfo {
-		
+		//TODO: user id can be removed, since we have it in the Request
 		private String docId, name, userId;
 		
 		public DocumentInfo(String docId, String name, String userId) {
@@ -86,7 +93,7 @@ public class RequestImpl implements Request {
 		}
 		
 		public String toString() {
-			return "DocumentInfo("+docId+", "+name+", "+userId+")";
+			return "DocumentInfo("+docId+", '"+name+"', "+userId+")";
 		}
 	}
 	

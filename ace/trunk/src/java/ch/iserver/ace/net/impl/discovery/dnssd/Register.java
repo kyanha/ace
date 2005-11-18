@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:Register.java 1205 2005-11-14 07:57:10Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -58,6 +58,7 @@ public class Register extends DNSSDCall {
 	 */
 	protected Object makeCall() throws DNSSDCallException {
 		try {
+			//TODO: set host as on some hosts there may be multiple interfaces and IP addresses respectively 
 			return DNSSD.register(0, 0, serviceName, registrationType, "", "", port, txt, listener);
 		} catch (DNSSDException de) {
 			throw new DNSSDCallException(de);

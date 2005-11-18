@@ -29,6 +29,13 @@ package ch.iserver.ace.net;
 public interface NetworkServiceCallback {
 	
 	/**
+	 * @param code
+	 * @param msg
+	 * @param e
+	 */
+	void serviceFailure(int code, String msg, Exception e);
+	
+	/**
 	 * Notifies the callback that a new user was discovered on the network.
 	 * The passed in <var>proxy</var> can be used to communicate with that
 	 * newly discovered user.

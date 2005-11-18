@@ -26,21 +26,22 @@ import java.util.Map;
 
 import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.net.DocumentServerLogic;
-import ch.iserver.ace.net.RemoteDocumentProxy;
 import ch.iserver.ace.util.ParameterValidator;
 
 public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 	
 	private String id;
-	private UserDetails details;
+	private MutableUserDetails details;
 	private Map documents;
+	private boolean isSessionEstablished;
 	
-	public RemoteUserProxyImpl(String id, UserDetails details) {
+	public RemoteUserProxyImpl(String id, MutableUserDetails details) {
 		ParameterValidator.notNull("id", id);
 		ParameterValidator.notNull("details", details);
 		this.id = id;
 		this.details = details;
 		this.documents = new HashMap();
+		isSessionEstablished = false;
 	}
 
 	public String getId() {
@@ -50,28 +51,43 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 	public UserDetails getUserDetails() {
 		return details;
 	}
+	
+	public MutableUserDetails getMutableUserDetails() {
+		return details;
+	}
 
 	public Collection getSharedDocuments() {
 		return documents.values();
 	}
 
 	public void invite(DocumentServerLogic logic) {
-		// TODO Auto-generated method stub
-
+		throw new UnsupportedOperationException();
 	}
 
-	public void setUserDetails(UserDetails details) {
+	public void setMutableUserDetails(MutableUserDetails details) {
 		ParameterValidator.notNull("details", details);
 		this.details = details;
 	}
 	
-	public void addSharedDocument(RemoteDocumentProxy doc) {
+	public void addSharedDocument(RemoteDocumentProxyExt doc) {
 		documents.put(doc.getId(), doc);
 	}
 	
-	public RemoteDocumentProxy removeSharedDocument(String id) {
-		RemoteDocumentProxy doc = (RemoteDocumentProxy) documents.remove(id);
+	public RemoteDocumentProxyExt removeSharedDocument(String id) {
+		RemoteDocumentProxyExt doc = (RemoteDocumentProxyExt) documents.remove(id);
 		return doc;
+	}
+	
+	public RemoteDocumentProxyExt getSharedDocument(String id) {
+		return (RemoteDocumentProxyExt) documents.get(id);
+	}
+	
+	public void setSessionEstablished(boolean value) {
+		isSessionEstablished = value;
+	}
+
+	public boolean isSessionEstablished() {
+		return isSessionEstablished;
 	}
 	
 	/**

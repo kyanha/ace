@@ -22,11 +22,14 @@
 package ch.iserver.ace.net.impl.protocol;
 
 import java.util.Iterator;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.beepcore.beep.core.ReplyListener;
 
-import ch.iserver.ace.net.impl.PublishedDocument;
+import ch.iserver.ace.net.impl.RemoteUserProxyExt;
+import ch.iserver.ace.net.impl.discovery.DiscoveryManager;
+import ch.iserver.ace.net.impl.discovery.DiscoveryManagerFactory;
 
 /**
  *
@@ -50,27 +53,46 @@ public class PublishDocumentPrepareFilter extends AbstractRequestFilter {
 	 */
 	public void process(Request request) {
 		if (request.getType() == ProtocolConstants.PUBLISH) {
-			Object doc = request.getPayload();
-			try {
-				byte[] data = serializer.createNotification(ProtocolConstants.PUBLISH, doc);
-				
-				//send data to each known remote user
-				SessionManager manager = SessionManager.getInstance();
-				Iterator iter = manager.getSessions().iterator();
-				while (iter.hasNext()) {
-					RemoteUserSession session = (RemoteUserSession)iter.next();
-					ParticipantConnectionExt connection = session.getConnection();
-					connection.send(data, doc.toString(), listener);
+			LOG.info("--> process()");
+			DiscoveryManager discoveryManager = DiscoveryManagerFactory.getDiscoveryManager(null);
+			if (discoveryManager.getSize() > 0) {
+				Object doc = request.getPayload();
+				try {
+					byte[] data = serializer.createNotification(ProtocolConstants.PUBLISH, doc);
+					
+					RemoteUserProxyExt[] peers = discoveryManager.getPeersWithNoSession();
+					SessionManager manager = SessionManager.getInstance();
+					LOG.debug("initiate sessions with "+peers.length+" peers; "+manager.size()+" sessions already initiated.");
+					for (int i = 0; i < peers.length; i++) {
+						RemoteUserProxyExt next = peers[i];
+						manager.createSession(next);
+					}
+					Map sessions = manager.getSessions();
+					
+					LOG.info("publish to "+sessions.size()+" users.");
+					synchronized(sessions) {
+						Iterator iter = sessions.values().iterator();
+						while (iter.hasNext()) {
+							RemoteUserSession session = (RemoteUserSession)iter.next();
+							try {
+								ParticipantConnectionExt connection = session.getConnection();
+								connection.send(data, session.getUser().getUserDetails().getUsername(), listener);
+							} catch (ConnectionException ce) {
+								LOG.warn("connection failure for session ["+session.getUser().getUserDetails().getUsername()+"] "+ce.getMessage());
+								LOG.debug("continue with next user.");
+							}
+						}
+					}
+				} catch (Exception e) {
+					//TODO: handling
+					LOG.error("caught exception ["+e.getMessage()+"]");
 				}
-				
-			} catch (Exception e) {
-				//TODO: handling
-				LOG.error(e);
+			} else {
+				LOG.debug("no discovered peers available for publish.");
 			}
-			
+			LOG.info("<-- process()");
 		} else { //Forward
 			super.process(request);
 		}
 	}
-
 }

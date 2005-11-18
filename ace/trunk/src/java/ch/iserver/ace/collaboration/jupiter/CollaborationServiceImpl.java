@@ -30,11 +30,13 @@ import javax.swing.event.EventListenerList;
 import org.apache.log4j.Logger;
 
 import ch.iserver.ace.DocumentModel;
+import ch.iserver.ace.ServerInfo;
 import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.algorithm.jupiter.JupiterTimestampFactory;
 import ch.iserver.ace.collaboration.CollaborationService;
 import ch.iserver.ace.collaboration.DiscoveryCallback;
 import ch.iserver.ace.collaboration.DocumentListener;
+import ch.iserver.ace.collaboration.ServiceFailureHandler;
 import ch.iserver.ace.collaboration.InvitationCallback;
 import ch.iserver.ace.collaboration.PublishedSession;
 import ch.iserver.ace.collaboration.PublishedSessionCallback;
@@ -66,6 +68,8 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	
 	private InvitationCallback callback = NullInvitationCallback.getInstance();
 	
+	private ServiceFailureHandler failureHandler;
+	
 	private UserRegistry userRegistry;
 	
 	private DocumentRegistry documentRegistry;;
@@ -80,7 +84,7 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 		this.service.setCallback(this);
 		this.service.setTimestampFactory(new JupiterTimestampFactory());
 	}
-	
+		
 	public UserRegistry getUserRegistry() {
 		return userRegistry;
 	}
@@ -123,7 +127,37 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	protected InvitationCallback getInvitationCallback() {
 		return callback;
 	}
+
+	// --> CollaborationService interface methods <--
 	
+	/**
+	 * @see ch.iserver.ace.collaboration.CollaborationService#getServerInfo()
+	 */
+	public ServerInfo getServerInfo() {
+		return getNetworkService().getServerInfo();
+	}
+	
+	/**
+	 * @see ch.iserver.ace.collaboration.CollaborationService#start()
+	 */
+	public void start() {
+		getNetworkService().start();
+	}
+	
+	/**
+	 * @see ch.iserver.ace.collaboration.CollaborationService#stop()
+	 */
+	public void stop() {
+		getNetworkService().stop();
+	}
+	
+	/**
+	 * @see ch.iserver.ace.collaboration.CollaborationService#setUserId(java.lang.String)
+	 */
+	public void setUserId(String id) {
+		getNetworkService().setUserId(id);
+	}
+
 	/**
 	 * @see ch.iserver.ace.collaboration.CollaborationService#setUserDetails(ch.iserver.ace.UserDetails)
 	 */
@@ -167,6 +201,13 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	public void setInvitationCallback(InvitationCallback callback) {
 		this.callback = callback == null ? NullInvitationCallback.getInstance() : callback;
 	}
+	
+	/**
+	 * @see ch.iserver.ace.collaboration.CollaborationService#setFailureHandler(ch.iserver.ace.collaboration.ServiceFailureHandler)
+	 */
+	public void setFailureHandler(ServiceFailureHandler handler) {
+		this.failureHandler = handler;
+	}
 
 	/**
 	 * @see ch.iserver.ace.collaboration.CollaborationService#publish(ch.iserver.ace.collaboration.PublishedSessionCallback, ch.iserver.ace.DocumentModel)
@@ -195,26 +236,46 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	}
 	
 	// --> network service callback methods <--
-
+	
+	/**
+	 * @see ch.iserver.ace.net.NetworkServiceCallback#serviceFailure(int, java.lang.String, java.lang.Exception)
+	 */
+	public void serviceFailure(int code, String msg, Exception e) {
+		if (failureHandler != null) {
+			failureHandler.serviceFailed(code, msg, e);
+		}
+	}
+	
 	/**
 	 * @see ch.iserver.ace.net.NetworkServiceCallback#documentDiscovered(ch.iserver.ace.net.RemoteDocumentProxy[])
 	 */
-	public void documentDiscovered(RemoteDocumentProxy[] proxies) {
-		RemoteDocument[] documents = new RemoteDocument[proxies.length];
+	public synchronized void documentDiscovered(RemoteDocumentProxy[] proxies) {
+		List tmp = new ArrayList(proxies.length);
 		for (int i = 0; i < proxies.length; i++) {
-			documents[i] = getDocumentRegistry().addDocument(proxies[i]);
+			if (getDocumentRegistry().getDocument(proxies[i].getId()) != null) {
+				LOG.warn("document with id " + proxies[i].getId() + " discovered before");
+			} else {
+				tmp.add(getDocumentRegistry().addDocument(proxies[i]));
+			}
 		}
+		
+		if (tmp.size() == 0) {
+			LOG.warn("all discovered documents discovered before");
+			return;
+		}
+		
+		RemoteDocument[] documents = (RemoteDocument[]) tmp.toArray(new RemoteDocument[tmp.size()]);
 		DocumentListener[] list = (DocumentListener[]) listeners.getListeners(DocumentListener.class);
 		for (int i = 0; i < list.length; i++) {
 			DocumentListener listener = list[i];
 			listener.documentsDiscovered(documents);
-		}		
+		}
 	}
 	
 	/**
 	 * @see ch.iserver.ace.net.NetworkServiceCallback#documentDetailsChanged(ch.iserver.ace.net.RemoteDocumentProxy)
 	 */
-	public void documentDetailsChanged(RemoteDocumentProxy proxy) {
+	public synchronized void documentDetailsChanged(RemoteDocumentProxy proxy) {
 		MutableRemoteDocument doc = getDocumentRegistry().getDocument(proxy.getId());
 		if (doc == null) {
 			LOG.error("documentDetailsChanged called with an unknown document id (i.e. documentDiscovered not called)");
@@ -226,12 +287,12 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	/**
 	 * @see ch.iserver.ace.net.NetworkServiceCallback#documentDiscarded(ch.iserver.ace.net.RemoteDocumentProxy[])
 	 */
-	public void documentDiscarded(RemoteDocumentProxy[] proxies) {
+	public synchronized void documentDiscarded(RemoteDocumentProxy[] proxies) {
 		List tmp = new ArrayList();
 		for (int i = 0; i < proxies.length; i++) {
 			RemoteDocument doc = getDocumentRegistry().removeDocument(proxies[i]);
 			if (doc == null) {
-				LOG.error("documentDiscarded called without previos documentDiscovered call");
+				LOG.error("documentDiscarded called without previous documentDiscovered call");
 			}
 			tmp.add(doc);
 		}
@@ -239,14 +300,18 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 		DocumentListener[] list = (DocumentListener[]) listeners.getListeners(DocumentListener.class);
 		for (int i = 0; i < list.length; i++) {
 			DocumentListener listener = list[i];
-			listener.documentsDiscovered(documents);
+			listener.documentsDiscarded(documents);
 		}
 	}
 	
 	/**
 	 * @see ch.iserver.ace.net.NetworkServiceCallback#userDiscovered(ch.iserver.ace.net.RemoteUserProxy)
 	 */
-	public void userDiscovered(RemoteUserProxy proxy) {
+	public synchronized void userDiscovered(RemoteUserProxy proxy) {
+		if (getUserRegistry().getUser(proxy.getId()) != null) {
+			LOG.warn("user with id " + proxy.getId() + " discovered before: discarding notification");
+			return;
+		}
 		RemoteUser user = getUserRegistry().addUser(proxy);
 		UserListener[] listeners = (UserListener[]) this.listeners.getListeners(UserListener.class);
 		for (int i = 0; i < listeners.length; i++) {
@@ -258,7 +323,7 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	/**
 	 * @see ch.iserver.ace.net.NetworkServiceCallback#userDetailsChanged(ch.iserver.ace.net.RemoteUserProxy)
 	 */
-	public void userDetailsChanged(RemoteUserProxy proxy) {
+	public synchronized void userDetailsChanged(RemoteUserProxy proxy) {
 		MutableRemoteUser user = getUserRegistry().getUser(proxy.getId());
 		if (user == null) {
 			// TODO: throw exception
@@ -271,7 +336,7 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	/**
 	 * @see ch.iserver.ace.net.NetworkServiceCallback#userDiscarded(ch.iserver.ace.net.RemoteUserProxy)
 	 */
-	public void userDiscarded(RemoteUserProxy proxy) {
+	public synchronized void userDiscarded(RemoteUserProxy proxy) {
 		RemoteUser user = getUserRegistry().removeUser(proxy);
 		if (user == null) {
 			// TODO: throw exception
@@ -280,7 +345,7 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 			UserListener[] listeners = (UserListener[]) this.listeners.getListeners(UserListener.class);
 			for (int i = 0; i < listeners.length; i++) {
 				UserListener listener = listeners[i];
-				listener.userDiscovered(user);
+				listener.userDiscarded(user);
 			}
 		}
 	}

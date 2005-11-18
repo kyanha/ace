@@ -21,25 +21,23 @@
 
 package ch.iserver.ace.application;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 
-
-
 public class DocumentItemCellRenderer extends JPanel implements ListCellRenderer {
 
 	private DocumentItem value;
-	private LocaleMessageSource messageSource;
 	protected ImageIcon iconLocal, iconPublished, iconRemote;
 
 	public DocumentItemCellRenderer(LocaleMessageSource messageSource) {
-		this.messageSource = messageSource;
 		iconLocal = messageSource.getIcon("iViewFileLocal");
 		iconPublished = messageSource.getIcon("iViewFilePublic");
 		iconRemote = messageSource.getIcon("iViewFileRemote");
@@ -50,43 +48,66 @@ public class DocumentItemCellRenderer extends JPanel implements ListCellRenderer
 							int index,
 							boolean isSelected,
 							boolean cellHasFocus) {
+
 		setOpaque(true);
 		this.value = (DocumentItem)value;
-		
+
 		if(isSelected) {
 			setForeground(list.getSelectionForeground());
 			setBackground(list.getSelectionBackground());
-			//setBorder(BorderFactory.createLineBorder(Color.black, 1));
+			setBorder(BorderFactory.createLineBorder(list.getSelectionBackground().darker(), 1));
 		} else {
 			setForeground(list.getForeground());
 			setBackground(list.getBackground());
-			//setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+			setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 		}
-		
+
 		return this;
 	}
 
-	public void paintComponent(Graphics g) {
+	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
+
+		int itemHeight = getHeight();
+		
 		// draw document icon
+		int imageHeight = 16; //iconLocal.getIconHeight();
+		int imageWidth = 16; //iconLocal.getIconWidth();
+		int imagePosX = 1;
+		int imagePosY = (itemHeight / 2) - (imageHeight / 2);
+
 		switch(value.getType()) {
 			case DocumentItem.LOCAL:
-				g.drawImage(iconLocal.getImage(), 2, 1, 14, 14, this);
+				g.drawImage(iconLocal.getImage(), imagePosX, imagePosY, imageHeight, imageWidth, this);
 			break;
 			case DocumentItem.PUBLISHED:
-				g.drawImage(iconPublished.getImage(), 2, 1, 14, 14, this);
+				g.drawImage(iconPublished.getImage(), imagePosX, imagePosY, imageHeight, imageWidth, this);
 			break;			
 			case DocumentItem.REMOTE:
-				g.drawImage(iconRemote.getImage(), 2, 1, 14, 14, this);
+				g.drawImage(iconRemote.getImage(), imagePosX, imagePosY, imageHeight, imageWidth, this);
 			break;
 		}
-		
-		// draw document title
-		g.drawString(value.getTitle(), 20, 10);
+
+		// draw document title & dirty flag (TODO: dynamic border)
+		g.setColor(Color.BLACK);
+		int textAscent = g.getFontMetrics().getAscent();
+		int textDescent = g.getFontMetrics().getDescent();		
+		int textPosX = imagePosX + imageWidth + 5;
+		int textPosY = (itemHeight / 2) + (textAscent / 2) - textDescent + 1;
+		if(value.isDirty()) {
+			g.drawString(value.getTitle() + " *", textPosX, textPosY);
+		} else {
+			g.drawString(value.getTitle(), textPosX, textPosY);
+		}
+
+	}
+	
+	public String getToolTipText() {
+		return value.getToolTip();
 	}
 
 	public Dimension getPreferredSize() {
-		return new Dimension(0, 16);
+		return new Dimension(0, 20);
 	}
 	
 }

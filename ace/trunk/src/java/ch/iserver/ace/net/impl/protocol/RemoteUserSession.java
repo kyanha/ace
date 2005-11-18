@@ -21,14 +21,18 @@
 
 package ch.iserver.ace.net.impl.protocol;
 
+import java.net.ConnectException;
 import java.net.InetAddress;
 
 import org.apache.log4j.Logger;
 import org.beepcore.beep.core.BEEPException;
 import org.beepcore.beep.core.Channel;
+import org.beepcore.beep.core.ProfileRegistry;
 import org.beepcore.beep.transport.tcp.TCPSession;
 import org.beepcore.beep.transport.tcp.TCPSessionCreator;
 
+import ch.iserver.ace.FailureCodes;
+import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;
 import ch.iserver.ace.util.ParameterValidator;
 
@@ -45,7 +49,7 @@ public class RemoteUserSession {
 	private ParticipantConnectionExt connection;
 	private RemoteUserProxyExt user;
 	private boolean isInitiated;
-	private int channelNo;
+	private boolean isAlive;
 	
 	public RemoteUserSession(InetAddress address, int port, RemoteUserProxyExt user) {
 		ParameterValidator.notNull("address", address);
@@ -55,35 +59,79 @@ public class RemoteUserSession {
 		this.session = null;
 		this.user = user;
 		isInitiated = false;
+		isAlive = true;
 	}
 	
-	public void initiate() {
-		if ( session != null ) {
-			try {
-				session =  TCPSessionCreator.initiate(host, port);
-				isInitiated = true;
-			} catch (BEEPException be) {
-				//TODO: retry strategy?
-				LOG.error("could not initiate session ["+be+"]");
-			}
-		}
+	public RemoteUserSession(TCPSession session, RemoteUserProxyExt user) {
+		ParameterValidator.notNull("session", session);
+		ParameterValidator.notNull("user", user);
+		this.session = session;
+		this.user = user;
+		isInitiated = true;
+		isAlive = true;
 	}
 	
-	public ParticipantConnectionExt getConnection() {
-		if (!isInitiated()) {
+	/**
+	 * 
+	 * If the session has been cleaned up, a <code>ConnectionExeption</code>
+	 * is thrown.
+	 * 
+	 * @return
+	 */
+	public synchronized ParticipantConnectionExt getConnection() throws ConnectionException {
+		if (!isAlive)
+			throw new ConnectionException("session has been ended");
+		
+		if (!isInitiated())
 			initiate();
-		}
 		if (connection == null) {
 			try {
 			Channel channel = session.startChannel(ProtocolConstants.PROFILE_URI);
-			channelNo = channel.getNumber();
 			connection = new ParticipantConnectionImpl(channel);
 			} catch (BEEPException be) {
 				//TODO: retry strategy?
-				LOG.error("could not initiate session ["+be+"]");
+				LOG.error("could not start channel ["+be+"]");
 			}
 		}
 		return connection;
+	}
+	
+	/**
+	 * Helper method to initiate the TCPSession for this 
+	 * RemoteUserSession.
+	 *
+	 * @see TCPSession
+	 */
+	private void initiate() throws ConnectionException {
+		try {
+			ProfileRegistry registry = ProfileRegistryFactory.getProfileRegistry();
+			session =  TCPSessionCreator.initiate(host, port, registry);
+			LOG.info("initiated session to "+host+":"+port);
+			isInitiated = true;
+		} catch (BEEPException be) {
+			//TODO: retry strategy?
+			LOG.error("could not initiate session ["+be+"]");
+			if (be.getCause() instanceof ConnectException) {
+				String msg = "connection refused to host [" + host + ":" + port + "]";
+				NetworkServiceImpl.getInstance().getCallback().serviceFailure(FailureCodes.CONNECTION_REFUSED, msg, be);
+			}
+			throw new ConnectionException("session init failed ["+be.getMessage()+"]");
+		}
+	}
+	
+	/**
+	 * Cleans up the session. No methods may be called
+	 * after a call to <code>cleanup()</code>.
+	 */
+	public synchronized void cleanup() {
+		connection = null;
+		session = null;
+		user = null;
+		isAlive = false;
+	}
+	
+	public synchronized boolean isAlive() {
+		return isAlive;
 	}
 	
 	public boolean isInitiated() {
@@ -101,18 +149,4 @@ public class RemoteUserSession {
 	public int getPort() {
 		return port;
 	}
-	
-	/**
-	 * Returns -1 if no channel has been started yet,
-	 * otherwise the channel's number.
-	 * 
-	 * @return int 	the number of the channel or -1 
-	 * 				if no channel has been started
-	 */
-	public int getChannelNo() {
-		return (isInitiated()) ? channelNo : -1;
-	}
-	
-	
-	
 }

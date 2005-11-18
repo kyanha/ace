@@ -17,6 +17,7 @@ pdfcreator={pdftex},
 \begin{document}
 
 \setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
 
 \include{titlepage}
 
@@ -47,7 +48,7 @@ repository.
 Maven 2.0 now comes with a set of Ant tasks that can be used to utilise Maven's
 artifact handling features from within Ant. This includes most notably the
 transitive \emph{Dependency management} handling of Maven 2.0. You can
-download these Ant tasks from 
+download these Ant tasks from \\
 \href{http://maven.apache.org/download.html}{http://maven.apache.org/download.html}.
 
 \subsubsection{Installation}
@@ -85,7 +86,8 @@ In the \texttt{build.xml} you find the declaration of the dependencies.
 A dependency has a group id, an artifact id, and a version. You have to know
 these in order to add dependencies (browse the Maven repositories to find
 out the correct values). The dependencies are downloaded to a local repository,
-which can be found in the directory \texttt{~/.m2/repository/}.
+which can be found in the user's home directory in the folder 
+\texttt{.m2/repository/}.
 
 The id given to the set of dependencies with the \texttt{pathId} attribute
 can be used like any other path in the Ant build file. The Maven Ant tasks
@@ -203,10 +205,17 @@ the main class of the whole application. If you want to run another class
 with the main argument, you can start it with by calling the \texttt{run-class}
 task with a system property \texttt{class} set to the correct class name.
 You do this from the command line with an additional argument 
-\texttt{-Dclass=...}.
+\texttt{-Dclass=...}. To debug the application, there is a \texttt{debug}
+target that starts the JVM with the correct startup parameters. Connect
+your favorite debugger to the JVM. The connection parameters are:
+\begin{itemize}
+ \item connection type: socket attach
+ \item host: localhost
+ \item port: 8000
+\end{itemize}
 
 \subsection{Cleaning the Build Results}
-The well-known \texttt{clean} target can be used to clean the build directory,
+The \texttt{clean} target can be used to clean the build directory,
 forcing a complete rebuild.
 
 \subsection{Javadoc}

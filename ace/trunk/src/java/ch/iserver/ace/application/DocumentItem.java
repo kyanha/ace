@@ -31,7 +31,12 @@ import ch.iserver.ace.collaboration.RemoteDocument;
 import ch.iserver.ace.collaboration.RemoteUser;
 import ch.iserver.ace.collaboration.Session;
 
+import ch.iserver.ace.util.UUID;
+
+import javax.swing.event.DocumentListener;
+import javax.swing.event.DocumentEvent;
 import javax.swing.text.*;
+import java.io.File;
 
 
 
@@ -40,12 +45,17 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 	public final static int LOCAL		= 1;
 	public final static int REMOTE		= 2;
 	public final static int PUBLISHED	= 3;
+	public final static String TYPE_PROPERTY = "type";
+	public final static String TITLE_PROPERTY = "title";
+	public final static String DIRTY_PROPERTY = "dirty";
 
-	private String id;
-	private String title;
+	private String id, title, extendedTitle, toolTip;
 	private int type;
+	private boolean isDirty = false;
+	private File file;
 
 	private StyledDocument editorDocument;
+//	private SyntaxDocument editorDocument;
 	private RemoteDocument remoteDocument;
 	private Session session;
 	private SessionCallback sessionCallback;
@@ -54,17 +64,29 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 
 	public DocumentItem(String title) {
 		// create local document
-		// TODO: id-generator
-		id = "" + Math.round(1000000 * Math.random());
+		id = UUID.nextUUID();
 		this.title = title;
-		type = LOCAL;
-		editorDocument = new DefaultStyledDocument();
+		extendedTitle = title;
+		toolTip = title;
+		createEditorDocument();
+	}
+	
+	public DocumentItem(File file) {
+		// create local document
+		id = UUID.nextUUID();
+		this.file = file;
+		title = file.getName();
+		extendedTitle = file.getAbsolutePath();// + " - " + file.getName();
+		toolTip = file.getAbsolutePath();
+		createEditorDocument();
 	}
 	
 	public DocumentItem(RemoteDocument document) {
 		// create remote document
 		id = document.getId();
 		title = document.getTitle();
+		extendedTitle = document.getPublisher().getName() + " - " + document.getTitle();
+		toolTip = document.getPublisher().getName() + " - " + document.getTitle();
 		type = REMOTE;
 		document.addPropertyChangeListener(this);
 		document.getPublisher().addPropertyChangeListener(this);
@@ -78,12 +100,47 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 		return title;
 	}
 	
+/*	public void setTitle(String title) {
+		this.title = title;
+	}*/
+	
+	public String getExtendedTitle() {
+		return extendedTitle;
+	}
+
+/*	public void setExtendedTitle(String extendedTitle) {
+		this.extendedTitle = extendedTitle;
+	}*/
+		
+	public String getToolTip() {
+		return toolTip;
+	}
+	
 	public int getType() {
 		return type;
 	}
 	
+	public boolean isDirty() {
+		return isDirty;
+	}
 	
+	public void setClean() {
+		if (isDirty) {
+			isDirty = false;
+			firePropertyChange(DIRTY_PROPERTY, Boolean.TRUE, Boolean.FALSE);
+		}
+	}
 	
+	public void setDirty() {
+		if (!isDirty) {
+			isDirty = true;
+			firePropertyChange(DIRTY_PROPERTY, Boolean.FALSE, Boolean.TRUE);
+		}
+	}
+	
+	public boolean hasBeenSaved() {
+		return (file != null);
+	}
 	
 	public RemoteDocument getRemoteDocument() {
 		return remoteDocument;
@@ -97,19 +154,64 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 		return session;
 	}
 	
+	public File getFile() {
+		return file;
+	}
+	
+	public void setFile(File file) {
+		this.file = file;
+		String oldTitle = title;
+		title = file.getName();
+		extendedTitle = file.getAbsolutePath();// + " - " + file.getName();
+		toolTip = file.getAbsolutePath();
+		firePropertyChange(TITLE_PROPERTY, oldTitle, title);
+	}
+	
+	
+	
+	
+	
+	private void createEditorDocument() {
+		type = LOCAL;
+		editorDocument = new DefaultStyledDocument();
+//		editorDocument = new SyntaxDocument();
+		editorDocument.addDocumentListener(new DocumentListener() {
+			public void changedUpdate(DocumentEvent e) {
+			}
+
+			public void insertUpdate(DocumentEvent e) {
+				if(!isDirty) {
+					isDirty = true;
+					firePropertyChange(DIRTY_PROPERTY, "CLEAN", "DIRTY");
+				}
+			}
+
+			public void removeUpdate(DocumentEvent e) {
+				if(!isDirty) {
+					isDirty = true;
+					firePropertyChange(DIRTY_PROPERTY, "CLEAN", "DIRTY");
+				}
+			}
+		});
+	}
+	
+	
+	
+	
 	
 	
 	
 	public void publish(CollaborationService collaborationService) {
-		System.out.println("huasdf");
 		sessionCallback = new SessionCallbackImpl();
 		session = collaborationService.publish(sessionCallback, new DocumentModel("", 0, 0, new DocumentDetails(title)));
 		type = PUBLISHED;
+		firePropertyChange(TYPE_PROPERTY, "LOCAL", "PUBLISHED");
 	}
 	
 	public void conceal() {
 		session.leave();
 		type = LOCAL;
+		firePropertyChange(TYPE_PROPERTY, "PUBLISHED", "LOCAL");
 	}
 	
 	
@@ -125,6 +227,8 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 	public void propertyChange(PropertyChangeEvent evt) {
 		if(evt.getPropertyName().equals(RemoteDocument.TITLE_PROPERTY)) {
 			title = (String)evt.getNewValue();
+			extendedTitle = getRemoteDocument().getPublisher().getName() + " - " + title;
+			toolTip = getRemoteDocument().getPublisher().getName() + " - " + title;
 			firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.getNewValue());
 		} else if (RemoteUser.NAME_PROPERTY.equals(evt.getPropertyName())) {
 			firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.getNewValue());

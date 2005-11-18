@@ -28,7 +28,7 @@ public class DiscoveryCallbackAdapterTest extends TestCase {
 		callbackCtrl = MockControl.createControl(DiscoveryCallback.class);
 		callbackCtrl.setDefaultMatcher(new RemoteUserProxyMatcher());
 		callback = (DiscoveryCallback)callbackCtrl.getMock();
-		adapter = new DiscoveryCallbackAdapter(callback);
+		adapter = new DiscoveryManagerImpl(callback);
 	}
 	
 	/**
@@ -81,11 +81,10 @@ public class DiscoveryCallbackAdapterTest extends TestCase {
 	private void testUserAddressResolved(MutableUserDetails details, RemoteUserProxyExt proxy) throws UnknownHostException {
 		callbackCtrl.reset();
 		callbackCtrl.setDefaultMatcher(new RemoteUserProxyMatcher());
-
 		InetAddress addr = InetAddress.getByName("147.87.14.145");
 		details.setAddress(addr);
-		proxy.setUserDetails(details);
-		callback.userDetailsChanged(proxy);
+		proxy.setMutableUserDetails(details);
+		callback.userDiscoveryCompleted(proxy);
 		
 		callbackCtrl.replay();
 		
@@ -143,7 +142,7 @@ class RemoteUserProxyMatcher implements ArgumentsMatcher {
 	}
 
 	public String toString(Object[] arg0) {
-		return arg0.toString();
+		return ((RemoteUserProxyImpl)arg0[0]).toString();
 	}
 	
 }

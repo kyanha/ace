@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:FailureFilter.java 1205 2005-11-14 07:57:10Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -39,6 +39,7 @@ public class FailureFilter extends AbstractRequestFilter {
 	}
 	
 	public void process(Request request) {
+		LOG.debug(request+" could not be processed, reply with error code.");
 		MessageMSG message = request.getMessage();
 		if (message != null) {
 			try {

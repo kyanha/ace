@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:NetworkServiceExt.java 1205 2005-11-14 07:57:10Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -21,6 +21,7 @@
 
 package ch.iserver.ace.net.impl;
 
+import ch.iserver.ace.ServerInfo;
 import ch.iserver.ace.net.NetworkService;
 
 /**
@@ -30,5 +31,13 @@ public interface NetworkServiceExt extends NetworkService {
 
 	public void setDiscovery(Discovery discovery);
 	
+	public void setServerInfo(ServerInfo info);
+	
 	public void discoverDocuments(RemoteUserProxyExt proxy);
+	
+	public void sendDocuments(RemoteUserProxyExt proxy);
+	
+	public void conceal(String docId);
+	
+	public boolean hasPublishedDocuments();
 }

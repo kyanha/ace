@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:Request.java 1205 2005-11-14 07:57:10Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -29,6 +29,8 @@ import org.beepcore.beep.core.MessageMSG;
 public interface Request {
 
 	public int getType();
+	
+	public String getUserId();
 	
 	public Object getPayload();
 	

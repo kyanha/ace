@@ -24,6 +24,7 @@ package ch.iserver.ace.collaboration;
 import java.net.InetAddress;
 
 import ch.iserver.ace.DocumentModel;
+import ch.iserver.ace.ServerInfo;
 import ch.iserver.ace.UserDetails;
 
 /**
@@ -33,6 +34,32 @@ import ch.iserver.ace.UserDetails;
  * local documents.
  */
 public interface CollaborationService {
+	
+	/**
+	 * @return
+	 */
+	ServerInfo getServerInfo();
+	
+	/**
+	 * Starts the CollaborationService. No events are fired before this
+	 * method is called.
+	 */
+	void start();
+	
+	/**
+	 * Stops the CollaborationService. This method destroys the collaboration
+	 * service. Do not call any methods after this method call.
+	 */
+	void stop();
+	
+	/**
+	 * Sets the user id of the local user. This method has to be called before
+	 * starting the service with the {@link #start()} method. Note, it is
+	 * an error to set the user id twice!
+	 * 
+	 * @param id the id of the local user
+	 */
+	void setUserId(String id);
 	
 	/**
 	 * Sets the UserDetails for the local user.
@@ -77,6 +104,14 @@ public interface CollaborationService {
 	 * @param processor the InvitationCallback used by the service
 	 */
 	void setInvitationCallback(InvitationCallback processor);
+	
+	/**
+	 * Sets the ServiceFailureHandler for the service. This handler gets
+	 * notified about failures in the collaboration and network layers.
+	 * 
+	 * @param handler the new failure handler
+	 */
+	void setFailureHandler(ServiceFailureHandler handler);
 	
 	/**
 	 * Publishes a document so that other users can join editing it

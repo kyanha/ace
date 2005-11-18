@@ -35,6 +35,8 @@ public interface ApplicationFactory {
 
 	JPanel createComponentPane();
 	
+	JPanel createPersistentContentPane();
+	
 	JPanel createStatusBar();
 	
 	void setMessageSource(LocaleMessageSource messageSource);

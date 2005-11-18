@@ -21,54 +21,105 @@
 
 package ch.iserver.ace.application;
 
-import ch.iserver.ace.application.action.*;
-import java.awt.Component;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.ActionEvent;
-import javax.swing.JFrame;
-import javax.swing.UIManager;
+import java.lang.reflect.InvocationTargetException;
+
+import javax.swing.SwingUtilities;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import java.awt.BorderLayout;
-import javax.swing.*;
-import javax.swing.event.*;
+import ch.iserver.ace.UserDetails;
+import ch.iserver.ace.application.action.ToggleFullScreenEditingAction;
+import ch.iserver.ace.application.preferences.PreferencesStore;
+import ch.iserver.ace.collaboration.CollaborationService;
+import ch.iserver.ace.util.UUID;
 
 
 
 public class Main {
 	
 	private static final String[] CONTEXT_FILES = new String[] {
-		"application-context.xml", "actions-context.xml"
+		"application-context.xml", "actions-context.xml" ,"collaboration-context.xml", "network-context.xml"
 	};
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) {		
 		final ApplicationContext context = new ClassPathXmlApplicationContext(CONTEXT_FILES);
-		LocaleMessageSource messageSource = new LocaleMessageSourceImpl(context);
 
-		// set look & feel
-		/*try {
-			UIManager.setLookAndFeel("com.jgoodies.looks.plastic.PlasticXPLookAndFeel");
-		} catch(Exception e) {}*/
-
+		// get application factory
+		ApplicationFactory applicationFactory = (ApplicationFactory)context.getBean("appFactory");
 
 		// create frame
-		JFrame frame = new JFrame();
-		frame.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				// check for unsaved documents				
-				((ApplicationExitAction)context.getBean("appExitAction")).actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "Exit"));
-			}
-		});
-		frame.setSize(640, 480);
-		ApplicationFactory applicationFactory = (ApplicationFactory)context.getBean("appFactory");
-		frame.setJMenuBar(applicationFactory.createMenuBar());
-		frame.getContentPane().add(BorderLayout.PAGE_START, applicationFactory.createToolBar());
-		frame.getContentPane().add(BorderLayout.CENTER, applicationFactory.createComponentPane());
-		frame.getContentPane().add(BorderLayout.PAGE_END, applicationFactory.createStatusBar());		
-		frame.show();
+		PersistentFrame frame = (PersistentFrame)context.getBean("persistentMainFrame");
+		frame.setMenuBar(applicationFactory.createMenuBar());
+		frame.setToolBar(applicationFactory.createToolBar());
+		PersistentContentPane pane = (PersistentContentPane)applicationFactory.createPersistentContentPane();
+		frame.setContentPane(pane);
+		frame.setStatusBar(applicationFactory.createStatusBar());
+		frame.setTitle("ACE - a collaborative editor");
+		frame.setVisible(true);
+		
+		// TODO: define persistentPane in spring
+		((ToggleFullScreenEditingAction)context.getBean("toggleFullScreenEditingAction")).setPersistentContentPane(pane);
+		
+		// get application controller
+		ApplicationController controller = (ApplicationController) context.getBean("applicationController");
+		
+		// customizing for operating system specific stuff
+		String classname = System.getProperty("ch.iserver.ace.customizer");
+		if (classname != null) {
+			customize(classname, controller);
+		}
+		
+		// get the preferences store
+		PreferencesStore preferencesStore = (PreferencesStore) context.getBean("preferencesStore");
+		
+		// get collaboration service
+		CollaborationService collaborationService = (CollaborationService) context.getBean("collaborationService");
+		String id = preferencesStore.get(PreferencesStore.USER_ID, UUID.nextUUID());
+		preferencesStore.put(PreferencesStore.USER_ID, id);
+		collaborationService.setUserId(id);
+		UserDetails details = getUserDetails(preferencesStore);
+		collaborationService.setUserDetails(details);
+
+		// preference listeners
+		preferencesStore.addPreferenceChangeListener(
+						new UserDetailsUpdater(collaborationService, details.getUsername()));
+		
+		// register listeners & start
+		collaborationService.addUserListener((UserViewController)context.getBean("userViewController"));
+		collaborationService.addDocumentListener((BrowseViewController)context.getBean("browseViewController"));
+		collaborationService.start();
+		
+		try {
+			SwingUtilities.invokeAndWait(new Runnable() {
+				public void run() {
+					((DocumentManager) context.getBean("documentManager")).newDocument();
+				}
+			});
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private static void customize(String classname, ApplicationController controller) {
+		try {
+			Class clazz = Class.forName(classname);
+			Customizer customizer = (Customizer) clazz.newInstance();
+			customizer.init(controller);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private static UserDetails getUserDetails(PreferencesStore preferences) {
+		return new UserDetails(preferences.get(PreferencesStore.NICKNAME_KEY, 
+				System.getProperty("user.name")));
 	}
 	
 }

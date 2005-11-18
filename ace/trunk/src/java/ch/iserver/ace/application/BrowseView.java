@@ -24,6 +24,9 @@ package ch.iserver.ace.application;
 import java.awt.BorderLayout;
 import java.util.List;
 
+import javax.swing.AbstractAction;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -48,23 +51,22 @@ import com.jgoodies.uif_lite.panel.SimpleInternalFrame;
 
 public class BrowseView extends ViewImpl {
 
-	public BrowseView(BrowseViewController controller, LocaleMessageSource messageSource) {//, List toolBarActions) {
+	private JToolBar browseToolBar;
+
+	public BrowseView(LocaleMessageSource messageSource, BrowseViewController controller) {
 		super(controller, messageSource);
 		// get view source
 		setSourceList(controller.getBrowseSourceList());
 		
 		// create view toolbar & actions
-		JToolBar browseToolBar = new JToolBar();
-		//for(int i = 0; i < toolBarActions.size(); i++) {
-			//browseToolBar.add()toolBarActions.get(i));
-		//}
+		browseToolBar = new JToolBar();
 
 		// create list
 		JTextField browseFilterField = new JTextField();
 		TextFilterator browseFilterator = new TextFilterator() {
 			public void getFilterStrings(List baseList, Object element) {
 				BrowseItem item = (BrowseItem)element;
-				baseList.add(item.getTitle());
+				baseList.add(item.getPublisher());
 			}
 		};
 		MatcherEditor browseMatcherEditor = new TextComponentMatcherEditor(browseFilterField, browseFilterator);
@@ -107,4 +109,13 @@ public class BrowseView extends ViewImpl {
 		} catch(ArrayIndexOutOfBoundsException e) {}
 		return selectedItem;
 	}
+
+	public void setToolBarActions(List toolBarActions) {
+		for(int i = 0; i < toolBarActions.size(); i++) {
+			JButton toolBarButton = browseToolBar.add(((AbstractAction)toolBarActions.get(i)));
+			toolBarButton.setBorder(BorderFactory.createEmptyBorder());
+			browseToolBar.addSeparator();
+		}
+	}
+	
 }

@@ -41,6 +41,7 @@ public class ConcealDocumentReceiveFilter extends AbstractRequestFilter {
 	
 	public void process(Request request) {
 		if (request.getType() == ProtocolConstants.CONCEAL) {
+			LOG.info("--> process()");
 			DocumentInfo info = (DocumentInfo) request.getPayload();
 			String userId = info.getUserId();
 			RemoteUserSession session = SessionManager.getInstance().getSession(userId);
@@ -55,6 +56,7 @@ public class ConcealDocumentReceiveFilter extends AbstractRequestFilter {
 			} catch (Exception e) {
 				LOG.error("could not send Nul confirmation ["+e.getMessage()+"]");
 			}
+			LOG.info("<-- process()");
 		} else { //Forward
 			super.process(request);
 		}

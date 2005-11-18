@@ -21,21 +21,25 @@
 
 package ch.iserver.ace.application.action;
 
+import ch.iserver.ace.application.DocumentManager;
 import ch.iserver.ace.application.ItemSelectionChangeEvent;
 import ch.iserver.ace.application.LocaleMessageSource;
-import ch.iserver.ace.application.ViewController;
+import ch.iserver.ace.application.DocumentViewController;
 import java.awt.event.ActionEvent;
-import java.util.List;
 import java.awt.Toolkit;
 import javax.swing.KeyStroke;
 
 
 
-public class EditSelectAllAction extends ItemSelectionChangeAction {
+public class EditSelectAllAction extends DocumentItemSelectionChangeAction {
 
-	public EditSelectAllAction(LocaleMessageSource messageSource, List viewControllers) {
-		super(messageSource.getMessage("mEditSelectAll"), viewControllers);
+	private DocumentManager documentManager;
+
+	public EditSelectAllAction(LocaleMessageSource messageSource, DocumentManager documentManager,
+			DocumentViewController viewController) {
+		super(messageSource.getMessage("mEditSelectAll"), viewController);
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke('A', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+		this.documentManager = documentManager;
 		setEnabled(false);
 	}
 	

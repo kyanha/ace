@@ -21,22 +21,28 @@
 
 package ch.iserver.ace.application.action;
 
-import ch.iserver.ace.application.LocaleMessageSource;
 import java.awt.event.ActionEvent;
+
 import javax.swing.AbstractAction;
-import javax.swing.Icon;
+
+import ch.iserver.ace.application.ApplicationController;
+import ch.iserver.ace.application.LocaleMessageSource;
+import ch.iserver.ace.util.ParameterValidator;
 
 
 
 public class HelpAboutAction extends AbstractAction {
-
-	public HelpAboutAction(LocaleMessageSource messageSource) {
+	
+	private ApplicationController appController;
+	
+	public HelpAboutAction(LocaleMessageSource messageSource, ApplicationController appController) {
 		super(messageSource.getMessage("mHelpAbout"), messageSource.getIcon("iMenuHelpAbout"));
-		setEnabled(false);
+		ParameterValidator.notNull("controller", appController);
+		this.appController = appController;
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		System.out.println("HelpAboutAction");
+		appController.showAbout();
 	}
 
 }

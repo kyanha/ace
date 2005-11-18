@@ -19,24 +19,32 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.net.impl.protocol;
-
-import org.beepcore.beep.core.RequestHandler;
-import org.beepcore.beep.core.StartChannelListener;
+package ch.iserver.ace.application.dialog;
 
 /**
  *
  */
-public class BEEPServerFactory {
-
+public class DialogResult {
 	
-	public static BEEPServer create() {
-		Deserializer deserializer = DeserializerImpl.getInstance();
-		RequestFilter filter = RequestFilterFactory.createServerChain();
-		RequestHandler handler = new RequestHandlerImpl(deserializer, filter);
-		StartChannelListener listener = new StartChannelListenerImpl(handler);
-		DefaultProfile profile = new DefaultProfile(listener);
-		BEEPServer server = new BEEPServer(profile);
-		return server;
+	private int option;
+	
+	private Object result;
+	
+	public DialogResult(int option) {
+		this(option, null);
 	}
+	
+	public DialogResult(int option, Object result) {
+		this.option = option;
+		this.result = result;
+	}
+	
+	public int getOption() {
+		return option;
+	}
+	
+	public Object getResult() {
+		return result;
+	}
+	
 }

@@ -1,11 +1,14 @@
 package ch.iserver.ace.net.impl;
 
+import java.net.InetAddress;
+
 import junit.framework.TestCase;
 
 import org.easymock.MockControl;
 
-import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.net.NetworkServiceCallback;
+import ch.iserver.ace.net.impl.discovery.DiscoveryManagerFactory;
+import ch.iserver.ace.net.impl.protocol.SessionManager;
 
 public class DiscoveryCallbackImplTest extends TestCase {
 	
@@ -16,15 +19,18 @@ public class DiscoveryCallbackImplTest extends TestCase {
 		NetworkServiceExt service = (NetworkServiceExt)serviceCtrl.getMock();
 		
 		DiscoveryCallbackImpl discoveryCallback = new DiscoveryCallbackImpl(callback, service);
-		
-		RemoteUserProxyExt proxy = new RemoteUserProxyImpl("testid", new UserDetails("testuser"));
+		DiscoveryManagerFactory.getDiscoveryManager(discoveryCallback);
+		RemoteUserProxyExt proxy = new RemoteUserProxyImpl("testid", new MutableUserDetails("testuser", InetAddress.getLocalHost(), 4123));
+		SessionManager.getInstance().createSession(proxy);
 		
 		//define mock behavior
+		callbackCtrl.setDefaultMatcher(MockControl.ALWAYS_MATCHER);
 		callback.userDetailsChanged(proxy);
 		callback.userDiscarded(proxy);
 		callback.userDiscovered(proxy);
-		
-		service.discoverDocuments(proxy);
+		service.hasPublishedDocuments();
+		serviceCtrl.setReturnValue(false);
+//		service.discoverDocuments(proxy);
 		
 		// replay
 		callbackCtrl.replay();
@@ -33,7 +39,9 @@ public class DiscoveryCallbackImplTest extends TestCase {
 		// test
 		discoveryCallback.userDetailsChanged(proxy);
 		discoveryCallback.userDiscarded(proxy);
+		//TODO: write test where proxy has documents and documentDiscarded(..) is invoked
 		discoveryCallback.userDiscovered(proxy);
+		discoveryCallback.userDiscoveryCompleted(proxy);
 		
 		
 		// verify

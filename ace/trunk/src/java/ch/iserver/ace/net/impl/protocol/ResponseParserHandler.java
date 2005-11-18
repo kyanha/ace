@@ -56,7 +56,7 @@ public class ResponseParserHandler extends ParserHandler {
 	
 	public void endDocument() throws SAXException {
 		if (getType() == PUBLISHED_DOCUMENTS) {
-			response = new RequestImpl(getType(), requestPayload);
+			response = new RequestImpl(getType(), null, requestPayload);
 		}
 	}
 	
@@ -82,6 +82,7 @@ public class ResponseParserHandler extends ParserHandler {
 	 * 
 	 */
 	public Object getResult() {
+		LOG.debug("getResult("+response+")");
 		return response;
 	}
 	

@@ -38,6 +38,7 @@ public class BrowseViewController extends ViewControllerImpl implements Document
 	
 	public void documentsDiscarded(RemoteDocument[] documents) {
 		// remove discarded document from the list
+		//System.out.println("documentsDiscarded (" + documents.length + ")");
 		for(int i = 0; i < documents.length; i++ ) {
 			browseSourceList.getReadWriteLock().writeLock().lock();
 			try {
@@ -50,6 +51,7 @@ public class BrowseViewController extends ViewControllerImpl implements Document
 	
 	public void documentsDiscovered(RemoteDocument[] documents) {
 		// add discovered document to the list
+		//System.out.println("documentsDiscovered (" + documents.length + ")");
 		for(int i = 0; i < documents.length; i++ ) {
 			browseSourceList.getReadWriteLock().writeLock().lock();
 			try {

@@ -21,22 +21,28 @@
 
 package ch.iserver.ace.application.action;
 
-import ch.iserver.ace.application.LocaleMessageSource;
 import java.awt.event.ActionEvent;
+
 import javax.swing.AbstractAction;
-import javax.swing.Icon;
+
+import ch.iserver.ace.application.ApplicationController;
+import ch.iserver.ace.application.LocaleMessageSource;
+import ch.iserver.ace.util.ParameterValidator;
 
 
 
 public class ApplicationSettingsAction extends AbstractAction {
-
-	public ApplicationSettingsAction(LocaleMessageSource messageSource) {
-		super(messageSource.getMessage("mAppSettings"), messageSource.getIcon("iMenuAppSettings"));
-		setEnabled(false);
-	}
+		
+	private final ApplicationController appController;
 	
+	public ApplicationSettingsAction(LocaleMessageSource messageSource, ApplicationController appController) {
+		super(messageSource.getMessage("mAppSettings"), messageSource.getIcon("iMenuAppSettings"));
+		ParameterValidator.notNull("controller", appController);
+		this.appController = appController;
+	}
+			
 	public void actionPerformed(ActionEvent e) {
-		System.out.println("ApplicationSettingsAction");
+		appController.showPreferences();
 	}
 
 }

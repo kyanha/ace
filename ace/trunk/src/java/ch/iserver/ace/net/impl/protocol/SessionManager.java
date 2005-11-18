@@ -21,12 +21,16 @@
 
 package ch.iserver.ace.net.impl.protocol;
 
-import java.util.Collection;
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
-import ch.iserver.ace.UserDetails;
+import org.beepcore.beep.transport.tcp.TCPSession;
+
+import ch.iserver.ace.net.impl.MutableUserDetails;
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;
+import ch.iserver.ace.net.impl.discovery.DiscoveryManager;
+import ch.iserver.ace.net.impl.discovery.DiscoveryManagerFactory;
 
 /**
  *
@@ -41,7 +45,7 @@ public class SessionManager {
 	private static SessionManager theInstance;
 	
 	private SessionManager() {
-		sessions = new HashMap();
+		sessions = Collections.synchronizedMap(new LinkedHashMap());
 	}
 	
 	public static SessionManager getInstance() {
@@ -51,12 +55,27 @@ public class SessionManager {
 		return theInstance;
 	}
 	
-	public synchronized RemoteUserSession createSession(RemoteUserProxyExt user) {
+	public RemoteUserSession createSession(RemoteUserProxyExt user) {
 		String id = user.getId();
-		UserDetails details = user.getUserDetails();
+		MutableUserDetails details = user.getMutableUserDetails();
 		RemoteUserSession newSession = new RemoteUserSession(details.getAddress(), details.getPort(), user);
 		sessions.put(id, newSession);
+		DiscoveryManagerFactory.getDiscoveryManager(null).setSessionEstablished(user.getId());
 		return newSession;
+	}
+	
+	public RemoteUserSession createSession(RemoteUserProxyExt user, TCPSession session) {
+		RemoteUserSession newSession = new RemoteUserSession(session, user);
+		sessions.put(user.getId(), newSession);
+		DiscoveryManagerFactory.getDiscoveryManager(null).setSessionEstablished(user.getId());
+		return newSession;
+	}
+	
+	public synchronized RemoteUserSession removeSession(String userid) {
+		RemoteUserSession session = null;
+		session = (RemoteUserSession) sessions.remove(userid);
+		DiscoveryManagerFactory.getDiscoveryManager(null).setSessionTerminated(userid);
+		return session;
 	}
 	
 	/**
@@ -73,8 +92,13 @@ public class SessionManager {
 		return sessions.size();
 	}
 	
-	public Collection getSessions() {
-		return sessions.values();
+	/**
+	 * Gets the sessions as a id-session map.
+	 * 
+	 * @return the sessions as a id-session map
+	 */
+	public Map getSessions() {
+		return sessions;
 	}
 	
 	

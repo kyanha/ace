@@ -48,17 +48,17 @@ public class DocumentDiscoveryPrepareFilter extends AbstractRequestFilter {
 		if (request.getType() == ProtocolConstants.PUBLISHED_DOCUMENTS) {
 			RemoteUserProxyExt user = (RemoteUserProxyExt)request.getPayload(); 
 			RemoteUserSession session = manager.createSession(user); 
-			ParticipantConnectionExt connection = session.getConnection();
-			byte[] query = null;
 			try {
-				query = serializer.createQuery(ProtocolConstants.PUBLISHED_DOCUMENTS);
+				ParticipantConnectionExt connection = session.getConnection();
+				byte[] query = serializer.createQuery(ProtocolConstants.PUBLISHED_DOCUMENTS);
 				connection.send(query, new QueryInfo(user.getId(), ProtocolConstants.PUBLISHED_DOCUMENTS), listener);
+			} catch (ConnectionException ce) {
+				LOG.warn("connection failure for session '"+session.getUser().getUserDetails().getUsername()+"' ["+ce.getMessage()+"]");
+				LOG.warn("abort document discovery.");
 			} catch (Exception e) {
 				//TODO: handling
-				LOG.error("could no serialize ["+e.getMessage()+"]");
+				LOG.error("could no serialize request ["+e.getMessage()+"]");
 			}
-			
-			
 		} else {
 			super.process(request);
 		}

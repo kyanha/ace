@@ -21,6 +21,7 @@
 
 package ch.iserver.ace.application.action;
 
+import ch.iserver.ace.application.ApplicationController;
 import ch.iserver.ace.application.LocaleMessageSource;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
@@ -30,13 +31,16 @@ import javax.swing.Icon;
 
 public class NetDiscoverUserAction extends AbstractAction {
 
-	public NetDiscoverUserAction(LocaleMessageSource messageSource) {
+	private ApplicationController appController;
+	
+	public NetDiscoverUserAction(LocaleMessageSource messageSource, ApplicationController appController) {
 		super(messageSource.getMessage("mNetDiscoverUser"), messageSource.getIcon("iMenuNetDiscover"));
 		setEnabled(false);
+		this.appController = appController;
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		System.out.println("NetDiscoverUserAction");
+		appController.discoverUser();
 	}
 
 }

@@ -7,7 +7,9 @@ import org.easymock.AbstractMatcher;
 import org.easymock.MockControl;
 
 import ch.iserver.ace.DocumentDetails;
+import ch.iserver.ace.net.impl.DiscoveryCallback;
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
+import ch.iserver.ace.net.impl.discovery.DiscoveryManagerFactory;
 
 public class PublishedDocumentsRequestFilterTest extends TestCase {
 
@@ -19,6 +21,11 @@ public class PublishedDocumentsRequestFilterTest extends TestCase {
 		RequestFilter successor = (RequestFilter)succCtrl.getMock();
 		succCtrl.replay();
 		
+		//init discovery manager, so that NetworkServiceImpl can be initalized properly
+		MockControl callbackCtrl = MockControl.createControl(DiscoveryCallback.class);
+		DiscoveryCallback callback = (DiscoveryCallback) callbackCtrl.getMock();
+		DiscoveryManagerFactory.getDiscoveryManager(callback);
+		
 		NetworkServiceImpl service = NetworkServiceImpl.getInstance();
 		DocumentDetails details = new DocumentDetails("file1.txt");
 		service.publish(null, details);
@@ -29,7 +36,7 @@ public class PublishedDocumentsRequestFilterTest extends TestCase {
 		
 		PublishedDocumentsRequestFilter filter = new PublishedDocumentsRequestFilter(successor);
 		
-		Request request = new RequestImpl(ProtocolConstants.PUBLISHED_DOCUMENTS, null);
+		Request request = new RequestImpl(ProtocolConstants.PUBLISHED_DOCUMENTS, null, null);
 		MockControl msgCtrl = MockControl.createControl(MessageMSG.class);
 		MessageMSG msg = (MessageMSG)msgCtrl.getMock();
 		request.setMessage(msg);
@@ -50,7 +57,7 @@ public class PublishedDocumentsRequestFilterTest extends TestCase {
 		
 		PublishedDocumentsRequestFilter filter = new PublishedDocumentsRequestFilter(successor);
 		
-		Request request = new RequestImpl(ProtocolConstants.PUBLISH, null);
+		Request request = new RequestImpl(ProtocolConstants.PUBLISH, null, null);
 		successor.process(request);
 		succCtrl.setDefaultMatcher(new RequestMatcher());
 		succCtrl.replay();

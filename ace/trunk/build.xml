@@ -29,6 +29,9 @@
 	<!-- compiler settings javac (override on command line if desired) -->
     <property name="debug" value="true"/>
     <property name="optimize" value="false"/>
+    
+    <!-- debugger settings (override on command line if desired) -->
+    <property name="suspend" value="n"/>
 	
 	<artifact:remoteRepository id="remote.repository.ace" url="http://ace.iserver.ch/maven2/" />
 	<artifact:remoteRepository id="remote.repository.maven" url="http://repo1.maven.org/maven2"/>
@@ -37,6 +40,9 @@
 		<dependency groupId="jdom" 
 		            artifactId="jdom" 
 		            version="1.0"/>
+		<dependency groupId="commons-io" 
+		            artifactId="commons-io" 
+		            version="1.1"/>
 		<dependency groupId="commons-beanutils" 
 		            artifactId="commons-beanutils" 
 		            version="1.7.0"/>
@@ -79,9 +85,15 @@
 		<dependency groupId="beepcore"
                     artifactId="beepcore"
                     version="0.9.08"/>
+		<dependency groupId="concurrent"
+                    artifactId="concurrent"
+                    version="1.3.4"/>
 		<dependency groupId="dnssd"
                     artifactId="dnssd"
                     version="107.1"/>
+		<dependency groupId="spin" 
+		            artifactId="spin" 
+		            version="1.4"/>
 		<dependency groupId="junit" 
 		            artifactId="junit" 
 		            version="3.8.1"
@@ -227,7 +239,19 @@
 	
 	<target name="run" depends="compile,resources">
         <description>runs the main class</description>
-		<java classname="ch.iserver.ace.application.Main" fork="true" classpathref="classpath.run"/>
+		<java classname="ch.iserver.ace.application.Main" 
+		      fork="true" 
+		      classpathref="classpath.run"/>
+	</target>
+	
+	<target name="debug" depends="compile,resources">
+        <description>debug the application</description>
+        <java classname="ch.iserver.ace.application.Main"
+              fork="true"
+              classpathref="classpath.run">
+            <jvmarg value="-Xdebug"/>
+            <jvmarg value="-Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=${suspend}"/>
+        </java>
 	</target>
 
 	<target name="javadoc">
@@ -286,6 +310,8 @@
 				<fileset dir="${src.integration-test}">
 					<include name="ch/iserver/ace/collaboration/CollaborationServiceTest.java"/>
 					<include name="ch/iserver/ace/collaboration/server/ServerTest.java"/>
+					<include name="ch/iserver/ace/net/impl/discovery/PeerDiscoveryTest.java"/>
+					<include name="ch/iserver/ace/net/impl/discovery/UserRegistrationTest.java"/>					
 				</fileset>
 			</batchtest>
 			<test if="testcase" todir="${build.testreports}" name="${testcase}"/>
@@ -362,6 +388,8 @@
 				<include name="junit*.jar"/>
 				<include name="easymock*.jar"/>
 				<include name="jamon*.jar"/>
+				<include name="cglib*.jar"/>
+				<include name="commons-attributes*.jar"/>
 			</fileset>
 		</delete>
 	</target>
@@ -404,13 +432,15 @@
 				<exclude name="Info.plist"/>
 			</fileset>
 		</copy>
-		<chmod file="${build.osx}/application/ACE.app/Contents/MacOS/JavaApplicationStub" perm="+x" />
+		<chmod file="${build.osx}/application/ACE.app/Contents/MacOS/JavaApplicationStub" perm="+x"/>
 		<enhance source="${src.osx}/application/Info.plist"
 		         target="${build.osx}/application/ACE.app/Contents/Info.plist">
 			<fileset refid="dependency.fileset"/>
 			<exclude name="junit*.jar"/>
 			<exclude name="easymock*.jar"/>
 			<exclude name="jamon*.jar"/>
+            <exclude name="cglib*.jar"/>
+			<exclude name="commons-attributes*.jar"/>
 		</enhance>
 		<mkdir dir="${build.osx}/application/ACE.app/Contents/Resources/Java"/>
 		<copy todir="${build.osx}/application/ACE.app/Contents/Resources/Java">

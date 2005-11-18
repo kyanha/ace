@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:BonjourFactory.java 1205 2005-11-14 07:57:10Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -44,7 +44,8 @@ public class BonjourFactory extends DiscoveryFactory {
 	
 	private PeerDiscovery createPeerDiscovery(DiscoveryCallback callback) {
 		//TODO: load classes via spring framework?
-		DiscoveryCallbackAdapter adapter = new DiscoveryCallbackAdapter(callback);
+		//TODO: cast is a hack, do better
+		DiscoveryCallbackAdapter adapter = (DiscoveryCallbackAdapter) DiscoveryManagerFactory.getDiscoveryManager(callback);
 		AbstractQueryListener ipListener = new IPQueryListener(adapter);
 		AbstractQueryListener txtListener = new TXTQueryListener(adapter);
 		ResolveListener resolveListener = new ResolveListenerImpl(adapter, ipListener, txtListener);

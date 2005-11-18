@@ -22,26 +22,28 @@
 package ch.iserver.ace.net.impl.protocol;
 
 import org.apache.log4j.Logger;
+import org.beepcore.beep.core.BEEPException;
 import org.beepcore.beep.core.ProfileRegistry;
-import org.beepcore.beep.core.StartChannelListener;
-import org.beepcore.beep.profile.Profile;
+import org.beepcore.beep.core.Session;
+import org.beepcore.beep.core.event.SessionEvent;
+import org.beepcore.beep.core.event.SessionListener;
+import org.beepcore.beep.core.event.SessionResetEvent;
+import org.beepcore.beep.transport.tcp.TCPSession;
 import org.beepcore.beep.transport.tcp.TCPSessionCreator;
 
 /**
  *
  */
-public class BEEPServer extends Thread {
+public class BEEPSessionListener extends Thread implements SessionListener {
 
-	private static Logger LOG = Logger.getLogger(BEEPServer.class);
+	private static Logger LOG = Logger.getLogger(BEEPSessionListener.class);
 	
 	private ProfileRegistry registry;
-	private Profile profile;
 	
 	private boolean terminate;
 	
-	public BEEPServer(Profile profile) {
-		this.profile = profile;
-		this.registry = new ProfileRegistry();
+	public BEEPSessionListener(ProfileRegistry registry) {
+		this.registry = registry;
 		terminate = false;
 	}
 	
@@ -49,22 +51,48 @@ public class BEEPServer extends Thread {
 	public void run() {
 		String exitStatus = "normal";
 		try {
-			StartChannelListener listener = profile.init(ProtocolConstants.PROFILE_URI, null);
-			registry.addStartChannelListener(ProtocolConstants.PROFILE_URI, listener, null);
-			
 			while (!terminate) {
 				//TODO: error handling, e.g. when port is already in use -> retry strategy
-				TCPSessionCreator.listen(ProtocolConstants.LISTENING_PORT, registry);
+				LOG.debug("start listening at port "+ProtocolConstants.LISTENING_PORT+" again");
+				try {
+					TCPSession session = TCPSessionCreator.listen(ProtocolConstants.LISTENING_PORT, registry);
+					session.addSessionListener(this);
+					LOG.debug("accepted session with ["+session.getSocket()+"]");
+				} catch (BEEPException be) {
+					LOG.warn("server stopped, restart ["+be.getMessage()+"]");
+				} catch (Exception e) {
+					LOG.error("server stopped, shutdown ["+e.getMessage()+"]");
+					exitStatus = e.getMessage();
+					terminate = true;
+				}
 			}
 			
 		} catch (Exception e) {
 			exitStatus = e.getMessage();
 		}
-		LOG.debug("stopped ["+exitStatus+"]");
+		LOG.debug("terminate ["+exitStatus+"]");
 	}
 	
 	public void terminate() {
 		terminate = true;
 		interrupt();
+	}
+
+
+	public void greetingReceived(SessionEvent event) {
+		LOG.debug("greeting received for session ["+((Session)event.getSource()).toString()+"]");
+		
+	}
+
+
+	public void sessionClosed(SessionEvent arg0) {
+		LOG.debug("session closed");
+		
+	}
+
+
+	public void sessionReset(SessionResetEvent arg0) {
+		LOG.debug("session reset");
+		
 	}
 }

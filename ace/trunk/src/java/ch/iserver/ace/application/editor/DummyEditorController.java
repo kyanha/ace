@@ -22,32 +22,70 @@
 package ch.iserver.ace.application.editor;
 
 import ch.iserver.ace.application.*;
+import ch.iserver.ace.application.preferences.PreferenceChangeEvent;
+import ch.iserver.ace.application.preferences.PreferenceChangeListener;
+import ch.iserver.ace.application.preferences.PreferencesStore;
+
+import javax.swing.event.DocumentListener;
+import javax.swing.event.DocumentEvent;
+
 import javax.swing.text.*;
 
+import org.apache.log4j.Logger;
 
 
-public class DummyEditorController implements ItemSelectionChangeListener {
 
+public class DummyEditorController implements ItemSelectionChangeListener, PreferenceChangeListener {
+
+	private static final Logger LOG = Logger.getLogger(DummyEditorController.class);
+	
 	private DummyEditor editor;
 
-	public DummyEditorController(DummyEditor editor, DocumentViewController documentViewController) {
-		//this.messageSource = messageSource;
+	public DummyEditorController(DummyEditor editor, 
+			                    DocumentViewController documentViewController,
+			                    PreferencesStore preferences) {
 		this.editor = editor;
+		this.editor.setFontSize(getFontSize(preferences, 12));
 		documentViewController.addItemSelectionChangeListener(this);
+		this.editor.setEnabled(false);
+		preferences.addPreferenceChangeListener(this);
+	}
+	
+	private int getFontSize(PreferencesStore preferences, int def) {
+		try {
+			return Integer.parseInt(preferences.get(PreferencesStore.FONTSIZE_KEY, "" + def));
+		} catch (NumberFormatException e) {
+			LOG.debug("failed to set font size from preferences: " + e.getMessage());
+			return def;
+		}
 	}
 	
 	public void itemSelectionChanged(ItemSelectionChangeEvent e) {
 		if(e.getItem() != null) {
+			/*System.out.print("Item:   ");
+			if(e.getItem() instanceof DocumentItem) {
+				System.out.println("DocumentItem");
+			}*/
 			// enable editor
-			// set title
-			// set editor document
-			editor.setDocument(((DocumentItem)e.getItem()).getEditorDocument());
+			StyledDocument doc = ((DocumentItem)e.getItem()).getEditorDocument();
+			editor.setDocument(doc);
+			editor.setTitle(((DocumentItem)e.getItem()).getTitle());
 			editor.setEnabled(true);
 		} else {
 			// disable editor
-			// set title to ""
 			editor.setDocument(new DefaultStyledDocument());
+			editor.setTitle(" ");
 			editor.setEnabled(false);
+		}
+	}
+	
+	public void preferenceChanged(PreferenceChangeEvent event) {
+		if (PreferencesStore.FONTSIZE_KEY.equals(event.getKey())) {
+			try {
+				editor.setFontSize(Integer.parseInt(event.getValue()));
+			} catch (NumberFormatException e) {
+				LOG.debug("failed to set font size from preferences: " + e.getMessage());
+			}
 		}
 	}
 	

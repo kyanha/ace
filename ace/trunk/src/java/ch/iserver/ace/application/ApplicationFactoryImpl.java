@@ -21,6 +21,7 @@
 
 package ch.iserver.ace.application;
 
+import ch.iserver.ace.application.editor.Editor;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -49,11 +50,13 @@ public class ApplicationFactoryImpl implements ApplicationFactory, ApplicationCo
 		mFile.add((AbstractAction)context.getBean("fileOpenAction")).setToolTipText(null);
 		mFile.addSeparator();
 		mFile.add((AbstractAction)context.getBean("fileSaveAction")).setToolTipText(null);
-		mFile.add((AbstractAction)context.getBean("fileSaveAllAction")).setToolTipText(null);
 		mFile.add((AbstractAction)context.getBean("fileSaveAsAction")).setToolTipText(null);
+		mFile.add((AbstractAction)context.getBean("fileSaveAllAction")).setToolTipText(null);
 		mFile.add((AbstractAction)context.getBean("fileCloseAction")).setToolTipText(null);
+		mFile.add((AbstractAction)context.getBean("fileCloseAllAction")).setToolTipText(null);
 		mFile.addSeparator();
 		mFile.add((AbstractAction)context.getBean("appSettingsAction")).setToolTipText(null);
+		mFile.addSeparator();
 		mFile.add((AbstractAction)context.getBean("appExitAction")).setToolTipText(null);
 		menuBar.add(mFile);
 
@@ -101,6 +104,8 @@ public class ApplicationFactoryImpl implements ApplicationFactory, ApplicationCo
 		toolBar.addSeparator(new Dimension(8, 0));
 		toolBar.add((AbstractAction)context.getBean("netInviteUserAction"));
 		toolBar.add((AbstractAction)context.getBean("netKickParticipantAction"));
+		//toolBar.addSeparator(new Dimension(8, 0));
+		//toolBar.add((AbstractAction)context.getBean("toggleFullScreenEditingAction"));
 
 		return toolBar;
 	}
@@ -115,8 +120,10 @@ public class ApplicationFactoryImpl implements ApplicationFactory, ApplicationCo
 		UserView userView = (UserView)context.getBean("userView");
 
 		// create editor
-		EditorFactory editorFactory = (EditorFactory)context.getBean("editorFactory");
-		JPanel editorPane = editorFactory.createEditor();
+		//EditorFactory editorFactory = (EditorFactory)context.getBean("editorFactory");
+		//JPanel editorPane = editorFactory.createEditor();
+		//EditorFactory editorFactory = (EditorFactory)context.getBean("editorFactory");
+		JPanel editorPane = (JPanel)context.getBean("dummyEditor");
 
 		JSplitPane dvSbv = createStrippedSplitPane(JSplitPane.VERTICAL_SPLIT, documentView, browseView, 0.0);
 		JSplitPane pvSuv = createStrippedSplitPane(JSplitPane.VERTICAL_SPLIT, participantView,  userView, 0.0);
@@ -125,6 +132,18 @@ public class ApplicationFactoryImpl implements ApplicationFactory, ApplicationCo
 		componentPane.add(dvbvceSpvuv);
 
 		return componentPane;
+	}
+	
+	public JPanel createPersistentContentPane() {
+		//return (PersistentContentPane)context.getBean("persistentContentPane");
+
+		DocumentView documentView = (DocumentView)context.getBean("documentView");
+		BrowseView browseView = (BrowseView)context.getBean("browseView");
+		Editor editor = (Editor)context.getBean("dummyEditor");
+		ParticipantView participantView = (ParticipantView)context.getBean("participantView");
+		UserView userView = (UserView)context.getBean("userView");
+
+		return new PersistentContentPane(documentView, browseView, editor, participantView, userView);
 	}
 	
 	public JPanel createStatusBar() {
@@ -147,7 +166,7 @@ public class ApplicationFactoryImpl implements ApplicationFactory, ApplicationCo
 	private static JSplitPane createStrippedSplitPane(int orientation, Component leftComponent, Component rightComponent, double value) {
 		JSplitPane splitPane = new JSplitPane(orientation, leftComponent, rightComponent);
 		splitPane.setBorder(BorderFactory.createEmptyBorder());
-		splitPane.setOneTouchExpandable(false);
+		splitPane.setOneTouchExpandable(true);
 		splitPane.setResizeWeight(value);
 		return splitPane;
 	}

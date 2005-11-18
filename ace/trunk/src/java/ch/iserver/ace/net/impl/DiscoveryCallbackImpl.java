@@ -23,6 +23,11 @@ package ch.iserver.ace.net.impl;
 import org.apache.log4j.Logger;
 
 import ch.iserver.ace.net.NetworkServiceCallback;
+import ch.iserver.ace.net.RemoteDocumentProxy;
+import ch.iserver.ace.net.impl.discovery.DiscoveryManager;
+import ch.iserver.ace.net.impl.discovery.DiscoveryManagerFactory;
+import ch.iserver.ace.net.impl.protocol.RemoteUserSession;
+import ch.iserver.ace.net.impl.protocol.SessionManager;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
@@ -50,23 +55,57 @@ public class DiscoveryCallbackImpl implements DiscoveryCallback {
 	 * 
 	 */
 	public void userDiscovered(RemoteUserProxyExt proxy) {
+		LOG.debug("--> userDiscovered("+proxy+")");
 		callback.userDiscovered(proxy);
-		service.discoverDocuments(proxy);
+		LOG.debug("<-- userDiscovered()");
 	}
-
+	
 	/**
 	 * 
 	 */
-	public void userDiscarded(RemoteUserProxyExt proxy) {
-		callback.userDiscarded(proxy);
+	public void userDiscoveryCompleted(RemoteUserProxyExt proxy) {
+		LOG.debug("--> userDiscoveryCompleted("+proxy+")");
+
+		if (service.hasPublishedDocuments()) {
+			service.sendDocuments(proxy);
+		} else {
+			LOG.debug("no published documents, thus do not yet establish session with ["+proxy.getUserDetails().getUsername()+"]");
+		}
+//		service.discoverDocuments(proxy);
+		LOG.debug("<-- userDiscoveryCompleted()");
 	}
 
 	/**
 	 * 
 	 */
 	public void userDetailsChanged(RemoteUserProxyExt proxy) {
+		LOG.debug("--> userDetailsChanged("+proxy+")");
 		callback.userDetailsChanged(proxy);
+		LOG.debug("<-- userDetailsChanged()");
 	}
-
-
+	
+	/**
+	 * 
+	 */
+	public void userDiscarded(RemoteUserProxyExt proxy) {
+		LOG.debug("--> userDiscarded("+proxy+")");
+		
+		RemoteDocumentProxy[] docs = (RemoteDocumentProxy[]) 
+					proxy.getSharedDocuments().toArray(new RemoteDocumentProxy[0]);
+		
+		if (docs.length > 0) {
+			callback.documentDiscarded(docs);
+		}
+		callback.userDiscarded(proxy);
+		
+		DiscoveryManager manager = DiscoveryManagerFactory.getDiscoveryManager(null);
+		if (manager.hasSessionEstablished(proxy.getId())) {
+			RemoteUserSession session = 
+				SessionManager.getInstance().removeSession(proxy.getId());
+			session.cleanup();
+		}
+		//--> session and user proxy ready to be garbage collected
+		
+		LOG.debug("<-- userDiscarded()");
+	}
 }

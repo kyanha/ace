@@ -74,6 +74,10 @@ public class DocumentViewController extends ViewControllerImpl {
 		getDocumentView().setSelectedIndex(index);
 	}
 	
+	public int getSelectedIndex() {
+		return getDocumentView().getSelectedIndex();
+	}
+	
 	private DocumentView getDocumentView() {
 		if(view == null) throw new IllegalStateException("View have to be set before using getView()!");
 		return (DocumentView)view;
@@ -81,6 +85,10 @@ public class DocumentViewController extends ViewControllerImpl {
 	
 	public EventList getDocumentSourceList() {
 		return documentSourceList;
+	}
+	
+	public void setSelectedItem(Item item) {
+		getDocumentView().setSelectedItem(item);
 	}
 	
 	public DocumentItem getSelectedDocumentItem() {

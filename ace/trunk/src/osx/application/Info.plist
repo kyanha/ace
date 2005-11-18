@@ -70,10 +70,10 @@
 		<string>ch.iserver.ace.application.Main</string>
 		<key>Properties</key>
 		<dict>
+			<key>apple.laf.useScreenMenuBar</key>
+			<string>true</string>
 			<key>ch.iserver.ace.customizer</key>
 			<string>ch.iserver.ace.application.OSXCustomizer</string>
-			<key>com.apple.macos.useScreenMenuBar</key>
-			<string>true</string>
 		</dict>
 	</dict>
 	<key>NSJavaNeeded</key>

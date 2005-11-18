@@ -22,7 +22,11 @@
 package ch.iserver.ace.application;
 
 import java.awt.BorderLayout;
+import java.util.List;
 
+import javax.swing.AbstractAction;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -42,16 +46,19 @@ import com.jgoodies.uif_lite.panel.SimpleInternalFrame;
 
 public class DocumentView extends ViewImpl {
 
-	public DocumentView(DocumentViewController controller, LocaleMessageSource messageSource) {
+	private JToolBar documentToolBar;
+	private SortedList documentSortedList;
+	
+	public DocumentView(LocaleMessageSource messageSource, DocumentViewController controller) {
 		super(controller, messageSource);
 		// get view source
 		setSourceList(controller.getDocumentSourceList());
 		
 		// create view toolbar & actions
-		JToolBar viewToolBar = new JToolBar();
+		documentToolBar = new JToolBar();
 
 		// create list
-		SortedList documentSortedList = new SortedList(new ObservableElementList(getSourceList(), GlazedLists.beanConnector(DocumentItem.class)));
+		documentSortedList = new SortedList(new ObservableElementList(getSourceList(), GlazedLists.beanConnector(DocumentItem.class)));
 		setEventListModel(new EventListModel(documentSortedList));
 		setEventSelectionModel(new EventSelectionModel(documentSortedList));
 
@@ -77,7 +84,7 @@ public class DocumentView extends ViewImpl {
 		// create frame
 		JPanel documentViewContent = new JPanel(new BorderLayout());
 		documentViewContent.add(new JScrollPane(getList()), BorderLayout.CENTER);
-		SimpleInternalFrame documentView = new SimpleInternalFrame(null, messageSource.getMessage("vDocumentTitle"), viewToolBar, documentViewContent);
+		SimpleInternalFrame documentView = new SimpleInternalFrame(null, messageSource.getMessage("vDocumentTitle"), documentToolBar, documentViewContent);
 		setLayout(new BorderLayout());
 		add(documentView);		
 	}
@@ -89,5 +96,23 @@ public class DocumentView extends ViewImpl {
 		} catch(ArrayIndexOutOfBoundsException e) {}
 		return selectedItem;
 	}
+	
+	public void setSelectedItem(Item item) {
+		getSourceList().getReadWriteLock().readLock().lock();
+		try {
+			int pos = documentSortedList.indexOf(item);
+			getEventSelectionModel().setSelectionInterval(pos, pos);
+			getList().ensureIndexIsVisible(pos);
+		} finally {
+			getSourceList().getReadWriteLock().readLock().unlock();
+		}
+	}
 
+	public void setToolBarActions(List toolBarActions) {
+		for(int i = 0; i < toolBarActions.size(); i++) {
+			JButton toolBarButton = documentToolBar.add(((AbstractAction)toolBarActions.get(i)));
+			toolBarButton.setBorder(BorderFactory.createEmptyBorder());
+			documentToolBar.addSeparator();
+		}
+	}
 }

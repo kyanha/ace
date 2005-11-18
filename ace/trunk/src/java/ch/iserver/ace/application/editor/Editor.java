@@ -21,6 +21,9 @@
 
 package ch.iserver.ace.application.editor;
 
+import javax.swing.JPanel;
+import javax.swing.text.StyledDocument;
+
 
 
 public interface Editor {
@@ -28,5 +31,13 @@ public interface Editor {
 	//public void setDocument(Document document);
 
 	public void setTitle(String title);
+	
+	public void setDocument(StyledDocument document);
+	
+	public void setEnabled(boolean enabled);
+	
+	public void setFontSize(int size);
+	
+	public JPanel getEditorComponent();
 
 }

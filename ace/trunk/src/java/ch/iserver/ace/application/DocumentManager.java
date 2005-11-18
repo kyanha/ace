@@ -21,62 +21,114 @@
 
 package ch.iserver.ace.application;
 
-import ch.iserver.ace.application.*;
-import ch.iserver.ace.collaboration.*;
+import java.io.File;
+import java.io.IOException;
 
+import ca.odell.glazedlists.EventList;
 
+/**
+ * 
+ */
+public interface DocumentManager {
 
-public class DocumentManager implements ItemSelectionChangeListener {
+	/**
+	 * Gets the list of open documents.
+	 * 
+	 * @return the list of open documents
+	 */
+	EventList getDocuments();
 
-	private DocumentViewController controller;
-	private CollaborationService collaborationService;
-	private DocumentItem currentDocumentItem;
-
-	public DocumentManager(DocumentViewController controller) {
-		controller.addItemSelectionChangeListener(this);
-		this.controller = controller;
-	}
+	/**
+	 * Gets the document for the given file. If there is no document open
+	 * for the given file, this method returns null.
+	 * 
+	 * @param file the file for which to look for an open document
+	 * @return the DocumentItem containing the file's content or null if
+	 *         there is none
+	 */
+	DocumentItem getDocumentForFile(File file);
 	
-	public void closeDocument() {
-		controller.removeDocument(controller.getSelectedDocumentItem());
-		controller.setSelectedIndex(controller.getDocumentSourceList().size()-1);
-	}
+	/**
+	 * Gets the currently selected document. This method returns null if
+	 * there is no currently selected document.
+	 * 
+	 * @return the currently selected document or null if there is no document
+	 *         selected
+	 */
+	DocumentItem getSelectedDocument();
 	
-	public void newDocument() {
-		//System.out.println("new");
-		DocumentItem newItem = new DocumentItem("New Document");
-		controller.addDocument(newItem);
-		controller.setSelectedIndex(controller.indexOf(newItem));
-	}
-	
-	public void openDocument() {
-		System.out.println("open");
-	}
-	
-	public void exitApplication() {
-		System.out.println("exit application");
-	}
-	
-	
-	public void publishDocument() {
-		currentDocumentItem.publish(collaborationService);
-	}
-	
-	public void concealDocument() {
-		currentDocumentItem.conceal();
-	}
-	
-	public void itemSelectionChanged(ItemSelectionChangeEvent e) {
-		// set actual document
-		//System.out.println("DM: set current item");
-		currentDocumentItem = (DocumentItem)e.getItem();
-	}
+	/**
+	 * Sets the currently selected document.
+	 */
+	void setSelectedDocument(DocumentItem item);
 
+	/**
+	 * Gets a list containing all the dirty documents.
+	 * 
+	 * @return the list of dirty documents
+	 */
+	EventList getDirtyDocuments();
 
+	/**
+	 * Creates a new untitled document.
+	 */
+	void newDocument();
 
-	public void setCollaborationService(CollaborationService collaborationService) {
-		this.collaborationService = collaborationService;
-	}
+	/**
+	 * Opens the given file in a new editor document.
+	 * 
+	 * @param file the file to open
+	 * @throws IOException if the exception fails
+	 */
+	void openDocument(File file) throws IOException;
 
+	/**
+	 * Saves the given document to the associated file. It is an error
+	 * to call this method with an item that has never been saved before.
+	 * 
+	 * @param item the document to save
+	 * @throws IOException if there is a problem saving the document
+	 * @throws IllegalArgumentException if the item is null or has not been
+	 *         saved
+	 * @see DocumentItem#hasBeenSaved()
+	 */
+	void saveDocument(DocumentItem item) throws IOException;
 
+	/**
+	 * Saves a document into a new file. The file will be overwritten if it
+	 * exists. The file is associated with the item, further calls to
+	 * {@link #saveDocument(DocumentItem)} save the document to the new
+	 * file.
+	 * 
+	 * @param file where to save the document
+	 * @param item the document item to save
+	 * @throws IOException in case of IO problems
+	 */
+	void saveAsDocument(File file, DocumentItem item) throws IOException;
+
+	/**
+	 * Closes the given document item. Unsaved changes will be discarded,
+	 * so be careful to ask the user for confirmation. If the document has
+	 * been published, it is concealed.
+	 * 
+	 * @param item the document to close
+	 */
+	void closeDocument(DocumentItem item);
+
+	/**
+	 * Closes all documents. The documents are concealed first if they were
+	 * published. 
+	 */
+	void closeAllDocuments();
+
+	/**
+	 * Publishes the currently selected document.
+	 */
+	void publishDocument();
+
+	/**
+	 * Conceals the currently selected document.
+	 */
+	void concealDocument();
+	
 }

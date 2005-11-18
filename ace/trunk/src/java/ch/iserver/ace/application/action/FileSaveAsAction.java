@@ -21,33 +21,43 @@
 
 package ch.iserver.ace.application.action;
 
+import ch.iserver.ace.application.ApplicationController;
 import ch.iserver.ace.application.DocumentManager;
 import ch.iserver.ace.application.ItemSelectionChangeEvent;
 import ch.iserver.ace.application.LocaleMessageSource;
-import ch.iserver.ace.application.ViewController;
+import ch.iserver.ace.application.DocumentViewController;
 import java.awt.event.ActionEvent;
-import java.util.List;
+import java.awt.event.InputEvent;
 import java.awt.Toolkit;
 import javax.swing.KeyStroke;
 
 
 
-public class FileSaveAsAction extends ItemSelectionChangeAction {
+public class FileSaveAsAction extends DocumentItemSelectionChangeAction {
 
+	private ApplicationController appController;
 	private DocumentManager documentManager;
 
-	public FileSaveAsAction(LocaleMessageSource messageSource, DocumentManager documentManager, List viewControllers) {
-		super(messageSource.getMessage("mFileSaveAs"), messageSource.getIcon("iMenuFileSaveAs"), viewControllers);
+	public FileSaveAsAction(LocaleMessageSource messageSource, DocumentManager documentManager,
+			DocumentViewController viewController, ApplicationController appController) {
+		super(messageSource.getMessage("mFileSaveAs"), messageSource.getIcon("iMenuFileSaveAs"), viewController);
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke('S', InputEvent.SHIFT_MASK | Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 		this.documentManager = documentManager;
+		this.appController = appController;
 		setEnabled(false);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		//System.out.println("FileSaveAsAction");
+		appController.saveDocumentAs();
 	}
 
 	public void itemSelectionChanged(ItemSelectionChangeEvent e) {
-		//System.out.println("ItemSelectionChangeEvent: " + e);
+		// TODO: maybe disable when document hasnt been saved yet?
+		if(e.getItem() == null) {
+			setEnabled(false);
+		} else {
+			setEnabled(true);
+		}
 	}
 
 }

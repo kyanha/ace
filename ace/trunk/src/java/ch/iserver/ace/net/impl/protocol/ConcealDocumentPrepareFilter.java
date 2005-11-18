@@ -22,6 +22,7 @@
 package ch.iserver.ace.net.impl.protocol;
 
 import java.util.Iterator;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.beepcore.beep.core.ReplyListener;
@@ -45,28 +46,36 @@ public class ConcealDocumentPrepareFilter extends AbstractRequestFilter {
 		ParameterValidator.notNull("listener", listener);
 		this.serializer = serializer;
 		this.listener = listener;
-		//TODO: how about a NullReplyListener for notifications where no answer is expected?
 	}
 
 	public void process(Request request) {
 		if (request.getType() == ProtocolConstants.CONCEAL) {
+			LOG.info("--> process()");
 			PublishedDocument doc = (PublishedDocument)request.getPayload();
 			try {
 				byte[] data = serializer.createNotification(ProtocolConstants.CONCEAL, doc);
 			
 				//send data to each known remote user
 				SessionManager manager = SessionManager.getInstance();
-				Iterator iter = manager.getSessions().iterator();
-				while (iter.hasNext()) {
-					RemoteUserSession session = (RemoteUserSession)iter.next();
-					ParticipantConnectionExt connection = session.getConnection();
-					connection.send(data, doc.toString(), listener);
+				Map sessions = manager.getSessions();
+				LOG.info("conceal to "+sessions.size()+" users.");
+				synchronized(sessions) {
+					Iterator iter = sessions.values().iterator();
+					while (iter.hasNext()) {
+						RemoteUserSession session = (RemoteUserSession)iter.next();
+						try {
+							ParticipantConnectionExt connection = session.getConnection();
+							connection.send(data, session.getUser().getUserDetails().getUsername(), listener);
+						} catch (ConnectionException ce) {
+							LOG.warn("connection failure for session ["+session.getUser().getUserDetails()+"] "+ce.getMessage());
+						}
+					}
 				}
 				
 			} catch (Exception e) {
-				LOG.error(e);
+				LOG.error("caught exception ["+e.getMessage()+"]");
 			}
-			
+			LOG.info("<-- process()");
 		} else {
 			super.process(request);
 		}

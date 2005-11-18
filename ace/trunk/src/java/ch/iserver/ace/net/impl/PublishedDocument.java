@@ -21,8 +21,7 @@
 
 package ch.iserver.ace.net.impl;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.apache.log4j.Logger;
 
 import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.net.DocumentServer;
@@ -41,22 +40,25 @@ import ch.iserver.ace.util.ParameterValidator;
  */
 public class PublishedDocument implements DocumentServer {
 
+	private static Logger LOG = Logger.getLogger(PublishedDocument.class);
+	
 	private String docId;
 	private DocumentServerLogic logic;
 	private DocumentDetails details;
 	private RequestFilter filter;
-	private List joinedParticipants;
+	private NetworkServiceExt service;
 	private boolean isConcealed, isShutdown;
 	
-	public PublishedDocument(String id, DocumentServerLogic logic, DocumentDetails details, RequestFilter filter) {
+	public PublishedDocument(String id, DocumentServerLogic logic, DocumentDetails details, RequestFilter filter, NetworkServiceExt service) {
 		ParameterValidator.notNull("id", id);
+		LOG.debug("new PublishedDocument("+id+", "+details+")");
 		this.docId = id;
 		this.logic = logic;
 		this.details = details;
+		this.service = service;
 		this.filter = (filter != null) ? filter : NullRequestFilter.getInstance();
 		this.isConcealed = false;
 		this.isShutdown = false;
-		joinedParticipants = new ArrayList();
 	}
 
 	public DocumentDetails getDocumentDetails() {
@@ -65,7 +67,6 @@ public class PublishedDocument implements DocumentServer {
 	
 	public synchronized ParticipantPort join(ParticipantConnectionExt connection) throws JoinException {
 		if (!isConcealed()) {
-			//TODO: joinedParticipants.add(connection);
 			return logic.join(connection);
 		} else {
 			throw new JoinException();
@@ -85,7 +86,7 @@ public class PublishedDocument implements DocumentServer {
 	}
 	
 	public String toString() {
-		return "PublishedDocument("+docId+", "+details.getTitle()+")";
+		return "PublishedDocument("+docId+", '"+details.getTitle()+"')";
 	}
 
 	/********************************************/
@@ -96,15 +97,18 @@ public class PublishedDocument implements DocumentServer {
 			throw new IllegalStateException("document has been shutdown");
 		} else if (!isConcealed()) {
 			this.details = details;
-			//TODO: notify participants
+			Request request = new RequestImpl(ProtocolConstants.DOCUMENT_DETAILS_CHANGED, null, this);
+			filter.process(request);
 		}
 	}
 
 	public void shutdown() {
 		if (isShutdown()) throw new IllegalStateException("document has been shutdown already");
 		//TODO: consider doing this task in ParticipantConnection.close()
-		Request request = new RequestImpl(ProtocolConstants.CONCEAL, this);
+		
+		Request request = new RequestImpl(ProtocolConstants.CONCEAL, null, this);
 		filter.process(request);
+		service.conceal(getId());
 		isShutdown = true;
 	}
 

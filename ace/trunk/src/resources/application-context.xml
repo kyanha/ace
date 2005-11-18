@@ -13,22 +13,65 @@
   <bean id="localeMessageSource" class="ch.iserver.ace.application.LocaleMessageSourceImpl">
     <constructor-arg><ref local="messageSource"/></constructor-arg>
   </bean>
+  
+  <bean id="applicationController" class="ch.iserver.ace.application.ApplicationControllerImpl">
+    <property name="dialogController" ref="dialogController"/>
+    <property name="documentManager" ref="documentManager"/>
+  </bean>
+  
+  <bean id="dialogController" 
+        class="ch.iserver.ace.application.DialogControllerImpl"
+        destroy-method="destroy">
+    <property name="preferences" ref="preferencesStore"/>
+    <property name="messages" ref="localeMessageSource"/>
+    <property name="mainFrame" ref="persistentMainFrame"/>
+  </bean>
 
   <bean id="appFactory" class="ch.iserver.ace.application.ApplicationFactoryImpl">
     <property name="messageSource"><ref local="localeMessageSource"/></property>
   </bean>
 
-  <bean id="editorFactory" class="ch.iserver.ace.application.editor.DummyEditorFactory">
+
+  <bean id="persistentMainFrame" class="ch.iserver.ace.application.PersistentFrame">
+    <constructor-arg><ref bean="appExitAction"/></constructor-arg>
     <property name="messageSource"><ref local="localeMessageSource"/></property>
   </bean>
 
+  <!--bean id="persistentContentPane" class="ch.iserver.ace.application.PersistentContentPane">
+    <constructor-arg><ref local="documentView"/></constructor-arg>
+    <constructor-arg><ref local="browseView"/></constructor-arg>
+    <constructor-arg><ref local="dummyEditor"/></constructor-arg>
+    <constructor-arg><ref local="participantView"/></constructor-arg>
+    <constructor-arg><ref local="userView"/></constructor-arg>
+    <property name="documentView"><ref bean="documentView"/></property>
+    <property name="browseView"><ref bean="browseView"/></property>
+    <property name="dummyEditor"><ref bean="dummyEditor"/></property>
+    <property name="participantView"><ref bean="participantView"/></property>
+    <property name="userView"><ref bean="userView"/></property>
+  </bean-->
+
+  <!--bean id="editorFactory" class="ch.iserver.ace.application.editor.DummyEditorFactory">
+    <property name="messageSource"><ref local="localeMessageSource"/></property>
+  </bean-->
+
   <bean id="dummyEditor" class="ch.iserver.ace.application.editor.DummyEditor">
-    <!--property name="messageSource"><ref local="localeMessageSource"/></property-->
+    <constructor-arg><ref local="localeMessageSource"/></constructor-arg>
+    <constructor-arg>
+      <list>
+        <!--ref bean="netPublishDocumentAction"/>
+        <ref bean="netConcealDocumentAction"/-->
+        <ref bean="netPublishConcealDocumentToggleAction"/>
+        <ref bean="toggleFullScreenEditingAction"/>
+      </list>
+    </constructor-arg>
+    <property name="toggleFullScreenEditingAction"><ref bean="toggleFullScreenEditingAction"/></property>
+    <!--property name="persistentContentPane"><ref local="persistentContentPane"/></property-->
   </bean>
 
   <bean id="dummyEditorController" class="ch.iserver.ace.application.editor.DummyEditorController">
     <constructor-arg><ref local="dummyEditor"/></constructor-arg>
     <constructor-arg><ref local="documentViewController"/></constructor-arg>
+    <constructor-arg><ref local="preferencesStore"/></constructor-arg>
   </bean>
 
 
@@ -39,8 +82,13 @@
   </bean>
 
   <bean id="documentView" class="ch.iserver.ace.application.DocumentView">
-    <constructor-arg><ref local="documentViewController"/></constructor-arg>
-    <constructor-arg><ref local="localeMessageSource"/></constructor-arg>
+    <constructor-arg index="0"><ref local="localeMessageSource"/></constructor-arg>
+    <constructor-arg index="1"><ref local="documentViewController"/></constructor-arg>
+    <!--property name="toolBarActions">
+      <list>
+        <ref bean="netPublishDocumentAction"/>
+      </list>
+    </property-->
   </bean>
 
 
@@ -50,8 +98,13 @@
   </bean>
 
   <bean id="browseView" class="ch.iserver.ace.application.BrowseView">
-    <constructor-arg><ref local="browseViewController"/></constructor-arg>
     <constructor-arg><ref local="localeMessageSource"/></constructor-arg>
+    <constructor-arg><ref local="browseViewController"/></constructor-arg>
+    <!--property name="toolBarActions">
+      <list>
+        <ref bean="netPublishDocumentAction"/>
+      </list>
+    </property-->
   </bean>
 
 
@@ -61,8 +114,13 @@
   </bean>
 
   <bean id="participantView" class="ch.iserver.ace.application.ParticipantView">
-    <constructor-arg><ref local="participantViewController"/></constructor-arg>
     <constructor-arg><ref local="localeMessageSource"/></constructor-arg>
+    <constructor-arg><ref local="participantViewController"/></constructor-arg>
+    <!--property name="toolBarActions">
+      <list>
+        <ref bean="netPublishDocumentAction"/>
+      </list>
+    </property-->
   </bean>
 
 
@@ -72,8 +130,13 @@
   </bean>
 
   <bean id="userView" class="ch.iserver.ace.application.UserView">
-    <constructor-arg><ref local="userViewController"/></constructor-arg>
     <constructor-arg><ref local="localeMessageSource"/></constructor-arg>
+    <constructor-arg><ref local="userViewController"/></constructor-arg>
+    <!--property name="toolBarActions">
+      <list>
+        <ref bean="netPublishDocumentAction"/>
+      </list>
+    </property-->
   </bean>
 
 
@@ -81,8 +144,15 @@
 
 
 
-  <bean id="documentManager" class="ch.iserver.ace.application.DocumentManager">
+  <bean id="documentManager" class="ch.iserver.ace.application.DocumentManagerImpl">
     <constructor-arg><ref local="documentViewController"/></constructor-arg>
+    <constructor-arg><ref local="preferencesStore"/></constructor-arg>
+    <property name="collaborationService"><ref bean="collaborationService"/></property>
+  </bean>
+  
+  
+  <bean id="preferencesStore" class="ch.iserver.ace.application.preferences.JDKPreferencesStore">
+    <constructor-arg><value>ch/iserver/ace</value></constructor-arg>
   </bean>
 
 

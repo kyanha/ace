@@ -3,9 +3,16 @@ package ch.iserver.ace.net.impl.protocol;
 import java.net.InetAddress;
 
 import junit.framework.TestCase;
-import ch.iserver.ace.UserDetails;
+
+import org.easymock.MockControl;
+
+import ch.iserver.ace.net.NetworkServiceCallback;
+import ch.iserver.ace.net.impl.DiscoveryCallback;
+import ch.iserver.ace.net.impl.DiscoveryCallbackImpl;
+import ch.iserver.ace.net.impl.MutableUserDetails;
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;
 import ch.iserver.ace.net.impl.RemoteUserProxyImpl;
+import ch.iserver.ace.net.impl.discovery.DiscoveryManagerFactory;
 
 public class SessionManagerTest extends TestCase {
 
@@ -19,8 +26,14 @@ public class SessionManagerTest extends TestCase {
 		String id = "ads214";
 		InetAddress address = InetAddress.getLocalHost();
 		int port = 45123;
-		UserDetails details = new UserDetails("test-username", address, port);
+		MutableUserDetails details = new MutableUserDetails("test-username", address, port);
 		RemoteUserProxyExt proxy = new RemoteUserProxyImpl(id, details);
+		
+		MockControl callbackCtrl = MockControl.createControl(NetworkServiceCallback.class);
+		NetworkServiceCallback callback = (NetworkServiceCallback)callbackCtrl.getMock();
+		callbackCtrl.replay();
+		DiscoveryCallbackImpl discoveryCallback = new DiscoveryCallbackImpl(callback, null);
+		DiscoveryManagerFactory.getDiscoveryManager(discoveryCallback);
 		
 		manager.createSession(proxy);
 		

@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:TXTRecordProxy.java 1205 2005-11-14 07:57:10Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -26,6 +26,7 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 
 import ch.iserver.ace.net.impl.NetworkConstants;
+import ch.iserver.ace.util.ParameterValidator;
 
 import com.apple.dnssd.TXTRecord;
 
@@ -40,6 +41,7 @@ class TXTRecordProxy {
 	private static Logger LOG = Logger.getLogger(TXTRecordProxy.class);
 	
 	public static TXTRecord create(final Properties props) {
+		LOG.debug("create("+props+")");
 		TXTRecord r = new TXTRecord();
 		r.set(TXT_VERSION, (String)props.get(Bonjour.KEY_TXT_VERSION));
 		r.set(TXT_USER, (String)props.get(Bonjour.KEY_USER));
@@ -49,6 +51,8 @@ class TXTRecordProxy {
 	}
 	
 	public static String get(final String key, final TXTRecord txt) {
+		ParameterValidator.notNull("key", key);
+		ParameterValidator.notNull("txtrecord", txt);
 		byte[] data = txt.getValue(key);
 		String result = null;
 		if (data != null) {
@@ -65,7 +69,10 @@ class TXTRecordProxy {
 		return result;
 	}
 	
-	public static void set(String key, String value, TXTRecord txt) {
+	public static void set(final String key, final String value, TXTRecord txt) {
+		ParameterValidator.notNull("key", key);
+		ParameterValidator.notNull("value", value);
+		ParameterValidator.notNull("txtrecord", txt);
 		try {
 			txt.set(key, value.getBytes(NetworkConstants.DEFAULT_ENCODING));
 		} catch (UnsupportedEncodingException uee) {

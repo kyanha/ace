@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:RequestFilterFactory.java 1205 2005-11-14 07:57:10Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -21,6 +21,7 @@
 
 package ch.iserver.ace.net.impl.protocol;
 
+
 /**
  *
  */
@@ -33,22 +34,26 @@ public class RequestFilterFactory {
 		Deserializer deserializer = DeserializerImpl.getInstance();
 		listener.init(deserializer, createClientChainForResponses());
 		Serializer serializer = SerializerImpl.getInstance();
+		filter = new ConcealDocumentPrepareFilter(filter, serializer, listener);
+		filter = new DocumentDetailsChangedPrepareFilter(filter, serializer, listener);
 		filter = new PublishDocumentPrepareFilter(filter, serializer, listener); 
-		filter = new DocumentDiscoveryPrepareFilter(filter, serializer, listener);
+		filter = new SendDocumentsPrepareFilter(filter, serializer, listener);
+		filter = new LogFilter(filter, true);
 		return filter;
 	}
 	
 	private static RequestFilter createClientChainForResponses() {
-		RequestFilter filter = new FailureFilter(null);
-		filter = new DocumentDiscoveryResponseFilter(filter);
+		RequestFilter filter = new LogFilter(null, false);
 		return filter;
 	}
 	
 	public static RequestFilter createServerChain() {
 		RequestFilter filter = new FailureFilter(null);
 		filter = new ConcealDocumentReceiveFilter(filter);
+		filter = new DocumentDetailsChangedReceiveFilter(filter);
 		filter = new PublishDocumentReceiveFilter(filter);
-		filter = new PublishedDocumentsRequestFilter(filter);
+		filter = new SendDocumentsReceiveFilter(filter);
+		filter = new LogFilter(filter, true);
 		return filter;
 	}
 	

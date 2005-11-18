@@ -21,20 +21,24 @@
 
 package ch.iserver.ace.application.action;
 
+import ch.iserver.ace.application.DocumentManager;
 import ch.iserver.ace.application.ItemSelectionChangeEvent;
 import ch.iserver.ace.application.LocaleMessageSource;
-import ch.iserver.ace.application.ViewController;
+import ch.iserver.ace.application.DocumentViewController;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
-import java.util.List;
 
 
 
-public class NetLeaveSessionAction extends ItemSelectionChangeAction {
+public class NetLeaveSessionAction extends DocumentItemSelectionChangeAction {
 
-	public NetLeaveSessionAction(LocaleMessageSource messageSource, List viewControllers) {
-		super(messageSource.getMessage("mNetLeave"), messageSource.getIcon("iMenuNetLeave"), viewControllers);
+	private DocumentManager documentManager;
+
+	public NetLeaveSessionAction(LocaleMessageSource messageSource, DocumentManager documentManager,
+			DocumentViewController viewController) {
+		super(messageSource.getMessage("mNetLeave"), messageSource.getIcon("iMenuNetLeave"), viewController);
 		putValue(SHORT_DESCRIPTION, messageSource.getMessage("mNetLeaveTT"));
+		this.documentManager = documentManager;
 		setEnabled(false);
 	}
 	
