@@ -34,10 +34,12 @@ import javax.swing.text.BadLocationException;
 import org.apache.commons.io.FileUtils;
 
 import ca.odell.glazedlists.EventList;
+import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.application.preferences.PreferenceChangeEvent;
 import ch.iserver.ace.application.preferences.PreferenceChangeListener;
 import ch.iserver.ace.application.preferences.PreferencesStore;
 import ch.iserver.ace.collaboration.CollaborationService;
+import ch.iserver.ace.collaboration.PublishedSession;
 import ch.iserver.ace.util.ParameterValidator;
 
 
@@ -205,6 +207,10 @@ public class DocumentManagerImpl implements ItemSelectionChangeListener, Prefere
 		}
 		FileUtils.writeStringToFile(file, content, getDefaultEncoding());
 		item.setFile(file);
+		if (item.getType() == DocumentItem.PUBLISHED) {
+			PublishedSession session = (PublishedSession) item.getSession();
+			session.setDocumentDetails(new DocumentDetails(item.getTitle()));
+		}
 		item.setClean();
 	}
 	
