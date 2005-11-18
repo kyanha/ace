@@ -41,9 +41,12 @@ public class RequestHandlerImpl implements RequestHandler {
 
 	private static Logger LOG = Logger.getLogger(RequestHandlerImpl.class);
 	
+	private static Object MUTEX = new Object();
+	
 	private RequestFilter filter;
 	private Deserializer deserializer;
-	private RequestParserHandler handler;
+	private RequestParserHandler handler;	
+	
 	
 	//TODO: write integration-test for this class
 	public RequestHandlerImpl(Deserializer deserializer, RequestFilter filter) {
@@ -62,16 +65,19 @@ public class RequestHandlerImpl implements RequestHandler {
 		
 		try {
 			byte[] rawData = readData(input);
-			LOG.debug("received "+rawData.length+" bytes.");
-			deserializer.deserialize(rawData, handler);
-			Request request = (Request)handler.getResult();
-			String userid = request.getUserId();
-			DiscoveryManager discoveryManager = DiscoveryManagerFactory.getDiscoveryManager(null);
-			if (!discoveryManager.hasSessionEstablished(userid)) {
-				RemoteUserProxyExt user = discoveryManager.getUser(userid);
-				LOG.debug("create new session for ["+user.getMutableUserDetails().getUsername()+"]");
-				SessionManager manager = SessionManager.getInstance();
-				manager.createSession(user, (TCPSession) message.getChannel().getSession());
+			LOG.debug("received "+rawData.length+" bytes. ["+(new String(rawData))+"]");
+			Request request = null;
+			synchronized (MUTEX) {
+				deserializer.deserialize(rawData, handler);
+				request = (Request)handler.getResult();
+				String userid = request.getUserId();
+				DiscoveryManager discoveryManager = DiscoveryManagerFactory.getDiscoveryManager(null);
+				if (!discoveryManager.hasSessionEstablished(userid)) {
+					RemoteUserProxyExt user = discoveryManager.getUser(userid);
+					LOG.debug("create new session for ["+user.getMutableUserDetails().getUsername()+"]");
+					SessionManager manager = SessionManager.getInstance();
+					manager.createSession(user, (TCPSession) message.getChannel().getSession());
+				}
 			}
 			request.setMessage(message);
 			filter.process(request);

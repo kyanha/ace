@@ -69,7 +69,7 @@ public class SendDocumentsReceiveFilter extends AbstractRequestFilter {
 				//confirm reception of msg				
 				request.getMessage().sendNUL();
 			} catch (Exception e) {
-				LOG.error("could not send confirmation ["+e.getMessage()+"]");
+				LOG.error("could not send confirmation ["+e+", "+e.getMessage()+"]");
 			}
 			LOG.info("<-- process()");
 		} else { //Forward
