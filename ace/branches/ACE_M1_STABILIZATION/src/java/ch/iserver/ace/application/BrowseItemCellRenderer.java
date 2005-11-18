@@ -100,7 +100,7 @@ public class BrowseItemCellRenderer extends JPanel implements ListCellRenderer {
 	}
 
 	public String getToolTipText() {
-		return value.getTitle() + "(" + value.getPublisher() + ")";
+		return value.getTitle();// + "(" + value.getPublisher() + ")";
 	}
 	
 	public Dimension getPreferredSize() {
