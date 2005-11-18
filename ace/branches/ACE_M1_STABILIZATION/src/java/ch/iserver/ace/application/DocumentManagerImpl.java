@@ -67,7 +67,11 @@ public class DocumentManagerImpl implements ItemSelectionChangeListener, Prefere
 		preferences.addPreferenceChangeListener(this);
 		
 		// create new empty document
-		newDocument();
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				newDocument();
+			}
+		});
 	}
 	
 	public void setCollaborationService(CollaborationService collaborationService) {
