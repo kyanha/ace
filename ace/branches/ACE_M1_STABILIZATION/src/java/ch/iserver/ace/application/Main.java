@@ -86,6 +86,8 @@ public class Main {
 		collaborationService.addUserListener((UserViewController)context.getBean("userViewController"));
 		collaborationService.addDocumentListener((BrowseViewController)context.getBean("browseViewController"));
 		collaborationService.start();
+		
+		((DocumentManager) context.getBean("documentManager")).newDocument();
 	}
 	
 	private static void customize(String classname, ApplicationController controller) {
