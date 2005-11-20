@@ -1,3 +1,10 @@
+<h2>Diploma Project</h2>
+
+<ul>
+ <li><a href="documents/projectmanual.pdf">Project Manual</a></li>
+ <li><a href="documents/systemrequirements.pdf">System Requirements</a></li>
+</ul>
+
 <h2>Semester Project</h2>
 
 <h3>Technical Reports</h3>

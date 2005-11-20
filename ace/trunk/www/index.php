@@ -50,7 +50,7 @@
        <img src="images/opensource.png" border="0"/>
       </div>
     </td>
-    <td style="padding: 10px; padding-right: 30px" valign="top">
+    <td style="padding: 10px; padding-right: 30px; padding-top: 25px" valign="top">
      <div id="content">
        <?php
        switch ($_GET['page']) {
