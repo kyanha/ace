@@ -22,7 +22,7 @@ if ($id < 0 || $id > 2) {
  header("Location: index.php\n\n");
 } else {
  $link = mysql_connect('localhost', 'ace', 'ace13x');
- mysql_select_db('my_database');
+ mysql_select_db('ace');
  $query = 'update downloads set count = count + 1 where id=' . $id;
  mysql_query($query);
  $query = 'select name from downloads where id=' . $id;
