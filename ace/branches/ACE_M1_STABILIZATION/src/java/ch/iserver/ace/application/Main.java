@@ -33,16 +33,22 @@ import ch.iserver.ace.application.action.ToggleFullScreenEditingAction;
 import ch.iserver.ace.application.preferences.PreferencesStore;
 import ch.iserver.ace.collaboration.CollaborationService;
 import ch.iserver.ace.util.UUID;
-
+import javax.swing.*;
 
 
 public class Main {
-	
+
 	private static final String[] CONTEXT_FILES = new String[] {
 		"application-context.xml", "actions-context.xml" ,"collaboration-context.xml", "network-context.xml"
 	};
-	
-	public static void main(String[] args) {		
+
+	public static void main(String[] args) {
+
+//		try {
+//			UIManager.setLookAndFeel("com.jgoodies.looks.plastic.PlasticLookAndFeel");
+//			UIManager.setLookAndFeel("com.jgoodies.looks.windows.WindowsLookAndFeel");
+//		} catch(Exception e) {}
+
 		final ApplicationContext context = new ClassPathXmlApplicationContext(CONTEXT_FILES);
 
 		// get application factory
@@ -57,22 +63,22 @@ public class Main {
 		frame.setStatusBar(applicationFactory.createStatusBar());
 		frame.setTitle("ACE - a collaborative editor");
 		frame.setVisible(true);
-		
+
 		// TODO: define persistentPane in spring
 		((ToggleFullScreenEditingAction)context.getBean("toggleFullScreenEditingAction")).setPersistentContentPane(pane);
-		
+
 		// get application controller
 		ApplicationController controller = (ApplicationController) context.getBean("applicationController");
-		
+
 		// customizing for operating system specific stuff
 		String classname = System.getProperty("ch.iserver.ace.customizer");
 		if (classname != null) {
 			customize(classname, controller);
 		}
-		
+
 		// get the preferences store
 		PreferencesStore preferencesStore = (PreferencesStore) context.getBean("preferencesStore");
-		
+
 		// get collaboration service
 		CollaborationService collaborationService = (CollaborationService) context.getBean("collaborationService");
 		String id = preferencesStore.get(PreferencesStore.USER_ID, UUID.nextUUID());
@@ -84,12 +90,12 @@ public class Main {
 		// preference listeners
 		preferencesStore.addPreferenceChangeListener(
 						new UserDetailsUpdater(collaborationService, details.getUsername()));
-		
+
 		// register listeners & start
 		collaborationService.addUserListener((UserViewController)context.getBean("userViewController"));
 		collaborationService.addDocumentListener((BrowseViewController)context.getBean("browseViewController"));
 		collaborationService.start();
-		
+
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
 				public void run() {
@@ -102,7 +108,7 @@ public class Main {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private static void customize(String classname, ApplicationController controller) {
 		try {
 			Class clazz = Class.forName(classname);
@@ -116,10 +122,10 @@ public class Main {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private static UserDetails getUserDetails(PreferencesStore preferences) {
-		return new UserDetails(preferences.get(PreferencesStore.NICKNAME_KEY, 
+		return new UserDetails(preferences.get(PreferencesStore.NICKNAME_KEY,
 				System.getProperty("user.name")));
 	}
-	
+
 }

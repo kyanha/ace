@@ -52,7 +52,7 @@ public class ParticipantItemCellRenderer extends JPanel implements ListCellRende
 							boolean cellHasFocus) {
 		setOpaque(true);
 		this.value = (ParticipantItem)value;
-		
+
 		if(isSelected) {
 			setForeground(list.getSelectionForeground());
 			setBackground(list.getSelectionBackground());
@@ -78,15 +78,15 @@ public class ParticipantItemCellRenderer extends JPanel implements ListCellRende
 		int imagePosX = 1;
 		int imagePosY = (itemHeight / 2) - (imageHeight / 2);
 		g.drawImage(iconParticipant.getImage(), imagePosX, imagePosY, imageHeight, imageWidth, this);
-		
+
 		// draw participant name (TODO: dynamic border)
-		g.setColor(Color.BLACK);
+		//g.setColor(Color.BLACK);
 		int textAscent = g.getFontMetrics().getAscent();
-		int textDescent = g.getFontMetrics().getDescent();		
+		int textDescent = g.getFontMetrics().getDescent();
 		int textPosX = imagePosX + imageWidth + 5;
 		int textPosY = (itemHeight / 2) + (textAscent / 2) - textDescent + 1;
 		g.drawString(value.getName(), textPosX, textPosY);
-		
+
 		// draw participant color
 		int colorWidth = 20;
 		int colorHeight = 10;
@@ -96,9 +96,9 @@ public class ParticipantItemCellRenderer extends JPanel implements ListCellRende
 		g.fillRect(colorPosX, colorPosY, colorWidth, colorHeight);
 		g.setColor(value.getColor().darker());
 		g.drawRect(colorPosX, colorPosY, colorWidth, colorHeight);
-		
+
 	}
-	
+
 /*	public String getToolTipText() {
 		return value.getName();
 	}*/
@@ -106,5 +106,5 @@ public class ParticipantItemCellRenderer extends JPanel implements ListCellRende
 	public Dimension getPreferredSize() {
 		return new Dimension(0, 20);
 	}
-	
+
 }
