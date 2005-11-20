@@ -2,7 +2,7 @@
  <head>
   <title>ACE - a collaborative editor</title>
   <link rel="stylesheet" type="text/css" href="css/site.css" />
-  <meta name="keywords" content="ace, collaborative, editor, operational, transformation, concurrency, control, groupware"/>
+  <meta name="keywords" content="ace, collaborative, editor, text editor, opensource, java, beep, bonjour, operational, transformation, concurrency, control, groupware"/>
   <meta name="author" content="ace project team"/>
  </head>
  <body>
@@ -12,7 +12,7 @@
     <table border="0" cellspacing="0" cellpadding="0" width="100%">
      <tr>
       <td style="padding-left: 15px; padding-top: 13px">
-       <img src="images/logo.png"/>
+       <a href="index.php"><img src="images/logo.png" border="0"/></a>
       </td>
       <td id="quicknav">
      <a href="http://ace.iserver.ch:8080/jira">Jira</a> | 
@@ -24,29 +24,29 @@
   </div>
   
   <div id="mainnav">
-   <img src="images/navbar-intro.jpg"/>
-   <img src="images/navbar-vision.jpg"/>
-   <img src="images/navbar-background.jpg"/>
-   <img src="images/navbar-contact.jpg"/>
+   <a href="index.php?page=1"><img src="images/navbar-intro.jpg" border="0"/></a>
+   <a href="index.php?page=2"><img src="images/navbar-vision.jpg" border="0"/></a>
+   <a href="index.php?page=3"><img src="images/navbar-background.jpg" border="0"/></a>
+   <a href="mailto:feedback@ace.iserver.ch"><img src="images/navbar-contact.jpg" border="0"/></a>
   </div>
   
   <div id="main">
    <table border="0" cellspacing="0" cellpadding="0" 
           style="margin-left: 10px; width: 100%">
     <tr>
-     <td valign="top">
+     <td valign="top" width="160px">
       <div class="block">
        <ul>
         <li><a href="index.php">Home</a></li>
-        <li><a href="index.php?page=2">Documents</a></li>
+        <li><a href="index.php?page=7">Documents</a></li>
         <li><a href="index.php?page=3">Links</a></li>
         <li><a href="index.php?page=4">Team</a></li>
         <li><a href="index.php?page=5">Development</a></li>
         <li><a href="index.php?page=6">Testing</a></li>
        </ul>
       </div>
-      <div align="center" style="margin-top: 15px; margin-bottom: 15px">
-       <img src="images/download.png"/>
+      <div align="center" style="margin-top: 25px; margin-bottom: 15px">
+       <a href="index.php?page=8"><img src="images/download.png" border="0"/></a>
       </div>
     </td>
     <td style="padding: 10px; padding-right: 30px">
@@ -60,7 +60,7 @@
          require('inc/vision.inc.php');
          break;
        case 3:
-         require('inc/background.inc.php');
+         require('inc/links.inc.php');
          break;
        case 4:
          require('inc/team.inc.php');
@@ -71,6 +71,12 @@
        case 6:
          require('inc/testing.inc.php');
          break;
+       case 7:
+         require('inc/documents.inc.php');
+         break;
+       case 8:
+         require('inc/downloads.inc.php');
+         break;
        default:
          require('inc/index.inc.php');
        }
@@ -79,6 +85,16 @@
      </td>
     </tr>
    </table>
+  </div>
+  
+  <div id="footernav">
+   <div align="center">
+    <div style="width: 700px; border-top: 1px solid #eee; padding-top: 10px">
+     <a href="index.php">Home</a> |
+     <a href="index.php?page=8">Downloads</a> |
+     <a href="mailto:feedback@ace.iserver.ch">Contact</a>
+    </div>
+   </div>
   </div>
   
   <div id="footer">

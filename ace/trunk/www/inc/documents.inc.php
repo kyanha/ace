@@ -1,4 +1,5 @@
-<h2>Documents</h2>
+<h2>Semester Project</h2>
+
 <h3>Technical Reports</h3>
 <ul>
   <li><a href="http://ace.iserver.ch:81/repos/ace/ace/tags/ACE_20050624/doc/pdf/finalreport.pdf">Final Report</a></li>
