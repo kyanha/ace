@@ -15,9 +15,9 @@
        <a href="index.php"><img src="images/logo.png" border="0"/></a>
       </td>
       <td id="quicknav">
-     <a href="http://ace.iserver.ch:8080/jira">Jira</a> | 
-     <a href="http://ace.iserver.ch:8080/confluence">Confluence</a> | 
-     <a href="http://ace.iserver.ch:81/cgi-bin/trac.cgi">Trac</a>
+       <a href="http://ace.iserver.ch:8080/jira">Jira</a> | 
+       <a href="http://ace.iserver.ch:8080/confluence">Confluence</a> | 
+       <a href="http://ace.iserver.ch:81/cgi-bin/trac.cgi">Trac</a>
       </td>
      </tr>
     </table>
@@ -34,7 +34,7 @@
    <table border="0" cellspacing="0" cellpadding="0" 
           style="margin-left: 10px; width: 100%">
     <tr>
-     <td valign="top" width="160px">
+     <td valign="top" align="left" width="160">
       <div class="block">
        <ul>
         <li><a href="index.php">Home</a></li>
@@ -50,7 +50,7 @@
        <img src="images/opensource.png" border="0"/>
       </div>
     </td>
-    <td style="padding: 10px; padding-right: 30px; padding-top: 25px" valign="top">
+    <td style="vertical-align: top; padding: 10px; padding-right: 30px">
      <div id="content">
        <?php
        switch ($_GET['page']) {
@@ -88,14 +88,12 @@
    </table>
   </div>
   
-  <div id="footernav">
-   <div align="center">
+  <div id="footernav" align="center">
     <div style="width: 700px; border-top: 1px solid #eee; padding-top: 10px">
      <a href="index.php">Home</a> |
      <a href="index.php?page=8">Downloads</a> |
      <a href="mailto:feedback@ace.iserver.ch">Contact</a>
     </div>
-   </div>
   </div>
   
   <div id="footer">
