@@ -46,10 +46,11 @@
        </ul>
       </div>
       <div align="center" style="margin-top: 25px; margin-bottom: 15px">
-       <a href="index.php?page=8"><img src="images/download.png" border="0"/></a>
+       <a href="index.php?page=8"><img src="images/download.png" border="0"/></a><br/><br/>
+       <img src="images/opensource.png" border="0"/>
       </div>
     </td>
-    <td style="padding: 10px; padding-right: 30px">
+    <td style="padding: 10px; padding-right: 30px" valign="top">
      <div id="content">
        <?php
        switch ($_GET['page']) {
