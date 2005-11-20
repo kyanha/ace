@@ -88,6 +88,7 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 		extendedTitle = document.getPublisher().getName() + " - " + document.getTitle();
 		toolTip = document.getPublisher().getName() + " - " + document.getTitle();
 		type = REMOTE;
+		remoteDocument = document;
 		document.addPropertyChangeListener(this);
 		document.getPublisher().addPropertyChangeListener(this);
 	}
