@@ -28,7 +28,7 @@ import com.apple.eawt.ApplicationEvent;
 /**
  *
  */
-public class OSXCustomizer extends ApplicationAdapter implements Customizer {
+public class WindowsCustomizer extends ApplicationAdapter implements Customizer {
 	
 	private ApplicationController controller;
 	
