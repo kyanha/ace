@@ -50,6 +50,7 @@ public class NetJoinSessionAction extends AbstractAction implements ItemSelectio
 
 	public void itemSelectionChanged(ItemSelectionChangeEvent e) {
 		//System.out.println("ItemSelectionChangeEvent: " + e);
+		
 	}
 
 }

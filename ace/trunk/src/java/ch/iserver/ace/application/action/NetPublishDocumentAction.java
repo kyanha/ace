@@ -53,10 +53,15 @@ public class NetPublishDocumentAction extends DocumentItemSelectionChangeAction 
 	}
 
 	public void itemSelectionChanged(ItemSelectionChangeEvent e) {
-		if((e.getItem() != null) && ((DocumentItem)e.getItem()).getType() == DocumentItem.LOCAL) {
-			setEnabled(true);
-		} else {
+		if(e.getItem() == null) {
 			setEnabled(false);
+		} else {
+			DocumentItem item = (DocumentItem)e.getItem();
+			if(item.getType() == DocumentItem.LOCAL) {
+				setEnabled(true);
+			} else {
+				setEnabled(false);
+			}
 		}
 	}
 

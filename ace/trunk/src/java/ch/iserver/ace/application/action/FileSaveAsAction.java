@@ -21,6 +21,7 @@
 
 package ch.iserver.ace.application.action;
 
+import ch.iserver.ace.application.DocumentItem;
 import ch.iserver.ace.application.ApplicationController;
 import ch.iserver.ace.application.DocumentManager;
 import ch.iserver.ace.application.ItemSelectionChangeEvent;
@@ -36,13 +37,11 @@ import javax.swing.KeyStroke;
 public class FileSaveAsAction extends DocumentItemSelectionChangeAction {
 
 	private ApplicationController appController;
-	private DocumentManager documentManager;
 
-	public FileSaveAsAction(LocaleMessageSource messageSource, DocumentManager documentManager,
-			DocumentViewController viewController, ApplicationController appController) {
+	public FileSaveAsAction(LocaleMessageSource messageSource, DocumentViewController viewController,
+			ApplicationController appController) {
 		super(messageSource.getMessage("mFileSaveAs"), messageSource.getIcon("iMenuFileSaveAs"), viewController);
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke('S', InputEvent.SHIFT_MASK | Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
-		this.documentManager = documentManager;
 		this.appController = appController;
 		setEnabled(false);
 	}
@@ -56,7 +55,13 @@ public class FileSaveAsAction extends DocumentItemSelectionChangeAction {
 		if(e.getItem() == null) {
 			setEnabled(false);
 		} else {
-			setEnabled(true);
+			DocumentItem item = (DocumentItem)e.getItem();
+			// disable for remote documents
+			if(item.getType() == DocumentItem.REMOTE) {
+				setEnabled(false);
+			} else {
+				setEnabled(true);
+			}
 		}
 	}
 

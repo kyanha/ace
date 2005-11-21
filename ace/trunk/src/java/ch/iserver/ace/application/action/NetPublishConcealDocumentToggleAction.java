@@ -64,21 +64,22 @@ public class NetPublishConcealDocumentToggleAction extends DocumentItemSelection
 	}
 
 	public void itemSelectionChanged(ItemSelectionChangeEvent e) {
-		if(e.getItem() != null) {
-			if(((DocumentItem)e.getItem()).getType() == DocumentItem.LOCAL) {
+		if(e.getItem() == null) {
+			setEnabled(false);
+		} else {
+			DocumentItem item = (DocumentItem)e.getItem();
+			if(item.getType() == DocumentItem.LOCAL) {
 				documentPublished = false;
 				putValue(SMALL_ICON, iconPublish);
 				putValue(SHORT_DESCRIPTION, toolTipPublish);
 				setEnabled(true);
-			} else if(((DocumentItem)e.getItem()).getType() == DocumentItem.PUBLISHED) {
+			} else if(item.getType() == DocumentItem.PUBLISHED) {
 				// published document
 				documentPublished = true;
 				putValue(SMALL_ICON, iconConceal);
 				putValue(SHORT_DESCRIPTION, toolTipConceal);
 				setEnabled(true);
 			}
-		} else {
-			setEnabled(false);
 		}
 	}
 

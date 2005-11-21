@@ -36,14 +36,12 @@ import javax.swing.KeyStroke;
 public class FileSaveAction extends DocumentItemSelectionChangeAction {
 
 	private ApplicationController appController;
-	private DocumentManager documentManager;
 
-	public FileSaveAction(LocaleMessageSource messageSource, DocumentManager documentManager,
-			DocumentViewController viewController, ApplicationController appController) {
+	public FileSaveAction(LocaleMessageSource messageSource, DocumentViewController viewController,
+			ApplicationController appController) {
 		super(messageSource.getMessage("mFileSave"), messageSource.getIcon("iMenuFileSave"), viewController);
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke('S', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 		putValue(SHORT_DESCRIPTION, messageSource.getMessage("mFileSaveTT"));
-		this.documentManager = documentManager;
 		this.appController = appController;
 		setEnabled(false);
 	}
@@ -57,7 +55,8 @@ public class FileSaveAction extends DocumentItemSelectionChangeAction {
 		if(e.getItem() == null) {
 			setEnabled(false);
 		} else {
-			if(!((DocumentItem)e.getItem()).hasBeenSaved() || ((DocumentItem)e.getItem()).isDirty()) {
+			DocumentItem item = (DocumentItem)e.getItem();
+			if(!item.hasBeenSaved() || item.isDirty()) {
 				setEnabled(true);
 			} else {
 				setEnabled(false);

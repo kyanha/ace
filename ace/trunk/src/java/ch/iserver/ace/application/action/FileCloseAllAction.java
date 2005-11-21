@@ -36,14 +36,12 @@ import javax.swing.KeyStroke;
 public class FileCloseAllAction extends DocumentItemSelectionChangeAction {
 
 	private ApplicationController appController;
-	private DocumentManager documentManager;
 
-	public FileCloseAllAction(LocaleMessageSource messageSource, DocumentManager documentManager,
-			DocumentViewController viewController, ApplicationController appController) {
+	public FileCloseAllAction(LocaleMessageSource messageSource, DocumentViewController viewController,
+			ApplicationController appController) {
 		super(messageSource.getMessage("mFileCloseAll"), messageSource.getIcon("iMenuFileCloseAll"), viewController);
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke('W', InputEvent.SHIFT_MASK | Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 		putValue(SHORT_DESCRIPTION, messageSource.getMessage("mFileCloseAllTT"));
-		this.documentManager = documentManager;
 		this.appController = appController;
 		setEnabled(false);
 	}

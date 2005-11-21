@@ -21,33 +21,37 @@
 
 package ch.iserver.ace.application.action;
 
+import ch.iserver.ace.application.DocumentItem;
 import ch.iserver.ace.application.ApplicationController;
 import ch.iserver.ace.application.DocumentManager;
 import ch.iserver.ace.application.ItemSelectionChangeEvent;
 import ch.iserver.ace.application.LocaleMessageSource;
 import ch.iserver.ace.application.DocumentViewController;
 import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
+import java.awt.Toolkit;
+import javax.swing.KeyStroke;
 
 
 
-public class FileSaveAllAction extends DocumentItemSelectionChangeAction {
+public class FileSaveCopyAction extends DocumentItemSelectionChangeAction {
 
 	private ApplicationController appController;
 
-	public FileSaveAllAction(LocaleMessageSource messageSource, DocumentViewController viewController,
+	public FileSaveCopyAction(LocaleMessageSource messageSource, DocumentViewController viewController,
 			ApplicationController appController) {
-		super(messageSource.getMessage("mFileSaveAll"), messageSource.getIcon("iMenuFileSaveAll"), viewController);
+		super(messageSource.getMessage("mFileSaveCopy"), messageSource.getIcon("iMenuFileSaveCopy"), viewController);
+		//putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke('S', InputEvent.SHIFT_MASK | Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 		this.appController = appController;
 		setEnabled(false);
 	}
 	
-	// TODO: ask document manager for list of unsaved documents. if list->size == 0 then disable
-
 	public void actionPerformed(ActionEvent e) {
-		appController.saveAllDocuments();
+		appController.saveDocumentCopy();
 	}
 
 	public void itemSelectionChanged(ItemSelectionChangeEvent e) {
+		// TODO: maybe disable when document hasnt been saved yet?
 		if(e.getItem() == null) {
 			setEnabled(false);
 		} else {
