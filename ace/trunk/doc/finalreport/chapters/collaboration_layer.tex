@@ -1,1 +1,117 @@
 \chapter{Collaboration Layer}
+
+The collaboration layer is in between the two other layers: the network 
+layer below and the application layer above. It is responsible for all the 
+collaboration functionality. The core responsibilities are:
+
+\begin{itemize}
+ \item host the concurrency control algorithm
+ \item transform incoming as well as outgoing requests
+ \item manage the set of participants in a given session
+ \item access control
+\end{itemize}
+
+The concurrency control algorithm is based on the concept of operational 
+transformation. It was developed and tested as part of the semester project.
+In the diploma project, the main task in this layer was to integrate the
+algorithm into the layer design.
+
+The collaboration layer can basically be split into two different parts: the
+client part and the server part.
+
+
+\section{Server} 
+
+First of all, to avoid any confusion. The server part in the collaboration
+layer has nothing to do with a network layer server, for instance a Java
+application listening on a \texttt{ServerSocket}. The collaboration layer
+server is a purely logical construct. In this chapter we refer to
+this collaboration layer server simply as server.
+
+The server hosts the server part of the concurrency control algorithm. Further
+it controls who joins the session and ensures that the session's list of
+participants is kept up-to-date. The server itself does not have a graphical
+user interface.
+
+\subsection{Overview}
+For each published document, there is an instance of \texttt{ServerLogicImpl}.
+This class implements the \texttt{DocumentServerLogic} interface, which 
+represents the view of the Network Layer of a published document in the
+Collaboration Layer. Further, it provides additional methods to manage
+the set of participants. The interface \texttt{ServerLogic} contains
+the methods exposed by the implementation.
+
+Incoming communication from a particular participant is comming through an
+implementation of the \texttt{ParticipantPort} interface. The 
+\texttt{ParticipantPort} represents the entry point for messages from
+one particular participant into the server. Outgoing communication happens 
+through an implementation of 
+\texttt{ParticipantConnection}. This interface is used by the Collaboration
+Layer to send messages to one particular participant. For every participant, 
+there is such a pair of objects. 
+
+\begin{figure}[H]
+ \centering
+ 
+ \caption{Collaboration Layer Server}
+\end{figure}
+
+\subsection{Serialized Processing}
+One of the core requirements of the chosen algorithm is that at the
+server only one particular request is processed at a given time. Because
+there are potentially several threads accessing the server part, this 
+serialization becomes very important. Using \texttt{synchronized} blocks
+would result in blocked Network Layer threads. We chose a different
+approach.
+
+To serialize all incoming requests, a blocking queue is used. This queue,
+called serializer queue, decouples the Network Layer threads from the
+processing of requests and provides a simple serialization. The queue
+contains command objects of type \texttt{SerializerCommand}, which is an
+interface.
+
+\begin{figure}[H]
+ \centering
+ \caption{Serializer Command}
+\end{figure}
+
+To explain the reason for this design, let us imagine the following
+imaginary situation. Participant A sent a request to the server, which is
+still in the serializer queue when another user joins the session. Adding
+the user directly to the list of participants would result in the situation
+that he gets a request that was issued before the user joined the session.
+This is an undesirable situation. Through the use of queue, which serializes
+all access, we can maintain the correct temporal order.
+
+There are five different serializer commands, which are described in the
+next sections.
+
+\subsubsection{CaretUpdateSerializerCommand} Processes an incoming
+\texttt{CaretUpdateMessage}. Processing consists of transforming the
+message with the server side algorithm representing the participant, from 
+which the message was received.
+
+\subsubsection{RequestSerializerCommand} Processes an incoming
+\texttt{Request}. Processing consists of transforming the reqeust with
+the server side algorithm representing the participant, from which the
+message was received.
+
+\subsubsection{JoinCommand} Adds the joining user to the list of participants
+in the session, sends the initial document to the newly joined participant
+and notifies all the other participants about the new participant.
+
+\subsubsection{LeaveCommand} Notifies the other participants that a participant
+left the session.
+
+\subsubsection{ShutdownCommand} Shuts the Collaboration Layer server for the
+session down and closes all \texttt{ParticipantConnection} instances.
+
+
+
+\section{Publisher}
+
+
+\section{Participant}
+
+
+
