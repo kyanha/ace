@@ -68,8 +68,6 @@
     <constructor-arg><ref local="localeMessageSource"/></constructor-arg>
     <property name="toolBarActions">
       <list>
-        <ref bean="netPublishConcealDocumentToggleAction"/>
-        <ref bean="appExitAction"/>
         <ref bean="toggleFullScreenEditingAction"/>
       </list>
     </property>
@@ -113,10 +111,7 @@
     <constructor-arg index="1"><ref local="documentViewController"/></constructor-arg>
     <property name="toolBarActions">
       <list>
-        <ref bean="netInviteUserAction"/>
-        <ref bean="netKickParticipantAction"/>
         <ref bean="netPublishConcealDocumentToggleAction"/>
-        <ref bean="appExitAction"/>
       </list>
     </property>
   </bean>
@@ -128,10 +123,7 @@
     <constructor-arg><ref local="browseViewController"/></constructor-arg>
     <property name="toolBarActions">
       <list>
-        <ref bean="netInviteUserAction"/>
-        <ref bean="netKickParticipantAction"/>
-        <ref bean="netPublishConcealDocumentToggleAction"/>
-        <ref bean="appExitAction"/>
+        <ref bean="netJoinSessionAction"/>
       </list>
     </property>
   </bean>
@@ -145,10 +137,7 @@
     <constructor-arg><ref local="participantViewController"/></constructor-arg>
     <property name="toolBarActions">
       <list>
-        <ref bean="netInviteUserAction"/>
         <ref bean="netKickParticipantAction"/>
-        <ref bean="netPublishConcealDocumentToggleAction"/>
-        <ref bean="appExitAction"/>
       </list>
     </property>
   </bean>
@@ -163,9 +152,6 @@
     <property name="toolBarActions">
       <list>
         <ref bean="netInviteUserAction"/>
-        <ref bean="netKickParticipantAction"/>
-        <ref bean="netPublishConcealDocumentToggleAction"/>
-        <ref bean="appExitAction"/>
       </list>
     </property>
   </bean>
