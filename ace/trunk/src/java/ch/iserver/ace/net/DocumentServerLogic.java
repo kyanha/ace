@@ -32,8 +32,7 @@ public interface DocumentServerLogic {
 	 * to communicate with the joining user.
 	 *
 	 * @param connection a connection for communicating with the joining user
-	 * @throws JoinException if there is a problem while joining
 	 */
-	void join(ParticipantConnection connection) throws JoinException;
+	void join(ParticipantConnection connection);
 			
 }
