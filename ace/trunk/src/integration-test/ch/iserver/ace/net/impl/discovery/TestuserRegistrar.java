@@ -24,7 +24,8 @@ package ch.iserver.ace.net.impl.discovery;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Properties;
+
+import ch.iserver.ace.net.impl.NetworkProperties;
 
 import com.apple.dnssd.DNSSD;
 import com.apple.dnssd.DNSSDRegistration;
@@ -39,14 +40,12 @@ public class TestuserRegistrar implements RegisterListener {
 
 	private List usernames;
 	private List servicenames;
-	private Properties props;
 	private List registrations;
 	private int[] ports;
 	
-	public TestuserRegistrar(List usernames, List servicenames, int[] ports, Properties properties) {
+	public TestuserRegistrar(List usernames, List servicenames, int[] ports) {
 		this.usernames = usernames;
 		this.servicenames = servicenames;
-		this.props = properties;
 		this.ports = ports;
 		this.registrations = new ArrayList();
 	}
@@ -58,17 +57,15 @@ public class TestuserRegistrar implements RegisterListener {
 		while (iter.hasNext()) {
 			String service = (String)iter.next();
 			String user = (String)iter2.next();
-			props.put(Bonjour.KEY_USER, user);
-			props.put(Bonjour.KEY_USERID, user+ports[ctr]);
 			
 			try {
 				DNSSD.register(0, 0, 
 					service, 
-					(String)props.get(Bonjour.KEY_REGISTRATION_TYPE), 
+					NetworkProperties.get(NetworkProperties.KEY_REGISTRATION_TYPE), 
 					"",
 					"", 
-					ports[ctr++],
-					TXTRecordProxy.create(props), 
+					ports[ctr],
+					TXTRecordProxy.create(user, (user+ports[ctr++])), 
 					this);
 			} catch (Exception e) {
 				throw new RuntimeException(e);

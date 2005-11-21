@@ -20,10 +20,9 @@
  */
 package ch.iserver.ace.net.impl.discovery;
 
-import java.util.Properties;
-
 import org.apache.log4j.Logger;
 
+import ch.iserver.ace.net.impl.NetworkProperties;
 import ch.iserver.ace.net.impl.discovery.dnssd.Browse;
 import ch.iserver.ace.net.impl.discovery.dnssd.DNSSDUnavailable;
 import ch.iserver.ace.util.ParameterValidator;
@@ -53,10 +52,8 @@ class PeerDiscoveryImpl implements PeerDiscovery {
 	/**
 	 * @inheritDoc
 	 */
-	public void browse(final Properties props) {
-		ParameterValidator.notNull("properties", props);
-
-		String regType = (String)props.get(Bonjour.KEY_REGISTRATION_TYPE);
+	public void browse() {
+		String regType = NetworkProperties.get(NetworkProperties.KEY_REGISTRATION_TYPE);
 		Browse call = new Browse(regType, listener);
 		try {
 			browser = (DNSSDService)call.execute();

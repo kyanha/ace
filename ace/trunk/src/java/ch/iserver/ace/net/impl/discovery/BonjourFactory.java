@@ -20,10 +20,6 @@
  */
 package ch.iserver.ace.net.impl.discovery;
 
-import java.io.IOException;
-import java.util.Properties;
-
-import ch.iserver.ace.ApplicationError;
 import ch.iserver.ace.net.impl.Discovery;
 import ch.iserver.ace.net.impl.DiscoveryCallback;
 import ch.iserver.ace.net.impl.DiscoveryFactory;
@@ -34,10 +30,9 @@ import com.apple.dnssd.ResolveListener;
 public class BonjourFactory extends DiscoveryFactory {
 	
 	public Discovery createDiscovery(DiscoveryCallback callback) {
-		Properties props = loadConfig();
 		UserRegistration registration = new UserRegistrationImpl();
 		PeerDiscovery discovery = createPeerDiscovery(callback);
-		Bonjour b = new Bonjour(registration, discovery, props);
+		Bonjour b = new Bonjour(registration, discovery);
 		Bonjour.setLocalServiceName(System.getProperty("user.name"));
 		return b;
 	}
@@ -53,18 +48,4 @@ public class BonjourFactory extends DiscoveryFactory {
 		PeerDiscovery discovery = new PeerDiscoveryImpl(browseListener);
 		return discovery;
 	}
-
-	/**
-	 * Loads the properties for Bonjour zeroconf.
-	 */
-	protected Properties loadConfig() {
-	    Properties properties = new Properties();
-	    try {
-	        properties.load(getClass().getResourceAsStream("zeroconf.properties"));
-	    } catch (IOException e) {
-	    		throw new ApplicationError(e);
-	    }
-		return properties;
-	}
-
 }

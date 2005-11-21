@@ -21,7 +21,7 @@
 
 package ch.iserver.ace.net.impl.discovery.dnssd;
 
-import java.util.Properties;
+import ch.iserver.ace.net.impl.NetworkProperties;
 
 /**
  *
@@ -34,28 +34,9 @@ public class RetryStrategyFactory {
 	 * @return a retry strategy
 	 */
 	public static RetryStrategy create() {
-		Properties props = loadConfig();
 		return new AdditiveWaitRetryStrategy(
-				Integer.parseInt((String)props.get(AdditiveWaitRetryStrategy.KEY_NUMBER_OF_RETRIES)),
-				Long.parseLong((String)props.get(AdditiveWaitRetryStrategy.KEY_INITIAL_WAITINGTIME)), 
-				Long.parseLong((String)props.get(AdditiveWaitRetryStrategy.KEY_SUBSEQUENT_WAITINGTIME)));
+				Integer.parseInt(NetworkProperties.get(NetworkProperties.KEY_NUMBER_OF_RETRIES)),
+				Long.parseLong(NetworkProperties.get(NetworkProperties.KEY_INITIAL_WAITINGTIME)), 
+				Long.parseLong(NetworkProperties.get(NetworkProperties.KEY_SUBSEQUENT_WAITINGTIME)));
 	}
-	
-	/**
-	 * Loads the properties for Bonjour zeroconf.
-	 */
-	//TODO: the properties are loaded a second time -> improve
-	private static Properties loadConfig() {
-	    Properties properties = new Properties();
-	    properties.put(AdditiveWaitRetryStrategy.KEY_NUMBER_OF_RETRIES, "3");
-	    properties.put(AdditiveWaitRetryStrategy.KEY_INITIAL_WAITINGTIME, "2000");
-	    properties.put(AdditiveWaitRetryStrategy.KEY_SUBSEQUENT_WAITINGTIME, "4000");
-//	    try {
-//	        properties.load(getResourceAsStream("zeroconf.properties"));
-//	    } catch (IOException e) {
-//	    		throw new ApplicationError(e);
-//	    }
-		return properties;
-	}
-	
 }

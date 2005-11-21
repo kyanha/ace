@@ -20,7 +20,6 @@
  */
 package ch.iserver.ace.net.impl.discovery;
 
-import java.util.Properties;
 
 /**
  * 
@@ -32,10 +31,9 @@ interface PeerDiscovery {
 	 * Browses the local network for other services of the same type, i.e.
 	 * other users.
 	 * 
-	 * @param properties the properties for the DNSSD call.
 	 * @see com.apple.dnssd.DNSSD
 	 */
-	void browse(Properties properties);
+	void browse();
 	
 	/**
 	 * Stops the Bonjour peer discovery process.

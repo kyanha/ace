@@ -20,8 +20,6 @@
  */
 package ch.iserver.ace.net.impl.discovery;
 
-import java.util.Properties;
-
 import org.apache.log4j.Logger;
 
 import ch.iserver.ace.ApplicationError;
@@ -37,13 +35,7 @@ public class Bonjour implements Discovery {
 	private static Logger LOG = Logger.getLogger(Bonjour.class);
 	private static Logger APP_LOG = Logger.getLogger("application");
 	
-	public static final String KEY_REGISTRATION_TYPE = "registration.type";
-	public static final String KEY_TXT_VERSION = "txt.version";
-	public static final String KEY_PROTOCOL_VERSION = "protocol.version";
-	public static final String KEY_USER = "user.name";
-	public static final String KEY_USERID = "user.id";
-	
-	public static final String SERVICE_NAME_SEPARATOR = "._";
+	private static final String SERVICE_NAME_SEPARATOR = "._";
 	
 	//type values for resources and queries
 	//constants defined as in nameser.h
@@ -52,15 +44,13 @@ public class Bonjour implements Discovery {
 	
 	private static String LOCAL_SERVICE_NAME;
 
-	private Properties props;
+	private String username, userid;
 	private UserRegistration registration;
 	private PeerDiscovery peerDiscovery;
 	
-	public Bonjour(UserRegistration registration, PeerDiscovery discovery, Properties props) {
-		ParameterValidator.notNull("props", props);
+	public Bonjour(UserRegistration registration, PeerDiscovery discovery) {
 		ParameterValidator.notNull("registration", registration);
 		ParameterValidator.notNull("discovery", discovery);
-		this.props = props;
 		this.registration  = registration;
 		this.peerDiscovery = discovery;
 	}
@@ -69,8 +59,8 @@ public class Bonjour implements Discovery {
 	 * @inheritDoc
 	 */
 	public void execute() {
-		registration.register(props);
-		peerDiscovery.browse(props);
+		registration.register(username, userid);
+		peerDiscovery.browse();
 	}
 	
 	public void abort() {
@@ -84,7 +74,7 @@ public class Bonjour implements Discovery {
 	//TODO: integration test with userId (from Bonjour client to UserRegistrationImpl)
 	public void setUserId(String uuid) {
 		ParameterValidator.notNull("uuid", uuid);
-		props.put(KEY_USERID, uuid);
+		userid = uuid;
 	}
 	
 	/**
@@ -92,20 +82,10 @@ public class Bonjour implements Discovery {
 	 */
 	public void setUserDetails(UserDetails details) {
 		ParameterValidator.notNull("details", details);
-		props.put(KEY_USER, details.getUsername());
+		username = details.getUsername();
 		if (registration.isRegistered()) {
 			registration.updateUserDetails(details);
 		}
-	}
-	
-	/**
-	 * Returns the user id or an empty string if it is not
-	 * available.
-	 * 
-	 * @return the user id or an empty string
-	 */
-	public String getUserId() {
-		return (String)props.getProperty(KEY_USERID, "");
 	}
 	
 	/**

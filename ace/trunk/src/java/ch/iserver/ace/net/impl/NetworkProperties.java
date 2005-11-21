@@ -52,6 +52,13 @@ public class NetworkProperties {
 	public static final String KEY_DEFAULT_ENCODING = "default.encoding";
 	
 	
+	/****************************************/
+	/** Keys for retry strategy properties **/
+	/****************************************/
+	public static final String KEY_INITIAL_WAITINGTIME = "initial.waitingtime";
+	public static final String KEY_SUBSEQUENT_WAITINGTIME = "subsequent.waitingtime";
+	public static final String KEY_NUMBER_OF_RETRIES = "number.retries";
+	
 	static Properties properties;
 	
 	public static String get(String key) {

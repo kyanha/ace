@@ -1,19 +1,18 @@
 package ch.iserver.ace.net.impl.discovery;
 
 import java.net.InetAddress;
-import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
 import ch.iserver.ace.ServerInfo;
 import ch.iserver.ace.UserDetails;
+import ch.iserver.ace.net.impl.NetworkProperties;
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.discovery.dnssd.DNSSDUnavailable;
 import ch.iserver.ace.net.impl.discovery.dnssd.QueryRecord;
 import ch.iserver.ace.net.impl.discovery.dnssd.Register;
 import ch.iserver.ace.net.impl.discovery.dnssd.Resolve;
 import ch.iserver.ace.net.impl.discovery.dnssd.TXTUpdate;
-import ch.iserver.ace.net.impl.protocol.ProtocolConstants;
 import ch.iserver.ace.util.ParameterValidator;
 
 import com.apple.dnssd.DNSSD;
@@ -44,19 +43,20 @@ class UserRegistrationImpl implements UserRegistration {
 	
 	
 	/**
-	 * @inheritDoc
+	 * Properties must include USER_NAME and USER_ID.
+	 * 
+	 * @param props the properties to register
 	 */
-	public void register(final Properties props) {
+	public void register(String username, String userid) {
 		String serviceName = System.getProperty("user.name");
-		String username = (String)props.get(Bonjour.KEY_USER);
 		if (username == null) {
-			props.put(Bonjour.KEY_USER, serviceName);
+			username = serviceName;
 		}
 		
 		Register call = new Register(serviceName, 
-				(String)props.get(Bonjour.KEY_REGISTRATION_TYPE), 
-				getPort(props),
-				TXTRecordProxy.create(props), 
+				NetworkProperties.get(NetworkProperties.KEY_REGISTRATION_TYPE), 
+				getPort(),
+				TXTRecordProxy.create(username, userid), 
 				this);
 		try {
 			registration = (DNSSDRegistration) call.execute();
@@ -65,8 +65,8 @@ class UserRegistrationImpl implements UserRegistration {
 		}
 	}	
 	
-	private int getPort(Properties props) {
-		String portStr = (String)props.get(Bonjour.KEY_DISCOVERY_PORT);
+	private int getPort() {
+		String portStr = NetworkProperties.get(NetworkProperties.KEY_PROTOCOL_PORT);
 		int port = 0;
 		try {
 			port = Integer.parseInt(portStr);
@@ -177,8 +177,8 @@ class UserRegistrationImpl implements UserRegistration {
 		}
 		LOG.info("local user address resolved to ["+address+"]");
 		query.stop();
-		//TODO: get port property from a global static property class
-		ServerInfo info = new ServerInfo(address, ProtocolConstants.LISTENING_PORT);
+		int port = Integer.parseInt(NetworkProperties.get(NetworkProperties.KEY_PROTOCOL_PORT));
+		ServerInfo info = new ServerInfo(address, port);
 		NetworkServiceImpl.getInstance().setServerInfo(info);
 	}
 

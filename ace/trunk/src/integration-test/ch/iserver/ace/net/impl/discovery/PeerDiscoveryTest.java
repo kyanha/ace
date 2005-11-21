@@ -20,17 +20,14 @@
  */
 package ch.iserver.ace.net.impl.discovery;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 import junit.framework.TestCase;
 
 import org.easymock.ArgumentsMatcher;
 import org.easymock.MockControl;
 
-import ch.iserver.ace.ApplicationError;
 import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.net.impl.Discovery;
@@ -44,12 +41,10 @@ import com.apple.dnssd.ResolveListener;
 
 public class PeerDiscoveryTest extends TestCase {
 
-	Properties props;
 	private PeerDiscovery peerDiscovery;
 	private UserRegistration registration;
 	
 	public void testPeerDiscoveryTest() {
-		props = loadConfig();
 		//register 4 (local) peers
 		List users = new ArrayList();
 		users.add("peer1");
@@ -62,7 +57,7 @@ public class PeerDiscoveryTest extends TestCase {
 		services.add("peer-machine3");
 		services.add("peer-machine4");
 		int[] ports = new int[]{55890, 55981, 55982, 55893};
-		TestuserRegistrar registrar = new TestuserRegistrar(users, services, ports, props);
+		TestuserRegistrar registrar = new TestuserRegistrar(users, services, ports);
 		registrar.execute();
 		
 		try {
@@ -130,7 +125,7 @@ public class PeerDiscoveryTest extends TestCase {
 		registration = new UserRegistrationImpl();
 		peerDiscovery = createPeerDiscovery(callback);
 		
-		Bonjour b = new Bonjour(registration, peerDiscovery, props);
+		Bonjour b = new Bonjour(registration, peerDiscovery);
 		Bonjour.setLocalServiceName(System.getProperty("user.name"));
 		return b;
 	}
@@ -144,16 +139,6 @@ public class PeerDiscoveryTest extends TestCase {
 		BrowseListener browseListener = new BrowseListenerImpl(adapter, resolveListener);
 		PeerDiscovery discovery = new PeerDiscoveryImpl(browseListener);
 		return discovery;
-	}
-	
-	protected Properties loadConfig() {
-	    Properties properties = new Properties();
-	    try {
-	        properties.load(getClass().getResourceAsStream("zeroconf.properties"));
-	    } catch (IOException e) {
-	    		throw new ApplicationError(e);
-	    }
-		return properties;
 	}
 	
 class RemoteUserProxyMatcher implements ArgumentsMatcher {

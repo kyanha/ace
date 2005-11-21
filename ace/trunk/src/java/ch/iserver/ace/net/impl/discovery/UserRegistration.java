@@ -20,8 +20,6 @@
  */
 package ch.iserver.ace.net.impl.discovery;
 
-import java.util.Properties;
-
 import ch.iserver.ace.UserDetails;
 
 import com.apple.dnssd.QueryListener;
@@ -37,10 +35,11 @@ public interface UserRegistration extends RegisterListener, ResolveListener, Que
 	/**
 	 * Registers the user for dynamic discovery.
 	 * 
-	 * @param properties the properties used for a successful registration
+	 * @param username 	the name of the local user
+	 * @param userid 	the id of the local user
 	 * @see com.apple.dnssd.DNSSD
 	 */
-	void register(Properties properties);
+	void register(String username, String userid);
 	
 	/**
 	 * Determines if the user has been successfully

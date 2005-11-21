@@ -20,20 +20,17 @@
  */
 package ch.iserver.ace.net.impl.discovery;
 
-import java.io.IOException;
-import java.util.Properties;
-
 import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
 import org.easymock.MockControl;
 
-import ch.iserver.ace.ApplicationError;
 import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.net.NetworkServiceCallback;
 import ch.iserver.ace.net.impl.Discovery;
 import ch.iserver.ace.net.impl.DiscoveryCallback;
 import ch.iserver.ace.net.impl.DiscoveryCallbackImpl;
+import ch.iserver.ace.net.impl.NetworkProperties;
 
 import com.apple.dnssd.TXTRecord;
 
@@ -43,13 +40,14 @@ public class UserRegistrationTest extends TestCase {
 	
 	private MockControl peerDiscoveryCtrl;
 	private UserRegistration registration;
-	private Properties props;
+	private String username, userid;
 	
 	//TODO: this test does not deterministically work due to mDNSResponder caching
 	public void testUserRegistrationAndUserDetailsUpdate() throws Exception {
 		final String USER = "testuser";
 		final String USER_ID = "test-id_1";
-		
+		username = USER;
+		userid = USER_ID;
 		MockControl networkServiceCallbackCtrl = MockControl.createControl(NetworkServiceCallback.class);
 		NetworkServiceCallback nsc = (NetworkServiceCallback)networkServiceCallbackCtrl.getMock();
 		
@@ -62,14 +60,16 @@ public class UserRegistrationTest extends TestCase {
 		
 		peerDiscoveryCtrl.verify();
 
+		//System.out.println("before sleep");
 		Thread.sleep(3000);
-
+		//System.out.println("after sleep");
+		
 		assertTrue(registration.isRegistered());
 		TXTRecord rec = ((UserRegistrationImpl)registration).getTXTRecord();
-		assertEquals(props.get(Bonjour.KEY_TXT_VERSION), TXTRecordProxy.get(TXTRecordProxy.TXT_VERSION, rec));
+		assertEquals(NetworkProperties.get(NetworkProperties.KEY_TXT_VERSION), TXTRecordProxy.get(TXTRecordProxy.TXT_VERSION, rec));
 //		assertEquals(props.get(Bonjour.KEY_USER), TXTRecordProxy.get(TXTRecordProxy.TXT_USER, rec));
 //		assertEquals(props.get(Bonjour.KEY_USERID), TXTRecordProxy.get(TXTRecordProxy.TXT_USERID, rec));
-		assertEquals(props.get(Bonjour.KEY_PROTOCOL_VERSION), TXTRecordProxy.get(TXTRecordProxy.TXT_PROTOCOL_VERSION, rec));
+		assertEquals(NetworkProperties.get(NetworkProperties.KEY_PROTOCOL_VERSION), TXTRecordProxy.get(TXTRecordProxy.TXT_PROTOCOL_VERSION, rec));
 		
 		//TODO: updateUserDetails does not work on zbinl's Mac due to mDNSResponder failure
 //		final String NEW_USER = "new-testuser";
@@ -91,29 +91,14 @@ public class UserRegistrationTest extends TestCase {
 	}
 	
 	public Discovery createDiscovery(DiscoveryCallback callback) {
-		props = loadConfig();
 		registration = new UserRegistrationImpl();
 		
 		peerDiscoveryCtrl = MockControl.createControl(PeerDiscovery.class);
 		PeerDiscovery discovery = (PeerDiscovery)peerDiscoveryCtrl.getMock();
-		discovery.browse(null);
+		discovery.browse();
 		peerDiscoveryCtrl.setDefaultMatcher(MockControl.ALWAYS_MATCHER);
 		peerDiscoveryCtrl.replay();
-		Bonjour b = new Bonjour(registration, discovery, props);
+		Bonjour b = new Bonjour(registration, discovery);
 		return b;
 	}
-	
-	/**
-	 * Loads the properties for Bonjour zeroconf.
-	 */
-	protected Properties loadConfig() {
-	    Properties properties = new Properties();
-	    try {
-	        properties.load(getClass().getResourceAsStream("zeroconf.properties"));
-	    } catch (IOException e) {
-	    		throw new ApplicationError(e);
-	    }
-		return properties;
-	}
-	
 }

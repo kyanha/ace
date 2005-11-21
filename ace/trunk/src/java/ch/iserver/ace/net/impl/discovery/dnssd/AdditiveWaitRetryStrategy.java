@@ -25,10 +25,6 @@ package ch.iserver.ace.net.impl.discovery.dnssd;
  *
  */
 public class AdditiveWaitRetryStrategy extends RetryStrategy {
-
-	public static final String KEY_INITIAL_WAITINGTIME = "initial.waitingtime";
-	public static final String KEY_SUBSEQUENT_WAITINGTIME = "subsequent.waitingtime";
-	public static final String KEY_NUMBER_OF_RETRIES = "number.retries";
 	
 	public static final long STARTING_WAIT_TIME = 3000;
 	public static final long WAIT_TIME_INCREMENT = 4000;
