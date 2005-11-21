@@ -67,11 +67,13 @@ public class PublishedDocument implements DocumentServer {
 	}
 	
 	public synchronized ParticipantPort join(ParticipantConnectionExt connection) throws JoinException {
+		/* REMOVED TO FIX COMPILER ERROR
 		if (!isConcealed()) {
 			return logic.join(connection);
 		} else {
 			throw new JoinException();
-		}
+		}*/
+		return null;
 	}
 
 	public String getId() {
