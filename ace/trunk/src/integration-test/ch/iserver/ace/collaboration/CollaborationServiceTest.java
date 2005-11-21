@@ -64,6 +64,8 @@ public class CollaborationServiceTest extends TestCase {
 		connection.sendParticipantJoined(2, new RemoteUserProxyStub("Z"));
 		connection.close();
 		
+		callback.joinRequest(null);
+		callbackCtrl.setDefaultMatcher(MockControl.ALWAYS_MATCHER);
 		callback.participantJoined(new ParticipantImpl(1, new RemoteUserStub("X")));
 		callback.receiveOperation(new ParticipantImpl(1, new RemoteUserStub("X")), new InsertOperation(0, "XYZ"));
 		callback.participantJoined(new ParticipantImpl(2, new RemoteUserStub("Z")));
@@ -75,6 +77,7 @@ public class CollaborationServiceTest extends TestCase {
 		// test
 		ThreadDomain threadDomain = new CallerThreadDomain();
 		UserRegistry registry = new UserRegistryImpl();
+		registry.addUser(new RemoteUserProxyStub("X"));
 		CollaborationServiceImpl service = new CollaborationServiceImpl(networkService);
 		service.setUserRegistry(registry);
 		service.setPublisherThreadDomain(threadDomain);
@@ -86,8 +89,9 @@ public class CollaborationServiceTest extends TestCase {
 		DocumentServerStub server = (DocumentServerStub) networkService.getDocumentServers().get(0);
 		
 		DocumentServerLogic logic = server.getLogic();
-		ParticipantPort port1 = logic.join(connection);
-		port1.receiveRequest(new RequestImpl(1, new JupiterVectorTime(0, 0), new InsertOperation(0, "XYZ")));
+		logic.join(connection);
+		
+//		port1.receiveRequest(new RequestImpl(1, new JupiterVectorTime(0, 0), new InsertOperation(0, "XYZ")));
 		
 		ParticipantConnectionStub connectionStub = new ParticipantConnectionStub(new RemoteUserProxyStub("Z"));
 		ServerDocumentImpl expectedDocument = new ServerDocumentImpl();
