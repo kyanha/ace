@@ -21,6 +21,7 @@
 
 package ch.iserver.ace.application.action;
 
+import ch.iserver.ace.application.BrowseItem;
 import ch.iserver.ace.application.DocumentManager;
 import ch.iserver.ace.application.ItemSelectionChangeEvent;
 import ch.iserver.ace.application.ItemSelectionChangeListener;
@@ -45,11 +46,16 @@ public class NetJoinSessionAction extends AbstractAction implements ItemSelectio
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		//System.out.println("NetJoinSessionAction");
+		System.out.println("NetJoinSessionAction");
 	}
 
 	public void itemSelectionChanged(ItemSelectionChangeEvent e) {
-		//System.out.println("ItemSelectionChangeEvent: " + e);
+		if(e.getItem() == null) {
+			setEnabled(false);
+		} else {
+			BrowseItem item = (BrowseItem)e.getItem();
+			setEnabled(true);
+		}
 		
 	}
 

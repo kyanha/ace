@@ -56,7 +56,8 @@ public class FileSaveAction extends DocumentItemSelectionChangeAction {
 			setEnabled(false);
 		} else {
 			DocumentItem item = (DocumentItem)e.getItem();
-			if(!item.hasBeenSaved() || item.isDirty()) {
+			if(!(item.getType() == DocumentItem.REMOTE) && (!item.hasBeenSaved() || item.isDirty())) {
+				// enable for all local document that havent been saved yet or that are dirty
 				setEnabled(true);
 			} else {
 				setEnabled(false);

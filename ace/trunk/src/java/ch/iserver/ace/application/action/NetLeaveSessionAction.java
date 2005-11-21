@@ -21,6 +21,7 @@
 
 package ch.iserver.ace.application.action;
 
+import ch.iserver.ace.application.DocumentItem;
 import ch.iserver.ace.application.DocumentManager;
 import ch.iserver.ace.application.ItemSelectionChangeEvent;
 import ch.iserver.ace.application.LocaleMessageSource;
@@ -43,11 +44,22 @@ public class NetLeaveSessionAction extends DocumentItemSelectionChangeAction {
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		//System.out.println("NetLeaveSessionAction");
+		System.out.println("NetLeaveSessionAction");
 	}
 
 	public void itemSelectionChanged(ItemSelectionChangeEvent e) {
 		//System.out.println("ItemSelectionChangeEvent: " + e);
+		if(e.getItem() == null) {
+			setEnabled(false);
+		} else {
+			DocumentItem item = (DocumentItem)e.getItem();
+			if(item.getType() == DocumentItem.REMOTE) {
+				// enabled for remote documents only
+				setEnabled(true);
+			} else {
+				setEnabled(false);
+			}
+		}
 	}
 
 }
