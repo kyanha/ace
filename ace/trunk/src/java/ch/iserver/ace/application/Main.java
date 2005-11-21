@@ -43,6 +43,8 @@ public class Main {
 	};
 	
 	public static void main(String[] args) {
+
+		// CREATE CUSTOMIZER
 		// customizing for operating system specific stuff
 		String classname = System.getProperty("ch.iserver.ace.customizer");
 		Customizer customizer = null;
@@ -50,48 +52,55 @@ public class Main {
 			customizer = loadCustomizer(classname);
 		}
 
+
+
+		// LOAD BEANS
 		final ApplicationContext context = new ClassPathXmlApplicationContext(CONTEXT_FILES);
 
-		// get application factory
-		ApplicationFactory applicationFactory = (ApplicationFactory)context.getBean("appFactory");
+		// 1. application factory
+		ApplicationFactory applicationFactory = (ApplicationFactory) context.getBean("appFactory");
+		// 2. application controller
+		ApplicationController controller = (ApplicationController) context.getBean("applicationController");		
+		customize(customizer, controller);
+		// 3. collaboration service
+		CollaborationService collaborationService = (CollaborationService) context.getBean("collaborationService");
+		// 4. preferences store
+		PreferencesStore preferencesStore = (PreferencesStore) context.getBean("preferencesStore");
 
-		// create frame
+
+
+		// CREATE FRAME
 		PersistentFrame frame = (PersistentFrame)context.getBean("persistentMainFrame");
+		PersistentContentPane pane = (PersistentContentPane)context.getBean("persistentContentPane");
 		frame.setMenuBar(applicationFactory.createMenuBar());
 		frame.setToolBar(applicationFactory.createToolBar());
-		PersistentContentPane pane = (PersistentContentPane)applicationFactory.createPersistentContentPane();
 		frame.setContentPane(pane);
 		frame.setStatusBar(applicationFactory.createStatusBar());
 		frame.setTitle("ACE - a collaborative editor");
 		frame.setVisible(true);
 		
-		// TODO: define persistentPane in spring
-		((ToggleFullScreenEditingAction)context.getBean("toggleFullScreenEditingAction")).setPersistentContentPane(pane);
+
 		
-		// get application controller
-		ApplicationController controller = (ApplicationController) context.getBean("applicationController");		
-		customize(customizer, controller);
-		
-		// get the preferences store
-		PreferencesStore preferencesStore = (PreferencesStore) context.getBean("preferencesStore");
-		
-		// get collaboration service
-		CollaborationService collaborationService = (CollaborationService) context.getBean("collaborationService");
+		// INIT
+		// 1. preferences store
 		String id = preferencesStore.get(PreferencesStore.USER_ID, UUID.nextUUID());
 		preferencesStore.put(PreferencesStore.USER_ID, id);
+
+		// 2. collaboration service
 		collaborationService.setUserId(id);
 		UserDetails details = getUserDetails(preferencesStore);
 		collaborationService.setUserDetails(details);
 
-		// preference listeners
+		// 3. preference listeners
 		preferencesStore.addPreferenceChangeListener(
 						new UserDetailsUpdater(collaborationService, details.getUsername()));
 		
-		// register listeners & start
+		// 4. register listeners & start
 		collaborationService.addUserListener((UserViewController)context.getBean("userViewController"));
 		collaborationService.addDocumentListener((BrowseViewController)context.getBean("browseViewController"));
 		collaborationService.start();
 		
+		// 5. create empty document
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
 				public void run() {
@@ -104,7 +113,9 @@ public class Main {
 			e.printStackTrace();
 		}
 	}
-	
+
+
+
 	private static Customizer loadCustomizer(String classname) {
 		try {
 			Class clazz = Class.forName(classname);
@@ -118,13 +129,13 @@ public class Main {
 		}
 		return null;
 	}
-	
+
 	private static void customize(Customizer customizer, ApplicationController controller) {
 		if (customizer != null) {
 			customizer.init(controller);
 		}
 	}
-	
+
 	private static UserDetails getUserDetails(PreferencesStore preferences) {
 		return new UserDetails(preferences.get(PreferencesStore.NICKNAME_KEY, 
 				System.getProperty("user.name")));
