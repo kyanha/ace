@@ -21,11 +21,10 @@
 package ch.iserver.ace.net.impl.discovery;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
-import ch.iserver.ace.net.impl.NetworkConstants;
+import ch.iserver.ace.net.impl.NetworkProperties;
 import ch.iserver.ace.util.ParameterValidator;
 
 import com.apple.dnssd.TXTRecord;
@@ -40,13 +39,19 @@ class TXTRecordProxy {
 	
 	private static Logger LOG = Logger.getLogger(TXTRecordProxy.class);
 	
-	public static TXTRecord create(final Properties props) {
-		LOG.debug("create("+props+")");
+	/**
+	 * Properties must contain USER_NAME and USER_ID.
+	 * 
+	 * @param props
+	 * @return
+	 */
+	public static TXTRecord create(String username, String userid) {
+		LOG.debug("create("+username+", "+userid+")");
 		TXTRecord r = new TXTRecord();
-		r.set(TXT_VERSION, (String)props.get(Bonjour.KEY_TXT_VERSION));
-		r.set(TXT_USER, (String)props.get(Bonjour.KEY_USER));
-		r.set(TXT_USERID, (String)props.get(Bonjour.KEY_USERID));
-		r.set(TXT_PROTOCOL_VERSION, (String)props.get(Bonjour.KEY_PROTOCOL_VERSION));
+		r.set(TXT_VERSION, NetworkProperties.get(NetworkProperties.KEY_TXT_VERSION));
+		r.set(TXT_USER, username);
+		r.set(TXT_USERID, userid);
+		r.set(TXT_PROTOCOL_VERSION, NetworkProperties.get(NetworkProperties.KEY_PROTOCOL_VERSION));
 		return r;
 	}
 	
@@ -57,7 +62,7 @@ class TXTRecordProxy {
 		String result = null;
 		if (data != null) {
 			try {
-				result = new String(data, NetworkConstants.DEFAULT_ENCODING);
+				result = new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 			} catch (UnsupportedEncodingException uee) {
 				//should not happen, since  every implementation of the Java platform 
 				//is required to support the default charset
@@ -74,7 +79,7 @@ class TXTRecordProxy {
 		ParameterValidator.notNull("value", value);
 		ParameterValidator.notNull("txtrecord", txt);
 		try {
-			txt.set(key, value.getBytes(NetworkConstants.DEFAULT_ENCODING));
+			txt.set(key, value.getBytes(NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING)));
 		} catch (UnsupportedEncodingException uee) {
 			//should not happen, since  every implementation of the Java platform 
 			//is required to support the default charset
