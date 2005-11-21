@@ -12,15 +12,15 @@ AutoCloseWindow true
 ShowInstDetails nevershow
  
 ;You want to change the next two lines too
-!define CLASSPATH ".;lib;HelloWorld.jar;lib\HelloWorldSplash.jar"
-!define CLASS "ch.iserver.ace.HelloWorld"
+!define CLASSPATH "lib\aopalliance-1.0.jar;lib\backport-util-concurrent-1.1_01.jar;lib\xercesImpl-2.6.2.jar;lib\spring-core-1.2.5.jar;lib\spring-beans-1.2.5.jar;lib\spin-1.4.jar;lib\oro-2.0.8.jar;lib\log4j-1.2.12.jar;lib\glazedlists-1.0.0.jar;lib\concurrent-1.3.4.jar;lib\commons-logging-1.0.4.jar;lib\commons-collections-3.1.jar;lib\beepcore-0.9.08.jar;lib\commons-beanutils-1.7.0.jar;lib\commons-io-1.1.jar;lib\commons-pool-1.2.jar;lib\dnssd-107.1.jar;lib\jdom-1.0.jar;lib\looks-1.3.2.jar;lib\spring-aop-1.2.5.jar;lib\spring-context-1.2.5.jar;lib\xml-apis-2.0.2.jar;lib\ace.jar;lib\ace-windows.jar;lib\asm-1.5.3.jar"
+!define CLASS "ch.iserver.ace.application.Main"
  
 Section ""
   Call GetJRE
   Pop $R0
  
   ; change for your purpose (-jar etc.)
-  StrCpy $0 '"$R0" -classpath "${CLASSPATH}" ${CLASS}'
+  StrCpy $0 '"$R0" -Dch.iserver.ace.customizer=ch.iserver.ace.application.WindowsCustomizer -classpath "${CLASSPATH}" ${CLASS}'
   
  
   SetOutPath $EXEDIR

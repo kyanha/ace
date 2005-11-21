@@ -12,6 +12,8 @@
   !define ACE_PRODUCT_DESC "ACE - a collaborative editor"
   !define ACE_URL_LINK "ace.lnk"
   !define ACE_URL_EXEC "ace.exe"
+  !define BONJOUR_URL "http://wsidecar.apple.com/cgi-bin/nph-reg3rdpty1.pl/product=05945&platform=osx&method=sa/BonjourSetup.exe"
+  !define BONJOUR_TEMP_URL "$TEMP\BonjourSetup.exe"
 
 
 ;--------------------------------
@@ -42,6 +44,7 @@
 ;--------------------------------
 ;Pages
   !insertmacro MUI_PAGE_LICENSE "doc_gpl.txt"
+  Page custom DetectBonjour
   !insertmacro MUI_PAGE_DIRECTORY
   Page custom CustomPageOptions
   !insertmacro MUI_PAGE_INSTFILES
@@ -67,6 +70,7 @@
 ;Variables
   Var OPT_DESC_VALUE
   Var OPT_MENU_VALUE
+  ;Var OPT_BONJOUR_INSTALLED
 
 
 ;--------------------------------
@@ -78,12 +82,36 @@ Section "Install" InstallSection
   
   ;copy root
   File "ace.exe"
-  File "HelloWorld.jar"
-  
+    
   ;copy libs
   CreateDirectory "$INSTDIR\lib"
   SetOutPath "$INSTDIR\lib"
-  File "lib\HelloWorldSplash.jar"
+  
+  File "lib\aopalliance-1.0.jar"
+  File "lib\backport-util-concurrent-1.1_01.jar"
+  File "lib\xercesImpl-2.6.2.jar"
+  File "lib\spring-core-1.2.5.jar"
+  File "lib\spring-beans-1.2.5.jar"
+  File "lib\spin-1.4.jar"
+  File "lib\oro-2.0.8.jar"
+  File "lib\log4j-1.2.12.jar"
+  File "lib\glazedlists-1.0.0.jar"
+  File "lib\concurrent-1.3.4.jar"
+  File "lib\commons-logging-1.0.4.jar"
+  File "lib\commons-collections-3.1.jar"
+  File "lib\beepcore-0.9.08.jar"
+  File "lib\commons-beanutils-1.7.0.jar"
+  File "lib\commons-io-1.1.jar"
+  File "lib\commons-pool-1.2.jar"
+  File "lib\dnssd-107.1.jar"
+  File "lib\jdom-1.0.jar"
+  File "lib\looks-1.3.2.jar"
+  File "lib\spring-aop-1.2.5.jar"
+  File "lib\spring-context-1.2.5.jar"
+  File "lib\xml-apis-2.0.2.jar"
+  File "lib\ace.jar"
+  File "lib\ace-windows.jar"
+  File "lib\asm-1.5.3.jar"
   
 
 
@@ -136,6 +164,36 @@ FunctionEnd
 Function LaunchACE
   ExecShell "" "$INSTDIR\${ACE_URL_EXEC}"
 FunctionEnd
+
+Function DetectBonjour
+;  ClearErrors
+;  EnumRegValue $OPT_BONJOUR_INSTALLED HKLM "SOFTWARE\Apple Computer, Inc.\Bonjour" 0
+;  IfErrors 0 +2
+;    InetLoad::load /BANNER "asdf" "asdf" "${BONJOUR_URL}" "${BONJOUR_TEMP_URL}"
+
+
+
+    ;MessageBox MB_OK|MB_ICONINFORMATION "${ACE_PRODUCT_NAME} uses Bonjour, please download and install it from $\"http://www.apple.com/$\" (see readme file for detailed informations)."
+    ;Quit
+    ;MessageBox MB_OK "${ACE_PRODUCT_NAME} uses Bonjour, it will now be downloaded and installed. This procedure can take several Minutes."
+    ;Call InstallBonjour
+FunctionEnd
+
+;Function InstallBonjour
+;  nsisdl::download /TIMEOUT=30000 "${BONJOUR_URL}" "${BONJOUR_TEMP_URL}"
+;  Pop $R0 ;Get the return value
+;    StrCmp $R0 "success" +3
+;    MessageBox MB_OK "Bonjour downloa failed. $R0"
+;    Quit
+;  ExecWait "${BONJOUR_TEMP_URL}"
+;  Pop $R0 ;Get the return value
+;  MessageBox MB_OK "Bonjour downloa failed. $R0"
+;    StrCmp $R0 "success" +3
+;    MessageBox MB_OK "Bonjour installation failed. $R0"
+;    Quit
+;  Delete "${BONJOUR_TEMP_URL}"
+;FunctionEnd
+
 
 
 ;--------------------------------
