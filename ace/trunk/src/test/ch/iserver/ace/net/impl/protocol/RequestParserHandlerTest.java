@@ -44,7 +44,7 @@ public class RequestParserHandlerTest extends TestCase {
 	public void testPublishDocument() throws Exception {
 		deserializer.deserialize(PUBLISH.getBytes(NetworkConstants.DEFAULT_ENCODING), handler);
 		
-		Request request = (Request) handler.getResult();
+		Request request = handler.getResult();
 		assertEquals(ProtocolConstants.PUBLISH, request.getType());
 		DocumentInfo info = (DocumentInfo) request.getPayload();
 		assertEquals(info.getDocId(), "WERS24-RE2");
@@ -55,7 +55,7 @@ public class RequestParserHandlerTest extends TestCase {
 	public void testConcealDocument() throws Exception {
 		deserializer.deserialize(CONCEAL.getBytes(NetworkConstants.DEFAULT_ENCODING), handler);
 		
-		Request request = (Request) handler.getResult();
+		Request request = handler.getResult();
 		assertEquals(ProtocolConstants.CONCEAL, request.getType());
 		DocumentInfo info = (DocumentInfo) request.getPayload();
 		assertEquals(info.getDocId(), "WERS24-RE2");
@@ -65,14 +65,14 @@ public class RequestParserHandlerTest extends TestCase {
 	public void testQueryDocuments() throws Exception {
 		deserializer.deserialize(QUERY.getBytes(NetworkConstants.DEFAULT_ENCODING), handler);
 		
-		Request request = (Request) handler.getResult();
+		Request request =  handler.getResult();
 		assertEquals(ProtocolConstants.PUBLISHED_DOCUMENTS, request.getType());
 	}
 	
 	public void testSendDocuments() throws Exception {
 		deserializer.deserialize(SEND_DOCUMENTS.getBytes(NetworkConstants.DEFAULT_ENCODING), handler);
 		
-		Request request = (Request) handler.getResult();
+		Request request = handler.getResult();
 		assertEquals(ProtocolConstants.SEND_DOCUMENTS, request.getType());
 		List docs = (List) request.getPayload();
 		assertEquals(3, docs.size());

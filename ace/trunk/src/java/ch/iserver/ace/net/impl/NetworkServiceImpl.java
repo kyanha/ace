@@ -172,17 +172,6 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 		this.info = info;
 	}
 	
-	//TODO: discarded
-	public void discoverDocuments(RemoteUserProxyExt proxy) {
-		//TODO: possibly include SingleThreadDomain between DiscoveryCallbackImpl and DocumentDiscovery?
-		LOG.info("--> discoverDocuments() for ["+proxy.getUserDetails().getUsername()+"]");
-		
-		Request request = new RequestImpl(ProtocolConstants.PUBLISHED_DOCUMENTS, null, proxy);
-		requestChain.process(request);
-		
-		LOG.info("<-- discoverDocuments()");
-	}
-	
 	public void sendDocuments(RemoteUserProxyExt proxy) {
 		LOG.info("--> sendDocuments() to ["+proxy.getUserDetails().getUsername()+"]");
 		

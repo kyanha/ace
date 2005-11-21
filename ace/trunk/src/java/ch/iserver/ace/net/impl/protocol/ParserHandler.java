@@ -29,7 +29,6 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public abstract class ParserHandler extends DefaultHandler implements ProtocolConstants {
 
-	//TODO: return value could be of type Result
 	/**
 	 * 
 	 * @return 

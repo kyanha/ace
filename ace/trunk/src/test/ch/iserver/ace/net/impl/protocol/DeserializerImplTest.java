@@ -22,7 +22,7 @@ public class DeserializerImplTest extends TestCase {
 		
 		byte[] data = PUBLISHED_DOCUMENTS.getBytes(NetworkConstants.DEFAULT_ENCODING);
 		deserializer.deserialize(data, handler);
-		Request result = (Request) handler.getResult();
+		Request result = handler.getResult();
 		
 		//verify that the handler was actually used
 		assertNotNull(result);

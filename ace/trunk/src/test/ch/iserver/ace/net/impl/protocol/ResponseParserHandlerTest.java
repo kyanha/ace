@@ -21,7 +21,7 @@ public class ResponseParserHandlerTest extends TestCase {
 		QueryInfo qInfo = new QueryInfo(userId, ProtocolConstants.PUBLISHED_DOCUMENTS);
 		handler.setMetaData(qInfo);
 		deserializer.deserialize(data, handler);
-		Request result = (Request) handler.getResult();
+		Request result = handler.getResult();
 		
 		assertEquals(result.getType(), ProtocolConstants.PUBLISHED_DOCUMENTS);
 		
