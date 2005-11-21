@@ -6,6 +6,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.beepcore.beep.core.MessageMSG;
 import org.easymock.AbstractMatcher;
 import org.easymock.MockControl;
 
@@ -21,10 +22,10 @@ import ch.iserver.ace.net.impl.RemoteUserProxyImpl;
 import ch.iserver.ace.net.impl.discovery.DiscoveryManagerFactory;
 import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
 
-public class DocumentDiscoveryResponseFilterTest extends TestCase {
+public class SendDocumentsReceiveFilterTest extends TestCase {
 
 	/*
-	 * Test method for 'ch.iserver.ace.net.impl.protocol.DocumentDiscoveryResponseFilter.process(Request)'
+	 * Test method for 'ch.iserver.ace.net.impl.protocol.SendDocumentsReceiveFilter.process(Request)'
 	 */
 	public void testProcess() throws Exception {
 		MockControl callbackCtrl = MockControl.createControl(NetworkServiceCallback.class);
@@ -51,14 +52,21 @@ public class DocumentDiscoveryResponseFilterTest extends TestCase {
 				new DocumentDetails("file4.txt"), 
 				user);
 		
-		DocumentDiscoveryResponseFilter filter = new DocumentDiscoveryResponseFilter(null);
+		SendDocumentsReceiveFilter filter = new SendDocumentsReceiveFilter(null);
 		List docs = new ArrayList(4);
 		docs.add(new DocumentInfo("docid1", "file1.txt", "userid1"));
 		docs.add(new DocumentInfo("docid2", "file2.txt", "userid1"));
 		docs.add(new DocumentInfo("docid3", "file3.txt", "userid1"));
 		docs.add(new DocumentInfo("docid4", "file4.txt", "userid1"));
 		
-		Request request = new RequestImpl(ProtocolConstants.PUBLISHED_DOCUMENTS, null, docs);
+		
+		Request request = new RequestImpl(ProtocolConstants.SEND_DOCUMENTS, null, docs);
+		MockControl msgCtrl = MockControl.createControl(MessageMSG.class);
+		MessageMSG message = (MessageMSG)msgCtrl.getMock();
+		message.sendNUL();
+		msgCtrl.setDefaultReturnValue(null);
+		msgCtrl.replay();
+		request.setMessage(message);
 		
 		callback.documentDiscovered(proxies);
 		callbackCtrl.setDefaultMatcher(new RemoteDocumentProxyMatcher());
@@ -68,22 +76,21 @@ public class DocumentDiscoveryResponseFilterTest extends TestCase {
 		filter.process(request);
 		
 		callbackCtrl.verify();
-		
+		msgCtrl.verify();
 	}
-
 }
 
 class RemoteDocumentProxyMatcher extends AbstractMatcher {
 
-	protected boolean argumentMatches(Object arg0, Object arg1) {
-		RemoteDocumentProxy[] proxies1 = (RemoteDocumentProxy[])arg0;
-		RemoteDocumentProxy[] proxies2 = (RemoteDocumentProxy[])arg1;
-		if (proxies1.length != proxies2.length) return false;
-		
-		for (int i = 0; i < proxies1.length; i++) {
-			boolean result = proxies1[i].equals(proxies2[i]);
-			if (!result) return false;
+		protected boolean argumentMatches(Object arg0, Object arg1) {
+			RemoteDocumentProxy[] proxies1 = (RemoteDocumentProxy[])arg0;
+			RemoteDocumentProxy[] proxies2 = (RemoteDocumentProxy[])arg1;
+			if (proxies1.length != proxies2.length) return false;
+			
+			for (int i = 0; i < proxies1.length; i++) {
+				boolean result = proxies1[i].equals(proxies2[i]);
+				if (!result) return false;
+			}
+			return true;
 		}
-		return true;
-	}
 }
