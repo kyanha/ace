@@ -122,11 +122,29 @@ public class RemoteUserSession {
 	
 	/**
 	 * Cleans up the session. No methods may be called
-	 * after a call to <code>cleanup()</code>.
+	 * after a call to <code>cleanup()</code>. This method
+	 * is called when the BEEP session has terminated already.
 	 */
 	public synchronized void cleanup() {
 		connection = null;
 		session = null;
+		user = null;
+		isAlive = false;
+	}
+	
+	/**
+	 * Closes the active session. This method must
+	 * be called when the TCPSession is still active.
+	 */
+	public synchronized void close() {
+		if (session != null) {
+			try {
+				connection.close();
+				session.close();
+			} catch (BEEPException be) {
+				LOG.warn("could not close active session ["+be.getMessage()+"]");
+			}
+		}
 		user = null;
 		isAlive = false;
 	}

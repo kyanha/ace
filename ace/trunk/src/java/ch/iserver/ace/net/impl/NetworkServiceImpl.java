@@ -43,6 +43,7 @@ import ch.iserver.ace.net.impl.protocol.Request;
 import ch.iserver.ace.net.impl.protocol.RequestFilter;
 import ch.iserver.ace.net.impl.protocol.RequestFilterFactory;
 import ch.iserver.ace.net.impl.protocol.RequestImpl;
+import ch.iserver.ace.net.impl.protocol.SessionManager;
 import ch.iserver.ace.util.ParameterValidator;
 import ch.iserver.ace.util.UUID;
 
@@ -118,11 +119,20 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 		//start discovery process
 		DiscoveryLauncher launcher = new DiscoveryLauncher(this);
 		launcher.start();
+		//TODO: warn message if dnssd is not installed locally
 	}
 	
 	public void stop() {
-		LOG.debug("network service stopped.");
-		//TODO: implement
+		LOG.debug("--> stop()");
+		//abort discovery
+		discovery.abort();
+		//close all open sessions
+		SessionManager.getInstance().closeSessions();
+		//stop beep session listener
+		sessionListener.terminate();
+		
+		//TODO: conceal message for documents not necessary -> check with raess
+		LOG.debug("<-- stop()");
 	}
 	
 	public void setUserDetails(UserDetails details) {

@@ -73,7 +73,9 @@ public class RemoteDocumentProxyImpl implements RemoteDocumentProxyExt {
 	 * @see ch.iserver.ace.net.RemoteDocumentProxy#join(ch.iserver.ace.net.JoinNetworkCallback)
 	 */
 	public void join(JoinNetworkCallback callback) {
-		throw new UnsupportedOperationException();
+		
+		
+		
 	}
 	
 	/**

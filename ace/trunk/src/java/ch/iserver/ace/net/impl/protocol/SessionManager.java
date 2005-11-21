@@ -22,6 +22,7 @@
 package ch.iserver.ace.net.impl.protocol;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -29,7 +30,6 @@ import org.beepcore.beep.transport.tcp.TCPSession;
 
 import ch.iserver.ace.net.impl.MutableUserDetails;
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;
-import ch.iserver.ace.net.impl.discovery.DiscoveryManager;
 import ch.iserver.ace.net.impl.discovery.DiscoveryManagerFactory;
 
 /**
@@ -76,6 +76,20 @@ public class SessionManager {
 		session = (RemoteUserSession) sessions.remove(userid);
 		DiscoveryManagerFactory.getDiscoveryManager(null).setSessionTerminated(userid);
 		return session;
+	}
+	
+	/**
+	 * Closes all sessions.
+	 * To be called on network layer shutdown.
+	 */
+	public void closeSessions() {
+		synchronized(sessions) {
+			Iterator iter = sessions.values().iterator();
+			while (iter.hasNext()) {
+				RemoteUserSession session = (RemoteUserSession) iter.next();
+				session.close();
+			}
+		}
 	}
 	
 	/**
