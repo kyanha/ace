@@ -26,6 +26,8 @@ import org.beepcore.beep.core.ProfileRegistry;
 import org.beepcore.beep.core.RequestHandler;
 import org.beepcore.beep.core.StartChannelListener;
 
+import ch.iserver.ace.net.impl.NetworkProperties;
+
 /**
  *
  */
@@ -42,10 +44,10 @@ public class ProfileRegistryFactory {
 			DefaultProfile profile = new DefaultProfile(listener);
 			StartChannelListener channelListener = null;
 			try {
-				channelListener = profile.init(ProtocolConstants.PROFILE_URI, null);
+				channelListener = profile.init(NetworkProperties.get(NetworkProperties.KEY_PROFILE_URI), null);
 			} catch (BEEPException be) {}
 			instance = new ProfileRegistry();
-			instance.addStartChannelListener(ProtocolConstants.PROFILE_URI, channelListener, null);
+			instance.addStartChannelListener(NetworkProperties.get(NetworkProperties.KEY_PROFILE_URI), channelListener, null);
 		}
 		return instance;
 	}

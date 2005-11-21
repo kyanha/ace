@@ -31,6 +31,8 @@ import org.beepcore.beep.core.event.SessionResetEvent;
 import org.beepcore.beep.transport.tcp.TCPSession;
 import org.beepcore.beep.transport.tcp.TCPSessionCreator;
 
+import ch.iserver.ace.net.impl.NetworkProperties;
+
 /**
  *
  */
@@ -51,11 +53,12 @@ public class BEEPSessionListener extends Thread implements SessionListener {
 	public void run() {
 		String exitStatus = "normal";
 		try {
+			int port = Integer.parseInt(NetworkProperties.get(NetworkProperties.KEY_PROTOCOL_PORT));
 			while (!terminate) {
 				//TODO: error handling, e.g. when port is already in use -> retry strategy
-				LOG.debug("start listening at port "+ProtocolConstants.LISTENING_PORT+" again");
-				try {
-					TCPSession session = TCPSessionCreator.listen(ProtocolConstants.LISTENING_PORT, registry);
+				LOG.debug("start listening at port "+port+" again");
+				try { 
+					TCPSession session = TCPSessionCreator.listen(port, registry);
 					session.addSessionListener(this);
 					LOG.debug("accepted session with ["+session.getSocket()+"]");
 				} catch (BEEPException be) {

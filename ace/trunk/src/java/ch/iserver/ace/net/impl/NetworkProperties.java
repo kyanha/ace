@@ -43,28 +43,46 @@ public class NetworkProperties {
 	/************************************/
 	public static final String KEY_REGISTRATION_TYPE = "registration.type";
 	public static final String KEY_TXT_VERSION = "txt.version";
-	public static final String KEY_USER = "user.name";
-	public static final String KEY_USERID = "user.id";
+	public static final String KEY_PROFILE_URI = "profile.uri";
 	
-	Properties properties;
+
+	/************************************/
+	/** General properties			 **/
+	/************************************/
+	public static final String KEY_DEFAULT_ENCODING = "default.encoding";
 	
-	public NetworkProperties() {}
+	
+	static Properties properties;
+	
+	public static String get(String key) {
+		if (properties == null) {
+			init();
+		}
+		return (String)properties.get(key);
+	}
+	
+	public static String get(String key, String defaultValue) {
+		if (properties == null) {
+			init();
+		}
+		return properties.getProperty(key, defaultValue);
+	}
 	
 	/**
-	 * Loads the properties for Bonjour zeroconf.
+	 * Loads the properties.
 	 */
-	public void init() {
+	private static void init() {
 		if (properties == null) {
 			properties = new Properties();
 			try {
-				properties.load(getClass().getResourceAsStream("net.properties"));
+				properties.load(NetworkProperties.class.getResourceAsStream("net.properties"));
 			} catch (IOException e) {
 	    			throw new ApplicationError(e);
 			}
 		}
 	}
 	
-	public String get(String key, String defaultValue) {
-		return properties.getProperty(key, defaultValue);
+	public static void main(String args[]) {
+		System.out.println(NetworkProperties.get(KEY_DEFAULT_ENCODING, "was not found"));
 	}
 }

@@ -32,6 +32,7 @@ import org.beepcore.beep.transport.tcp.TCPSession;
 import org.beepcore.beep.transport.tcp.TCPSessionCreator;
 
 import ch.iserver.ace.FailureCodes;
+import ch.iserver.ace.net.impl.NetworkProperties;
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;
 import ch.iserver.ace.util.ParameterValidator;
@@ -86,7 +87,7 @@ public class RemoteUserSession {
 			initiate();
 		if (connection == null) {
 			try {
-			Channel channel = session.startChannel(ProtocolConstants.PROFILE_URI);
+			Channel channel = session.startChannel(NetworkProperties.get(NetworkProperties.KEY_PROFILE_URI));
 			connection = new ParticipantConnectionImpl(channel);
 			} catch (BEEPException be) {
 				//TODO: retry strategy?

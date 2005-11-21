@@ -65,14 +65,14 @@ public class ResponseParserHandler extends ParserHandler {
 			String name = attributes.getValue(DOCUMENT_NAME);
 			DocumentInfo doc = new DocumentInfo(id, name, info.getId());
 			requestPayload.add(doc);
-		} else if (qName.equals(RESPONSE_PUBLISHED_DOCUMENTS)) {
+		} else if (qName.equals(TAG_PUBLISHED_DOCS)) {
 			responseType = PUBLISHED_DOCUMENTS;
 			currentType = responseType;
 		}
 	}
 	
 	public void endElement(String uri, String localName, String qName) throws SAXException {
-		if (qName.equals(RESPONSE_PUBLISHED_DOCUMENTS)) {
+		if (qName.equals(TAG_PUBLISHED_DOCS)) {
 			currentType = -1;
 		}
 	}

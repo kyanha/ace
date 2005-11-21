@@ -81,7 +81,7 @@ public class SerializerImpl implements Serializer, ProtocolConstants {
 	 * @see ch.iserver.ace.net.impl.protocol.Serializer#createQuery(int)
 	 */
 	public byte[] createQuery(int type) throws SerializeException {
-		ParameterValidator.inRange("queryType", type, 0, NAMES.length-1);
+		//TODO: query obsolete
 		try {
 			TransformerHandler handler = createHandler();
 			ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -91,7 +91,8 @@ public class SerializerImpl implements Serializer, ProtocolConstants {
 			handler.startDocument();
 			handler.startElement("", "", "ace", attrs);
 			handler.startElement("", "", "request", attrs);
-			attrs.addAttribute("", "", "type", "", NAMES[type]);
+			//default type is 'docs', yet no other types
+			attrs.addAttribute("", "", "type", "", QUERY_TYPE_PUBLISHED_DOCUMENTS);
 			handler.startElement("", "", "query", attrs);
 			handler.endElement("", "", "query");
 			handler.endElement("", "", "request");
@@ -106,6 +107,7 @@ public class SerializerImpl implements Serializer, ProtocolConstants {
 	}
 
 	public byte[] createResponse(int type, Object data) throws SerializeException {
+		//TODO: response obsolete
 		try {
 			TransformerHandler handler = createHandler();
 			ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -116,7 +118,7 @@ public class SerializerImpl implements Serializer, ProtocolConstants {
 				AttributesImpl attrs = new AttributesImpl();
 				handler.startElement("", "", "ace", attrs);
 				handler.startElement("", "", "response", attrs);
-				handler.startElement("", "", RESPONSE_PUBLISHED_DOCUMENTS, attrs);
+				handler.startElement("", "", TAG_PUBLISHED_DOCS, attrs);
 				Map docs = (Map)data;
 				synchronized(docs) {
 					Iterator docIter = docs.values().iterator();
@@ -129,7 +131,7 @@ public class SerializerImpl implements Serializer, ProtocolConstants {
 						handler.endElement("", "", "doc");
 					}
 				}
-				handler.endElement("", "", RESPONSE_PUBLISHED_DOCUMENTS);
+				handler.endElement("", "", TAG_PUBLISHED_DOCS);
 				handler.endElement("", "", "response");
 				handler.endElement("", "", "ace");
 				handler.endDocument();
