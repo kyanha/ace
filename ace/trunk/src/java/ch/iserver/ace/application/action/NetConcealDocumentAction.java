@@ -57,7 +57,7 @@ public class NetConcealDocumentAction extends DocumentItemSelectionChangeAction 
 			setEnabled(false);
 		} else {
 			DocumentItem item = (DocumentItem)e.getItem();
-			if(item.getType() == DocumentItem.REMOTE) {
+			if(item.getType() == DocumentItem.PUBLISHED) {
 				setEnabled(true);
 			} else {
 				setEnabled(false);
