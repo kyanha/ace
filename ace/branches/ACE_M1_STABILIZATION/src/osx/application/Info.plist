@@ -45,8 +45,6 @@
 	</array>
 	<key>CFBundleExecutable</key>
 	<string>JavaApplicationStub</string>
-	<key>CFBundleIconFile</key>
-	<string>void.icns</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>

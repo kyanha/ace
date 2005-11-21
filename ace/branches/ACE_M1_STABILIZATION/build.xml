@@ -390,6 +390,12 @@
 				<include name="jamon*.jar"/>
 				<include name="cglib*.jar"/>
 				<include name="commons-attributes*.jar"/>
+			    <include name="xerces-2.0.2.jar"/>
+				<include name="qdox*.jar"/>
+				<include name="ant*.jar"/>
+				<include name="jasperreports*.jar"/>
+				<include name="freemarker*.jar"/>
+				<include name="velocity*.jar"/>
 			</fileset>
 		</delete>
 	</target>
@@ -441,6 +447,12 @@
 			<exclude name="jamon*.jar"/>
             <exclude name="cglib*.jar"/>
 			<exclude name="commons-attributes*.jar"/>
+			<exclude name="xerces-2.0.2.jar"/>
+            <exclude name="qdox*.jar"/>
+            <exclude name="ant*.jar"/>
+            <exclude name="jasperreports*.jar"/>
+            <exclude name="freemarker*.jar"/>
+            <exclude name="velocity*.jar"/>
 		</enhance>
 		<mkdir dir="${build.osx}/application/ACE.app/Contents/Resources/Java"/>
 		<copy todir="${build.osx}/application/ACE.app/Contents/Resources/Java">
