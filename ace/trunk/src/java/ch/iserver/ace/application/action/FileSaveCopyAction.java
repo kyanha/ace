@@ -55,7 +55,12 @@ public class FileSaveCopyAction extends DocumentItemSelectionChangeAction {
 		if(e.getItem() == null) {
 			setEnabled(false);
 		} else {
-			setEnabled(true);
+			DocumentItem item = (DocumentItem)e.getItem();
+			if(item.getType() == DocumentItem.AWAITING) {
+				setEnabled(false);
+			} else {
+				setEnabled(true);
+			}
 		}
 	}
 

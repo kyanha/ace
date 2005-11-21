@@ -57,10 +57,10 @@ public class FileSaveAsAction extends DocumentItemSelectionChangeAction {
 		} else {
 			DocumentItem item = (DocumentItem)e.getItem();
 			// disable for remote documents
-			if(item.getType() == DocumentItem.REMOTE) {
-				setEnabled(false);
-			} else {
+			if(item.getType() == DocumentItem.LOCAL || item.getType() == DocumentItem.PUBLISHED) {
 				setEnabled(true);
+			} else {
+				setEnabled(false);
 			}
 		}
 	}
