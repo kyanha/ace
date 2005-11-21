@@ -21,6 +21,7 @@
 
 package ch.iserver.ace.application;
 
+import javax.swing.SwingUtilities;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
@@ -86,7 +87,7 @@ public class BrowseViewTest extends TestCase {
 		BrowseView view = new BrowseView(new LocaleMessageSourceStub(), controller);
 
 		RemoteUser user = new RemoteUserStub("X", "X");
-		MutableRemoteDocument document = new RemoteDocumentStub("X", "X", user);
+		final MutableRemoteDocument document = new RemoteDocumentStub("X", "X", user);
 		Item item = new BrowseItem(document);
 
 		controller.getBrowseSourceList().getReadWriteLock().writeLock().lock();
@@ -103,10 +104,13 @@ public class BrowseViewTest extends TestCase {
 		listenerCtrl.replay();
 		
 		// test
-		document.setTitle("NEW TITLE");
+		SwingUtilities.invokeAndWait(new Runnable() {
+			public void run() {
+				document.setTitle("NEW TITLE");
+			}		
+		});
 		
 		// verify
-		Thread.sleep(5);
 		listenerCtrl.verify();
 	}
 	
