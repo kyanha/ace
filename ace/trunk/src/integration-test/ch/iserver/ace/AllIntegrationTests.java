@@ -7,7 +7,6 @@ import ch.iserver.ace.collaboration.server.ServerTest;
 import ch.iserver.ace.net.impl.discovery.PeerDiscoveryTest;
 import ch.iserver.ace.net.impl.discovery.UserRegistrationTest;
 import ch.iserver.ace.net.impl.discovery.dnssd.RetryStrategyTest;
-import ch.iserver.ace.net.impl.protocol.ConcealDocumentReceiveFilterTest;
 import ch.iserver.ace.net.impl.protocol.ConcealDocumentTest;
 import ch.iserver.ace.net.impl.protocol.DocumentDiscoveryTest;
 import ch.iserver.ace.net.impl.protocol.PublishDocumentReceiveFilterTest;
