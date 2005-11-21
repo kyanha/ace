@@ -24,7 +24,6 @@ public class AllIntegrationTests {
 		suite.addTestSuite(PeerDiscoveryTest.class);
 		suite.addTestSuite(UserRegistrationTest.class);
 		suite.addTestSuite(RetryStrategyTest.class);
-		suite.addTestSuite(ConcealDocumentReceiveFilterTest.class);
 		suite.addTestSuite(ConcealDocumentTest.class);
 		suite.addTestSuite(DocumentDiscoveryTest.class);
 		suite.addTestSuite(PublishDocumentReceiveFilterTest.class);
