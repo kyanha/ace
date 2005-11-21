@@ -21,46 +21,21 @@
 
 package ch.iserver.ace.application;
 
-import com.apple.eawt.Application;
-import com.apple.eawt.ApplicationAdapter;
-import com.apple.eawt.ApplicationEvent;
+import javax.swing.UIManager;
+
+
 
 /**
  *
  */
 public class WindowsCustomizer extends ApplicationAdapter implements Customizer {
 	
-	private ApplicationController controller;
-	
 	public void init(ApplicationController controller) {
-		this.controller = controller;
-		Application app = Application.getApplication();
-		app.setEnabledPreferencesMenu(true);
-		app.addApplicationListener(this);
-	}
-	
-	protected ApplicationController getController() {
-		return controller;
-	}
-	
-	public void handleAbout(ApplicationEvent e) {
-		e.setHandled(true);
-		getController().showAbout();
+		try {
+			UIManager.setLookAndFeel("com.jgoodies.looks.windows.WindowsLookAndFeel");
+		} catch(ClassNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 		
-	public void handleOpenFile(ApplicationEvent e) {
-		e.setHandled(true);
-		getController().openFile(e.getFilename());
-	}
-
-	public void handlePreferences(ApplicationEvent e) {
-		e.setHandled(true);
-		getController().showPreferences();
-	}
-	
-	public void handleQuit(ApplicationEvent e) {
-		e.setHandled(false);
-		getController().quit();
-	}
-	
 }
