@@ -29,6 +29,8 @@ public interface ViewController extends ItemSelectionChangeListener {
 	void addItemSelectionChangeListener(ItemSelectionChangeListener listener);
 	
 	void removeItemSelectionChangeListener(ItemSelectionChangeListener listener);
+	
+	void setView(View view);
 
 }
 

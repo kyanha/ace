@@ -44,6 +44,7 @@ public abstract class ViewImpl extends JPanel implements View {
 
 	public ViewImpl(ViewController controller, LocaleMessageSource messageSource) {
 		this.controller = controller;
+		controller.setView(this);
 		this.messageSource = messageSource;
 		eventListenerList = new EventListenerList();
 		addItemSelectionChangeListener(controller);
