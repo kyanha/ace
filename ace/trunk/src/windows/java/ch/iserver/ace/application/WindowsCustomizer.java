@@ -28,12 +28,12 @@ import javax.swing.UIManager;
 /**
  *
  */
-public class WindowsCustomizer extends ApplicationAdapter implements Customizer {
+public class WindowsCustomizer implements Customizer {
 	
 	public void init(ApplicationController controller) {
 		try {
 			UIManager.setLookAndFeel("com.jgoodies.looks.windows.WindowsLookAndFeel");
-		} catch(ClassNotFoundException e) {
+		} catch(Exception e) {
 			e.printStackTrace();
 		}
 	}
