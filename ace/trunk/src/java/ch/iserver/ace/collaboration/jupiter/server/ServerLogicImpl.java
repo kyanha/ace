@@ -123,7 +123,7 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 		this.threadDomain = domain;
 		this.registry = registry;
 		
-		this.serializerQueue = new LinkedBlockingQueue();
+		this.serializerQueue = createSerializerQueue();
 		this.serializer = new Serializer(serializerQueue, lock, forwarder, this);
 		
 		this.publisherConnection = connection;
@@ -138,6 +138,10 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 		this.document.updateCaret(0, document.getDot(), document.getMark());
 		
 		this.proxies.put(new Integer(-1), new DocumentUpdateProxy(this.document));
+	}
+	
+	protected BlockingQueue createSerializerQueue() {
+		return new LinkedBlockingQueue();
 	}
 	
 	protected PublisherPort createPublisherPort(ParticipantConnection connection) {
@@ -229,10 +233,12 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 		ports.remove(key);
 	}
 		
-	private synchronized ParticipantConnection getParticipantConnection(int id) {
+	protected synchronized ParticipantConnection getParticipantConnection(int id) {
 		return (ParticipantConnection) connections.get(new Integer(id));
 	}
-				
+	
+	// --> server logic methods <--
+
 	/**
 	 * @see ch.iserver.ace.net.DocumentServerLogic#join(ch.iserver.ace.net.ParticipantConnection)
 	 */
@@ -269,21 +275,25 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 	/**
 	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerLogic#joinAccepted(ch.iserver.ace.net.ParticipantConnection)
 	 */
-	public synchronized void joinAccepted(ParticipantConnection connection) {
-		Algorithm algorithm = new Jupiter(false);
-		
+	public synchronized void joinAccepted(ParticipantConnection connection) {		
 		try {
-			int participantId = nextParticipantId();
-			connection.setParticipantId(participantId);
+			if (!isAcceptingJoins()) {
+				LOG.info("join accepted by publisher but shutdown is in progress");
+			} else {
+				Algorithm algorithm = new Jupiter(false);
+				int participantId = nextParticipantId();
+				connection.setParticipantId(participantId);
 		
-			ParticipantPort port = new ParticipantPortImpl(this, participantId, algorithm);
-			ParticipantProxy proxy = new ParticipantProxy(participantId, algorithm, connection);
-			RemoteUserProxy user = connection.getUser();
+				ParticipantPort port = new ParticipantPortImpl(this, participantId, algorithm);
+				ParticipantProxy proxy = new ParticipantProxy(participantId, algorithm, connection);
+				RemoteUserProxy user = connection.getUser();
 		
-			SessionParticipant participant = new SessionParticipant(port, proxy, connection, user);
-			SerializerCommand cmd = new JoinCommand(participant, this);
-			addCommand(cmd);
+				SessionParticipant participant = new SessionParticipant(port, proxy, connection, user);
+				SerializerCommand cmd = new JoinCommand(participant, this);
+				addCommand(cmd);
+			}
 		} finally {
+			// remove from list of joining users
 			joinSet.remove(connection.getUser().getId());
 		}
 	}
@@ -293,14 +303,17 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 	 */
 	public synchronized void joinRejected(ParticipantConnection connection) {
 		try {
-			connection.joinRejected(JoinRequest.REJECTED);
+			if (!isAcceptingJoins()) {
+				LOG.info("join rejected by publisher but shutdown is in progress");
+			} else {
+				connection.joinRejected(JoinRequest.REJECTED);
+			}
 		} finally {
+			// remove from list of joining users
 			joinSet.remove(connection.getUser().getId());
 		}
 	}
-	
-	// --> session logic methods <--
-	
+		
 	/**
 	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerLogic#getPublisherPort()
 	 */
@@ -313,6 +326,48 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 	 */
 	public void setDocumentDetails(DocumentDetails details) {
 		getDocumentServer().setDocumentDetails(details);
+	}
+		
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerLogic#getParticipantProxies()
+	 */
+	public synchronized Iterator getParticipantProxies() {
+		Map clone = (Map) proxies.clone();
+		return clone.values().iterator();
+	}
+
+	/**
+	 * @see ServerLogic#leave(int)
+	 */
+	public synchronized void leave(int participantId) {
+		ParticipantConnection connection = getParticipantConnection(participantId);
+		if (connection == null) {
+			LOG.warn("participant with id " + participantId + " not (or no longer) in session");
+			return;
+		}
+		connection.close();
+		removeParticipant(participantId);
+	}
+	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerLogic#kick(int)
+	 */
+	public void kick(int participantId) {
+		if (participantId == PUBLISHER_ID) {
+			throw new IllegalArgumentException("cannot kick publisher of session");
+		}
+		LOG.info("kicking participant " + participantId);
+		synchronized (this) {
+			ParticipantConnection connection = getParticipantConnection(participantId);
+			if (connection == null) {
+				LOG.info("participant with id " + participantId + " not (or no longer) in session");
+			} else {
+				blacklist.add(connection.getUser().getId());
+				removeParticipant(participantId);
+				connection.sendKicked();
+				connection.close();
+			}
+		}
 	}
 	
 	/**
@@ -335,50 +390,6 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 			dispose();
 		} catch (InterruptedException e) {
 			throw new InterruptedRuntimeException(e);
-		}
-	}
-	
-	/**
-	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerLogic#getParticipantProxies()
-	 */
-	public synchronized Iterator getParticipantProxies() {
-		Map clone = (Map) proxies.clone();
-		return clone.values().iterator();
-	}
-
-	/**
-	 * @see ServerLogic#leave(int)
-	 */
-	public synchronized void leave(int participantId) {
-		ParticipantConnection connection = getParticipantConnection(participantId);
-		if (connection == null) {
-			LOG.warn("participant with id " + participantId + " not (or no longer) in session");
-			return;
-		}
-		connection.close();
-		removeParticipant(participantId);
-	}
-		
-	/**
-	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerLogic#kick(int)
-	 */
-	public void kick(int participantId) {
-		if (participantId == PUBLISHER_ID) {
-			throw new IllegalArgumentException("cannot kick publisher of session");
-		}
-		LOG.info("kicking participant " + participantId);
-		synchronized (this) {
-			ParticipantConnection connection = getParticipantConnection(participantId);
-			if (connection == null) {
-				LOG.warn("participant with id " + participantId + " not (or no longer) in session");
-				return;
-			}
-			connection.sendKicked();
-			connection.close();
-			removeParticipant(participantId);
-
-			// add kicked user to blacklist (he can no longer join)
-			blacklist.add(connection.getUser().getId());
 		}
 	}
 	
