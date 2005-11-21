@@ -10,7 +10,6 @@ import org.easymock.ArgumentsMatcher;
 import org.easymock.MockControl;
 
 import ch.iserver.ace.net.impl.NetworkConstants;
-import ch.iserver.ace.net.impl.protocol.DocumentDiscoveryPrepareFilter.QueryInfo;
 
 public class ParticipantConnectionImplTest extends TestCase {
 

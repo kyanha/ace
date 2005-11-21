@@ -32,7 +32,6 @@ import org.beepcore.beep.core.ReplyListener;
 import org.beepcore.beep.transport.tcp.TCPSession;
 import org.beepcore.beep.util.BufferSegment;
 
-import ch.iserver.ace.net.impl.protocol.DocumentDiscoveryPrepareFilter.QueryInfo;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**

@@ -7,7 +7,6 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 import ch.iserver.ace.net.impl.NetworkConstants;
-import ch.iserver.ace.net.impl.protocol.DocumentDiscoveryPrepareFilter.QueryInfo;
 import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
 
 public class ResponseParserHandlerTest extends TestCase {
