@@ -31,7 +31,7 @@ import ch.iserver.ace.text.InsertOperation;
 import ch.iserver.ace.text.NoOperation;
 import ch.iserver.ace.text.SplitOperation;
 
-public class DocumentUpdateProxyTest extends TestCase {
+public class DocumentUpdaterTest extends TestCase {
 	
 	private MockControl documentCtrl;
 	
@@ -42,7 +42,7 @@ public class DocumentUpdateProxyTest extends TestCase {
 	public void setUp() {
 		documentCtrl = MockControl.createControl(ServerDocument.class);
 		document = (ServerDocument) documentCtrl.getMock();
-		proxy = new DocumentUpdateProxy(document);
+		proxy = new DocumentUpdater(document);
 	}
 	
 	public void testSendInsertOperation() throws Exception {

@@ -137,7 +137,7 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 		this.document.insertString(0, 0, document.getContent());
 		this.document.updateCaret(0, document.getDot(), document.getMark());
 		
-		this.proxies.put(new Integer(-1), new DocumentUpdateProxy(this.document));
+		this.proxies.put(new Integer(-1), new DocumentUpdater(this.document));
 	}
 	
 	protected BlockingQueue createSerializerQueue() {

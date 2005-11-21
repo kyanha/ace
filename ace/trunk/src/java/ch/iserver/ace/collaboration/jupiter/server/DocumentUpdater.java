@@ -39,12 +39,12 @@ import ch.iserver.ace.util.ParameterValidator;
  * caret updates are applied to a 
  * {@link ch.iserver.ace.collaboration.jupiter.server.ServerDocument} instance.
  */
-class DocumentUpdateProxy implements Forwarder {
+class DocumentUpdater implements Forwarder {
 	
 	/**
 	 * The static logger used by classes of this instance.
 	 */
-	private static final Logger LOG = Logger.getLogger(DocumentUpdateProxy.class);
+	private static final Logger LOG = Logger.getLogger(DocumentUpdater.class);
 	
 	/**
 	 * The target ServerDocument to which all operations and caret updates
@@ -58,7 +58,7 @@ class DocumentUpdateProxy implements Forwarder {
 	 *  
 	 * @param document the target ServerDocument
 	 */
-	DocumentUpdateProxy(final ServerDocument document) {
+	DocumentUpdater(final ServerDocument document) {
 		ParameterValidator.notNull("document", document);
 		this.document = document;
 	}

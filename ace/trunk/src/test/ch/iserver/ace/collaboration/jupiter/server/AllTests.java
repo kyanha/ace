@@ -35,7 +35,7 @@ public class AllTests {
 		suite.addTestSuite(ParticipantProxyTest.class);
 		suite.addTestSuite(ParticipantPortImplTest.class);
 		suite.addTestSuite(CaretHandlerTest.class);
-		suite.addTestSuite(DocumentUpdateProxyTest.class);
+		suite.addTestSuite(DocumentUpdaterTest.class);
 		suite.addTestSuite(ParticipantConnectionWrapperTest.class);
 		suite.addTestSuite(ServerLogicImplTest.class);
 		//$JUnit-END$
