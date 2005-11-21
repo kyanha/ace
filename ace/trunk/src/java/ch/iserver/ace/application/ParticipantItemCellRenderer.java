@@ -69,6 +69,7 @@ public class ParticipantItemCellRenderer extends JPanel implements ListCellRende
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
+		Color textColor = g.getColor();
 		int itemHeight = getHeight();
 		int itemWidth = getWidth();
 
@@ -80,7 +81,7 @@ public class ParticipantItemCellRenderer extends JPanel implements ListCellRende
 		g.drawImage(iconParticipant.getImage(), imagePosX, imagePosY, imageHeight, imageWidth, this);
 		
 		// draw participant name (TODO: dynamic border)
-		g.setColor(Color.BLACK);
+		g.setColor(textColor);
 		int textAscent = g.getFontMetrics().getAscent();
 		int textDescent = g.getFontMetrics().getDescent();		
 		int textPosX = imagePosX + imageWidth + 5;

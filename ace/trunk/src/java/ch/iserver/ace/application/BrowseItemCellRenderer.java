@@ -73,6 +73,7 @@ public class BrowseItemCellRenderer extends JPanel implements ListCellRenderer {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
+		Color textColor = g.getColor();
 		int itemHeight = getHeight();
 		int itemWidth = getWidth();
 		
@@ -84,7 +85,7 @@ public class BrowseItemCellRenderer extends JPanel implements ListCellRenderer {
 		g.drawImage(iconRemote.getImage(), imagePosX, imagePosY, imageHeight, imageWidth, this);
 
 		// draw document title (TODO: dynamic border)
-		g.setColor(Color.BLACK);
+		g.setColor(textColor);
 		int textAscent = g.getFontMetrics().getAscent();
 		int textDescent = g.getFontMetrics().getDescent();		
 		int textPosX = imagePosX + imageWidth + 5;

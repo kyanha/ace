@@ -68,7 +68,8 @@ public class UserItemCellRenderer extends JPanel implements ListCellRenderer {
 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-
+		
+		Color textColor = g.getColor();
 		int itemHeight = getHeight();
 		int itemWidth = getWidth();
 
@@ -80,7 +81,7 @@ public class UserItemCellRenderer extends JPanel implements ListCellRenderer {
 		g.drawImage(iconUser.getImage(), imagePosX, imagePosY, imageHeight, imageWidth, this);
 		
 		// draw user name (TODO: dynamic border)
-		g.setColor(Color.BLACK);
+		g.setColor(textColor);
 		int textAscent = g.getFontMetrics().getAscent();
 		int textDescent = g.getFontMetrics().getDescent();		
 		int textPosX = imagePosX + imageWidth + 5;

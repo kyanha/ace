@@ -68,7 +68,9 @@ public class DocumentItemCellRenderer extends JPanel implements ListCellRenderer
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
+		Color textColor = g.getColor();
 		int itemHeight = getHeight();
+		int itemWidth = getWidth();
 		
 		// draw document icon
 		int imageHeight = 16; //iconLocal.getIconHeight();
@@ -89,7 +91,7 @@ public class DocumentItemCellRenderer extends JPanel implements ListCellRenderer
 		}
 
 		// draw document title & dirty flag (TODO: dynamic border)
-		g.setColor(Color.BLACK);
+		g.setColor(textColor);
 		int textAscent = g.getFontMetrics().getAscent();
 		int textDescent = g.getFontMetrics().getDescent();		
 		int textPosX = imagePosX + imageWidth + 5;
