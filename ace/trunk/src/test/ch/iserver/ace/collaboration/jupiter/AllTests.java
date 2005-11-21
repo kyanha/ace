@@ -39,6 +39,7 @@ public class AllTests {
 		suite.addTestSuite(SessionConnectionWrapperTest.class);
 		suite.addTestSuite(RemoteDocumentImplTest.class);
 		suite.addTestSuite(AlgorithmWrapperImplTest.class);
+		suite.addTestSuite(JoinRequestImplTest.class);
 		//$JUnit-END$
 		return suite;
 	}
