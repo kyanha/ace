@@ -53,7 +53,7 @@ public class NetLeaveSessionAction extends DocumentItemSelectionChangeAction {
 			setEnabled(false);
 		} else {
 			DocumentItem item = (DocumentItem)e.getItem();
-			if(item.getType() == DocumentItem.REMOTE) {
+			if(item.getType() == DocumentItem.REMOTE || item.getType() == DocumentItem.AWAITING) {
 				// enabled for remote documents only
 				setEnabled(true);
 			} else {
