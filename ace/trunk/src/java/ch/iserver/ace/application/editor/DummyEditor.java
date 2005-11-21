@@ -30,24 +30,23 @@ import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.StyledDocument;
 import java.util.List;
 import com.jgoodies.uif_lite.panel.SimpleInternalFrame;
+import java.beans.*;
 
 
 
-public class DummyEditor extends JPanel implements Editor {
+public class DummyEditor extends AbstractEditor {
 
 	private JTextPane textPane;
+	private JToolBar editorToolBar;
 	private SimpleInternalFrame editorFrame;
 	private LocaleMessageSource messageSource;
 	private ToggleFullScreenEditingAction toggleFullScreenEditingAction;
 
-	public DummyEditor(LocaleMessageSource messageSource, List toolBarActions) {
+	public DummyEditor(LocaleMessageSource messageSource) {
 		this.messageSource = messageSource;
 		// create toolbar
-		JToolBar editorToolBar = new JToolBar();
-		for(int i = 0; i < toolBarActions.size(); i++) {
-			JButton toolBarButton = editorToolBar.add(((AbstractAction)toolBarActions.get(i)));
-			toolBarButton.setBorder(BorderFactory.createEmptyBorder());
-		}
+		editorToolBar = new JToolBar();
+
 		// create editor
 		//JPanel innerEditorPane = new JPanel();
 		textPane = new DummyTextPane();
@@ -59,13 +58,13 @@ public class DummyEditor extends JPanel implements Editor {
 		
 		// add components
 		editorFrame = new SimpleInternalFrame(null, " ", editorToolBar, scrollPane);
-		editorFrame.addMouseListener(new MouseAdapter() {
+/*		editorFrame.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				if(e.getClickCount() == 2) {
 					toggleFullScreenEditingAction.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "ToggleEditingMode"));
 				}
 			}
-		});
+		});*/
 		setLayout(new BorderLayout());
 		add(editorFrame);
 	}
@@ -87,13 +86,9 @@ public class DummyEditor extends JPanel implements Editor {
 		textPane.setFont(new Font("Courier", Font.PLAIN, size));
 	}
 	
-	public JPanel getEditorComponent() {
-		return this;
-	}
-	
-	public void setToggleFullScreenEditingAction(ToggleFullScreenEditingAction toggleFullScreenEditingAction) {
+	/*public void setToggleFullScreenEditingAction(ToggleFullScreenEditingAction toggleFullScreenEditingAction) {
 		this.toggleFullScreenEditingAction = toggleFullScreenEditingAction;
-	}
+	}*/
 	
 	public class DummyTextPane extends JTextPane {
 		public DummyTextPane() {
@@ -111,6 +106,16 @@ public class DummyEditor extends JPanel implements Editor {
 		/*public boolean getScrollableTracksViewportWidth() {
         	return true;
     	}*/
+	}
+
+	
+	
+	public void setToolBarActions(List toolBarActions) {
+		for(int i = 0; i < toolBarActions.size(); i++) {
+			JButton toolBarButton = editorToolBar.add(((AbstractAction)toolBarActions.get(i)));
+			toolBarButton.setBorder(BorderFactory.createEmptyBorder());
+			editorToolBar.addSeparator();
+		}
 	}
 
 }

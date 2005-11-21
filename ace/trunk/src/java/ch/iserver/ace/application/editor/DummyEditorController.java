@@ -67,9 +67,10 @@ public class DummyEditorController implements ItemSelectionChangeListener, Prefe
 				System.out.println("DocumentItem");
 			}*/
 			// enable editor
-			StyledDocument doc = ((DocumentItem)e.getItem()).getEditorDocument();
+			DocumentItem item = (DocumentItem)e.getItem();
+			StyledDocument doc = item.getEditorDocument();			
 			editor.setDocument(doc);
-			editor.setTitle(((DocumentItem)e.getItem()).getTitle());
+			editor.setTitle(item.getExtendedTitle());
 			editor.setEnabled(true);
 		} else {
 			// disable editor
