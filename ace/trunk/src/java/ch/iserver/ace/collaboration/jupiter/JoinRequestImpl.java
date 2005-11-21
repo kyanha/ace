@@ -21,19 +21,10 @@
 
 package ch.iserver.ace.collaboration.jupiter;
 
-import ch.iserver.ace.algorithm.Algorithm;
-import ch.iserver.ace.algorithm.jupiter.Jupiter;
 import ch.iserver.ace.collaboration.JoinRequest;
 import ch.iserver.ace.collaboration.RemoteUser;
-import ch.iserver.ace.collaboration.jupiter.server.ParticipantPortImpl;
-import ch.iserver.ace.collaboration.jupiter.server.ParticipantProxy;
 import ch.iserver.ace.collaboration.jupiter.server.ServerLogic;
-import ch.iserver.ace.collaboration.jupiter.server.SessionParticipant;
-import ch.iserver.ace.collaboration.jupiter.server.serializer.JoinCommand;
-import ch.iserver.ace.collaboration.jupiter.server.serializer.SerializerCommand;
 import ch.iserver.ace.net.ParticipantConnection;
-import ch.iserver.ace.net.ParticipantPort;
-import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
@@ -48,7 +39,6 @@ public class JoinRequestImpl implements JoinRequest {
 	private ServerLogic logic;
 	
 	public JoinRequestImpl(ServerLogic logic, RemoteUser user, ParticipantConnection connection) {
-		ParameterValidator.notNull("logic", logic);
 		ParameterValidator.notNull("user", user);
 		ParameterValidator.notNull("connection", connection);
 		this.logic = logic;
@@ -66,28 +56,36 @@ public class JoinRequestImpl implements JoinRequest {
 	/**
 	 * @see ch.iserver.ace.collaboration.JoinRequest#accept()
 	 */
-	public void accept() {
-		Algorithm algorithm = new Jupiter(false);
-		
-		int participantId = logic.nextParticipantId();;
-		connection.setParticipantId(participantId);
-		
-		ParticipantPort port = new ParticipantPortImpl(logic, participantId, algorithm);
-		ParticipantProxy proxy = new ParticipantProxy(participantId, algorithm, connection);
-		RemoteUserProxy user = connection.getUser();
-		
-		SessionParticipant participant = new SessionParticipant(port, proxy, connection, user);
-		SerializerCommand cmd = new JoinCommand(participant, logic);
-		logic.addCommand(cmd);
-
-		connection.joinAccepted(port);
+	public void accept() {		
+		logic.joinAccepted(connection);
 	}
 
 	/**
 	 * @see ch.iserver.ace.collaboration.JoinRequest#reject()
 	 */
 	public void reject() {
-		connection.joinRejected(JoinRequest.REJECTED);
+		logic.joinRejected(connection);
+	}
+	
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		} else if (obj instanceof JoinRequest) {
+			JoinRequest request = (JoinRequest) obj;
+			return getUser().equals(request.getUser());
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	public int hashCode() {
+		return 7 * getUser().hashCode();
 	}
 
 }

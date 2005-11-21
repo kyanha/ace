@@ -58,6 +58,7 @@ public class JoinCommandTest extends TestCase {
 		// define mock behavior
 		logic.getDocument();
 		logicCtrl.setReturnValue(doc);
+		connection.joinAccepted(port);
 		connection.sendDocument(doc);
 		logic.addParticipant(participant);
 		forwarder.sendParticipantJoined(1, user);

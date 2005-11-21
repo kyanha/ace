@@ -37,8 +37,6 @@ import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.RemoteUserProxyStub;
 import ch.iserver.ace.text.InsertOperation;
 import ch.iserver.ace.util.CallerThreadDomain;
-import ch.iserver.ace.util.Lock;
-import ch.iserver.ace.util.SemaphoreLock;
 
 /**
  *
@@ -54,7 +52,6 @@ public class ServerTest extends TestCase {
 			registry.addUser(new RemoteUserProxyStub("" + i));
 		}
 		
-		Lock lock = new SemaphoreLock("serializer-lock");
 		MockControl[] controls = new MockControl[PARTICIPANTS];
 		PublisherConnection[] connections = new PublisherConnection[PARTICIPANTS];
 		ParticipantPort[] ports = new ParticipantPort[PARTICIPANTS];
@@ -94,7 +91,7 @@ public class ServerTest extends TestCase {
 
 		// test
 		DocumentModel document = new DocumentModel("", 0, 0, new DocumentDetails("collab.txt"));
-		ServerLogicImpl server = new ServerLogicImpl(lock, 
+		ServerLogicImpl server = new ServerLogicImpl( 
 				new CallerThreadDomain(), 
 				connections[0], 
 				document,

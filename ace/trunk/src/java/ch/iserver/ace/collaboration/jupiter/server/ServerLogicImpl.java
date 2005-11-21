@@ -40,6 +40,7 @@ import ch.iserver.ace.collaboration.RemoteUser;
 import ch.iserver.ace.collaboration.jupiter.JoinRequestImpl;
 import ch.iserver.ace.collaboration.jupiter.PublisherConnection;
 import ch.iserver.ace.collaboration.jupiter.UserRegistry;
+import ch.iserver.ace.collaboration.jupiter.server.serializer.JoinCommand;
 import ch.iserver.ace.collaboration.jupiter.server.serializer.LeaveCommand;
 import ch.iserver.ace.collaboration.jupiter.server.serializer.Serializer;
 import ch.iserver.ace.collaboration.jupiter.server.serializer.SerializerCommand;
@@ -48,10 +49,13 @@ import ch.iserver.ace.net.DocumentServer;
 import ch.iserver.ace.net.DocumentServerLogic;
 import ch.iserver.ace.net.JoinException;
 import ch.iserver.ace.net.ParticipantConnection;
+import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.PortableDocument;
+import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.util.InterruptedRuntimeException;
 import ch.iserver.ace.util.Lock;
 import ch.iserver.ace.util.ParameterValidator;
+import ch.iserver.ace.util.SemaphoreLock;
 import ch.iserver.ace.util.ThreadDomain;
 import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
 import edu.emory.mathcs.backport.java.util.concurrent.LinkedBlockingQueue;
@@ -93,6 +97,13 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 	
 	private final Set blacklist = new HashSet();
 	
+	public ServerLogicImpl(ThreadDomain domain,
+					     PublisherConnection connection,
+					     DocumentModel document,
+					     UserRegistry registry) {
+		this(new SemaphoreLock("serializer"), domain, connection, document, registry);
+	}
+	
 	public ServerLogicImpl(Lock lock, 
 	                       ThreadDomain domain, 
 	                       PublisherConnection connection, 
@@ -129,10 +140,8 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 	
 	protected PublisherPort createPublisherPort(ParticipantConnection connection) {
 		Algorithm algorithm = new Jupiter(false);
-		int participantId = 0;
-		connection.setParticipantId(participantId);
-		PublisherPort port = new PublisherPortImpl(this, participantId, algorithm);
-		ParticipantProxy proxy = new ParticipantProxy(participantId, algorithm, connection);
+		PublisherPort port = new PublisherPortImpl(this, 0, algorithm);
+		ParticipantProxy proxy = new ParticipantProxy(0, algorithm, connection);
 		addParticipant(new SessionParticipant(port, proxy, connection, null));
 		return port;
 	}
@@ -160,6 +169,10 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 	
 	public ThreadDomain getThreadDomain() {
 		return threadDomain;
+	}
+	
+	protected Set getBlacklist() {
+		return blacklist;
 	}
 		
 	public void start() {
@@ -219,12 +232,13 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 	 */
 	public synchronized void join(ParticipantConnection target) {
 		if (!isAcceptingJoins()) {
-			throw new IllegalStateException("DocumentServerLogic is not accepting joins");
+			target.joinRejected(JoinRequest.SHUTDOWN);
+			return;
 		}
 		
 		String id = target.getUser().getId();
 		if (blacklist.contains(id)) {
-			target.joinRejected(JoinException.BLACKLISTED);
+			target.joinRejected(JoinRequest.BLACKLISTED);
 			return;
 		}
 
@@ -239,6 +253,33 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 		
 		JoinRequest request = new JoinRequestImpl(this, user, connection);
 		getPublisherConnection().sendJoinRequest(request);
+	}
+	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerLogic#joinAccepted(ch.iserver.ace.net.ParticipantConnection)
+	 */
+	public void joinAccepted(ParticipantConnection connection) {
+		Algorithm algorithm = new Jupiter(false);
+		
+		synchronized (this) {
+			int participantId = nextParticipantId();;
+			connection.setParticipantId(participantId);
+		
+			ParticipantPort port = new ParticipantPortImpl(this, participantId, algorithm);
+			ParticipantProxy proxy = new ParticipantProxy(participantId, algorithm, connection);
+			RemoteUserProxy user = connection.getUser();
+		
+			SessionParticipant participant = new SessionParticipant(port, proxy, connection, user);
+			SerializerCommand cmd = new JoinCommand(participant, this);
+			addCommand(cmd);
+		}
+	}
+	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerLogic#joinRejected(ch.iserver.ace.net.ParticipantConnection)
+	 */
+	public void joinRejected(ParticipantConnection connection) {
+		connection.joinRejected(JoinRequest.REJECTED);
 	}
 	
 	// --> session logic methods <--
@@ -262,8 +303,10 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 	 */
 	public synchronized void prepareShutdown() {
 		this.acceptingJoins = false;
-		getDocumentServer().prepareShutdown();
-		getSerializerQueue().add(new ShutdownCommand(this));
+		if (getDocumentServer() != null) {
+			getDocumentServer().prepareShutdown();
+		}
+		addCommand(new ShutdownCommand(this));
 	}
 	
 	/**
@@ -336,7 +379,7 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 				prepareShutdown();
 			} else {
 				removeParticipant(participantId);
-				getSerializerQueue().add(new LeaveCommand(participantId, Participant.DISCONNECTED));
+				addCommand(new LeaveCommand(participantId, Participant.DISCONNECTED));
 			}
 		}
 	}

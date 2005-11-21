@@ -36,12 +36,12 @@ import ch.iserver.ace.algorithm.jupiter.JupiterTimestampFactory;
 import ch.iserver.ace.collaboration.CollaborationService;
 import ch.iserver.ace.collaboration.DiscoveryCallback;
 import ch.iserver.ace.collaboration.DocumentListener;
-import ch.iserver.ace.collaboration.ServiceFailureHandler;
 import ch.iserver.ace.collaboration.InvitationCallback;
 import ch.iserver.ace.collaboration.PublishedSession;
 import ch.iserver.ace.collaboration.PublishedSessionCallback;
 import ch.iserver.ace.collaboration.RemoteDocument;
 import ch.iserver.ace.collaboration.RemoteUser;
+import ch.iserver.ace.collaboration.ServiceFailureHandler;
 import ch.iserver.ace.collaboration.UserListener;
 import ch.iserver.ace.collaboration.jupiter.server.ServerLogicImpl;
 import ch.iserver.ace.net.DocumentServer;
@@ -50,9 +50,7 @@ import ch.iserver.ace.net.NetworkService;
 import ch.iserver.ace.net.NetworkServiceCallback;
 import ch.iserver.ace.net.RemoteDocumentProxy;
 import ch.iserver.ace.net.RemoteUserProxy;
-import ch.iserver.ace.util.Lock;
 import ch.iserver.ace.util.ParameterValidator;
-import ch.iserver.ace.util.SemaphoreLock;
 import ch.iserver.ace.util.ThreadDomain;
 
 /**
@@ -215,9 +213,7 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	public PublishedSession publish(PublishedSessionCallback callback, DocumentModel document) {
 		PublishedSessionImpl session = new PublishedSessionImpl(callback);
 		session.setUserRegistry(getUserRegistry());
-		Lock semaphoreLock = new SemaphoreLock("server-lock");
 		ServerLogicImpl logic = new ServerLogicImpl(
-						semaphoreLock, 
 						getPublisherThreadDomain(), 
 						session, 
 						document,

@@ -27,6 +27,7 @@ import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.collaboration.jupiter.server.serializer.SerializerCommand;
 import ch.iserver.ace.net.DocumentServer;
 import ch.iserver.ace.net.DocumentServerLogic;
+import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.net.PortableDocument;
 
 /**
@@ -45,15 +46,7 @@ public interface ServerLogic extends DocumentServerLogic {
 	 * @param server the server
 	 */
 	void setDocumentServer(DocumentServer server);
-	
-	/**
-	 * Gets the next participant id for the session. The participant id must
-	 * be unique, so this method must be properly synchronized.
-	 * 
-	 * @return the next available participant id
-	 */
-	int nextParticipantId();
-	
+		
 	/**
 	 * Adds a participant to the session logic.
 	 * 
@@ -61,6 +54,11 @@ public interface ServerLogic extends DocumentServerLogic {
 	 */
 	void addParticipant(SessionParticipant participant);
 	
+	/**
+	 * Adds a command to the serializer queue.
+	 * 
+	 * @param command the command to add to the serializer queue
+	 */
 	void addCommand(SerializerCommand command);
 	
 	/**
@@ -106,6 +104,16 @@ public interface ServerLogic extends DocumentServerLogic {
 	 * @param participant the participant to be kicked
 	 */
 	void kick(int participant);
+	
+	/**
+	 * @param connection
+	 */
+	void joinRejected(ParticipantConnection connection);
+	
+	/**
+	 * @param connection
+	 */
+	void joinAccepted(ParticipantConnection connection);
 	
 	/**
 	 * Prepares the shutdown of the server. After calling this method, the 
