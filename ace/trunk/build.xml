@@ -246,6 +246,19 @@
 		      classpathref="classpath.run"/>
 	</target>
 	
+	<target name="run-windows" depends="compile,resources,jar-windows">
+        <description>runs the main class with windows customization</description>
+		<java classname="ch.iserver.ace.application.Main" 
+		      fork="true">
+			<classpath>
+				<path refid="classpath.run"/>
+				<pathelement path="${build.dir}/classes"/>
+				<pathelement path="${build.windows}/classes"/>
+			</classpath>
+		    <jvmarg value="-Dch.iserver.ace.customizer=ch.iserver.ace.application.WindowsCustomizer"></jvmarg>
+		</java>
+	</target>
+
 	<target name="debug" depends="compile,resources">
         <description>debug the application</description>
         <java classname="ch.iserver.ace.application.Main"
@@ -480,7 +493,22 @@
 	<target name="dist-windows" depends="jar-windows">
 	</target>
 	
-	<target name="jar-windows">
+	<target name="compile-windows">
+		<mkdir dir="${build.windows}/classes"/>
+        <javac srcdir="${src.windows}" 
+               destdir="${build.windows}/classes"
+		       target="1.4"
+		       source="1.4" 
+		       debug="${debug}" 
+		       optimize="${optimize}">
+			<classpath>
+				<path refid="classpath.compile"/>
+				<pathelement path="${build.dir}/classes"/>
+			</classpath>
+		</javac>
+	</target>
+	
+	<target name="jar-windows" depends="compile-windows">
         <description>creates a jar file for windows specific classes</description>
         <jar destfile="${build.dir}/lib/ace-windows.jar">
             <fileset dir="${build.windows}/classes"/>
