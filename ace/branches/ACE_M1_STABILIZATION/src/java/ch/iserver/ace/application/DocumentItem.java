@@ -85,6 +85,7 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 		// create remote document
 		id = document.getId();
 		title = document.getTitle();
+		remoteDocument = document;
 		extendedTitle = document.getPublisher().getName() + " - " + document.getTitle();
 		toolTip = document.getPublisher().getName() + " - " + document.getTitle();
 		type = REMOTE;
