@@ -25,7 +25,7 @@ import javax.swing.JPanel;
 
 
 
-public abstract class EditorImpl extends JPanel {
+public abstract class EditorImpl extends JPanel implements Editor {
 
 	public JPanel getEditorComponent() {
 		return this;

@@ -21,12 +21,14 @@
 
 package ch.iserver.ace.application.action;
 
-import java.awt.event.ActionEvent;
-
-import javax.swing.AbstractAction;
-
 import ch.iserver.ace.application.LocaleMessageSource;
 import ch.iserver.ace.application.PersistentContentPane;
+import ch.iserver.ace.application.editor.EditorImpl;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.*;
+
+import javax.swing.AbstractAction;
 
 
 
@@ -36,13 +38,28 @@ public class ToggleFullScreenEditingAction extends AbstractAction {
 	private boolean fullScreenEditingMode = false;
 	private LocaleMessageSource messageSource;
 	
-	public ToggleFullScreenEditingAction(LocaleMessageSource messageSource) {
+	public ToggleFullScreenEditingAction(LocaleMessageSource messageSource, PersistentContentPane persistentContentPane,
+			EditorImpl editor) {
 		super(messageSource.getMessage("mWindowToggleFullScreen"), messageSource.getIcon("iWindowToggleFullScreen"));
 		putValue(SHORT_DESCRIPTION, messageSource.getMessage("mWindowToggleFullScreenTT"));
 		this.messageSource = messageSource;
+		this.persistentContentPane = persistentContentPane;
+
+		editor.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				if(e.getClickCount() == 2) {
+					toggleEditingMode();
+				}
+			}
+		});
+	
 	}
 	
 	public void actionPerformed(ActionEvent e) {
+		toggleEditingMode();
+	}
+	
+	public void toggleEditingMode() {
 		if(fullScreenEditingMode) {
 			// switch to normal mode
 			putValue(SMALL_ICON, messageSource.getIcon("iWindowToggleFullScreen"));
@@ -55,11 +72,7 @@ public class ToggleFullScreenEditingAction extends AbstractAction {
 			putValue(SHORT_DESCRIPTION, messageSource.getMessage("mWindowToggleNormalScreenTT"));
 			persistentContentPane.switchFullScreenEditing();
 			fullScreenEditingMode = true;
-		}		
+		}
 	}
 	
-	public void setPersistentContentPane(PersistentContentPane persistentContentPane) {
-		this.persistentContentPane = persistentContentPane;
-	}
-
 }

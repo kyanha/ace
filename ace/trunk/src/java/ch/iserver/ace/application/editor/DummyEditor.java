@@ -34,7 +34,7 @@ import java.beans.*;
 
 
 
-public class DummyEditor extends AbstractEditor {
+public class DummyEditor extends EditorImpl {
 
 	private JTextPane textPane;
 	private JToolBar editorToolBar;
@@ -48,7 +48,7 @@ public class DummyEditor extends AbstractEditor {
 		editorToolBar = new JToolBar();
 
 		// create editor
-		//JPanel innerEditorPane = new JPanel();
+		// JPanel innerEditorPane = new JPanel();
 		textPane = new DummyTextPane();
 		setFontSize(12);
 		
@@ -58,13 +58,7 @@ public class DummyEditor extends AbstractEditor {
 		
 		// add components
 		editorFrame = new SimpleInternalFrame(null, " ", editorToolBar, scrollPane);
-/*		editorFrame.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
-				if(e.getClickCount() == 2) {
-					toggleFullScreenEditingAction.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "ToggleEditingMode"));
-				}
-			}
-		});*/
+
 		setLayout(new BorderLayout());
 		add(editorFrame);
 	}
