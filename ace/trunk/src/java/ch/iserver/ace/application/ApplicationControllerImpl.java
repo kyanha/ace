@@ -85,14 +85,23 @@ public class ApplicationControllerImpl implements ApplicationController, Applica
 		return dialogController;
 	}
 
+	/**
+	 * @see ch.iserver.ace.application.ApplicationController#showAbout()
+	 */
 	public void showAbout() {
 		getDialogController().showAbout();
 	}
 
+	/**
+	 * @see ch.iserver.ace.application.ApplicationController#showPreferences()
+	 */
 	public void showPreferences() {
 		getDialogController().showPreferences();
 	}
 
+	/**
+	 * @see ch.iserver.ace.application.ApplicationController#quit()
+	 */
 	public void quit() {
 		Map failed = new TreeMap();
 		EventList dirty = getDocumentManager().getDirtyDocuments();	
@@ -139,6 +148,9 @@ public class ApplicationControllerImpl implements ApplicationController, Applica
 		}
 	}
 
+	/**
+	 * @see ch.iserver.ace.application.ApplicationController#closeDocument()
+	 */
 	public void closeDocument() {
 		DocumentItem item = getDocumentManager().getSelectedDocument();
 		try {
@@ -201,6 +213,9 @@ public class ApplicationControllerImpl implements ApplicationController, Applica
 		}
 	}
 
+	/**
+	 * @see ch.iserver.ace.application.ApplicationController#openDocument()
+	 */
 	public void openDocument() {
 		DialogResult result = getDialogController().showOpenDocuments();
 		int option = result.getOption();
@@ -223,6 +238,9 @@ public class ApplicationControllerImpl implements ApplicationController, Applica
 		}
 	}
 
+	/**
+	 * @see ch.iserver.ace.application.ApplicationController#openFile(java.lang.String)
+	 */
 	public void openFile(String filename) {
 		File file = new File(filename);
 		if (!file.exists()) {
@@ -238,6 +256,9 @@ public class ApplicationControllerImpl implements ApplicationController, Applica
 		}
 	}
 
+	/**
+	 * @see ch.iserver.ace.application.ApplicationController#saveDocument()
+	 */
 	public void saveDocument() {
 		DocumentItem item = getDocumentManager().getSelectedDocument();
 		if (item.isDirty() || !item.hasBeenSaved()) {
@@ -249,6 +270,9 @@ public class ApplicationControllerImpl implements ApplicationController, Applica
 		}
 	}
 
+	/**
+	 * @see ch.iserver.ace.application.ApplicationController#saveDocumentAs()
+	 */
 	public void saveDocumentAs() {
 		DocumentItem item = getDocumentManager().getSelectedDocument();
 		if (item != null) {
@@ -260,10 +284,23 @@ public class ApplicationControllerImpl implements ApplicationController, Applica
 		}
 	}
 
+	/**
+	 * @see ch.iserver.ace.application.ApplicationController#saveDocumentCopy()
+	 */
 	public void saveDocumentCopy() {
-		// TODO:
+		DocumentItem item = getDocumentManager().getSelectedDocument();
+		if (item != null) {
+			try {
+				saveItemAs(item, true);
+			} catch (IOException e) {
+				getDialogController().showSaveFailed(item, e);
+			}
+		}
 	}
 
+	/**
+	 * @see ch.iserver.ace.application.ApplicationController#saveAllDocuments()
+	 */
 	public void saveAllDocuments() {
 		Map failed = new TreeMap();
 		EventList dirty = getDocumentManager().getDirtyDocuments();
@@ -288,6 +325,9 @@ public class ApplicationControllerImpl implements ApplicationController, Applica
 		}
 	}
 
+	/**
+	 * @see ch.iserver.ace.application.ApplicationController#discoverUser()
+	 */
 	public void discoverUser() {
 		DialogResult result = getDialogController().showDiscoverUser();
 		
@@ -319,6 +359,10 @@ public class ApplicationControllerImpl implements ApplicationController, Applica
 	}
 	
 	protected boolean saveItemAs(DocumentItem item) throws IOException {
+		return saveItemAs(item, false);
+	}
+	
+	protected boolean saveItemAs(DocumentItem item, boolean copy) throws IOException {
 		getDocumentManager().setSelectedDocument(item);
 		DialogResult result = getDialogController().showSaveDocument(item.getTitle());
 		if (JFileChooser.APPROVE_OPTION == result.getOption()) {
@@ -333,18 +377,18 @@ public class ApplicationControllerImpl implements ApplicationController, Applica
 			if (renamed && file.exists()) {
 				int option = getDialogController().showConfirmOverwrite(file);
 				if (option == JOptionPane.YES_OPTION) {
-					getDocumentManager().saveAsDocument(file, item);
+					getDocumentManager().saveDocumentAs(file, item, copy);
 					return true;
 				} else {
 					return false;
 				}
 			} else {
-				getDocumentManager().saveAsDocument(file, item);
+				getDocumentManager().saveDocumentAs(file, item, copy);
 				return true;
 			}
 		} else {
 			return false;
 		}
 	}
-	
+		
 }

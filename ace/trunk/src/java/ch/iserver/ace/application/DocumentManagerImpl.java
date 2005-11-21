@@ -189,13 +189,13 @@ public class DocumentManagerImpl implements ItemSelectionChangeListener, Prefere
 		if (!item.hasBeenSaved()) {
 			throw new IllegalArgumentException("item has no fail name, save impossible");
 		}
-		saveAsDocument(item.getFile(), item);
+		saveDocumentAs(item.getFile(), item, false);
 	}
 	
 	/**
-	 * @see ch.iserver.ace.application.DocumentManager#saveAsDocument(java.io.File, ch.iserver.ace.application.DocumentItem)
+	 * @see ch.iserver.ace.application.DocumentManager#saveDocumentAs(java.io.File, ch.iserver.ace.application.DocumentItem, boolean)
 	 */
-	public void saveAsDocument(File file, DocumentItem item) throws IOException {
+	public void saveDocumentAs(File file, DocumentItem item, boolean copy) throws IOException {
 		ParameterValidator.notNull("file", file);
 		ParameterValidator.notNull("item", item);
 		
@@ -207,6 +207,7 @@ public class DocumentManagerImpl implements ItemSelectionChangeListener, Prefere
 		
 		AbstractDocument doc = (AbstractDocument) item.getEditorDocument();
 		String content;
+		
 		doc.readLock();
 		try {
 			content = doc.getText(0, doc.getLength());
@@ -215,8 +216,14 @@ public class DocumentManagerImpl implements ItemSelectionChangeListener, Prefere
 		} finally {
 			doc.readUnlock();
 		}
+		
 		FileUtils.writeStringToFile(file, content, getDefaultEncoding());
-		item.setFile(file);
+		
+		// set the new file if we are not creating a copy
+		if (!copy) {
+			item.setFile(file);
+		}
+		
 		if (renamed && item.getType() == DocumentItem.PUBLISHED) {
 			PublishedSession session = (PublishedSession) item.getSession();
 			session.setDocumentDetails(new DocumentDetails(item.getTitle()));

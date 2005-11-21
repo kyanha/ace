@@ -102,9 +102,10 @@ public interface DocumentManager {
 	 * 
 	 * @param file where to save the document
 	 * @param item the document item to save
+	 * @param copy TODO
 	 * @throws IOException in case of IO problems
 	 */
-	void saveAsDocument(File file, DocumentItem item) throws IOException;
+	void saveDocumentAs(File file, DocumentItem item, boolean copy) throws IOException;
 
 	/**
 	 * Closes the given document item. Unsaved changes will be discarded,

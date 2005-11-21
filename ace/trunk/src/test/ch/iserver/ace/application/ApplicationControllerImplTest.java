@@ -757,7 +757,7 @@ public class ApplicationControllerImplTest extends TestCase {
 		documentManager.setSelectedDocument(item);
 		documentManager.getDocumentForFile(file);
 		documentManagerCtrl.setReturnValue(null);
-		documentManager.saveAsDocument(file, item);
+		documentManager.saveDocumentAs(file, item, false);
 		
 		// replay
 		documentManagerCtrl.replay();
@@ -809,7 +809,7 @@ public class ApplicationControllerImplTest extends TestCase {
 		documentManager.setSelectedDocument(item);
 		documentManager.getDocumentForFile(file);
 		documentManagerCtrl.setReturnValue(null);
-		documentManager.saveAsDocument(file, item);
+		documentManager.saveDocumentAs(file, item, false);
 		
 		// replay
 		documentManagerCtrl.replay();
