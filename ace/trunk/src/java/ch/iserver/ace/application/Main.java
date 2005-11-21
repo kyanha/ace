@@ -42,7 +42,14 @@ public class Main {
 		"application-context.xml", "actions-context.xml" ,"collaboration-context.xml", "network-context.xml"
 	};
 	
-	public static void main(String[] args) {		
+	public static void main(String[] args) {
+		// customizing for operating system specific stuff
+		String classname = System.getProperty("ch.iserver.ace.customizer");
+		Customizer customizer = null;
+		if (classname != null) {
+			customizer = loadCustomizer(classname);
+		}
+
 		final ApplicationContext context = new ClassPathXmlApplicationContext(CONTEXT_FILES);
 
 		// get application factory
@@ -62,13 +69,8 @@ public class Main {
 		((ToggleFullScreenEditingAction)context.getBean("toggleFullScreenEditingAction")).setPersistentContentPane(pane);
 		
 		// get application controller
-		ApplicationController controller = (ApplicationController) context.getBean("applicationController");
-		
-		// customizing for operating system specific stuff
-		String classname = System.getProperty("ch.iserver.ace.customizer");
-		if (classname != null) {
-			customize(classname, controller);
-		}
+		ApplicationController controller = (ApplicationController) context.getBean("applicationController");		
+		customize(customizer, controller);
 		
 		// get the preferences store
 		PreferencesStore preferencesStore = (PreferencesStore) context.getBean("preferencesStore");
@@ -103,17 +105,23 @@ public class Main {
 		}
 	}
 	
-	private static void customize(String classname, ApplicationController controller) {
+	private static Customizer loadCustomizer(String classname) {
 		try {
 			Class clazz = Class.forName(classname);
-			Customizer customizer = (Customizer) clazz.newInstance();
-			customizer.init(controller);
+			return (Customizer) clazz.newInstance();
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (InstantiationException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	private static void customize(Customizer customizer, ApplicationController controller) {
+		if (customizer != null) {
+			customizer.init(controller);
 		}
 	}
 	
