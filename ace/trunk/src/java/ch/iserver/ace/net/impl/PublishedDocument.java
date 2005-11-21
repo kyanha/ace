@@ -26,6 +26,7 @@ import org.apache.log4j.Logger;
 import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.net.DocumentServer;
 import ch.iserver.ace.net.DocumentServerLogic;
+import ch.iserver.ace.net.JoinException;
 import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.impl.protocol.NullRequestFilter;
 import ch.iserver.ace.net.impl.protocol.ParticipantConnectionExt;
