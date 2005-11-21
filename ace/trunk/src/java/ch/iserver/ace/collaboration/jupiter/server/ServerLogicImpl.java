@@ -97,6 +97,8 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 	
 	private final Set blacklist = new HashSet();
 	
+	private final Set joinSet = new HashSet();
+	
 	public ServerLogicImpl(ThreadDomain domain,
 					     PublisherConnection connection,
 					     DocumentModel document,
@@ -174,6 +176,10 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 	protected Set getBlacklist() {
 		return blacklist;
 	}
+	
+	protected Set getJoinSet() {
+		return joinSet;
+	}
 		
 	public void start() {
 		acceptingJoins = true;
@@ -241,6 +247,11 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 			target.joinRejected(JoinRequest.BLACKLISTED);
 			return;
 		}
+		
+		if (joinSet.contains(id)) {
+			target.joinRejected(JoinRequest.IN_PROGRESS);
+			return;
+		}
 
 		ParticipantConnection connection = (ParticipantConnection) getThreadDomain().wrap(
 						new ParticipantConnectionWrapper(target, this), ParticipantConnection.class);
@@ -258,11 +269,11 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 	/**
 	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerLogic#joinAccepted(ch.iserver.ace.net.ParticipantConnection)
 	 */
-	public void joinAccepted(ParticipantConnection connection) {
+	public synchronized void joinAccepted(ParticipantConnection connection) {
 		Algorithm algorithm = new Jupiter(false);
 		
-		synchronized (this) {
-			int participantId = nextParticipantId();;
+		try {
+			int participantId = nextParticipantId();
 			connection.setParticipantId(participantId);
 		
 			ParticipantPort port = new ParticipantPortImpl(this, participantId, algorithm);
@@ -272,14 +283,20 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 			SessionParticipant participant = new SessionParticipant(port, proxy, connection, user);
 			SerializerCommand cmd = new JoinCommand(participant, this);
 			addCommand(cmd);
+		} finally {
+			joinSet.remove(connection.getUser().getId());
 		}
 	}
 	
 	/**
 	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerLogic#joinRejected(ch.iserver.ace.net.ParticipantConnection)
 	 */
-	public void joinRejected(ParticipantConnection connection) {
-		connection.joinRejected(JoinRequest.REJECTED);
+	public synchronized void joinRejected(ParticipantConnection connection) {
+		try {
+			connection.joinRejected(JoinRequest.REJECTED);
+		} finally {
+			joinSet.remove(connection.getUser().getId());
+		}
 	}
 	
 	// --> session logic methods <--

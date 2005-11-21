@@ -36,6 +36,8 @@ import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.net.RemoteUserProxyStub;
 import ch.iserver.ace.util.CallerThreadDomain;
+import ch.iserver.ace.util.Lock;
+import ch.iserver.ace.util.SemaphoreLock;
 
 /**
  *
@@ -103,8 +105,12 @@ public class ServerLogicImplTest extends TestCase {
 		participantCtrl.replay();
 		registryCtrl.replay();
 
+		// lock the serializer (otherwise we get unpredictable behavior)
+		Lock lock = new SemaphoreLock("serializer-lock");
+		lock.lock();
+
 		// test
-		ServerLogicImpl logic = new ServerLogicImpl(new CallerThreadDomain(), connection, document, registry);
+		ServerLogicImpl logic = new ServerLogicImpl(lock, new CallerThreadDomain(), connection, document, registry);
 		logic.start();
 		logic.prepareShutdown();
 		logic.getBlacklist().add("X");
@@ -150,6 +156,40 @@ public class ServerLogicImplTest extends TestCase {
 		registryCtrl.verify();
 	}
 	
+	public void testJoinInProgress() throws Exception {
+		MockControl connectionCtrl = MockControl.createStrictControl(PublisherConnection.class);
+		PublisherConnection connection = (PublisherConnection) connectionCtrl.getMock();
+		
+		DocumentModel document = new DocumentModel("", 0, 0, new DocumentDetails("XYZ"));
+		
+		MockControl registryCtrl = MockControl.createControl(UserRegistry.class);
+		UserRegistry registry = (UserRegistry) registryCtrl.getMock();
+		
+		MockControl participantCtrl = MockControl.createControl(ParticipantConnection.class);
+		ParticipantConnection participant = (ParticipantConnection) participantCtrl.getMock();
+						
+		// define mock behavior
+		participant.getUser();
+		participantCtrl.setReturnValue(new RemoteUserProxyStub("X"));
+		participant.joinRejected(JoinRequest.IN_PROGRESS);
+				
+		// replay
+		connectionCtrl.replay();
+		participantCtrl.replay();
+		registryCtrl.replay();
+
+		// test
+		ServerLogicImpl logic = new ServerLogicImpl(new CallerThreadDomain(), connection, document, registry);
+		logic.start();
+		logic.getJoinSet().add("X");
+		logic.join(participant);
+		
+		// verify
+		connectionCtrl.verify();
+		participantCtrl.verify();
+		registryCtrl.verify();
+	}
+
 	public void testJoinUnknownUser() throws Exception {
 		MockControl connectionCtrl = MockControl.createStrictControl(PublisherConnection.class);
 		PublisherConnection connection = (PublisherConnection) connectionCtrl.getMock();

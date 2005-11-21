@@ -36,19 +36,28 @@ public interface JoinRequest {
 	int REJECTED = 1;
 	
 	/**
-	 * Rejection code specifying that the request was rejected by the publisher.
+	 * Rejection code specifying that the request was rejected because the
+	 * joining user is on the session black list.
 	 */
 	int BLACKLISTED = 2;
 	
 	/**
-	 * Rejection code specifying that the request was rejected by the publisher.
+	 * Rejection code specifying that the request was rejected because the 
+	 * joining user is unknown.
 	 */
 	int UNKNOWN_USER = 3;
 	
 	/**
-	 * Rejection code specifying that the request was rejected by the publisher.
+	 * Rejection code specifying that the request was rejected because the 
+	 * document server is shutting down.
 	 */
 	int SHUTDOWN = 4;
+	
+	/**
+	 * Rejection code specifying that the request was rejected because a join
+	 * request from the same user was received earlier.
+	 */
+	int IN_PROGRESS = 5;
 	
 	/**
 	 * Gets the user that whishes to join the published document.
