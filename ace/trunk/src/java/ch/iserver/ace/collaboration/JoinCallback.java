@@ -33,8 +33,10 @@ public interface JoinCallback {
 	/**
 	 * Notifies the callback that the request was rejected by the owner of 
 	 * the document.
+	 * 
+	 * @param code the rejection code
 	 */
-	void rejected();
+	void rejected(int code);
 	
 	/**
 	 * Notifies the callback that the request was accepted by the owner of

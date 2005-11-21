@@ -25,6 +25,7 @@ import org.apache.log4j.Logger;
 
 import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.Operation;
+import ch.iserver.ace.collaboration.JoinRequest;
 import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.collaboration.PortableDocument;
 import ch.iserver.ace.collaboration.SessionCallback;
@@ -48,6 +49,10 @@ final class NullSessionCallback implements SessionCallback {
 			instance = new NullSessionCallback();
 		}
 		return instance;
+	}
+	
+	public void joinRequest(JoinRequest request) {
+		LOG.warn("SessionCallback not set on Session (joinRequest called)");
 	}
 	
 	public void participantJoined(Participant participant) {

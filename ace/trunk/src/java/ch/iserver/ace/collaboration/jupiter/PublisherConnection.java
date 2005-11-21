@@ -21,6 +21,7 @@
 
 package ch.iserver.ace.collaboration.jupiter;
 
+import ch.iserver.ace.collaboration.JoinRequest;
 import ch.iserver.ace.net.ParticipantConnection;
 
 /**
@@ -41,5 +42,12 @@ public interface PublisherConnection extends ParticipantConnection {
 	 * @param e the exception causing the failure
 	 */
 	void sessionFailed(int reason, Exception e);
+	
+	/**
+	 * Passes the given join request to the publisher of the document.
+	 * 
+	 * @param request the join request
+	 */
+	void sendJoinRequest(JoinRequest request);
 	
 }

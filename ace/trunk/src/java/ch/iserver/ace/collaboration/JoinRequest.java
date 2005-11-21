@@ -19,21 +19,19 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.net;
+package ch.iserver.ace.collaboration;
 
 /**
- * This interface represents the view of the network layer on the object that
- * implements the logic functionality of a document server.
+ *
  */
-public interface DocumentServerLogic {
-		
-	/**
-	 * Join this editing session. The passed in proxy is used by the server
-	 * to communicate with the joining user.
-	 *
-	 * @param connection a connection for communicating with the joining user
-	 * @throws JoinException if there is a problem while joining
-	 */
-	void join(ParticipantConnection connection) throws JoinException;
-			
+public interface JoinRequest {
+	
+	int REJECTED = 1;
+	
+	RemoteUser getUser();
+	
+	void accept();
+	
+	void reject();
+	
 }

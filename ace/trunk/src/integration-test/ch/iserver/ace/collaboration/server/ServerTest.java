@@ -30,6 +30,8 @@ import ch.iserver.ace.DocumentModel;
 import ch.iserver.ace.algorithm.RequestImpl;
 import ch.iserver.ace.algorithm.jupiter.JupiterVectorTime;
 import ch.iserver.ace.collaboration.jupiter.PublisherConnection;
+import ch.iserver.ace.collaboration.jupiter.UserRegistry;
+import ch.iserver.ace.collaboration.jupiter.UserRegistryImpl;
 import ch.iserver.ace.collaboration.jupiter.server.ServerLogicImpl;
 import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.RemoteUserProxyStub;
@@ -46,6 +48,12 @@ public class ServerTest extends TestCase {
 	public static final int PARTICIPANTS = 3;
 	
 	public void testBasics() throws Exception {
+		UserRegistry registry = new UserRegistryImpl();
+		
+		for (int i = 1; i < PARTICIPANTS; i++) {
+			registry.addUser(new RemoteUserProxyStub("" + i));
+		}
+		
 		Lock lock = new SemaphoreLock("serializer-lock");
 		MockControl[] controls = new MockControl[PARTICIPANTS];
 		PublisherConnection[] connections = new PublisherConnection[PARTICIPANTS];
@@ -58,6 +66,10 @@ public class ServerTest extends TestCase {
 		
 		// define mock behavior
 		connections[0].setParticipantId(0);
+		connections[0].sendJoinRequest(null);
+		controls[0].setMatcher(MockControl.ALWAYS_MATCHER);
+		connections[0].sendJoinRequest(null);
+		controls[0].setMatcher(MockControl.ALWAYS_MATCHER);
 		
 		for (int i = 0; i < PARTICIPANTS; i++) {
 			connections[i].getUser();
@@ -85,12 +97,13 @@ public class ServerTest extends TestCase {
 		ServerLogicImpl server = new ServerLogicImpl(lock, 
 				new CallerThreadDomain(), 
 				connections[0], 
-				document);
+				document,
+				registry);
 		ports[0] = server.getPublisherPort();
 		server.start();
 		
 		for (int i = 1; i < PARTICIPANTS; i++) {
-			ports[i] = server.join(connections[i]);
+			server.join(connections[i]);
 		}
 				
 		// test

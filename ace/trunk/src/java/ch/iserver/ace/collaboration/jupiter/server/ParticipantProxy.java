@@ -35,7 +35,7 @@ import ch.iserver.ace.util.ParameterValidator;
 /**
  *
  */
-class ParticipantProxy implements Forwarder {
+public class ParticipantProxy implements Forwarder {
 	
 	/**
 	 * 
@@ -58,7 +58,7 @@ class ParticipantProxy implements Forwarder {
 	 * @param algorithm
 	 * @param connection
 	 */
-	ParticipantProxy(int participantId, 
+	public ParticipantProxy(int participantId, 
 					Algorithm algorithm, 
 					ParticipantConnection connection) {
 		this(participantId, new AlgorithmWrapperImpl(algorithm), connection);

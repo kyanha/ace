@@ -25,6 +25,7 @@ import ca.odell.glazedlists.BasicEventList;
 import ca.odell.glazedlists.EventList;
 import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.Operation;
+import ch.iserver.ace.collaboration.JoinRequest;
 import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.collaboration.PublishedSessionCallback;
 
@@ -38,6 +39,11 @@ public class PublishedSessionCallbackImpl implements PublishedSessionCallback {
 	public PublishedSessionCallbackImpl() {
 		participantSourceList = new BasicEventList();
 		participationColorManager = new ParticipationColorManager();
+	}
+	
+	public void joinRequest(JoinRequest request) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	public void participantJoined(Participant participant) {

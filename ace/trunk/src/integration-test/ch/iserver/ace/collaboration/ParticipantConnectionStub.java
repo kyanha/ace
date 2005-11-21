@@ -25,6 +25,7 @@ import junit.framework.AssertionFailedError;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.net.ParticipantConnection;
+import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.PortableDocument;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.util.CompareUtil;
@@ -47,6 +48,20 @@ public class ParticipantConnectionStub implements ParticipantConnection {
 	 */
 	public void setParticipantId(int participantId) {
 
+	}
+	
+	/**
+	 * @see ch.iserver.ace.net.ParticipantConnection#joinAccepted(ch.iserver.ace.net.ParticipantPort)
+	 */
+	public void joinAccepted(ParticipantPort port) {
+		
+	}
+	
+	/**
+	 * @see ch.iserver.ace.net.ParticipantConnection#joinRejected(int)
+	 */
+	public void joinRejected(int code) {
+		
 	}
 
 	/**

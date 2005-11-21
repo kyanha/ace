@@ -42,7 +42,7 @@ public class JoinNetworkCallbackImplTest extends TestCase {
 		SessionFactory factory = (SessionFactory) factoryCtrl.getMock();
 		
 		// define mock behavior
-		callback.rejected();
+		callback.rejected(1);
 		
 		// replay
 		callbackCtrl.replay();
@@ -50,7 +50,7 @@ public class JoinNetworkCallbackImplTest extends TestCase {
 		
 		// test
 		JoinNetworkCallback impl = new JoinNetworkCallbackImpl(callback, factory);
-		impl.rejected();
+		impl.rejected(1);
 		
 		// verify
 		callbackCtrl.verify();

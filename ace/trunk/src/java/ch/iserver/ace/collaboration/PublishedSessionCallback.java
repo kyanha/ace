@@ -31,6 +31,14 @@ import ch.iserver.ace.Operation;
 public interface PublishedSessionCallback {
 	
 	/**
+	 * Passes the given join request to the publisher of the document.
+	 * 
+	 * @param request the join request
+	 * @return true iff the user is allowed to join, false otherwise
+	 */
+	void joinRequest(JoinRequest request);
+	
+	/**
 	 * Notifies the session callback that a new user joined the Session.
 	 * 
 	 * @param participant the participant that joined

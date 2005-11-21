@@ -29,48 +29,52 @@ import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.RequestImpl;
-import ch.iserver.ace.collaboration.jupiter.server.serializer.CaretUpdateSerializerCommand;
-import ch.iserver.ace.collaboration.jupiter.server.serializer.RequestSerializerCommand;
 import ch.iserver.ace.net.ParticipantPort;
-import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
-import edu.emory.mathcs.backport.java.util.concurrent.LinkedBlockingQueue;
 
 public class ParticipantPortImplTest extends TestCase {
 	
 	/** The algorithm mock. */
 	private Algorithm algorithm;
-	
-	/** The blocking queue for the commands. */
-	private BlockingQueue queue;
-	
+		
 	/** The participant port under test. */
 	private ParticipantPort port;
+	
+	/** The mock control for the logic. */
+	private MockControl logicCtrl;
+	
+	/** The server logic mock. */
+	private ServerLogic logic;
 	
 	public void setUp() {
 		MockControl control = MockControl.createNiceControl(Algorithm.class);
 		algorithm = (Algorithm) control.getMock();
-		queue = new LinkedBlockingQueue();
-		port = new ParticipantPortImpl(null, 1, algorithm, queue);
+		
+		logicCtrl = MockControl.createControl(ServerLogic.class);
+		logicCtrl.setDefaultMatcher(MockControl.ALWAYS_MATCHER);
+		logic = (ServerLogic) logicCtrl.getMock();
+		
+		port = new ParticipantPortImpl(logic, 1, algorithm);
 	}
 	
 	public void testReceiveCaretUpdate() throws InterruptedException {
 		CaretUpdateMessage message = new CaretUpdateMessage(0, null, null);
+		
+		logic.addCommand(null);
+		logicCtrl.replay();
+		
 		port.receiveCaretUpdate(message);
-		assertEquals(1, queue.size());
-		CaretUpdateSerializerCommand command = (CaretUpdateSerializerCommand) queue.take();
-		assertEquals(1, command.getParticipantId());
-		assertSame(algorithm, command.getAlgorithm());
-		assertSame(message, command.getMessage());
+		
+		logicCtrl.verify();
 	}
 
 	public void testReceiveRequest() throws InterruptedException {
+		logic.addCommand(null);
+		logicCtrl.replay();
+
 		Request request = new RequestImpl(0, null, null);
 		port.receiveRequest(request);
-		assertEquals(1, queue.size());
-		RequestSerializerCommand command = (RequestSerializerCommand) queue.take();
-		assertEquals(1, command.getParticipantId());
-		assertSame(algorithm, command.getAlgorithm());
-		assertSame(request, command.getRequest());
+
+		logicCtrl.verify();
 	}
 
 }

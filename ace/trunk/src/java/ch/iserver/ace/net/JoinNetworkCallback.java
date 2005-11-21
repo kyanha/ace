@@ -29,8 +29,10 @@ public interface JoinNetworkCallback {
 	/**
 	 * Notifies the callback that the join request was rejected by the owner
 	 * of the document.
+	 * 
+	 * @param code the reason of rejection
 	 */
-	void rejected();
+	void rejected(int code);
 	
 	/**
 	 * Notifies the callback that the join request was accepted by the owner

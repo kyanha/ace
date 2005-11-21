@@ -38,7 +38,7 @@ public class JoinCallbackImpl implements JoinCallback {
 		return null;
 	}
 	
-	public void rejected() {
+	public void rejected(int code) {
 	}
 
 }

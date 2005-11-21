@@ -28,11 +28,13 @@ import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.TransformationException;
 import ch.iserver.ace.algorithm.jupiter.Jupiter;
+import ch.iserver.ace.collaboration.JoinRequest;
 import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.collaboration.PublishedSession;
 import ch.iserver.ace.collaboration.PublishedSessionCallback;
 import ch.iserver.ace.collaboration.jupiter.server.PublisherPort;
 import ch.iserver.ace.collaboration.jupiter.server.ServerLogic;
+import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.PortableDocument;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.util.ParameterValidator;
@@ -126,6 +128,10 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 	
 	// --> start ParticipantConnection implementation <--
 	
+	public void sendJoinRequest(JoinRequest request) {
+		getCallback().joinRequest(request);
+	}
+	
 	public void sessionFailed(int reason, Exception e) {
 		getCallback().sessionFailed(reason, e);
 	}
@@ -210,6 +216,20 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 	 */
 	public void sendKicked() {
 		throw new UnsupportedOperationException("publisher cannot be kicked");
+	}
+	
+	/**
+	 * @see ch.iserver.ace.net.ParticipantConnection#joinAccepted(ch.iserver.ace.net.ParticipantPort)
+	 */
+	public void joinAccepted(ParticipantPort port) {
+		throw new UnsupportedOperationException("publisher is always part of session");
+	}
+	
+	/**
+	 * @see ch.iserver.ace.net.ParticipantConnection#joinRejected(int)
+	 */
+	public void joinRejected(int code) {
+		throw new UnsupportedOperationException("publisher is never rejected");
 	}
 		
 }

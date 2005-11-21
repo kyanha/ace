@@ -26,6 +26,14 @@ package ch.iserver.ace.net;
  */
 public class JoinException extends Exception {
 	
+	public static final int BLACKLISTED = 1;
+	
+	public static final int REJECTED = 2;
+	
+	public static final int UNKNOWN_USER = 3;
+	
+	private int code;
+	
 	/**
 	 * Constructor.
 	 * 
@@ -35,6 +43,15 @@ public class JoinException extends Exception {
 		super(message);
 	}
 	
+	public JoinException(int code) {
+		this.code = code;
+	}
+	
+	public JoinException(int code, String message) {
+		super(message);
+		this.code = code;
+	}
+	
 	/**
 	 * Default constructor.
 	 * 
@@ -42,5 +59,8 @@ public class JoinException extends Exception {
 	public JoinException() {
 	}
 	
+	public int getCode() {
+		return code;
+	}
 	
 }

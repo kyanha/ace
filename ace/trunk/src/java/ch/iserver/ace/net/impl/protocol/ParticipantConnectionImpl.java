@@ -22,7 +22,6 @@
 package ch.iserver.ace.net.impl.protocol;
 
 import org.apache.log4j.Logger;
-import org.beepcore.beep.core.BEEPException;
 import org.beepcore.beep.core.Channel;
 import org.beepcore.beep.core.OutputDataStream;
 import org.beepcore.beep.core.ReplyListener;
@@ -30,6 +29,7 @@ import org.beepcore.beep.util.BufferSegment;
 
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
+import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.PortableDocument;
 import ch.iserver.ace.net.RemoteUserProxy;
 
@@ -75,6 +75,16 @@ public class ParticipantConnectionImpl implements ParticipantConnectionExt {
 	/** methods from interface Participantconnection  **/
 	/***************************************************/
 	public void setParticipantId(int participantId) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public void joinAccepted(ParticipantPort port) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public void joinRejected(int code) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -25,6 +25,7 @@ import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.net.ParticipantConnection;
+import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.PortableDocument;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.util.ParameterValidator;
@@ -119,6 +120,20 @@ public class ParticipantConnectionWrapper implements ParticipantConnection {
 	public void setParticipantId(int participantId) {
 		this.participantId = participantId;
 		getTarget().setParticipantId(participantId);
+	}
+	
+	/**
+	 * @see ch.iserver.ace.net.ParticipantConnection#joinAccepted(ch.iserver.ace.net.ParticipantPort)
+	 */
+	public void joinAccepted(ParticipantPort port) {
+		getTarget().joinAccepted(port);
+	}
+	
+	/**
+	 * @see ch.iserver.ace.net.ParticipantConnection#joinRejected(int)
+	 */
+	public void joinRejected(int code) {
+		getTarget().joinRejected(code);
 	}
 
 	/**

@@ -24,6 +24,7 @@ package ch.iserver.ace.collaboration.jupiter.server;
 import java.util.Iterator;
 
 import ch.iserver.ace.DocumentDetails;
+import ch.iserver.ace.collaboration.jupiter.server.serializer.SerializerCommand;
 import ch.iserver.ace.net.DocumentServer;
 import ch.iserver.ace.net.DocumentServerLogic;
 import ch.iserver.ace.net.PortableDocument;
@@ -46,11 +47,21 @@ public interface ServerLogic extends DocumentServerLogic {
 	void setDocumentServer(DocumentServer server);
 	
 	/**
+	 * Gets the next participant id for the session. The participant id must
+	 * be unique, so this method must be properly synchronized.
+	 * 
+	 * @return the next available participant id
+	 */
+	int nextParticipantId();
+	
+	/**
 	 * Adds a participant to the session logic.
 	 * 
 	 * @param participant the participant to add
 	 */
 	void addParticipant(SessionParticipant participant);
+	
+	void addCommand(SerializerCommand command);
 	
 	/**
 	 * Gets an Iterator over all the participant proxy objects in the

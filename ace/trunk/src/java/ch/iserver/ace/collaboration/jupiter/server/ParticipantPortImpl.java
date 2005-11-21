@@ -31,41 +31,29 @@ import ch.iserver.ace.collaboration.jupiter.server.serializer.RequestSerializerC
 import ch.iserver.ace.collaboration.jupiter.server.serializer.SerializerCommand;
 import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.util.ParameterValidator;
-import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
 
 /**
  * 
  */
-class ParticipantPortImpl implements ParticipantPort {
+public class ParticipantPortImpl implements ParticipantPort {
 	
 	private final ServerLogic logic;
 	
 	private final int participantId;
 	
 	private final Algorithm algorithm;
-	
-	private final BlockingQueue queue;
-	
+		
 	/**
 	 * @param logic
 	 * @param participantId
 	 * @param algorithm
 	 * @param queue
 	 */
-	ParticipantPortImpl(ServerLogic logic, int participantId, Algorithm algorithm, BlockingQueue queue) {
+	public ParticipantPortImpl(ServerLogic logic, int participantId, Algorithm algorithm) {
 		ParameterValidator.notNull("algorithm", algorithm);
-		ParameterValidator.notNull("queue", queue);
 		this.logic = logic;
 		this.participantId = participantId;
 		this.algorithm = algorithm;
-		this.queue = queue;
-	}
-
-	/**
-	 * @return
-	 */
-	protected BlockingQueue getQueue() {
-		return queue;
 	}
 
 	/**
@@ -97,7 +85,7 @@ class ParticipantPortImpl implements ParticipantPort {
 						getParticipantId(),
 						getAlgorithm(),
 						message);
-		getQueue().add(cmd);
+		getLogic().addCommand(cmd);
 	}
 	
 	/**
@@ -108,7 +96,7 @@ class ParticipantPortImpl implements ParticipantPort {
 						getParticipantId(),
 						getAlgorithm(),
 						request);
-		getQueue().add(cmd);
+		getLogic().addCommand(cmd);
 	}
 	
 	/**
@@ -116,7 +104,7 @@ class ParticipantPortImpl implements ParticipantPort {
 	 */
 	public void leave() {
 		getLogic().leave(getParticipantId());
-		getQueue().add(new LeaveCommand(getParticipantId(), Participant.LEFT));
+		getLogic().addCommand(new LeaveCommand(getParticipantId(), Participant.LEFT));
 	}
 	
 }

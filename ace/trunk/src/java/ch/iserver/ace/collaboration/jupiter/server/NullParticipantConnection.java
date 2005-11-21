@@ -26,6 +26,7 @@ import org.apache.log4j.Logger;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.net.ParticipantConnection;
+import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.PortableDocument;
 import ch.iserver.ace.net.RemoteUserProxy;
 
@@ -67,6 +68,20 @@ public final class NullParticipantConnection implements ParticipantConnection {
 	 */
 	public void setParticipantId(int participantId) {
 		LOG.info("setParticipantId ignored");
+	}
+	
+	/**
+	 * @see ch.iserver.ace.net.ParticipantConnection#joinAccepted(ch.iserver.ace.net.ParticipantPort)
+	 */
+	public void joinAccepted(ParticipantPort port) {
+		LOG.info("joinAccepted ignored");
+	}
+	
+	/**
+	 * @see ch.iserver.ace.net.ParticipantConnection#joinRejected(int)
+	 */
+	public void joinRejected(int code) {
+		LOG.info("joinRejected ignored");
 	}
 
 	/**

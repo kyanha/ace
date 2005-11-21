@@ -22,8 +22,10 @@
 package ch.iserver.ace.collaboration.jupiter.server;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 import org.apache.log4j.Logger;
@@ -32,19 +34,21 @@ import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.DocumentModel;
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.jupiter.Jupiter;
+import ch.iserver.ace.collaboration.JoinRequest;
 import ch.iserver.ace.collaboration.Participant;
+import ch.iserver.ace.collaboration.RemoteUser;
+import ch.iserver.ace.collaboration.jupiter.JoinRequestImpl;
 import ch.iserver.ace.collaboration.jupiter.PublisherConnection;
-import ch.iserver.ace.collaboration.jupiter.server.serializer.JoinCommand;
+import ch.iserver.ace.collaboration.jupiter.UserRegistry;
 import ch.iserver.ace.collaboration.jupiter.server.serializer.LeaveCommand;
 import ch.iserver.ace.collaboration.jupiter.server.serializer.Serializer;
 import ch.iserver.ace.collaboration.jupiter.server.serializer.SerializerCommand;
 import ch.iserver.ace.collaboration.jupiter.server.serializer.ShutdownCommand;
 import ch.iserver.ace.net.DocumentServer;
 import ch.iserver.ace.net.DocumentServerLogic;
+import ch.iserver.ace.net.JoinException;
 import ch.iserver.ace.net.ParticipantConnection;
-import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.PortableDocument;
-import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.util.InterruptedRuntimeException;
 import ch.iserver.ace.util.Lock;
 import ch.iserver.ace.util.ParameterValidator;
@@ -83,21 +87,28 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 	
 	private final ServerDocument document;
 	
+	private final UserRegistry registry;
+	
 	private boolean acceptingJoins;
+	
+	private final Set blacklist = new HashSet();
 	
 	public ServerLogicImpl(Lock lock, 
 	                       ThreadDomain domain, 
 	                       PublisherConnection connection, 
-	                       DocumentModel document) {
+	                       DocumentModel document,
+	                       UserRegistry registry) {
 		ParameterValidator.notNull("lock", lock);
 		ParameterValidator.notNull("domain", domain);
 		ParameterValidator.notNull("connection", connection);
 		ParameterValidator.notNull("document", document);
+		ParameterValidator.notNull("registry", registry);
 		
 		this.nextParticipantId = 0;
 		this.forwarder = new CompositeForwarder(this);
 		
 		this.threadDomain = domain;
+		this.registry = registry;
 		
 		this.serializerQueue = new LinkedBlockingQueue();
 		this.serializer = new Serializer(serializerQueue, lock, forwarder, this);
@@ -120,7 +131,7 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 		Algorithm algorithm = new Jupiter(false);
 		int participantId = 0;
 		connection.setParticipantId(participantId);
-		PublisherPort port = new PublisherPortImpl(this, participantId, algorithm, getSerializerQueue());
+		PublisherPort port = new PublisherPortImpl(this, participantId, algorithm);
 		ParticipantProxy proxy = new ParticipantProxy(participantId, algorithm, connection);
 		addParticipant(new SessionParticipant(port, proxy, connection, null));
 		return port;
@@ -132,6 +143,10 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 	
 	public PortableDocument getDocument() {
 		return document.toPortableDocument();
+	}
+	
+	protected UserRegistry getUserRegistry() {
+		return registry;
 	}
 	
 	protected DocumentServer getDocumentServer() {
@@ -156,16 +171,26 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 		serializer.kill();
 	}
 	
-	private synchronized int nextParticipantId() {
-		return ++nextParticipantId;
-	}
-	
 	protected BlockingQueue getSerializerQueue() {
 		return serializerQueue;
 	}
 	
 	protected PublisherConnection getPublisherConnection() {
 		return publisherConnection;
+	}
+	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerLogic#nextParticipantId()
+	 */
+	public synchronized int nextParticipantId() {
+		return ++nextParticipantId;
+	}
+	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerLogic#addCommand(ch.iserver.ace.collaboration.jupiter.server.serializer.SerializerCommand)
+	 */
+	public void addCommand(SerializerCommand command) {
+		getSerializerQueue().add(command);
 	}
 	
 	/**
@@ -192,26 +217,28 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 	/**
 	 * @see ch.iserver.ace.net.DocumentServerLogic#join(ch.iserver.ace.net.ParticipantConnection)
 	 */
-	public synchronized ParticipantPort join(ParticipantConnection target) {
+	public synchronized void join(ParticipantConnection target) {
 		if (!isAcceptingJoins()) {
-			// TODO: correct exception type
 			throw new IllegalStateException("DocumentServerLogic is not accepting joins");
 		}
 		
-		Algorithm algorithm = new Jupiter(false);
-		int participantId = nextParticipantId();
-		target.setParticipantId(participantId);
-		
-		ParticipantPort port = new ParticipantPortImpl(this, participantId, algorithm, getSerializerQueue());
-		ParticipantProxy proxy = new ParticipantProxy(participantId, algorithm, target);
+		String id = target.getUser().getId();
+		if (blacklist.contains(id)) {
+			target.joinRejected(JoinException.BLACKLISTED);
+			return;
+		}
+
 		ParticipantConnection connection = (ParticipantConnection) getThreadDomain().wrap(
-				new ParticipantConnectionWrapper(target, this), ParticipantConnection.class);
-		RemoteUserProxy user = target.getUser();
-		SessionParticipant participant = new SessionParticipant(port, proxy, connection, user);
-		SerializerCommand cmd = new JoinCommand(participant, this);
-		getSerializerQueue().add(cmd);
+						new ParticipantConnectionWrapper(target, this), ParticipantConnection.class);
+		RemoteUser user = getUserRegistry().getUser(id);
 		
-		return port;
+		if (user == null) {
+			target.joinRejected(JoinException.UNKNOWN_USER);
+			return;
+		}
+		
+		JoinRequest request = new JoinRequestImpl(this, user, connection);
+		getPublisherConnection().sendJoinRequest(request);
 	}
 	
 	// --> session logic methods <--
@@ -289,6 +316,9 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 			connection.sendKicked();
 			connection.close();
 			removeParticipant(participantId);
+
+			// add kicked user to blacklist (he can no longer join)
+			blacklist.add(connection.getUser().getId());
 		}
 	}
 	

@@ -41,6 +41,10 @@ public interface ParticipantConnection {
 	 */
 	void setParticipantId(int participantId);
 	
+	void joinAccepted(ParticipantPort port);
+	
+	void joinRejected(int code);
+	
 	/**
 	 * @return the remote user proxy of the participant represented by the
 	 *         connection

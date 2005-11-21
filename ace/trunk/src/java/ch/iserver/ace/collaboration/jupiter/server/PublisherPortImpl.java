@@ -24,21 +24,20 @@ package ch.iserver.ace.collaboration.jupiter.server;
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.collaboration.jupiter.server.serializer.LeaveCommand;
-import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
 
 /**
  *
  */
 public class PublisherPortImpl extends ParticipantPortImpl implements PublisherPort {
 	
-	public PublisherPortImpl(ServerLogic logic, int participantId, Algorithm algorithm, BlockingQueue queue) {
-		super(logic, participantId, algorithm, queue);
+	public PublisherPortImpl(ServerLogic logic, int participantId, Algorithm algorithm) {
+		super(logic, participantId, algorithm);
 	}
 	
 	public void kick(int participantId) {
 		if (participantId != getParticipantId()) {
 			getLogic().kick(participantId);
-			getQueue().add(new LeaveCommand(participantId, Participant.KICKED));
+			getLogic().addCommand(new LeaveCommand(participantId, Participant.KICKED));
 		}
 	}
 	
