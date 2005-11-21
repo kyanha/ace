@@ -68,8 +68,10 @@ public class DocumentItemCellRenderer extends JPanel implements ListCellRenderer
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
+		Color textColor = g.getColor();
 		int itemHeight = getHeight();
-
+		int itemWidth = getWidth();
+		
 		// draw document icon
 		int imageHeight = 16; //iconLocal.getIconHeight();
 		int imageWidth = 16; //iconLocal.getIconWidth();
@@ -82,16 +84,16 @@ public class DocumentItemCellRenderer extends JPanel implements ListCellRenderer
 			break;
 			case DocumentItem.PUBLISHED:
 				g.drawImage(iconPublished.getImage(), imagePosX, imagePosY, imageHeight, imageWidth, this);
-			break;
+			break;			
 			case DocumentItem.REMOTE:
 				g.drawImage(iconRemote.getImage(), imagePosX, imagePosY, imageHeight, imageWidth, this);
 			break;
 		}
 
 		// draw document title & dirty flag (TODO: dynamic border)
-		//g.setColor(Color.BLACK);
+		g.setColor(textColor);
 		int textAscent = g.getFontMetrics().getAscent();
-		int textDescent = g.getFontMetrics().getDescent();
+		int textDescent = g.getFontMetrics().getDescent();		
 		int textPosX = imagePosX + imageWidth + 5;
 		int textPosY = (itemHeight / 2) + (textAscent / 2) - textDescent + 1;
 		if(value.isDirty()) {
@@ -101,7 +103,7 @@ public class DocumentItemCellRenderer extends JPanel implements ListCellRenderer
 		}
 
 	}
-
+	
 	public String getToolTipText() {
 		return value.getToolTip();
 	}
@@ -109,5 +111,5 @@ public class DocumentItemCellRenderer extends JPanel implements ListCellRenderer
 	public Dimension getPreferredSize() {
 		return new Dimension(0, 20);
 	}
-
+	
 }

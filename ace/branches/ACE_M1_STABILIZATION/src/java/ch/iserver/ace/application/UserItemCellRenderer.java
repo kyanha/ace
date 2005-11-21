@@ -52,7 +52,7 @@ public class UserItemCellRenderer extends JPanel implements ListCellRenderer {
 							boolean cellHasFocus) {
 		setOpaque(true);
 		this.value = (UserItem)value;
-
+		
 		if(isSelected) {
 			setForeground(list.getSelectionForeground());
 			setBackground(list.getSelectionBackground());
@@ -68,7 +68,8 @@ public class UserItemCellRenderer extends JPanel implements ListCellRenderer {
 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-
+		
+		Color textColor = g.getColor();
 		int itemHeight = getHeight();
 		int itemWidth = getWidth();
 
@@ -78,11 +79,11 @@ public class UserItemCellRenderer extends JPanel implements ListCellRenderer {
 		int imagePosX = 1;
 		int imagePosY = (itemHeight / 2) - (imageHeight / 2);
 		g.drawImage(iconUser.getImage(), imagePosX, imagePosY, imageHeight, imageWidth, this);
-
+		
 		// draw user name (TODO: dynamic border)
-		//g.setColor(Color.BLACK);
+		g.setColor(textColor);
 		int textAscent = g.getFontMetrics().getAscent();
-		int textDescent = g.getFontMetrics().getDescent();
+		int textDescent = g.getFontMetrics().getDescent();		
 		int textPosX = imagePosX + imageWidth + 5;
 		int textPosY = (itemHeight / 2) + (textAscent / 2) - textDescent + 1;
 		g.drawString(value.getName(), textPosX, textPosY);
@@ -92,9 +93,9 @@ public class UserItemCellRenderer extends JPanel implements ListCellRenderer {
 /*	public String getToolTipText() {
 		return value.getName();
 	}*/
-
+	
 	public Dimension getPreferredSize() {
 		return new Dimension(0, 20);
 	}
-
+	
 }

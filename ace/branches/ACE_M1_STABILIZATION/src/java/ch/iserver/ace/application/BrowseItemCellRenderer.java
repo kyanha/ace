@@ -56,7 +56,7 @@ public class BrowseItemCellRenderer extends JPanel implements ListCellRenderer {
 							boolean cellHasFocus) {
 		setOpaque(true);
 		this.value = (BrowseItem)value;
-
+		
 		if(isSelected) {
 			setForeground(list.getSelectionForeground());
 			setBackground(list.getSelectionBackground());
@@ -66,16 +66,17 @@ public class BrowseItemCellRenderer extends JPanel implements ListCellRenderer {
 			setBackground(list.getBackground());
 			setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 		}
-
+		
 		return this;
 	}
 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
+		Color textColor = g.getColor();
 		int itemHeight = getHeight();
 		int itemWidth = getWidth();
-
+		
 		// draw document icon
 		int imageHeight = 16; //iconLocal.getIconHeight();
 		int imageWidth = 16; //iconLocal.getIconWidth();
@@ -84,9 +85,9 @@ public class BrowseItemCellRenderer extends JPanel implements ListCellRenderer {
 		g.drawImage(iconRemote.getImage(), imagePosX, imagePosY, imageHeight, imageWidth, this);
 
 		// draw document title (TODO: dynamic border)
-		//g.setColor(Color.BLACK);
+		g.setColor(textColor);
 		int textAscent = g.getFontMetrics().getAscent();
-		int textDescent = g.getFontMetrics().getDescent();
+		int textDescent = g.getFontMetrics().getDescent();		
 		int textPosX = imagePosX + imageWidth + 5;
 		int textTitlePosY = (itemHeight / 2) + (textAscent / 2) - textDescent - 3;
 		g.drawString(value.getTitle(), textPosX, textTitlePosY);
@@ -102,9 +103,9 @@ public class BrowseItemCellRenderer extends JPanel implements ListCellRenderer {
 	public String getToolTipText() {
 		return value.getTitle();// + "(" + value.getPublisher() + ")";
 	}
-
+	
 	public Dimension getPreferredSize() {
 		return new Dimension(0, 30);
 	}
-
+	
 }
