@@ -43,6 +43,8 @@ public interface ApplicationController {
 	void saveDocument();
 	
 	void saveDocumentAs();
+
+	void saveDocumentCopy();
 	
 	void saveAllDocuments();
 	

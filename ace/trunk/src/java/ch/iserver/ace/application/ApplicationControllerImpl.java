@@ -260,6 +260,10 @@ public class ApplicationControllerImpl implements ApplicationController, Applica
 		}
 	}
 
+	public void saveDocumentCopy() {
+		// TODO:
+	}
+
 	public void saveAllDocuments() {
 		Map failed = new TreeMap();
 		EventList dirty = getDocumentManager().getDirtyDocuments();
