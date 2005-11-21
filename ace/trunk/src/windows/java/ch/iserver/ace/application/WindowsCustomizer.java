@@ -30,12 +30,16 @@ import javax.swing.UIManager;
  */
 public class WindowsCustomizer implements Customizer {
 	
-	public void init(ApplicationController controller) {
+	public WindowsCustomizer() {
+		System.out.println("huhu");
 		try {
 			UIManager.setLookAndFeel("com.jgoodies.looks.windows.WindowsLookAndFeel");
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void init(ApplicationController controller) {
 	}
 		
 }
