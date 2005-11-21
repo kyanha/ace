@@ -33,8 +33,6 @@ public interface NetworkServiceExt extends NetworkService {
 	
 	public void setServerInfo(ServerInfo info);
 	
-	public void discoverDocuments(RemoteUserProxyExt proxy);
-	
 	public void sendDocuments(RemoteUserProxyExt proxy);
 	
 	public void conceal(String docId);
