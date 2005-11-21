@@ -70,7 +70,7 @@ public class RequestHandlerImpl implements RequestHandler {
 			//TODO: use SingleThreadedDomain instead of synchronized
 			synchronized (MUTEX) {
 				deserializer.deserialize(rawData, handler);
-				request = (Request)handler.getResult();
+				request = handler.getResult();
 				String userid = request.getUserId();
 				DiscoveryManager discoveryManager = DiscoveryManagerFactory.getDiscoveryManager(null);
 				if (!discoveryManager.hasSessionEstablished(userid)) {

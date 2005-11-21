@@ -80,7 +80,7 @@ public class ResponseParserHandler extends ParserHandler {
 	/**
 	 * 
 	 */
-	public Object getResult() {
+	public Request getResult() {
 		LOG.debug("getResult("+response+")");
 		return response;
 	}

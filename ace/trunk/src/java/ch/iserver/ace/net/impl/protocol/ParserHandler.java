@@ -34,7 +34,7 @@ public abstract class ParserHandler extends DefaultHandler implements ProtocolCo
 	 * 
 	 * @return 
 	 */
-	public abstract Object getResult();
+	public abstract Request getResult();
 	
 	/**
 	 * Sets the meta data to create the result.

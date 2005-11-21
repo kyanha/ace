@@ -122,7 +122,7 @@ public class RequestParserHandler extends ParserHandler {
 	/* (non-Javadoc)
 	 * @see ch.iserver.ace.net.impl.protocol.ParserHandler#getResult()
 	 */
-	public Object getResult() {
+	public Request getResult() {
 		LOG.debug("getResult("+result+")");
 		return result;
 	}

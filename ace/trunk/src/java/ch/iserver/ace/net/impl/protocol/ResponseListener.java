@@ -75,7 +75,7 @@ public class ResponseListener implements ReplyListener {
 			QueryInfo info = (QueryInfo) message.getChannel().getAppData();
 			handler.setMetaData(info);
 			deserializer.deserialize(data, handler);
-			Request request = (Request) handler.getResult();
+			Request request = handler.getResult();
 			if (message.getMessageType() == Message.MESSAGE_TYPE_MSG) {
 				request.setMessage((MessageMSG) message);
 			}
