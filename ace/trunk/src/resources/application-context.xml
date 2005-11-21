@@ -68,6 +68,7 @@
     <constructor-arg><ref local="localeMessageSource"/></constructor-arg>
     <property name="toolBarActions">
       <list>
+        <ref bean="netPublishConcealDocumentToggleAction"/>
         <ref bean="toggleFullScreenEditingAction"/>
       </list>
     </property>
