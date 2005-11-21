@@ -12,6 +12,7 @@
 	<property name="build.resources-test" value="${build.dir}/resources-test"/>
 	<property name="build.testreports" value="${build.dir}/testreports"/>
 	<property name="build.osx" value="${build.dir}/osx"/>
+	<property name="build.windows" value="${build.dir}/windows"/>
 	
 	<property name="maven.repo" value="${user.home}/.m2/repository"/>
 	
@@ -25,7 +26,8 @@
 	<property name="src.resources" value="${src.dir}/resources"/>
 	<property name="src.resources-test" value="${src.dir}/resources-test"/>
 	<property name="src.osx" value="${src.dir}/osx"/>
-	
+	<property name="src.windows" value="${src.dir}/windows"/>	
+
 	<!-- compiler settings javac (override on command line if desired) -->
     <property name="debug" value="true"/>
     <property name="optimize" value="false"/>
@@ -373,6 +375,9 @@
 		<!-- os x double-clickable application -->
 		<antcall target="dist-osx"/>
 		
+		<!-- create windows distribution -->
+		<antcall target="dist-windows"/>
+
 		<!-- cleanup -->
 		<delete file="${dist.dir}/ace-${DSTAMP}.tar"/>
 		<delete dir="${dist.dir}/target"/>
@@ -393,6 +398,8 @@
 			</fileset>
 		</delete>
 	</target>
+	
+	
 	
 	<!-- OS X specific distribution -->
 	
@@ -454,6 +461,18 @@
         <exec executable="/usr/bin/hdiutil" os="Mac OS X">
             <arg line="create -fs HFS+ -volname ace -srcfolder ${build.dir}/osx/application ${dist.dir}/ace.dmg"/>
         </exec>
+	</target>
+	
+	
+	<!-- windows specific stuff -->
+	<target name="dist-windows" depends="jar-windows">
+	</target>
+	
+	<target name="jar-windows">
+        <description>creates a jar file for windows specific classes</description>
+        <jar destfile="${build.dir}/lib/ace-windows.jar">
+            <fileset dir="${build.windows}/classes"/>
+        </jar>
 	</target>
 	
 	<!-- create dependency graph of Ant build file -->
