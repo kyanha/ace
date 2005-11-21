@@ -33,30 +33,33 @@ import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
- *
+ * Forwarder implementation that is responsible to forward events
+ * to one particular participant. The participant is represented
+ * by a ParticipantConnection.
  */
 public class ParticipantProxy implements Forwarder {
 	
 	/**
-	 * 
+	 * The participant id of the participant represented by this proxy.
 	 */
 	private final int participantId;
 		
 	/**
-	 * 
+	 * The algorithm used to transform requests.
 	 */
 	private final AlgorithmWrapper algorithm;
 	
 	/**
-	 * 
+	 * The connection to the participant.
 	 */
 	private final ParticipantConnection connection;
 	
 	/**
-	 * @param participantId
-	 * @param queue
-	 * @param algorithm
-	 * @param connection
+	 * Creates a new ParticipantProxy instance.
+	 * 
+	 * @param participantId the participant id of this proxy
+	 * @param algorithm the algorithm used to transform requests
+	 * @param connection the connection to the participant
 	 */
 	public ParticipantProxy(int participantId, 
 					Algorithm algorithm, 
@@ -65,9 +68,11 @@ public class ParticipantProxy implements Forwarder {
 	}
 	
 	/**
-	 * @param participantId
-	 * @param algorithm
-	 * @param connection
+	 * Creates a new ParticipantProxy instance.
+	 * 
+	 * @param participantId the participant id of this proxy
+	 * @param algorithm the algorithm wrapper used by this proxy
+	 * @param connection the connection to the participant
 	 */
 	ParticipantProxy(int participantId,
 					AlgorithmWrapper algorithm,
@@ -80,14 +85,14 @@ public class ParticipantProxy implements Forwarder {
 	}
 	
 	/**
-	 * @return
+	 * @return the algorithm wrapper of this proxy
 	 */
 	protected AlgorithmWrapper getAlgorithm() {
 		return algorithm;
 	}
 	
 	/**
-	 * @return
+	 * @return the connection to the participant
 	 */
 	protected ParticipantConnection getConnection() {
 		return connection;
@@ -133,6 +138,9 @@ public class ParticipantProxy implements Forwarder {
 		}
 	}
 	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.Forwarder#close()
+	 */
 	public void close() {
 		getConnection().close();
 	}

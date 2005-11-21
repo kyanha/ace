@@ -42,6 +42,11 @@ import ch.iserver.ace.net.PortableDocument;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.util.CompareUtil;
 
+/**
+ * Default implementation of the ServerDocument. Implements also the
+ * PortableDocument interface from the network layer. Uses the 
+ * Swing Document classes to keep the structure of the document.
+ */
 public class ServerDocumentImpl extends AbstractDocument implements
 				ServerDocument, ch.iserver.ace.net.PortableDocument {
 
@@ -97,18 +102,30 @@ public class ServerDocumentImpl extends AbstractDocument implements
 		return map;
 	}
 	
+	/**
+	 * @see javax.swing.text.AbstractDocument#createLeafElement(javax.swing.text.Element, javax.swing.text.AttributeSet, int, int)
+	 */
 	protected Element createLeafElement(Element parent, AttributeSet a, int p0, int p1) {
 		return new FragmentElement(parent, a, p0, p1);
 	}
 
+	/**
+	 * @see javax.swing.text.Document#getDefaultRootElement()
+	 */
 	public Element getDefaultRootElement() {
 		return defaultRoot;
 	}
 
+	/**
+	 * @see javax.swing.text.AbstractDocument#getParagraphElement(int)
+	 */
 	public Element getParagraphElement(int pos) {
 		return defaultRoot;
 	}
 	
+	/**
+	 * @see javax.swing.text.AbstractDocument#insertUpdate(javax.swing.text.AbstractDocument.DefaultDocumentEvent, javax.swing.text.AttributeSet)
+	 */
 	protected void insertUpdate(DefaultDocumentEvent chng, AttributeSet attr) {
 		List added = new ArrayList();
 		List removed = new ArrayList();
@@ -145,7 +162,7 @@ public class ServerDocumentImpl extends AbstractDocument implements
 		super.insertUpdate(chng, attr);
 	}
 
-	/** (non-Javadoc)
+	/**
 	 * @see javax.swing.text.AbstractDocument#removeUpdate(javax.swing.text.AbstractDocument.DefaultDocumentEvent)
 	 */
 	protected void removeUpdate(DefaultDocumentEvent chng) {
@@ -189,8 +206,11 @@ public class ServerDocumentImpl extends AbstractDocument implements
 		super.removeUpdate(chng);
 	}
 		
-	// --> DocumentModel methods <--
+	// --> ServerDocumentl methods <--
 	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerDocument#participantJoined(int, ch.iserver.ace.net.RemoteUserProxy)
+	 */
 	public void participantJoined(int participantId, RemoteUserProxy proxy) {
 		setCaretHandler(participantId, new CaretHandler(-1, -1));
 		addParticipant(participantId, proxy);
@@ -288,6 +308,9 @@ public class ServerDocumentImpl extends AbstractDocument implements
 		};
 	}
 	
+	/**
+	 * @see ch.iserver.ace.net.PortableDocument#getParticipantIds()
+	 */
 	public int[] getParticipantIds() {
 		Set ids = participants.keySet();
 		int[] result = new int[ids.size()];
@@ -300,6 +323,9 @@ public class ServerDocumentImpl extends AbstractDocument implements
 		return result;
 	}
 	
+	/**
+	 * @see ch.iserver.ace.net.PortableDocument#getUserProxy(int)
+	 */
 	public RemoteUserProxy getUserProxy(int participantId) {
 		return (RemoteUserProxy) participants.get(new Integer(participantId));
 	}
@@ -318,6 +344,9 @@ public class ServerDocumentImpl extends AbstractDocument implements
 	
 	// --> java.lang.Object methods <--
 	
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
@@ -341,16 +370,26 @@ public class ServerDocumentImpl extends AbstractDocument implements
 		
 	// --> Fragment Element <--
 	
+	/**
+	 * Implementation of the Fragment interface which is also a Swing element
+	 * used to represent the document structure.
+	 */
 	protected class FragmentElement extends LeafElement implements Fragment {
 		
 		protected FragmentElement(Element parent, AttributeSet a, int p0, int p1) {
 			super(parent, a, p0, p1);
 		}
 		
+		/**
+		 * @see ch.iserver.ace.Fragment#getParticipantId()
+		 */
 		public int getParticipantId() {
 			return ServerDocumentImpl.this.getParticipantId(getAttributes());
 		}
 		
+		/**
+		 * @see ch.iserver.ace.Fragment#getText()
+		 */
 		public String getText() {
 			int length = getEndOffset() - getStartOffset();
 			try {
@@ -361,10 +400,16 @@ public class ServerDocumentImpl extends AbstractDocument implements
 			}
 		}
 		
+		/**
+		 * @see java.lang.Object#toString()
+		 */
 		public String toString() {
 			return "Fragment [pid=" + getParticipantId() + "] " + getText();
 		}
 		
+		/**
+		 * @see java.lang.Object#equals(java.lang.Object)
+		 */
 		public boolean equals(Object obj) {
 			if (this == obj) {
 				return true;
@@ -375,6 +420,13 @@ public class ServerDocumentImpl extends AbstractDocument implements
 			} else {
 				return false;
 			}
+		}
+		
+		/**
+		 * @see java.lang.Object#hashCode()
+		 */
+		public int hashCode() {
+			return (getText() + "-" + getParticipantId()).hashCode();
 		}
 		
 	}

@@ -24,12 +24,21 @@ package ch.iserver.ace.collaboration.jupiter.server;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+/**
+ * Helper class used to update the position of a caret of a particular user.
+ */
 class CaretHandler implements DocumentListener {
 	
 	private int dot;
 	
 	private int mark;
 	
+	/**
+	 * Initializes a new CaretHandler.
+	 * 
+	 * @param dot the dot position
+	 * @param mark the mark position
+	 */
 	public CaretHandler(int dot, int mark) {
 		this.dot = dot;
 		this.mark = mark;

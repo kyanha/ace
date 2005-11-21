@@ -33,7 +33,7 @@ import ch.iserver.ace.text.SplitOperation;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
- * A ParticipantProxy that updates the server copy of the document. An instance
+ * A Forwarder that updates the server copy of the document. An instance
  * of this class is added to the list of proxy objects that receive transformed
  * server-side operations and caret updates. The transformed operations and
  * caret updates are applied to a 

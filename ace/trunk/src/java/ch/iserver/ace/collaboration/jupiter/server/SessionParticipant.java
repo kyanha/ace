@@ -26,7 +26,8 @@ import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.RemoteUserProxy;
 
 /**
- *
+ * Object used to hold all the relevant objects for a participant on
+ * the server side.
  */
 public class SessionParticipant {
 	

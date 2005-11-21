@@ -26,14 +26,27 @@ import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.collaboration.jupiter.server.serializer.LeaveCommand;
 
 /**
+ * Default implementation of the PublisherPort interface.
+ */
+/**
  *
  */
 public class PublisherPortImpl extends ParticipantPortImpl implements PublisherPort {
 	
+	/**
+	 * Creates a new PublisherPortImpl instance.
+	 * 
+	 * @param logic the server logic
+	 * @param participantId the participant id of this participant
+	 * @param algorithm the algorithm used by the port
+	 */
 	public PublisherPortImpl(ServerLogic logic, int participantId, Algorithm algorithm) {
 		super(logic, participantId, algorithm);
 	}
 	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.PublisherPort#kick(int)
+	 */
 	public void kick(int participantId) {
 		if (participantId != getParticipantId()) {
 			getLogic().kick(participantId);
@@ -41,6 +54,12 @@ public class PublisherPortImpl extends ParticipantPortImpl implements PublisherP
 		}
 	}
 	
+	/**
+	 * Overrides the leave method to shutdown the session if the
+	 * publisher leaves the session.
+	 * 
+	 * @see ch.iserver.ace.net.ParticipantPort#leave()
+	 */
 	public void leave() {
 		getLogic().prepareShutdown();
 	}

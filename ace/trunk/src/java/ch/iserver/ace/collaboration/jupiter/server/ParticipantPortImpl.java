@@ -33,21 +33,35 @@ import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
- * 
+ * Default implementation of the ParticipantPort interface. Adds all
+ * incoming requests as 
+ * {@link ch.iserver.ace.collaboration.jupiter.server.serializer.SerializerCommand}
+ * to the server logic queue.
  */
 public class ParticipantPortImpl implements ParticipantPort {
 	
+	/**
+	 * The server logic to which this port belongs.
+	 */
 	private final ServerLogic logic;
 	
+	/**
+	 * The participant id of the participant.
+	 */
 	private final int participantId;
 	
+	/**
+	 * The algorithm used to transform requests.
+	 */
 	private final Algorithm algorithm;
 		
 	/**
-	 * @param logic
-	 * @param participantId
-	 * @param algorithm
-	 * @param queue
+	 * Creates a new ParticipantPortImpl using the passed in server logic
+	 * and algorithm.
+	 * 
+	 * @param logic the server logic used by this port
+	 * @param participantId the participant id of the participant
+	 * @param algorithm the algorithm used to transform requests
 	 */
 	public ParticipantPortImpl(ServerLogic logic, int participantId, Algorithm algorithm) {
 		ParameterValidator.notNull("algorithm", algorithm);
@@ -57,14 +71,14 @@ public class ParticipantPortImpl implements ParticipantPort {
 	}
 
 	/**
-	 * @return
+	 * @return the server logic used by this port
 	 */
 	protected ServerLogic getLogic() {
 		return logic;
 	}
 		
 	/**
-	 * @return
+	 * @return the algorithm used to transform requests
 	 */
 	public Algorithm getAlgorithm() {
 		return algorithm;

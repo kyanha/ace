@@ -44,9 +44,6 @@ import ch.iserver.ace.util.ParameterValidator;
  * that connection are simply discarded. There is no need for complex
  * handling of this situation.</p>
  */
-/**
- *
- */
 public class ParticipantConnectionWrapper implements ParticipantConnection {
 	
 	/**

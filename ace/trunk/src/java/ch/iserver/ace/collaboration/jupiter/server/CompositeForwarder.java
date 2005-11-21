@@ -29,23 +29,38 @@ import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
- *
+ * A Forwarder implementation that forwards requests to several forwarders.
+ * The forwarders are retrieved from the {@link ServerLogic}.
  */
 class CompositeForwarder implements Forwarder {
 	
-	final ServerLogic serverLogic;
+	/**
+	 * The server logic holding the list of participants.
+	 */
+	private final ServerLogic serverLogic;
 	
+	/**
+	 * Creates a new CompositeForwarder instance.
+	 * 
+	 * @param logic the server logic
+	 */
 	public CompositeForwarder(ServerLogic logic) {
 		ParameterValidator.notNull("logic", logic);
 		this.serverLogic = logic;
 	}
 	
+	/**
+	 * @return the server logic
+	 */
 	public ServerLogic getServerLogic() {
 		return serverLogic;
 	}
 	
+	/**
+	 * @return gets an iterator over all the forwarders
+	 */
 	public Iterator getProxies() {
-		return getServerLogic().getParticipantProxies();
+		return getServerLogic().getForwarders();
 	}
 		
 	/**

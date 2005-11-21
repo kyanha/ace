@@ -91,7 +91,7 @@ public class CompositeForwarderTest extends TestCase {
 		CaretUpdate update = new CaretUpdate(1, 3);
 
 		// define mock behavior
-		logic.getParticipantProxies();
+		logic.getForwarders();
 		control.setReturnValue(getProxies());
 		
 		for (int i = 0; i < PROXY_COUNT; i++) {
@@ -115,7 +115,7 @@ public class CompositeForwarderTest extends TestCase {
 		Operation operation = new InsertOperation(0, "foo");
 
 		// define mock behavior
-		logic.getParticipantProxies();
+		logic.getForwarders();
 		control.setReturnValue(getProxies());
 		
 		for (int i = 0; i < PROXY_COUNT; i++) {
@@ -138,7 +138,7 @@ public class CompositeForwarderTest extends TestCase {
 		RemoteUserProxy user = new RemoteUserProxyStub("X");
 
 		// define mock behavior
-		logic.getParticipantProxies();
+		logic.getForwarders();
 		control.setReturnValue(getProxies());
 		
 		for (int i = 0; i < PROXY_COUNT; i++) {
@@ -159,7 +159,7 @@ public class CompositeForwarderTest extends TestCase {
 	
 	public void testSendParticipantLeft() throws Exception {
 		// define mock behavior
-		logic.getParticipantProxies();
+		logic.getForwarders();
 		control.setReturnValue(getProxies());
 		
 		for (int i = 0; i < PROXY_COUNT; i++) {

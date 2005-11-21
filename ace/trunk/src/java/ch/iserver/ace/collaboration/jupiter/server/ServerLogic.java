@@ -67,7 +67,7 @@ public interface ServerLogic extends DocumentServerLogic {
 	 * 
 	 * @return an Iterator over all participant proxies
 	 */
-	Iterator getParticipantProxies();
+	Iterator getForwarders();
 	
 	/**
 	 * Retrieves the current document for sending it to a joining user.

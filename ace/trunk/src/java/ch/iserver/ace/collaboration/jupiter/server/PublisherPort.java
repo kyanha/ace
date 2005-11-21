@@ -24,10 +24,19 @@ package ch.iserver.ace.collaboration.jupiter.server;
 import ch.iserver.ace.net.ParticipantPort;
 
 /**
- *
+ * A PublisherPort extends the ParticipantPort interface with methods available
+ * to the publisher of a document. The publisher has additional rights, which
+ * are not available to normal participants.
  */
 public interface PublisherPort extends ParticipantPort {
 	
+	/**
+	 * Allows the publisher part of the Collaboration Layer to kick a
+	 * participant from the session. Kicked users are no longer
+	 * part of the session and do not receive messages anymore.
+	 * 
+	 * @param participantId the participant to kick
+	 */
 	void kick(int participantId);
 	
 }

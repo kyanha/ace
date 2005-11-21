@@ -202,13 +202,23 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 		return publisherConnection;
 	}
 	
-	/**
-	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerLogic#nextParticipantId()
-	 */
-	public synchronized int nextParticipantId() {
+	protected synchronized int nextParticipantId() {
 		return ++nextParticipantId;
 	}
+			
+	protected synchronized void removeParticipant(int participantId) {
+		Integer key = new Integer(participantId);
+		connections.remove(key);
+		proxies.remove(key);
+		ports.remove(key);
+	}
+		
+	protected synchronized ParticipantConnection getParticipantConnection(int id) {
+		return (ParticipantConnection) connections.get(new Integer(id));
+	}
 	
+	// --> server logic methods <--
+
 	/**
 	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerLogic#addCommand(ch.iserver.ace.collaboration.jupiter.server.serializer.SerializerCommand)
 	 */
@@ -225,19 +235,6 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 		proxies.put(key, participant.getParticipantProxy());
 		connections.put(key, participant.getParticipantConnection());
 	}
-		
-	protected synchronized void removeParticipant(int participantId) {
-		Integer key = new Integer(participantId);
-		connections.remove(key);
-		proxies.remove(key);
-		ports.remove(key);
-	}
-		
-	protected synchronized ParticipantConnection getParticipantConnection(int id) {
-		return (ParticipantConnection) connections.get(new Integer(id));
-	}
-	
-	// --> server logic methods <--
 
 	/**
 	 * @see ch.iserver.ace.net.DocumentServerLogic#join(ch.iserver.ace.net.ParticipantConnection)
@@ -329,9 +326,9 @@ public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, Failur
 	}
 		
 	/**
-	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerLogic#getParticipantProxies()
+	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerLogic#getForwarders()
 	 */
-	public synchronized Iterator getParticipantProxies() {
+	public synchronized Iterator getForwarders() {
 		Map clone = (Map) proxies.clone();
 		return clone.values().iterator();
 	}
