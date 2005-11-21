@@ -45,6 +45,7 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 	public final static int LOCAL		= 1;
 	public final static int REMOTE		= 2;
 	public final static int PUBLISHED	= 3;
+	public final static int AWAITING	= 4;
 	public final static String TYPE_PROPERTY = "type";
 	public final static String TITLE_PROPERTY = "title";
 	public final static String DIRTY_PROPERTY = "dirty";
@@ -215,7 +216,9 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 		firePropertyChange(TYPE_PROPERTY, "PUBLISHED", "LOCAL");
 	}
 	
-	
+	public void leave() {
+		session.leave();
+	}
 	
 	
 

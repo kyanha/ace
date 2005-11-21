@@ -35,12 +35,13 @@ import javax.swing.ListCellRenderer;
 public class DocumentItemCellRenderer extends JPanel implements ListCellRenderer {
 
 	private DocumentItem value;
-	protected ImageIcon iconLocal, iconPublished, iconRemote;
+	protected ImageIcon iconLocal, iconPublished, iconRemote, iconAwaiting;
 
 	public DocumentItemCellRenderer(LocaleMessageSource messageSource) {
 		iconLocal = messageSource.getIcon("iViewFileLocal");
 		iconPublished = messageSource.getIcon("iViewFilePublic");
 		iconRemote = messageSource.getIcon("iViewFileRemote");
+		iconAwaiting = messageSource.getIcon("iViewFileAwaiting");
 	}
 
 	public Component getListCellRendererComponent(JList list,
@@ -87,6 +88,9 @@ public class DocumentItemCellRenderer extends JPanel implements ListCellRenderer
 			break;			
 			case DocumentItem.REMOTE:
 				g.drawImage(iconRemote.getImage(), imagePosX, imagePosY, imageHeight, imageWidth, this);
+			break;
+			case DocumentItem.AWAITING:
+				g.drawImage(iconAwaiting.getImage(), imagePosX, imagePosY, imageHeight, imageWidth, this);
 			break;
 		}
 
