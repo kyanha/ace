@@ -21,23 +21,54 @@
 
 package ch.iserver.ace.application;
 
-import ch.iserver.ace.collaboration.PortableDocument;
-import ch.iserver.ace.collaboration.ParticipantSessionCallback;
+import ch.iserver.ace.CaretUpdate;
+import ch.iserver.ace.Operation;
+import ch.iserver.ace.collaboration.Participant;
+import ch.iserver.ace.collaboration.SessionCallback;
+
+import ca.odell.glazedlists.BasicEventList;
+import ca.odell.glazedlists.EventList;
 
 
 
-public class SessionCallbackImpl extends PublishedSessionCallbackImpl implements ParticipantSessionCallback {
+public class SessionCallbackImpl implements SessionCallback {
+
+	private EventList participantSourceList;
+	protected ParticipationColorManager participationColorManager;
+//	private StyledDocument editorDocument;
 
 	public SessionCallbackImpl() {
+		participantSourceList = new BasicEventList();
+		participationColorManager = new ParticipationColorManager();
 	}
 	
-	public void setDocument(PortableDocument doc) {
+	public void participantJoined(Participant participant) {
+		participationColorManager.addParticipant(participant);
+		participantSourceList.add(new ParticipantItem(participant,
+			participationColorManager.getHighlightColor(participant)));
+		
+		System.out.println("participantJoined");
 	}
 	
-	public void sessionTerminated() {
+	public void participantLeft(Participant participant, int code) {
+		participantSourceList.remove(new ParticipantItem(participant,
+			participationColorManager.getHighlightColor(participant)));
+		participationColorManager.removeParticipant(participant);
+
+		System.out.println("participantLeft");
+	}	
+	
+	public void receiveCaretUpdate(Participant participant, CaretUpdate update) {
+		System.out.println("receiveCaretUpdate");
+	}
+
+	public void receiveOperation(Participant participant, Operation operation) {
+		System.out.println("receiveOperation");
 	}
 	
-	public void kicked() {
+	public void sessionFailed(int reason, Exception e) {
+		System.out.println("sessionFailed");
+		e.printStackTrace();
 	}
 
 }

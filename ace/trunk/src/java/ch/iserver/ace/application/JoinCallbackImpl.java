@@ -29,16 +29,24 @@ import ch.iserver.ace.collaboration.ParticipantSessionCallback;
 
 public class JoinCallbackImpl implements JoinCallback {
 
-	public JoinCallbackImpl() {
+	private DocumentItem documentItem;
+	
+	public JoinCallbackImpl(DocumentItem documentItem) {
+		this.documentItem = documentItem;
 	}
 	
 	public ParticipantSessionCallback accepted(Session session) {
-		//session.addParticipantListener(new ParticipantController());
-		//return new SessionCallbackImpl();
-		return null;
+		// set session
+		documentItem.setSession(session);
+
+		// create and set session callback
+		ParticipantSessionCallback callback = new ParticipantSessionCallbackImpl();
+		// documentItem.setSessionCallback(callback); necessary?
+		return callback;
 	}
 	
 	public void rejected(int code) {
+		System.out.println("rejected");
 	}
 
 }

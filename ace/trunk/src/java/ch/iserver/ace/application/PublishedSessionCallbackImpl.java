@@ -21,48 +21,18 @@
 
 package ch.iserver.ace.application;
 
-import ca.odell.glazedlists.BasicEventList;
-import ca.odell.glazedlists.EventList;
-import ch.iserver.ace.CaretUpdate;
-import ch.iserver.ace.Operation;
 import ch.iserver.ace.collaboration.JoinRequest;
-import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.collaboration.PublishedSessionCallback;
 
 
 
-public class PublishedSessionCallbackImpl implements PublishedSessionCallback {
-
-	private EventList participantSourceList;
-	private ParticipationColorManager participationColorManager;
+public class PublishedSessionCallbackImpl extends SessionCallbackImpl implements PublishedSessionCallback {
 
 	public PublishedSessionCallbackImpl() {
-		participantSourceList = new BasicEventList();
-		participationColorManager = new ParticipationColorManager();
 	}
 	
 	public void joinRequest(JoinRequest request) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void participantJoined(Participant participant) {
-		participationColorManager.addParticipant(participant);
-		participantSourceList.add(new ParticipantItem(participant, participationColorManager.getHighlightColor(participant)));
-	}
-	
-	public void participantLeft(Participant participant, int code) {
-		participantSourceList.remove(new ParticipantItem(participant, participationColorManager.getHighlightColor(participant)));
-		participationColorManager.removeParticipant(participant);
-	}	
-	
-	public void receiveCaretUpdate(Participant participant, CaretUpdate update) {
-	}
-
-	public void receiveOperation(Participant participant, Operation operation) {
-	}
-	
-	public void sessionFailed(int reason, Exception e) {	
+		System.out.println("joinRequest");
 	}
 	
 }
