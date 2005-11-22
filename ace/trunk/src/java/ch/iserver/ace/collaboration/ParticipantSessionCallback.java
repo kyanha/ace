@@ -23,8 +23,9 @@ package ch.iserver.ace.collaboration;
 
 
 /**
- * This interface describes the interface between the logic layer and
- * the application layer.
+ * The ParticipantSessionCallback extends the SessionCallback interface and
+ * adds methods used only for sessions in which the local user is a 
+ * participant.
  */
 public interface ParticipantSessionCallback extends SessionCallback {
 	

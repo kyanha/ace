@@ -4,7 +4,9 @@ import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.Operation;
 
 /**
- *
+ * Callback interface used by sessions to notify the application about events
+ * in the session. This interface groups all the operations common to published
+ * sessions and participant sessions.
  */
 public interface SessionCallback {
 
