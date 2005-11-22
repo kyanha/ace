@@ -46,7 +46,6 @@ import ch.iserver.ace.collaboration.jupiter.server.serializer.Serializer;
 import ch.iserver.ace.collaboration.jupiter.server.serializer.SerializerCommand;
 import ch.iserver.ace.collaboration.jupiter.server.serializer.ShutdownCommand;
 import ch.iserver.ace.net.DocumentServer;
-import ch.iserver.ace.net.DocumentServerLogic;
 import ch.iserver.ace.net.JoinException;
 import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.net.ParticipantPort;
@@ -61,9 +60,9 @@ import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
 import edu.emory.mathcs.backport.java.util.concurrent.LinkedBlockingQueue;
 
 /**
- *
+ * Default implementation of the ServerLogic interface.
  */
-public class ServerLogicImpl implements ServerLogic, DocumentServerLogic, FailureHandler {
+public class ServerLogicImpl implements ServerLogic, FailureHandler {
 	
 	private static final Logger LOG = Logger.getLogger(ServerLogicImpl.class);
 	
