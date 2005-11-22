@@ -21,6 +21,7 @@
 
 package ch.iserver.ace.collaboration.jupiter.server;
 
+import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.net.ParticipantPort;
 
 /**
@@ -38,5 +39,12 @@ public interface PublisherPort extends ParticipantPort {
 	 * @param participantId the participant to kick
 	 */
 	void kick(int participantId);
+	
+	/**
+	 * Sets the new document details for the session.
+	 * 
+	 * @param details the new document details
+	 */
+	void setDocumentDetails(DocumentDetails details);
 	
 }

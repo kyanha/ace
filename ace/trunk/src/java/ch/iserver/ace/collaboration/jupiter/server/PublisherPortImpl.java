@@ -21,6 +21,7 @@
 
 package ch.iserver.ace.collaboration.jupiter.server;
 
+import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.collaboration.jupiter.server.serializer.LeaveCommand;
@@ -52,6 +53,13 @@ public class PublisherPortImpl extends ParticipantPortImpl implements PublisherP
 			getLogic().kick(participantId);
 			getLogic().addCommand(new LeaveCommand(participantId, Participant.KICKED));
 		}
+	}
+	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.PublisherPort#setDocumentDetails(ch.iserver.ace.DocumentDetails)
+	 */
+	public void setDocumentDetails(DocumentDetails details) {
+		getLogic().setDocumentDetails(details);
 	}
 	
 	/**

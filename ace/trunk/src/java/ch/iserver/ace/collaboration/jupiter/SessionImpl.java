@@ -210,7 +210,9 @@ public class SessionImpl extends AbstractSession implements ConfigurableSession,
 		int[] ids = document.getParticipantIds();
 		for (int i = 0; i < ids.length; i++) {
 			int id = ids[i];
-			participants.put(new Integer(id), createParticipant(id, document.getUserProxy(id)));
+			Participant participant = createParticipant(id, document.getUserProxy(id));
+			participants.put(new Integer(id), participant);
+			addParticipant(participant);
 		}
 		PortableDocumentWrapper wrapper = new PortableDocumentWrapper(document, participants);
 		getCallback().setDocument(wrapper);

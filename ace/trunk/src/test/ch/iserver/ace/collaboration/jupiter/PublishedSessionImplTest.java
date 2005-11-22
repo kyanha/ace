@@ -59,15 +59,19 @@ public class PublishedSessionImplTest extends TestCase {
 		MockControl logicCtrl = MockControl.createControl(ServerLogic.class);
 		ServerLogic logic = (ServerLogic) logicCtrl.getMock();
 		
+		MockControl portCtrl = MockControl.createControl(PublisherPort.class);
+		PublisherPort port = (PublisherPort) portCtrl.getMock();
+		
 		PublishedSessionImpl impl = new PublishedSessionImpl(callback);
 		DocumentDetails details = new DocumentDetails("collab.txt");
 		
 		// define mock behavior
 		logic.getPublisherPort();
-		logicCtrl.setReturnValue(null);
-		logic.setDocumentDetails(details);
+		logicCtrl.setReturnValue(port);
+		port.setDocumentDetails(details);
 		
 		// replay
+		portCtrl.replay();
 		logicCtrl.replay();
 		callbackCtrl.replay();
 		
@@ -76,6 +80,7 @@ public class PublishedSessionImplTest extends TestCase {
 		impl.setDocumentDetails(details);
 		
 		// verify
+		portCtrl.verify();
 		logicCtrl.verify();
 		callbackCtrl.verify();
 	}

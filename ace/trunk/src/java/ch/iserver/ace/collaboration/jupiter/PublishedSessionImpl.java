@@ -84,7 +84,7 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 	 * @see ch.iserver.ace.collaboration.PublishedSession#setDocumentDetails(ch.iserver.ace.DocumentDetails)
 	 */
 	public void setDocumentDetails(DocumentDetails details) {
-		getLogic().setDocumentDetails(details);
+		getPort().setDocumentDetails(details);
 	}
 
 	/**
@@ -147,7 +147,6 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 	 * @see ch.iserver.ace.net.ParticipantConnection#getUser()
 	 */
 	public RemoteUserProxy getUser() {
-		// TODO: is this a problem?
 		return null;
 	}
 
