@@ -23,7 +23,7 @@ package ch.iserver.ace.application;
 
 import ch.iserver.ace.collaboration.JoinCallback;
 import ch.iserver.ace.collaboration.Session;
-import ch.iserver.ace.collaboration.SessionCallback;
+import ch.iserver.ace.collaboration.ParticipantSessionCallback;
 
 
 
@@ -32,7 +32,7 @@ public class JoinCallbackImpl implements JoinCallback {
 	public JoinCallbackImpl() {
 	}
 	
-	public SessionCallback accepted(Session session) {
+	public ParticipantSessionCallback accepted(Session session) {
 		//session.addParticipantListener(new ParticipantController());
 		//return new SessionCallbackImpl();
 		return null;

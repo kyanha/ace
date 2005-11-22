@@ -22,11 +22,11 @@
 package ch.iserver.ace.application;
 
 import ch.iserver.ace.collaboration.PortableDocument;
-import ch.iserver.ace.collaboration.SessionCallback;
+import ch.iserver.ace.collaboration.ParticipantSessionCallback;
 
 
 
-public class SessionCallbackImpl extends PublishedSessionCallbackImpl implements SessionCallback {
+public class SessionCallbackImpl extends PublishedSessionCallbackImpl implements ParticipantSessionCallback {
 
 	public SessionCallbackImpl() {
 	}

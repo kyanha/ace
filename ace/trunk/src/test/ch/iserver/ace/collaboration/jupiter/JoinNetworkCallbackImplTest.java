@@ -26,7 +26,7 @@ import junit.framework.TestCase;
 import org.easymock.MockControl;
 
 import ch.iserver.ace.collaboration.JoinCallback;
-import ch.iserver.ace.collaboration.SessionCallback;
+import ch.iserver.ace.collaboration.ParticipantSessionCallback;
 import ch.iserver.ace.net.JoinNetworkCallback;
 import ch.iserver.ace.net.SessionConnection;
 
@@ -66,8 +66,8 @@ public class JoinNetworkCallbackImplTest extends TestCase {
 		ConfigurableSession session = (ConfigurableSession) sessionCtrl.getMock();
 		MockControl connectionCtrl = MockControl.createControl(SessionConnection.class);
 		SessionConnection connection = (SessionConnection) connectionCtrl.getMock();
-		MockControl sessionCallbackCtrl = MockControl.createControl(SessionCallback.class);
-		SessionCallback sessionCallback = (SessionCallback) sessionCallbackCtrl.getMock();
+		MockControl sessionCallbackCtrl = MockControl.createControl(ParticipantSessionCallback.class);
+		ParticipantSessionCallback sessionCallback = (ParticipantSessionCallback) sessionCallbackCtrl.getMock();
 		
 		// define mock behavior
 		factory.createSession();

@@ -25,7 +25,7 @@ import ch.iserver.ace.collaboration.Invitation;
 import ch.iserver.ace.collaboration.RemoteDocument;
 import ch.iserver.ace.collaboration.RemoteUser;
 import ch.iserver.ace.collaboration.Session;
-import ch.iserver.ace.collaboration.SessionCallback;
+import ch.iserver.ace.collaboration.ParticipantSessionCallback;
 import ch.iserver.ace.net.InvitationProxy;
 import ch.iserver.ace.net.SessionConnection;
 import ch.iserver.ace.util.ParameterValidator;
@@ -103,9 +103,9 @@ class InvitationImpl implements Invitation {
 	}
 	
 	/**
-	 * @see ch.iserver.ace.collaboration.Invitation#accept(ch.iserver.ace.collaboration.SessionCallback)
+	 * @see ch.iserver.ace.collaboration.Invitation#accept(ch.iserver.ace.collaboration.ParticipantSessionCallback)
 	 */
-	public Session accept(SessionCallback callback) {
+	public Session accept(ParticipantSessionCallback callback) {
 		ConfigurableSession session = getSessionFactory().createSession();
 		session.setSessionCallback(callback);
 		SessionConnection connection = getProxy().accept(session);

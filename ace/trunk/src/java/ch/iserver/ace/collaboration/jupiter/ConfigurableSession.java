@@ -22,7 +22,7 @@
 package ch.iserver.ace.collaboration.jupiter;
 
 import ch.iserver.ace.collaboration.Session;
-import ch.iserver.ace.collaboration.SessionCallback;
+import ch.iserver.ace.collaboration.ParticipantSessionCallback;
 import ch.iserver.ace.net.SessionConnection;
 import ch.iserver.ace.net.SessionConnectionCallback;
 
@@ -31,7 +31,7 @@ import ch.iserver.ace.net.SessionConnectionCallback;
  */
 public interface ConfigurableSession extends Session, SessionConnectionCallback {
 	
-	void setSessionCallback(SessionCallback callback);
+	void setSessionCallback(ParticipantSessionCallback callback);
 	
 	void setConnection(SessionConnection connection);
 	

@@ -51,7 +51,7 @@ public interface Invitation {
 	 * @param controller the SessionCallback for the session
 	 * @return the Session object
 	 */
-	Session accept(SessionCallback controller);
+	Session accept(ParticipantSessionCallback controller);
 	
 	/**
 	 * Rejects the invitation.

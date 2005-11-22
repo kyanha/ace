@@ -28,23 +28,23 @@ import ch.iserver.ace.Operation;
 import ch.iserver.ace.collaboration.JoinRequest;
 import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.collaboration.PortableDocument;
-import ch.iserver.ace.collaboration.SessionCallback;
+import ch.iserver.ace.collaboration.ParticipantSessionCallback;
 
 /**
  * Null object of a SessionCallback. Logs a warning if methods are called on
  * this object.
  */
-final class NullSessionCallback implements SessionCallback {
+final class NullSessionCallback implements ParticipantSessionCallback {
 	
 	private static final Logger LOG = Logger.getLogger(NullSessionCallback.class);
 	
-	private static SessionCallback instance;
+	private static ParticipantSessionCallback instance;
 	
 	private NullSessionCallback() {
 		// hidden constructor
 	}
 	
-	public static final synchronized SessionCallback getInstance() {
+	public static final synchronized ParticipantSessionCallback getInstance() {
 		if (instance == null) {
 			instance = new NullSessionCallback();
 		}
@@ -64,21 +64,21 @@ final class NullSessionCallback implements SessionCallback {
 	}
 	
 	/**
-	 * @see ch.iserver.ace.collaboration.SessionCallback#setDocument(PortableDocument)
+	 * @see ch.iserver.ace.collaboration.ParticipantSessionCallback#setDocument(PortableDocument)
 	 */
 	public void setDocument(PortableDocument doc) {
 		LOG.warn("SessionCallback not set on Session (setDocument called)");
 	}
 
 	/**
-	 * @see ch.iserver.ace.collaboration.SessionCallback#sessionTerminated()
+	 * @see ch.iserver.ace.collaboration.ParticipantSessionCallback#sessionTerminated()
 	 */
 	public void sessionTerminated() {
 		LOG.warn("SessionCallback not set on Session (sessionTerminated called)");
 	}
 
 	/**
-	 * @see ch.iserver.ace.collaboration.SessionCallback#kicked()
+	 * @see ch.iserver.ace.collaboration.ParticipantSessionCallback#kicked()
 	 */
 	public void kicked() {
 		LOG.warn("SessionCallback not set on Session (kicked called)");

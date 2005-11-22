@@ -32,7 +32,7 @@ import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.RequestImpl;
 import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.collaboration.RemoteUserStub;
-import ch.iserver.ace.collaboration.SessionCallback;
+import ch.iserver.ace.collaboration.ParticipantSessionCallback;
 import ch.iserver.ace.net.RemoteUserProxyStub;
 import ch.iserver.ace.net.SessionConnection;
 import ch.iserver.ace.text.InsertOperation;
@@ -174,8 +174,8 @@ public class SessionImplTest extends TestCase {
 	}
 	
 	public void testKicked() throws Exception {
-		MockControl callbackCtrl = MockControl.createControl(SessionCallback.class);
-		SessionCallback callback = (SessionCallback) callbackCtrl.getMock();
+		MockControl callbackCtrl = MockControl.createControl(ParticipantSessionCallback.class);
+		ParticipantSessionCallback callback = (ParticipantSessionCallback) callbackCtrl.getMock();
 		
 		SessionImpl impl = new SessionImpl();
 		impl.setSessionCallback(callback);
@@ -194,8 +194,8 @@ public class SessionImplTest extends TestCase {
 	}
 
 	public void testSessionTerminated() throws Exception {
-		MockControl callbackCtrl = MockControl.createControl(SessionCallback.class);
-		SessionCallback callback = (SessionCallback) callbackCtrl.getMock();
+		MockControl callbackCtrl = MockControl.createControl(ParticipantSessionCallback.class);
+		ParticipantSessionCallback callback = (ParticipantSessionCallback) callbackCtrl.getMock();
 		
 		SessionImpl impl = new SessionImpl();
 		impl.setSessionCallback(callback);
@@ -218,8 +218,8 @@ public class SessionImplTest extends TestCase {
 		Lock lock = (Lock) lockCtrl.getMock();
 		MockControl algorithmCtrl = MockControl.createControl(AlgorithmWrapper.class);
 		AlgorithmWrapper algorithm = (AlgorithmWrapper) algorithmCtrl.getMock();
-		MockControl callbackCtrl = MockControl.createControl(SessionCallback.class);
-		SessionCallback callback = (SessionCallback) callbackCtrl.getMock();
+		MockControl callbackCtrl = MockControl.createControl(ParticipantSessionCallback.class);
+		ParticipantSessionCallback callback = (ParticipantSessionCallback) callbackCtrl.getMock();
 		
 		Operation operation = new InsertOperation(0, "x");
 		Request request = new RequestImpl(0, null, operation);
@@ -254,8 +254,8 @@ public class SessionImplTest extends TestCase {
 		Lock lock = (Lock) lockCtrl.getMock();
 		MockControl algorithmCtrl = MockControl.createControl(AlgorithmWrapper.class);
 		AlgorithmWrapper algorithm = (AlgorithmWrapper) algorithmCtrl.getMock();
-		MockControl callbackCtrl = MockControl.createControl(SessionCallback.class);
-		SessionCallback callback = (SessionCallback) callbackCtrl.getMock();
+		MockControl callbackCtrl = MockControl.createControl(ParticipantSessionCallback.class);
+		ParticipantSessionCallback callback = (ParticipantSessionCallback) callbackCtrl.getMock();
 		
 		CaretUpdate update = new CaretUpdate(0, 1);
 		CaretUpdateMessage message = new CaretUpdateMessage(0, null, update);
@@ -286,8 +286,8 @@ public class SessionImplTest extends TestCase {
 	}	
 
 	public void testJoinLeave() throws Exception {
-		MockControl callbackCtrl = MockControl.createControl(SessionCallback.class);
-		SessionCallback callback = (SessionCallback) callbackCtrl.getMock();
+		MockControl callbackCtrl = MockControl.createControl(ParticipantSessionCallback.class);
+		ParticipantSessionCallback callback = (ParticipantSessionCallback) callbackCtrl.getMock();
 		
 		MockControl registryCtrl = MockControl.createControl(UserRegistry.class);
 		UserRegistry registry = (UserRegistry) registryCtrl.getMock();

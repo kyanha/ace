@@ -33,7 +33,7 @@ import ch.iserver.ace.algorithm.TransformationException;
 import ch.iserver.ace.algorithm.jupiter.Jupiter;
 import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.collaboration.Session;
-import ch.iserver.ace.collaboration.SessionCallback;
+import ch.iserver.ace.collaboration.ParticipantSessionCallback;
 import ch.iserver.ace.net.PortableDocument;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.net.SessionConnection;
@@ -53,7 +53,7 @@ public class SessionImpl extends AbstractSession implements ConfigurableSession,
 	/**
 	 * The SessionCallback from the application layer.
 	 */
-	private SessionCallback callback = NullSessionCallback.getInstance();
+	private ParticipantSessionCallback callback = NullSessionCallback.getInstance();
 	
 	/**
 	 * The SessionConnection from the network layer.
@@ -70,14 +70,14 @@ public class SessionImpl extends AbstractSession implements ConfigurableSession,
 	}
 			
 	public SessionImpl(AlgorithmWrapper algorithm) {
-		this(algorithm, (SessionCallback) null);
+		this(algorithm, (ParticipantSessionCallback) null);
 	}
 	
 	public SessionImpl(AlgorithmWrapper wrapper, Lock lock) {
 		super(wrapper, lock);
 	}
 	
-	protected SessionImpl(AlgorithmWrapper algorithm, SessionCallback callback) {
+	protected SessionImpl(AlgorithmWrapper algorithm, ParticipantSessionCallback callback) {
 		super(algorithm, new SemaphoreLock("client-lock"));
 		setSessionCallback(callback);
 	}
@@ -87,14 +87,14 @@ public class SessionImpl extends AbstractSession implements ConfigurableSession,
 	 * 
 	 * @param callback the new callback
 	 */
-	public void setSessionCallback(SessionCallback callback) {
+	public void setSessionCallback(ParticipantSessionCallback callback) {
 		this.callback = callback == null ? NullSessionCallback.getInstance() : callback;
 	}
 	
 	/**
 	 * @return the callback to be notified from the application layer
 	 */
-	protected SessionCallback getCallback() {
+	protected ParticipantSessionCallback getCallback() {
 		return callback;
 	}
 	

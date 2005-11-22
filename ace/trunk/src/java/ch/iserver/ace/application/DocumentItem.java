@@ -59,7 +59,7 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 //	private SyntaxDocument editorDocument;
 	private RemoteDocument remoteDocument;
 	private Session session;
-	private SessionCallback sessionCallback;
+	private ParticipantSessionCallback sessionCallback;
 
 
 

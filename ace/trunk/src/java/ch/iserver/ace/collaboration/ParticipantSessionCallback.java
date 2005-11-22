@@ -26,7 +26,7 @@ package ch.iserver.ace.collaboration;
  * This interface describes the interface between the logic layer and
  * the application layer.
  */
-public interface SessionCallback extends PublishedSessionCallback {
+public interface ParticipantSessionCallback extends PublishedSessionCallback {
 	
 	/**
 	 * Sets the document content to the given <var>doc</var>.
