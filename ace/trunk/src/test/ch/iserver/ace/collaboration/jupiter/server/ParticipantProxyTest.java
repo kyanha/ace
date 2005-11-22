@@ -31,6 +31,7 @@ import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.RequestImpl;
 import ch.iserver.ace.collaboration.Participant;
+import ch.iserver.ace.collaboration.jupiter.AcknowledgeStrategy;
 import ch.iserver.ace.collaboration.jupiter.AlgorithmWrapper;
 import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.net.RemoteUserProxy;
@@ -61,6 +62,9 @@ public class ParticipantProxyTest extends TestCase {
 	}
 	
 	public void testSendCaretUpdate() {
+		MockControl acknowledgerCtrl = MockControl.createControl(AcknowledgeStrategy.class);
+		AcknowledgeStrategy acknowledger = (AcknowledgeStrategy) acknowledgerCtrl.getMock();
+		
 		// test fixture
 		CaretUpdate update = new CaretUpdate(0, 1);
 		CaretUpdateMessage message = new CaretUpdateMessage(0, null, null);
@@ -69,17 +73,28 @@ public class ParticipantProxyTest extends TestCase {
 		algorithm.generateCaretUpdateMessage(update);
 		algorithmCtrl.setReturnValue(message);
 		connection.sendCaretUpdateMessage(2, message);
+		acknowledger.init(null);
+		acknowledgerCtrl.setMatcher(MockControl.ALWAYS_MATCHER);
+		acknowledger.resetTimer();
 		
 		// replay
+		acknowledgerCtrl.replay();
 		algorithmCtrl.replay();
 		connectionCtrl.replay();
 		
 		// test
 		ParticipantProxy proxy = new ParticipantProxy(1, algorithm, connection);
+		proxy.setAcknowledgeStrategy(acknowledger);
 		proxy.sendCaretUpdate(2, update);
+		
+		// verify
+		acknowledgerCtrl.verify();
 	}
 
 	public void testSendOperation() {
+		MockControl acknowledgerCtrl = MockControl.createControl(AcknowledgeStrategy.class);
+		AcknowledgeStrategy acknowledger = (AcknowledgeStrategy) acknowledgerCtrl.getMock();
+
 		// test fixture
 		Operation operation = new InsertOperation(0, "x");
 		Request request = new RequestImpl(0, null, null);
@@ -88,14 +103,22 @@ public class ParticipantProxyTest extends TestCase {
 		algorithm.generateRequest(operation);
 		algorithmCtrl.setReturnValue(request);
 		connection.sendRequest(2, request);
+		acknowledger.init(null);
+		acknowledgerCtrl.setMatcher(MockControl.ALWAYS_MATCHER);
+		acknowledger.resetTimer();
 		
 		// replay
+		acknowledgerCtrl.replay();
 		algorithmCtrl.replay();
 		connectionCtrl.replay();
 		
 		// test
 		ParticipantProxy proxy = new ParticipantProxy(1, algorithm, connection);
+		proxy.setAcknowledgeStrategy(acknowledger);
 		proxy.sendOperation(2, operation);
+		
+		// verify
+		acknowledgerCtrl.verify();
 	}
 
 	public void testSendParticipantJoined() {

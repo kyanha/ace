@@ -76,6 +76,8 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	
 	private ThreadDomain publisherThreadDomain;
 	
+	private AcknowledgeStrategyFactory acknowledgeStrategyFactory;
+	
 	public CollaborationServiceImpl(NetworkService service) {
 		ParameterValidator.notNull("service", service);
 		this.service = service;
@@ -124,6 +126,14 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	
 	protected InvitationCallback getInvitationCallback() {
 		return callback;
+	}
+	
+	public void setAcknowledgeStrategyFactory(AcknowledgeStrategyFactory acknowledgerManager) {
+		this.acknowledgeStrategyFactory = acknowledgerManager;
+	}
+	
+	public AcknowledgeStrategyFactory getAcknowledgeStrategyFactory() {
+		return acknowledgeStrategyFactory;
 	}
 
 	// --> CollaborationService interface methods <--
@@ -212,12 +222,14 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	 */
 	public PublishedSession publish(PublishedSessionCallback callback, DocumentModel document) {
 		PublishedSessionImpl session = new PublishedSessionImpl(callback);
+		session.setAcknowledgeStrategy(getAcknowledgeStrategyFactory().createStrategy());
 		session.setUserRegistry(getUserRegistry());
 		ServerLogicImpl logic = new ServerLogicImpl(
 						getPublisherThreadDomain(), 
-						session, 
 						document,
 						getUserRegistry());
+		logic.setAcknowledgeStrategyFactory(getAcknowledgeStrategyFactory());
+		logic.setPublisherConnection(session);
 		session.setServerLogic(logic);
 		DocumentServer server = getNetworkService().publish(logic, document.getDetails());
 		logic.setDocumentServer(server);

@@ -37,7 +37,10 @@ import ch.iserver.ace.algorithm.jupiter.Jupiter;
 import ch.iserver.ace.collaboration.JoinRequest;
 import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.collaboration.RemoteUser;
+import ch.iserver.ace.collaboration.jupiter.AcknowledgeStrategy;
+import ch.iserver.ace.collaboration.jupiter.AcknowledgeStrategyFactory;
 import ch.iserver.ace.collaboration.jupiter.JoinRequestImpl;
+import ch.iserver.ace.collaboration.jupiter.NullAcknowledgeStrategyFactory;
 import ch.iserver.ace.collaboration.jupiter.PublisherConnection;
 import ch.iserver.ace.collaboration.jupiter.UserRegistry;
 import ch.iserver.ace.collaboration.jupiter.server.serializer.JoinCommand;
@@ -46,7 +49,6 @@ import ch.iserver.ace.collaboration.jupiter.server.serializer.Serializer;
 import ch.iserver.ace.collaboration.jupiter.server.serializer.SerializerCommand;
 import ch.iserver.ace.collaboration.jupiter.server.serializer.ShutdownCommand;
 import ch.iserver.ace.net.DocumentServer;
-import ch.iserver.ace.net.JoinException;
 import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.PortableDocument;
@@ -84,9 +86,9 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler {
 	
 	private final ThreadDomain threadDomain;
 	
-	private final PublisherConnection publisherConnection;
+	private PublisherConnection publisherConnection;
 	
-	private final PublisherPort publisherPort;
+	private PublisherPort publisherPort;
 	
 	private final ServerDocument document;
 	
@@ -98,21 +100,20 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler {
 	
 	private final Set joinSet = new HashSet();
 	
+	private AcknowledgeStrategyFactory acknowledgeStrategyFactory = new NullAcknowledgeStrategyFactory();
+	
 	public ServerLogicImpl(ThreadDomain domain,
-					     PublisherConnection connection,
 					     DocumentModel document,
 					     UserRegistry registry) {
-		this(new SemaphoreLock("serializer"), domain, connection, document, registry);
+		this(new SemaphoreLock("serializer"), domain, document, registry);
 	}
 	
 	public ServerLogicImpl(Lock lock, 
 	                       ThreadDomain domain, 
-	                       PublisherConnection connection, 
 	                       DocumentModel document,
 	                       UserRegistry registry) {
 		ParameterValidator.notNull("lock", lock);
 		ParameterValidator.notNull("domain", domain);
-		ParameterValidator.notNull("connection", connection);
 		ParameterValidator.notNull("document", document);
 		ParameterValidator.notNull("registry", registry);
 		
@@ -124,13 +125,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler {
 		
 		this.serializerQueue = createSerializerQueue();
 		this.serializer = new Serializer(serializerQueue, lock, forwarder, this);
-		
-		this.publisherConnection = connection;
-		
-		ParticipantConnection wrapped = (ParticipantConnection) threadDomain.wrap(
-				new ParticipantConnectionWrapper(connection, this), ParticipantConnection.class);
-		this.publisherPort = createPublisherPort(wrapped);
-		
+				
 		this.document = new ServerDocumentImpl();
 		this.document.participantJoined(0, null);
 		this.document.insertString(0, 0, document.getContent());
@@ -139,6 +134,13 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler {
 		this.proxies.put(new Integer(-1), new DocumentUpdater(this.document));
 	}
 	
+	public void setPublisherConnection(PublisherConnection publisherConnection) {
+		this.publisherConnection = publisherConnection;
+		ParticipantConnection wrapped = (ParticipantConnection) threadDomain.wrap(
+				new ParticipantConnectionWrapper(publisherConnection, this), ParticipantConnection.class);
+		this.publisherPort = createPublisherPort(wrapped);
+	}
+		
 	protected BlockingQueue createSerializerQueue() {
 		return new LinkedBlockingQueue();
 	}
@@ -146,7 +148,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler {
 	protected PublisherPort createPublisherPort(ParticipantConnection connection) {
 		Algorithm algorithm = new Jupiter(false);
 		PublisherPort port = new PublisherPortImpl(this, 0, algorithm);
-		ParticipantProxy proxy = new ParticipantProxy(0, algorithm, connection);
+		Forwarder proxy = createParticipantProxy(0, connection, algorithm);
 		addParticipant(new SessionParticipant(port, proxy, connection, null));
 		return port;
 	}
@@ -201,6 +203,14 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler {
 		return publisherConnection;
 	}
 	
+	public void setAcknowledgeStrategyFactory(AcknowledgeStrategyFactory factory) {
+		this.acknowledgeStrategyFactory = factory;
+	}
+	
+	public AcknowledgeStrategyFactory getAcknowledgeStrategyFactory() {
+		return acknowledgeStrategyFactory;
+	}
+	
 	protected synchronized int nextParticipantId() {
 		return ++nextParticipantId;
 	}
@@ -231,7 +241,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler {
 	public synchronized void addParticipant(SessionParticipant participant) {
 		Integer key = new Integer(participant.getParticipantId());
 		ports.put(key, participant.getParticipantPort());
-		proxies.put(key, participant.getParticipantProxy());
+		proxies.put(key, participant.getForwarder());
 		connections.put(key, participant.getParticipantConnection());
 	}
 
@@ -260,7 +270,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler {
 		RemoteUser user = getUserRegistry().getUser(id);
 		
 		if (user == null) {
-			target.joinRejected(JoinException.UNKNOWN_USER);
+			target.joinRejected(JoinRequest.UNKNOWN_USER);
 			return;
 		}
 		
@@ -281,7 +291,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler {
 				connection.setParticipantId(participantId);
 		
 				ParticipantPort port = new ParticipantPortImpl(this, participantId, algorithm);
-				ParticipantProxy proxy = new ParticipantProxy(participantId, algorithm, connection);
+				Forwarder proxy = createParticipantProxy(participantId, connection, algorithm);
 				RemoteUserProxy user = connection.getUser();
 		
 				SessionParticipant participant = new SessionParticipant(port, proxy, connection, user);
@@ -292,6 +302,13 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler {
 			// remove from list of joining users
 			joinSet.remove(connection.getUser().getId());
 		}
+	}
+
+	protected Forwarder createParticipantProxy(int participantId, ParticipantConnection connection, Algorithm algorithm) {
+		AcknowledgeStrategy acknowledger = getAcknowledgeStrategyFactory().createStrategy();
+		ParticipantProxy proxy = new ParticipantProxy(participantId, algorithm, connection);
+		proxy.setAcknowledgeStrategy(acknowledger);
+		return proxy;
 	}
 	
 	/**

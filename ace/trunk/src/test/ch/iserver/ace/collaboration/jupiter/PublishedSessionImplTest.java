@@ -151,6 +151,8 @@ public class PublishedSessionImplTest extends TestCase {
 		ServerLogic logic = (ServerLogic) logicCtrl.getMock();
 		MockControl portCtrl = MockControl.createControl(PublisherPort.class);
 		PublisherPort port = (PublisherPort) portCtrl.getMock();
+		MockControl acknowledgeCtrl = MockControl.createControl(AcknowledgeStrategy.class);
+		AcknowledgeStrategy acknowledge = (AcknowledgeStrategy) acknowledgeCtrl.getMock();
 		
 		PublishedSessionImpl impl = new PublishedSessionImpl(callback, algorithm);
 		Operation operation = new InsertOperation(0, "x");
@@ -162,15 +164,20 @@ public class PublishedSessionImplTest extends TestCase {
 		algorithm.generateRequest(operation);
 		algorithmCtrl.setReturnValue(request);
 		port.receiveRequest(request);
+		acknowledge.init(null);
+		acknowledgeCtrl.setMatcher(MockControl.ALWAYS_MATCHER);
+		acknowledge.resetTimer();
 		
 		// replay
 		algorithmCtrl.replay();
 		logicCtrl.replay();
 		callbackCtrl.replay();
 		portCtrl.replay();
+		acknowledgeCtrl.replay();
 		
 		// test
 		impl.setServerLogic(logic);
+		impl.setAcknowledgeStrategy(acknowledge);
 		impl.lock();
 		impl.sendOperation(operation);
 		impl.unlock();
@@ -180,6 +187,7 @@ public class PublishedSessionImplTest extends TestCase {
 		logicCtrl.verify();
 		portCtrl.verify();
 		callbackCtrl.verify();
+		acknowledgeCtrl.verify();
 	}
 
 	public void testSendOperationNoLocking() throws Exception {
@@ -226,6 +234,8 @@ public class PublishedSessionImplTest extends TestCase {
 		ServerLogic logic = (ServerLogic) logicCtrl.getMock();
 		MockControl portCtrl = MockControl.createControl(PublisherPort.class);
 		PublisherPort port = (PublisherPort) portCtrl.getMock();
+		MockControl acknowledgeCtrl = MockControl.createControl(AcknowledgeStrategy.class);
+		AcknowledgeStrategy acknowledge = (AcknowledgeStrategy) acknowledgeCtrl.getMock();
 		
 		PublishedSessionImpl impl = new PublishedSessionImpl(callback, algorithm);
 		CaretUpdate update = new CaretUpdate(1, 2);
@@ -237,15 +247,20 @@ public class PublishedSessionImplTest extends TestCase {
 		algorithm.generateCaretUpdateMessage(update);
 		algorithmCtrl.setReturnValue(message);
 		port.receiveCaretUpdate(message);
+		acknowledge.init(null);
+		acknowledgeCtrl.setMatcher(MockControl.ALWAYS_MATCHER);
+		acknowledge.resetTimer();
 		
 		// replay
 		algorithmCtrl.replay();
 		logicCtrl.replay();
 		callbackCtrl.replay();
 		portCtrl.replay();
+		acknowledgeCtrl.replay();
 		
 		// test
 		impl.setServerLogic(logic);
+		impl.setAcknowledgeStrategy(acknowledge);
 		impl.lock();
 		impl.sendCaretUpdate(update);
 		impl.unlock();
@@ -255,6 +270,7 @@ public class PublishedSessionImplTest extends TestCase {
 		logicCtrl.verify();
 		portCtrl.verify();
 		callbackCtrl.verify();
+		acknowledgeCtrl.verify();
 	}
 
 	public void testSendCaretUpdateNoLocking() throws Exception {

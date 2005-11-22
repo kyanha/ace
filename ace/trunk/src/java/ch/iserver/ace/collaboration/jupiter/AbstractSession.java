@@ -63,6 +63,8 @@ abstract class AbstractSession implements Session {
 	 * 
 	 */
 	private UserRegistry userRegistry;
+
+	private AcknowledgeStrategy acknowledgeStrategy = new NullAcknowledgeStrategy();
 	
 	/**
 	 * Creates a new AbstractSession that uses the given Algorithm.
@@ -174,6 +176,21 @@ abstract class AbstractSession implements Session {
 	 */
 	protected Participant createParticipant(int participantId, RemoteUserProxy proxy) {
 		return new ParticipantImpl(participantId, getUserRegistry().addUser(proxy));
+	}
+
+	protected abstract AcknowledgeAction createAcknowledgeAction();
+	
+	public AcknowledgeStrategy getAcknowledgeStrategy() {
+		return acknowledgeStrategy;
+	}
+
+	public void setAcknowledgeStrategy(AcknowledgeStrategy acknowledgeStrategy) {
+		this.acknowledgeStrategy = acknowledgeStrategy;
+		this.acknowledgeStrategy.init(createAcknowledgeAction());
+	}
+
+	protected void resetAcknowledgeTimer() {
+		acknowledgeStrategy.resetTimer();
 	}
 
 }

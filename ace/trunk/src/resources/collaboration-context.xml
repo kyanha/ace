@@ -27,6 +27,7 @@
     <property name="userRegistry"><ref local="userRegistry"/></property>
     <property name="documentRegistry"><ref local="documentRegistry"/></property>
     <property name="publisherThreadDomain"><ref local="threadDomain"/></property>
+    <property name="acknowledgeStrategyFactory"><ref local="acknowledgeStrategyFactory"/></property>
   </bean>
   
   <bean id="sessionFactory" class="ch.iserver.ace.collaboration.jupiter.SessionFactoryImpl">
@@ -43,6 +44,14 @@
   <bean id="documentRegistry" class="ch.iserver.ace.collaboration.jupiter.DocumentRegistryImpl">
      <constructor-arg index="0"><ref local="userRegistry"/></constructor-arg>
      <property name="sessionFactory"><ref local="sessionFactory"/></property>
+  </bean>
+  
+  <bean id="acknowledgeStrategyFactory" class="ch.iserver.ace.collaboration.jupiter.AcknowledgeStrategyFactoryImpl">
+    <constructor-arg><ref local="acknowledgeStrategyExecutorService"/></constructor-arg> 
+  </bean>
+  
+  <bean id="acknowledgeStrategyExecutorService" class="edu.emory.mathcs.backport.java.util.concurrent.ScheduledThreadPoolExecutor">
+    <constructor-arg><value>3</value></constructor-arg>
   </bean>
   
 </beans>

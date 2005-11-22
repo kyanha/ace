@@ -93,9 +93,9 @@ public class ServerTest extends TestCase {
 		DocumentModel document = new DocumentModel("", 0, 0, new DocumentDetails("collab.txt"));
 		ServerLogicImpl server = new ServerLogicImpl( 
 				new CallerThreadDomain(), 
-				connections[0], 
 				document,
 				registry);
+		server.setPublisherConnection(connections[0]);
 		ports[0] = server.getPublisherPort();
 		server.start();
 		

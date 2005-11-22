@@ -37,13 +37,15 @@ import ch.iserver.ace.collaboration.jupiter.server.ServerLogic;
 import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.PortableDocument;
 import ch.iserver.ace.net.RemoteUserProxy;
+import ch.iserver.ace.text.NoOperation;
 import ch.iserver.ace.util.ParameterValidator;
 import ch.iserver.ace.util.SemaphoreLock;
 
 /**
  *
  */
-public class PublishedSessionImpl extends AbstractSession implements PublishedSession, PublisherConnection {
+public class PublishedSessionImpl extends AbstractSession 
+		implements PublishedSession, PublisherConnection {
 	
 	private ServerLogic logic;
 	
@@ -80,6 +82,20 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 		return callback;
 	}
 	
+	protected AcknowledgeAction createAcknowledgeAction() {
+		return new AcknowledgeAction() {
+			public void execute() {
+				lock();
+				try {
+					Request request = getAlgorithm().generateRequest(new NoOperation());
+					getPort().receiveRequest(request);
+				} finally {
+					unlock();
+				}
+			}
+		};
+	}
+	
 	/**
 	 * @see ch.iserver.ace.collaboration.PublishedSession#setDocumentDetails(ch.iserver.ace.DocumentDetails)
 	 */
@@ -113,6 +129,7 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 	 */
 	public void sendOperation(Operation operation) {
 		checkLockUsage();
+		resetAcknowledgeTimer();
 		Request request = getAlgorithm().generateRequest(operation);
 		getPort().receiveRequest(request);
 	}
@@ -122,16 +139,23 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 	 */
 	public void sendCaretUpdate(CaretUpdate update) {
 		checkLockUsage();
+		resetAcknowledgeTimer();
 		CaretUpdateMessage message = getAlgorithm().generateCaretUpdateMessage(update);
 		getPort().receiveCaretUpdate(message);
 	}
 	
 	// --> start ParticipantConnection implementation <--
 	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.PublisherConnection#sendJoinRequest(ch.iserver.ace.collaboration.JoinRequest)
+	 */
 	public void sendJoinRequest(JoinRequest request) {
 		getCallback().joinRequest(request);
 	}
 	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.PublisherConnection#sessionFailed(int, java.lang.Exception)
+	 */
 	public void sessionFailed(int reason, Exception e) {
 		getCallback().sessionFailed(reason, e);
 	}
@@ -230,5 +254,5 @@ public class PublishedSessionImpl extends AbstractSession implements PublishedSe
 	public void joinRejected(int code) {
 		throw new UnsupportedOperationException("publisher is never rejected");
 	}
-		
+			
 }

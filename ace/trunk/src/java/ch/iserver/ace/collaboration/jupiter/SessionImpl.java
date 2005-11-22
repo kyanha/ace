@@ -38,6 +38,7 @@ import ch.iserver.ace.net.PortableDocument;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.net.SessionConnection;
 import ch.iserver.ace.net.SessionConnectionCallback;
+import ch.iserver.ace.text.NoOperation;
 import ch.iserver.ace.util.Lock;
 import ch.iserver.ace.util.ParameterValidator;
 import ch.iserver.ace.util.SemaphoreLock;
@@ -48,7 +49,8 @@ import ch.iserver.ace.util.ThreadDomain;
  * the SessionConnectionCallback interface and can thus be set as callback
  * on SessionConnections.
  */
-public class SessionImpl extends AbstractSession implements ConfigurableSession, SessionConnectionCallback, SessionConnectionFailureHandler {
+public class SessionImpl extends AbstractSession 
+		implements ConfigurableSession, SessionConnectionCallback, SessionConnectionFailureHandler {
 	
 	/**
 	 * The SessionCallback from the application layer.
@@ -124,6 +126,20 @@ public class SessionImpl extends AbstractSession implements ConfigurableSession,
 		this.threadDomain = threadDomain;
 	}
 	
+	protected AcknowledgeAction createAcknowledgeAction() {
+		return new AcknowledgeAction() {
+			public void execute() {
+				lock();
+				try {
+					Request request = getAlgorithm().generateRequest(new NoOperation());
+					getConnection().sendRequest(request);
+				} finally {
+					unlock();
+				}
+			}
+		};
+	}
+	
 	/**
 	 * @see ch.iserver.ace.collaboration.Session#getParticipantId()
 	 */
@@ -143,6 +159,7 @@ public class SessionImpl extends AbstractSession implements ConfigurableSession,
 	 */
 	public void sendOperation(Operation operation) {
 		checkLockUsage();
+		resetAcknowledgeTimer();
 		Request request = getAlgorithm().generateRequest(operation);
 		getConnection().sendRequest(request);
 	}
@@ -152,6 +169,7 @@ public class SessionImpl extends AbstractSession implements ConfigurableSession,
 	 */
 	public void sendCaretUpdate(CaretUpdate update) {
 		checkLockUsage();
+		resetAcknowledgeTimer();
 		CaretUpdateMessage message = getAlgorithm().generateCaretUpdateMessage(update);
 		getConnection().sendCaretUpdateMessage(message);
 	}

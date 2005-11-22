@@ -80,7 +80,8 @@ public class ServerLogicImplTest extends TestCase {
 		registryCtrl.replay();
 
 		// test
-		ServerLogicImpl logic = new ServerLogicImpl(new CallerThreadDomain(), connection, document, registry);
+		ServerLogicImpl logic = new ServerLogicImpl(new CallerThreadDomain(), document, registry);
+		logic.setPublisherConnection(connection);
 		logic.start();
 		logic.join(participant);
 		
@@ -115,7 +116,8 @@ public class ServerLogicImplTest extends TestCase {
 		lock.lock();
 
 		// test
-		ServerLogicImpl logic = new ServerLogicImpl(lock, new CallerThreadDomain(), connection, document, registry);
+		ServerLogicImpl logic = new ServerLogicImpl(lock, new CallerThreadDomain(), document, registry);
+		logic.setPublisherConnection(connection);
 		logic.start();
 		logic.prepareShutdown();
 		logic.getBlacklist().add("X");
@@ -150,7 +152,8 @@ public class ServerLogicImplTest extends TestCase {
 		registryCtrl.replay();
 
 		// test
-		ServerLogicImpl logic = new ServerLogicImpl(new CallerThreadDomain(), connection, document, registry);
+		ServerLogicImpl logic = new ServerLogicImpl(new CallerThreadDomain(), document, registry);
+		logic.setPublisherConnection(connection);
 		logic.start();
 		logic.getBlacklist().add("X");
 		logic.join(participant);
@@ -184,7 +187,8 @@ public class ServerLogicImplTest extends TestCase {
 		registryCtrl.replay();
 
 		// test
-		ServerLogicImpl logic = new ServerLogicImpl(new CallerThreadDomain(), connection, document, registry);
+		ServerLogicImpl logic = new ServerLogicImpl(new CallerThreadDomain(), document, registry);
+		logic.setPublisherConnection(connection);
 		logic.start();
 		logic.getJoinSet().add("X");
 		logic.join(participant);
@@ -221,7 +225,8 @@ public class ServerLogicImplTest extends TestCase {
 		registryCtrl.replay();
 
 		// test
-		ServerLogicImpl logic = new ServerLogicImpl(new CallerThreadDomain(), connection, document, registry);
+		ServerLogicImpl logic = new ServerLogicImpl(new CallerThreadDomain(), document, registry);
+		logic.setPublisherConnection(connection);
 		logic.start();
 		logic.join(participant);
 		
@@ -263,11 +268,12 @@ public class ServerLogicImplTest extends TestCase {
 		lock.lock();
 		
 		// test
-		ServerLogicImpl logic = new ServerLogicImpl(lock, new CallerThreadDomain(), connection, document, registry) {
+		ServerLogicImpl logic = new ServerLogicImpl(lock, new CallerThreadDomain(), document, registry) {
 			protected BlockingQueue createSerializerQueue() {
 				return queue;
 			}
 		};
+		logic.setPublisherConnection(connection);
 		logic.start();
 		logic.joinAccepted(participant);
 				
@@ -303,7 +309,8 @@ public class ServerLogicImplTest extends TestCase {
 		registryCtrl.replay();
 
 		// test
-		ServerLogicImpl logic = new ServerLogicImpl(new CallerThreadDomain(), connection, document, registry);
+		ServerLogicImpl logic = new ServerLogicImpl(new CallerThreadDomain(), document, registry);
+		logic.setPublisherConnection(connection);
 		logic.joinAccepted(participant);
 		
 		// verify
@@ -339,7 +346,8 @@ public class ServerLogicImplTest extends TestCase {
 		registryCtrl.replay();
 
 		// test
-		ServerLogicImpl logic = new ServerLogicImpl(new CallerThreadDomain(), connection, document, registry);
+		ServerLogicImpl logic = new ServerLogicImpl(new CallerThreadDomain(), document, registry);
+		logic.setPublisherConnection(connection);
 		logic.start();
 		logic.joinRejected(participant);
 		
@@ -375,7 +383,8 @@ public class ServerLogicImplTest extends TestCase {
 		registryCtrl.replay();
 
 		// test
-		ServerLogicImpl logic = new ServerLogicImpl(new CallerThreadDomain(), connection, document, registry);
+		ServerLogicImpl logic = new ServerLogicImpl(new CallerThreadDomain(), document, registry);
+		logic.setPublisherConnection(connection);
 		logic.joinRejected(participant);
 		
 		// verify
@@ -412,7 +421,7 @@ public class ServerLogicImplTest extends TestCase {
 
 		// test
 		final List removed = new ArrayList();
-		ServerLogicImpl logic = new ServerLogicImpl(new CallerThreadDomain(), connection, document, registry) {
+		ServerLogicImpl logic = new ServerLogicImpl(new CallerThreadDomain(), document, registry) {
 			protected synchronized ParticipantConnection getParticipantConnection(int id) {
 				return participant;
 			}
@@ -420,6 +429,7 @@ public class ServerLogicImplTest extends TestCase {
 				removed.add(new Integer(participantId));
 			}
 		};
+		logic.setPublisherConnection(connection);
 		logic.start();
 		logic.kick(1);
 		
@@ -459,7 +469,7 @@ public class ServerLogicImplTest extends TestCase {
 
 		// test
 		final List removed = new ArrayList();
-		ServerLogicImpl logic = new ServerLogicImpl(new CallerThreadDomain(), connection, document, registry) {
+		ServerLogicImpl logic = new ServerLogicImpl(new CallerThreadDomain(), document, registry) {
 			protected synchronized ParticipantConnection getParticipantConnection(int id) {
 				return participant;
 			}
@@ -467,6 +477,7 @@ public class ServerLogicImplTest extends TestCase {
 				removed.add(new Integer(participantId));
 			}
 		};
+		logic.setPublisherConnection(connection);
 		logic.start();
 		logic.leave(1);
 		

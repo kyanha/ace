@@ -26,11 +26,17 @@ import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
+import ch.iserver.ace.collaboration.jupiter.AcknowledgeAction;
+import ch.iserver.ace.collaboration.jupiter.AcknowledgeStrategy;
 import ch.iserver.ace.collaboration.jupiter.AlgorithmWrapper;
 import ch.iserver.ace.collaboration.jupiter.AlgorithmWrapperImpl;
+import ch.iserver.ace.collaboration.jupiter.NullAcknowledgeStrategy;
 import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.net.RemoteUserProxy;
+import ch.iserver.ace.text.NoOperation;
+import ch.iserver.ace.util.Lock;
 import ch.iserver.ace.util.ParameterValidator;
+import ch.iserver.ace.util.SemaphoreLock;
 
 /**
  * Forwarder implementation that is responsible to forward events
@@ -55,11 +61,22 @@ public class ParticipantProxy implements Forwarder {
 	private final ParticipantConnection connection;
 	
 	/**
+	 * 
+	 */
+	private AcknowledgeStrategy acknowledgeStrategy = new NullAcknowledgeStrategy();
+	
+	/**
+	 * 
+	 */
+	private final Lock lock;
+	
+	/**
 	 * Creates a new ParticipantProxy instance.
 	 * 
 	 * @param participantId the participant id of this proxy
 	 * @param algorithm the algorithm used to transform requests
 	 * @param connection the connection to the participant
+	 * @param acknowledgeStrategy
 	 */
 	public ParticipantProxy(int participantId, 
 					Algorithm algorithm, 
@@ -73,6 +90,7 @@ public class ParticipantProxy implements Forwarder {
 	 * @param participantId the participant id of this proxy
 	 * @param algorithm the algorithm wrapper used by this proxy
 	 * @param connection the connection to the participant
+	 * @param acknowledgeStrategy
 	 */
 	ParticipantProxy(int participantId,
 					AlgorithmWrapper algorithm,
@@ -82,6 +100,26 @@ public class ParticipantProxy implements Forwarder {
 		this.participantId = participantId;
 		this.algorithm = algorithm;
 		this.connection = connection;
+		this.lock = new SemaphoreLock("proxy-lock-" + participantId);
+	}
+	
+	public void setAcknowledgeStrategy(AcknowledgeStrategy acknowledger) {
+		this.acknowledgeStrategy = acknowledger != null ? acknowledger : new NullAcknowledgeStrategy();
+		this.acknowledgeStrategy.init(new AcknowledgeAction() {
+			public void execute() {
+				lock.lock();
+				try {
+					Request request = getAlgorithm().generateRequest(new NoOperation());
+					getConnection().sendRequest(-1, request);
+				} finally {
+					lock.unlock();
+				}
+			}		
+		});
+	}
+	
+	public AcknowledgeStrategy getAcknowledgeStrategy() {
+		return acknowledgeStrategy;
 	}
 	
 	/**
@@ -99,13 +137,40 @@ public class ParticipantProxy implements Forwarder {
 	}
 	
 	/**
+	 * 
+	 */
+	protected void lock() {
+		lock.lock();
+	}
+	
+	/**
+	 * 
+	 */
+	protected void unlock() {
+		lock.unlock();
+	}
+	
+	/**
+	 * 
+	 */
+	protected void resetAcknowledgeTimer() {
+		acknowledgeStrategy.resetTimer();
+	}
+	
+	/**
 	 * @see ch.iserver.ace.collaboration.jupiter.server.ParticipantProxy#sendCaretUpdate(int, ch.iserver.ace.CaretUpdate)
 	 */
 	public void sendCaretUpdate(int participantId, CaretUpdate update) {
 		if (this.participantId != participantId) {
+			resetAcknowledgeTimer();
 			AlgorithmWrapper algorithm = getAlgorithm();
-			CaretUpdateMessage message = algorithm.generateCaretUpdateMessage(update);
-			getConnection().sendCaretUpdateMessage(participantId, message);
+			lock();
+			try {
+				CaretUpdateMessage message = algorithm.generateCaretUpdateMessage(update);
+				getConnection().sendCaretUpdateMessage(participantId, message);
+			} finally {
+				unlock();
+			}
 		}
 	}
 	
@@ -114,9 +179,15 @@ public class ParticipantProxy implements Forwarder {
 	 */
 	public void sendOperation(int participantId, Operation operation) {
 		if (this.participantId != participantId) {
+			resetAcknowledgeTimer();
 			AlgorithmWrapper algorithm = getAlgorithm();
-			Request request = algorithm.generateRequest(operation);
-			getConnection().sendRequest(participantId, request);
+			lock();
+			try {
+				Request request = algorithm.generateRequest(operation);
+				getConnection().sendRequest(participantId, request);
+			} finally {
+				unlock();
+			}
 		}
 	}
 		
@@ -144,5 +215,5 @@ public class ParticipantProxy implements Forwarder {
 	public void close() {
 		getConnection().close();
 	}
-	
+		
 }

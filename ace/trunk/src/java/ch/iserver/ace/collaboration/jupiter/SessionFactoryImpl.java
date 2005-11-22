@@ -40,6 +40,11 @@ public class SessionFactoryImpl implements SessionFactory {
 	private UserRegistry registry;
 	
 	/**
+	 * 
+	 */
+	private AcknowledgeStrategyFactory acknowledgerManager;
+	
+	/**
 	 * @param threadDomain
 	 */
 	public void setThreadDomain(ThreadDomain threadDomain) {
@@ -69,10 +74,25 @@ public class SessionFactoryImpl implements SessionFactory {
 	}
 	
 	/**
+	 * @return
+	 */
+	public AcknowledgeStrategyFactory getAcknowledgerManager() {
+		return acknowledgerManager;
+	}
+	
+	/**
+	 * @param acknowledgerManager
+	 */
+	public void setAcknowledgerManager(AcknowledgeStrategyFactory acknowledgerManager) {
+		this.acknowledgerManager = acknowledgerManager;
+	}
+	
+	/**
 	 * @see ch.iserver.ace.collaboration.jupiter.SessionFactory#createSession()
 	 */
 	public ConfigurableSession createSession() {
 		SessionImpl session = new SessionImpl();
+		session.setAcknowledgeStrategy(getAcknowledgerManager().createStrategy());
 		session.setThreadDomain(getThreadDomain());
 		session.setUserRegistry(getUserRegistry());
 		return session;
