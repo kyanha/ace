@@ -59,7 +59,7 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 //	private SyntaxDocument editorDocument;
 	private RemoteDocument remoteDocument;
 	private Session session;
-	private ParticipantSessionCallback sessionCallback;
+	private PublishedSessionCallbackImpl publishedSessionCallback;
 
 
 
@@ -77,7 +77,7 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 		id = UUID.nextUUID();
 		this.file = file;
 		title = file.getName();
-		extendedTitle = file.getAbsolutePath();// + " - " + file.getName();
+		extendedTitle = file.getAbsolutePath();
 		toolTip = file.getAbsolutePath();
 		createEditorDocument();
 	}
@@ -102,18 +102,10 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 		return title;
 	}
 	
-/*	public void setTitle(String title) {
-		this.title = title;
-	}*/
-	
 	public String getExtendedTitle() {
 		return extendedTitle;
 	}
 
-/*	public void setExtendedTitle(String extendedTitle) {
-		this.extendedTitle = extendedTitle;
-	}*/
-		
 	public String getToolTip() {
 		return toolTip;
 	}
@@ -156,6 +148,10 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 		return session;
 	}
 	
+	public void setSession(Session session) {
+		this.session = session;
+	}
+	
 	public File getFile() {
 		return file;
 	}
@@ -164,7 +160,7 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 		this.file = file;
 		String oldTitle = title;
 		title = file.getName();
-		extendedTitle = file.getAbsolutePath();// + " - " + file.getName();
+		extendedTitle = file.getAbsolutePath();
 		toolTip = file.getAbsolutePath();
 		firePropertyChange(TITLE_PROPERTY, oldTitle, title);
 	}
@@ -204,8 +200,9 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 	
 	
 	public void publish(CollaborationService collaborationService) {
-		sessionCallback = new SessionCallbackImpl();
-		session = collaborationService.publish(sessionCallback, new DocumentModel("", 0, 0, new DocumentDetails(title)));
+		publishedSessionCallback = new PublishedSessionCallbackImpl();
+		session = collaborationService.publish(publishedSessionCallback,
+					new DocumentModel("", 0, 0, new DocumentDetails(title)));
 		type = PUBLISHED;
 		firePropertyChange(TYPE_PROPERTY, "LOCAL", "PUBLISHED");
 	}
