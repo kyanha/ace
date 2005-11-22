@@ -279,7 +279,15 @@ public class DocumentManagerImpl implements ItemSelectionChangeListener, Prefere
 	 */
 	public void concealDocument() {
 		currentDocumentItem.conceal();
-	}	
+	}
+	
+	public void leaveSession() {
+		//currentDocumentItem.leave();
+	}
+	
+	public void joinSession() {
+		//
+	}
 	
 	// --> ItemSelectionChangeListener methods <--
 		
