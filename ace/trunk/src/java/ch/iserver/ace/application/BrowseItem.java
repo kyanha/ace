@@ -31,9 +31,15 @@ import ch.iserver.ace.collaboration.RemoteUser;
 
 public class BrowseItem extends ItemImpl implements Comparable, PropertyChangeListener {
 
+	public final static int NORMAL		= 1;
+	public final static int AWAITING	= 2;
+	public final static int JOINED		= 3;
+	public final static String TYPE_PROPERTY = "type";
+
 	private String title, publisher;
 	private RemoteDocument document;
 	private RemoteUser user;
+	private int type;
 
 	public BrowseItem(RemoteDocument document) {
 		this.document = document;
@@ -42,6 +48,17 @@ public class BrowseItem extends ItemImpl implements Comparable, PropertyChangeLi
 		user = document.getPublisher();
 		user.addPropertyChangeListener(this);
 		publisher = user.getName();
+		type = NORMAL;
+	}
+	
+	public int getType() {
+		return type;
+	}
+	
+	public void setType(int type) {
+		int oldType = this.type;
+		this.type = type;
+		firePropertyChange(TYPE_PROPERTY, "" + oldType, "" + type);
 	}
 
 	public String getTitle() {
