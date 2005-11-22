@@ -3,6 +3,9 @@ package ch.iserver.ace.collaboration;
 import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.Operation;
 
+/**
+ *
+ */
 public interface SessionCallback {
 
 	/**
