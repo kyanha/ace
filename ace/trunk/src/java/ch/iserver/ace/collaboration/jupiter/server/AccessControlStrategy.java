@@ -19,24 +19,16 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.collaboration.jupiter.server.serializer;
+package ch.iserver.ace.collaboration.jupiter.server;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import ch.iserver.ace.collaboration.JoinRequest;
+import ch.iserver.ace.collaboration.jupiter.PublisherConnection;
 
-public class AllTests {
-
-	public static Test suite() {
-		TestSuite suite = new TestSuite(
-						"Test for ch.iserver.ace.collaboration.jupiter.server.serializer");
-		//$JUnit-BEGIN$
-		suite.addTestSuite(RequestSerializerCommandTest.class);
-		suite.addTestSuite(CaretUpdateSerializerCommandTest.class);
-		suite.addTestSuite(JoinCommandTest.class);
-		suite.addTestSuite(ShutdownCommandTest.class);
-		suite.addTestSuite(LeaveCommandTest.class);
-		//$JUnit-END$
-		return suite;
-	}
-
+/**
+ *
+ */
+public interface AccessControlStrategy {
+	
+	void joinRequest(PublisherConnection connection, JoinRequest request);
+	
 }

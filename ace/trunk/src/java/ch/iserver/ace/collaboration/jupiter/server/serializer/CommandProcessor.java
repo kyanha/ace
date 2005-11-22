@@ -21,22 +21,15 @@
 
 package ch.iserver.ace.collaboration.jupiter.server.serializer;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
-public class AllTests {
-
-	public static Test suite() {
-		TestSuite suite = new TestSuite(
-						"Test for ch.iserver.ace.collaboration.jupiter.server.serializer");
-		//$JUnit-BEGIN$
-		suite.addTestSuite(RequestSerializerCommandTest.class);
-		suite.addTestSuite(CaretUpdateSerializerCommandTest.class);
-		suite.addTestSuite(JoinCommandTest.class);
-		suite.addTestSuite(ShutdownCommandTest.class);
-		suite.addTestSuite(LeaveCommandTest.class);
-		//$JUnit-END$
-		return suite;
-	}
-
+/**
+ *
+ */
+public interface CommandProcessor {
+	
+	void startProcessor();
+	
+	void process(SerializerCommand command);
+	
+	void stopProcessor();
+	
 }

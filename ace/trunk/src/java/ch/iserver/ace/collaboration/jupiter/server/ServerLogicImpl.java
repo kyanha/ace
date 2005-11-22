@@ -43,9 +43,10 @@ import ch.iserver.ace.collaboration.jupiter.JoinRequestImpl;
 import ch.iserver.ace.collaboration.jupiter.NullAcknowledgeStrategyFactory;
 import ch.iserver.ace.collaboration.jupiter.PublisherConnection;
 import ch.iserver.ace.collaboration.jupiter.UserRegistry;
+import ch.iserver.ace.collaboration.jupiter.server.serializer.CommandProcessor;
+import ch.iserver.ace.collaboration.jupiter.server.serializer.CommandProcessorImpl;
 import ch.iserver.ace.collaboration.jupiter.server.serializer.JoinCommand;
 import ch.iserver.ace.collaboration.jupiter.server.serializer.LeaveCommand;
-import ch.iserver.ace.collaboration.jupiter.server.serializer.Serializer;
 import ch.iserver.ace.collaboration.jupiter.server.serializer.SerializerCommand;
 import ch.iserver.ace.collaboration.jupiter.server.serializer.ShutdownCommand;
 import ch.iserver.ace.net.DocumentServer;
@@ -64,18 +65,16 @@ import edu.emory.mathcs.backport.java.util.concurrent.LinkedBlockingQueue;
 /**
  * Default implementation of the ServerLogic interface.
  */
-public class ServerLogicImpl implements ServerLogic, FailureHandler {
+public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessControlStrategy {
 	
 	private static final Logger LOG = Logger.getLogger(ServerLogicImpl.class);
 	
 	private int nextParticipantId;
 	
 	private final Forwarder forwarder;
-	
-	private final Serializer serializer;
-	
-	private final BlockingQueue serializerQueue;
-	
+
+	private CommandProcessor commandProcessor;
+		
 	private final HashMap ports = new HashMap();
 	
 	private final HashMap proxies = new HashMap();
@@ -85,6 +84,8 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler {
 	private DocumentServer server;
 	
 	private final ThreadDomain threadDomain;
+	
+	private AccessControlStrategy accessControlStrategy;
 	
 	private PublisherConnection publisherConnection;
 	
@@ -122,10 +123,10 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler {
 		
 		this.threadDomain = domain;
 		this.registry = registry;
+		this.accessControlStrategy = this;
 		
-		this.serializerQueue = createSerializerQueue();
-		this.serializer = new Serializer(serializerQueue, lock, forwarder, this);
-				
+		this.commandProcessor = new CommandProcessorImpl(forwarder, this);
+						
 		this.document = new ServerDocumentImpl();
 		this.document.participantJoined(0, null);
 		this.document.insertString(0, 0, document.getContent());
@@ -178,6 +179,18 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler {
 		return threadDomain;
 	}
 	
+	public void setCommandProcessor(CommandProcessor commandProcessor) {
+		this.commandProcessor = commandProcessor;
+	}
+	
+	public CommandProcessor getCommandProcessor() {
+		return commandProcessor;
+	}
+	
+	public Forwarder getForwarder() {
+		return forwarder;
+	}
+	
 	protected Set getBlacklist() {
 		return blacklist;
 	}
@@ -188,19 +201,23 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler {
 		
 	public void start() {
 		acceptingJoins = true;
-		serializer.start();
+		commandProcessor.startProcessor();
 	}
 	
 	public void dispose() throws InterruptedException {
-		serializer.kill();
-	}
-	
-	protected BlockingQueue getSerializerQueue() {
-		return serializerQueue;
+		commandProcessor.stopProcessor();
 	}
 	
 	protected PublisherConnection getPublisherConnection() {
 		return publisherConnection;
+	}
+	
+	protected AccessControlStrategy getAccessControlStrategy() {
+		return accessControlStrategy;
+	}
+	
+	public void setAccessControlStrategy(AccessControlStrategy strategy) {
+		this.accessControlStrategy = strategy;
 	}
 	
 	public void setAcknowledgeStrategyFactory(AcknowledgeStrategyFactory factory) {
@@ -232,7 +249,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler {
 	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerLogic#addCommand(ch.iserver.ace.collaboration.jupiter.server.serializer.SerializerCommand)
 	 */
 	public void addCommand(SerializerCommand command) {
-		getSerializerQueue().add(command);
+		commandProcessor.process(command);
 	}
 	
 	/**
@@ -275,7 +292,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler {
 		}
 		
 		JoinRequest request = new JoinRequestImpl(this, user, connection);
-		getPublisherConnection().sendJoinRequest(request);
+		getAccessControlStrategy().joinRequest(getPublisherConnection(), request);
 	}
 	
 	/**
@@ -423,6 +440,18 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler {
 				addCommand(new LeaveCommand(participantId, Participant.DISCONNECTED));
 			}
 		}
+	}
+	
+	// --> AccessControlStrategy implementation <--
+	
+	/**
+	 * Default implementation of the AccessControlStrategy interface.
+	 * 
+	 * @param connection the publisher connection
+	 * @param request the join request
+	 */
+	public void joinRequest(PublisherConnection connection, JoinRequest request) {
+		connection.sendJoinRequest(request);
 	}
 
 }

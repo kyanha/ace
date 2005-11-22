@@ -26,94 +26,69 @@ import org.apache.log4j.Logger;
 import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.collaboration.jupiter.server.FailureHandler;
 import ch.iserver.ace.collaboration.jupiter.server.Forwarder;
-import ch.iserver.ace.util.Lock;
-import ch.iserver.ace.util.ParameterValidator;
 import ch.iserver.ace.util.Worker;
 import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
+import edu.emory.mathcs.backport.java.util.concurrent.LinkedBlockingQueue;
 
 /**
- * Worker thread that serializes processing of incoming requests. This is
- * a fundamental requirement of the Jupiter algorithm server-side
- * component.
+ *
  */
-public class Serializer extends Worker {
+public class CommandProcessorImpl extends Worker implements CommandProcessor {
 	
-	private static final Logger LOG = Logger.getLogger(Serializer.class);
-	
-	/**
-	 * The BlockingQueue from which to retrieve commands.
-	 */
+	private static final Logger LOG = Logger.getLogger(CommandProcessor.class);
+
 	private final BlockingQueue queue;
 	
-	/**
-	 * The Lock that guards the transformation on the server.
-	 */
-	private final Lock lock;
-	
-	/**
-	 * The Forwarder that forwards the results of the transformation to
-	 * all other participants.
-	 */
 	private final Forwarder forwarder;
 	
-	/**
-	 * 
-	 */
 	private final FailureHandler failureHandler;
-	
-	/**
-	 * Creates a new Serializer worker thread.
-	 * 
-	 * @param queue the queue from which to retrieve commands
-	 * @param lock the lock that guards the critical sections
-	 * @param forwarder the forwarder that forwards the results
-	 * @param failureHandler the FailureHandler to be notified about failures
-	 */
-	public Serializer(BlockingQueue queue, Lock lock, Forwarder forwarder, FailureHandler failureHandler) {
-		super("Serializer");
-		ParameterValidator.notNull("queue", queue);
-		ParameterValidator.notNull("lock", lock);
-		ParameterValidator.notNull("forwarder", forwarder);
-		this.queue = queue;
-		this.lock = lock;
+
+	public CommandProcessorImpl(Forwarder forwarder, FailureHandler failureHandler) {
+		super("serializer");
+		this.queue = new LinkedBlockingQueue();
 		this.forwarder = forwarder;
 		this.failureHandler = failureHandler;
 	}
-
-	/**
-	 * @return the forwarder that forwards the results
-	 */
+	
 	protected Forwarder getForwarder() {
 		return forwarder;
 	}
-	
-	/**
-	 * @return the lock that guards the critical sections
-	 */
-	protected Lock getLock() {
-		return lock;
-	}
-	
+		
 	protected FailureHandler getFailureHandler() {
 		return failureHandler;
 	}
+
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.serializer.CommandProcessor#startProcessor()
+	 */
+	public void startProcessor() {
+		start();
+	}
 	
 	/**
-	 * @see ch.iserver.ace.util.Worker#doWork()
+	 * @see ch.iserver.ace.collaboration.jupiter.server.serializer.CommandProcessor#process(ch.iserver.ace.collaboration.jupiter.server.serializer.SerializerCommand)
 	 */
+	public void process(SerializerCommand command) {
+		queue.add(command);
+	}
+	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.serializer.CommandProcessor#stopProcessor()
+	 */
+	public void stopProcessor() {
+		kill();
+	}
+	
 	protected void doWork() throws InterruptedException {
 		SerializerCommand cmd = (SerializerCommand) queue.take();
 		LOG.info("serializing next command ...");
-		getLock().lock();
 		try {
 			cmd.execute(getForwarder());
 			LOG.info("command executed ...");
 		} catch (SerializerException e) {
 			LOG.warn("command execution failed: " + e.getMessage());
 			getFailureHandler().handleFailure(e.getParticipantId(), Participant.RECEPTION_FAILED);
-		} finally {
-			getLock().unlock();
 		}
 	}
-		
+
 }

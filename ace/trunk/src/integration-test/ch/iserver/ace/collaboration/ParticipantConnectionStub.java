@@ -39,8 +39,14 @@ public class ParticipantConnectionStub implements ParticipantConnection {
 	
 	private PortableDocument expectedDocument;
 	
+	private ParticipantPort participantPort;
+	
 	public ParticipantConnectionStub(RemoteUserProxy user) {
 		this.user = user;
+	}
+	
+	public ParticipantPort getParticipantPort() {
+		return participantPort;
 	}
 	
 	/**
@@ -54,7 +60,7 @@ public class ParticipantConnectionStub implements ParticipantConnection {
 	 * @see ch.iserver.ace.net.ParticipantConnection#joinAccepted(ch.iserver.ace.net.ParticipantPort)
 	 */
 	public void joinAccepted(ParticipantPort port) {
-		
+		this.participantPort = port;
 	}
 	
 	/**

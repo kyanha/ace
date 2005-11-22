@@ -76,7 +76,7 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	
 	private ThreadDomain publisherThreadDomain;
 	
-	private AcknowledgeStrategyFactory acknowledgeStrategyFactory;
+	private AcknowledgeStrategyFactory acknowledgeStrategyFactory = new NullAcknowledgeStrategyFactory();
 	
 	public CollaborationServiceImpl(NetworkService service) {
 		ParameterValidator.notNull("service", service);

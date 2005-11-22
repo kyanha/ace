@@ -27,91 +27,140 @@ import org.easymock.MockControl;
 
 import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.DocumentModel;
-import ch.iserver.ace.algorithm.RequestImpl;
-import ch.iserver.ace.algorithm.jupiter.JupiterVectorTime;
 import ch.iserver.ace.collaboration.jupiter.CollaborationServiceImpl;
 import ch.iserver.ace.collaboration.jupiter.ParticipantImpl;
 import ch.iserver.ace.collaboration.jupiter.UserRegistry;
 import ch.iserver.ace.collaboration.jupiter.UserRegistryImpl;
 import ch.iserver.ace.collaboration.jupiter.server.ServerDocumentImpl;
-import ch.iserver.ace.net.DocumentServerLogic;
+import ch.iserver.ace.collaboration.jupiter.server.ServerLogicImpl;
 import ch.iserver.ace.net.ParticipantConnection;
-import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.RemoteUserProxyStub;
-import ch.iserver.ace.text.InsertOperation;
 import ch.iserver.ace.util.CallerThreadDomain;
 import ch.iserver.ace.util.ThreadDomain;
 
 /**
- *
+ * Complex test cases that test the overall working of the collaboration 
+ * service and its collaborators.
  */
 public class CollaborationServiceTest extends TestCase {
 	
 	public void testPublish() throws Exception {
-		MockControl callbackCtrl = MockControl.createControl(PublishedSessionCallback.class);
+		MockControl callbackCtrl = MockControl.createStrictControl(PublishedSessionCallback.class);
 		PublishedSessionCallback callback = (PublishedSessionCallback) callbackCtrl.getMock();
-		MockControl connectionCtrl = MockControl.createControl(ParticipantConnection.class);
-		ParticipantConnection connection = (ParticipantConnection) connectionCtrl.getMock();
 		
 		NetworkServiceStub networkService = new NetworkServiceStub();
 		
-		// define mock behavior
-		connection.setParticipantId(1);
-		connection.getUser();
-		connectionCtrl.setDefaultReturnValue(new RemoteUserProxyStub("X"));
-		connection.sendDocument(null);
-		connectionCtrl.setMatcher(MockControl.ALWAYS_MATCHER);
-		connection.sendParticipantJoined(2, new RemoteUserProxyStub("Z"));
-		connection.close();
-		
-		callback.joinRequest(null);
-		callbackCtrl.setDefaultMatcher(MockControl.ALWAYS_MATCHER);
-		callback.participantJoined(new ParticipantImpl(1, new RemoteUserStub("X")));
-		callback.receiveOperation(new ParticipantImpl(1, new RemoteUserStub("X")), new InsertOperation(0, "XYZ"));
-		callback.participantJoined(new ParticipantImpl(2, new RemoteUserStub("Z")));
-		
 		// replay
 		callbackCtrl.replay();
-		connectionCtrl.replay();
 		
 		// test
 		ThreadDomain threadDomain = new CallerThreadDomain();
 		UserRegistry registry = new UserRegistryImpl();
-		registry.addUser(new RemoteUserProxyStub("X"));
+		DocumentModel document = new DocumentModel("", 0, 0, new DocumentDetails("collabl.txt"));
 		CollaborationServiceImpl service = new CollaborationServiceImpl(networkService);
 		service.setUserRegistry(registry);
 		service.setPublisherThreadDomain(threadDomain);
+		PublishedSession session = service.publish(callback, document);
+		assertEquals(0, session.getParticipants().size());
+		
+		// verify
+		callbackCtrl.verify();
+	}
+	
+	public void testPublishJoining() throws Exception {
+		MockControl callbackCtrl = MockControl.createControl(PublishedSessionCallback.class);
+		PublishedSessionCallback callback = (PublishedSessionCallback) callbackCtrl.getMock();
+		
+		NetworkServiceStub networkService = new NetworkServiceStub();
+		
+		// define mock behavior		
+		callback.participantJoined(new ParticipantImpl(1, new RemoteUserStub("X")));
+		callback.participantJoined(new ParticipantImpl(2, new RemoteUserStub("Y")));
+		
+		// replay
+		callbackCtrl.replay();
+		
+		// create the needed objects
+		ThreadDomain threadDomain = new CallerThreadDomain();
+		UserRegistry registry = new UserRegistryImpl();		
+		CollaborationServiceImpl service = new CollaborationServiceImpl(networkService);
+		service.setUserRegistry(registry);
+		service.setPublisherThreadDomain(threadDomain);
+		
+		// discover a user
+		service.userDiscovered(new RemoteUserProxyStub("X"));
+		service.userDiscovered(new RemoteUserProxyStub("Y"));
 
+		// create document to publish
 		DocumentModel document = new DocumentModel("", 0, 0, new DocumentDetails("collab.txt"));
+		
+		// publish a document
 		PublishedSession session = service.publish(callback, document);
 		
+		// check that publish went down all the way to the network layer
 		assertEquals(1, networkService.getDocumentServers().size());
+				
+		// extract the server logic from the stub
 		DocumentServerStub server = (DocumentServerStub) networkService.getDocumentServers().get(0);
+		ServerLogicImpl logic = (ServerLogicImpl) server.getLogic();
 		
-		DocumentServerLogic logic = server.getLogic();
-		logic.join(connection);
+		// configure the server logic
+		logic.setAccessControlStrategy(new AcceptingAccessControlStrategy());
+		logic.setCommandProcessor(new SimpleCommandProcessor(logic.getForwarder()));
 		
-//		port1.receiveRequest(new RequestImpl(1, new JupiterVectorTime(0, 0), new InsertOperation(0, "XYZ")));
+		// configure a new joining user
+		MockControl connectionCtrl1 = MockControl.createStrictControl(ParticipantConnection.class);
+		ParticipantConnection connection1 = (ParticipantConnection) connectionCtrl1.getMock();
 		
-		ParticipantConnectionStub connectionStub = new ParticipantConnectionStub(new RemoteUserProxyStub("Z"));
+		// create expected document
 		ServerDocumentImpl expectedDocument = new ServerDocumentImpl();
 		expectedDocument.participantJoined(0, null);
 		expectedDocument.insertString(0, 0, document.getContent());
 		expectedDocument.updateCaret(0, document.getDot(), document.getMark());
-		expectedDocument.participantJoined(1, null);
-		expectedDocument.insertString(1, 0, "XYZ");
-		connectionStub.setExpectedDocument(expectedDocument);
-		logic.join(connectionStub);
 		
-		Thread.sleep(2000);
+		// set up expectations
+		connection1.getUser();
+		connectionCtrl1.setDefaultReturnValue(new RemoteUserProxyStub("X"));
+		connection1.setParticipantId(1);
+		connection1.joinAccepted(null);
+		connectionCtrl1.setMatcher(MockControl.ALWAYS_MATCHER);
+		connection1.sendDocument(expectedDocument.toPortableDocument());
+		connection1.sendParticipantJoined(2, new RemoteUserProxyStub("Y"));
+		connection1.close();
+		
+		// replay / test
+		connectionCtrl1.replay();
+		logic.join(connection1);
+		
+		// configure a new joining user
+		MockControl connectionCtrl2 = MockControl.createStrictControl(ParticipantConnection.class);
+		ParticipantConnection connection2 = (ParticipantConnection) connectionCtrl2.getMock();
 
+		// create expected document
+		expectedDocument = new ServerDocumentImpl();
+		expectedDocument.participantJoined(0, null);
+		expectedDocument.insertString(0, 0, document.getContent());
+		expectedDocument.updateCaret(0, document.getDot(), document.getMark());
+		expectedDocument.participantJoined(1, new RemoteUserProxyStub("X"));
+
+		// set up expectations
+		connection2.getUser();
+		connectionCtrl2.setDefaultReturnValue(new RemoteUserProxyStub("Y"));
+		connection2.setParticipantId(2);
+		connection2.joinAccepted(null);
+		connectionCtrl2.setMatcher(MockControl.ALWAYS_MATCHER);
+		connection2.sendDocument(expectedDocument.toPortableDocument());
+		connection2.close();
+		
+		// replay / test
+		connectionCtrl2.replay();
+		logic.join(connection2);
 		session.leave();
-
-		Thread.sleep(2000);
-
+		
 		// verify
 		callbackCtrl.verify();
-		connectionCtrl.verify();
+		connectionCtrl1.verify();
+		connectionCtrl2.verify();
 		
 		// assertions
 		assertNotNull(networkService.getTimestampFactory());

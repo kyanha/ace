@@ -29,6 +29,8 @@ import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.DocumentModel;
 import ch.iserver.ace.algorithm.RequestImpl;
 import ch.iserver.ace.algorithm.jupiter.JupiterVectorTime;
+import ch.iserver.ace.collaboration.AcceptingAccessControlStrategy;
+import ch.iserver.ace.collaboration.SimpleCommandProcessor;
 import ch.iserver.ace.collaboration.jupiter.PublisherConnection;
 import ch.iserver.ace.collaboration.jupiter.UserRegistry;
 import ch.iserver.ace.collaboration.jupiter.UserRegistryImpl;
@@ -61,13 +63,7 @@ public class ServerTest extends TestCase {
 			connections[i] = (PublisherConnection) controls[i].getMock();
 		}
 		
-		// define mock behavior
-		connections[0].setParticipantId(0);
-		connections[0].sendJoinRequest(null);
-		controls[0].setMatcher(MockControl.ALWAYS_MATCHER);
-		connections[0].sendJoinRequest(null);
-		controls[0].setMatcher(MockControl.ALWAYS_MATCHER);
-		
+		// define mock behavior		
 		for (int i = 0; i < PARTICIPANTS; i++) {
 			connections[i].getUser();
 			controls[i].setDefaultReturnValue(new RemoteUserProxyStub("" + i));
@@ -75,6 +71,8 @@ public class ServerTest extends TestCase {
 		
 		for (int i = 1; i < PARTICIPANTS; i++) {
 			connections[i].setParticipantId(i);
+			connections[i].joinAccepted(null);
+			controls[i].setMatcher(MockControl.ALWAYS_MATCHER);
 			connections[i].sendDocument(null);
 			controls[i].setMatcher(MockControl.ALWAYS_MATCHER);
 			for (int j = 0; j < i; j++) {
@@ -95,6 +93,8 @@ public class ServerTest extends TestCase {
 				new CallerThreadDomain(), 
 				document,
 				registry);
+		server.setAccessControlStrategy(new AcceptingAccessControlStrategy());
+		server.setCommandProcessor(new SimpleCommandProcessor(server.getForwarder()));
 		server.setPublisherConnection(connections[0]);
 		ports[0] = server.getPublisherPort();
 		server.start();
@@ -105,10 +105,7 @@ public class ServerTest extends TestCase {
 				
 		// test
 		ports[0].receiveRequest(new RequestImpl(1, new JupiterVectorTime(0, 0), new InsertOperation(0, "x")));
-		
-		// sleeep
-		Thread.sleep(2000);
-		
+				
 		// verify
 		for (int i = 0; i < PARTICIPANTS; i++) {
 			controls[i].verify();
