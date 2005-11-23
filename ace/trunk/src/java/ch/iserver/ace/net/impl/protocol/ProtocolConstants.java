@@ -34,6 +34,8 @@ public interface ProtocolConstants {
 	public static final int CONCEAL = 2;
 	public static final int SEND_DOCUMENTS = 3;
 	public static final int DOCUMENT_DETAILS_CHANGED = 4;
+	public static final int JOIN = 5;
+	public static final int JOIN_DOCUMENT = 6;
 	
 	/********************/
 	/** Top level tags **/
@@ -42,6 +44,7 @@ public interface ProtocolConstants {
 	public static final String TAG_PUBLISHED_DOCS = "publishedDocs";
 	public static final String TAG_PUBLISH = "publishDocs";
 	public static final String TAG_CONCEAL = "concealDocs";
+	public static final String TAG_JOIN = "join";
 	public static final String TAG_DOCUMENT_DETAILS_CHANGED = "docDetailsChanged";
 	public static final String TAG_DOC = "doc";
 	
