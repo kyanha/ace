@@ -23,10 +23,12 @@ package ch.iserver.ace.application.action;
 
 import ch.iserver.ace.application.LocaleMessageSource;
 import ch.iserver.ace.application.PersistentContentPane;
-import ch.iserver.ace.application.editor.EditorImpl;
+import ch.iserver.ace.application.editor.Editor;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.*;
+import java.awt.Toolkit;
+import javax.swing.KeyStroke;
 
 import javax.swing.AbstractAction;
 
@@ -39,13 +41,15 @@ public class ToggleFullScreenEditingAction extends AbstractAction {
 	private LocaleMessageSource messageSource;
 	
 	public ToggleFullScreenEditingAction(LocaleMessageSource messageSource, PersistentContentPane persistentContentPane,
-			EditorImpl editor) {
+			Editor editor) {
 		super(messageSource.getMessage("mWindowToggleFullScreen"), messageSource.getIcon("iWindowToggleFullScreen"));
 		putValue(SHORT_DESCRIPTION, messageSource.getMessage("mWindowToggleFullScreenTT"));
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke('F', InputEvent.SHIFT_MASK | Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+		
 		this.messageSource = messageSource;
 		this.persistentContentPane = persistentContentPane;
 
-		editor.addMouseListener(new MouseAdapter() {
+		editor.getEditorComponent().addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				if(e.getClickCount() == 2) {
 					toggleEditingMode();

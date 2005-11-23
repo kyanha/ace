@@ -34,9 +34,11 @@ import javax.swing.JToolBar;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import ca.odell.glazedlists.FilterList;
 import ca.odell.glazedlists.GlazedLists;
 import ca.odell.glazedlists.ObservableElementList;
 import ca.odell.glazedlists.SortedList;
+import ca.odell.glazedlists.matchers.Matcher;
 import ca.odell.glazedlists.swing.EventListModel;
 import ca.odell.glazedlists.swing.EventSelectionModel;
 
@@ -51,19 +53,30 @@ public class DocumentView extends ViewImpl {
 	
 	public DocumentView(LocaleMessageSource messageSource, DocumentViewController controller) {
 		super(controller, messageSource);
-		// get view source
-		setSourceList(controller.getDocumentSourceList());
-		
+				
 		// create view toolbar & actions
 		documentToolBar = new JToolBar();
 
-		// create list
-		documentSortedList = new SortedList(new ObservableElementList(getSourceList(), GlazedLists.beanConnector(DocumentItem.class)));
+		// create data list & filters
+		Matcher documentViewMatcher = new Matcher() {
+			public boolean matches(Object item) {
+				DocumentItem dItem = (DocumentItem)item;
+				return (dItem.getType() == DocumentItem.LOCAL ||
+						dItem.getType() == DocumentItem.PUBLISHED ||
+						dItem.getType() == DocumentItem.JOINED);
+			}
+		};
+		
+		setSourceList(new FilterList(new ObservableElementList(controller.getSourceList(),
+								GlazedLists.beanConnector(DocumentItem.class)), documentViewMatcher));
+		documentSortedList = new SortedList(getSourceList());
+
+		// create list & model			
 		setEventListModel(new EventListModel(documentSortedList));
 		setEventSelectionModel(new EventSelectionModel(documentSortedList));
 
 		setList(new JList(getEventListModel()));
-		getList().setCellRenderer(new DocumentItemCellRenderer(messageSource));
+		getList().setCellRenderer(new DocumentViewCellRenderer(messageSource));
 		getList().setSelectionModel(getEventSelectionModel());
 		getList().setSelectionMode(EventSelectionModel.SINGLE_SELECTION);
 

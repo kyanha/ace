@@ -49,13 +49,13 @@ public class UserViewTest extends TestCase {
 		RemoteUser[] users = new RemoteUser[3];
 		Item[] items = new Item[3];
 		
-		controller.getUserSourceList().getReadWriteLock().writeLock().lock();
+		controller.getSourceList().getReadWriteLock().writeLock().lock();
 		for (int i = 0; i < 3; i++) {
 			users[i] = new RemoteUserStub("" + i, "" + i);
 			items[i] = new UserItem(users[i]);
-			controller.getUserSourceList().add(items[i]);
+			controller.getSourceList().add(items[i]);
 		}
-		controller.getUserSourceList().getReadWriteLock().writeLock().unlock();
+		controller.getSourceList().getReadWriteLock().writeLock().unlock();
 		view.addItemSelectionChangeListener(listener);
 
 		// define mock behavior
@@ -89,10 +89,10 @@ public class UserViewTest extends TestCase {
 		MutableRemoteUser user = new RemoteUserStub("X", "X");
 		Item item = new UserItem(user);
 
-		controller.getUserSourceList().getReadWriteLock().writeLock().lock();
-		controller.getUserSourceList().add(item);
-		controller.getUserSourceList().add(new UserItem(new RemoteUserStub("Z", "Z")));
-		controller.getUserSourceList().getReadWriteLock().writeLock().unlock();
+		controller.getSourceList().getReadWriteLock().writeLock().lock();
+		controller.getSourceList().add(item);
+		controller.getSourceList().add(new UserItem(new RemoteUserStub("Z", "Z")));
+		controller.getSourceList().getReadWriteLock().writeLock().unlock();
 		
 		Thread.sleep(5);
 		view.getList().getModel().addListDataListener(listener);

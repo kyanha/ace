@@ -32,7 +32,8 @@ public class PublishedSessionCallbackImpl extends SessionCallbackImpl implements
 	}
 	
 	public void joinRequest(JoinRequest request) {
-		System.out.println("joinRequest");
+		System.out.println("join request automaticaly accepted");
+		request.accept();
 	}
 	
 }

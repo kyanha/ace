@@ -1,5 +1,5 @@
 /*
- * $Id:UserItemCellRenderer.java 1091 2005-11-09 13:29:05Z zbinl $
+ * $Id:DocumentItemCellRenderer.java 1091 2005-11-09 13:29:05Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -21,28 +21,26 @@
 
 package ch.iserver.ace.application;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Color;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
-import javax.swing.BorderFactory;
 
+public class DocumentViewCellRenderer extends JPanel implements ListCellRenderer {
 
+	private DocumentItem value;
+	protected ImageIcon iconLocal, iconPublished, iconJoined;
 
-public class UserItemCellRenderer extends JPanel implements ListCellRenderer {
-
-	private UserItem value;
-	private LocaleMessageSource messageSource;
-	protected ImageIcon iconUser;
-
-	public UserItemCellRenderer(LocaleMessageSource messageSource) {
-		this.messageSource = messageSource;
-		iconUser = messageSource.getIcon("iViewUser");
+	public DocumentViewCellRenderer(LocaleMessageSource messageSource) {
+		iconLocal = messageSource.getIcon("iViewFileLocal");
+		iconPublished = messageSource.getIcon("iViewFilePublic");
+		iconJoined = messageSource.getIcon("iViewFileRemote");
 	}
 
 	public Component getListCellRendererComponent(JList list,
@@ -50,9 +48,10 @@ public class UserItemCellRenderer extends JPanel implements ListCellRenderer {
 							int index,
 							boolean isSelected,
 							boolean cellHasFocus) {
+
 		setOpaque(true);
-		this.value = (UserItem)value;
-		
+		this.value = (DocumentItem)value;
+
 		if(isSelected) {
 			setForeground(list.getSelectionForeground());
 			setBackground(list.getSelectionBackground());
@@ -66,34 +65,49 @@ public class UserItemCellRenderer extends JPanel implements ListCellRenderer {
 		return this;
 	}
 
-	public void paintComponent(Graphics g) {
+	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		
+
 		Color textColor = g.getColor();
 		int itemHeight = getHeight();
 		int itemWidth = getWidth();
-
-		// draw user icon
+		
+		// draw document icon
 		int imageHeight = 16; //iconLocal.getIconHeight();
 		int imageWidth = 16; //iconLocal.getIconWidth();
 		int imagePosX = 1;
 		int imagePosY = (itemHeight / 2) - (imageHeight / 2);
-		g.drawImage(iconUser.getImage(), imagePosX, imagePosY, imageHeight, imageWidth, this);
-		
-		// draw user name (TODO: dynamic border)
+
+		switch(value.getType()) {
+			case DocumentItem.LOCAL:
+				g.drawImage(iconLocal.getImage(), imagePosX, imagePosY, imageHeight, imageWidth, this);
+			break;
+			case DocumentItem.PUBLISHED:
+				g.drawImage(iconPublished.getImage(), imagePosX, imagePosY, imageHeight, imageWidth, this);
+			break;			
+			case DocumentItem.JOINED:
+				g.drawImage(iconJoined.getImage(), imagePosX, imagePosY, imageHeight, imageWidth, this);
+			break;
+		}
+
+		// draw document title & dirty flag (TODO: dynamic border)
 		g.setColor(textColor);
 		int textAscent = g.getFontMetrics().getAscent();
 		int textDescent = g.getFontMetrics().getDescent();		
 		int textPosX = imagePosX + imageWidth + 5;
 		int textPosY = (itemHeight / 2) + (textAscent / 2) - textDescent + 1;
-		g.drawString(value.getName(), textPosX, textPosY);
+		if(value.isDirty()) {
+			g.drawString(value.getTitle() + " *", textPosX, textPosY);
+		} else {
+			g.drawString(value.getTitle(), textPosX, textPosY);
+		}
 
 	}
-
-/*	public String getToolTipText() {
-		return value.getName();
-	}*/
 	
+	public String getToolTipText() {
+		return value.getToolTip();
+	}
+
 	public Dimension getPreferredSize() {
 		return new Dimension(0, 20);
 	}

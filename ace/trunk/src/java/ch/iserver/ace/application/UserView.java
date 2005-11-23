@@ -56,13 +56,10 @@ public class UserView extends ViewImpl {
 
 	public UserView(LocaleMessageSource messageSource, UserViewController controller) {
 		super(controller, messageSource);
-		// get view source
-		setSourceList(controller.getUserSourceList());
-		
 		// create view toolbar & actions
 		userToolBar = new JToolBar();
 		
-		// create list
+		// create data list & filters
 		JTextField userFilterField = new JTextField();
 		TextFilterator userFilterator = new TextFilterator() {
 			public void getFilterStrings(List baseList, Object element) {
@@ -71,12 +68,16 @@ public class UserView extends ViewImpl {
 			}
 		};
 		MatcherEditor userMatcherEditor = new TextComponentMatcherEditor(userFilterField, userFilterator);
-		SortedList userSortedList = new SortedList(new ObservableElementList(new FilterList(getSourceList(), userMatcherEditor), GlazedLists.beanConnector(UserItem.class)));
+		
+		setSourceList(new ObservableElementList(new FilterList(controller.getSourceList(), userMatcherEditor), GlazedLists.beanConnector(UserItem.class)));
+		SortedList userSortedList = new SortedList(getSourceList());
+
+		// create list & model
 		setEventListModel(new EventListModel(userSortedList));
 		setEventSelectionModel(new EventSelectionModel(userSortedList));
 
 		setList(new JList(getEventListModel()));
-		getList().setCellRenderer(new UserItemCellRenderer(messageSource));
+		getList().setCellRenderer(new UserViewCellRenderer(messageSource));
 		getList().setSelectionModel(getEventSelectionModel());
 		getList().setSelectionMode(EventSelectionModel.SINGLE_SELECTION);
 		

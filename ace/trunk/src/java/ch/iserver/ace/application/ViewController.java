@@ -21,6 +21,8 @@
 
 package ch.iserver.ace.application;
 
+import javax.swing.JList;
+import ca.odell.glazedlists.EventList;
 
 
 
@@ -31,6 +33,12 @@ public interface ViewController extends ItemSelectionChangeListener {
 	void removeItemSelectionChangeListener(ItemSelectionChangeListener listener);
 	
 	void setView(View view);
+	
+	JList getViewList();
+	
+	EventList getSourceList();
+
+	EventList getViewSourceList();
 
 }
 

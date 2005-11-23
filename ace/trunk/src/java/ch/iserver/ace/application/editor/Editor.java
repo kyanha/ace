@@ -28,8 +28,6 @@ import javax.swing.text.StyledDocument;
 
 public interface Editor {
 
-	//public void setDocument(Document document);
-
 	public void setTitle(String title);
 	
 	public void setDocument(StyledDocument document);

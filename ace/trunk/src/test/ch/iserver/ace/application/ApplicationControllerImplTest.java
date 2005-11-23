@@ -92,7 +92,7 @@ public class ApplicationControllerImplTest extends TestCase {
 
 	public void testCloseDirtyDocumentNoSave() throws Exception {
 		DocumentItem item = new DocumentItem("test");
-		item.setDirty();
+		item.setDirty(true);
 		
 		// define mock behavior
 		documentManager.getSelectedDocument();
@@ -117,7 +117,7 @@ public class ApplicationControllerImplTest extends TestCase {
 	public void testCloseSavedDirtyDocument() throws Exception {
 		DocumentItem item = new DocumentItem("test");
 		item.setFile(new File("test.txt"));
-		item.setDirty();
+		item.setDirty(true);
 		
 		// define mock behavior
 		documentManager.getSelectedDocument();
@@ -150,7 +150,7 @@ public class ApplicationControllerImplTest extends TestCase {
 	public void testCloseCanceledSaveDirtyDocument() throws Exception {
 		DocumentItem item = new DocumentItem("test");
 		item.setFile(new File("test.txt"));
-		item.setDirty();
+		item.setDirty(true);
 		
 		// define mock behavior
 		documentManager.getSelectedDocument();
@@ -182,7 +182,7 @@ public class ApplicationControllerImplTest extends TestCase {
 	public void testCloseSaveDirtyDocumentException() throws Exception {
 		DocumentItem item = new DocumentItem("test");
 		item.setFile(new File("test.txt"));
-		item.setDirty();
+		item.setDirty(true);
 		final IOException e = new IOException();
 		
 		// define mock behavior
@@ -504,7 +504,7 @@ public class ApplicationControllerImplTest extends TestCase {
 	public void testSaveDirtyDocument() throws Exception {
 		final List saved = new LinkedList();
 		DocumentItem item = new DocumentItem(new File("XYZ"));
-		item.setDirty();
+		item.setDirty(true);
 		
 		// define mock behavior
 		documentManager.getSelectedDocument();

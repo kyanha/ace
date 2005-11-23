@@ -21,11 +21,13 @@
 
 package ch.iserver.ace.application;
 
+import javax.swing.JList;
 import javax.swing.event.EventListenerList;
+import ca.odell.glazedlists.EventList;
 
 
 
-public class ViewControllerImpl implements ViewController {
+public abstract class ViewControllerImpl implements ViewController {
 
 	protected View view;
 	private EventListenerList eventListenerList;
@@ -54,6 +56,16 @@ public class ViewControllerImpl implements ViewController {
 	
 	public void setView(View view) {
 		this.view = view;
+	}
+	
+	public JList getViewList() {
+		return view.getList();
+	}
+	
+	public abstract EventList getSourceList();
+	
+	public EventList getViewSourceList() {
+		return view.getSourceList();
 	}
 	
 }

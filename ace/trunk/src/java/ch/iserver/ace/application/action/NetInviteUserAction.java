@@ -21,6 +21,8 @@
 
 package ch.iserver.ace.application.action;
 
+import ch.iserver.ace.application.DocumentItem;
+import ch.iserver.ace.application.UserItem;
 import ch.iserver.ace.application.DocumentManager;
 import ch.iserver.ace.application.ItemSelectionChangeEvent;
 import ch.iserver.ace.application.LocaleMessageSource;
@@ -28,28 +30,68 @@ import ch.iserver.ace.application.DocumentViewController;
 import ch.iserver.ace.application.UserViewController;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
+import java.awt.event.*;
 
 
 
 public class NetInviteUserAction extends DocumentItemSelectionChangeAction {
 
 	private DocumentManager documentManager;
+	private DocumentItem currentDocumentItem;
+	private UserItem currentUserItem;
+	private DocumentViewController viewController;
+	private UserViewController userController;
 
 	public NetInviteUserAction(LocaleMessageSource messageSource, DocumentManager documentManager,
 			DocumentViewController viewController, UserViewController userController) {
 		super(messageSource.getMessage("mNetInvite"), messageSource.getIcon("iMenuNetInvite"), viewController);
 		putValue(SHORT_DESCRIPTION, messageSource.getMessage("mNetInviteTT"));
 		userController.addItemSelectionChangeListener(this);
+		userController.getViewList().addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				if(e.getClickCount() == 2) {
+					inviteUser();
+				}
+			}
+		});
 		this.documentManager = documentManager;
+		this.viewController = viewController;
+		this.userController = userController;
 		setEnabled(false);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		//System.out.println("NetInviteUserAction");
+		inviteUser();
+	}
+
+	private void inviteUser() {
+		if(currentDocumentItem != null && currentUserItem != null) {
+			System.out.println("NetInviteUserAction");
+		}
 	}
 
 	public void itemSelectionChanged(ItemSelectionChangeEvent e) {
-		//System.out.println("ItemSelectionChangeEvent: " + e);
+		// HANDLE USER & DOCUMENT ITEM SELECTION CHANGES
+		if(e.getSource() == viewController) {
+			if(e.getItem() == null) {
+				currentDocumentItem = null;
+			} else {
+				currentDocumentItem = (DocumentItem)e.getItem();
+			}
+		} else if(e.getSource() == userController){
+			if(e.getItem() == null) {
+				currentUserItem = null;
+			} else {
+				currentUserItem = (UserItem)e.getItem();
+			}
+		}
+		
+		if(currentDocumentItem != null && currentUserItem != null) {
+			setEnabled(true);
+		} else {
+			setEnabled(false);
+		}
+		
 	}
 
 }

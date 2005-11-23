@@ -32,6 +32,15 @@ public class InvitationCallbackImpl implements InvitationCallback {
 	}
 	
 	public void invitationReceived(Invitation invitation) {
+		System.out.println("auto accepted invitation");
+		// 1. create document item with remote document
+/*		doc = new DocumentItem(invitation.getDocument());
+		// 2. create participant callback
+		ParticipantCallback callback = doc.createParticipantCallback();
+		// 3. accept
+		Session session = invitation.accept(callback);
+		// 4. set session
+		doc.setSession(session);*/
 	}
 	
 }

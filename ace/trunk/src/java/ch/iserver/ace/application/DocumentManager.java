@@ -132,4 +132,8 @@ public interface DocumentManager {
 	 */
 	void concealDocument();
 	
+	void joinSession(DocumentItem item);
+	
+	void leaveSession();
+	
 }

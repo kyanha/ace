@@ -86,15 +86,15 @@ public abstract class ViewImpl extends JPanel implements View {
 		this.list = list;
 	}
 
-	protected JList getList() {
+	public JList getList() {
 		return list;
 	}
-
+	
 	protected void setSourceList(EventList sourceList) {
 		this.sourceList = sourceList;
 	}
 
-	protected EventList getSourceList() {
+	public EventList getSourceList() {
 		return sourceList;
 	}
 
@@ -112,6 +112,10 @@ public abstract class ViewImpl extends JPanel implements View {
 
 	protected EventSelectionModel getEventSelectionModel() {
 		return eventSelectionModel;
+	}
+	
+	public JList getViewList() {
+		return getList();
 	}
 
 }

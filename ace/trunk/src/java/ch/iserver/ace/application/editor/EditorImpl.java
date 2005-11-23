@@ -30,5 +30,5 @@ public abstract class EditorImpl extends JPanel implements Editor {
 	public JPanel getEditorComponent() {
 		return this;
 	}
-
+	
 }

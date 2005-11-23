@@ -90,6 +90,7 @@ public class Main {
 		collaborationService.setUserId(id);
 		UserDetails details = getUserDetails(preferencesStore);
 		collaborationService.setUserDetails(details);
+		collaborationService.setInvitationCallback(new InvitationCallbackImpl());
 
 		// 3. preference listeners
 		preferencesStore.addPreferenceChangeListener(

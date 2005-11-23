@@ -21,6 +21,8 @@
 
 package ch.iserver.ace.application;
 
+import javax.swing.JList;
+import ca.odell.glazedlists.EventList;
 
 
 
@@ -35,5 +37,9 @@ public interface View {
 	void setSelectedIndex(int index);
 	
 	int getSelectedIndex();
+	
+	JList getList();
+	
+	EventList getSourceList();
 	
 }

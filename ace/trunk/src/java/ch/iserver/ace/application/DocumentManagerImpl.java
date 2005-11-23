@@ -83,7 +83,7 @@ public class DocumentManagerImpl implements ItemSelectionChangeListener, Prefere
 	 * @see ch.iserver.ace.application.DocumentManager#getDocuments()
 	 */
 	public EventList getDocuments() {
-		return documentController.getDocumentSourceList();
+		return documentController.getViewSourceList();
 	}
 
 	/**
@@ -146,7 +146,7 @@ public class DocumentManagerImpl implements ItemSelectionChangeListener, Prefere
 			//   change event makes the document dirty
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
-					item.setClean();
+					item.setDirty(false);
 				}
 			});
 		}
@@ -228,7 +228,7 @@ public class DocumentManagerImpl implements ItemSelectionChangeListener, Prefere
 			PublishedSession session = (PublishedSession) item.getSession();
 			session.setDocumentDetails(new DocumentDetails(item.getTitle()));
 		}
-		item.setClean();
+		item.setDirty(false);
 		setSelectedDocument(item);
 	}
 	
@@ -241,7 +241,7 @@ public class DocumentManagerImpl implements ItemSelectionChangeListener, Prefere
 		}
 		int index = documentController.indexOf(item);
 		documentController.removeDocument(item);
-		if (documentController.getDocumentSourceList().size() > 0) {
+		if (documentController.getViewSourceList().size() > 0) {
 			documentController.setSelectedIndex(index == 0 ? 0 : index - 1);
 		}
 	}
@@ -285,8 +285,14 @@ public class DocumentManagerImpl implements ItemSelectionChangeListener, Prefere
 		//currentDocumentItem.leave();
 	}
 	
-	public void joinSession() {
-		//
+	public void joinSession(DocumentItem item) {
+		// 1. create doc item
+		//DocumentItem newItem = new DocumentItem(item.getDocument());
+		// 2. add to doc view
+//		documentController.addDocument(item);
+//		documentController.setSelectedItem(item);
+		// 3. set browse item type
+		item.setType(DocumentItem.AWAITING);
 	}
 	
 	// --> ItemSelectionChangeListener methods <--

@@ -50,12 +50,12 @@ public class BrowseViewTest extends TestCase {
 		
 		Item[] items = new Item[3];
 		
-		controller.getBrowseSourceList().getReadWriteLock().writeLock().lock();
+		controller.getSourceList().getReadWriteLock().writeLock().lock();
 		for (int i = 0; i < 3; i++) {
-			items[i] = new BrowseItem(new RemoteDocumentStub("" + i, "" + i, new RemoteUserStub("" + i)));
-			controller.getBrowseSourceList().add(items[i]);
+			items[i] = new DocumentItem(new RemoteDocumentStub("" + i, "" + i, new RemoteUserStub("" + i)));
+			controller.getSourceList().add(items[i]);
 		}
-		controller.getBrowseSourceList().getReadWriteLock().writeLock().unlock();
+		controller.getSourceList().getReadWriteLock().writeLock().unlock();
 		view.addItemSelectionChangeListener(listener);
 
 		// define mock behavior
@@ -88,11 +88,11 @@ public class BrowseViewTest extends TestCase {
 
 		RemoteUser user = new RemoteUserStub("X", "X");
 		final MutableRemoteDocument document = new RemoteDocumentStub("X", "X", user);
-		Item item = new BrowseItem(document);
+		Item item = new DocumentItem(document);
 
-		controller.getBrowseSourceList().getReadWriteLock().writeLock().lock();
-		controller.getBrowseSourceList().add(item);
-		controller.getBrowseSourceList().getReadWriteLock().writeLock().unlock();
+		controller.getSourceList().getReadWriteLock().writeLock().lock();
+		controller.getSourceList().add(item);
+		controller.getSourceList().getReadWriteLock().writeLock().unlock();
 
 		Thread.sleep(5);
 		view.getList().getModel().addListDataListener(listener);

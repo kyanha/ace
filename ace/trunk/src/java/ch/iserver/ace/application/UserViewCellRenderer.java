@@ -1,5 +1,5 @@
 /*
- * $Id:ParticipantItemCellRenderer.java 1091 2005-11-09 13:29:05Z zbinl $
+ * $Id:UserItemCellRenderer.java 1091 2005-11-09 13:29:05Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -34,15 +34,15 @@ import javax.swing.BorderFactory;
 
 
 
-public class ParticipantItemCellRenderer extends JPanel implements ListCellRenderer {
+public class UserViewCellRenderer extends JPanel implements ListCellRenderer {
 
-	private ParticipantItem value;
+	private UserItem value;
 	private LocaleMessageSource messageSource;
-	protected ImageIcon iconParticipant;
+	protected ImageIcon iconUser;
 
-	public ParticipantItemCellRenderer(LocaleMessageSource messageSource) {
+	public UserViewCellRenderer(LocaleMessageSource messageSource) {
 		this.messageSource = messageSource;
-		iconParticipant = messageSource.getIcon("iViewParticipant");
+		iconUser = messageSource.getIcon("iViewUser");
 	}
 
 	public Component getListCellRendererComponent(JList list,
@@ -51,7 +51,7 @@ public class ParticipantItemCellRenderer extends JPanel implements ListCellRende
 							boolean isSelected,
 							boolean cellHasFocus) {
 		setOpaque(true);
-		this.value = (ParticipantItem)value;
+		this.value = (UserItem)value;
 		
 		if(isSelected) {
 			setForeground(list.getSelectionForeground());
@@ -68,42 +68,32 @@ public class ParticipantItemCellRenderer extends JPanel implements ListCellRende
 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-
+		
 		Color textColor = g.getColor();
 		int itemHeight = getHeight();
 		int itemWidth = getWidth();
 
-		// draw participant icon
+		// draw user icon
 		int imageHeight = 16; //iconLocal.getIconHeight();
 		int imageWidth = 16; //iconLocal.getIconWidth();
 		int imagePosX = 1;
 		int imagePosY = (itemHeight / 2) - (imageHeight / 2);
-		g.drawImage(iconParticipant.getImage(), imagePosX, imagePosY, imageHeight, imageWidth, this);
+		g.drawImage(iconUser.getImage(), imagePosX, imagePosY, imageHeight, imageWidth, this);
 		
-		// draw participant name (TODO: dynamic border)
+		// draw user name (TODO: dynamic border)
 		g.setColor(textColor);
 		int textAscent = g.getFontMetrics().getAscent();
 		int textDescent = g.getFontMetrics().getDescent();		
 		int textPosX = imagePosX + imageWidth + 5;
 		int textPosY = (itemHeight / 2) + (textAscent / 2) - textDescent + 1;
 		g.drawString(value.getName(), textPosX, textPosY);
-		
-		// draw participant color
-		int colorWidth = 20;
-		int colorHeight = 10;
-		int colorPosX = itemWidth - colorWidth - 5;
-		int colorPosY = (itemHeight / 2) - (colorHeight / 2);
-		g.setColor(value.getColor());
-		g.fillRect(colorPosX, colorPosY, colorWidth, colorHeight);
-		g.setColor(value.getColor().darker());
-		g.drawRect(colorPosX, colorPosY, colorWidth, colorHeight);
-		
+
 	}
-	
+
 /*	public String getToolTipText() {
 		return value.getName();
 	}*/
-
+	
 	public Dimension getPreferredSize() {
 		return new Dimension(0, 20);
 	}

@@ -35,8 +35,8 @@ public class NetDiscoverUserAction extends AbstractAction {
 	
 	public NetDiscoverUserAction(LocaleMessageSource messageSource, ApplicationController appController) {
 		super(messageSource.getMessage("mNetDiscoverUser"), messageSource.getIcon("iMenuNetDiscover"));
-		setEnabled(false);
 		this.appController = appController;
+		setEnabled(false);
 	}
 	
 	public void actionPerformed(ActionEvent e) {

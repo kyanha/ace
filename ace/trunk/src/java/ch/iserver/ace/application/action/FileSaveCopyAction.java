@@ -41,7 +41,6 @@ public class FileSaveCopyAction extends DocumentItemSelectionChangeAction {
 	public FileSaveCopyAction(LocaleMessageSource messageSource, DocumentViewController viewController,
 			ApplicationController appController) {
 		super(messageSource.getMessage("mFileSaveCopy"), messageSource.getIcon("iMenuFileSaveCopy"), viewController);
-		//putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke('S', InputEvent.SHIFT_MASK | Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 		this.appController = appController;
 		setEnabled(false);
 	}
@@ -55,12 +54,7 @@ public class FileSaveCopyAction extends DocumentItemSelectionChangeAction {
 		if(e.getItem() == null) {
 			setEnabled(false);
 		} else {
-			DocumentItem item = (DocumentItem)e.getItem();
-			if(item.getType() == DocumentItem.AWAITING) {
-				setEnabled(false);
-			} else {
-				setEnabled(true);
-			}
+			setEnabled(true);
 		}
 	}
 

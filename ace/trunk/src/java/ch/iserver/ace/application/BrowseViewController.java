@@ -31,18 +31,23 @@ import ch.iserver.ace.collaboration.RemoteDocument;
 public class BrowseViewController extends ViewControllerImpl implements DocumentListener {
 
 	private EventList browseSourceList;
+	private DocumentViewController docViewController;
 
 	public BrowseViewController() {
-		browseSourceList = new BasicEventList();
+		this.browseSourceList = new BasicEventList();
 	}
 	
+	public BrowseViewController(EventList browseSourceList) {
+		this.browseSourceList = browseSourceList;// = new BasicEventList();
+	}
+
 	public void documentsDiscarded(RemoteDocument[] documents) {
 		// remove discarded document from the list
 		//System.out.println("documentsDiscarded (" + documents.length + ")");
 		for(int i = 0; i < documents.length; i++ ) {
 			browseSourceList.getReadWriteLock().writeLock().lock();
 			try {
-				browseSourceList.remove(new BrowseItem(documents[i]));
+				browseSourceList.remove(new DocumentItem(documents[i]));
 			} finally {
 				browseSourceList.getReadWriteLock().writeLock().unlock();
 			}
@@ -55,24 +60,24 @@ public class BrowseViewController extends ViewControllerImpl implements Document
 		for(int i = 0; i < documents.length; i++ ) {
 			browseSourceList.getReadWriteLock().writeLock().lock();
 			try {
-				browseSourceList.add(new BrowseItem(documents[i]));
+				browseSourceList.add(new DocumentItem(documents[i]));
 			} finally {
 				browseSourceList.getReadWriteLock().writeLock().unlock();
 			}
 		}
 	}
 		
-	private BrowseView getBrowseView() {
+	public BrowseView getBrowseView() {
 		if(view == null) throw new IllegalStateException("View have to be set before using getView()!");
 		return (BrowseView)view;
 	}
 	
-	public EventList getBrowseSourceList() {
+	public EventList getSourceList() {
 		return browseSourceList;
 	}
 	
-	public BrowseItem getSelectedBrowseItem() {
-		return (BrowseItem)getBrowseView().getSelectedItem();
+	public DocumentItem getSelectedBrowseItem() {
+		return (DocumentItem)getBrowseView().getSelectedItem();
 	}
 
 }

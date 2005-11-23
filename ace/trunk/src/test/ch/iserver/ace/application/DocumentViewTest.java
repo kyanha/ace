@@ -50,12 +50,12 @@ public class DocumentViewTest extends TestCase {
 		
 		Item[] items = new Item[3];
 		
-		controller.getDocumentSourceList().getReadWriteLock().writeLock().lock();
+		controller.getViewSourceList().getReadWriteLock().writeLock().lock();
 		for (int i = 0; i < 3; i++) {
 			items[i] = new DocumentItem("" + i);
-			controller.getDocumentSourceList().add(items[i]);
+			controller.getViewSourceList().add(items[i]);
 		}
-		controller.getDocumentSourceList().getReadWriteLock().writeLock().unlock();
+		controller.getViewSourceList().getReadWriteLock().writeLock().unlock();
 		view.addItemSelectionChangeListener(listener);
 
 		// define mock behavior
@@ -90,10 +90,10 @@ public class DocumentViewTest extends TestCase {
 		final MutableRemoteDocument document = new RemoteDocumentStub("0", "z", user);
 		Item item = new DocumentItem(document);
 
-		controller.getDocumentSourceList().getReadWriteLock().writeLock().lock();
-		controller.getDocumentSourceList().add(new DocumentItem(new RemoteDocumentStub("1", "ZZZ", new RemoteUserStub("Z"))));
-		controller.getDocumentSourceList().add(item);
-		controller.getDocumentSourceList().getReadWriteLock().writeLock().unlock();
+		controller.getViewSourceList().getReadWriteLock().writeLock().lock();
+		controller.getViewSourceList().add(new DocumentItem(new RemoteDocumentStub("1", "ZZZ", new RemoteUserStub("Z"))));
+		controller.getViewSourceList().add(item);
+		controller.getViewSourceList().getReadWriteLock().writeLock().unlock();
 		
 		Thread.sleep(5);
 		view.getList().getModel().addListDataListener(listener);

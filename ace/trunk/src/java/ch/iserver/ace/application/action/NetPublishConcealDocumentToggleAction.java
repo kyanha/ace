@@ -45,12 +45,10 @@ public class NetPublishConcealDocumentToggleAction extends DocumentItemSelection
 		super(messageSource.getMessage("mNetPublish"), messageSource.getIcon("iMenuNetPublish"), viewController);
 		putValue(SHORT_DESCRIPTION, messageSource.getMessage("mNetPublishTT"));
 		this.documentManager = documentManager;
-
 		toolTipPublish = messageSource.getMessage("mNetPublishTT");
 		iconPublish = messageSource.getIcon("iMenuNetPublish");
 		toolTipConceal = messageSource.getMessage("mNetConcealTT");
 		iconConceal = messageSource.getIcon("iMenuNetConceal");
-
 		setEnabled(false);
 	}
 	
@@ -69,6 +67,7 @@ public class NetPublishConcealDocumentToggleAction extends DocumentItemSelection
 		} else {
 			DocumentItem item = (DocumentItem)e.getItem();
 			if(item.getType() == DocumentItem.LOCAL) {
+				// local document
 				documentPublished = false;
 				putValue(SMALL_ICON, iconPublish);
 				putValue(SHORT_DESCRIPTION, toolTipPublish);
@@ -79,6 +78,8 @@ public class NetPublishConcealDocumentToggleAction extends DocumentItemSelection
 				putValue(SMALL_ICON, iconConceal);
 				putValue(SHORT_DESCRIPTION, toolTipConceal);
 				setEnabled(true);
+			} else {
+				setEnabled(false);
 			}
 		}
 	}

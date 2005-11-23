@@ -45,10 +45,10 @@ public class NetLeaveSessionAction extends DocumentItemSelectionChangeAction {
 	
 	public void actionPerformed(ActionEvent e) {
 		//documentManager.leaveSession();
+		// session.leave();
 	}
 
 	public void itemSelectionChanged(ItemSelectionChangeEvent e) {
-		//System.out.println("ItemSelectionChangeEvent: " + e);
 		if(e.getItem() == null) {
 			setEnabled(false);
 		} else {

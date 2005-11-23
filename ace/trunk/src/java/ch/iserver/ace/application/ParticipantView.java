@@ -49,19 +49,19 @@ public class ParticipantView extends ViewImpl {
 	
 	public ParticipantView(LocaleMessageSource messageSource, ParticipantViewController controller) {
 		super(controller, messageSource);
-		// get view source
-		setSourceList(controller.getParticipantSourceList());
-		
 		// create view toolbar & actions
 		participantToolBar = new JToolBar();
 
-		// create list
-		SortedList participantSortedList = new SortedList(new ObservableElementList(getSourceList(), GlazedLists.beanConnector(ParticipantItem.class)));
+		// create data list & filters
+		setSourceList(new ObservableElementList(controller.getCompositeSourceList(), GlazedLists.beanConnector(ParticipantItem.class)));
+		SortedList participantSortedList = new SortedList(getSourceList());
+
+		// create list & model
 		setEventListModel(new EventListModel(participantSortedList));
 		setEventSelectionModel(new EventSelectionModel(participantSortedList));
 
 		setList(new JList(getEventListModel()));
-		getList().setCellRenderer(new ParticipantItemCellRenderer(messageSource));
+		getList().setCellRenderer(new ParticipantViewCellRenderer(messageSource));
 		getList().setSelectionModel(getEventSelectionModel());
 		getList().setSelectionMode(EventSelectionModel.SINGLE_SELECTION);
 		

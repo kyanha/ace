@@ -21,7 +21,7 @@
 
 package ch.iserver.ace.application.action;
 
-import ch.iserver.ace.application.BrowseItem;
+import ch.iserver.ace.application.DocumentItem;
 import ch.iserver.ace.application.DocumentManager;
 import ch.iserver.ace.application.ItemSelectionChangeEvent;
 import ch.iserver.ace.application.ItemSelectionChangeListener;
@@ -29,32 +29,53 @@ import ch.iserver.ace.application.LocaleMessageSource;
 import ch.iserver.ace.application.BrowseViewController;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
+import java.awt.event.*;
 
 
 
 public class NetJoinSessionAction extends AbstractAction implements ItemSelectionChangeListener {
 	
 	private DocumentManager documentManager;
+	private DocumentItem currentBrowseItem;
 
 	public NetJoinSessionAction(LocaleMessageSource messageSource, DocumentManager documentManager,
 			BrowseViewController browseController) {
 		super(messageSource.getMessage("mNetJoin"), messageSource.getIcon("iMenuNetJoin"));
 		putValue(SHORT_DESCRIPTION, messageSource.getMessage("mNetJoinTT"));
 		browseController.addItemSelectionChangeListener(this);
+		browseController.getViewList().addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				if(e.getClickCount() == 2) {
+					joinSession();
+				}
+			}
+		});
 		this.documentManager = documentManager;
 		setEnabled(false);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		System.out.println("NetJoinSessionAction");
+		joinSession();
+	}
+	
+	private void joinSession() {
+		if(currentBrowseItem != null) {
+			documentManager.joinSession(currentBrowseItem);
+		}
 	}
 
 	public void itemSelectionChanged(ItemSelectionChangeEvent e) {
 		if(e.getItem() == null) {
+			currentBrowseItem = null;
 			setEnabled(false);
 		} else {
-			BrowseItem item = (BrowseItem)e.getItem();
-			setEnabled(true);
+			DocumentItem item = (DocumentItem)e.getItem();
+			currentBrowseItem = item;
+			if(item.getType() == DocumentItem.REMOTE) {
+				setEnabled(true);
+			} else {
+				setEnabled(false);
+			}
 		}
 		
 	}

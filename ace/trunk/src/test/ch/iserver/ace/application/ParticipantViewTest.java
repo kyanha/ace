@@ -47,18 +47,18 @@ public class ParticipantViewTest extends TestCase {
 
 		// test fixture
 		ParticipantViewController controller = new ParticipantViewController();
-		EventList participantList = controller.getParticipantSourceList().createMemberList();
+		EventList participantList = controller.getCompositeSourceList().createMemberList();
 		View view = new ParticipantView(new LocaleMessageSourceStub(), controller);
 		controller.setParticipantList(participantList);
 		
 		Item[] items = new Item[3];
 		
-		controller.getParticipantSourceList().getReadWriteLock().writeLock().lock();
+		controller.getCompositeSourceList().getReadWriteLock().writeLock().lock();
 		for (int i = 0; i < 3; i++) {
 			items[i] = new ParticipantItem(new ParticipantStub(new RemoteUserStub("" + i, "" + i), i), Color.RED);
 			participantList.add(items[i]);
 		}
-		controller.getParticipantSourceList().getReadWriteLock().writeLock().unlock();
+		controller.getCompositeSourceList().getReadWriteLock().writeLock().unlock();
 		view.addItemSelectionChangeListener(listener);
 
 		// define mock behavior
@@ -87,17 +87,17 @@ public class ParticipantViewTest extends TestCase {
 		
 		// test fixture
 		ParticipantViewController controller = new ParticipantViewController();
-		EventList participantList = controller.getParticipantSourceList().createMemberList();
+		EventList participantList = controller.getCompositeSourceList().createMemberList();
 		ParticipantView view = new ParticipantView(new LocaleMessageSourceStub(), controller);
 		controller.setParticipantList(participantList);
 
 		MutableRemoteUser user = new RemoteUserStub("X", "X");
 		Item item = new ParticipantItem(new ParticipantStub(user, 1), Color.BLACK);
 
-		controller.getParticipantSourceList().getReadWriteLock().writeLock().lock();
+		controller.getCompositeSourceList().getReadWriteLock().writeLock().lock();
 		participantList.add(item);
 		participantList.add(new ParticipantItem(new ParticipantStub(new RemoteUserStub("Y", "Y"), 2), Color.BLACK));
-		controller.getParticipantSourceList().getReadWriteLock().writeLock().unlock();
+		controller.getCompositeSourceList().getReadWriteLock().writeLock().unlock();
 		
 		Thread.sleep(5);
 		view.getList().getModel().addListDataListener(listener);

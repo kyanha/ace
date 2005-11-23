@@ -1,5 +1,5 @@
 /*
- * $Id:BrowseItemCellRenderer.java 1091 2005-11-09 13:29:05Z zbinl $
+ * $Id:ParticipantItemCellRenderer.java 1091 2005-11-09 13:29:05Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -23,30 +23,26 @@ package ch.iserver.ace.application;
 
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Color;
 
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 import javax.swing.BorderFactory;
-import javax.swing.Scrollable;
-import java.awt.Rectangle;
 
 
 
-public class BrowseItemCellRenderer extends JPanel implements ListCellRenderer {
+public class ParticipantViewCellRenderer extends JPanel implements ListCellRenderer {
 
-	private BrowseItem value;
+	private ParticipantItem value;
 	private LocaleMessageSource messageSource;
-	protected ImageIcon iconRemote;
+	protected ImageIcon iconParticipant;
 
-	public BrowseItemCellRenderer(LocaleMessageSource messageSource) {
+	public ParticipantViewCellRenderer(LocaleMessageSource messageSource) {
 		this.messageSource = messageSource;
-		iconRemote = messageSource.getIcon("iViewFileRemote");
+		iconParticipant = messageSource.getIcon("iViewParticipant");
 	}
 
 	public Component getListCellRendererComponent(JList list,
@@ -55,7 +51,7 @@ public class BrowseItemCellRenderer extends JPanel implements ListCellRenderer {
 							boolean isSelected,
 							boolean cellHasFocus) {
 		setOpaque(true);
-		this.value = (BrowseItem)value;
+		this.value = (ParticipantItem)value;
 		
 		if(isSelected) {
 			setForeground(list.getSelectionForeground());
@@ -66,7 +62,7 @@ public class BrowseItemCellRenderer extends JPanel implements ListCellRenderer {
 			setBackground(list.getBackground());
 			setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 		}
-		
+
 		return this;
 	}
 
@@ -76,36 +72,40 @@ public class BrowseItemCellRenderer extends JPanel implements ListCellRenderer {
 		Color textColor = g.getColor();
 		int itemHeight = getHeight();
 		int itemWidth = getWidth();
-		
-		// draw document icon
+
+		// draw participant icon
 		int imageHeight = 16; //iconLocal.getIconHeight();
 		int imageWidth = 16; //iconLocal.getIconWidth();
 		int imagePosX = 1;
 		int imagePosY = (itemHeight / 2) - (imageHeight / 2);
-		g.drawImage(iconRemote.getImage(), imagePosX, imagePosY, imageHeight, imageWidth, this);
-
-		// draw document title (TODO: dynamic border)
+		g.drawImage(iconParticipant.getImage(), imagePosX, imagePosY, imageHeight, imageWidth, this);
+		
+		// draw participant name (TODO: dynamic border)
 		g.setColor(textColor);
 		int textAscent = g.getFontMetrics().getAscent();
 		int textDescent = g.getFontMetrics().getDescent();		
 		int textPosX = imagePosX + imageWidth + 5;
-		int textTitlePosY = (itemHeight / 2) + (textAscent / 2) - textDescent - 3;
-		g.drawString(value.getTitle(), textPosX, textTitlePosY);
-
-		// draw owner
-		int textPublisherPosY = textTitlePosY + 12;
-		g.setFont(g.getFont().deriveFont(10.0f));
-		g.setFont(g.getFont().deriveFont(Font.PLAIN & Font.BOLD));
-		g.drawString(value.getPublisher(), textPosX, textPublisherPosY);
-
-	}
-
-	public String getToolTipText() {
-		return value.getTitle();// + "(" + value.getPublisher() + ")";
+		int textPosY = (itemHeight / 2) + (textAscent / 2) - textDescent + 1;
+		g.drawString(value.getName(), textPosX, textPosY);
+		
+		// draw participant color
+		int colorWidth = 20;
+		int colorHeight = 10;
+		int colorPosX = itemWidth - colorWidth - 5;
+		int colorPosY = (itemHeight / 2) - (colorHeight / 2);
+		g.setColor(value.getColor());
+		g.fillRect(colorPosX, colorPosY, colorWidth, colorHeight);
+		g.setColor(value.getColor().darker());
+		g.drawRect(colorPosX, colorPosY, colorWidth, colorHeight);
+		
 	}
 	
+/*	public String getToolTipText() {
+		return value.getName();
+	}*/
+
 	public Dimension getPreferredSize() {
-		return new Dimension(0, 30);
+		return new Dimension(0, 20);
 	}
 	
 }

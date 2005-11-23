@@ -48,7 +48,6 @@ public class NetConcealDocumentAction extends DocumentItemSelectionChangeAction 
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		//System.out.println("NetConcealDocumentAction");
 		documentManager.concealDocument();
 	}
 

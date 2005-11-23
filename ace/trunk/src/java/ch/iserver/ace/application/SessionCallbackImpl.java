@@ -70,5 +70,9 @@ public class SessionCallbackImpl implements SessionCallback {
 		System.out.println("sessionFailed");
 		e.printStackTrace();
 	}
+	
+	public EventList getParticipantSourceList() {
+		return participantSourceList;
+	}
 
 }

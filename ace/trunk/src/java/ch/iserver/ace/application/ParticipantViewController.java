@@ -29,7 +29,6 @@ import ca.odell.glazedlists.EventList;
 public class ParticipantViewController extends ViewControllerImpl {
 
 	private CompositeList participantSourceList;
-	
 	private EventList memberList;
 
 	public ParticipantViewController() {
@@ -54,8 +53,12 @@ public class ParticipantViewController extends ViewControllerImpl {
 		return (ParticipantView)view;
 	}
 	
-	public CompositeList getParticipantSourceList() {
+	public CompositeList getCompositeSourceList() {
 		return participantSourceList;
+	}
+	
+	public EventList getSourceList() {
+		return memberList;
 	}
 	
 	public ParticipantItem getSelectedParticipantItem() {

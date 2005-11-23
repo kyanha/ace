@@ -61,7 +61,7 @@ public class UserViewController extends ViewControllerImpl implements UserListen
 		return (UserView)view;
 	}
 	
-	public EventList getUserSourceList() {
+	public EventList getSourceList() {
 		return userSourceList;
 	}
 

@@ -40,6 +40,7 @@ import ca.odell.glazedlists.GlazedLists;
 import ca.odell.glazedlists.ObservableElementList;
 import ca.odell.glazedlists.SortedList;
 import ca.odell.glazedlists.TextFilterator;
+import ca.odell.glazedlists.matchers.Matcher;
 import ca.odell.glazedlists.matchers.MatcherEditor;
 import ca.odell.glazedlists.swing.EventListModel;
 import ca.odell.glazedlists.swing.EventSelectionModel;
@@ -55,27 +56,39 @@ public class BrowseView extends ViewImpl {
 
 	public BrowseView(LocaleMessageSource messageSource, BrowseViewController controller) {
 		super(controller, messageSource);
-		// get view source
-		setSourceList(controller.getBrowseSourceList());
-		
 		// create view toolbar & actions
 		browseToolBar = new JToolBar();
 
-		// create list
+		// create data list & filters
 		JTextField browseFilterField = new JTextField();
 		TextFilterator browseFilterator = new TextFilterator() {
 			public void getFilterStrings(List baseList, Object element) {
-				BrowseItem item = (BrowseItem)element;
+				DocumentItem item = (DocumentItem)element;
 				baseList.add(item.getPublisher());
 			}
 		};
+		
+		Matcher browseViewMatcher = new Matcher() {
+			public boolean matches(Object item) {
+				DocumentItem dItem = (DocumentItem)item;
+				return (dItem.getType() == DocumentItem.REMOTE ||
+						dItem.getType() == DocumentItem.AWAITING);
+			}
+		};
+		
 		MatcherEditor browseMatcherEditor = new TextComponentMatcherEditor(browseFilterField, browseFilterator);
-		SortedList browseSortedList = new SortedList(new ObservableElementList(new FilterList(getSourceList(), browseMatcherEditor), GlazedLists.beanConnector(BrowseItem.class)));
+				
+		setSourceList(new FilterList(new ObservableElementList(controller.getSourceList(),
+								GlazedLists.beanConnector(DocumentItem.class)),	browseViewMatcher));
+		
+		SortedList browseSortedList = new SortedList(new FilterList(getSourceList(), browseMatcherEditor));
+
+		// create list & model
 		setEventListModel(new EventListModel(browseSortedList));
 		setEventSelectionModel(new EventSelectionModel(browseSortedList));
 
 		setList(new JList(getEventListModel()));
-		getList().setCellRenderer(new BrowseItemCellRenderer(messageSource));
+		getList().setCellRenderer(new BrowseViewCellRenderer(messageSource));
 		getList().setSelectionModel(getEventSelectionModel());
 		getList().setSelectionMode(EventSelectionModel.SINGLE_SELECTION);
 		
@@ -85,9 +98,9 @@ public class BrowseView extends ViewImpl {
 				if(event.getValueIsAdjusting()) {
 					return;
 				}
-				BrowseItem newItem = null;
+				DocumentItem newItem = null;
 				try {
-					newItem = (BrowseItem)getEventListModel().getElementAt(getEventSelectionModel().getMinSelectionIndex());
+					newItem = (DocumentItem)getEventListModel().getElementAt(getEventSelectionModel().getMinSelectionIndex());
 				} catch(ArrayIndexOutOfBoundsException e) {}
 				fireItemSelectionChange(newItem);
 			}
@@ -103,9 +116,9 @@ public class BrowseView extends ViewImpl {
 	}
 
 	public Item getSelectedItem() {
-		BrowseItem selectedItem = null;
+		DocumentItem selectedItem = null;
 		try {
-			selectedItem = (BrowseItem)getEventListModel().getElementAt(getEventSelectionModel().getMinSelectionIndex());
+			selectedItem = (DocumentItem)getEventListModel().getElementAt(getEventSelectionModel().getMinSelectionIndex());
 		} catch(ArrayIndexOutOfBoundsException e) {}
 		return selectedItem;
 	}

@@ -32,23 +32,69 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.text.*;
 
 import org.apache.log4j.Logger;
+import ca.odell.glazedlists.EventList;
+import ca.odell.glazedlists.BasicEventList;
 
 
 
-public class DummyEditorController implements ItemSelectionChangeListener, PreferenceChangeListener {
+public class EditorController implements ItemSelectionChangeListener, PreferenceChangeListener {
 
-	private static final Logger LOG = Logger.getLogger(DummyEditorController.class);
+	private static final Logger LOG = Logger.getLogger(EditorController.class);
+	private Editor editor;
+	private ParticipantViewController participantViewController;
 	
-	private DummyEditor editor;
-
-	public DummyEditorController(DummyEditor editor, 
-			                    DocumentViewController documentViewController,
+	public EditorController(Editor editor, DocumentViewController documentViewController,
+			                    ParticipantViewController participantViewController,
 			                    PreferencesStore preferences) {
 		this.editor = editor;
+		this.participantViewController = participantViewController;
 		this.editor.setFontSize(getFontSize(preferences, 12));
 		documentViewController.addItemSelectionChangeListener(this);
 		this.editor.setEnabled(false);
 		preferences.addPreferenceChangeListener(this);
+	}
+	
+	public void itemSelectionChanged(ItemSelectionChangeEvent e) {
+		if(e.getItem() == null) {
+			setEditorEnabled(false);
+		} else {
+			DocumentItem item = (DocumentItem)e.getItem();
+			if(item.getType() == DocumentItem.LOCAL || item.getType() == DocumentItem.PUBLISHED ||
+			   		item.getType() == DocumentItem.JOINED) {
+				// enable editor
+				StyledDocument doc = item.getEditorDocument();			
+				editor.setDocument(doc);
+				editor.setTitle(item.getExtendedTitle());
+				editor.setEnabled(true);
+				// set participantlist
+				if(item.getType() == DocumentItem.LOCAL) {
+					// there are no participants for local editing
+					participantViewController.setParticipantList(new BasicEventList());
+				} else {
+					participantViewController.setParticipantList(item.getParticipantSourceList());
+				}
+			} else {
+				setEditorEnabled(false);
+			}
+		}
+	}
+	
+	private void setEditorEnabled(boolean enabled) {
+		if(enabled) {
+			/*// enable editor
+			editor.setDocument(item.getEditorDocument());
+			editor.setTitle(item.getExtendedTitle());
+			editor.setEnabled(true);
+			// set participantlist
+			participantViewController.setParticipantList(item.getParticipantSourceList());*/
+		} else {
+			// disable editor
+			editor.setDocument(new DefaultStyledDocument());
+			editor.setTitle(" ");
+			editor.setEnabled(false);
+			// set participantlist
+			participantViewController.setParticipantList(new BasicEventList());
+		}
 	}
 	
 	private int getFontSize(PreferencesStore preferences, int def) {
@@ -57,26 +103,6 @@ public class DummyEditorController implements ItemSelectionChangeListener, Prefe
 		} catch (NumberFormatException e) {
 			LOG.debug("failed to set font size from preferences: " + e.getMessage());
 			return def;
-		}
-	}
-	
-	public void itemSelectionChanged(ItemSelectionChangeEvent e) {
-		if(e.getItem() != null) {
-			/*System.out.print("Item:   ");
-			if(e.getItem() instanceof DocumentItem) {
-				System.out.println("DocumentItem");
-			}*/
-			// enable editor
-			DocumentItem item = (DocumentItem)e.getItem();
-			StyledDocument doc = item.getEditorDocument();			
-			editor.setDocument(doc);
-			editor.setTitle(item.getExtendedTitle());
-			editor.setEnabled(true);
-		} else {
-			// disable editor
-			editor.setDocument(new DefaultStyledDocument());
-			editor.setTitle(" ");
-			editor.setEnabled(false);
 		}
 	}
 	

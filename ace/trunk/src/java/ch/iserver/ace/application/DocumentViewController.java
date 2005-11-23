@@ -31,7 +31,11 @@ public class DocumentViewController extends ViewControllerImpl {
 	private EventList documentSourceList;
 
 	public DocumentViewController() {
-		documentSourceList = new BasicEventList();
+		this.documentSourceList = new BasicEventList();
+	}
+
+	public DocumentViewController(EventList documentSourceList) {
+		this.documentSourceList = documentSourceList;
 	}
 	
 	public void addDocument(DocumentItem document) {
@@ -53,20 +57,20 @@ public class DocumentViewController extends ViewControllerImpl {
 	}
 	
 	public boolean containsDocument(DocumentItem document) {
-		documentSourceList.getReadWriteLock().readLock().lock();
+		getViewSourceList().getReadWriteLock().readLock().lock();
 		try {
-			return documentSourceList.contains(document);
+			return getViewSourceList().contains(document);
 		} finally {
-			documentSourceList.getReadWriteLock().readLock().unlock();
+			getViewSourceList().getReadWriteLock().readLock().unlock();
 		}
 	}
 	
 	public int indexOf(DocumentItem document) {
-		documentSourceList.getReadWriteLock().readLock().lock();
+		getViewSourceList().getReadWriteLock().readLock().lock();
 		try {
-			return documentSourceList.indexOf(document);
+			return getViewSourceList().indexOf(document);
 		} finally {
-			documentSourceList.getReadWriteLock().readLock().unlock();
+			getViewSourceList().getReadWriteLock().readLock().unlock();
 		}
 	}
 	
@@ -83,14 +87,14 @@ public class DocumentViewController extends ViewControllerImpl {
 		return (DocumentView)view;
 	}
 	
-	public EventList getDocumentSourceList() {
-		return documentSourceList;
-	}
-	
 	public void setSelectedItem(Item item) {
 		getDocumentView().setSelectedItem(item);
 	}
 	
+	public EventList getSourceList() {
+		return documentSourceList;
+	}
+
 	public DocumentItem getSelectedDocumentItem() {
 		return (DocumentItem)getDocumentView().getSelectedItem();
 	}

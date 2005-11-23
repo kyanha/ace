@@ -37,6 +37,7 @@ public class ParticipantSessionCallbackImpl extends SessionCallbackImpl implemen
 	
 	public synchronized void setDocument(PortableDocument doc) {
 		// IMPORTANT: this method is called first from the collaboration layer. set participants here.
+		System.out.println("setDocument");
 
 		// add all participants
 		Iterator pIter = doc.getParticipants().iterator();
@@ -51,10 +52,6 @@ public class ParticipantSessionCallbackImpl extends SessionCallbackImpl implemen
 			Fragment f = (Fragment)fIter.next();
 			System.out.println(f.getText() + "(" + f.getParticipantId() + ")");
 		}
-		
-		
-		System.out.println("setDocument");
-		
 	}
 	
 	public void sessionTerminated() {
