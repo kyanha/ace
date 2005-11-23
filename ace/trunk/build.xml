@@ -141,6 +141,13 @@
         <pathelement path="${build.stubs}"/>
 	</path>
 	
+	<path id="classpath.integration-test.compile">
+		<path refid="dependency.classpath"/>
+        <pathelement path="${build.classes}"/>
+		<pathelement path="${build.test}"/>
+        <pathelement path="${build.stubs}"/>
+	</path>
+
 	<path id="classpath.run">
         <path refid="dependency.classpath"/>
         <pathelement path="${build.classes}"/>
@@ -156,7 +163,7 @@
         <pathelement path="${build.resources}"/>
 		<pathelement path="${build.resources-test}"/>
 	</path>
-    
+	    
     <!-- condition used to avoid build for OS X on other platforms -->
 	<condition property="osx">
 		<os name="Mac OS X"/>
@@ -210,7 +217,7 @@
                destdir="${build.integration-test}"
                target="1.4" 
                source="1.4" 
-               classpathref="classpath.test.compile"
+               classpathref="classpath.integration-test.compile"
 		       debug="true" 
 		       optimize="false"/>
 	</target>
