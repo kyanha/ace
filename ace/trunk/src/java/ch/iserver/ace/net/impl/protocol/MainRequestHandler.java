@@ -37,9 +37,9 @@ import ch.iserver.ace.net.impl.discovery.DiscoveryManagerFactory;
 /**
  *
  */
-public class RequestHandlerImpl implements RequestHandler {
+public class MainRequestHandler implements RequestHandler {
 
-	private static Logger LOG = Logger.getLogger(RequestHandlerImpl.class);
+	private static Logger LOG = Logger.getLogger(MainRequestHandler.class);
 	
 	private static Object MUTEX = new Object();
 	
@@ -49,7 +49,7 @@ public class RequestHandlerImpl implements RequestHandler {
 	
 	
 	//TODO: write integration-test for this class
-	public RequestHandlerImpl(Deserializer deserializer, RequestFilter filter) {
+	public MainRequestHandler(Deserializer deserializer, RequestFilter filter) {
 		this.deserializer = deserializer;
 		this.filter = filter;
 		handler = new RequestParserHandler();
