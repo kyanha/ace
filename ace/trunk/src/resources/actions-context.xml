@@ -102,14 +102,12 @@
 
   <bean id="netJoinSessionAction" class="ch.iserver.ace.application.action.NetJoinSessionAction">
     <constructor-arg index="0"><ref bean="localeMessageSource"/></constructor-arg>
-    <constructor-arg index="1"><ref bean="documentManager"/></constructor-arg>
-    <constructor-arg index="2"><ref bean="browseViewController"/></constructor-arg>
+    <constructor-arg index="1"><ref bean="browseViewController"/></constructor-arg>
   </bean>
 
   <bean id="netLeaveSessionAction" class="ch.iserver.ace.application.action.NetLeaveSessionAction">
     <constructor-arg index="0"><ref bean="localeMessageSource"/></constructor-arg>
-    <constructor-arg index="1"><ref bean="documentManager"/></constructor-arg>
-    <constructor-arg index="2"><ref bean="documentViewController"/></constructor-arg>
+    <constructor-arg index="1"><ref bean="documentViewController"/></constructor-arg>
   </bean>
 
   <bean id="netDiscoverUserAction" class="ch.iserver.ace.application.action.NetDiscoverUserAction">
