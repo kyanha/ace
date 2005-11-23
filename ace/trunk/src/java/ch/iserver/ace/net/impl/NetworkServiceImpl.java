@@ -71,6 +71,7 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	private NetworkServiceImpl() {
 		publishedDocs = Collections.synchronizedMap(new LinkedHashMap());
 		requestChain = RequestFilterFactory.createClientChain();
+		RemoteDocumentProxyFactory.init(requestChain);
 		sessionListener = BEEPSessionListenerFactory.create();
 	}
 	
@@ -124,6 +125,7 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	
 	public void stop() {
 		LOG.debug("--> stop()");
+		//TODO: what if at the same time a new message is received and processed?
 		//abort discovery
 		discovery.abort();
 		//close all open sessions
@@ -152,6 +154,7 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	}
 
 	public void discoverUser(DiscoveryNetworkCallback callback, InetAddress addr, int port) {
+		//TODO: explicit discovery
 		throw new UnsupportedOperationException();
 	}
 
@@ -169,7 +172,7 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	/** Methods from interface NetworkServiceExt **/
 	/**********************************************/
 	
-	public void conceal(String docId) {
+	public synchronized void conceal(String docId) {
 		publishedDocs.remove(docId);
 	}
 	

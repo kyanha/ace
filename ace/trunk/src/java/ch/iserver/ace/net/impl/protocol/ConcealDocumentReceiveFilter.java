@@ -54,7 +54,7 @@ public class ConcealDocumentReceiveFilter extends AbstractRequestFilter {
 				//confirm reception of msg				
 				request.getMessage().sendNUL();
 			} catch (Exception e) {
-				LOG.error("could not send Nul confirmation ["+e.getMessage()+"]");
+				LOG.error("could not send confirmation ["+e.getMessage()+"]");
 			}
 			LOG.info("<-- process()");
 		} else { //Forward

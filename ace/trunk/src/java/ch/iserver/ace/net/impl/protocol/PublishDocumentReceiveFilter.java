@@ -29,6 +29,7 @@ import ch.iserver.ace.net.NetworkServiceCallback;
 import ch.iserver.ace.net.RemoteDocumentProxy;
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.RemoteDocumentProxyExt;
+import ch.iserver.ace.net.impl.RemoteDocumentProxyFactory;
 import ch.iserver.ace.net.impl.RemoteDocumentProxyImpl;
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;
 import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
@@ -54,8 +55,8 @@ public class PublishDocumentReceiveFilter extends AbstractRequestFilter {
 				if (session != null) {
 					LOG.info("found session ["+session.getUser().getUserDetails().getUsername()+"] for request");
 					RemoteUserProxyExt publisher = session.getUser();
-					RemoteDocumentProxyExt doc = new RemoteDocumentProxyImpl(
-							info.getDocId(), new DocumentDetails(info.getName()), publisher);
+					RemoteDocumentProxyFactory factory = RemoteDocumentProxyFactory.getInstance();
+					RemoteDocumentProxyExt doc = factory.createProxy(info.getDocId(), new DocumentDetails(info.getName()), publisher); 
 					publisher.addSharedDocument(doc);
 					NetworkServiceCallback callback = NetworkServiceImpl.getInstance().getCallback();
 					RemoteDocumentProxy[] docs = new RemoteDocumentProxy[]{ doc };

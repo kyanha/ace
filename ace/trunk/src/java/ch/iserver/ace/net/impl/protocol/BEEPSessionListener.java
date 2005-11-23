@@ -36,7 +36,7 @@ import ch.iserver.ace.net.impl.NetworkProperties;
 /**
  *
  */
-public class BEEPSessionListener extends Thread implements SessionListener {
+public class BEEPSessionListener extends Thread {
 
 	private static Logger LOG = Logger.getLogger(BEEPSessionListener.class);
 	
@@ -59,7 +59,6 @@ public class BEEPSessionListener extends Thread implements SessionListener {
 				LOG.debug("start listening at port "+port+" again");
 				try { 
 					TCPSession session = TCPSessionCreator.listen(port, registry);
-					session.addSessionListener(this);
 					LOG.debug("accepted session with ["+session.getSocket()+"]");
 				} catch (BEEPException be) {
 					LOG.warn("server stopped, restart ["+be.getMessage()+"]");
@@ -73,29 +72,11 @@ public class BEEPSessionListener extends Thread implements SessionListener {
 		} catch (Exception e) {
 			exitStatus = e.getMessage();
 		}
-		LOG.debug("terminate ["+exitStatus+"]");
+		LOG.info("terminate ["+exitStatus+"]");
 	}
 	
 	public void terminate() {
 		terminate = true;
 		interrupt();
-	}
-
-
-	public void greetingReceived(SessionEvent event) {
-		LOG.debug("greeting received for session ["+((Session)event.getSource()).toString()+"]");
-		
-	}
-
-
-	public void sessionClosed(SessionEvent arg0) {
-		LOG.debug("session closed");
-		
-	}
-
-
-	public void sessionReset(SessionResetEvent arg0) {
-		LOG.debug("session reset");
-		
 	}
 }

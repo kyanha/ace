@@ -23,11 +23,15 @@ package ch.iserver.ace.net.impl.protocol;
 
 import java.net.ConnectException;
 import java.net.InetAddress;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.beepcore.beep.core.BEEPException;
 import org.beepcore.beep.core.Channel;
 import org.beepcore.beep.core.ProfileRegistry;
+import org.beepcore.beep.lib.NullReplyListener;
 import org.beepcore.beep.transport.tcp.TCPSession;
 import org.beepcore.beep.transport.tcp.TCPSessionCreator;
 
@@ -41,13 +45,19 @@ import ch.iserver.ace.util.ParameterValidator;
  *
  */
 public class RemoteUserSession {
+	
+	public static final String CHANNEL_MAIN = "main";
+	public static final String CHANNEL_COLLABORATION = "coll";
+	//TODO: could open a channel to a host which acts as a proxy to another host inside that subnet
+	public static final String CHANNEL_PROXY = "proxy";
 
 	private static Logger LOG = Logger.getLogger(RemoteUserSession.class);
 	
 	private InetAddress host;
 	private int port;
 	private TCPSession session;
-	private ParticipantConnectionExt connection;
+	private MainConnection mainConnection;
+	private List collabConnections;
 	private RemoteUserProxyExt user;
 	private boolean isInitiated;
 	private boolean isAlive;
@@ -61,6 +71,7 @@ public class RemoteUserSession {
 		this.user = user;
 		isInitiated = false;
 		isAlive = true;
+		collabConnections = Collections.synchronizedList(new ArrayList());
 	}
 	
 	public RemoteUserSession(TCPSession session, RemoteUserProxyExt user) {
@@ -79,24 +90,46 @@ public class RemoteUserSession {
 	 * 
 	 * @return
 	 */
-	public synchronized ParticipantConnectionExt getConnection() throws ConnectionException {
+	public synchronized MainConnection getMainConnection() throws ConnectionException {
 		if (!isAlive)
 			throw new ConnectionException("session has been ended");
 		
 		if (!isInitiated())
 			initiate();
-		if (connection == null) {
-			try {
-			Channel channel = session.startChannel(NetworkProperties.get(NetworkProperties.KEY_PROFILE_URI));
-			connection = new ParticipantConnectionImpl(channel);
-			} catch (BEEPException be) {
-				//TODO: retry strategy?
-				LOG.error("could not start channel ["+be+"]");
-			}
+		if (mainConnection == null) {
+			Channel channel = startNewChannel(CHANNEL_MAIN);
+			mainConnection = new MainConnection(channel);
 		}
+		return mainConnection;
+	}
+	
+	public void startChannel(CollaborationConnection connection) throws ConnectionException {
+		Channel channel = startNewChannel(CHANNEL_COLLABORATION);
+		connection.setChannel(channel);
+	}
+	
+	private Channel startNewChannel(String type) throws ConnectionException {
+		try {
+			return session.startChannel(NetworkProperties.get(NetworkProperties.KEY_PROFILE_URI), false, type);
+		} catch (BEEPException be) {
+			//TODO: retry strategy?
+			LOG.error("could not start channel ["+be+"]");
+			throw new ConnectionException("could not start channel");
+		}
+	}
+	
+	public CollaborationConnection createCollaborationConnection() {
+		//TODO: do i have to check for isAlive as well?
+		CollaborationConnection connection = new CollaborationConnection(this, null, 
+				NullReplyListener.getListener(), SerializerImpl.getInstance());
+		collabConnections.add(connection);
 		return connection;
 	}
 	
+	public boolean removeCollaborationConnection(CollaborationConnection connection) {
+		return collabConnections.remove(connection);
+	}
+
 	/**
 	 * Helper method to initiate the TCPSession for this 
 	 * RemoteUserSession.
@@ -126,7 +159,7 @@ public class RemoteUserSession {
 	 * is called when the BEEP session has terminated already.
 	 */
 	public synchronized void cleanup() {
-		connection = null;
+		mainConnection = null;
 		session = null;
 		user = null;
 		isAlive = false;
@@ -139,7 +172,7 @@ public class RemoteUserSession {
 	public synchronized void close() {
 		if (session != null) {
 			try {
-				connection.close();
+				mainConnection.close();
 				session.close();
 			} catch (BEEPException be) {
 				LOG.warn("could not close active session ["+be.getMessage()+"]");

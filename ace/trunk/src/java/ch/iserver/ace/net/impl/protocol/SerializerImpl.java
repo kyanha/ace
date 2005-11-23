@@ -23,7 +23,6 @@ package ch.iserver.ace.net.impl.protocol;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import javax.xml.transform.OutputKeys;
@@ -36,10 +35,13 @@ import javax.xml.transform.stream.StreamResult;
 import org.apache.log4j.Logger;
 import org.xml.sax.helpers.AttributesImpl;
 
+import ch.iserver.ace.CaretUpdate;
+import ch.iserver.ace.net.PortableDocument;
+import ch.iserver.ace.net.impl.MutableUserDetails;
 import ch.iserver.ace.net.impl.NetworkConstants;
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.PublishedDocument;
-import ch.iserver.ace.util.ParameterValidator;
+import ch.iserver.ace.net.impl.RemoteUserProxyExt;
 
 /**
  *
@@ -105,21 +107,59 @@ public class SerializerImpl implements Serializer, ProtocolConstants {
 			throw new SerializeException(e.getMessage());
 		}
 	}
+	
+	
+	public byte[] createRequest(int type, Object data) throws SerializeException {
+		try {
+			TransformerHandler handler = createHandler();
+			ByteArrayOutputStream output = new ByteArrayOutputStream();
+			StreamResult result = new StreamResult(output);
+			handler.setResult(result);
+			handler.startDocument();
+			AttributesImpl attrs = new AttributesImpl();
+			handler.startElement("", "", "ace", attrs);
+			
+			if (type == JOIN) {
+				attrs = new AttributesImpl();
+				handler.startElement("", "", "request", attrs);
+				String userid = NetworkServiceImpl.getInstance().getUserId();
+				attrs.addAttribute("", "", "userid", "", userid);	
+				handler.startElement("", "", TAG_JOIN, attrs);
+				String docId = (String) data;
+				attrs = new AttributesImpl();
+				attrs.addAttribute("", "", "id", "", docId);
+				handler.startElement("", "", "doc", attrs);
+				handler.endElement("", "", "doc");
+				handler.endElement("", "", TAG_JOIN);
+				handler.endElement("", "", "request");
+			} else {
+				LOG.error("unknown notification type ["+type+"]");
+			}
+			handler.endElement("", "", "ace");
+			handler.endDocument();
+			output.flush();
+			return output.toByteArray();
+		} catch (Exception e) {
+			LOG.error("could not serialize ["+e.getMessage()+"]");
+			throw new SerializeException(e.getMessage());
+		}
+	}
+	
 
-	public byte[] createResponse(int type, Object data) throws SerializeException {
-		//TODO: response obsolete
+	public byte[] createResponse(int type, Object data1, Object data2) throws SerializeException {
 		try {
 			TransformerHandler handler = createHandler();
 			ByteArrayOutputStream output = new ByteArrayOutputStream();
 			StreamResult result = new StreamResult(output);
 			if (type == PUBLISHED_DOCUMENTS) {
+				//TODO: published documents obsolete
 				handler.setResult(result);
 				handler.startDocument();
 				AttributesImpl attrs = new AttributesImpl();
 				handler.startElement("", "", "ace", attrs);
 				handler.startElement("", "", "response", attrs);
 				handler.startElement("", "", TAG_PUBLISHED_DOCS, attrs);
-				Map docs = (Map)data;
+				Map docs = (Map)data1;
 				synchronized(docs) {
 					Iterator docIter = docs.values().iterator();
 					while (docIter.hasNext()) {
@@ -135,6 +175,30 @@ public class SerializerImpl implements Serializer, ProtocolConstants {
 				handler.endElement("", "", "response");
 				handler.endElement("", "", "ace");
 				handler.endDocument();
+			} else if (type == JOIN_DOCUMENT) {
+				handler.setResult(result);
+				handler.startDocument();
+				AttributesImpl attrs = new AttributesImpl();
+				handler.startElement("", "", "ace", attrs);
+				handler.startElement("", "", "response", attrs);
+				String docId = (String) data1;
+				attrs.addAttribute("", "", "id", "", docId);
+				String userid = NetworkServiceImpl.getInstance().getUserId();
+				attrs.addAttribute("", "", "userid", "", userid);
+				handler.startElement("", "", "document", attrs);
+				PortableDocument doc = (PortableDocument) data2;
+				createParticipantTag(handler, doc);
+				attrs = new AttributesImpl();
+				handler.startElement("", "", "data", attrs);
+				char[] data = TLVHandler.create(doc);
+				handler.startCDATA();
+				handler.characters(data, 0, data.length);
+				handler.endCDATA();
+				handler.endElement("", "", "data");
+				handler.endElement("", "", "document");
+				handler.endElement("", "", "response");
+				handler.endElement("", "", "ace");
+				handler.endDocument();
 			}
 			output.flush();
 			return output.toByteArray();
@@ -142,6 +206,48 @@ public class SerializerImpl implements Serializer, ProtocolConstants {
 			LOG.error("could not serialize ["+e.getMessage()+"]");
 			throw new SerializeException(e.getMessage());
 		}
+	}
+
+	private void createParticipantTag(TransformerHandler handler, PortableDocument doc) throws Exception	 {
+		AttributesImpl attrs = new AttributesImpl();
+		handler.startElement("", "", "participants", attrs);
+		int[] ids = doc.getParticipantIds();
+		for (int i = 0; i < ids.length; i++) {
+			attrs = new AttributesImpl();
+			int id = ids[i];
+			attrs.addAttribute("", "", "id", "", Integer.toString(id));
+			handler.startElement("", "", "participant", attrs);
+			attrs = new AttributesImpl();
+			RemoteUserProxyExt proxy = (RemoteUserProxyExt) doc.getUserProxy(id);
+			String userid = proxy.getId();
+			attrs.addAttribute("", "", "id", "", userid);
+			MutableUserDetails details = proxy.getMutableUserDetails();
+			String name = details.getUsername();
+			attrs.addAttribute("", "", "name", "", name);
+			String address = details.getAddress().getHostAddress();
+			attrs.addAttribute("", "", "address", "", address);
+			String port = Integer.toString(details.getPort());
+			attrs.addAttribute("", "", "port", "", port);
+			boolean isExplicitlyDiscovered = proxy.isExplicitlyDiscovered();
+			String explicitDiscovery = Boolean.toString(isExplicitlyDiscovered);
+			attrs.addAttribute("", "", "explicitDiscovery", "", explicitDiscovery);
+			handler.startElement("", "", "user", attrs);
+			if (isExplicitlyDiscovered) {
+				//TODO: add published documents of this user
+			}
+			handler.endElement("", "", "user");
+			attrs = new AttributesImpl();
+			CaretUpdate selection = doc.getSelection(id);
+			String mark = Integer.toString(selection.getMark());
+			attrs.addAttribute("", "", "mark", "", mark);
+			String dot = Integer.toString(selection.getDot());
+			attrs.addAttribute("", "", "dot", "", dot);
+			handler.startElement("", "", "selection", attrs);
+			handler.endElement("", "", "selection");
+			handler.endElement("", "", "participant");
+		}
+		handler.endElement("", "", "participants");
+		
 	}
 
 	public byte[] createNotification(int type, Object data) throws SerializeException {

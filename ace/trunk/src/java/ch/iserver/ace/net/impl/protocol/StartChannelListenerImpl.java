@@ -22,6 +22,7 @@
 package ch.iserver.ace.net.impl.protocol;
 
 import org.apache.log4j.Logger;
+import org.beepcore.beep.core.BEEPError;
 import org.beepcore.beep.core.BEEPException;
 import org.beepcore.beep.core.Channel;
 import org.beepcore.beep.core.CloseChannelException;
@@ -39,11 +40,13 @@ public class StartChannelListenerImpl implements StartChannelListener {
 
 	private static Logger LOG = Logger.getLogger(StartChannelListenerImpl.class);
 	
-	private RequestHandler handler;
+	private RequestHandler mainHandler;
+	private RequestHandler collaborationHandler;
 	
-	public StartChannelListenerImpl(RequestHandler handler) {
-		ParameterValidator.notNull("handler", handler);
-		this.handler = handler;
+	public StartChannelListenerImpl(RequestHandler mainHandler, RequestHandler collaborationHandler) {
+		ParameterValidator.notNull("mainHandler", mainHandler);
+		this.mainHandler = mainHandler;
+		this.collaborationHandler = collaborationHandler;
 	}
 	
 	/**
@@ -59,9 +62,17 @@ public class StartChannelListenerImpl implements StartChannelListener {
 	 */
 	public void startChannel(Channel channel, String encoding, String data)
 			throws StartChannelException {
-		//Called when the underlying BEEP framework receives  a "start" element.
-		LOG.debug("startChannel("+channel+", "+encoding+", "+data+")");
-		channel.setRequestHandler(handler);
+		LOG.debug("--> startChannel("+channel+", "+encoding+", "+data+")");
+		RequestHandler requestHandler = null;
+		if (data.equals(RemoteUserSession.CHANNEL_MAIN)) {
+			requestHandler = mainHandler;
+		} else if (data.equals(RemoteUserSession.CHANNEL_COLLABORATION)){
+			requestHandler = collaborationHandler;
+		} else {
+			throw new StartChannelException(BEEPError.CODE_PARAMETER_INVALID, "channel type not known");
+		}
+		channel.setRequestHandler(requestHandler);
+		LOG.debug("<-- startChannel()");
 	}
 
 	/**

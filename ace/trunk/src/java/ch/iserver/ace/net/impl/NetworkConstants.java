@@ -22,6 +22,7 @@ package ch.iserver.ace.net.impl;
 
 public interface NetworkConstants {
 
+	//TODO: replace by using NetworkProperties
 	public static final String DEFAULT_ENCODING = "UTF-8";
 	
 }

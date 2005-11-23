@@ -34,6 +34,7 @@ public class RequestFilterFactory {
 		Deserializer deserializer = DeserializerImpl.getInstance();
 		listener.init(deserializer, createClientChainForResponses());
 		Serializer serializer = SerializerImpl.getInstance();
+		filter = new JoinRequestSenderFilter(filter, serializer, listener);
 		filter = new ConcealDocumentPrepareFilter(filter, serializer, listener);
 		filter = new DocumentDetailsChangedPrepareFilter(filter, serializer, listener);
 		filter = new PublishDocumentPrepareFilter(filter, serializer, listener); 

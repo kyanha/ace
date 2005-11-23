@@ -75,7 +75,7 @@ public class PublishDocumentPrepareFilter extends AbstractRequestFilter {
 						while (iter.hasNext()) {
 							RemoteUserSession session = (RemoteUserSession)iter.next();
 							try {
-								ParticipantConnectionExt connection = session.getConnection();
+								MainConnection connection = session.getMainConnection();
 								connection.send(data, session.getUser().getUserDetails().getUsername(), listener);
 							} catch (ConnectionException ce) {
 								LOG.warn("connection failure for session ["+session.getUser().getUserDetails().getUsername()+"] "+ce.getMessage());

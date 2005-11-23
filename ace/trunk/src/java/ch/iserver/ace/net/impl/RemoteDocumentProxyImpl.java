@@ -23,8 +23,12 @@ package ch.iserver.ace.net.impl;
 
 import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.net.JoinNetworkCallback;
-import ch.iserver.ace.net.RemoteDocumentProxy;
 import ch.iserver.ace.net.RemoteUserProxy;
+import ch.iserver.ace.net.impl.protocol.ProtocolConstants;
+import ch.iserver.ace.net.impl.protocol.Request;
+import ch.iserver.ace.net.impl.protocol.RequestFilter;
+import ch.iserver.ace.net.impl.protocol.RequestImpl;
+import ch.iserver.ace.util.ParameterValidator;
 
 /**
  *
@@ -34,11 +38,18 @@ public class RemoteDocumentProxyImpl implements RemoteDocumentProxyExt {
 	private String id;
 	private DocumentDetails details;
 	private RemoteUserProxy publisher;
+	private JoinNetworkCallback callback;
+	private RequestFilter filterChain;
 	
-	public RemoteDocumentProxyImpl(String id, DocumentDetails details, RemoteUserProxy publisher) {
+	public RemoteDocumentProxyImpl(String id, DocumentDetails details, RemoteUserProxy publisher, RequestFilter filter) {
+		ParameterValidator.notNull("id", id);
+		ParameterValidator.notNull("details", details);
+		ParameterValidator.notNull("publisher", publisher);
+		ParameterValidator.notNull("filter", filter);
 		this.id = id;
 		this.details = details;
 		this.publisher = publisher;
+		this.filterChain = filter;
 	}
 	
 	/**
@@ -73,9 +84,9 @@ public class RemoteDocumentProxyImpl implements RemoteDocumentProxyExt {
 	 * @see ch.iserver.ace.net.RemoteDocumentProxy#join(ch.iserver.ace.net.JoinNetworkCallback)
 	 */
 	public void join(JoinNetworkCallback callback) {
-		
-		
-		
+		this.callback = callback;
+		Request request = new RequestImpl(ProtocolConstants.JOIN, publisher.getId(), id);
+		filterChain.process(request);
 	}
 	
 	/**

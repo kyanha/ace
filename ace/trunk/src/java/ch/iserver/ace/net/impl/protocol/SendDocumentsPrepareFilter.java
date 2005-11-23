@@ -60,7 +60,7 @@ private static Logger LOG = Logger.getLogger(SendDocumentsPrepareFilter.class);
 		try {			
 			RemoteUserProxyExt user = (RemoteUserProxyExt)request.getPayload(); 
 			RemoteUserSession session = SessionManager.getInstance().createSession(user); 
-			ParticipantConnectionExt connection = session.getConnection();
+			MainConnection connection = session.getMainConnection();
 			Map publishedDocs = NetworkServiceImpl.getInstance().getPublishedDocuments();
 			byte[] message = serializer.createNotification(ProtocolConstants.SEND_DOCUMENTS, publishedDocs);	
 			connection.send(message, user.getUserDetails().getUsername(), listener);

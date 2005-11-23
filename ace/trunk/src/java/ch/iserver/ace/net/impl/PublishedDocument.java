@@ -26,10 +26,8 @@ import org.apache.log4j.Logger;
 import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.net.DocumentServer;
 import ch.iserver.ace.net.DocumentServerLogic;
-import ch.iserver.ace.net.JoinException;
-import ch.iserver.ace.net.ParticipantPort;
+import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.net.impl.protocol.NullRequestFilter;
-import ch.iserver.ace.net.impl.protocol.ParticipantConnectionExt;
 import ch.iserver.ace.net.impl.protocol.ProtocolConstants;
 import ch.iserver.ace.net.impl.protocol.Request;
 import ch.iserver.ace.net.impl.protocol.RequestFilter;
@@ -44,17 +42,17 @@ public class PublishedDocument implements DocumentServer {
 	private static Logger LOG = Logger.getLogger(PublishedDocument.class);
 	
 	private String docId;
-	private DocumentServerLogic logic;
+	private DocumentServerLogic docServer;
 	private DocumentDetails details;
 	private RequestFilter filter;
 	private NetworkServiceExt service;
 	private boolean isConcealed, isShutdown;
 	
-	public PublishedDocument(String id, DocumentServerLogic logic, DocumentDetails details, RequestFilter filter, NetworkServiceExt service) {
+	public PublishedDocument(String id, DocumentServerLogic docServer, DocumentDetails details, RequestFilter filter, NetworkServiceExt service) {
 		ParameterValidator.notNull("id", id);
 		LOG.debug("new PublishedDocument("+id+", "+details+")");
 		this.docId = id;
-		this.logic = logic;
+		this.docServer = docServer;
 		this.details = details;
 		this.service = service;
 		this.filter = (filter != null) ? filter : NullRequestFilter.getInstance();
@@ -66,21 +64,15 @@ public class PublishedDocument implements DocumentServer {
 		return details;
 	}
 	
-	public synchronized ParticipantPort join(ParticipantConnectionExt connection) throws JoinException {
-		/* REMOVED TO FIX COMPILER ERROR
-		if (!isConcealed()) {
-			return logic.join(connection);
-		} else {
-			throw new JoinException();
-		}*/
-		return null;
+	public void join(ParticipantConnection connection) {
+		docServer.join(connection);
 	}
 
 	public String getId() {
 		return docId;
 	}
 	
-	public boolean isConcealed() {
+	public synchronized boolean isConcealed() {
 		return isConcealed;
 	}
 	

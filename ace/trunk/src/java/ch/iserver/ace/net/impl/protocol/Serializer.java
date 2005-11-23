@@ -28,7 +28,9 @@ public interface Serializer {
 	
 	public byte[] createQuery(int type) throws SerializeException;
 	
-	public byte[] createResponse(int type, Object data) throws SerializeException;
+	public byte[] createRequest(int type, Object data) throws SerializeException;
+	
+	public byte[] createResponse(int type, Object data1, Object data2) throws SerializeException;
 	
 	public byte[] createNotification(int type, Object data) throws SerializeException;
 	

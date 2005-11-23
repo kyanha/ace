@@ -90,6 +90,11 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 		return isSessionEstablished;
 	}
 	
+	public boolean isExplicitlyDiscovered() {
+		//TODO: explicit discovery
+		return false;
+	}
+	
 	/**
 	 * @inheritDoc
 	 */
