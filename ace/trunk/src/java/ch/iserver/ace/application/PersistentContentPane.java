@@ -56,10 +56,12 @@ public class PersistentContentPane extends JPanel {
 		
 		// splitPane (DocumentView | BrowseView)
 		dvbv = createStrippedSplitPane(JSplitPane.VERTICAL_SPLIT, documentView, browseView, 0.5);
+		dvbv.setDividerLocation(220);
 
 		// splitPane (ParticipantView | UserView)
 		pvuv = createStrippedSplitPane(JSplitPane.VERTICAL_SPLIT, participantView,  userView, 0.5);
-		
+		pvuv.setDividerLocation(180);
+
 		// splitPane (DocumentView/BrowseView | Editor)
 		dvbvce = createStrippedSplitPane(JSplitPane.HORIZONTAL_SPLIT, dvbv, editor.getEditorComponent(), 0.0);
 		
