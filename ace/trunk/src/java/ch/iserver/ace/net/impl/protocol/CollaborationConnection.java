@@ -1,5 +1,5 @@
 /*
- * $Id:Connection.java 1095 2005-11-09 13:56:51Z zbinl $
+ * $Id$
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -24,56 +24,50 @@ package ch.iserver.ace.net.impl.protocol;
 import org.apache.log4j.Logger;
 import org.beepcore.beep.core.BEEPException;
 import org.beepcore.beep.core.Channel;
-import org.beepcore.beep.core.OutputDataStream;
 import org.beepcore.beep.core.ReplyListener;
-import org.beepcore.beep.util.BufferSegment;
 
+import ch.iserver.ace.FailureCodes;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
+import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.PortableDocument;
 import ch.iserver.ace.net.RemoteUserProxy;
+import ch.iserver.ace.net.impl.NetworkServiceImpl;
 
 /**
- * Wrapper/Decorator class around a <code>Channel</code>.
- * 
- * @see org.beepcore.beep.core.Channel
+ * This connection does not establish its channel until <code>joinAccepted(ParticipantPort)</code> is 
+ * invoked.
+ *
  */
-public class ParticipantConnectionImpl implements ParticipantConnectionExt {
-	
-	private Logger LOG = Logger.getLogger(ParticipantConnectionImpl.class);
+public class CollaborationConnection extends AbstractConnection implements
+		ParticipantConnection {
 
-	private Channel channel;
+	private RemoteUserSession session;
+	private ParticipantPort port;
+	private boolean joinAccepted;
+	private Serializer serializer;
+	private String docId;
 	
-	public ParticipantConnectionImpl(Channel channel) {
-		this.channel = channel;
+	public CollaborationConnection(RemoteUserSession session, Channel channel, ReplyListener listener, Serializer serializer) {
+		super(channel);
+		this.session = session;
+		joinAccepted = false;
+		this.serializer = serializer;
+		setReplyListener(listener);
+		super.LOG = Logger.getLogger(CollaborationConnection.class);
 	}
 	
-	public void send(byte[] message, Object data, ReplyListener listener) throws ProtocolException {
-		try {
-			OutputDataStream output = prepare(message);
-			//AppData is only kept in-process
-			if (data != null)
-				channel.setAppData(data);
-			LOG.debug("--> sendMSG() with "+message.length+" bytes");
-			channel.sendMSG(output, listener);
-			LOG.debug("<-- sendMSG()");
-		} catch (Exception e) {
-			throw new ProtocolException(e.getMessage());
-		}
+	public void setDocumentId(String id) {
+		this.docId = id;
 	}
 	
-	private OutputDataStream prepare(byte[] data) {
-		BufferSegment buffer = new BufferSegment(data);
-		OutputDataStream output = new OutputDataStream();
-		output.add(buffer);
-		output.setComplete();
-		return output;
+	public String getDocumentId() {
+		return docId;
 	}
 
-	
 	/***************************************************/
-	/** methods from interface Participantconnection  **/
+	/** methods from interface ParticipantConnection  **/
 	/***************************************************/
 	public void setParticipantId(int participantId) {
 		// TODO Auto-generated method stub
@@ -81,23 +75,39 @@ public class ParticipantConnectionImpl implements ParticipantConnectionExt {
 	}
 	
 	public void joinAccepted(ParticipantPort port) {
-		// TODO Auto-generated method stub
-		
+		joinAccepted = true;
+		this.port = port;
+		//intiate collaboration channel
+		try {
+			session.startChannel(this);
+		} catch (ConnectionException ce) {
+			NetworkServiceImpl.getInstance().getCallback().serviceFailure(
+					FailureCodes.CHANNEL_FAILURE, "cannot start channel for collaboration", ce);
+		}
 	}
 	
 	public void joinRejected(int code) {
-		// TODO Auto-generated method stub
+		//TODO: do not initiate collaboration channel, instead return via JoinRejectedFilter
 		
 	}
 
 	public RemoteUserProxy getUser() {
-		// TODO Auto-generated method stub
-		return null;
+		return session.getUser();
 	}
 
 	public void sendDocument(PortableDocument document) {
-		// TODO Auto-generated method stub
-		
+		if (joinAccepted) {
+			try {
+				byte [] data = serializer.createResponse(ProtocolConstants.JOIN_DOCUMENT, getDocumentId(), document);
+				send(data, null, getReplyListener());
+			} catch (SerializeException se) {
+				LOG.error("could not serialize document ["+se.getMessage()+"]");
+			} catch (ProtocolException pe) {
+				LOG.error("protocol exception ["+pe.getMessage()+"]");
+			}
+		} else {
+			throw new IllegalStateException("cannot send document before join has been accepted.");
+		}
 	}
 
 	public void sendRequest(int participantId, Request request) {
@@ -124,16 +134,26 @@ public class ParticipantConnectionImpl implements ParticipantConnectionExt {
 		// TODO Auto-generated method stub
 		
 	}
-
+	
 	public void close() {
 		//TODO: consider if on session shutdown it is more appropriate to 
 		//notify the participant on close() invocation or on DocumentServer.shutdown()
 		//invocation
 		try {
-			channel.close();
+			getChannel().close();
 		} catch (BEEPException be) {
 			LOG.warn("could not close channel ["+be.getMessage()+"]");
 		}
 	}
 	
+	public boolean equals(Object obj) {
+		//TODO:!!!
+		throw new UnsupportedOperationException("to be implemented");
+	}
+	
+	public int hashCode() {
+		//TODO: !!!
+		throw new UnsupportedOperationException("to be implemented");
+	}
+
 }
