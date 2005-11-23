@@ -54,13 +54,8 @@ import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.PortableDocument;
 import ch.iserver.ace.net.RemoteUserProxy;
-import ch.iserver.ace.util.InterruptedRuntimeException;
-import ch.iserver.ace.util.Lock;
 import ch.iserver.ace.util.ParameterValidator;
-import ch.iserver.ace.util.SemaphoreLock;
 import ch.iserver.ace.util.ThreadDomain;
-import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
-import edu.emory.mathcs.backport.java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Default implementation of the ServerLogic interface.
@@ -102,24 +97,16 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	private final Set joinSet = new HashSet();
 	
 	private AcknowledgeStrategyFactory acknowledgeStrategyFactory = new NullAcknowledgeStrategyFactory();
-	
-	public ServerLogicImpl(ThreadDomain domain,
-					     DocumentModel document,
-					     UserRegistry registry) {
-		this(new SemaphoreLock("serializer"), domain, document, registry);
-	}
-	
-	public ServerLogicImpl(Lock lock, 
-	                       ThreadDomain domain, 
+		
+	public ServerLogicImpl(ThreadDomain domain, 
 	                       DocumentModel document,
 	                       UserRegistry registry) {
-		ParameterValidator.notNull("lock", lock);
 		ParameterValidator.notNull("domain", domain);
 		ParameterValidator.notNull("document", document);
 		ParameterValidator.notNull("registry", registry);
 		
 		this.nextParticipantId = 0;
-		this.forwarder = new CompositeForwarder(this);
+		this.forwarder = createForwarder(this);
 		
 		this.threadDomain = domain;
 		this.registry = registry;
@@ -130,19 +117,68 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 		this.proxies.put(new Integer(-1), new DocumentUpdater(this.document));
 	}
 
+	/**
+	 * Creates the command processor used to process incoming serializer
+	 * commands. 
+	 * 
+	 * @param forwarder the forwarder receiving the results of the command
+	 * @param handler the failure handler used to handle failures
+	 * @return the newly created command processor
+	 */
 	protected CommandProcessor createCommandProcessor(Forwarder forwarder, FailureHandler handler) {
 		return new CommandProcessorImpl(forwarder, handler);
 	}
 	
+	/**
+	 * Sets the command processor used by the server logic. This is used only
+	 * for testing purposes. Do not use it especially not after calling
+	 * start on this object.
+	 * 
+	 * @param commandProcessor the command processor used to process commands
+	 */
 	public void setCommandProcessor(CommandProcessor commandProcessor) {
 		this.commandProcessor = commandProcessor;
 	}
 
+	/**
+	 * Creates a new server document used to keep track of the document's
+	 * content on the server side.
+	 * 
+	 * @param document the initial document content
+	 * @return the server document ready to be used
+	 */
 	protected ServerDocument createServerDocument(DocumentModel document) {
 		ServerDocument doc = new ServerDocumentImpl();
 		doc.insertString(0, 0, document.getContent());
 		doc.updateCaret(0, document.getDot(), document.getMark());
 		return doc;
+	}
+	
+	/**
+	 * Creates a new forwarder responsible to forward the results of the
+	 * command processor to all other participants.
+	 * 
+	 * @param logic the server logic used to retrieve the forwarders for
+	 *              each participant
+	 * @return the initialized forwarder
+	 */
+	protected Forwarder createForwarder(ServerLogic logic) {
+		return new CompositeForwarder(logic);
+	}
+	
+	/**
+	 * Creates the publisher port for the publisher of the session.
+	 * 
+	 * @param connection the connection to the publisher
+	 * @return the publisher port used by the publisher to communicate with
+	 *         the session
+	 */
+	protected PublisherPort createPublisherPort(ParticipantConnection connection) {
+		Algorithm algorithm = new Jupiter(false);
+		PublisherPort port = new PublisherPortImpl(this, 0, algorithm);
+		Forwarder proxy = createParticipantProxy(0, connection, algorithm);
+		addParticipant(new SessionParticipant(port, proxy, connection, null));
+		return port;
 	}
 	
 	public void setPublisherConnection(PublisherConnection publisherConnection) {
@@ -152,18 +188,6 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 		this.publisherPort = createPublisherPort(wrapped);
 	}
 		
-	protected BlockingQueue createSerializerQueue() {
-		return new LinkedBlockingQueue();
-	}
-	
-	protected PublisherPort createPublisherPort(ParticipantConnection connection) {
-		Algorithm algorithm = new Jupiter(false);
-		PublisherPort port = new PublisherPortImpl(this, 0, algorithm);
-		Forwarder proxy = createParticipantProxy(0, connection, algorithm);
-		addParticipant(new SessionParticipant(port, proxy, connection, null));
-		return port;
-	}
-	
 	public boolean isAcceptingJoins() {
 		return acceptingJoins;
 	}
@@ -193,10 +217,24 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 		return forwarder;
 	}
 	
+	/**
+	 * Gets the blacklist of the session. The black list is a collection of
+	 * user ids (element type is String), which are no longer allowed to join
+	 * the session.
+	 * 
+	 * @return the black list of the session
+	 */
 	protected Set getBlacklist() {
 		return blacklist;
 	}
 	
+	/**
+	 * Gets the set of user ids who have tried to join the session but have
+	 * not been accepted or rejected. This list is used to reject join
+	 * requests for users that have already issued an unanswered join request.
+	 * 
+	 * @return the join set of the session
+	 */
 	protected Set getJoinSet() {
 		return joinSet;
 	}
@@ -206,7 +244,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 		commandProcessor.startProcessor();
 	}
 	
-	public void dispose() throws InterruptedException {
+	public void dispose() {
 		commandProcessor.stopProcessor();
 	}
 	
@@ -418,11 +456,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	 */
 	public void shutdown() {
 		getDocumentServer().shutdown();
-		try {
-			dispose();
-		} catch (InterruptedException e) {
-			throw new InterruptedRuntimeException(e);
-		}
+		dispose();
 	}
 	
 	// --> start FailureHandler methods <--

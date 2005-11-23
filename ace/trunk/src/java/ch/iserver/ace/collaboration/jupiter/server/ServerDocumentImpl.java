@@ -215,8 +215,6 @@ public class ServerDocumentImpl extends AbstractDocument implements
 	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerDocument#participantJoined(int, ch.iserver.ace.net.RemoteUserProxy)
 	 */
 	public void participantJoined(int participantId, RemoteUserProxy proxy) {
-		System.out.println("added participant with id: " + participantId);
-		System.out.println(new Throwable().getStackTrace()[1]);
 		setCaretHandler(participantId, new CaretHandler(-1, -1));
 		addParticipant(participantId, proxy);
 	}

@@ -32,17 +32,17 @@ import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.DocumentModel;
 import ch.iserver.ace.collaboration.JoinRequest;
 import ch.iserver.ace.collaboration.RemoteUserStub;
+import ch.iserver.ace.collaboration.SimpleCommandProcessor;
 import ch.iserver.ace.collaboration.jupiter.JoinRequestImpl;
 import ch.iserver.ace.collaboration.jupiter.PublisherConnection;
 import ch.iserver.ace.collaboration.jupiter.UserRegistry;
+import ch.iserver.ace.collaboration.jupiter.server.serializer.CommandProcessor;
 import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.net.RemoteUserProxyStub;
 import ch.iserver.ace.util.CallerThreadDomain;
 import ch.iserver.ace.util.Lock;
 import ch.iserver.ace.util.SemaphoreLock;
-import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
-import edu.emory.mathcs.backport.java.util.concurrent.LinkedBlockingQueue;
 
 /**
  *
@@ -80,7 +80,11 @@ public class ServerLogicImplTest extends TestCase {
 		registryCtrl.replay();
 
 		// test
-		ServerLogicImpl logic = new ServerLogicImpl(new CallerThreadDomain(), document, registry);
+		ServerLogicImpl logic = new ServerLogicImpl(new CallerThreadDomain(), document, registry) {
+			protected CommandProcessor createCommandProcessor(Forwarder forwarder, FailureHandler handler) {
+				return new SimpleCommandProcessor(forwarder);
+			}
+		};
 		logic.setPublisherConnection(connection);
 		logic.start();
 		logic.join(participant);
@@ -111,16 +115,15 @@ public class ServerLogicImplTest extends TestCase {
 		participantCtrl.replay();
 		registryCtrl.replay();
 
-		// lock the serializer (otherwise we get unpredictable behavior)
-		Lock lock = new SemaphoreLock("serializer-lock");
-		lock.lock();
-
 		// test
-		ServerLogicImpl logic = new ServerLogicImpl(lock, new CallerThreadDomain(), document, registry);
+		ServerLogicImpl logic = new ServerLogicImpl(new CallerThreadDomain(), document, registry) {
+			protected CommandProcessor createCommandProcessor(Forwarder forwarder, FailureHandler handler) {
+				return new IgnoreCommandProcessor();
+			}
+		};
 		logic.setPublisherConnection(connection);
 		logic.start();
 		logic.prepareShutdown();
-		logic.getBlacklist().add("X");
 		logic.join(participant);
 		
 		// verify
@@ -244,7 +247,6 @@ public class ServerLogicImplTest extends TestCase {
 		MockControl connectionCtrl = MockControl.createStrictControl(PublisherConnection.class);
 		PublisherConnection connection = (PublisherConnection) connectionCtrl.getMock();
 		
-		final BlockingQueue queue = new LinkedBlockingQueue();		
 		DocumentModel document = new DocumentModel("", 0, 0, new DocumentDetails("XYZ"));
 		
 		MockControl registryCtrl = MockControl.createControl(UserRegistry.class);
@@ -254,7 +256,12 @@ public class ServerLogicImplTest extends TestCase {
 		ParticipantConnection participant = (ParticipantConnection) participantCtrl.getMock();
 						
 		// define mock behavior
+		connection.sendParticipantJoined(1, new RemoteUserProxyStub("X"));
 		participant.setParticipantId(1);
+		participant.joinAccepted(null);
+		participantCtrl.setMatcher(MockControl.ALWAYS_MATCHER);
+		participant.sendDocument(null);
+		participantCtrl.setMatcher(MockControl.ALWAYS_MATCHER);
 		participant.getUser();
 		participantCtrl.setDefaultReturnValue(new RemoteUserProxyStub("X"));
 		
@@ -268,9 +275,9 @@ public class ServerLogicImplTest extends TestCase {
 		lock.lock();
 		
 		// test
-		ServerLogicImpl logic = new ServerLogicImpl(lock, new CallerThreadDomain(), document, registry) {
-			protected BlockingQueue createSerializerQueue() {
-				return queue;
+		ServerLogicImpl logic = new ServerLogicImpl(new CallerThreadDomain(), document, registry) {
+			protected CommandProcessor createCommandProcessor(Forwarder forwarder, FailureHandler handler) {
+				return new SimpleCommandProcessor(forwarder);
 			}
 		};
 		logic.setPublisherConnection(connection);
