@@ -26,7 +26,6 @@ import java.io.ByteArrayOutputStream;
 import org.apache.log4j.Logger;
 import org.beepcore.beep.core.InputDataStream;
 import org.beepcore.beep.core.MessageMSG;
-import org.beepcore.beep.core.RequestHandler;
 import org.beepcore.beep.transport.tcp.TCPSession;
 import org.beepcore.beep.util.BufferSegment;
 
@@ -37,8 +36,8 @@ import ch.iserver.ace.net.impl.discovery.DiscoveryManagerFactory;
 /**
  *
  */
-public class MainRequestHandler implements RequestHandler {
-
+public class MainRequestHandler extends AbstractRequestHandler {
+	
 	private static Logger LOG = Logger.getLogger(MainRequestHandler.class);
 	
 	private static Object MUTEX = new Object();
@@ -66,40 +65,33 @@ public class MainRequestHandler implements RequestHandler {
 		try {
 			byte[] rawData = readData(input);
 			LOG.debug("received "+rawData.length+" bytes. ["+(new String(rawData))+"]");
-			Request request = null;
-			//TODO: use SingleThreadedDomain instead of synchronized
-			synchronized (MUTEX) {
-				deserializer.deserialize(rawData, handler);
-				request = handler.getResult();
-				String userid = request.getUserId();
-				DiscoveryManager discoveryManager = DiscoveryManagerFactory.getDiscoveryManager(null);
-				if (!discoveryManager.hasSessionEstablished(userid)) {
-					RemoteUserProxyExt user = discoveryManager.getUser(userid);
-					LOG.debug("create new session for ["+user.getMutableUserDetails().getUsername()+"]");
-					SessionManager manager = SessionManager.getInstance();
-					manager.createSession(user, (TCPSession) message.getChannel().getSession());
+			if (rawData.length == PIGGYBACKED_MESSAGE_LENGTH) {
+				handlePiggybackedMessage(message);
+			} else {
+				Request request = null;
+				//TODO: use SingleThreadedDomain instead of synchronized
+				synchronized (MUTEX) {
+					deserializer.deserialize(rawData, handler);
+					request = handler.getResult();
+					String userid = request.getUserId();
+					DiscoveryManager discoveryManager = DiscoveryManagerFactory.getDiscoveryManager(null);
+					if (!discoveryManager.hasSessionEstablished(userid)) {
+						RemoteUserProxyExt user = discoveryManager.getUser(userid);
+						LOG.debug("create new session for ["+user.getMutableUserDetails().getUsername()+"]");
+						SessionManager manager = SessionManager.getInstance();
+						manager.createSession(user, (TCPSession) message.getChannel().getSession());
+					}
 				}
+				request.setMessage(message);
+				filter.process(request);
 			}
-			request.setMessage(message);
-			filter.process(request);
 		} catch (Exception e) {
 			LOG.error("could not process request ["+e+"]");
 		}
 		LOG.debug("<-- receiveMSG");
 	}
-
-	private byte[] readData(InputDataStream stream) throws Exception {
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		do {
-            	BufferSegment b = stream.waitForNextSegment();
-             if (b == null) {
-             	out.flush();
-                 break;
-             }
-             out.write(b.getData());
-        } while (!stream.isComplete());
-		
-		return out.toByteArray();
-	}
 	
+	protected Logger getLogger() {
+		return LOG;
+	}
 }

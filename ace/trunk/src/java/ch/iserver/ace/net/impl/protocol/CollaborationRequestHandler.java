@@ -21,18 +21,14 @@
 
 package ch.iserver.ace.net.impl.protocol;
 
-import java.io.ByteArrayOutputStream;
-
 import org.apache.log4j.Logger;
 import org.beepcore.beep.core.InputDataStream;
 import org.beepcore.beep.core.MessageMSG;
-import org.beepcore.beep.core.RequestHandler;
-import org.beepcore.beep.util.BufferSegment;
 
 /**
  *
  */
-public class CollaborationRequestHandler implements RequestHandler {
+public class CollaborationRequestHandler extends AbstractRequestHandler {
 
 	private static Logger LOG = Logger.getLogger(CollaborationRequestHandler.class);
 	
@@ -43,9 +39,12 @@ public class CollaborationRequestHandler implements RequestHandler {
 		
 		try {
 			byte[] rawData = readData(input);
-
 			LOG.debug("received "+rawData.length+" bytes. ["+(new String(rawData))+"]");
-			
+			if (rawData.length == PIGGYBACKED_MESSAGE_LENGTH) {
+				handlePiggybackedMessage(message);
+			} else {
+				LOG.debug("to be implemented...");
+			}
 		} catch (Exception e) {
 			LOG.error("could not process request ["+e+"]");
 		}
@@ -53,18 +52,8 @@ public class CollaborationRequestHandler implements RequestHandler {
 		
 	}
 	
-	private byte[] readData(InputDataStream stream) throws Exception {
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		do {
-            	BufferSegment b = stream.waitForNextSegment();
-             if (b == null) {
-             	out.flush();
-                 break;
-             }
-             out.write(b.getData());
-        } while (!stream.isComplete());
-		
-		return out.toByteArray();
+	protected Logger getLogger() {
+		return LOG;
 	}
 	
 }
