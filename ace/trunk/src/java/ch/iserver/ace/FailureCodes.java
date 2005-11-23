@@ -35,6 +35,7 @@ public interface FailureCodes {
 	/** Failure codes for network layer between 100 and 199 **/
 	/*********************************************************/
 	public static final int CONNECTION_REFUSED = 100;
+	public static final int CHANNEL_FAILURE = 101;
 	
 	
 }
