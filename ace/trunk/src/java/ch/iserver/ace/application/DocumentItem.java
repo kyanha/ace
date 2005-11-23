@@ -208,10 +208,11 @@ BASCHTLE
 */
 	public void publish(CollaborationService collaborationService) {
 		sessionCallback = new PublishedSessionCallbackImpl();
-		session = (Session)Spin.off(
+		session = (Session)
+			//Spin.off(
 					collaborationService.publish((PublishedSessionCallback)sessionCallback,
-					new DocumentModel("", 0, 0, new DocumentDetails(title)))
-			);
+					new DocumentModel("", 0, 0, new DocumentDetails(title)));
+			//);
 		setType(PUBLISHED);
 	}
 	
