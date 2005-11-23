@@ -24,22 +24,44 @@ package ch.iserver.ace.collaboration.jupiter.server.serializer;
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.util.ParameterValidator;
 
+/**
+ * Abstract base class for serializer commands from a participant port.
+ */
 public abstract class AbstractSerializerCommand implements SerializerCommand {
 
+	/**
+	 * The participant id of the sender.
+	 */
 	private final int participantId;
 
-	private final Algorithm algorithm;	
+	/**
+	 * The server-side algorithm of the participant.
+	 */
+	private final Algorithm algorithm;
 	
+	/**
+	 * Creates a new AbstractSerializerCommand using the given participantId
+	 * and algorithm.
+	 * 
+	 * @param participantId the participant id of the sender
+	 * @param algorithm the sender's server-side algorithm
+	 */
 	protected AbstractSerializerCommand(int participantId, Algorithm algorithm) {
 		ParameterValidator.notNull("algorithm", algorithm);
 		this.algorithm = algorithm;
 		this.participantId = participantId;
 	}
 
+	/**
+	 * @return the server-side algorithm
+	 */
 	public Algorithm getAlgorithm() {
 		return algorithm;
 	}
 
+	/**
+	 * @return the participant id of the sender
+	 */
 	public int getParticipantId() {
 		return participantId;
 	}

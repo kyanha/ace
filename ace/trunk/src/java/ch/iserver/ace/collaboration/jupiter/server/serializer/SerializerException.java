@@ -22,32 +22,54 @@
 package ch.iserver.ace.collaboration.jupiter.server.serializer;
 
 /**
- *
+ * Exception used to report errors in command processing
  */
 public class SerializerException extends Exception {
 	
+	/**
+	 * The participant id of the failing command.
+	 */
 	private final int participantId;
 	
+	/**
+	 * @param participantId the participant id of the failing command
+	 */
 	public SerializerException(int participantId) {
 		super();
 		this.participantId = participantId; 
 	}
 
+	/**
+	 * @param participantId the participant id of the failing command
+	 * @param message
+	 * @param cause
+	 */
 	public SerializerException(int participantId, String message, Throwable cause) {
 		super(message, cause);
 		this.participantId = participantId;
 	}
 
+	/**
+	 * @param participantId the participant id of the failing command
+	 * @param message
+	 */
 	public SerializerException(int participantId, String message) {
 		super(message);
 		this.participantId = participantId;
 	}
 
+	/**
+	 * @param participantId the participant id of the failing command
+	 * @param cause
+	 */
 	public SerializerException(int participantId, Throwable cause) {
 		super(cause);
 		this.participantId = participantId;
 	}
 	
+	/**
+	 * @return the participant id of the failing command
+	 */
 	public int getParticipantId() {
 		return participantId;
 	}

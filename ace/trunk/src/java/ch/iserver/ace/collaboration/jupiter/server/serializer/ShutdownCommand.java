@@ -26,12 +26,21 @@ import ch.iserver.ace.collaboration.jupiter.server.ServerLogic;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
- *
+ * Command that shuts down the server logic.
  */
 public class ShutdownCommand implements SerializerCommand {
 	
+	/**
+	 * The server logic to be shut down.
+	 */
 	private final ServerLogic logic;
 	
+	/**
+	 * Creates a new ShutdownCommand that shuts down the given server
+	 * logic.
+	 * 
+	 * @param logic the server logic to be shut down
+	 */
 	public ShutdownCommand(ServerLogic logic) {
 		ParameterValidator.notNull("logic", logic);
 		this.logic = logic;

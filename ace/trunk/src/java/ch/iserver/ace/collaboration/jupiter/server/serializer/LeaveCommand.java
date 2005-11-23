@@ -25,23 +25,26 @@ import ch.iserver.ace.collaboration.jupiter.server.Forwarder;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
- *
+ * Command that notifies the session's participants about a leaving user.
  */
 public class LeaveCommand implements SerializerCommand {
 	
 	/**
-	 * 
+	 * The participant id of the leaving user.
 	 */
 	private final int participantId;
 	
 	/**
-	 * 
+	 * The reason why the participant left.
 	 */
 	private final int reason;
 	
 	/**
-	 * @param participantId
-	 * @param reason
+	 * Creates a new LeaveCommand that notifies the other participants that
+	 * the user with the given participantId left the session.
+	 * 
+	 * @param participantId the participant that left
+	 * @param reason the reason why he left
 	 */
 	public LeaveCommand(int participantId, int reason) {
 		ParameterValidator.notNegative("participantId", participantId);

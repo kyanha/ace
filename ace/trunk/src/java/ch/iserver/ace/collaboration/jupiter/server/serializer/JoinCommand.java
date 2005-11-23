@@ -31,14 +31,27 @@ import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
- *
+ * Command that joins a participant to the session.
  */
 public class JoinCommand implements SerializerCommand {
 
+	/**
+	 * The participant that joins the session.
+	 */
 	private final SessionParticipant participant;
 	
+	/**
+	 * The server logic of the session.
+	 */
 	private final ServerLogic logic;
 	
+	/**
+	 * Creates a new JoinCommand that joins the participant to the session
+	 * represented by the logic.
+	 * 
+	 * @param participant the participant to join
+	 * @param logic the server logic of the session
+	 */
 	public JoinCommand(SessionParticipant participant, ServerLogic logic) {
 		ParameterValidator.notNull("participant", participant);
 		ParameterValidator.notNull("logic", logic);
@@ -46,18 +59,30 @@ public class JoinCommand implements SerializerCommand {
 		this.logic = logic;
 	}
 	
+	/**
+	 * @return the user proxy of the participant
+	 */
 	protected RemoteUserProxy getUserProxy() {
 		return participant.getUserProxy();
 	}
 	
+	/**
+	 * @return the participant id of the participant
+	 */
 	protected int getParticipantId() {
 		return participant.getParticipantId();
 	}
 	
+	/**
+	 * @return the connection of the participant
+	 */
 	protected ParticipantConnection getConnection() {
 		return participant.getParticipantConnection();
 	}
 	
+	/**
+	 * @return the port of the participant
+	 */
 	protected ParticipantPort getPort() {
 		return participant.getParticipantPort();
 	}

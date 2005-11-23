@@ -25,23 +25,37 @@ import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Timestamp;
-import ch.iserver.ace.algorithm.TransformationException;
 import ch.iserver.ace.collaboration.jupiter.server.Forwarder;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
- *
+ * Command that receives a caret update and forwards it to the other 
+ * participants.
  */
 public class CaretUpdateSerializerCommand extends AbstractSerializerCommand {
 		
+	/**
+	 * The CaretUpdateMessage to receive. 
+	 */
 	private final CaretUpdateMessage message;
 	
+	/**
+	 * Creates a new CaretUpdateSerializerCommand using the given participant
+	 * id, algorithm, and message.
+	 * 
+	 * @param participantId the participant id of the sender
+	 * @param algorithm the server-side algorithm
+	 * @param message the message to be received
+	 */
 	public CaretUpdateSerializerCommand(int participantId, Algorithm algorithm, CaretUpdateMessage message) {
 		super(participantId, algorithm);
 		ParameterValidator.notNull("message", message);
 		this.message = message;
 	}
 	
+	/**
+	 * @return the message to be received
+	 */
 	public CaretUpdateMessage getMessage() {
 		return message;
 	}
@@ -55,8 +69,8 @@ public class CaretUpdateSerializerCommand extends AbstractSerializerCommand {
 			Timestamp timestamp = getMessage().getTimestamp();
 			int[] indices = getAlgorithm().transformIndices(timestamp, update.getIndices());
 			forwarder.sendCaretUpdate(getParticipantId(), new CaretUpdate(indices[0], indices[1]));
-		} catch (TransformationException e) {
-			throw new SerializerException(getParticipantId());
+		} catch (Exception e) {
+			throw new SerializerException(getParticipantId(), e);
 		}
 	}
 

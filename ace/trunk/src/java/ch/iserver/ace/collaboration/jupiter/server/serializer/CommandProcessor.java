@@ -22,14 +22,27 @@
 package ch.iserver.ace.collaboration.jupiter.server.serializer;
 
 /**
- *
+ * Processor for SerializerCommand objects.
  */
 public interface CommandProcessor {
 	
+	/**
+	 * Starts the processor.
+	 */
 	void startProcessor();
 	
+	/**
+	 * Processes the given command. Note, it is an error to call this
+	 * method without prior call to startProcessor.
+	 * 
+	 * @param command the command to be processed
+	 * @throws IllegalStateException if the processor is not started
+	 */
 	void process(SerializerCommand command);
 	
+	/**
+	 * Stops the processor.
+	 */
 	void stopProcessor();
 	
 }

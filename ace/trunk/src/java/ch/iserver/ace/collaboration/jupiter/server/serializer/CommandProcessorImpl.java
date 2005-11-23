@@ -42,6 +42,8 @@ public class CommandProcessorImpl extends Worker implements CommandProcessor {
 	private final Forwarder forwarder;
 	
 	private final FailureHandler failureHandler;
+	
+	private boolean started;
 
 	public CommandProcessorImpl(Forwarder forwarder, FailureHandler failureHandler) {
 		super("serializer");
@@ -62,6 +64,7 @@ public class CommandProcessorImpl extends Worker implements CommandProcessor {
 	 * @see ch.iserver.ace.collaboration.jupiter.server.serializer.CommandProcessor#startProcessor()
 	 */
 	public void startProcessor() {
+		started = true;
 		start();
 	}
 	
@@ -69,6 +72,9 @@ public class CommandProcessorImpl extends Worker implements CommandProcessor {
 	 * @see ch.iserver.ace.collaboration.jupiter.server.serializer.CommandProcessor#process(ch.iserver.ace.collaboration.jupiter.server.serializer.SerializerCommand)
 	 */
 	public void process(SerializerCommand command) {
+		if (!started) {
+			throw new IllegalStateException("processor not started");
+		}
 		queue.add(command);
 	}
 	
@@ -76,9 +82,17 @@ public class CommandProcessorImpl extends Worker implements CommandProcessor {
 	 * @see ch.iserver.ace.collaboration.jupiter.server.serializer.CommandProcessor#stopProcessor()
 	 */
 	public void stopProcessor() {
+		started = false;
 		kill();
 	}
 	
+	/**
+	 * Waits on the serializer queue for commands. The commands and then
+	 * executed on this worker thread. If the execution throws any exception
+	 * the connection to the participant is terminated.
+	 * 
+	 * @see ch.iserver.ace.util.Worker#doWork()
+	 */
 	protected void doWork() throws InterruptedException {
 		SerializerCommand cmd = (SerializerCommand) queue.take();
 		LOG.info("serializing next command ...");
