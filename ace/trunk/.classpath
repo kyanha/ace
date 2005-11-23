@@ -28,5 +28,6 @@
 	<classpathentry kind="var" path="MAVEN2/dnssd/dnssd/107.1/dnssd-107.1.jar"/>
 	<classpathentry kind="var" path="MAVEN2/commons-io/commons-io/1.1/commons-io-1.1.jar"/>
 	<classpathentry kind="var" path="MAVEN2/jmock/jmock/1.0.1/jmock-1.0.1.jar"/>
+	<classpathentry kind="var" path="MAVEN2/spin/spin/1.4/spin-1.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

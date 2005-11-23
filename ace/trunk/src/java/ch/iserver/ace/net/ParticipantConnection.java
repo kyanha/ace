@@ -23,6 +23,7 @@ package ch.iserver.ace.net;
 
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
+import ch.iserver.ace.algorithm.Timestamp;
 
 /**
  * A ParticipantConnection provides a logical connection to a participant in
@@ -88,6 +89,17 @@ public interface ParticipantConnection {
 	 * @param message the CaretUpdateMessage to send
 	 */
 	void sendCaretUpdateMessage(int participantId, CaretUpdateMessage message);
+	
+	/**
+	 * Sends an acknowledge message to the other side of the connection.
+	 * The acknowledge message tells the other side the number of
+	 * operations processed by the local side. This can be used to
+	 * drop acknowledged messages by the other side.
+	 * 
+	 * @param siteId the site id of the sender
+	 * @param timestamp the current timestamp at the local site
+	 */
+	void sendAcknowledge(int siteId, Timestamp timestamp);
 	
 	/**
 	 * Sends a participant joined message to the participant represented by

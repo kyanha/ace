@@ -25,6 +25,7 @@ import org.apache.log4j.Logger;
 
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
+import ch.iserver.ace.algorithm.Timestamp;
 import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.PortableDocument;
@@ -111,6 +112,13 @@ public final class NullParticipantConnection implements ParticipantConnection {
 	 */
 	public void sendCaretUpdateMessage(int participantId, CaretUpdateMessage message) {
 		LOG.info("sendCaretUpdateMessage ignored");
+	}
+	
+	/**
+	 * @see ch.iserver.ace.net.ParticipantConnection#sendAcknowledge(int, ch.iserver.ace.algorithm.Timestamp)
+	 */
+	public void sendAcknowledge(int siteId, Timestamp timestamp) {
+		LOG.info("sendAcknowledge ignored");
 	}
 
 	/**

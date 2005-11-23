@@ -23,6 +23,7 @@ package ch.iserver.ace.net;
 
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
+import ch.iserver.ace.algorithm.Timestamp;
 
 /**
  * The SessionConnectionCallback interface is used by the network layer to communicate
@@ -61,6 +62,14 @@ public interface SessionConnectionCallback {
 	 * @param message the message to be received
 	 */
 	void receiveCaretUpdate(int participantId, CaretUpdateMessage message);
+	
+	/**
+	 * Receives an acknowledge message from a given site.
+	 * 
+	 * @param siteId the site id of the other site
+	 * @param timestamp the timestamp of the other site
+	 */
+	void receiveAcknowledge(int siteId, Timestamp timestamp);
 	
 	/**
 	 * This method is called by the network layer to notify this participant

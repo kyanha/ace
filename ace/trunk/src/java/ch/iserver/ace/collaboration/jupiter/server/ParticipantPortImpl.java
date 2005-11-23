@@ -24,7 +24,9 @@ package ch.iserver.ace.collaboration.jupiter.server;
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
+import ch.iserver.ace.algorithm.Timestamp;
 import ch.iserver.ace.collaboration.Participant;
+import ch.iserver.ace.collaboration.jupiter.server.serializer.AcknowledgeSerializerCommand;
 import ch.iserver.ace.collaboration.jupiter.server.serializer.CaretUpdateSerializerCommand;
 import ch.iserver.ace.collaboration.jupiter.server.serializer.LeaveCommand;
 import ch.iserver.ace.collaboration.jupiter.server.serializer.RequestSerializerCommand;
@@ -110,6 +112,18 @@ public class ParticipantPortImpl implements ParticipantPort {
 						getParticipantId(),
 						getAlgorithm(),
 						request);
+		getLogic().addCommand(cmd);
+	}
+	
+	/**
+	 * @see ch.iserver.ace.net.ParticipantPort#receiveAcknowledge(int, ch.iserver.ace.algorithm.Timestamp)
+	 */
+	public void receiveAcknowledge(int siteId, Timestamp timestamp) {
+		SerializerCommand cmd = new AcknowledgeSerializerCommand(
+						getParticipantId(),
+						getAlgorithm(), 
+						siteId, 
+						timestamp);
 		getLogic().addCommand(cmd);
 	}
 	

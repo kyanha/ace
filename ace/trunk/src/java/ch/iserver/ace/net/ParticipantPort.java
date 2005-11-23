@@ -23,6 +23,7 @@ package ch.iserver.ace.net;
 
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
+import ch.iserver.ace.algorithm.Timestamp;
 
 /**
  * The ParticipantPort is the interface for the network layer to speak to
@@ -50,6 +51,14 @@ public interface ParticipantPort {
 	 * @param message the CaretUpdateMessage to receive
 	 */
 	void receiveCaretUpdate(CaretUpdateMessage message);
+	
+	/**
+	 * Receives an acknowledge message from the network layer.
+	 * 
+	 * @param siteId the site id of the sender
+	 * @param timestamp the timstamp at the sender's site
+	 */
+	void receiveAcknowledge(int siteId, Timestamp timestamp);
 	
 	/**
 	 * Notifies the implementation that the participant left the

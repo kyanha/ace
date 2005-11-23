@@ -23,6 +23,7 @@ package ch.iserver.ace.collaboration.jupiter;
 
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
+import ch.iserver.ace.algorithm.Timestamp;
 import ch.iserver.ace.collaboration.Session;
 import ch.iserver.ace.net.SessionConnection;
 import ch.iserver.ace.util.ParameterValidator;
@@ -88,6 +89,17 @@ public class SessionConnectionWrapper implements SessionConnection {
 	public void sendCaretUpdateMessage(CaretUpdateMessage message) {
 		try {
 			target.sendCaretUpdateMessage(message);
+		} catch (Exception e) {
+			getFailureHandler().handleFailure(Session.SEND_FAILED, e);
+		}
+	}
+	
+	/**
+	 * @see ch.iserver.ace.net.SessionConnection#sendAcknowledge(int, ch.iserver.ace.algorithm.Timestamp)
+	 */
+	public void sendAcknowledge(int siteId, Timestamp timestamp) {
+		try {
+			target.sendAcknowledge(siteId, timestamp);
 		} catch (Exception e) {
 			getFailureHandler().handleFailure(Session.SEND_FAILED, e);
 		}

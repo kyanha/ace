@@ -23,6 +23,7 @@ package ch.iserver.ace.collaboration.jupiter.server;
 
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
+import ch.iserver.ace.algorithm.Timestamp;
 import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.net.ParticipantPort;
@@ -168,6 +169,17 @@ public class ParticipantConnectionWrapper implements ParticipantConnection {
 	public void sendCaretUpdateMessage(int participantId, CaretUpdateMessage message) {
 		try {
 			getTarget().sendCaretUpdateMessage(participantId, message);
+		} catch (Exception e) {
+			failed(e);
+		}
+	}
+	
+	/**
+	 * @see ch.iserver.ace.net.ParticipantConnection#sendAcknowledge(int, ch.iserver.ace.algorithm.Timestamp)
+	 */
+	public void sendAcknowledge(int siteId, Timestamp timestamp) {
+		try {
+			getTarget().sendAcknowledge(siteId, timestamp);
 		} catch (Exception e) {
 			failed(e);
 		}

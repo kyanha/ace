@@ -29,16 +29,16 @@ import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
+import ch.iserver.ace.algorithm.Timestamp;
 import ch.iserver.ace.algorithm.TransformationException;
 import ch.iserver.ace.algorithm.jupiter.Jupiter;
 import ch.iserver.ace.collaboration.Participant;
-import ch.iserver.ace.collaboration.Session;
 import ch.iserver.ace.collaboration.ParticipantSessionCallback;
+import ch.iserver.ace.collaboration.Session;
 import ch.iserver.ace.net.PortableDocument;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.net.SessionConnection;
 import ch.iserver.ace.net.SessionConnectionCallback;
-import ch.iserver.ace.text.NoOperation;
 import ch.iserver.ace.util.Lock;
 import ch.iserver.ace.util.ParameterValidator;
 import ch.iserver.ace.util.SemaphoreLock;
@@ -126,13 +126,17 @@ public class SessionImpl extends AbstractSession
 		this.threadDomain = threadDomain;
 	}
 	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.AbstractSession#createAcknowledgeAction()
+	 */
 	protected AcknowledgeAction createAcknowledgeAction() {
 		return new AcknowledgeAction() {
 			public void execute() {
 				lock();
 				try {
-					Request request = getAlgorithm().generateRequest(new NoOperation());
-					getConnection().sendRequest(request);
+					Timestamp timestamp = getAlgorithm().getTimestamp();
+					int siteId = getAlgorithm().getSiteId();
+					getConnection().sendAcknowledge(siteId, timestamp);
 				} finally {
 					unlock();
 				}
@@ -213,6 +217,20 @@ public class SessionImpl extends AbstractSession
 		try {
 			Operation operation = getAlgorithm().receiveRequest(request);
 			getCallback().receiveOperation(getParticipant(participantId), operation);
+		} catch (TransformationException e) {
+			getCallback().sessionFailed(Session.TRANSFORMATION_FAILED, e);
+		} finally {
+			unlock();
+		}
+	}
+	
+	/**
+	 * @see ch.iserver.ace.net.SessionConnectionCallback#receiveAcknowledge(int, ch.iserver.ace.algorithm.Timestamp)
+	 */
+	public void receiveAcknowledge(int siteId, Timestamp timestamp) {
+		lock();
+		try {
+			getAlgorithm().acknowledge(siteId, timestamp);
 		} catch (TransformationException e) {
 			getCallback().sessionFailed(Session.TRANSFORMATION_FAILED, e);
 		} finally {

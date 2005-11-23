@@ -73,7 +73,7 @@ public class Jupiter implements Algorithm {
 	}
 	
 	/**
-	 * {@inheritDoc}
+	 * @see ch.iserver.ace.algorithm.Algorithm#generateRequest(ch.iserver.ace.Operation)
 	 */
 	public Request generateRequest(Operation op) {
 		// send(op, myMsgs, otherMsgs);
@@ -101,7 +101,7 @@ public class Jupiter implements Algorithm {
 	}
 	
 	/**
-	 * {@inheritDoc}
+	 * @see ch.iserver.ace.algorithm.Algorithm#receiveRequest(ch.iserver.ace.algorithm.Request)
 	 */
 	public Operation receiveRequest(Request req) throws TransformationException {
 		LOG.info(">>> recv");
@@ -126,6 +126,16 @@ public class Jupiter implements Algorithm {
 		return newOp;
 	}
 	
+	/**
+	 * @see ch.iserver.ace.algorithm.Algorithm#acknowledge(int, ch.iserver.ace.algorithm.Timestamp)
+	 */
+	public void acknowledge(int siteId, Timestamp timestamp) throws TransformationException {
+		discardOperations((JupiterVectorTime) timestamp);
+	}
+	
+	/**
+	 * @see ch.iserver.ace.algorithm.Algorithm#transformIndices(ch.iserver.ace.algorithm.Timestamp, int[])
+	 */
 	public int[] transformIndices(Timestamp timestamp, int[] indices) throws TransformationException {
 		checkPreconditions((JupiterVectorTime) timestamp);
 		discardOperations((JupiterVectorTime) timestamp);

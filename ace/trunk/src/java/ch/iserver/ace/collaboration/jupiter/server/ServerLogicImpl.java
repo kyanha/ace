@@ -96,6 +96,8 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	
 	private final Set joinSet = new HashSet();
 	
+	private final Map userParticipantMapping = new HashMap();
+	
 	private AcknowledgeStrategyFactory acknowledgeStrategyFactory = new NullAcknowledgeStrategyFactory();
 		
 	public ServerLogicImpl(ThreadDomain domain, 
@@ -286,6 +288,15 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	protected synchronized int nextParticipantId() {
 		return ++nextParticipantId;
 	}
+	
+	protected synchronized int getParticipantId(String userId) {
+		Integer id = (Integer) userParticipantMapping.get(userId);
+		if (id == null) {
+			id = new Integer(nextParticipantId());
+			userParticipantMapping.put(userId, id);
+		}
+		return id.intValue();
+	}
 			
 	protected synchronized void removeParticipant(int participantId) {
 		Integer key = new Integer(participantId);
@@ -346,6 +357,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 			return;
 		}
 		
+		joinSet.add(id);
 		JoinRequest request = new JoinRequestImpl(this, user, connection);
 		getAccessControlStrategy().joinRequest(getPublisherConnection(), request);
 	}
@@ -359,7 +371,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 				LOG.info("join accepted by publisher but shutdown is in progress");
 			} else {
 				Algorithm algorithm = new Jupiter(false);
-				int participantId = nextParticipantId();
+				int participantId = getParticipantId(connection.getUser().getId());
 				connection.setParticipantId(participantId);
 		
 				ParticipantPort port = new ParticipantPortImpl(this, participantId, algorithm);

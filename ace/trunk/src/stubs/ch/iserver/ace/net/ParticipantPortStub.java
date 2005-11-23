@@ -23,6 +23,7 @@ package ch.iserver.ace.net;
 
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
+import ch.iserver.ace.algorithm.Timestamp;
 
 /**
  *
@@ -54,6 +55,13 @@ public class ParticipantPortStub implements ParticipantPort {
 	 */
 	public void receiveCaretUpdate(CaretUpdateMessage message) {
 
+	}
+	
+	/**
+	 * @see ch.iserver.ace.net.ParticipantPort#receiveAcknowledge(int, ch.iserver.ace.algorithm.Timestamp)
+	 */
+	public void receiveAcknowledge(int siteId, Timestamp timestamp) {
+		
 	}
 
 	/**

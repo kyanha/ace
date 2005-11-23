@@ -26,6 +26,7 @@ import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
+import ch.iserver.ace.algorithm.Timestamp;
 import ch.iserver.ace.algorithm.TransformationException;
 import ch.iserver.ace.algorithm.jupiter.Jupiter;
 import ch.iserver.ace.collaboration.JoinRequest;
@@ -37,7 +38,6 @@ import ch.iserver.ace.collaboration.jupiter.server.ServerLogic;
 import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.PortableDocument;
 import ch.iserver.ace.net.RemoteUserProxy;
-import ch.iserver.ace.text.NoOperation;
 import ch.iserver.ace.util.ParameterValidator;
 import ch.iserver.ace.util.SemaphoreLock;
 
@@ -87,8 +87,9 @@ public class PublishedSessionImpl extends AbstractSession
 			public void execute() {
 				lock();
 				try {
-					Request request = getAlgorithm().generateRequest(new NoOperation());
-					getPort().receiveRequest(request);
+					Timestamp timestamp = getAlgorithm().getTimestamp();
+					int siteId = getAlgorithm().getSiteId();
+					getPort().receiveAcknowledge(siteId, timestamp);
 				} finally {
 					unlock();
 				}
@@ -143,7 +144,7 @@ public class PublishedSessionImpl extends AbstractSession
 		CaretUpdateMessage message = getAlgorithm().generateCaretUpdateMessage(update);
 		getPort().receiveCaretUpdate(message);
 	}
-	
+		
 	// --> start ParticipantConnection implementation <--
 	
 	/**
@@ -203,6 +204,18 @@ public class PublishedSessionImpl extends AbstractSession
 			Participant participant = getParticipant(participantId);
 			Operation op = getAlgorithm().receiveRequest(request);
 			getCallback().receiveOperation(participant, op);
+		} catch (TransformationException e) {
+			getCallback().sessionFailed(TRANSFORMATION_FAILED, e);
+			leave();
+		}
+	}
+	
+	/**
+	 * @see ch.iserver.ace.net.ParticipantConnection#sendAcknowledge(int, ch.iserver.ace.algorithm.Timestamp)
+	 */
+	public void sendAcknowledge(int siteId, Timestamp timestamp) {
+		try {
+			getAlgorithm().acknowledge(siteId, timestamp);
 		} catch (TransformationException e) {
 			getCallback().sessionFailed(TRANSFORMATION_FAILED, e);
 			leave();

@@ -21,11 +21,15 @@
 
 package ch.iserver.ace.collaboration.jupiter;
 
+import javax.swing.undo.CannotRedoException;
+import javax.swing.undo.CannotUndoException;
+
 import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
+import ch.iserver.ace.algorithm.Timestamp;
 import ch.iserver.ace.algorithm.TransformationException;
 import ch.iserver.ace.util.ParameterValidator;
 
@@ -52,11 +56,50 @@ public class AlgorithmWrapperImpl implements AlgorithmWrapper {
 		this.algorithm = algorithm;
 	}
 	
-	/**
-	 * @see ch.iserver.ace.collaboration.jupiter.AlgorithmWrapper#getAlgorithm()
-	 */
-	public Algorithm getAlgorithm() {
+	protected Algorithm getAlgorithm() {
 		return algorithm;
+	}
+	
+	/**
+	 * @see ch.iserver.ace.algorithm.Algorithm#getSiteId()
+	 */
+	public int getSiteId() {
+		return getAlgorithm().getSiteId();
+	}
+	
+	/**
+	 * @see ch.iserver.ace.algorithm.Algorithm#getTimestamp()
+	 */
+	public Timestamp getTimestamp() {
+		return getAlgorithm().getTimestamp();
+	}
+	
+	/**
+	 * @see ch.iserver.ace.algorithm.Algorithm#canRedo()
+	 */
+	public boolean canRedo() {
+		return getAlgorithm().canRedo();
+	}
+	
+	/**
+	 * @see ch.iserver.ace.algorithm.Algorithm#canUndo()
+	 */
+	public boolean canUndo() {
+		return getAlgorithm().canUndo();
+	}
+	
+	/**
+	 * @see ch.iserver.ace.algorithm.Algorithm#redo()
+	 */
+	public Request redo() throws CannotRedoException {
+		return getAlgorithm().redo();
+	}
+	
+	/**
+	 * @see ch.iserver.ace.algorithm.Algorithm#undo()
+	 */
+	public Request undo() throws CannotUndoException {
+		return getAlgorithm().undo();
 	}
 
 	/**
@@ -75,6 +118,13 @@ public class AlgorithmWrapperImpl implements AlgorithmWrapper {
 		indices = algorithm.transformIndices(message.getTimestamp(), indices);
 		return new CaretUpdate(indices[CaretUpdate.DOT], indices[CaretUpdate.MARK]);
 	}
+	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.AlgorithmWrapper#acknowledge(int, ch.iserver.ace.algorithm.Timestamp)
+	 */
+	public void acknowledge(int siteId, Timestamp timestamp) throws TransformationException {
+		getAlgorithm().acknowledge(siteId, timestamp);
+	}
 
 	/**
 	 * @see ch.iserver.ace.collaboration.jupiter.AlgorithmWrapper#generateRequest(ch.iserver.ace.Operation)
@@ -92,6 +142,13 @@ public class AlgorithmWrapperImpl implements AlgorithmWrapper {
 						getAlgorithm().getTimestamp(),
 						update);
 		return msg;
+	}
+	
+	/**
+	 * @see ch.iserver.ace.algorithm.Algorithm#transformIndices(ch.iserver.ace.algorithm.Timestamp, int[])
+	 */
+	public int[] transformIndices(Timestamp timestamp, int[] indices) throws TransformationException {
+		return getAlgorithm().transformIndices(timestamp, indices);
 	}
 
 }

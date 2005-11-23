@@ -24,6 +24,7 @@ package ch.iserver.ace.collaboration;
 import junit.framework.AssertionFailedError;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
+import ch.iserver.ace.algorithm.Timestamp;
 import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.PortableDocument;
@@ -103,6 +104,13 @@ public class ParticipantConnectionStub implements ParticipantConnection {
 	public void sendCaretUpdateMessage(int participantId,
 					CaretUpdateMessage message) {
 
+	}
+	
+	/**
+	 * @see ch.iserver.ace.net.ParticipantConnection#sendAcknowledge(int, ch.iserver.ace.algorithm.Timestamp)
+	 */
+	public void sendAcknowledge(int siteId, Timestamp timestamp) {
+		
 	}
 
 	/**

@@ -26,6 +26,7 @@ import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
+import ch.iserver.ace.algorithm.Timestamp;
 import ch.iserver.ace.collaboration.jupiter.AcknowledgeAction;
 import ch.iserver.ace.collaboration.jupiter.AcknowledgeStrategy;
 import ch.iserver.ace.collaboration.jupiter.AlgorithmWrapper;
@@ -33,7 +34,6 @@ import ch.iserver.ace.collaboration.jupiter.AlgorithmWrapperImpl;
 import ch.iserver.ace.collaboration.jupiter.NullAcknowledgeStrategy;
 import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.net.RemoteUserProxy;
-import ch.iserver.ace.text.NoOperation;
 import ch.iserver.ace.util.Lock;
 import ch.iserver.ace.util.ParameterValidator;
 import ch.iserver.ace.util.SemaphoreLock;
@@ -109,8 +109,9 @@ public class ParticipantProxy implements Forwarder {
 			public void execute() {
 				lock.lock();
 				try {
-					Request request = getAlgorithm().generateRequest(new NoOperation());
-					getConnection().sendRequest(-1, request);
+					Timestamp timestamp = getAlgorithm().getTimestamp();
+					int siteId = getAlgorithm().getSiteId();
+					getConnection().sendAcknowledge(siteId, timestamp);
 				} finally {
 					lock.unlock();
 				}

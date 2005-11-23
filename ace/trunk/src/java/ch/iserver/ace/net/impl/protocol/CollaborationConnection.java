@@ -29,6 +29,7 @@ import org.beepcore.beep.core.ReplyListener;
 import ch.iserver.ace.FailureCodes;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
+import ch.iserver.ace.algorithm.Timestamp;
 import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.PortableDocument;
@@ -116,6 +117,11 @@ public class CollaborationConnection extends AbstractConnection implements
 	}
 
 	public void sendCaretUpdateMessage(int participantId, CaretUpdateMessage message) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public void sendAcknowledge(int siteId, Timestamp timestamp) {
 		// TODO Auto-generated method stub
 		
 	}

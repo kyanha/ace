@@ -102,6 +102,16 @@ public interface Algorithm {
 	Operation receiveRequest(Request req) throws TransformationException;
 	
 	/**
+	 * Notifies the algorithm that the site specified by the site id has 
+	 * processed the number of messages in the timestamp.
+	 * 
+	 * @param siteId the site id of the sending site
+	 * @param timestamp the timestamp at the other site
+	 * @throws TransformationException
+	 */
+	void acknowledge(int siteId, Timestamp timestamp) throws TransformationException;
+	
+	/**
 	 * Transform the array of indices from the state indicated by the timestamp
 	 * to the current timestamp at the local site. The transformed indices
 	 * are returned to the client.
