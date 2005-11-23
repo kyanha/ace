@@ -181,6 +181,21 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 		return port;
 	}
 	
+	/**
+	 * Creates a new forwarder for a participant.
+	 * 
+	 * @param participantId the participant id of the new participant
+	 * @param connection the connection to the participant
+	 * @param algorithm the algorithm to be used for that participant
+	 * @return the forwarder for that particular participant
+	 */
+	protected Forwarder createParticipantProxy(int participantId, ParticipantConnection connection, Algorithm algorithm) {
+		AcknowledgeStrategy acknowledger = getAcknowledgeStrategyFactory().createStrategy();
+		ParticipantProxy proxy = new ParticipantProxy(participantId, algorithm, connection);
+		proxy.setAcknowledgeStrategy(acknowledger);
+		return proxy;
+	}
+
 	public void setPublisherConnection(PublisherConnection publisherConnection) {
 		this.publisherConnection = publisherConnection;
 		ParticipantConnection wrapped = (ParticipantConnection) threadDomain.wrap(
@@ -359,13 +374,6 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 			// remove from list of joining users
 			joinSet.remove(connection.getUser().getId());
 		}
-	}
-
-	protected Forwarder createParticipantProxy(int participantId, ParticipantConnection connection, Algorithm algorithm) {
-		AcknowledgeStrategy acknowledger = getAcknowledgeStrategyFactory().createStrategy();
-		ParticipantProxy proxy = new ParticipantProxy(participantId, algorithm, connection);
-		proxy.setAcknowledgeStrategy(acknowledger);
-		return proxy;
 	}
 	
 	/**

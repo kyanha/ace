@@ -32,7 +32,6 @@ import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.DocumentModel;
 import ch.iserver.ace.collaboration.JoinRequest;
 import ch.iserver.ace.collaboration.RemoteUserStub;
-import ch.iserver.ace.collaboration.SimpleCommandProcessor;
 import ch.iserver.ace.collaboration.jupiter.JoinRequestImpl;
 import ch.iserver.ace.collaboration.jupiter.PublisherConnection;
 import ch.iserver.ace.collaboration.jupiter.UserRegistry;

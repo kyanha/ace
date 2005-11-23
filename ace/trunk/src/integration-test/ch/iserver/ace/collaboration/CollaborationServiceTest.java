@@ -33,6 +33,7 @@ import ch.iserver.ace.collaboration.jupiter.UserRegistry;
 import ch.iserver.ace.collaboration.jupiter.UserRegistryImpl;
 import ch.iserver.ace.collaboration.jupiter.server.ServerDocumentImpl;
 import ch.iserver.ace.collaboration.jupiter.server.ServerLogicImpl;
+import ch.iserver.ace.collaboration.jupiter.server.SimpleCommandProcessor;
 import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.net.RemoteUserProxyStub;
 import ch.iserver.ace.util.CallerThreadDomain;

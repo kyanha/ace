@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.collaboration;
+package ch.iserver.ace.collaboration.jupiter.server;
 
 import ch.iserver.ace.collaboration.jupiter.server.Forwarder;
 import ch.iserver.ace.collaboration.jupiter.server.serializer.CommandProcessor;
