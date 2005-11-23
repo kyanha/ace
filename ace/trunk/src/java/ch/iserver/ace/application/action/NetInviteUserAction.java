@@ -47,13 +47,13 @@ public class NetInviteUserAction extends DocumentItemSelectionChangeAction {
 		super(messageSource.getMessage("mNetInvite"), messageSource.getIcon("iMenuNetInvite"), viewController);
 		putValue(SHORT_DESCRIPTION, messageSource.getMessage("mNetInviteTT"));
 		userController.addItemSelectionChangeListener(this);
-		userController.getViewList().addMouseListener(new MouseAdapter() {
+		/*userController.getViewList().addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				if(e.getClickCount() == 2) {
 					inviteUser();
 				}
 			}
-		});
+		});*/
 		this.documentManager = documentManager;
 		this.viewController = viewController;
 		this.userController = userController;
@@ -72,7 +72,7 @@ public class NetInviteUserAction extends DocumentItemSelectionChangeAction {
 
 	public void itemSelectionChanged(ItemSelectionChangeEvent e) {
 		// HANDLE USER & DOCUMENT ITEM SELECTION CHANGES
-		if(e.getSource() == viewController) {
+		/*if(e.getSource() == viewController) {
 			if(e.getItem() == null) {
 				currentDocumentItem = null;
 			} else {
@@ -90,7 +90,7 @@ public class NetInviteUserAction extends DocumentItemSelectionChangeAction {
 			setEnabled(true);
 		} else {
 			setEnabled(false);
-		}
+		}*/
 		
 	}
 
