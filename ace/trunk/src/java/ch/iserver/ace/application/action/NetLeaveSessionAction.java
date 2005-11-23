@@ -33,13 +33,9 @@ import javax.swing.AbstractAction;
 
 public class NetLeaveSessionAction extends DocumentItemSelectionChangeAction {
 
-	private DocumentManager documentManager;
-
-	public NetLeaveSessionAction(LocaleMessageSource messageSource, DocumentManager documentManager,
-			DocumentViewController viewController) {
+	public NetLeaveSessionAction(LocaleMessageSource messageSource, DocumentViewController viewController) {
 		super(messageSource.getMessage("mNetLeave"), messageSource.getIcon("iMenuNetLeave"), viewController);
 		putValue(SHORT_DESCRIPTION, messageSource.getMessage("mNetLeaveTT"));
-		this.documentManager = documentManager;
 		setEnabled(false);
 	}
 	
