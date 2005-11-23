@@ -33,8 +33,18 @@ import ch.iserver.ace.Operation;
  */
 public interface Algorithm {
 
+	/**
+	 * Gets the site id of this algorithm.
+	 * 
+	 * @return the site id
+	 */
 	int getSiteId();
 	
+	/**
+	 * Gets the current timestamp at the local site.
+	 * 
+	 * @return the current timestamp
+	 */
 	Timestamp getTimestamp();
 	
 	/**
@@ -43,7 +53,7 @@ public interface Algorithm {
 	 * 
 	 * @return true iff an undo is possible
 	 */
-	public boolean canUndo();
+	boolean canUndo();
 
 	/**
 	 * Checks whether a redo is possible at the moment. If this method returns
@@ -51,7 +61,7 @@ public interface Algorithm {
 	 * 
 	 * @return true iff a redo is possible
 	 */
-	public boolean canRedo();
+	boolean canRedo();
 
 	/**
 	 * Undo the last local operation.
@@ -60,7 +70,7 @@ public interface Algorithm {
 	 * @throws javax.swing.undo.CannotUndoException
 	 *             iff an undo is impossible
 	 */
-	public Request undo() throws CannotUndoException;
+	Request undo() throws CannotUndoException;
 
 	/**
 	 * Redo the last undone local operation.
@@ -69,7 +79,7 @@ public interface Algorithm {
 	 * @throws javax.swing.undo.CannotRedoException
 	 *             iff a redo is impossible
 	 */
-	public Request redo() throws CannotRedoException;
+	Request redo() throws CannotRedoException;
 
 	/**
 	 * Generates a request for the given operation. The operation is a locally
@@ -80,7 +90,7 @@ public interface Algorithm {
 	 * @return the generated request
 	 * @see Request
 	 */
-	public Request generateRequest(Operation op);
+	Request generateRequest(Operation op);
 		
 	/**
 	 * Receives a request from a remote site. The request must be transformed
@@ -89,7 +99,7 @@ public interface Algorithm {
 	 * @param req the request to transform and apply
 	 * @return the transformed Operation
 	 */
-	public Operation receiveRequest(Request req) throws TransformationException;
+	Operation receiveRequest(Request req) throws TransformationException;
 	
 	/**
 	 * Transform the array of indices from the state indicated by the timestamp
@@ -100,6 +110,6 @@ public interface Algorithm {
 	 * @param indices the array of integer indices
 	 * @return the transformed array of indices
 	 */
-	public int[] transformIndices(Timestamp timestamp, int[] indices) throws TransformationException;
+	int[] transformIndices(Timestamp timestamp, int[] indices) throws TransformationException;
 	
 }
