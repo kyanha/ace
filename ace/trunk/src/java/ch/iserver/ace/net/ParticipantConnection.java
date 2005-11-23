@@ -41,8 +41,20 @@ public interface ParticipantConnection {
 	 */
 	void setParticipantId(int participantId);
 	
+	/**
+	 * Notifies the connection that the join request was accepted. The passed
+	 * in port can be used to communicate with the session.
+	 * 
+	 * @param port the port for the participant
+	 */
 	void joinAccepted(ParticipantPort port);
 	
+	/**
+	 * Notifies the connection that the join was rejected. The passed in code
+	 * specifies why the join request was rejected.
+	 * 
+	 * @param code the error code
+	 */
 	void joinRejected(int code);
 	
 	/**
