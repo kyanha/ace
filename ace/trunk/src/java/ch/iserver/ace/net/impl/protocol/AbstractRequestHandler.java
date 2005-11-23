@@ -39,7 +39,7 @@ public abstract class AbstractRequestHandler implements RequestHandler {
 	private static final String REPLY = "piggybacked message ack";
 	
 	protected void handlePiggybackedMessage(MessageMSG message) {
-		getLogger().info("piggybacked message received."));
+		getLogger().info("piggybacked message received.");
 		try {
 			OutputDataStream out = new OutputDataStream();
 			byte[] data = REPLY.getBytes();
