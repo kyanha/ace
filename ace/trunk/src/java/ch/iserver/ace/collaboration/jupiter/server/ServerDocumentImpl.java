@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.TreeMap;
 
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
@@ -56,11 +57,13 @@ public class ServerDocumentImpl extends AbstractDocument implements
 
 	private BranchElement defaultRoot;
 	
-	private final Map participants = new HashMap();
+	private final Map participants = new TreeMap();
 
 	public ServerDocumentImpl() {
 		super(new GapContent());
 		defaultRoot = (BranchElement) createDefaultRoot();
+		addParticipant(0, null);
+		setCaretHandler(0, new CaretHandler(0, 0));
 	}
 	
 	// --> utility methods <--
@@ -212,6 +215,8 @@ public class ServerDocumentImpl extends AbstractDocument implements
 	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerDocument#participantJoined(int, ch.iserver.ace.net.RemoteUserProxy)
 	 */
 	public void participantJoined(int participantId, RemoteUserProxy proxy) {
+		System.out.println("added participant with id: " + participantId);
+		System.out.println(new Throwable().getStackTrace()[1]);
 		setCaretHandler(participantId, new CaretHandler(-1, -1));
 		addParticipant(participantId, proxy);
 	}
@@ -366,6 +371,27 @@ public class ServerDocumentImpl extends AbstractDocument implements
 		} else {
 			return false;
 		}
+	}
+	
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString() {
+		StringBuffer buf = new StringBuffer();
+		buf.append("ServerDocument\n  ");
+		int[] ids = getParticipantIds();
+		for (int i = 0; i < ids.length; i++) {
+			buf.append(ids[i]);
+			buf.append("(");
+			buf.append(getSelection(i));
+			buf.append(")");
+			if (i + 1 < ids.length) {
+				buf.append(",");
+			}
+		}
+		buf.append("\n  ");
+		buf.append(getText());
+		return buf.toString();
 	}
 		
 	// --> Fragment Element <--

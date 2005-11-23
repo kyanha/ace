@@ -104,6 +104,10 @@
 		            artifactId="easymock"
 		            version="1.1"
 		            scope="test"/>
+		<dependency groupId="jmock"
+		            artifactId="jmock"
+		            version="1.0.1"
+		            scope="test"/>
 		<remoteRepository refid="remote.repository.ace" />
 		<remoteRepository refid="remote.repository.maven" />
 	</artifact:dependencies>

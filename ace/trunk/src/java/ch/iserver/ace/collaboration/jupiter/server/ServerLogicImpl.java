@@ -125,14 +125,24 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 		this.registry = registry;
 		this.accessControlStrategy = this;
 		
-		this.commandProcessor = new CommandProcessorImpl(forwarder, this);
-						
-		this.document = new ServerDocumentImpl();
-		this.document.participantJoined(0, null);
-		this.document.insertString(0, 0, document.getContent());
-		this.document.updateCaret(0, document.getDot(), document.getMark());
-		
+		this.commandProcessor = createCommandProcessor(forwarder, this);			
+		this.document = createServerDocument(document);
 		this.proxies.put(new Integer(-1), new DocumentUpdater(this.document));
+	}
+
+	protected CommandProcessor createCommandProcessor(Forwarder forwarder, FailureHandler handler) {
+		return new CommandProcessorImpl(forwarder, handler);
+	}
+	
+	public void setCommandProcessor(CommandProcessor commandProcessor) {
+		this.commandProcessor = commandProcessor;
+	}
+
+	protected ServerDocument createServerDocument(DocumentModel document) {
+		ServerDocument doc = new ServerDocumentImpl();
+		doc.insertString(0, 0, document.getContent());
+		doc.updateCaret(0, document.getDot(), document.getMark());
+		return doc;
 	}
 	
 	public void setPublisherConnection(PublisherConnection publisherConnection) {
@@ -178,15 +188,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	public ThreadDomain getThreadDomain() {
 		return threadDomain;
 	}
-	
-	public void setCommandProcessor(CommandProcessor commandProcessor) {
-		this.commandProcessor = commandProcessor;
-	}
-	
-	public CommandProcessor getCommandProcessor() {
-		return commandProcessor;
-	}
-	
+		
 	public Forwarder getForwarder() {
 		return forwarder;
 	}
