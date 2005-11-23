@@ -22,14 +22,18 @@ public class DocumentDiscoveryTest extends TestCase {
 	private final int NUM_DOCS = 5;
 	private RemoteDocumentProxy[] docs;
 	private RemoteUserProxyExt user;
+	private MockControl filterCtrl;
 	
 	public DocumentDiscoveryTest() throws Exception {
 		user = new RemoteUserProxyImpl(UUID.nextUUID(), 
 				new MutableUserDetails("test-user", InetAddress.getLocalHost(), 54321));
 		docs = new RemoteDocumentProxy[NUM_DOCS];
+		filterCtrl = MockControl.createControl(RequestFilter.class);
+		RequestFilter requestFilter = (RequestFilter) filterCtrl.getMock();
+		filterCtrl.replay();
 		for (int i=0; i < NUM_DOCS; i++) {
 			DocumentDetails details = new DocumentDetails("doc"+i);
-			docs[i] = new RemoteDocumentProxyImpl("id"+i, details, user);
+			docs[i] = new RemoteDocumentProxyImpl("id"+i, details, user, requestFilter);
 		}
 	}
 	
@@ -48,6 +52,7 @@ public class DocumentDiscoveryTest extends TestCase {
 		//discovery.execute(user);
 		
 		callbackCtrl.verify();
+		filterCtrl.verify();
 	}
 	
 }

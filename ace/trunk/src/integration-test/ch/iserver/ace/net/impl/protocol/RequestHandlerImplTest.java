@@ -14,7 +14,7 @@ public class RequestHandlerImplTest extends TestCase {
 		MockControl filterCtrl = MockControl.createControl(AbstractRequestFilter.class);
 		AbstractRequestFilter filter = (AbstractRequestFilter)filterCtrl.getMock();
 		
-		RequestHandler handler = new RequestHandlerImpl(DeserializerImpl.getInstance(), filter);
+		RequestHandler handler = new MainRequestHandler(DeserializerImpl.getInstance(), filter);
 
 		//fail("not yet implemented");
 	}
