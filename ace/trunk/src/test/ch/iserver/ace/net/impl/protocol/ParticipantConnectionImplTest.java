@@ -19,7 +19,7 @@ public class ParticipantConnectionImplTest extends TestCase {
 		MockControl channelCtrl = MockControl.createControl(Channel.class);
 		Channel channel = (Channel)channelCtrl.getMock();
 		
-		ParticipantConnectionImpl connection = new ParticipantConnectionImpl(channel);
+		MainConnection connection = new MainConnection(channel);
 		byte[] data = DATA.getBytes(NetworkConstants.DEFAULT_ENCODING);
 		
 		QueryInfo queryInfo = new QueryInfo("test-id", 0);

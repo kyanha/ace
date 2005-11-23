@@ -38,19 +38,22 @@ public class SendDocumentsReceiveFilterTest extends TestCase {
 		DiscoveryManagerFactory.getDiscoveryManager(discoveryCallback);
 		SessionManager.getInstance().createSession(user);
 		
+		MockControl filterCtrl = MockControl.createControl(RequestFilter.class);
+		RequestFilter requestFilter = (RequestFilter) filterCtrl.getMock();
+		filterCtrl.replay();
 		RemoteDocumentProxy[] proxies = new RemoteDocumentProxy[4];
 		proxies[0] = new RemoteDocumentProxyImpl("docid1", 
 				new DocumentDetails("file1.txt"), 
-				user);
+				user, requestFilter);
 		proxies[1] = new RemoteDocumentProxyImpl("docid2", 
 				new DocumentDetails("file2.txt"), 
-				user);
+				user, requestFilter);
 		proxies[2] = new RemoteDocumentProxyImpl("docid3", 
 				new DocumentDetails("file3.txt"), 
-				user);
+				user, requestFilter);
 		proxies[3] = new RemoteDocumentProxyImpl("docid4", 
 				new DocumentDetails("file4.txt"), 
-				user);
+				user, requestFilter);
 		
 		SendDocumentsReceiveFilter filter = new SendDocumentsReceiveFilter(null);
 		List docs = new ArrayList(4);
@@ -77,6 +80,7 @@ public class SendDocumentsReceiveFilterTest extends TestCase {
 		
 		callbackCtrl.verify();
 		msgCtrl.verify();
+		filterCtrl.verify();
 	}
 }
 

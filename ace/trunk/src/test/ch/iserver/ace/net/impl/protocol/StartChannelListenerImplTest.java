@@ -13,7 +13,7 @@ public class StartChannelListenerImplTest extends TestCase {
 	public void testAdvertiseProfile() throws Exception {
 		MockControl handlerCtrl = MockControl.createControl(RequestHandler.class);
 		RequestHandler handler = (RequestHandler)handlerCtrl.getMock();
-		StartChannelListener instance = new StartChannelListenerImpl(handler);
+		StartChannelListener instance = new StartChannelListenerImpl(handler, null);
 		
 		handlerCtrl.replay();
 		
@@ -26,7 +26,7 @@ public class StartChannelListenerImplTest extends TestCase {
 		MockControl handlerCtrl = MockControl.createControl(RequestHandler.class);
 		RequestHandler handler = (RequestHandler)handlerCtrl.getMock();
 		handlerCtrl.replay();
-		StartChannelListener instance = new StartChannelListenerImpl(handler);
+		StartChannelListener instance = new StartChannelListenerImpl(handler, null);
 		
 		MockControl channelCtrl = MockControl.createControl(Channel.class);
 		Channel channel = (Channel)channelCtrl.getMock();

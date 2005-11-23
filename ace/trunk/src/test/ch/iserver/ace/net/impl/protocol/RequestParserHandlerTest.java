@@ -7,30 +7,6 @@ import ch.iserver.ace.net.impl.NetworkConstants;
 import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
 
 public class RequestParserHandlerTest extends TestCase {
-
-	
-	private static final String PUBLISH = "<ace><notification>" +
-			"<publishDocs userid=\"asdf-w2\">" +
-			"<doc id=\"WERS24-RE2\" name=\"collab.txt\" />" +
-			"</publishDocs>" +
-			"</notification></ace>";
-	
-	private static final String CONCEAL = "<ace><notification>" +
-	"<concealDocs userid=\"asdf-w2\">" +
-	"<doc id=\"WERS24-RE2\" />" +
-	"</concealDocs>" +
-	"</notification></ace>";
-	
-	private static final String SEND_DOCUMENTS = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-	"<ace><notification>" +
-	"<publishedDocs userid=\"asdfadsf-23\">" +
-	"<doc id=\"WERS24-RE2\" name=\"testfile.txt\"/>" +
-	"<doc id=\"ADSFBW-45S\" name=\"meeting2.txt\"/>" +
-	"<doc id=\"23SSWD-3ED\" name=\"notes232.txt\"/>" +
-	"</publishedDocs>" +
-	"</notification></ace>";
-	
-	private static final String QUERY = "<ace><request><query type=\"docs\"/></request></ace>";
 	
 	private RequestParserHandler handler;
 	private Deserializer deserializer;
@@ -90,4 +66,40 @@ public class RequestParserHandlerTest extends TestCase {
 		assertEquals("asdfadsf-23", info.getUserId());
 	}
 	
+	public void testJoin() throws Exception {
+		deserializer.deserialize(JOIN.getBytes(NetworkConstants.DEFAULT_ENCODING), handler);
+		
+		Request request = handler.getResult();
+		assertEquals(ProtocolConstants.JOIN, request.getType());
+		DocumentInfo info = (DocumentInfo) request.getPayload();
+		assertEquals("doc-id-234b", info.getDocId());
+		assertEquals("asdfadsf-23", request.getUserId());
+	}
+	
+	private static final String PUBLISH = "<ace><notification>" +
+		"<publishDocs userid=\"asdf-w2\">" +
+		"<doc id=\"WERS24-RE2\" name=\"collab.txt\" />" +
+		"</publishDocs>" +
+		"</notification></ace>";
+
+	private static final String CONCEAL = "<ace><notification>"
+			+ "<concealDocs userid=\"asdf-w2\">" + "<doc id=\"WERS24-RE2\" />"
+			+ "</concealDocs>" + "</notification></ace>";
+
+	private static final String SEND_DOCUMENTS = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+			+ "<ace><notification>"
+			+ "<publishedDocs userid=\"asdfadsf-23\">"
+			+ "<doc id=\"WERS24-RE2\" name=\"testfile.txt\"/>"
+			+ "<doc id=\"ADSFBW-45S\" name=\"meeting2.txt\"/>"
+			+ "<doc id=\"23SSWD-3ED\" name=\"notes232.txt\"/>"
+			+ "</publishedDocs>" + "</notification></ace>";
+
+	private static final String QUERY = "<ace><request><query type=\"docs\"/></request></ace>";	
+	
+	private static final String JOIN = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+		"<ace><request>" +
+		"<join userid=\"asdfadsf-23\">" +
+		"<doc id=\"doc-id-234b\"/>" +
+		"</join>" +
+		"</request></ace>";
 }
