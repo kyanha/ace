@@ -50,6 +50,7 @@ public class RequestFilterFactory {
 	
 	public static RequestFilter createServerChain() {
 		RequestFilter filter = new FailureFilter(null);
+		filter = new JoinRequestRecipientFilter(filter);
 		filter = new ConcealDocumentReceiveFilter(filter);
 		filter = new DocumentDetailsChangedReceiveFilter(filter);
 		filter = new PublishDocumentReceiveFilter(filter);
