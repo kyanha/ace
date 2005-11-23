@@ -186,6 +186,7 @@ public class PublishedSessionImpl extends AbstractSession
 	 * @see ch.iserver.ace.net.ParticipantConnection#sendCaretUpdateMessage(int, ch.iserver.ace.algorithm.CaretUpdateMessage)
 	 */
 	public void sendCaretUpdateMessage(int participantId, CaretUpdateMessage message) {
+		lock();
 		try {
 			Participant participant = getParticipant(participantId);
 			CaretUpdate update = getAlgorithm().receiveCaretUpdateMessage(message);
@@ -193,6 +194,8 @@ public class PublishedSessionImpl extends AbstractSession
 		} catch (TransformationException e) {
 			getCallback().sessionFailed(TRANSFORMATION_FAILED, e);
 			leave();
+		} finally {
+			unlock();
 		}
 	}
 		
@@ -200,6 +203,7 @@ public class PublishedSessionImpl extends AbstractSession
 	 * @see ch.iserver.ace.net.ParticipantConnection#sendRequest(int, ch.iserver.ace.algorithm.Request)
 	 */
 	public void sendRequest(int participantId, Request request) {
+		lock();
 		try {
 			Participant participant = getParticipant(participantId);
 			Operation op = getAlgorithm().receiveRequest(request);
@@ -207,6 +211,8 @@ public class PublishedSessionImpl extends AbstractSession
 		} catch (TransformationException e) {
 			getCallback().sessionFailed(TRANSFORMATION_FAILED, e);
 			leave();
+		} finally {
+			unlock();
 		}
 	}
 	
@@ -214,11 +220,14 @@ public class PublishedSessionImpl extends AbstractSession
 	 * @see ch.iserver.ace.net.ParticipantConnection#sendAcknowledge(int, ch.iserver.ace.algorithm.Timestamp)
 	 */
 	public void sendAcknowledge(int siteId, Timestamp timestamp) {
+		lock();
 		try {
 			getAlgorithm().acknowledge(siteId, timestamp);
 		} catch (TransformationException e) {
 			getCallback().sessionFailed(TRANSFORMATION_FAILED, e);
 			leave();
+		} finally {
+			unlock();
 		}
 	}
 
