@@ -64,7 +64,7 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 	private RemoteDocument remoteDocument;
 	private Session session;
 	private PublishedSessionCallbackImpl publishedSessionCallback;
-	private SessionCallbackImpl sessionCallback;
+	private SessionCallback sessionCallback;
 
 
 
@@ -157,7 +157,7 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 	}
 	
 	public EventList getParticipantSourceList() {
-		return sessionCallback.getParticipantSourceList();
+		return ((SessionCallbackImpl)sessionCallback).getParticipantSourceList();
 	}
 	
 	public Session getSession() {
@@ -224,14 +224,24 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 BASCHTLE
 */
 
-
-public String getPublisher() {
-	if(type==REMOTE || type==AWAITING) {
-		return remoteDocument.getPublisher().getName();
-	} else {
-		return "";
+	public void join() {
+		// join document
+		remoteDocument.join(new JoinCallbackImpl(this));
+		setType(AWAITING);
 	}
-}
+
+	public void setSessionCallback(SessionCallback sessionCallback) {
+		this.sessionCallback = sessionCallback;
+	}
+
+
+	public String getPublisher() {
+		if(type==REMOTE || type==AWAITING) {
+			return remoteDocument.getPublisher().getName();
+		} else {
+			return "";
+		}
+	}
 
 
 
