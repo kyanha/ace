@@ -39,7 +39,7 @@ import javax.swing.text.*;
 import java.io.File;
 
 import ca.odell.glazedlists.EventList;
-
+import spin.Spin;
 
 
 
@@ -200,29 +200,30 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 	
 	
 	
-	public void publish(CollaborationService collaborationService) {
-		sessionCallback = new PublishedSessionCallbackImpl();
-		session = collaborationService.publish((PublishedSessionCallback)sessionCallback,
-					new DocumentModel("", 0, 0, new DocumentDetails(title)));
-		type = PUBLISHED;
-		firePropertyChange(TYPE_PROPERTY, "LOCAL", "PUBLISHED");
-	}
-	
-	public void conceal() {
-		session.leave();
-		type = LOCAL;
-		firePropertyChange(TYPE_PROPERTY, "PUBLISHED", "LOCAL");
-	}
-	
-	public void leave() {
-		session.leave();
-	}
 	
 	
 
 /*
 BASCHTLE
 */
+	public void publish(CollaborationService collaborationService) {
+		sessionCallback = new PublishedSessionCallbackImpl();
+		session = (Session)Spin.off(
+					collaborationService.publish((PublishedSessionCallback)sessionCallback,
+					new DocumentModel("", 0, 0, new DocumentDetails(title)))
+			);
+		setType(PUBLISHED);
+	}
+	
+	public void conceal() {
+		session.leave();
+		setType(LOCAL);
+	}
+	
+	public void leave() {
+		session.leave();
+		setType(REMOTE);
+	}
 
 	public void join() {
 		// join document
