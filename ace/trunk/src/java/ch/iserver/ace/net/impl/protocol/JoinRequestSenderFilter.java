@@ -49,6 +49,7 @@ public class JoinRequestSenderFilter extends AbstractRequestFilter {
 					byte[] data = serializer.createRequest(ProtocolConstants.JOIN, request.getPayload());
 					RemoteUserSession session = SessionManager.getInstance().getSession(request.getUserId());
 					MainConnection connection = session.getMainConnection();
+					LOG.debug("send data to ["+session.getUser().getUserDetails().getUsername()+"] ["+(new String(data))+"]");
 					connection.send(data, session.getUser().getUserDetails().getUsername(), listener);
 				}
 				
