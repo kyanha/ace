@@ -17,7 +17,8 @@
       <td id="quicknav">
        <a href="http://ace.iserver.ch:8080/jira">Jira</a> | 
        <a href="http://ace.iserver.ch:8080/confluence">Confluence</a> | 
-       <a href="http://ace.iserver.ch:81/cgi-bin/trac.cgi">Trac</a>
+       <a href="http://ace.iserver.ch:81/cgi-bin/trac.cgi">Trac</a> |
+       <a href="/api">API</a>
       </td>
      </tr>
     </table>
