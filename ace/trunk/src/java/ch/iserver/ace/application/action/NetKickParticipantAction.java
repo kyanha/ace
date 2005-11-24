@@ -21,6 +21,8 @@
 
 package ch.iserver.ace.application.action;
 
+import ch.iserver.ace.application.DocumentItem;
+import ch.iserver.ace.application.ParticipantItem;
 import ch.iserver.ace.application.DocumentManager;
 import ch.iserver.ace.application.ItemSelectionChangeEvent;
 import ch.iserver.ace.application.LocaleMessageSource;
@@ -34,6 +36,11 @@ import javax.swing.AbstractAction;
 public class NetKickParticipantAction extends DocumentItemSelectionChangeAction {
 
 	private DocumentManager documentManager;
+	private DocumentItem currentDocumentItem;
+	private ParticipantItem currentParticipantItem;
+	
+	private DocumentViewController viewController;
+	private ParticipantViewController participantController;
 
 	public NetKickParticipantAction(LocaleMessageSource messageSource, DocumentManager documentManager,
 			DocumentViewController viewController, ParticipantViewController participantController) {
@@ -41,15 +48,39 @@ public class NetKickParticipantAction extends DocumentItemSelectionChangeAction 
 		putValue(SHORT_DESCRIPTION, messageSource.getMessage("mNetKickTT"));
 		participantController.addItemSelectionChangeListener(this);
 		this.documentManager = documentManager;
+		this.viewController = viewController;
+		this.participantController = participantController;
 		setEnabled(false);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		System.out.println("NetKickParticipantAction");
+		// need session here
+		if(currentDocumentItem != null && currentParticipantItem != null) {
+			System.out.println("NetKickParticipantAction: " + currentParticipantItem.getName());
+		}
 	}
 
 	public void itemSelectionChanged(ItemSelectionChangeEvent e) {
-		//System.out.println("ItemSelectionChangeEvent: " + e);
+		// HANDLE PARTICIPANT & DOCUMENT ITEM SELECTION CHANGES
+		if(e.getSource() == viewController) {
+			if(e.getItem() == null) {
+				currentDocumentItem = null;
+			} else {
+				currentDocumentItem = (DocumentItem)e.getItem();
+			}
+		} else if(e.getSource() == participantController){
+			if(e.getItem() == null) {
+				currentParticipantItem = null;
+			} else {
+				currentParticipantItem = (ParticipantItem)e.getItem();
+			}
+		}
+		
+		if(currentDocumentItem != null && currentParticipantItem != null) {
+			setEnabled(true);
+		} else {
+			setEnabled(false);
+		}
 	}
 
 }
