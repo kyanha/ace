@@ -42,8 +42,8 @@ public class ProfileRegistryFactory {
 			RequestFilter filter = RequestFilterFactory.createServerChain();
 			mainHandler = new MainRequestHandler(deserializer, filter);
 			ResponseParserHandler handler = new ResponseParserHandler();
-			CollaborationRequestHandlerFactory.init(deserializer, handler);
-			RequestHandler collab = CollaborationRequestHandlerFactory.getInstance().createHandler();
+			SessionRequestHandlerFactory.init(deserializer, handler);
+			RequestHandler collab = SessionRequestHandlerFactory.getInstance().createHandler();
 			StartChannelListener listener = new StartChannelListenerImpl(mainHandler, collab);
 			DefaultProfile profile = new DefaultProfile(listener);
 			StartChannelListener channelListener = null;
