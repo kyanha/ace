@@ -30,7 +30,20 @@ import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
  * Abstract base class for ThreadDomain implementations.
  */
 abstract class AbstractThreadDomain implements ThreadDomain {
-		
+	
+	/**
+	 * The name of the thread domain.
+	 */
+	private String name = "";
+	
+	public String getName() {
+		return name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
 	/**
 	 * Wraps the given <var>target</var> object and returns a proxy that
 	 * implements the specified interface <var>clazz</var>. It is thus

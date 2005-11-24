@@ -42,7 +42,11 @@ public class AsyncWorker extends Worker implements AsyncExceptionHandler {
 	private AsyncExceptionHandler handler;
 	
 	public AsyncWorker(BlockingQueue queue) {
-		super("async-worker");
+		this("async-worker", queue);
+	}
+	
+	public AsyncWorker(String name, BlockingQueue queue) {
+		super("async-worker:" + name);
 		ParameterValidator.notNull("queue", queue);
 		this.queue = queue;
 		this.handler = this;

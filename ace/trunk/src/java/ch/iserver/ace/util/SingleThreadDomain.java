@@ -42,7 +42,7 @@ public class SingleThreadDomain extends AbstractThreadDomain {
 	 * The single worker thread.
 	 */
 	private AsyncWorker worker;
-	
+		
 	/**
 	 * Exception handler for the async workers.
 	 */
@@ -58,7 +58,7 @@ public class SingleThreadDomain extends AbstractThreadDomain {
 	/**
 	 * Creates a new SingleThreadDomain object.
 	 */
-	public SingleThreadDomain(AsyncExceptionHandler handler) {
+	public SingleThreadDomain( AsyncExceptionHandler handler) {
 		this.queue = new LinkedBlockingQueue();
 		this.handler = handler;
 	}
@@ -68,7 +68,7 @@ public class SingleThreadDomain extends AbstractThreadDomain {
 	 */
 	public Object wrap(Object target, Class clazz) {
 		if (worker == null) {
-			this.worker = new AsyncWorker(queue);
+			this.worker = new AsyncWorker(getName(), queue);
 			this.worker.setExceptionHandler(handler);
 			this.worker.start();
 		}
