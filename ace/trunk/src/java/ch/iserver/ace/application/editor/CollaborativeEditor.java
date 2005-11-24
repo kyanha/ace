@@ -66,9 +66,7 @@ public class CollaborativeEditor extends EditorImpl {
 	}
 
 	public void setDocument(CollaborativeDocument document) {
-		StyledDocument doc = (DefaultStyledDocument)document;
-		System.out.println("Setting document" + doc);
-		cTextPane.setDocument(doc);
+		cTextPane.setDocument(document);
 	}
 
 	public void setEnabled(boolean enabled) {
