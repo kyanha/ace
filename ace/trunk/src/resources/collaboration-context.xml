@@ -48,7 +48,7 @@
   </bean>
   
   <bean id="acknowledgeStrategyFactory" class="ch.iserver.ace.collaboration.jupiter.NullAcknowledgeStrategyFactory">
-    <constructor-arg><ref local="acknowledgeStrategyExecutorService"/></constructor-arg> 
+    <!--<constructor-arg><ref local="acknowledgeStrategyExecutorService"/></constructor-arg> -->
   </bean>
   
   <bean id="acknowledgeStrategyExecutorService" class="edu.emory.mathcs.backport.java.util.concurrent.ScheduledThreadPoolExecutor">
