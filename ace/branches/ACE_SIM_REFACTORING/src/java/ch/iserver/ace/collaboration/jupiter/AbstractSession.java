@@ -60,11 +60,19 @@ abstract class AbstractSession implements Session {
 	private final Map participantMap = new HashMap();
 	
 	/**
-	 * 
+	 * The user registry containing the known users.
 	 */
 	private UserRegistry userRegistry;
 
+	/**
+	 * The AcknowledgeStrategy used by this class.
+	 */
 	private AcknowledgeStrategy acknowledgeStrategy = new NullAcknowledgeStrategy();
+	
+	/**
+	 * Flag used to determine when the session has been destroyed.
+	 */
+	private boolean destroyed;
 	
 	/**
 	 * Creates a new AbstractSession that uses the given Algorithm.
@@ -79,10 +87,18 @@ abstract class AbstractSession implements Session {
 		this.algorithm = algorithm;
 	}
 	
+	/**
+	 * Sets the UserRegistry to be used by the session.
+	 * 
+	 * @param registry the user registry
+	 */
 	public void setUserRegistry(UserRegistry registry) {
 		this.userRegistry = registry;
 	}
 	
+	/**
+	 * @return gets the UserRegistry in use
+	 */
 	protected UserRegistry getUserRegistry() {
 		return userRegistry;
 	}
@@ -102,13 +118,31 @@ abstract class AbstractSession implements Session {
 	}
 	
 	/**
+	 * Sets the AcknowledgeStrategy to be used. Do not call this method more
+	 * than once.
+	 * 
+	 * @param acknowledgeStrategy the new AcknowledgeStrategy
+	 */
+	public void setAcknowledgeStrategy(AcknowledgeStrategy acknowledgeStrategy) {
+		this.acknowledgeStrategy = acknowledgeStrategy;
+		this.acknowledgeStrategy.init(createAcknowledgeAction());
+	}
+
+	/**
+	 * Resets the acknowledge strategy.
+	 */
+	protected void resetAcknowledgeTimer() {
+		acknowledgeStrategy.resetTimer();
+	}
+	
+	/**
 	 * Checks whether calls to the send methods are properly wrapped in 
 	 * lock/unlock calls.
 	 * 
 	 * @throws IllegalMonitorStateException if the Session is not properly locked
 	 *                       before sending operations and caret updates
 	 */
-	protected synchronized void checkLockUsage() {
+	protected void checkLockUsage() {
 		if (!lock.isOwner(Thread.currentThread())) {
 			throw new IllegalMonitorStateException("Lock the Session before sending.");
 		}
@@ -148,6 +182,9 @@ abstract class AbstractSession implements Session {
 	 * @param participant the Participant to be added
 	 */
 	protected void addParticipant(Participant participant) {
+		if (destroyed) {
+			throw new IllegalStateException("session is destroyed");
+		}
 		participants.add(participant);
 		participantMap.put(new Integer(participant.getParticipantId()), participant);
 	}
@@ -159,6 +196,9 @@ abstract class AbstractSession implements Session {
 	 * @param participant the Participant to be removed
 	 */
 	protected void removeParticipant(Participant participant) {
+		if (destroyed) {
+			throw new IllegalStateException("session is destroyed");
+		}
 		participants.remove(participant);
 		participantMap.remove(new Integer(participant.getParticipantId()));
 	}
@@ -171,25 +211,33 @@ abstract class AbstractSession implements Session {
 	 * @return a Participant instance
 	 */
 	protected Participant createParticipant(int participantId, RemoteUserProxy proxy) {
+		if (destroyed) {
+			throw new IllegalStateException("session is destroyed");
+		}
 		return new ParticipantImpl(participantId, getUserRegistry().addUser(proxy));
 	}
 
+	/**
+	 * Creates a new AcknowledgeAction to be executed each time the 
+	 * AcknowledgeStrategy decides it's time for an acknowledge. The action
+	 * defines what happens at that moment.
+	 * 
+	 * @return the action to be executed
+	 */
 	protected abstract AcknowledgeAction createAcknowledgeAction();
 	
+	/**
+	 * @return the AcknowledgeStrategy used by the session
+	 */
 	public AcknowledgeStrategy getAcknowledgeStrategy() {
 		return acknowledgeStrategy;
 	}
-
-	public void setAcknowledgeStrategy(AcknowledgeStrategy acknowledgeStrategy) {
-		this.acknowledgeStrategy = acknowledgeStrategy;
-		this.acknowledgeStrategy.init(createAcknowledgeAction());
-	}
-
-	protected void resetAcknowledgeTimer() {
-		acknowledgeStrategy.resetTimer();
-	}
 	
+	/**
+	 * Destroys the session.
+	 */
 	protected void destroy() {
+		destroyed = true;
 		acknowledgeStrategy.destroy();
 	}
 	

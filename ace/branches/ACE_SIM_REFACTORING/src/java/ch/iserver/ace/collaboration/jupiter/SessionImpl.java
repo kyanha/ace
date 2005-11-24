@@ -67,18 +67,39 @@ public class SessionImpl extends AbstractSession
 	 */
 	private ThreadDomain threadDomain;
 	
+	/**
+	 * Creates a new SessionImpl.
+	 */
 	public SessionImpl() {
 		this(new AlgorithmWrapperImpl(new Jupiter(true)));
 	}
 			
+	/**
+	 * Creates a new SessionImpl.
+	 * 
+	 * @param algorithm the algorithm for the session
+	 */
 	public SessionImpl(AlgorithmWrapper algorithm) {
 		this(algorithm, (ParticipantSessionCallback) null);
 	}
 	
+	/**
+	 * Creates a new SessionImpl using the given algorithm and lock.
+	 * 
+	 * @param wrapper the algorithm for the Session
+	 * @param lock the Lock to be used by the Session
+	 */
 	public SessionImpl(AlgorithmWrapper wrapper, Lock lock) {
 		super(wrapper, lock);
 	}
 	
+	/**
+	 * Creates a new SessionImpl using the given algorithm and 
+	 * ParticipantSessionCallback.
+	 * 
+	 * @param algorithm the algorithm to be used
+	 * @param callback the callback for the session
+	 */
 	protected SessionImpl(AlgorithmWrapper algorithm, ParticipantSessionCallback callback) {
 		super(algorithm, new SemaphoreLock("client-lock"));
 		setSessionCallback(callback);
@@ -101,9 +122,7 @@ public class SessionImpl extends AbstractSession
 	}
 	
 	/**
-	 * Sets the connection to the network layer.
-	 * 
-	 * @param connection the new connection
+	 * @see ch.iserver.ace.collaboration.jupiter.ConfigurableSession#setConnection(ch.iserver.ace.net.SessionConnection)
 	 */
 	public void setConnection(SessionConnection connection) {
 		ParameterValidator.notNull("connection", connection);
@@ -118,10 +137,19 @@ public class SessionImpl extends AbstractSession
 		return connection;
 	}
 	
+	/**
+	 * @return the ThreadDomain used by the session to wrap the session 
+	 *         connection
+	 */
 	public ThreadDomain getThreadDomain() {
 		return threadDomain;
 	}
 	
+	/**
+	 * Sets the ThreadDomain used to wrap the SessionConnection.
+	 * 
+	 * @param threadDomain 
+	 */
 	public void setThreadDomain(ThreadDomain threadDomain) {
 		this.threadDomain = threadDomain;
 	}
