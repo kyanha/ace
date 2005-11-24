@@ -29,7 +29,7 @@ import ch.iserver.ace.net.impl.PortableDocumentExt;
 import ch.iserver.ace.net.impl.RemoteDocumentProxyExt;
 
 /**
- *Client side request handler for a collaborative session.
+ * Client side request handler for a collaborative session.
  */
 public class SessionRequestHandler extends AbstractRequestHandler {
 
