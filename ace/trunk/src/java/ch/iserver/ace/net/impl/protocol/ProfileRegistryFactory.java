@@ -34,14 +34,15 @@ import ch.iserver.ace.net.impl.NetworkProperties;
 public class ProfileRegistryFactory {
 
 	private static ProfileRegistry instance;
+	private static MainRequestHandler mainHandler;
 	
 	public static ProfileRegistry getProfileRegistry() {
 		if (instance == null) {
 			Deserializer deserializer = DeserializerImpl.getInstance();
 			RequestFilter filter = RequestFilterFactory.createServerChain();
-			RequestHandler main = new MainRequestHandler(deserializer, filter);
+			mainHandler = new MainRequestHandler(deserializer, filter);
 			RequestHandler collab = new CollaborationRequestHandler();
-			StartChannelListener listener = new StartChannelListenerImpl(main, collab);
+			StartChannelListener listener = new StartChannelListenerImpl(mainHandler, collab);
 			DefaultProfile profile = new DefaultProfile(listener);
 			StartChannelListener channelListener = null;
 			try {
@@ -51,6 +52,10 @@ public class ProfileRegistryFactory {
 			instance.addStartChannelListener(NetworkProperties.get(NetworkProperties.KEY_PROFILE_URI), channelListener, null);
 		}
 		return instance;
+	}
+	
+	public static MainRequestHandler getMainRequestHandler() {
+		return mainHandler;
 	}
 	
 }

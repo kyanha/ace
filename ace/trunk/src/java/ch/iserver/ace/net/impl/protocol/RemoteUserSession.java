@@ -31,6 +31,8 @@ import org.apache.log4j.Logger;
 import org.beepcore.beep.core.BEEPException;
 import org.beepcore.beep.core.Channel;
 import org.beepcore.beep.core.ProfileRegistry;
+import org.beepcore.beep.core.RequestHandler;
+import org.beepcore.beep.core.StartChannelProfile;
 import org.beepcore.beep.lib.NullReplyListener;
 import org.beepcore.beep.transport.tcp.TCPSession;
 import org.beepcore.beep.transport.tcp.TCPSessionCreator;
@@ -118,7 +120,19 @@ public class RemoteUserSession {
 		try {
 			String uri = NetworkProperties.get(NetworkProperties.KEY_PROFILE_URI);
 			LOG.debug("startChannel("+uri+", "+type+")");
-			return session.startChannel(uri, false, type);
+			
+			StartChannelProfile profile = new StartChannelProfile(uri, false, type);
+			RequestHandler handler = null;
+			if (type == CHANNEL_MAIN) {
+				handler = ProfileRegistryFactory.getMainRequestHandler();
+			} else if (type == CHANNEL_COLLABORATION) {
+				handler = new CollaborationRequestHandler();
+			} else {
+				//TODO: proxy channel?
+				throw new IllegalStateException("unknown channel type ["+type+"]");
+			}
+			return session.startChannel(profile, handler);
+//			return session.startChannel(uri, false, type);
 		} catch (BEEPException be) {
 			//TODO: retry strategy?
 			LOG.error("could not start channel ["+be+"]");
