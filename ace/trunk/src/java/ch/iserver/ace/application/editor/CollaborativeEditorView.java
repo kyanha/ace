@@ -35,7 +35,7 @@ public class CollaborativeEditorView extends WrappedPlainView {
 	
 	public void paint(Graphics g, Shape a) {
 		super.paint(g, a);
-		g.drawString("hahaha!", 10, 10);
+		g.drawString(".", 10, 10);
 	}
 
 }
