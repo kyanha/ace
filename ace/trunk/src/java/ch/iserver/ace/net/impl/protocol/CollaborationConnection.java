@@ -163,14 +163,12 @@ public class CollaborationConnection extends AbstractConnection implements
 		}
 	}
 	
-	public boolean equals(Object obj) {
-		//TODO:!!!
-		throw new UnsupportedOperationException("to be implemented");
-	}
-	
-	public int hashCode() {
-		//TODO: !!!
-		throw new UnsupportedOperationException("to be implemented");
-	}
+//	public boolean equals(Object obj) {
+//		return false;
+//	}
+//	
+//	public int hashCode() {
+//		return -1;
+//	}
 
 }

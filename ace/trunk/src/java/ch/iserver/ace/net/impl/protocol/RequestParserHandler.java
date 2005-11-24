@@ -143,7 +143,7 @@ public class RequestParserHandler extends ParserHandler {
 	}
 
 	public void setMetaData(Object metadata) {
-		throw new UnsupportedOperationException("to be implemented");
+		throw new UnsupportedOperationException("setMetaData() to be implemented in RequestParserHandler");
 		
 	}
 }
