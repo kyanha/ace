@@ -26,9 +26,9 @@ import javax.swing.text.Style;
 import javax.swing.text.*;
 
 
-public class StyleChangedDocument extends DefaultStyledDocument {
+public class CollaborativeDocument extends DefaultStyledDocument {
 
-	public StyleChangedDocument() {
+	public CollaborativeDocument() {
 	}
 	
 	protected void styleChanged(Style style) {
@@ -38,6 +38,7 @@ public class StyleChangedDocument extends DefaultStyledDocument {
 			reapplyStyles(style);
 		}
 	}
+
 
 
 	public void reapplyStyles(Style style) {
@@ -80,7 +81,5 @@ public class StyleChangedDocument extends DefaultStyledDocument {
             }
         }
 	}
-
-
 
 }
