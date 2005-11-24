@@ -254,9 +254,20 @@
         <description>runs the main class</description>
 		<java classname="ch.iserver.ace.application.Main" 
 		      fork="true" 
-		      classpathref="classpath.run"/>
+		      classpathref="classpath.run">
+		</java>
 	</target>
 	
+	<target name="run-policy" depends="compile,resources">
+        <description>runs the main class</description>
+		<java classname="ch.iserver.ace.application.Main" 
+		      fork="true" 
+		      classpathref="classpath.run">
+		      <jvmarg value="-Djava.security.manager"/>
+		      <jvmarg value="-Djava.security.policy=${build.resources}/ace.policy"/>
+		</java>
+	</target>
+
 	<target name="run-windows" depends="compile,resources,jar-windows">
         <description>runs the main class with windows customization</description>
 		<java classname="ch.iserver.ace.application.Main" 
