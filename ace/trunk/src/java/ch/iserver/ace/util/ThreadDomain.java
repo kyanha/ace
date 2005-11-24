@@ -33,12 +33,18 @@ package ch.iserver.ace.util;
 public interface ThreadDomain {
 	
 	/**
-	 * @param name
+	 * Sets the name of this ThreadDomain. Names are mainly useful in debug
+	 * mode.
+	 * 
+	 * @param name the name of the thread domain
 	 */
 	void setName(String name);
 	
 	/**
-	 * @return
+	 * Gets the name of this ThreadDomain. The name is mainly useful for
+	 * debugging and logging output.
+	 * 
+	 * @return the name of the domain
 	 */
 	String getName();
 	
