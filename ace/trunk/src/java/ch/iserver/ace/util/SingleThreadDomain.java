@@ -70,6 +70,7 @@ public class SingleThreadDomain extends AbstractThreadDomain {
 		if (worker == null) {
 			this.worker = new AsyncWorker(queue);
 			this.worker.setExceptionHandler(handler);
+			this.worker.start();
 		}
 		Advice advice = new LoggingInterceptor(SingleThreadDomain.class);
 		return wrap(target, clazz, queue, advice);

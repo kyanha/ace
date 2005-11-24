@@ -87,6 +87,10 @@ abstract class AbstractSession implements Session {
 		this.algorithm = algorithm;
 	}
 	
+	public boolean isDestroyed() {
+		return destroyed;
+	}
+	
 	/**
 	 * Sets the UserRegistry to be used by the session.
 	 * 
@@ -147,6 +151,12 @@ abstract class AbstractSession implements Session {
 			throw new IllegalMonitorStateException("Lock the Session before sending.");
 		}
 	}
+	
+	protected final void checkSessionState() {
+		if (isDestroyed()) {
+			throw new IllegalStateException("session is disposed");
+		}
+	}
 
 	/**
 	 * @see ch.iserver.ace.collaboration.Session#lock()
@@ -166,6 +176,7 @@ abstract class AbstractSession implements Session {
 	 * @see ch.iserver.ace.collaboration.Session#getParticipants()
 	 */
 	public Set getParticipants() {
+		checkSessionState();
 		return Collections.unmodifiableSet(participants);
 	}
 
@@ -173,6 +184,7 @@ abstract class AbstractSession implements Session {
 	 * @see ch.iserver.ace.collaboration.Session#getParticipant(int)
 	 */
 	public Participant getParticipant(int participantId) {
+		checkSessionState();
 		return (Participant) participantMap.get(new Integer(participantId));
 	}
 
@@ -182,9 +194,6 @@ abstract class AbstractSession implements Session {
 	 * @param participant the Participant to be added
 	 */
 	protected void addParticipant(Participant participant) {
-		if (destroyed) {
-			throw new IllegalStateException("session is destroyed");
-		}
 		participants.add(participant);
 		participantMap.put(new Integer(participant.getParticipantId()), participant);
 	}
@@ -196,9 +205,6 @@ abstract class AbstractSession implements Session {
 	 * @param participant the Participant to be removed
 	 */
 	protected void removeParticipant(Participant participant) {
-		if (destroyed) {
-			throw new IllegalStateException("session is destroyed");
-		}
 		participants.remove(participant);
 		participantMap.remove(new Integer(participant.getParticipantId()));
 	}
@@ -211,9 +217,6 @@ abstract class AbstractSession implements Session {
 	 * @return a Participant instance
 	 */
 	protected Participant createParticipant(int participantId, RemoteUserProxy proxy) {
-		if (destroyed) {
-			throw new IllegalStateException("session is destroyed");
-		}
 		return new ParticipantImpl(participantId, getUserRegistry().addUser(proxy));
 	}
 

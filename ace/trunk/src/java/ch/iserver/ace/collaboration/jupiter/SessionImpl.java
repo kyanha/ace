@@ -182,9 +182,11 @@ public class SessionImpl extends AbstractSession
 	/**
 	 * @see ch.iserver.ace.collaboration.Session#leave()
 	 */
-	public void leave() {
+	public synchronized void leave() {
+		checkSessionState();
 		try {
 			connection.leave();
+			callback = NullSessionCallback.getInstance();
 		} finally {
 			destroy();
 		}
@@ -195,6 +197,7 @@ public class SessionImpl extends AbstractSession
 	 */
 	public void sendOperation(Operation operation) {
 		checkLockUsage();
+		checkSessionState();
 		resetAcknowledgeTimer();
 		Request request = getAlgorithm().generateRequest(operation);
 		getConnection().sendRequest(request);
@@ -205,6 +208,7 @@ public class SessionImpl extends AbstractSession
 	 */
 	public void sendCaretUpdate(CaretUpdate update) {
 		checkLockUsage();
+		checkSessionState();
 		resetAcknowledgeTimer();
 		CaretUpdateMessage message = getAlgorithm().generateCaretUpdateMessage(update);
 		getConnection().sendCaretUpdateMessage(message);
@@ -215,21 +219,21 @@ public class SessionImpl extends AbstractSession
 	/**
 	 * @see ch.iserver.ace.net.SessionConnectionCallback#kicked()
 	 */
-	public void kicked() {
+	public synchronized void kicked() {
 		getCallback().kicked();
 	}
 	
 	/**
 	 * @see ch.iserver.ace.net.SessionConnectionCallback#sessionTerminated()
 	 */
-	public void sessionTerminated() {
+	public synchronized void sessionTerminated() {
 		getCallback().sessionTerminated();
 	}
 	
 	/**
 	 * @see ch.iserver.ace.net.SessionConnectionCallback#receiveCaretUpdate(int, ch.iserver.ace.algorithm.CaretUpdateMessage)
 	 */
-	public void receiveCaretUpdate(int participantId, CaretUpdateMessage message) {
+	public synchronized void receiveCaretUpdate(int participantId, CaretUpdateMessage message) {
 		lock();
 		try {
 			CaretUpdate update = getAlgorithm().receiveCaretUpdateMessage(message);
@@ -244,7 +248,7 @@ public class SessionImpl extends AbstractSession
 	/**
 	 * @see ch.iserver.ace.net.SessionConnectionCallback#receiveRequest(int, ch.iserver.ace.algorithm.Request)
 	 */
-	public void receiveRequest(int participantId, Request request) {
+	public synchronized void receiveRequest(int participantId, Request request) {
 		lock();
 		try {
 			Operation operation = getAlgorithm().receiveRequest(request);
@@ -259,7 +263,7 @@ public class SessionImpl extends AbstractSession
 	/**
 	 * @see ch.iserver.ace.net.SessionConnectionCallback#receiveAcknowledge(int, ch.iserver.ace.algorithm.Timestamp)
 	 */
-	public void receiveAcknowledge(int siteId, Timestamp timestamp) {
+	public synchronized void receiveAcknowledge(int siteId, Timestamp timestamp) {
 		lock();
 		try {
 			getAlgorithm().acknowledge(siteId, timestamp);
@@ -273,7 +277,7 @@ public class SessionImpl extends AbstractSession
 	/**
 	 * @see ch.iserver.ace.net.SessionConnectionCallback#setDocument(ch.iserver.ace.net.PortableDocument)
 	 */
-	public void setDocument(PortableDocument document) {
+	public synchronized void setDocument(PortableDocument document) {
 		Map participants = new HashMap();
 		int[] ids = document.getParticipantIds();
 		for (int i = 0; i < ids.length; i++) {
@@ -289,7 +293,7 @@ public class SessionImpl extends AbstractSession
 	/**
 	 * @see ch.iserver.ace.net.SessionConnectionCallback#participantJoined(int, ch.iserver.ace.net.RemoteUserProxy)
 	 */
-	public void participantJoined(int participantId, RemoteUserProxy proxy) {
+	public synchronized void participantJoined(int participantId, RemoteUserProxy proxy) {
 		Participant participant = createParticipant(participantId, proxy);
 		addParticipant(participant);
 		getCallback().participantJoined(participant);
@@ -298,7 +302,7 @@ public class SessionImpl extends AbstractSession
 	/**
 	 * @see ch.iserver.ace.net.SessionConnectionCallback#participantLeft(int, int)
 	 */
-	public void participantLeft(int participantId, int reason) {
+	public synchronized void participantLeft(int participantId, int reason) {
 		Participant participant = getParticipant(participantId);
 		removeParticipant(participant);
 		getCallback().participantLeft(participant, reason);
@@ -309,7 +313,7 @@ public class SessionImpl extends AbstractSession
 	/**
 	 * @see ch.iserver.ace.collaboration.jupiter.SessionConnectionFailureHandler#handleFailure(int, java.lang.Exception)
 	 */
-	public void handleFailure(int reason, Exception e) {
+	public synchronized void handleFailure(int reason, Exception e) {
 		getCallback().sessionFailed(reason, e);
 	}
 	
