@@ -31,7 +31,6 @@ import ch.iserver.ace.net.RemoteUserProxy;
 
 /**
  * A Forwarder implementation that forwards requests to several forwarders.
- * The forwarders are retrieved from the {@link ServerLogic}.
  */
 class CompositeForwarderImpl implements CompositeForwarder {
 		
