@@ -63,7 +63,7 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 	private boolean isDirty = false;
 	private String id, title, extendedTitle, toolTip;
 
-	private StyledDocument editorDocument;
+	private CollaborativeDocument editorDocument;
 	// private SyntaxDocument editorDocument;
 	private RemoteDocument remoteDocument;
 	private Session session;
@@ -189,7 +189,7 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 		return remoteDocument;
 	}
 	
-	public StyledDocument getEditorDocument() {
+	public CollaborativeDocument getEditorDocument() {
 		return editorDocument;
 	}
 	
@@ -216,8 +216,8 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 	
 	
 
-	private void createEditorDocument() {
-		editorDocument = new CollaborativeDocument();// new DefaultStyledDocument();
+	public void createEditorDocument() {
+		editorDocument = new CollaborativeDocument();
 		// editorDocument = new SyntaxDocument();
 		editorDocument.addDocumentListener(new DocumentListener() {
 			public void changedUpdate(DocumentEvent e) {
@@ -246,10 +246,17 @@ BASCHTLE
 */
 	public void publish(CollaborationService collaborationService) {
 		sessionCallback = new PublishedSessionCallbackImpl();
+		String documentContent = "";
+		try {
+			documentContent = editorDocument.getText(0, editorDocument.getLength());
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println("asdf: " + documentContent);
 		session = (Session)
 			//Spin.off(
 					collaborationService.publish((PublishedSessionCallback)sessionCallback,
-					new DocumentModel("", 0, 0, new DocumentDetails(title)));
+					new DocumentModel(documentContent, 0, 0, new DocumentDetails(title)));
 			//);
 			
 		// editorDocument.setLocal(false);
