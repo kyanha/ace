@@ -79,9 +79,7 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	private DocumentRegistry documentRegistry;;
 	
 	private SessionFactory sessionFactory;
-	
-	private ThreadDomain incomingDomain;
-	
+		
 	private ThreadDomain publisherThreadDomain;
 	
 	private AcknowledgeStrategyFactory acknowledgeStrategyFactory = new NullAcknowledgeStrategyFactory();
@@ -128,15 +126,12 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 		this.publisherThreadDomain = domain;
 	}
 	
-	public ThreadDomain getIncomingDomain() {
-		if (incomingDomain == null) {
-			new SingleThreadDomain(new AsyncExceptionHandler() {
+	public ThreadDomain createIncomingDomain() {
+		return new SingleThreadDomain(new AsyncExceptionHandler() {
 				public void handleException(Throwable th) {
 					LOG.error(th);
 				}
-			});
-		}
-		return incomingDomain;
+		});
 	}
 	
 	protected NetworkService getNetworkService() {
@@ -244,7 +239,7 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 		session.setAcknowledgeStrategy(getAcknowledgeStrategyFactory().createStrategy());
 		session.setUserRegistry(getUserRegistry());
 		
-		ThreadDomain threadDomain = getIncomingDomain();
+		ThreadDomain threadDomain = createIncomingDomain();
 		
 		ServerLogicImpl target = new ServerLogicImpl(
 						threadDomain,
