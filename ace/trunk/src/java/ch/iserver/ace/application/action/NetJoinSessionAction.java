@@ -56,7 +56,7 @@ public class NetJoinSessionAction extends AbstractAction implements ItemSelectio
 	}
 	
 	private void joinSession() {
-		if(currentBrowseItem != null) {
+		if(currentBrowseItem != null && currentBrowseItem.getType() == DocumentItem.REMOTE) {
 			currentBrowseItem.join();
 		}
 	}
