@@ -25,16 +25,13 @@ import junit.framework.TestCase;
 
 import org.easymock.MockControl;
 
-import ch.iserver.ace.algorithm.Algorithm;
-import ch.iserver.ace.algorithm.CaretUpdateMessage;
-import ch.iserver.ace.algorithm.Request;
-import ch.iserver.ace.algorithm.RequestImpl;
+import ch.iserver.ace.collaboration.jupiter.AlgorithmWrapper;
 import ch.iserver.ace.net.ParticipantPort;
 
 public class ParticipantPortImplTest extends TestCase {
 	
 	/** The algorithm mock. */
-	private Algorithm algorithm;
+	private AlgorithmWrapper algorithm;
 		
 	/** The participant port under test. */
 	private ParticipantPort port;
@@ -46,35 +43,22 @@ public class ParticipantPortImplTest extends TestCase {
 	private ServerLogic logic;
 	
 	public void setUp() {
-		MockControl control = MockControl.createNiceControl(Algorithm.class);
-		algorithm = (Algorithm) control.getMock();
+		MockControl control = MockControl.createNiceControl(AlgorithmWrapper.class);
+		algorithm = (AlgorithmWrapper) control.getMock();
 		
 		logicCtrl = MockControl.createControl(ServerLogic.class);
 		logicCtrl.setDefaultMatcher(MockControl.ALWAYS_MATCHER);
 		logic = (ServerLogic) logicCtrl.getMock();
 		
-		port = new ParticipantPortImpl(logic, 1, algorithm);
+		port = new ParticipantPortImpl(logic, 1, algorithm, null);
 	}
 	
 	public void testReceiveCaretUpdate() throws InterruptedException {
-		CaretUpdateMessage message = new CaretUpdateMessage(0, null, null);
-		
-		logic.addCommand(null);
-		logicCtrl.replay();
-		
-		port.receiveCaretUpdate(message);
-		
-		logicCtrl.verify();
+
 	}
 
 	public void testReceiveRequest() throws InterruptedException {
-		logic.addCommand(null);
-		logicCtrl.replay();
 
-		Request request = new RequestImpl(0, null, null);
-		port.receiveRequest(request);
-
-		logicCtrl.verify();
 	}
 
 }

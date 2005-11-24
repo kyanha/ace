@@ -139,11 +139,7 @@ abstract class AbstractSession implements Session {
 	 * @see ch.iserver.ace.collaboration.Session#getParticipant(int)
 	 */
 	public Participant getParticipant(int participantId) {
-		Participant p = (Participant) participantMap.get(new Integer(participantId));
-		if (p == null) {
-			// TODO: throw new UnknownParticipantException();
-		}
-		return p;
+		return (Participant) participantMap.get(new Integer(participantId));
 	}
 
 	/**
@@ -192,5 +188,9 @@ abstract class AbstractSession implements Session {
 	protected void resetAcknowledgeTimer() {
 		acknowledgeStrategy.resetTimer();
 	}
-
+	
+	protected void destroy() {
+		acknowledgeStrategy.destroy();
+	}
+	
 }

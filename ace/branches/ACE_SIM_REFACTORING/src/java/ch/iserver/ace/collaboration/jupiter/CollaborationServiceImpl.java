@@ -43,6 +43,8 @@ import ch.iserver.ace.collaboration.RemoteDocument;
 import ch.iserver.ace.collaboration.RemoteUser;
 import ch.iserver.ace.collaboration.ServiceFailureHandler;
 import ch.iserver.ace.collaboration.UserListener;
+import ch.iserver.ace.collaboration.jupiter.server.PublisherPort;
+import ch.iserver.ace.collaboration.jupiter.server.ServerLogic;
 import ch.iserver.ace.collaboration.jupiter.server.ServerLogicImpl;
 import ch.iserver.ace.net.DocumentServer;
 import ch.iserver.ace.net.InvitationProxy;
@@ -50,7 +52,11 @@ import ch.iserver.ace.net.NetworkService;
 import ch.iserver.ace.net.NetworkServiceCallback;
 import ch.iserver.ace.net.RemoteDocumentProxy;
 import ch.iserver.ace.net.RemoteUserProxy;
+import ch.iserver.ace.util.AopUtil;
+import ch.iserver.ace.util.AsyncExceptionHandler;
+import ch.iserver.ace.util.LoggingInterceptor;
 import ch.iserver.ace.util.ParameterValidator;
+import ch.iserver.ace.util.SingleThreadDomain;
 import ch.iserver.ace.util.ThreadDomain;
 
 /**
@@ -224,16 +230,34 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 		PublishedSessionImpl session = new PublishedSessionImpl(callback);
 		session.setAcknowledgeStrategy(getAcknowledgeStrategyFactory().createStrategy());
 		session.setUserRegistry(getUserRegistry());
-		ServerLogicImpl logic = new ServerLogicImpl(
+		
+		ThreadDomain threadDomain = new SingleThreadDomain(new AsyncExceptionHandler() {
+			public void handleException(Throwable th) {
+				th.printStackTrace();
+			}
+		});
+		
+		ServerLogicImpl target = new ServerLogicImpl(
+						threadDomain,
 						getPublisherThreadDomain(), 
 						document,
 						getUserRegistry());
-		logic.setAcknowledgeStrategyFactory(getAcknowledgeStrategyFactory());
-		logic.setPublisherConnection(session);
+		target.setAcknowledgeStrategyFactory(getAcknowledgeStrategyFactory());
+	
+		PublisherConnection connection = (PublisherConnection) AopUtil.wrap(
+						session,
+						PublisherConnection.class,
+						new LoggingInterceptor(CollaborationServiceImpl.class)
+		);
+		PublisherPort port = target.initPublisherConnection(connection);
+		session.setPublisherPort(port);
+		
+		ServerLogic logic = (ServerLogic) threadDomain.wrap(target, ServerLogic.class);
 		session.setServerLogic(logic);
 		DocumentServer server = getNetworkService().publish(logic, document.getDetails());
-		logic.setDocumentServer(server);
-		logic.start();
+		target.setDocumentServer(server);
+		target.start();
+		
 		return session;
 	}
 

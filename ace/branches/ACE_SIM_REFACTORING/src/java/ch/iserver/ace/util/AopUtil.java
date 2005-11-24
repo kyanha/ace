@@ -19,30 +19,32 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.collaboration.jupiter.server.serializer;
+package ch.iserver.ace.util;
+
+import org.aopalliance.aop.Advice;
+import org.springframework.aop.framework.ProxyFactoryBean;
 
 /**
- * Processor for SerializerCommand objects.
+ *
  */
-public interface CommandProcessor {
+public final class AopUtil {
 	
-	/**
-	 * Starts the processor.
-	 */
-	void startProcessor();
+	private AopUtil() {
+		// nothing to do
+	}
 	
-	/**
-	 * Processes the given command. Note, it is an error to call this
-	 * method without prior call to startProcessor.
-	 * 
-	 * @param command the command to be processed
-	 * @throws IllegalStateException if the processor is not started
-	 */
-	void process(SerializerCommand command);
+	public static Object wrap(Object target, Class clazz, Advice advice) {
+		return wrap(target, clazz, new Advice[] { advice });
+	}
 	
-	/**
-	 * Stops the processor.
-	 */
-	void stopProcessor();
+	public static Object wrap(Object target, Class clazz, Advice[] advices) {
+		ProxyFactoryBean factory = new ProxyFactoryBean();
+		factory.addInterface(clazz);
+		for (int i = 0; i < advices.length; i++) {
+			factory.addAdvice(advices[i]);
+		}
+		factory.setTarget(target);
+		return factory.getObject();
+	}
 	
 }

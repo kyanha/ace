@@ -24,11 +24,8 @@ package ch.iserver.ace.collaboration.jupiter.server;
 import java.util.Iterator;
 
 import ch.iserver.ace.DocumentDetails;
-import ch.iserver.ace.collaboration.jupiter.server.serializer.SerializerCommand;
-import ch.iserver.ace.net.DocumentServer;
 import ch.iserver.ace.net.DocumentServerLogic;
 import ch.iserver.ace.net.ParticipantConnection;
-import ch.iserver.ace.net.PortableDocument;
 
 /**
  * Extended interface for internal use of the server logic.
@@ -39,28 +36,7 @@ public interface ServerLogic extends DocumentServerLogic {
 	 * The participant id of the publisher.
 	 */
 	int PUBLISHER_ID = 0;
-	
-	/**
-	 * Sets the document server that is associated with this server logic.
-	 * 
-	 * @param server the server
-	 */
-	void setDocumentServer(DocumentServer server);
-		
-	/**
-	 * Adds a participant to the session logic.
-	 * 
-	 * @param participant the participant to add
-	 */
-	void addParticipant(SessionParticipant participant);
-	
-	/**
-	 * Adds a command to the serializer queue.
-	 * 
-	 * @param command the command to add to the serializer queue
-	 */
-	void addCommand(SerializerCommand command);
-	
+				
 	/**
 	 * Gets an Iterator over all the participant proxy objects in the
 	 * session.
@@ -69,13 +45,6 @@ public interface ServerLogic extends DocumentServerLogic {
 	 */
 	Iterator getForwarders();
 	
-	/**
-	 * Retrieves the current document for sending it to a joining user.
-	 * 
-	 * @return the current document as present at the server
-	 */
-	PortableDocument getDocument();
-
 	/**
 	 * Retrieves the PublisherPort used by the publisher to send requests to
 	 * the logical server.
@@ -115,12 +84,6 @@ public interface ServerLogic extends DocumentServerLogic {
 	 */
 	void joinAccepted(ParticipantConnection connection);
 	
-	/**
-	 * Prepares the shutdown of the server. After calling this method, the 
-	 * server should no longer accept any join requests.
-	 */
-	void prepareShutdown();
-
 	/**
 	 * Shuts the server logic down. The server logic takes care that the
 	 * associated document server is shut down too. 

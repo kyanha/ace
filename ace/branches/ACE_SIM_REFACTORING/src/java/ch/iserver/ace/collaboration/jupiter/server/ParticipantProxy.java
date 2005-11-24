@@ -214,7 +214,11 @@ public class ParticipantProxy implements Forwarder {
 	 * @see ch.iserver.ace.collaboration.jupiter.server.Forwarder#close()
 	 */
 	public void close() {
-		getConnection().close();
+		try {
+			getConnection().close();
+		} finally {
+			acknowledgeStrategy.destroy();
+		}
 	}
 		
 }

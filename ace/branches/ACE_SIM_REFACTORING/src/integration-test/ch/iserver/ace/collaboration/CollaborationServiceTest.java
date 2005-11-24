@@ -33,7 +33,6 @@ import ch.iserver.ace.collaboration.jupiter.UserRegistry;
 import ch.iserver.ace.collaboration.jupiter.UserRegistryImpl;
 import ch.iserver.ace.collaboration.jupiter.server.ServerDocumentImpl;
 import ch.iserver.ace.collaboration.jupiter.server.ServerLogicImpl;
-import ch.iserver.ace.collaboration.jupiter.server.SimpleCommandProcessor;
 import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.net.RemoteUserProxyStub;
 import ch.iserver.ace.util.CallerThreadDomain;
@@ -107,7 +106,6 @@ public class CollaborationServiceTest extends TestCase {
 		
 		// configure the server logic
 		logic.setAccessControlStrategy(new AcceptingAccessControlStrategy());
-		logic.setCommandProcessor(new SimpleCommandProcessor(logic.getForwarder()));
 		
 		// configure a new joining user
 		MockControl connectionCtrl1 = MockControl.createStrictControl(ParticipantConnection.class);

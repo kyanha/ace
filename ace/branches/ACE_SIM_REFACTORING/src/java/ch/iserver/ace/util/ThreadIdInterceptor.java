@@ -19,33 +19,33 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.collaboration.jupiter;
+package ch.iserver.ace.util;
 
+import org.aopalliance.intercept.MethodInterceptor;
+import org.aopalliance.intercept.MethodInvocation;
+import org.apache.log4j.Logger;
 
 /**
- * AcknowledgeStrategy that does not schedule any acknowledge messages.
+ *
  */
-public class NullAcknowledgeStrategy implements AcknowledgeStrategy {
-	
-	/**
-	 * @see ch.iserver.ace.collaboration.jupiter.AcknowledgeStrategy#init(ch.iserver.ace.collaboration.jupiter.AcknowledgeAction)
-	 */
-	public void init(AcknowledgeAction action) {
-		// ignored
-	}
+public class ThreadIdInterceptor implements MethodInterceptor {
 
-	/**
-	 * @see ch.iserver.ace.collaboration.jupiter.AcknowledgeStrategy#resetTimer()
-	 */
-	public void resetTimer() {
-		// ignored
-	}
+	private static final Logger LOG = Logger.getLogger(ThreadIdInterceptor.class);
 	
 	/**
-	 * @see ch.iserver.ace.collaboration.jupiter.AcknowledgeStrategy#destroy()
+	 * @see org.aopalliance.intercept.MethodInterceptor#invoke(org.aopalliance.intercept.MethodInvocation)
 	 */
-	public void destroy() {
-		// ignored
+	public Object invoke(MethodInvocation invocation) throws Throwable {
+		LOG.info(getSignature(invocation) + " called by " + Thread.currentThread().getName());
+		return invocation.proceed();
+	}
+	
+	private String getSignature(MethodInvocation invocation) {
+		StringBuffer buf = new StringBuffer();
+		buf.append(invocation.getThis().getClass().getName());
+		buf.append("#");
+		buf.append(invocation.getMethod().getName());
+		return buf.toString();
 	}
 
 }

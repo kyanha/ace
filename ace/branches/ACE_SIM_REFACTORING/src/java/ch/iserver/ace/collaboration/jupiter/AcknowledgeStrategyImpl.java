@@ -101,6 +101,13 @@ class AcknowledgeStrategyImpl implements AcknowledgeStrategy {
 	}
 	
 	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.AcknowledgeStrategy#destroy()
+	 */
+	public void destroy() {
+		executorService.shutdown();
+	}
+	
+	/**
 	 * Schedules the execution of the action with the executor service.
 	 */
 	protected void schedule() {

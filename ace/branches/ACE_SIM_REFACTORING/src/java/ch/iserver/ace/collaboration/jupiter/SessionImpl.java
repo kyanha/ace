@@ -155,7 +155,11 @@ public class SessionImpl extends AbstractSession
 	 * @see ch.iserver.ace.collaboration.Session#leave()
 	 */
 	public void leave() {
-		connection.leave();
+		try {
+			connection.leave();
+		} finally {
+			destroy();
+		}
 	}
 
 	/**
