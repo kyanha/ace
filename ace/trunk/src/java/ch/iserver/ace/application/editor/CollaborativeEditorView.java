@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:DocumentItem.java 1091 2005-11-09 13:29:05Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -21,30 +21,21 @@
 
 package ch.iserver.ace.application.editor;
 
-import javax.swing.JPanel;
-import javax.swing.text.StyledDocument;
-import javax.swing.Action;
+import javax.swing.*;
+import javax.swing.text.*;
+import java.awt.*;
 
 
 
-public interface Editor {
+public class CollaborativeEditorView extends WrappedPlainView {
 
-	public void setTitle(String title);
+	public CollaborativeEditorView(Element elem) {
+		super(elem);
+	}
 	
-	public void setDocument(StyledDocument document);
-	
-	public void setEnabled(boolean enabled);
-	
-	public void setFontSize(int size);
-	
-	public JPanel getEditorComponent();
-	
-	public Action getCutAction();
-	
-	public Action getCopyAction();
-	
-	public Action getPasteAction();
-	
-	public Action getSelectAllAction();
+	public void paint(Graphics g, Shape a) {
+		super.paint(g, a);
+		g.drawString("hahaha!", 10, 10);
+	}
 
 }

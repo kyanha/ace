@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:DocumentItem.java 1091 2005-11-09 13:29:05Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -21,30 +21,36 @@
 
 package ch.iserver.ace.application.editor;
 
-import javax.swing.JPanel;
-import javax.swing.text.StyledDocument;
-import javax.swing.Action;
+import javax.swing.*;
+import javax.swing.text.*;
 
 
 
-public interface Editor {
+public class CollaborativeTextPane extends JTextPane {
 
-	public void setTitle(String title);
+	private boolean localEditing = true;
+
+	public CollaborativeTextPane() {
+	}
 	
-	public void setDocument(StyledDocument document);
-	
-	public void setEnabled(boolean enabled);
-	
-	public void setFontSize(int size);
-	
-	public JPanel getEditorComponent();
-	
-	public Action getCutAction();
-	
-	public Action getCopyAction();
-	
-	public Action getPasteAction();
-	
-	public Action getSelectAllAction();
+	public boolean isLocalEditing() {
+		return localEditing;
+	}
+
+	public void setLocalEditing(boolean localEditing) {
+		this.localEditing = localEditing;
+	}
+
+	public void replaceSelection(String content) {
+		if(!localEditing) {
+			super.replaceSelection(content);
+		} else {
+			// lock
+			System.out.println("CollaborativeReplaceSelection");
+			super.replaceSelection(content);
+			//super.replaceSelection(content);
+			// unlock
+		}
+	}
 
 }

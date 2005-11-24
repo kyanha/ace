@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:DocumentItem.java 1091 2005-11-09 13:29:05Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -34,76 +34,67 @@ import java.beans.*;
 
 
 
-public class DummyEditor extends EditorImpl {
 
-	private JTextPane textPane;
+
+public class CollaborativeEditor extends EditorImpl {
+
+	private CollaborativeTextPane cTextPane;
+	private CollaborativeEditorKit cEditorKit;
 	private JToolBar editorToolBar;
-	private SimpleInternalFrame editorFrame;
+	private SimpleInternalFrame editorPane;
 	private LocaleMessageSource messageSource;
-	private ToggleFullScreenEditingAction toggleFullScreenEditingAction;
-
-	public DummyEditor(LocaleMessageSource messageSource) {
+	
+	public CollaborativeEditor(LocaleMessageSource messageSource) {
 		this.messageSource = messageSource;
 		// create toolbar
 		editorToolBar = new JToolBar();
 
 		// create editor
-		// JPanel innerEditorPane = new JPanel();
-		textPane = new DummyTextPane();
-		setFontSize(12);
-		
-		JScrollPane scrollPane = new JScrollPane(textPane);
-		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-		
-		// add components
-		editorFrame = new SimpleInternalFrame(null, " ", editorToolBar, scrollPane);
+		cTextPane = new CollaborativeTextPane();
+		cEditorKit = new CollaborativeEditorKit();
+		cTextPane.setEditorKit(cEditorKit);
 
+		// create editor pane
+		JScrollPane scrollPane = new JScrollPane(cTextPane);
+		editorPane = new SimpleInternalFrame(null, " ", editorToolBar, scrollPane);
+		
+		// add components		
 		setLayout(new BorderLayout());
-		add(editorFrame);
+		add(editorPane);
 	}
-	
-	public void setTitle(String title) {
-		editorFrame.setTitle(title);
-	}
-	
+
 	public void setDocument(StyledDocument document) {
-		textPane.setDocument(document);
+		cTextPane.setDocument(document);
 	}
-	
+
 	public void setEnabled(boolean enabled) {
-		//
-		textPane.setEnabled(enabled);
+		cTextPane.setEnabled(enabled);
 	}
-	
+
 	public void setFontSize(int size) {
-		textPane.setFont(new Font("Courier", Font.PLAIN, size));
-	}
-	
-	/*public void setToggleFullScreenEditingAction(ToggleFullScreenEditingAction toggleFullScreenEditingAction) {
-		this.toggleFullScreenEditingAction = toggleFullScreenEditingAction;
-	}*/
-	
-	public class DummyTextPane extends JTextPane {
-		public DummyTextPane() {
-			//super();
-		}
-
-		/*public Dimension getPreferredScrollableViewportSize() {
-			return new Dimension(1000, 1000);//getSize();
-		}
-
-		public boolean getScrollableTracksViewportHeight() {
-        	return false;
-    	}*/
-		
-		/*public boolean getScrollableTracksViewportWidth() {
-        	return true;
-    	}*/
+		cTextPane.setFont(new Font("Courier", Font.PLAIN, size));
 	}
 
+	public void setTitle(String title) {
+		editorPane.setTitle(title);
+	}
 	
+	public Action getCutAction() {
+		return cEditorKit.getCutAction();
+	}
 	
+	public Action getCopyAction() {
+		return cEditorKit.getCopyAction();
+	}
+	
+	public Action getPasteAction() {
+		return cEditorKit.getPasteAction();
+	}
+	
+	public Action getSelectAllAction() {
+		return cEditorKit.getSelectAllAction();
+	}
+
 	public void setToolBarActions(List toolBarActions) {
 		for(int i = 0; i < toolBarActions.size(); i++) {
 			JButton toolBarButton = editorToolBar.add(((AbstractAction)toolBarActions.get(i)));
