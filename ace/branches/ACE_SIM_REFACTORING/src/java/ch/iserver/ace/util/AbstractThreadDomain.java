@@ -47,17 +47,30 @@ abstract class AbstractThreadDomain implements ThreadDomain {
 		return wrap(target, clazz, queue, new Advice[0]);
 	}
 	
+	/**
+	 * @param target
+	 * @param clazz
+	 * @param queue
+	 * @param advice
+	 * @return
+	 */
 	protected Object wrap(Object target, Class clazz, BlockingQueue queue, Advice advice) {
 		return wrap(target, clazz, queue, new Advice[] { advice });
 	}
 	
+	/**
+	 * @param target
+	 * @param clazz
+	 * @param queue
+	 * @param advices
+	 * @return
+	 */
 	protected Object wrap(Object target, Class clazz, BlockingQueue queue, Advice[] advices) {
 		ProxyFactoryBean factory = new ProxyFactoryBean();
 		factory.addInterface(clazz);
 		AsyncInterceptor interceptor = new AsyncInterceptor(queue);
 		factory.addAdvice(interceptor);
 		for (int i = 0; i < advices.length; i++) {
-			System.out.println("adding advice: " + advices[i]);
 			factory.addAdvice(advices[i]);
 		}
 		factory.setTarget(target);
