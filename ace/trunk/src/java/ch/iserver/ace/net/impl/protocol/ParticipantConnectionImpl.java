@@ -42,7 +42,7 @@ import ch.iserver.ace.net.impl.PublishedDocument;
  * invoked.
  *
  */
-public class CollaborationConnection extends AbstractConnection implements
+public class ParticipantConnectionImpl extends AbstractConnection implements
 		ParticipantConnection {
 
 	private RemoteUserSession session;
@@ -53,14 +53,14 @@ public class CollaborationConnection extends AbstractConnection implements
 	private String docId;
 	private PublishedDocument publishedDoc;
 	
-	public CollaborationConnection(String docId, RemoteUserSession session, Channel channel, ReplyListener listener, Serializer serializer) {
-		super(channel);
+	public ParticipantConnectionImpl(String docId, RemoteUserSession session, ReplyListener listener, Serializer serializer) {
+		super(null);
 		this.docId = docId;
 		this.session = session;
 		joinAccepted = false;
 		this.serializer = serializer;
 		setReplyListener(listener);
-		super.LOG = Logger.getLogger(CollaborationConnection.class);
+		super.LOG = Logger.getLogger(ParticipantConnectionImpl.class);
 	}
 		
 	public int getParticipantId() {
