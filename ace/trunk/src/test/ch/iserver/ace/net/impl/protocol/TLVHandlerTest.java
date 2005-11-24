@@ -20,7 +20,6 @@ public class TLVHandlerTest extends TestCase {
 	 * Test method for 'ch.iserver.ace.net.impl.protocol.TLVHandler.parse(String, PortableDocumentExt)'
 	 */
 	public void testParse() {
-
 		String data = "0 11 Los gehts:  1 15 ich habe durst. 2 18  das sagst du mir? 1 20  dir sage ich alles!";
 		
 		PortableDocumentExt document = new PortableDocumentImpl();
