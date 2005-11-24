@@ -104,7 +104,7 @@ class AcknowledgeStrategyImpl implements AcknowledgeStrategy {
 	 * @see ch.iserver.ace.collaboration.jupiter.AcknowledgeStrategy#destroy()
 	 */
 	public void destroy() {
-		executorService.shutdown();
+		future.cancel(false);
 	}
 	
 	/**
