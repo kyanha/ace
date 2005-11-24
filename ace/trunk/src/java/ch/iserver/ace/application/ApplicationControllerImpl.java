@@ -106,6 +106,7 @@ public class ApplicationControllerImpl implements ApplicationController, Applica
 		Map failed = new TreeMap();
 		EventList dirty = getDocumentManager().getDirtyDocuments();	
 		
+		dirty.getReadWriteLock().writeLock().lock();
 		try {
 			if (dirty.size() == 0) {
 				shutdown();
