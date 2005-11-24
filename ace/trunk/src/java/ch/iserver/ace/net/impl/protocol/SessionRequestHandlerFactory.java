@@ -28,38 +28,38 @@ import ch.iserver.ace.util.ParameterValidator;
 /**
  *
  */
-public class CollaborationRequestHandlerFactory {
+public class SessionRequestHandlerFactory {
 
-	private Logger LOG = Logger.getLogger(CollaborationRequestHandlerFactory.class);
+	private Logger LOG = Logger.getLogger(SessionRequestHandlerFactory.class);
 	
 	private Deserializer deserializer;
 	private ParserHandler handler;
 	
-	private static CollaborationRequestHandlerFactory instance;
+	private static SessionRequestHandlerFactory instance;
 	
 	public static void init(Deserializer deserializer, ParserHandler handler) {
 		ParameterValidator.notNull("deserializer", deserializer);
 		ParameterValidator.notNull("handler", handler);
 		if (instance == null) {
-			instance = new CollaborationRequestHandlerFactory(deserializer, handler);
+			instance = new SessionRequestHandlerFactory(deserializer, handler);
 		}
 	}
 	
-	private CollaborationRequestHandlerFactory(Deserializer deserializer, ParserHandler handler) {
+	private SessionRequestHandlerFactory(Deserializer deserializer, ParserHandler handler) {
 		this.deserializer = deserializer;
 		this.handler = handler;
 	}
 	
-	public static CollaborationRequestHandlerFactory getInstance() {
+	public static SessionRequestHandlerFactory getInstance() {
 		if (instance == null) {
 			throw new IllegalStateException("instance has not been initialized");
 		}
 		return instance;
 	}
 	
-	public CollaborationRequestHandler createHandler() {
+	public SessionRequestHandler createHandler() {
 		LOG.debug("create CollaborationRequestHandler()");
-		return new CollaborationRequestHandler(deserializer, handler);
+		return new SessionRequestHandler(deserializer, handler);
 	}
 	
 }

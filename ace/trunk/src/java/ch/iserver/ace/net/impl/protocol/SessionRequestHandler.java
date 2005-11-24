@@ -22,7 +22,6 @@
 package ch.iserver.ace.net.impl.protocol;
 
 import org.apache.log4j.Logger;
-import org.beepcore.beep.core.Channel;
 import org.beepcore.beep.core.InputDataStream;
 import org.beepcore.beep.core.MessageMSG;
 
@@ -30,16 +29,16 @@ import ch.iserver.ace.net.impl.PortableDocumentExt;
 import ch.iserver.ace.net.impl.RemoteDocumentProxyExt;
 
 /**
- *
+ *Client side request handler for a collaborative session.
  */
-public class CollaborationRequestHandler extends AbstractRequestHandler {
+public class SessionRequestHandler extends AbstractRequestHandler {
 
-	private static Logger LOG = Logger.getLogger(CollaborationRequestHandler.class);
+	private static Logger LOG = Logger.getLogger(SessionRequestHandler.class);
 	
 	private Deserializer deserializer;
 	private ParserHandler handler;
 	
-	public CollaborationRequestHandler(Deserializer deserializer, ParserHandler handler) {
+	public SessionRequestHandler(Deserializer deserializer, ParserHandler handler) {
 		this.deserializer = deserializer;
 		this.handler = handler;
 	}
