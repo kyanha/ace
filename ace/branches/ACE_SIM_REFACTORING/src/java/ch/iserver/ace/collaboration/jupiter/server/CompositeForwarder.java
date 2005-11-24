@@ -22,17 +22,23 @@
 package ch.iserver.ace.collaboration.jupiter.server;
 
 /**
- *
+ * A CompositeForwarder contains a list of forwarders which this forwarder
+ * forwards to. There are methods to add and remove forwarders too.
+ * This is a classical implementation of the Composite pattern.
  */
 public interface CompositeForwarder extends Forwarder {
 	
 	/**
-	 * @param forwarder
+	 * Adds a forwarder to the list of forwarders.
+	 * 
+	 * @param forwarder the forwarder to add
 	 */
 	void addForwarder(Forwarder forwarder);
 	
 	/**
-	 * @param forwarder
+	 * Removes a forwarder from the list of forwarders.
+	 * 
+	 * @param forwarder the forwarder to remove
 	 */
 	void removeForwarder(Forwarder forwarder);
 	

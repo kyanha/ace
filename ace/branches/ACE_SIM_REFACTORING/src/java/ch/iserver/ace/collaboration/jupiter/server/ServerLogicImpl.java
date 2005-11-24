@@ -166,6 +166,12 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 		return proxy;
 	}
 
+	/**
+	 * Initializes the publisher connection and returns a corresponding publisher port.
+	 * 
+	 * @param publisherConnection the connection to the publisher
+	 * @return the port for the publisher
+	 */
 	public PublisherPort initPublisherConnection(PublisherConnection publisherConnection) {
 		this.publisherConnection = (PublisherConnection) outgoingDomain.wrap(
 						new PublisherConnectionWrapper(publisherConnection, this), PublisherConnection.class);;
