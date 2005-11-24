@@ -35,8 +35,12 @@ import ch.iserver.ace.util.UUID;
 
 import javax.swing.event.DocumentListener;
 import javax.swing.event.DocumentEvent;
+import javax.swing.event.*;
 import javax.swing.text.*;
+import java.util.*;
 import java.io.File;
+import java.awt.*;
+import ch.iserver.ace.application.editor.*;
 
 import ca.odell.glazedlists.EventList;
 import spin.Spin;
@@ -73,6 +77,39 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 		initDocumentItem(UUID.nextUUID(), title, title, title);
 		type = LOCAL;
 		createEditorDocument();
+		
+		
+		StyleChangedDocument doc = (StyleChangedDocument)editorDocument;
+		
+		Style pStyle = doc.addStyle("" + 1, null);
+		StyleConstants.setBackground(pStyle, Color.RED.brighter());
+
+		Style pStyle2 = doc.addStyle("" + 2, null);
+		StyleConstants.setBackground(pStyle2, Color.BLUE.brighter());
+		
+		try {
+			doc.insertString(0, "tescht!", doc.getStyle("" + 1));
+			doc.insertString(0, "x ", doc.getStyle("" + 2));
+			doc.insertString(0, "x ", doc.getStyle("" + 2));
+			doc.insertString(0, "chline ", doc.getStyle("" + 2));
+			doc.insertString(0, "e ", doc.getStyle("" + 1));
+			doc.insertString(0, "x ", doc.getStyle("" + 2));
+			doc.insertString(0, "isch ", doc.getStyle("" + 1));
+			doc.insertString(0, "x ", doc.getStyle("" + 2));
+			doc.insertString(0, "das ", doc.getStyle("" + 1));
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+
+		
+		pStyle = doc.getStyle("" + 1);
+		StyleConstants.setBackground(pStyle, Color.GREEN.brighter());
+		
+
+
+
+
+
 	}
 	
 	public DocumentItem(File file) {
@@ -180,7 +217,7 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 	
 
 	private void createEditorDocument() {
-		editorDocument = new DefaultStyledDocument();
+		editorDocument = new StyleChangedDocument();// new DefaultStyledDocument();
 		// editorDocument = new SyntaxDocument();
 		editorDocument.addDocumentListener(new DocumentListener() {
 			public void changedUpdate(DocumentEvent e) {
@@ -192,6 +229,7 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 				setDirty(true);
 			}
 		});
+		
 	}
 	
 	
@@ -213,10 +251,15 @@ BASCHTLE
 					collaborationService.publish((PublishedSessionCallback)sessionCallback,
 					new DocumentModel("", 0, 0, new DocumentDetails(title)));
 			//);
+			
+		// editorDocument.setLocal(false);
+		// editorDocument.setSession(session);
+		((SessionCallbackImpl)sessionCallback).setDoc(editorDocument);
 		setType(PUBLISHED);
 	}
 	
 	public void conceal() {
+		// editorDocument.setLocal(true);
 		session.leave();
 		setType(LOCAL);
 	}
@@ -244,6 +287,8 @@ BASCHTLE
 			return "";
 		}
 	}
+
+
 
 
 
