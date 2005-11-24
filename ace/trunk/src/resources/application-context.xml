@@ -53,18 +53,7 @@
 
 
 
-
-
-
-
-
-
-
-  <!--bean id="editorFactory" class="ch.iserver.ace.application.editor.DummyEditorFactory">
-    <property name="messageSource"><ref local="localeMessageSource"/></property>
-  </bean-->
-
-  <bean id="dummyEditor" class="ch.iserver.ace.application.editor.DummyEditor">
+  <bean id="collabEditor" class="ch.iserver.ace.application.editor.CollaborativeEditor">
     <constructor-arg><ref local="localeMessageSource"/></constructor-arg>
     <property name="toolBarActions">
       <list>
@@ -75,7 +64,7 @@
   </bean>
 
   <bean id="editorController" class="ch.iserver.ace.application.editor.EditorController">
-    <constructor-arg><ref local="dummyEditor"/></constructor-arg>
+    <constructor-arg><ref local="collabEditor"/></constructor-arg>
     <constructor-arg><ref local="documentViewController"/></constructor-arg>
     <constructor-arg><ref local="participantViewController"/></constructor-arg>
     <constructor-arg><ref local="preferencesStore"/></constructor-arg>
@@ -83,10 +72,12 @@
 
 
 
+
+
   <bean id="persistentContentPane" class="ch.iserver.ace.application.PersistentContentPane">
     <constructor-arg><ref local="documentView"/></constructor-arg>
     <constructor-arg><ref local="browseView"/></constructor-arg>
-    <constructor-arg><ref local="dummyEditor"/></constructor-arg>
+    <constructor-arg><ref local="collabEditor"/></constructor-arg>
     <constructor-arg><ref local="participantView"/></constructor-arg>
     <constructor-arg><ref local="userView"/></constructor-arg>
   </bean>

@@ -145,7 +145,7 @@
   <bean id="toggleFullScreenEditingAction" class="ch.iserver.ace.application.action.ToggleFullScreenEditingAction">
     <constructor-arg index="0"><ref bean="localeMessageSource"/></constructor-arg>
     <constructor-arg index="1"><ref bean="persistentContentPane"/></constructor-arg>
-    <constructor-arg index="2"><ref bean="dummyEditor"/></constructor-arg>
+    <constructor-arg index="2"><ref bean="collabEditor"/></constructor-arg>
   </bean>
 
   <bean id="netPublishConcealDocumentToggleAction" class="ch.iserver.ace.application.action.NetPublishConcealDocumentToggleAction">
