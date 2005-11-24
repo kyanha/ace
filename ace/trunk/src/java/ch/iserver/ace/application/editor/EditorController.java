@@ -62,7 +62,7 @@ public class EditorController implements ItemSelectionChangeListener, Preference
 			if(item.getType() == DocumentItem.LOCAL || item.getType() == DocumentItem.PUBLISHED ||
 			   		item.getType() == DocumentItem.JOINED) {
 				// enable editor
-				StyledDocument doc = item.getEditorDocument();			
+				CollaborativeDocument doc = item.getEditorDocument();			
 				editor.setDocument(doc);
 				editor.setTitle(item.getExtendedTitle());
 				editor.setEnabled(true);
@@ -89,7 +89,7 @@ public class EditorController implements ItemSelectionChangeListener, Preference
 			participantViewController.setParticipantList(item.getParticipantSourceList());*/
 		} else {
 			// disable editor
-			editor.setDocument(new DefaultStyledDocument());
+			editor.setDocument(new CollaborativeDocument());
 			editor.setTitle(" ");
 			editor.setEnabled(false);
 			// set participantlist

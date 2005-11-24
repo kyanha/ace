@@ -56,6 +56,8 @@ public class CollaborativeEditor extends EditorImpl {
 
 		// create editor pane
 		JScrollPane scrollPane = new JScrollPane(cTextPane);
+		//scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		//scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		editorPane = new SimpleInternalFrame(null, " ", editorToolBar, scrollPane);
 		
 		// add components		
@@ -63,8 +65,10 @@ public class CollaborativeEditor extends EditorImpl {
 		add(editorPane);
 	}
 
-	public void setDocument(StyledDocument document) {
-		cTextPane.setDocument(document);
+	public void setDocument(CollaborativeDocument document) {
+		StyledDocument doc = (DefaultStyledDocument)document;
+		System.out.println("Setting document" + doc);
+		cTextPane.setDocument(doc);
 	}
 
 	public void setEnabled(boolean enabled) {

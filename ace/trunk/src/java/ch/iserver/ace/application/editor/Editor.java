@@ -31,7 +31,7 @@ public interface Editor {
 
 	public void setTitle(String title);
 	
-	public void setDocument(StyledDocument document);
+	public void setDocument(CollaborativeDocument document);
 	
 	public void setEnabled(boolean enabled);
 	

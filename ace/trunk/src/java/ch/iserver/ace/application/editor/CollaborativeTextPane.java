@@ -23,6 +23,7 @@ package ch.iserver.ace.application.editor;
 
 import javax.swing.*;
 import javax.swing.text.*;
+import java.awt.*;
 
 
 
@@ -51,6 +52,17 @@ public class CollaborativeTextPane extends JTextPane {
 			//super.replaceSelection(content);
 			// unlock
 		}
+	}
+	
+	public void setSize(Dimension d) {
+		if(d.width < getParent().getSize().width) {
+			d.width = getParent().getSize().width;
+		}
+		super.setSize(d);
+	}
+	
+	public boolean getScrollableTracksViewportWidth() {
+		return false;
 	}
 
 }
