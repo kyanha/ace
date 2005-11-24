@@ -31,9 +31,6 @@ import junit.framework.TestCase;
 
 import org.easymock.MockControl;
 
-import ch.iserver.ace.collaboration.RemoteDocumentStub;
-import ch.iserver.ace.collaboration.RemoteUserStub;
-
 /**
  *
  */
