@@ -44,17 +44,12 @@ public class ParticipantSessionCallbackImpl extends SessionCallbackImpl implemen
 		System.out.println("setDocument");
 		CollaborativeDocument docu = new CollaborativeDocument();
 		documentItem.setEditorDocument(docu);
-		try {
-			docu.insertString(0, "huderi", null);
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
 
 		// add all participants
 		Iterator pIter = doc.getParticipants().iterator();
 		while(pIter.hasNext()) {
 			Participant p = (Participant)pIter.next();
-			System.out.println("adding participant: " + p);
+			//System.out.println("adding participant: " + p);
 			participationColorManager.addParticipant(p);
 		}
 		
@@ -62,7 +57,11 @@ public class ParticipantSessionCallbackImpl extends SessionCallbackImpl implemen
 		Iterator fIter = doc.getFragments();
 		while(fIter.hasNext()) {
 			Fragment f = (Fragment)fIter.next();
-			System.out.println(f.getText() + "(" + f.getParticipantId() + ")");
+			try {
+				docu.insertString(0, "text: " + f.getText() + "   participantId: " + f.getParticipantId() + "\n", null);
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
 		}
 		
 	}
