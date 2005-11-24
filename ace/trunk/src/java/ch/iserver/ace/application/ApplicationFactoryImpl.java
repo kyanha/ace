@@ -21,7 +21,7 @@
 
 package ch.iserver.ace.application;
 
-import ch.iserver.ace.application.editor.Editor;
+import ch.iserver.ace.application.editor.*;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -62,10 +62,29 @@ public class ApplicationFactoryImpl implements ApplicationFactory, ApplicationCo
 		menuBar.add(mFile);
 
 		JMenu mEdit = new JMenu(messageSource.getMessage("mEdit"));
-		mEdit.add((AbstractAction)context.getBean("editCutAction")).setToolTipText(null);
-		mEdit.add((AbstractAction)context.getBean("editCopyAction")).setToolTipText(null);
-		mEdit.add((AbstractAction)context.getBean("editPasteAction")).setToolTipText(null);
-		mEdit.add((AbstractAction)context.getBean("editSelectAllAction")).setToolTipText(null);
+		CollaborativeEditor cEditor = (CollaborativeEditor)context.getBean("collabEditor");
+		Action cutAction = cEditor.getCutAction();
+		cutAction.putValue(Action.NAME, messageSource.getMessage("mEditCut"));
+		cutAction.putValue(Action.SMALL_ICON, messageSource.getIcon("iMenuEditCut"));
+		cutAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke('X', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+		mEdit.add(cutAction).setToolTipText(null);
+		
+		Action copyAction = cEditor.getCopyAction();
+		copyAction.putValue(Action.NAME, messageSource.getMessage("mEditCopy"));
+		copyAction.putValue(Action.SMALL_ICON, messageSource.getIcon("iMenuEditCopy"));
+		copyAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke('C', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+		mEdit.add(copyAction).setToolTipText(null);
+		
+		Action pasteAction = cEditor.getPasteAction();
+		pasteAction.putValue(Action.NAME, messageSource.getMessage("mEditPaste"));
+		pasteAction.putValue(Action.SMALL_ICON, messageSource.getIcon("iMenuEditPaste"));
+		pasteAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke('V', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+		mEdit.add(pasteAction).setToolTipText(null);
+		
+		Action selectAllAction = cEditor.getSelectAllAction();
+		selectAllAction.putValue(Action.NAME, messageSource.getMessage("mEditSelectAll"));
+		selectAllAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke('A', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+		mEdit.add(selectAllAction).setToolTipText(null);
 		menuBar.add(mEdit);
 
 		JMenu mNet = new JMenu(messageSource.getMessage("mNet"));
