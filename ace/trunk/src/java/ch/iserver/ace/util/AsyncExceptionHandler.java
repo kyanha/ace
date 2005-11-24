@@ -19,36 +19,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.collaboration.jupiter.server.serializer;
-
-import junit.framework.TestCase;
-
-import org.easymock.MockControl;
-
-import ch.iserver.ace.collaboration.Participant;
-import ch.iserver.ace.collaboration.jupiter.server.Forwarder;
+package ch.iserver.ace.util;
 
 /**
  *
  */
-public class LeaveCommandTest extends TestCase {
+public interface AsyncExceptionHandler {
 	
-	public void testExecute() throws Exception {
-		MockControl forwarderCtrl = MockControl.createControl(Forwarder.class);
-		Forwarder forwarder = (Forwarder) forwarderCtrl.getMock();
-						
-		// define mock behavior
-		forwarder.sendParticipantLeft(1, Participant.KICKED);
-		
-		// replay
-		forwarderCtrl.replay();
-		
-		// test
-		LeaveCommand command = new LeaveCommand(1, Participant.KICKED);
-		command.execute(forwarder);
-		
-		// verify
-		forwarderCtrl.verify();
-	}
+	void handleException(Throwable th);
 	
 }

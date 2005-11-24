@@ -33,17 +33,24 @@ import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
  * 
  * @see ch.iserver.ace.util.AsyncInterceptor
  */
-public class AsyncWorker extends Worker {
+public class AsyncWorker extends Worker implements AsyncExceptionHandler {
 	
 	private static final Logger LOG = Logger.getLogger(AsyncWorker.class);
 	
 	private final BlockingQueue queue;
 	
+	private AsyncExceptionHandler handler;
+	
 	public AsyncWorker(BlockingQueue queue) {
 		super("async-worker");
 		ParameterValidator.notNull("queue", queue);
 		this.queue = queue;
+		this.handler = this;
 		setDaemon(true);
+	}
+	
+	public void setExceptionHandler(AsyncExceptionHandler handler) {
+		this.handler = handler;
 	}
 	
 	protected void doWork() throws InterruptedException {
@@ -51,8 +58,12 @@ public class AsyncWorker extends Worker {
 		try {
 			invocation.proceed();
 		} catch (Throwable e) {
-			LOG.warn(e);
+			handler.handleException(e);
 		}
+	}
+	
+	public void handleException(Throwable th) {
+		LOG.warn(th);
 	}
 	
 }

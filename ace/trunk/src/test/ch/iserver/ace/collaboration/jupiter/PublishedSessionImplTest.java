@@ -36,7 +36,6 @@ import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.collaboration.PublishedSessionCallback;
 import ch.iserver.ace.collaboration.RemoteUserStub;
 import ch.iserver.ace.collaboration.jupiter.server.PublisherPort;
-import ch.iserver.ace.collaboration.jupiter.server.ServerLogic;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.net.RemoteUserProxyStub;
 import ch.iserver.ace.text.InsertOperation;
@@ -56,9 +55,6 @@ public class PublishedSessionImplTest extends TestCase {
 	}
 	
 	public void testSetDocumentDetails() throws Exception {
-		MockControl logicCtrl = MockControl.createControl(ServerLogic.class);
-		ServerLogic logic = (ServerLogic) logicCtrl.getMock();
-		
 		MockControl portCtrl = MockControl.createControl(PublisherPort.class);
 		PublisherPort port = (PublisherPort) portCtrl.getMock();
 		
@@ -66,29 +62,22 @@ public class PublishedSessionImplTest extends TestCase {
 		DocumentDetails details = new DocumentDetails("collab.txt");
 		
 		// define mock behavior
-		logic.getPublisherPort();
-		logicCtrl.setReturnValue(port);
 		port.setDocumentDetails(details);
 		
 		// replay
 		portCtrl.replay();
-		logicCtrl.replay();
 		callbackCtrl.replay();
 		
 		// test
-		impl.setServerLogic(logic);
+		impl.setPublisherPort(port);
 		impl.setDocumentDetails(details);
 		
 		// verify
 		portCtrl.verify();
-		logicCtrl.verify();
 		callbackCtrl.verify();
 	}
 	
 	public void testKick() throws Exception {
-		MockControl logicCtrl = MockControl.createControl(ServerLogic.class);
-		ServerLogic logic = (ServerLogic) logicCtrl.getMock();
-
 		MockControl portCtrl = MockControl.createControl(PublisherPort.class);
 		PublisherPort port = (PublisherPort) portCtrl.getMock();
 		
@@ -96,50 +85,39 @@ public class PublishedSessionImplTest extends TestCase {
 		Participant participant = new ParticipantImpl(1, new RemoteUserStub("1"));
 		
 		// define mock behavior
-		logic.getPublisherPort();
-		logicCtrl.setReturnValue(port);
 		port.kick(1);
 		
 		// replay
-		logicCtrl.replay();
 		callbackCtrl.replay();
 		portCtrl.replay();
 		
 		// test
-		impl.setServerLogic(logic);
+		impl.setPublisherPort(port);
 		impl.kick(participant);
 		
 		// verify
-		logicCtrl.verify();
 		callbackCtrl.verify();
 		portCtrl.verify();
 	}
 	
 	public void testLeave() throws Exception {
-		MockControl logicCtrl = MockControl.createControl(ServerLogic.class);
-		ServerLogic logic = (ServerLogic) logicCtrl.getMock();
-
 		MockControl portCtrl = MockControl.createControl(PublisherPort.class);
 		PublisherPort port = (PublisherPort) portCtrl.getMock();
 
 		PublishedSessionImpl impl = new PublishedSessionImpl(callback);
 		
 		// define mock behavior
-		logic.getPublisherPort();
-		logicCtrl.setReturnValue(port);
 		port.leave();
 		
 		// replay
-		logicCtrl.replay();
 		callbackCtrl.replay();
 		portCtrl.replay();
 		
 		// test
-		impl.setServerLogic(logic);
+		impl.setPublisherPort(port);
 		impl.leave();
 		
 		// verify
-		logicCtrl.verify();
 		callbackCtrl.verify();
 		portCtrl.verify();
 	}
@@ -147,8 +125,6 @@ public class PublishedSessionImplTest extends TestCase {
 	public void testSendOperation() throws Exception {
 		MockControl algorithmCtrl = MockControl.createControl(AlgorithmWrapper.class);
 		AlgorithmWrapper algorithm = (AlgorithmWrapper) algorithmCtrl.getMock();
-		MockControl logicCtrl = MockControl.createControl(ServerLogic.class);
-		ServerLogic logic = (ServerLogic) logicCtrl.getMock();
 		MockControl portCtrl = MockControl.createControl(PublisherPort.class);
 		PublisherPort port = (PublisherPort) portCtrl.getMock();
 		MockControl acknowledgeCtrl = MockControl.createControl(AcknowledgeStrategy.class);
@@ -159,8 +135,6 @@ public class PublishedSessionImplTest extends TestCase {
 		Request request = new RequestImpl(0, null, operation);
 		
 		// define mock behavior
-		logic.getPublisherPort();
-		logicCtrl.setReturnValue(port);
 		algorithm.generateRequest(operation);
 		algorithmCtrl.setReturnValue(request);
 		port.receiveRequest(request);
@@ -170,13 +144,12 @@ public class PublishedSessionImplTest extends TestCase {
 		
 		// replay
 		algorithmCtrl.replay();
-		logicCtrl.replay();
 		callbackCtrl.replay();
 		portCtrl.replay();
 		acknowledgeCtrl.replay();
 		
 		// test
-		impl.setServerLogic(logic);
+		impl.setPublisherPort(port);
 		impl.setAcknowledgeStrategy(acknowledge);
 		impl.lock();
 		impl.sendOperation(operation);
@@ -184,7 +157,6 @@ public class PublishedSessionImplTest extends TestCase {
 		
 		// verify
 		algorithmCtrl.verify();
-		logicCtrl.verify();
 		portCtrl.verify();
 		callbackCtrl.verify();
 		acknowledgeCtrl.verify();
@@ -193,8 +165,6 @@ public class PublishedSessionImplTest extends TestCase {
 	public void testSendOperationNoLocking() throws Exception {
 		MockControl algorithmCtrl = MockControl.createControl(AlgorithmWrapper.class);
 		AlgorithmWrapper algorithm = (AlgorithmWrapper) algorithmCtrl.getMock();
-		MockControl logicCtrl = MockControl.createControl(ServerLogic.class);
-		ServerLogic logic = (ServerLogic) logicCtrl.getMock();
 		MockControl portCtrl = MockControl.createControl(PublisherPort.class);
 		PublisherPort port = (PublisherPort) portCtrl.getMock();
 		
@@ -202,17 +172,14 @@ public class PublishedSessionImplTest extends TestCase {
 		Operation operation = new InsertOperation(0, "x");
 		
 		// define mock behavior
-		logic.getPublisherPort();
-		logicCtrl.setReturnValue(port);
+		impl.setPublisherPort(port);
 		
 		// replay
 		algorithmCtrl.replay();
-		logicCtrl.replay();
 		callbackCtrl.replay();
 		portCtrl.replay();
 		
 		// test
-		impl.setServerLogic(logic);
 		try {
 			impl.sendOperation(operation);
 			fail("sending operations without locking must fail");
@@ -222,7 +189,6 @@ public class PublishedSessionImplTest extends TestCase {
 		
 		// verify
 		algorithmCtrl.verify();
-		logicCtrl.verify();
 		portCtrl.verify();
 		callbackCtrl.verify();
 	}
@@ -230,8 +196,6 @@ public class PublishedSessionImplTest extends TestCase {
 	public void testSendCaretUpdate() throws Exception {
 		MockControl algorithmCtrl = MockControl.createControl(AlgorithmWrapper.class);
 		AlgorithmWrapper algorithm = (AlgorithmWrapper) algorithmCtrl.getMock();
-		MockControl logicCtrl = MockControl.createControl(ServerLogic.class);
-		ServerLogic logic = (ServerLogic) logicCtrl.getMock();
 		MockControl portCtrl = MockControl.createControl(PublisherPort.class);
 		PublisherPort port = (PublisherPort) portCtrl.getMock();
 		MockControl acknowledgeCtrl = MockControl.createControl(AcknowledgeStrategy.class);
@@ -242,8 +206,6 @@ public class PublishedSessionImplTest extends TestCase {
 		CaretUpdateMessage message = new CaretUpdateMessage(0, null, update);
 		
 		// define mock behavior
-		logic.getPublisherPort();
-		logicCtrl.setReturnValue(port);
 		algorithm.generateCaretUpdateMessage(update);
 		algorithmCtrl.setReturnValue(message);
 		port.receiveCaretUpdate(message);
@@ -253,13 +215,12 @@ public class PublishedSessionImplTest extends TestCase {
 		
 		// replay
 		algorithmCtrl.replay();
-		logicCtrl.replay();
 		callbackCtrl.replay();
 		portCtrl.replay();
 		acknowledgeCtrl.replay();
 		
 		// test
-		impl.setServerLogic(logic);
+		impl.setPublisherPort(port);
 		impl.setAcknowledgeStrategy(acknowledge);
 		impl.lock();
 		impl.sendCaretUpdate(update);
@@ -267,7 +228,6 @@ public class PublishedSessionImplTest extends TestCase {
 		
 		// verify
 		algorithmCtrl.verify();
-		logicCtrl.verify();
 		portCtrl.verify();
 		callbackCtrl.verify();
 		acknowledgeCtrl.verify();
@@ -276,8 +236,6 @@ public class PublishedSessionImplTest extends TestCase {
 	public void testSendCaretUpdateNoLocking() throws Exception {
 		MockControl algorithmCtrl = MockControl.createControl(AlgorithmWrapper.class);
 		AlgorithmWrapper algorithm = (AlgorithmWrapper) algorithmCtrl.getMock();
-		MockControl logicCtrl = MockControl.createControl(ServerLogic.class);
-		ServerLogic logic = (ServerLogic) logicCtrl.getMock();
 		MockControl portCtrl = MockControl.createControl(PublisherPort.class);
 		PublisherPort port = (PublisherPort) portCtrl.getMock();
 		
@@ -285,17 +243,14 @@ public class PublishedSessionImplTest extends TestCase {
 		CaretUpdate update = new CaretUpdate(0, 1);
 		
 		// define mock behavior
-		logic.getPublisherPort();
-		logicCtrl.setReturnValue(port);
 		
 		// replay
 		algorithmCtrl.replay();
-		logicCtrl.replay();
 		callbackCtrl.replay();
 		portCtrl.replay();
 		
 		// test
-		impl.setServerLogic(logic);
+		impl.setPublisherPort(port);
 		try {
 			impl.sendCaretUpdate(update);
 			fail("sending operations without locking must fail");
@@ -305,7 +260,6 @@ public class PublishedSessionImplTest extends TestCase {
 		
 		// verify
 		algorithmCtrl.verify();
-		logicCtrl.verify();
 		portCtrl.verify();
 		callbackCtrl.verify();
 	}
@@ -313,9 +267,6 @@ public class PublishedSessionImplTest extends TestCase {
 	public void testSendJoinedLeft() throws Exception {
 		MockControl registryCtrl = MockControl.createControl(UserRegistry.class);
 		UserRegistry registry = (UserRegistry) registryCtrl.getMock();
-		
-		MockControl logicCtrl = MockControl.createControl(ServerLogic.class);
-		ServerLogic logic = (ServerLogic) logicCtrl.getMock();
 		
 		PublishedSessionImpl impl = new PublishedSessionImpl(callback);
 		impl.setUserRegistry(registry);
@@ -329,8 +280,6 @@ public class PublishedSessionImplTest extends TestCase {
 		registryCtrl.setReturnValue(new RemoteUserStub("X"));
 		registry.addUser(new RemoteUserProxyStub("Y"));
 		registryCtrl.setReturnValue(new RemoteUserStub("Y"));
-		logic.getPublisherPort();
-		logicCtrl.setReturnValue(null);
 		callback.participantJoined(participant1);
 		callback.participantJoined(participant2);
 		callback.participantLeft(participant1, Participant.LEFT);
@@ -338,11 +287,9 @@ public class PublishedSessionImplTest extends TestCase {
 		
 		// replay
 		registryCtrl.replay();
-		logicCtrl.replay();
 		callbackCtrl.replay();
 		
 		// test
-		impl.setServerLogic(logic);
 		assertEquals(0, impl.getParticipants().size());
 		impl.sendParticipantJoined(1, proxy1);
 		assertEquals(1, impl.getParticipants().size());
@@ -359,7 +306,6 @@ public class PublishedSessionImplTest extends TestCase {
 		
 		// verify
 		registryCtrl.verify();
-		logicCtrl.verify();
 		callbackCtrl.verify();
 	}
 	

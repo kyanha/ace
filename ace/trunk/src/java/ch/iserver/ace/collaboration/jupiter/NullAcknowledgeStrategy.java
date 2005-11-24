@@ -40,5 +40,12 @@ public class NullAcknowledgeStrategy implements AcknowledgeStrategy {
 	public void resetTimer() {
 		// ignored
 	}
+	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.AcknowledgeStrategy#destroy()
+	 */
+	public void destroy() {
+		// ignored
+	}
 
 }

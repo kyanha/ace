@@ -19,24 +19,26 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.collaboration.jupiter.server.serializer;
+package ch.iserver.ace.collaboration.jupiter.server;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.apache.log4j.Logger;
 
-public class AllTests {
+import ch.iserver.ace.collaboration.JoinRequest;
+import ch.iserver.ace.collaboration.jupiter.PublisherConnection;
 
-	public static Test suite() {
-		TestSuite suite = new TestSuite(
-						"Test for ch.iserver.ace.collaboration.jupiter.server.serializer");
-		//$JUnit-BEGIN$
-		suite.addTestSuite(RequestSerializerCommandTest.class);
-		suite.addTestSuite(CaretUpdateSerializerCommandTest.class);
-		suite.addTestSuite(JoinCommandTest.class);
-		suite.addTestSuite(ShutdownCommandTest.class);
-		suite.addTestSuite(LeaveCommandTest.class);
-		//$JUnit-END$
-		return suite;
+/**
+ *
+ */
+public class NullPublisherConnection extends NullParticipantConnection implements PublisherConnection {
+	
+	private static final Logger LOG = Logger.getLogger(NullPublisherConnection.class);
+	
+	public void sendJoinRequest(JoinRequest request) {
+		LOG.debug("sendJoinRequest ignored");
 	}
 
+	public void sessionFailed(int reason, Exception e) {
+		LOG.debug("sessionFailed ignored");
+	}
+	
 }

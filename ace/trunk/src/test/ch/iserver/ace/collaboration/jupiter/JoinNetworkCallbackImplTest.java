@@ -29,6 +29,7 @@ import ch.iserver.ace.collaboration.JoinCallback;
 import ch.iserver.ace.collaboration.ParticipantSessionCallback;
 import ch.iserver.ace.net.JoinNetworkCallback;
 import ch.iserver.ace.net.SessionConnection;
+import ch.iserver.ace.util.CompareUtil;
 
 /**
  *
@@ -84,7 +85,7 @@ public class JoinNetworkCallbackImplTest extends TestCase {
 		
 		// test
 		JoinNetworkCallback impl = new JoinNetworkCallbackImpl(callback, factory);
-		assertSame(session, impl.accepted(connection));
+		assertTrue(CompareUtil.isSameTarget(session, impl.accepted(connection)));
 		
 		// verify
 		callbackCtrl.verify();

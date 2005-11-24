@@ -25,6 +25,8 @@ import ch.iserver.ace.collaboration.JoinCallback;
 import ch.iserver.ace.net.JoinNetworkCallback;
 import ch.iserver.ace.net.SessionConnection;
 import ch.iserver.ace.net.SessionConnectionCallback;
+import ch.iserver.ace.util.AopUtil;
+import ch.iserver.ace.util.LoggingInterceptor;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
@@ -76,7 +78,10 @@ class JoinNetworkCallbackImpl implements JoinNetworkCallback {
 		ConfigurableSession session = getSessionFactory().createSession();
 		session.setConnection(connection);
 		session.setSessionCallback(getCallback().accepted(session));
-		return session;
+		return (SessionConnectionCallback) AopUtil.wrap(
+					session, 
+					SessionConnectionCallback.class, 
+					new LoggingInterceptor(JoinNetworkCallbackImpl.class));
 	}
 	
 	/**

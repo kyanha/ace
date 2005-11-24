@@ -22,15 +22,10 @@
 package ch.iserver.ace.collaboration.jupiter.server;
 
 import ch.iserver.ace.DocumentDetails;
-import ch.iserver.ace.algorithm.Algorithm;
-import ch.iserver.ace.collaboration.Participant;
-import ch.iserver.ace.collaboration.jupiter.server.serializer.LeaveCommand;
+import ch.iserver.ace.collaboration.jupiter.AlgorithmWrapper;
 
 /**
  * Default implementation of the PublisherPort interface.
- */
-/**
- *
  */
 public class PublisherPortImpl extends ParticipantPortImpl implements PublisherPort {
 	
@@ -40,9 +35,10 @@ public class PublisherPortImpl extends ParticipantPortImpl implements PublisherP
 	 * @param logic the server logic
 	 * @param participantId the participant id of this participant
 	 * @param algorithm the algorithm used by the port
+	 * @param forwarder
 	 */
-	public PublisherPortImpl(ServerLogic logic, int participantId, Algorithm algorithm) {
-		super(logic, participantId, algorithm);
+	public PublisherPortImpl(ServerLogic logic, int participantId, AlgorithmWrapper algorithm, Forwarder forwarder) {
+		super(logic, participantId, algorithm, forwarder);
 	}
 	
 	/**
@@ -51,7 +47,6 @@ public class PublisherPortImpl extends ParticipantPortImpl implements PublisherP
 	public void kick(int participantId) {
 		if (participantId != getParticipantId()) {
 			getLogic().kick(participantId);
-			getLogic().addCommand(new LeaveCommand(participantId, Participant.KICKED));
 		}
 	}
 	
@@ -69,7 +64,7 @@ public class PublisherPortImpl extends ParticipantPortImpl implements PublisherP
 	 * @see ch.iserver.ace.net.ParticipantPort#leave()
 	 */
 	public void leave() {
-		getLogic().prepareShutdown();
+		getLogic().shutdown();
 	}
 	
 }

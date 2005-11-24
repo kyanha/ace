@@ -34,7 +34,6 @@ import ch.iserver.ace.collaboration.jupiter.PublisherConnection;
 import ch.iserver.ace.collaboration.jupiter.UserRegistry;
 import ch.iserver.ace.collaboration.jupiter.UserRegistryImpl;
 import ch.iserver.ace.collaboration.jupiter.server.ServerLogicImpl;
-import ch.iserver.ace.collaboration.jupiter.server.SimpleCommandProcessor;
 import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.RemoteUserProxyStub;
 import ch.iserver.ace.text.InsertOperation;
@@ -91,12 +90,11 @@ public class ServerTest extends TestCase {
 		DocumentModel document = new DocumentModel("", 0, 0, new DocumentDetails("collab.txt"));
 		ServerLogicImpl server = new ServerLogicImpl( 
 				new CallerThreadDomain(), 
+				new CallerThreadDomain(), 
 				document,
 				registry);
 		server.setAccessControlStrategy(new AcceptingAccessControlStrategy());
-		server.setCommandProcessor(new SimpleCommandProcessor(server.getForwarder()));
-		server.setPublisherConnection(connections[0]);
-		ports[0] = server.getPublisherPort();
+		ports[0] = server.initPublisherConnection(connections[0]);
 		server.start();
 		
 		for (int i = 1; i < PARTICIPANTS; i++) {

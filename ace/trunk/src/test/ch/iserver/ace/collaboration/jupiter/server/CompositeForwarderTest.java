@@ -40,20 +40,14 @@ public class CompositeForwarderTest extends TestCase {
 	
 	private static final int PROXY_COUNT = 4;
 		
-	private MockControl control;
-	
-	private ServerLogic logic;
-	
-	private Forwarder forwarder;
+	private CompositeForwarder forwarder;
 	
 	private List controls;
 	
 	private List proxies;
 	
 	public void setUp() {
-		control = MockControl.createControl(ServerLogic.class);
-		logic = (ServerLogic) control.getMock();
-		forwarder = new CompositeForwarder(logic);
+		forwarder = new CompositeForwarderImpl();
 		
 		controls = new ArrayList();
 		proxies = new ArrayList();
@@ -62,12 +56,9 @@ public class CompositeForwarderTest extends TestCase {
 			MockControl control = MockControl.createControl(Forwarder.class);
 			controls.add(control);
 			Forwarder proxy = (Forwarder) control.getMock();
+			forwarder.addForwarder(proxy);
 			proxies.add(proxy);
 		}
-	}
-	
-	private Iterator getProxies() {
-		return proxies.iterator();
 	}
 	
 	private void replayProxyControls() {
@@ -90,23 +81,18 @@ public class CompositeForwarderTest extends TestCase {
 		// test fixture
 		CaretUpdate update = new CaretUpdate(1, 3);
 
-		// define mock behavior
-		logic.getForwarders();
-		control.setReturnValue(getProxies());
-		
+		// define mock behavior		
 		for (int i = 0; i < PROXY_COUNT; i++) {
 			((Forwarder) proxies.get(i)).sendCaretUpdate(1, update);
 		}
 		
 		// replay
-		control.replay();
 		replayProxyControls();
 		
 		// test forwarding of CaretUpdate
 		forwarder.sendCaretUpdate(1, update);
 		
 		// verify
-		control.verify();
 		verifyProxyControls();
 	}
 
@@ -115,22 +101,17 @@ public class CompositeForwarderTest extends TestCase {
 		Operation operation = new InsertOperation(0, "foo");
 
 		// define mock behavior
-		logic.getForwarders();
-		control.setReturnValue(getProxies());
-		
 		for (int i = 0; i < PROXY_COUNT; i++) {
 			((Forwarder) proxies.get(i)).sendOperation(1, operation);
 		}
 		
 		// replay
-		control.replay();
 		replayProxyControls();
 		
 		// test forwarding of CaretUpdate
 		forwarder.sendOperation(1, operation);
 		
 		// verify
-		control.verify();
 		verifyProxyControls();
 	}
 	
@@ -138,43 +119,33 @@ public class CompositeForwarderTest extends TestCase {
 		RemoteUserProxy user = new RemoteUserProxyStub("X");
 
 		// define mock behavior
-		logic.getForwarders();
-		control.setReturnValue(getProxies());
-		
 		for (int i = 0; i < PROXY_COUNT; i++) {
 			((Forwarder) proxies.get(i)).sendParticipantJoined(1, user);
 		}
 		
 		// replay
-		control.replay();
 		replayProxyControls();
 		
 		// test
 		forwarder.sendParticipantJoined(1, user);
 
 		// verify
-		control.verify();
 		verifyProxyControls();
 	}
 	
 	public void testSendParticipantLeft() throws Exception {
 		// define mock behavior
-		logic.getForwarders();
-		control.setReturnValue(getProxies());
-		
 		for (int i = 0; i < PROXY_COUNT; i++) {
 			((Forwarder) proxies.get(i)).sendParticipantLeft(1, Participant.LEFT);
 		}
 		
 		// replay
-		control.replay();
 		replayProxyControls();
 		
 		// test
 		forwarder.sendParticipantLeft(1, Participant.LEFT);
 
 		// verify
-		control.verify();
 		verifyProxyControls();
 	}
 

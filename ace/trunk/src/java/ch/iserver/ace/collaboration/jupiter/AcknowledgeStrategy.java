@@ -47,5 +47,10 @@ public interface AcknowledgeStrategy {
 	 * acknowledge messages unnecessary.
 	 */
 	void resetTimer();
+	
+	/**
+	 * Destroys the acknowledge strategy.
+	 */
+	void destroy();
 		
 }

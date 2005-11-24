@@ -66,8 +66,11 @@ public class PublishedSessionImpl extends AbstractSession
 	public void setServerLogic(ServerLogic logic) {
 		ParameterValidator.notNull("logic", logic);
 		this.logic = logic;
-		this.port = logic.getPublisherPort();
-
+	}
+	
+	public void setPublisherPort(PublisherPort port) {
+		ParameterValidator.notNull("port", port);
+		this.port = port;
 	}
 	
 	public ServerLogic getLogic() {
@@ -122,7 +125,11 @@ public class PublishedSessionImpl extends AbstractSession
 	 * @see ch.iserver.ace.collaboration.Session#leave()
 	 */
 	public void leave() {
-		getPort().leave();
+		try {
+			getPort().leave();
+		} finally {
+			destroy();
+		}
 	}
 
 	/**

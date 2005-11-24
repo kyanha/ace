@@ -23,7 +23,6 @@ package ch.iserver.ace.collaboration.jupiter.server;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -39,16 +38,11 @@ import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.collaboration.RemoteUser;
 import ch.iserver.ace.collaboration.jupiter.AcknowledgeStrategy;
 import ch.iserver.ace.collaboration.jupiter.AcknowledgeStrategyFactory;
+import ch.iserver.ace.collaboration.jupiter.AlgorithmWrapperImpl;
 import ch.iserver.ace.collaboration.jupiter.JoinRequestImpl;
 import ch.iserver.ace.collaboration.jupiter.NullAcknowledgeStrategyFactory;
 import ch.iserver.ace.collaboration.jupiter.PublisherConnection;
 import ch.iserver.ace.collaboration.jupiter.UserRegistry;
-import ch.iserver.ace.collaboration.jupiter.server.serializer.CommandProcessor;
-import ch.iserver.ace.collaboration.jupiter.server.serializer.CommandProcessorImpl;
-import ch.iserver.ace.collaboration.jupiter.server.serializer.JoinCommand;
-import ch.iserver.ace.collaboration.jupiter.server.serializer.LeaveCommand;
-import ch.iserver.ace.collaboration.jupiter.server.serializer.SerializerCommand;
-import ch.iserver.ace.collaboration.jupiter.server.serializer.ShutdownCommand;
 import ch.iserver.ace.net.DocumentServer;
 import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.net.ParticipantPort;
@@ -66,19 +60,19 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	
 	private int nextParticipantId;
 	
-	private final Forwarder forwarder;
-
-	private CommandProcessor commandProcessor;
-		
-	private final HashMap ports = new HashMap();
+	private final CompositeForwarder forwarder;
 	
+	private final FailureHandler failureHandler;
+		
 	private final HashMap proxies = new HashMap();
 	
 	private final TreeMap connections = new TreeMap();
 	
 	private DocumentServer server;
 	
-	private final ThreadDomain threadDomain;
+	private final ThreadDomain incomingDomain;
+	
+	private final ThreadDomain outgoingDomain;
 	
 	private AccessControlStrategy accessControlStrategy;
 	
@@ -100,48 +94,27 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	
 	private AcknowledgeStrategyFactory acknowledgeStrategyFactory = new NullAcknowledgeStrategyFactory();
 		
-	public ServerLogicImpl(ThreadDomain domain, 
+	public ServerLogicImpl(ThreadDomain incomingDomain,
+	                       ThreadDomain outgoingDomain, 
 	                       DocumentModel document,
 	                       UserRegistry registry) {
-		ParameterValidator.notNull("domain", domain);
 		ParameterValidator.notNull("document", document);
 		ParameterValidator.notNull("registry", registry);
 		
 		this.nextParticipantId = 0;
-		this.forwarder = createForwarder(this);
+		this.forwarder = createForwarder();
 		
-		this.threadDomain = domain;
+		this.incomingDomain = incomingDomain;
+		this.outgoingDomain = outgoingDomain;
 		this.registry = registry;
 		this.accessControlStrategy = this;
 		
-		this.commandProcessor = createCommandProcessor(forwarder, this);			
+		this.failureHandler = (FailureHandler) incomingDomain.wrap(this, FailureHandler.class);
+		
 		this.document = createServerDocument(document);
 		this.proxies.put(new Integer(-1), new DocumentUpdater(this.document));
 	}
-
-	/**
-	 * Creates the command processor used to process incoming serializer
-	 * commands. 
-	 * 
-	 * @param forwarder the forwarder receiving the results of the command
-	 * @param handler the failure handler used to handle failures
-	 * @return the newly created command processor
-	 */
-	protected CommandProcessor createCommandProcessor(Forwarder forwarder, FailureHandler handler) {
-		return new CommandProcessorImpl(forwarder, handler);
-	}
 	
-	/**
-	 * Sets the command processor used by the server logic. This is used only
-	 * for testing purposes. Do not use it especially not after calling
-	 * start on this object.
-	 * 
-	 * @param commandProcessor the command processor used to process commands
-	 */
-	public void setCommandProcessor(CommandProcessor commandProcessor) {
-		this.commandProcessor = commandProcessor;
-	}
-
 	/**
 	 * Creates a new server document used to keep track of the document's
 	 * content on the server side.
@@ -160,14 +133,12 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	 * Creates a new forwarder responsible to forward the results of the
 	 * command processor to all other participants.
 	 * 
-	 * @param logic the server logic used to retrieve the forwarders for
-	 *              each participant
 	 * @return the initialized forwarder
 	 */
-	protected Forwarder createForwarder(ServerLogic logic) {
-		return new CompositeForwarder(logic);
+	protected CompositeForwarder createForwarder() {
+		return new CompositeForwarderImpl();
 	}
-	
+		
 	/**
 	 * Creates the publisher port for the publisher of the session.
 	 * 
@@ -177,10 +148,10 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	 */
 	protected PublisherPort createPublisherPort(ParticipantConnection connection) {
 		Algorithm algorithm = new Jupiter(false);
-		PublisherPort port = new PublisherPortImpl(this, 0, algorithm);
+		PublisherPort port = new PublisherPortImpl(this, 0, new AlgorithmWrapperImpl(algorithm), forwarder);
 		Forwarder proxy = createParticipantProxy(0, connection, algorithm);
 		addParticipant(new SessionParticipant(port, proxy, connection, null));
-		return port;
+		return (PublisherPort) incomingDomain.wrap(port, PublisherPort.class);
 	}
 	
 	/**
@@ -198,11 +169,20 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 		return proxy;
 	}
 
-	public void setPublisherConnection(PublisherConnection publisherConnection) {
-		this.publisherConnection = publisherConnection;
-		ParticipantConnection wrapped = (ParticipantConnection) threadDomain.wrap(
-				new ParticipantConnectionWrapper(publisherConnection, this), ParticipantConnection.class);
-		this.publisherPort = createPublisherPort(wrapped);
+	/**
+	 * Initializes the publisher connection and returns a corresponding publisher port.
+	 * 
+	 * @param publisherConnection the connection to the publisher
+	 * @return the port for the publisher
+	 */
+	public PublisherPort initPublisherConnection(PublisherConnection publisherConnection) {
+		this.publisherConnection = (PublisherConnection) outgoingDomain.wrap(
+						new PublisherConnectionWrapper(
+								publisherConnection, 
+								getFailureHandler()),
+						PublisherConnection.class);
+		this.publisherPort = createPublisherPort(this.publisherConnection);
+		return publisherPort;
 	}
 		
 	public boolean isAcceptingJoins() {
@@ -225,13 +205,13 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 		ParameterValidator.notNull("server", server);
 		this.server = server;
 	}
-	
-	public ThreadDomain getThreadDomain() {
-		return threadDomain;
-	}
-		
+			
 	public Forwarder getForwarder() {
 		return forwarder;
+	}
+	
+	public FailureHandler getFailureHandler() {
+		return failureHandler;
 	}
 	
 	/**
@@ -258,15 +238,19 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 		
 	public void start() {
 		acceptingJoins = true;
-		commandProcessor.startProcessor();
 	}
 	
 	public void dispose() {
-		commandProcessor.stopProcessor();
+		acceptingJoins = false;
 	}
 	
 	protected PublisherConnection getPublisherConnection() {
 		return publisherConnection;
+	}
+	
+	public PublisherPort getPublisherPort() {
+		LOG.info("--> getPublisherPort");
+		return publisherPort;
 	}
 	
 	protected AccessControlStrategy getAccessControlStrategy() {
@@ -289,7 +273,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 		return ++nextParticipantId;
 	}
 	
-	protected synchronized int getParticipantId(String userId) {
+	protected int getParticipantId(String userId) {
 		Integer id = (Integer) userParticipantMapping.get(userId);
 		if (id == null) {
 			id = new Integer(nextParticipantId());
@@ -298,40 +282,32 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 		return id.intValue();
 	}
 			
-	protected synchronized void removeParticipant(int participantId) {
+	protected void removeParticipant(int participantId) {
 		Integer key = new Integer(participantId);
 		connections.remove(key);
-		proxies.remove(key);
-		ports.remove(key);
+		Forwarder removed = (Forwarder) proxies.remove(key);
+		forwarder.removeForwarder(removed);
 	}
 		
-	protected synchronized ParticipantConnection getParticipantConnection(int id) {
+	protected ParticipantConnection getParticipantConnection(int id) {
 		return (ParticipantConnection) connections.get(new Integer(id));
 	}
 	
-	// --> server logic methods <--
-
-	/**
-	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerLogic#addCommand(ch.iserver.ace.collaboration.jupiter.server.serializer.SerializerCommand)
-	 */
-	public void addCommand(SerializerCommand command) {
-		commandProcessor.process(command);
-	}
 	
-	/**
-	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerLogic#addParticipant(ch.iserver.ace.collaboration.jupiter.server.SessionParticipant)
-	 */
-	public synchronized void addParticipant(SessionParticipant participant) {
+	public void addParticipant(SessionParticipant participant) {
 		Integer key = new Integer(participant.getParticipantId());
-		ports.put(key, participant.getParticipantPort());
 		proxies.put(key, participant.getForwarder());
 		connections.put(key, participant.getParticipantConnection());
+		forwarder.addForwarder(participant.getForwarder());
 	}
+
+	// --> server logic methods <--
 
 	/**
 	 * @see ch.iserver.ace.net.DocumentServerLogic#join(ch.iserver.ace.net.ParticipantConnection)
 	 */
-	public synchronized void join(ParticipantConnection target) {
+	public void join(ParticipantConnection target) {
+		LOG.info("--> join");
 		if (!isAcceptingJoins()) {
 			target.joinRejected(JoinRequest.SHUTDOWN);
 			return;
@@ -348,8 +324,11 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 			return;
 		}
 
-		ParticipantConnection connection = (ParticipantConnection) getThreadDomain().wrap(
-						new ParticipantConnectionWrapper(target, this), ParticipantConnection.class);
+		ParticipantConnection connection = (ParticipantConnection) outgoingDomain.wrap(
+						new ParticipantConnectionWrapper(
+								target, 
+								getFailureHandler()), 
+						ParticipantConnection.class);
 		RemoteUser user = getUserRegistry().getUser(id);
 		
 		if (user == null) {
@@ -358,14 +337,16 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 		}
 		
 		joinSet.add(id);
-		JoinRequest request = new JoinRequestImpl(this, user, connection);
+		ServerLogic wrapped = (ServerLogic) incomingDomain.wrap(this, ServerLogic.class);
+		JoinRequest request = new JoinRequestImpl(wrapped, user, connection);
 		getAccessControlStrategy().joinRequest(getPublisherConnection(), request);
 	}
 	
 	/**
 	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerLogic#joinAccepted(ch.iserver.ace.net.ParticipantConnection)
 	 */
-	public synchronized void joinAccepted(ParticipantConnection connection) {		
+	public void joinAccepted(ParticipantConnection connection) {
+		LOG.info("--> join accepted");
 		try {
 			if (!isAcceptingJoins()) {
 				LOG.info("join accepted by publisher but shutdown is in progress");
@@ -373,14 +354,18 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 				Algorithm algorithm = new Jupiter(false);
 				int participantId = getParticipantId(connection.getUser().getId());
 				connection.setParticipantId(participantId);
-		
-				ParticipantPort port = new ParticipantPortImpl(this, participantId, algorithm);
+				
+				ParticipantPort portTarget = new ParticipantPortImpl(this, participantId, new AlgorithmWrapperImpl(algorithm), forwarder);
+				ParticipantPort port = (ParticipantPort) incomingDomain.wrap(portTarget, ParticipantPort.class);
 				Forwarder proxy = createParticipantProxy(participantId, connection, algorithm);
 				RemoteUserProxy user = connection.getUser();
 		
-				SessionParticipant participant = new SessionParticipant(port, proxy, connection, user);
-				SerializerCommand cmd = new JoinCommand(participant, this);
-				addCommand(cmd);
+				SessionParticipant participant = new SessionParticipant(portTarget, proxy, connection, user);
+				PortableDocument document = getDocument();
+				connection.joinAccepted(port);
+				connection.sendDocument(document);
+				addParticipant(participant);
+				forwarder.sendParticipantJoined(participantId, user);
 			}
 		} finally {
 			// remove from list of joining users
@@ -391,7 +376,8 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	/**
 	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerLogic#joinRejected(ch.iserver.ace.net.ParticipantConnection)
 	 */
-	public synchronized void joinRejected(ParticipantConnection connection) {
+	public void joinRejected(ParticipantConnection connection) {
+		LOG.info("--> joinRejected");
 		try {
 			if (!isAcceptingJoins()) {
 				LOG.info("join rejected by publisher but shutdown is in progress");
@@ -403,33 +389,20 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 			joinSet.remove(connection.getUser().getId());
 		}
 	}
-		
-	/**
-	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerLogic#getPublisherPort()
-	 */
-	public PublisherPort getPublisherPort() {
-		return publisherPort;
-	}
-
+	
 	/**
 	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerLogic#setDocumentDetails(ch.iserver.ace.DocumentDetails)
 	 */
 	public void setDocumentDetails(DocumentDetails details) {
+		LOG.info("--> setDocumentDetails");
 		getDocumentServer().setDocumentDetails(details);
 	}
-		
-	/**
-	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerLogic#getForwarders()
-	 */
-	public synchronized Iterator getForwarders() {
-		Map clone = (Map) proxies.clone();
-		return clone.values().iterator();
-	}
-
+	
 	/**
 	 * @see ServerLogic#leave(int)
 	 */
-	public synchronized void leave(int participantId) {
+	public void leave(int participantId) {
+		LOG.info("--> leave");
 		ParticipantConnection connection = getParticipantConnection(participantId);
 		if (connection == null) {
 			LOG.warn("participant with id " + participantId + " not (or no longer) in session");
@@ -437,46 +410,41 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 		}
 		connection.close();
 		removeParticipant(participantId);
+		forwarder.sendParticipantLeft(participantId, Participant.LEFT);
 	}
 	
 	/**
 	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerLogic#kick(int)
 	 */
 	public void kick(int participantId) {
+		LOG.info("--> kick");
 		if (participantId == PUBLISHER_ID) {
 			throw new IllegalArgumentException("cannot kick publisher of session");
 		}
 		LOG.info("kicking participant " + participantId);
-		synchronized (this) {
-			ParticipantConnection connection = getParticipantConnection(participantId);
-			if (connection == null) {
-				LOG.info("participant with id " + participantId + " not (or no longer) in session");
-			} else {
-				blacklist.add(connection.getUser().getId());
-				removeParticipant(participantId);
-				connection.sendKicked();
-				connection.close();
-			}
+		ParticipantConnection connection = getParticipantConnection(participantId);
+		if (connection == null) {
+			LOG.info("participant with id " + participantId + " not (or no longer) in session");
+		} else {
+			blacklist.add(connection.getUser().getId());
+			removeParticipant(participantId);
+			connection.sendKicked();
+			connection.close();
 		}
 	}
 	
 	/**
 	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerLogic#prepareShutdown()
 	 */
-	public synchronized void prepareShutdown() {
-		this.acceptingJoins = false;
+	public void shutdown() {
+		LOG.info("--> shutdown");
 		if (getDocumentServer() != null) {
 			getDocumentServer().prepareShutdown();
 		}
-		addCommand(new ShutdownCommand(this));
-	}
-	
-	/**
-	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerLogic#shutdown()
-	 */
-	public void shutdown() {
-		getDocumentServer().shutdown();
-		dispose();
+		forwarder.close();
+		if (getDocumentServer() != null) {
+			getDocumentServer().shutdown();
+		}
 	}
 	
 	// --> start FailureHandler methods <--
@@ -486,15 +454,13 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	 */
 	public void handleFailure(int participantId, int reason) {
 		LOG.info("handling failed connection to participant " + participantId);
-		synchronized (this) {
-			if (participantId == PUBLISHER_ID) {
-				LOG.error("failure related to publisher: " + reason);
-				getPublisherConnection().sessionFailed(reason, null);
-				prepareShutdown();
-			} else {
-				removeParticipant(participantId);
-				addCommand(new LeaveCommand(participantId, Participant.DISCONNECTED));
-			}
+		if (participantId == PUBLISHER_ID) {
+			LOG.error("failure related to publisher: " + reason);
+			getPublisherConnection().sessionFailed(reason, null);
+			shutdown();
+		} else {
+			removeParticipant(participantId);
+			getForwarder().sendParticipantLeft(participantId, Participant.DISCONNECTED);
 		}
 	}
 	

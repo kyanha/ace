@@ -32,17 +32,14 @@ import ch.iserver.ace.collaboration.AcceptingAccessControlStrategy;
 import ch.iserver.ace.collaboration.JoinRequest;
 import ch.iserver.ace.collaboration.jupiter.UserRegistry;
 import ch.iserver.ace.collaboration.jupiter.UserRegistryImpl;
-import ch.iserver.ace.collaboration.jupiter.server.FailureHandler;
-import ch.iserver.ace.collaboration.jupiter.server.Forwarder;
 import ch.iserver.ace.collaboration.jupiter.server.ServerDocument;
 import ch.iserver.ace.collaboration.jupiter.server.ServerDocumentImpl;
 import ch.iserver.ace.collaboration.jupiter.server.ServerLogicImpl;
-import ch.iserver.ace.collaboration.jupiter.server.SimpleCommandProcessor;
-import ch.iserver.ace.collaboration.jupiter.server.serializer.CommandProcessor;
 import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.RemoteUserProxyStub;
 import ch.iserver.ace.util.CallerThreadDomain;
+import ch.iserver.ace.util.SingleThreadDomain;
 
 /**
  *
@@ -53,7 +50,7 @@ public class ServerLogicTest extends MockObjectTestCase {
 		DocumentModel document = new DocumentModel("", 0, 0, new DocumentDetails("collab.txt"));
 		UserRegistry registry = new UserRegistryImpl();
 		
-		ServerLogicImpl logic = new ServerLogicImpl(new CallerThreadDomain(), document, registry);
+		ServerLogicImpl logic = new ServerLogicImpl(new SingleThreadDomain(), new CallerThreadDomain(), document, registry);
 		
 		Mock mock = mock(ParticipantConnection.class);
 		ParticipantConnection connection = (ParticipantConnection) mock.proxy();
@@ -88,12 +85,10 @@ public class ServerLogicTest extends MockObjectTestCase {
 			registry.addUser(new RemoteUserProxyStub("" + i));
 		}
 		
-		ServerLogicImpl logic = new ServerLogicImpl(new CallerThreadDomain(), doc, registry) {
+		ServerLogicImpl logic = new ServerLogicImpl(new SingleThreadDomain(), 
+						new CallerThreadDomain(), doc, registry) {
 			protected ServerDocument createServerDocument(DocumentModel doc) {
 				return document;
-			}
-			protected CommandProcessor createCommandProcessor(Forwarder forwarder, FailureHandler handler) {
-				return new SimpleCommandProcessor(forwarder);
 			}
 		};
 		logic.setAccessControlStrategy(new AcceptingAccessControlStrategy());

@@ -21,16 +21,14 @@
 
 package ch.iserver.ace.collaboration.jupiter.server;
 
-import ch.iserver.ace.algorithm.Algorithm;
+import ch.iserver.ace.CaretUpdate;
+import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.Timestamp;
+import ch.iserver.ace.algorithm.TransformationException;
 import ch.iserver.ace.collaboration.Participant;
-import ch.iserver.ace.collaboration.jupiter.server.serializer.AcknowledgeSerializerCommand;
-import ch.iserver.ace.collaboration.jupiter.server.serializer.CaretUpdateSerializerCommand;
-import ch.iserver.ace.collaboration.jupiter.server.serializer.LeaveCommand;
-import ch.iserver.ace.collaboration.jupiter.server.serializer.RequestSerializerCommand;
-import ch.iserver.ace.collaboration.jupiter.server.serializer.SerializerCommand;
+import ch.iserver.ace.collaboration.jupiter.AlgorithmWrapper;
 import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.util.ParameterValidator;
 
@@ -41,11 +39,16 @@ import ch.iserver.ace.util.ParameterValidator;
  * to the server logic queue.
  */
 public class ParticipantPortImpl implements ParticipantPort {
-	
+		
 	/**
 	 * The server logic to which this port belongs.
 	 */
 	private final ServerLogic logic;
+	
+	/**
+	 * The forwarder to forward events.
+	 */
+	private final Forwarder forwarder;
 	
 	/**
 	 * The participant id of the participant.
@@ -55,7 +58,7 @@ public class ParticipantPortImpl implements ParticipantPort {
 	/**
 	 * The algorithm used to transform requests.
 	 */
-	private final Algorithm algorithm;
+	private final AlgorithmWrapper algorithm;
 		
 	/**
 	 * Creates a new ParticipantPortImpl using the passed in server logic
@@ -64,12 +67,14 @@ public class ParticipantPortImpl implements ParticipantPort {
 	 * @param logic the server logic used by this port
 	 * @param participantId the participant id of the participant
 	 * @param algorithm the algorithm used to transform requests
+	 * @param forwarder
 	 */
-	public ParticipantPortImpl(ServerLogic logic, int participantId, Algorithm algorithm) {
+	public ParticipantPortImpl(ServerLogic logic, int participantId, AlgorithmWrapper algorithm, Forwarder forwarder) {
 		ParameterValidator.notNull("algorithm", algorithm);
 		this.logic = logic;
 		this.participantId = participantId;
 		this.algorithm = algorithm;
+		this.forwarder = forwarder;
 	}
 
 	/**
@@ -82,7 +87,7 @@ public class ParticipantPortImpl implements ParticipantPort {
 	/**
 	 * @return the algorithm used to transform requests
 	 */
-	public Algorithm getAlgorithm() {
+	public AlgorithmWrapper getAlgorithm() {
 		return algorithm;
 	}
 	
@@ -92,39 +97,48 @@ public class ParticipantPortImpl implements ParticipantPort {
 	public int getParticipantId() {
 		return participantId;
 	}
+	
+	protected Forwarder getForwarder() {
+		return forwarder;
+	}
+	
+	protected FailureHandler getFailureHandler() {
+		return (FailureHandler) getLogic();
+	}
 
 	/**
 	 * @see ch.iserver.ace.net.ParticipantPort#receiveCaretUpdate(ch.iserver.ace.algorithm.CaretUpdateMessage)
 	 */
 	public void receiveCaretUpdate(CaretUpdateMessage message) {
-		SerializerCommand cmd = new CaretUpdateSerializerCommand(
-						getParticipantId(),
-						getAlgorithm(),
-						message);
-		getLogic().addCommand(cmd);
+		try {
+			CaretUpdate update = getAlgorithm().receiveCaretUpdateMessage(message);
+			getForwarder().sendCaretUpdate(getParticipantId(), update);
+		} catch (Exception e) {
+			getFailureHandler().handleFailure(getParticipantId(), Participant.RECEPTION_FAILED);
+		}
 	}
 	
 	/**
 	 * @see ch.iserver.ace.net.ParticipantPort#receiveRequest(ch.iserver.ace.algorithm.Request)
 	 */
 	public void receiveRequest(Request request) {
-		SerializerCommand cmd = new RequestSerializerCommand(
-						getParticipantId(),
-						getAlgorithm(),
-						request);
-		getLogic().addCommand(cmd);
+		try {
+			Operation op = getAlgorithm().receiveRequest(request);
+			getForwarder().sendOperation(getParticipantId(), op);
+		} catch (Exception e) {
+			getFailureHandler().handleFailure(getParticipantId(), Participant.RECEPTION_FAILED);
+		}
 	}
 	
 	/**
 	 * @see ch.iserver.ace.net.ParticipantPort#receiveAcknowledge(int, ch.iserver.ace.algorithm.Timestamp)
 	 */
 	public void receiveAcknowledge(int siteId, Timestamp timestamp) {
-		SerializerCommand cmd = new AcknowledgeSerializerCommand(
-						getParticipantId(),
-						getAlgorithm(), 
-						siteId, 
-						timestamp);
-		getLogic().addCommand(cmd);
+		try {
+			getAlgorithm().acknowledge(siteId, timestamp);
+		} catch (TransformationException e) {
+			getFailureHandler().handleFailure(getParticipantId(), Participant.RECEPTION_FAILED);
+		}
 	}
 	
 	/**
@@ -132,7 +146,6 @@ public class ParticipantPortImpl implements ParticipantPort {
 	 */
 	public void leave() {
 		getLogic().leave(getParticipantId());
-		getLogic().addCommand(new LeaveCommand(getParticipantId(), Participant.LEFT));
 	}
 	
 }

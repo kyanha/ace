@@ -33,8 +33,6 @@ public class SessionParticipant {
 	
 	private final int participantId;
 	
-	private final ParticipantPort participantPort;
-	
 	private final Forwarder forwarder;
 	
 	private final ParticipantConnection participantConnection;
@@ -53,7 +51,6 @@ public class SessionParticipant {
 					RemoteUserProxy userProxy) {
 		this.participantId = port.getParticipantId();
 		this.participantConnection = connection;
-		this.participantPort = port;
 		this.forwarder = proxy;
 		this.userProxy = userProxy;
 	}
@@ -64,10 +61,6 @@ public class SessionParticipant {
 	
 	public ParticipantConnection getParticipantConnection() {
 		return participantConnection;
-	}
-
-	public ParticipantPort getParticipantPort() {
-		return participantPort;
 	}
 
 	public Forwarder getForwarder() {

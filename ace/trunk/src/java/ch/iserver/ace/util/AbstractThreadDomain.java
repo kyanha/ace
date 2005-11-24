@@ -21,6 +21,7 @@
 
 package ch.iserver.ace.util;
 
+import org.aopalliance.aop.Advice;
 import org.springframework.aop.framework.ProxyFactoryBean;
 
 import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
@@ -43,12 +44,37 @@ abstract class AbstractThreadDomain implements ThreadDomain {
 	 * @return a dynamic proxy wrapping the given target object
 	 */
 	protected Object wrap(Object target, Class clazz, BlockingQueue queue) {
+		return wrap(target, clazz, queue, new Advice[0]);
+	}
+	
+	/**
+	 * @param target
+	 * @param clazz
+	 * @param queue
+	 * @param advice
+	 * @return
+	 */
+	protected Object wrap(Object target, Class clazz, BlockingQueue queue, Advice advice) {
+		return wrap(target, clazz, queue, new Advice[] { advice });
+	}
+	
+	/**
+	 * @param target
+	 * @param clazz
+	 * @param queue
+	 * @param advices
+	 * @return
+	 */
+	protected Object wrap(Object target, Class clazz, BlockingQueue queue, Advice[] advices) {
 		ProxyFactoryBean factory = new ProxyFactoryBean();
 		factory.addInterface(clazz);
 		AsyncInterceptor interceptor = new AsyncInterceptor(queue);
 		factory.addAdvice(interceptor);
+		for (int i = 0; i < advices.length; i++) {
+			factory.addAdvice(advices[i]);
+		}
 		factory.setTarget(target);
-		return target;
+		return factory.getObject();
 	}
 	
 }

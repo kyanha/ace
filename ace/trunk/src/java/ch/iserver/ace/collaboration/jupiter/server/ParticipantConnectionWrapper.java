@@ -107,9 +107,16 @@ public class ParticipantConnectionWrapper implements ParticipantConnection {
 	 *   <li>replace the target with a null object connection</li>
 	 * </ol>
 	 */
-	private void failed(Exception e) {
+	protected void failed(Exception e) {
 		getFailureHandler().handleFailure(participantId, Participant.DISCONNECTED);
-		target = NullParticipantConnection.getInstance();
+		target = createNullConnection();
+	}
+	
+	/**
+	 * @return
+	 */
+	protected ParticipantConnection createNullConnection() {
+		return new NullParticipantConnection();
 	}
 	
 	/**
