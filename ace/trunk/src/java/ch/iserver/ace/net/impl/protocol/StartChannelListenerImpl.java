@@ -69,8 +69,10 @@ public class StartChannelListenerImpl implements StartChannelListener {
 		if (data.equals(RemoteUserSession.CHANNEL_MAIN)) {
 			requestHandler = mainHandler;
 		} else if (data.equals(RemoteUserSession.CHANNEL_COLLABORATION)){
+			//TODO: add a SessionRequestHandler
+			
 			//for each collaborative session create new CollaborationRequestHandler
-			requestHandler = CollaborationRequestHandlerFactory.getInstance().createHandler();
+			requestHandler = SessionRequestHandlerFactory.getInstance().createHandler();
 		} else {
 			throw new StartChannelException(BEEPError.CODE_PARAMETER_INVALID, "channel type not known");
 		}

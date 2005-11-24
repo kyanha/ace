@@ -23,7 +23,6 @@ package ch.iserver.ace.net.impl.protocol;
 
 import java.net.ConnectException;
 import java.net.InetAddress;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -42,6 +41,7 @@ import ch.iserver.ace.FailureCodes;
 import ch.iserver.ace.net.impl.NetworkProperties;
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;
+import ch.iserver.ace.net.impl.SessionConnectionImpl;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
@@ -123,6 +123,11 @@ public class RemoteUserSession {
 	}
 	
 
+	public SessionConnectionImpl createSessionConnection(String docId, Channel collaborationChannel) {
+		
+		return null;
+	}
+	
 	/**
 	 * 
 	 * @param docId
@@ -157,6 +162,38 @@ public class RemoteUserSession {
 	}
 	
 	/**
+	 * 
+	 * @param type
+	 * @return
+	 * @throws ConnectionException
+	 */
+	private Channel startNewChannel(String type) throws ConnectionException {
+		try {
+			String uri = NetworkProperties.get(NetworkProperties.KEY_PROFILE_URI);
+			LOG.debug("startChannel("+uri+", "+type+")");
+			
+			StartChannelProfile profile = new StartChannelProfile(uri, false, type);
+			RequestHandler handler = null;
+			if (type == CHANNEL_MAIN) {
+				handler = ProfileRegistryFactory.getMainRequestHandler();
+			} else if (type == CHANNEL_COLLABORATION) {
+//				handler = SessionRequestHandlerFactory.getInstance().createHandler();
+				//TODO: consider passing a reference to ParticipantPort
+				handler = new ParticipantRequestHandler();
+			} else {
+				//TODO: proxy channel?
+				throw new IllegalStateException("unknown channel type ["+type+"]");
+			}
+			return session.startChannel(profile, handler);
+//			return session.startChannel(uri, false, type);
+		} catch (BEEPException be) {
+			//TODO: retry strategy?
+			LOG.error("could not start channel ["+be+"]");
+			throw new ConnectionException("could not start channel");
+		}
+	}
+	
+	/**
 	 * Helper method to initiate the TCPSession for this 
 	 * RemoteUserSession.
 	 *
@@ -176,36 +213,6 @@ public class RemoteUserSession {
 				NetworkServiceImpl.getInstance().getCallback().serviceFailure(FailureCodes.CONNECTION_REFUSED, msg, be);
 			}
 			throw new ConnectionException("session init failed ["+be.getMessage()+"]");
-		}
-	}
-	
-	/**
-	 * 
-	 * @param type
-	 * @return
-	 * @throws ConnectionException
-	 */
-	private Channel startNewChannel(String type) throws ConnectionException {
-		try {
-			String uri = NetworkProperties.get(NetworkProperties.KEY_PROFILE_URI);
-			LOG.debug("startChannel("+uri+", "+type+")");
-			
-			StartChannelProfile profile = new StartChannelProfile(uri, false, type);
-			RequestHandler handler = null;
-			if (type == CHANNEL_MAIN) {
-				handler = ProfileRegistryFactory.getMainRequestHandler();
-			} else if (type == CHANNEL_COLLABORATION) {
-				handler = CollaborationRequestHandlerFactory.getInstance().createHandler();
-			} else {
-				//TODO: proxy channel?
-				throw new IllegalStateException("unknown channel type ["+type+"]");
-			}
-			return session.startChannel(profile, handler);
-//			return session.startChannel(uri, false, type);
-		} catch (BEEPException be) {
-			//TODO: retry strategy?
-			LOG.error("could not start channel ["+be+"]");
-			throw new ConnectionException("could not start channel");
 		}
 	}
 	
