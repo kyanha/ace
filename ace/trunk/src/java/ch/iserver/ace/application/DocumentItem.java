@@ -64,7 +64,6 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 	private String id, title, extendedTitle, toolTip;
 
 	private CollaborativeDocument editorDocument;
-	// private SyntaxDocument editorDocument;
 	private RemoteDocument remoteDocument;
 	private Session session;
 	private PublishedSessionCallbackImpl publishedSessionCallback;
@@ -79,7 +78,7 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 		createEditorDocument();
 		
 		
-		CollaborativeDocument doc = (CollaborativeDocument)editorDocument;
+		/*CollaborativeDocument doc = (CollaborativeDocument)editorDocument;
 		
 		Style pStyle = doc.addStyle("" + 1, null);
 		StyleConstants.setBackground(pStyle, Color.RED.brighter());
@@ -103,7 +102,7 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 
 		
 		pStyle = doc.getStyle("" + 1);
-		StyleConstants.setBackground(pStyle, Color.GREEN.brighter());
+		StyleConstants.setBackground(pStyle, Color.GREEN.brighter());*/
 		
 
 
