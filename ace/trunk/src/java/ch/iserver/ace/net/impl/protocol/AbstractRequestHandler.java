@@ -36,7 +36,7 @@ import org.beepcore.beep.util.BufferSegment;
 public abstract class AbstractRequestHandler implements RequestHandler {
 
 	protected static final int PIGGYBACKED_MESSAGE_LENGTH = 2;
-	private static final String REPLY = "piggybacked message ack";
+	private static final String REPLY = "ack";
 	
 	protected void handlePiggybackedMessage(MessageMSG message) {
 		getLogger().info("piggybacked message received.");

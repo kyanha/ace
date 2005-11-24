@@ -35,6 +35,7 @@ import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.PortableDocument;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
+import ch.iserver.ace.net.impl.PublishedDocument;
 
 /**
  * This connection does not establish its channel until <code>joinAccepted(ParticipantPort)</code> is 
@@ -48,7 +49,8 @@ public class CollaborationConnection extends AbstractConnection implements
 	private ParticipantPort port;
 	private boolean joinAccepted;
 	private Serializer serializer;
-	private String docId;
+	private int participantId;
+	private PublishedDocument publishedDoc;
 	
 	public CollaborationConnection(RemoteUserSession session, Channel channel, ReplyListener listener, Serializer serializer) {
 		super(channel);
@@ -58,24 +60,28 @@ public class CollaborationConnection extends AbstractConnection implements
 		setReplyListener(listener);
 		super.LOG = Logger.getLogger(CollaborationConnection.class);
 	}
-	
-	public void setDocumentId(String id) {
-		this.docId = id;
+		
+	public int getParticipantId() {
+		return participantId;
 	}
 	
-	public String getDocumentId() {
-		return docId;
+	public void setPublishedDocument(PublishedDocument doc) {
+		this.publishedDoc = doc;
+	}
+	
+	public PublishedDocument getPublishedDocument() {
+		return publishedDoc;
 	}
 
 	/***************************************************/
 	/** methods from interface ParticipantConnection  **/
 	/***************************************************/
 	public void setParticipantId(int participantId) {
-		// TODO Auto-generated method stub
-		
+		this.participantId = participantId;
 	}
 	
 	public void joinAccepted(ParticipantPort port) {
+		LOG.info("joinAccepted()");
 		joinAccepted = true;
 		this.port = port;
 		//intiate collaboration channel
@@ -89,7 +95,7 @@ public class CollaborationConnection extends AbstractConnection implements
 	
 	public void joinRejected(int code) {
 		//TODO: do not initiate collaboration channel, instead return via JoinRejectedFilter
-		
+		LOG.info("joinRejected()");
 	}
 
 	public RemoteUserProxy getUser() {
@@ -98,14 +104,16 @@ public class CollaborationConnection extends AbstractConnection implements
 
 	public void sendDocument(PortableDocument document) {
 		if (joinAccepted) {
+			LOG.info("--> sendDocument()");
 			try {
-				byte [] data = serializer.createResponse(ProtocolConstants.JOIN_DOCUMENT, getDocumentId(), document);
+				byte [] data = serializer.createResponse(ProtocolConstants.JOIN_DOCUMENT, getPublishedDocument(), document);
 				send(data, null, getReplyListener());
 			} catch (SerializeException se) {
 				LOG.error("could not serialize document ["+se.getMessage()+"]");
 			} catch (ProtocolException pe) {
 				LOG.error("protocol exception ["+pe.getMessage()+"]");
 			}
+			LOG.info("<-- sendDocument()");
 		} else {
 			throw new IllegalStateException("cannot send document before join has been accepted.");
 		}

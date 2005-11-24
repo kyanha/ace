@@ -36,6 +36,8 @@ import org.apache.log4j.Logger;
 import org.xml.sax.helpers.AttributesImpl;
 
 import ch.iserver.ace.CaretUpdate;
+import ch.iserver.ace.ServerInfo;
+import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.net.PortableDocument;
 import ch.iserver.ace.net.impl.MutableUserDetails;
 import ch.iserver.ace.net.impl.NetworkConstants;
@@ -181,8 +183,8 @@ public class SerializerImpl implements Serializer, ProtocolConstants {
 				AttributesImpl attrs = new AttributesImpl();
 				handler.startElement("", "", "ace", attrs);
 				handler.startElement("", "", "response", attrs);
-				String docId = (String) data1;
-				attrs.addAttribute("", "", "id", "", docId);
+				PublishedDocument publishedDoc = (PublishedDocument) data1;
+				attrs.addAttribute("", "", "id", "", publishedDoc.getId());
 				String userid = NetworkServiceImpl.getInstance().getUserId();
 				attrs.addAttribute("", "", "userid", "", userid);
 				handler.startElement("", "", "document", attrs);
@@ -203,7 +205,8 @@ public class SerializerImpl implements Serializer, ProtocolConstants {
 			output.flush();
 			return output.toByteArray();
 		} catch (Exception e) {
-			LOG.error("could not serialize ["+e.getMessage()+"]");
+			e.printStackTrace();
+			LOG.error("could not serialize ["+e+", "+e.getMessage()+"]");
 			throw new SerializeException(e.getMessage());
 		}
 	}
@@ -218,18 +221,31 @@ public class SerializerImpl implements Serializer, ProtocolConstants {
 			attrs.addAttribute("", "", "id", "", Integer.toString(id));
 			handler.startElement("", "", "participant", attrs);
 			attrs = new AttributesImpl();
-			RemoteUserProxyExt proxy = (RemoteUserProxyExt) doc.getUserProxy(id);
-			String userid = proxy.getId();
+			String userid, name, address, port, explicitDiscovery;
+			boolean isExplicitlyDiscovered;
+			if (id == ParticipantConnection.PUBLISHER_ID) {
+				NetworkServiceImpl service = NetworkServiceImpl.getInstance();
+				userid = service.getUserId();
+				name = service.getUserDetails().getUsername();
+				ServerInfo info = service.getServerInfo();
+				address = info.getAddress().getHostAddress();
+				port = Integer.toString(info.getPort());
+				isExplicitlyDiscovered = false;
+				explicitDiscovery = Boolean.toString(isExplicitlyDiscovered);
+			} else {
+				RemoteUserProxyExt proxy = (RemoteUserProxyExt) doc.getUserProxy(id);
+				userid = proxy.getId();
+				MutableUserDetails details = proxy.getMutableUserDetails();
+				name = details.getUsername();
+				address = details.getAddress().getHostAddress();
+				port = Integer.toString(details.getPort());
+				isExplicitlyDiscovered = proxy.isExplicitlyDiscovered();
+				explicitDiscovery = Boolean.toString(isExplicitlyDiscovered);
+			}
 			attrs.addAttribute("", "", "id", "", userid);
-			MutableUserDetails details = proxy.getMutableUserDetails();
-			String name = details.getUsername();
 			attrs.addAttribute("", "", "name", "", name);
-			String address = details.getAddress().getHostAddress();
 			attrs.addAttribute("", "", "address", "", address);
-			String port = Integer.toString(details.getPort());
 			attrs.addAttribute("", "", "port", "", port);
-			boolean isExplicitlyDiscovered = proxy.isExplicitlyDiscovered();
-			String explicitDiscovery = Boolean.toString(isExplicitlyDiscovered);
 			attrs.addAttribute("", "", "explicitDiscovery", "", explicitDiscovery);
 			handler.startElement("", "", "user", attrs);
 			if (isExplicitlyDiscovered) {

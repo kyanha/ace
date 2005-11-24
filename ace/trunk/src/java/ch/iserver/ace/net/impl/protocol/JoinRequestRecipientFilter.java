@@ -51,7 +51,7 @@ public class JoinRequestRecipientFilter extends AbstractRequestFilter {
 				RemoteUserSession session = SessionManager.getInstance().getSession(request.getUserId());
 				
 				CollaborationConnection connection = session.createCollaborationConnection();
-				connection.setDocumentId(info.getDocId());
+				connection.setPublishedDocument(documentToJoin);
 				documentToJoin.join(connection);
 				
 				try {
@@ -65,6 +65,7 @@ public class JoinRequestRecipientFilter extends AbstractRequestFilter {
 				super.process(request);
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			LOG.error("exception processing request ["+e+", "+e.getMessage()+"]");
 		}	
 	}

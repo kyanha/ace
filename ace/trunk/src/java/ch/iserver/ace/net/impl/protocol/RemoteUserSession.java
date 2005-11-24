@@ -81,6 +81,7 @@ public class RemoteUserSession {
 		this.user = user;
 		isInitiated = true;
 		isAlive = true;
+		collabConnections = Collections.synchronizedList(new ArrayList());
 	}
 	
 	/**
@@ -98,6 +99,7 @@ public class RemoteUserSession {
 			initiate();
 		if (mainConnection == null) {
 			Channel channel = startNewChannel(CHANNEL_MAIN);
+			LOG.debug("channel started");
 			mainConnection = new MainConnection(channel);
 		}
 		return mainConnection;
@@ -110,7 +112,9 @@ public class RemoteUserSession {
 	
 	private Channel startNewChannel(String type) throws ConnectionException {
 		try {
-			return session.startChannel(NetworkProperties.get(NetworkProperties.KEY_PROFILE_URI), false, type);
+			String uri = NetworkProperties.get(NetworkProperties.KEY_PROFILE_URI);
+			LOG.debug("startChannel("+uri+", "+type+")");
+			return session.startChannel(uri, false, type);
 		} catch (BEEPException be) {
 			//TODO: retry strategy?
 			LOG.error("could not start channel ["+be+"]");
