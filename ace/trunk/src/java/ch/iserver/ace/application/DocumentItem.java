@@ -79,7 +79,7 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 		createEditorDocument();
 		
 		
-		StyleChangedDocument doc = (StyleChangedDocument)editorDocument;
+		CollaborativeDocument doc = (CollaborativeDocument)editorDocument;
 		
 		Style pStyle = doc.addStyle("" + 1, null);
 		StyleConstants.setBackground(pStyle, Color.RED.brighter());
@@ -217,7 +217,7 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 	
 
 	private void createEditorDocument() {
-		editorDocument = new StyleChangedDocument();// new DefaultStyledDocument();
+		editorDocument = new CollaborativeDocument();// new DefaultStyledDocument();
 		// editorDocument = new SyntaxDocument();
 		editorDocument.addDocumentListener(new DocumentListener() {
 			public void changedUpdate(DocumentEvent e) {
