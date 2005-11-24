@@ -33,6 +33,16 @@ package ch.iserver.ace.util;
 public interface ThreadDomain {
 	
 	/**
+	 * @param name
+	 */
+	void setName(String name);
+	
+	/**
+	 * @return
+	 */
+	String getName();
+	
+	/**
 	 * Wraps the <var>target</var> object so that calls to it are executed
 	 * in this ThreadDomain.
 	 * 

@@ -129,7 +129,7 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	public ThreadDomain createIncomingDomain() {
 		return new SingleThreadDomain(new AsyncExceptionHandler() {
 				public void handleException(Throwable th) {
-					LOG.error(th);
+					th.printStackTrace();
 				}
 		});
 	}
@@ -240,6 +240,7 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 		session.setUserRegistry(getUserRegistry());
 		
 		ThreadDomain threadDomain = createIncomingDomain();
+		threadDomain.setName("incoming-session-logic");
 		
 		ServerLogicImpl target = new ServerLogicImpl(
 						threadDomain,

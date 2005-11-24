@@ -73,7 +73,7 @@ public class SingleThreadDomain extends AbstractThreadDomain {
 			this.worker.start();
 		}
 		Advice advice = new LoggingInterceptor(SingleThreadDomain.class);
-		return wrap(target, clazz, queue, advice);
+		return wrap(target, clazz, queue, new Advice[] { advice }, true);
 	}
 
 }

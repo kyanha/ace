@@ -21,30 +21,20 @@
 
 package ch.iserver.ace.util;
 
+import java.lang.reflect.Method;
+
+import org.springframework.aop.support.StaticMethodMatcherPointcut;
+
 /**
- * CallerThreadDomain does not create worker threads at all. It does not wrap
- * the target instances either. It simply returns the target from the
- * {@link #wrap(Object, Class)} method and thus method calls on the target
- * are processed on the caller thread.
- * 
- * <p>Note, this might especially be useful in unit testing scenarios where
- * threading introduces a degree of non-deterministic behavior.</p>
+ *
  */
-public class CallerThreadDomain implements ThreadDomain {
-	
-	public String getName() {
-		return "caller-thread-domain";
-	}
-	
-	public void setName(String name) {
-		// ignored
-	}
-	
+public class VoidMethodMatcherPointcut extends StaticMethodMatcherPointcut {
+
 	/**
-	 * @see ch.iserver.ace.util.ThreadDomain#wrap(java.lang.Object, java.lang.Class)
+	 * @see org.springframework.aop.MethodMatcher#matches(java.lang.reflect.Method, java.lang.Class)
 	 */
-	public Object wrap(Object target, Class clazz) {
-		return target;
+	public boolean matches(Method method, Class clazz) {
+		return method.getReturnType().equals(Void.TYPE);
 	}
 
 }

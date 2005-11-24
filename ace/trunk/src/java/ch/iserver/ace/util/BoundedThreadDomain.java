@@ -21,6 +21,8 @@
 
 package ch.iserver.ace.util;
 
+import org.aopalliance.aop.Advice;
+
 import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
 import edu.emory.mathcs.backport.java.util.concurrent.LinkedBlockingQueue;
 
@@ -73,7 +75,7 @@ public class BoundedThreadDomain extends AbstractThreadDomain {
 		BlockingQueue queue = queues[index];		
 		index = (index + 1) % maxWorkers;
 		
-		return wrap(target, clazz, queue);
+		return wrap(target, clazz, queue, new Advice[0], true);
 	}
 	
 }

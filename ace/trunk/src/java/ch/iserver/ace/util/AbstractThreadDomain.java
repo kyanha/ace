@@ -22,7 +22,9 @@
 package ch.iserver.ace.util;
 
 import org.aopalliance.aop.Advice;
+import org.springframework.aop.Pointcut;
 import org.springframework.aop.framework.ProxyFactoryBean;
+import org.springframework.aop.support.DefaultPointcutAdvisor;
 
 import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
 
@@ -79,15 +81,24 @@ abstract class AbstractThreadDomain implements ThreadDomain {
 	 * @return
 	 */
 	protected Object wrap(Object target, Class clazz, BlockingQueue queue, Advice[] advices) {
+		return wrap(target, clazz, queue, advices, false);
+	}
+	
+	protected Object wrap(Object target, Class clazz, BlockingQueue queue, Advice[] advices, boolean shortcutVoid) {
 		ProxyFactoryBean factory = new ProxyFactoryBean();
 		factory.addInterface(clazz);
 		AsyncInterceptor interceptor = new AsyncInterceptor(queue);
-		factory.addAdvice(interceptor);
+		if (shortcutVoid) {
+			Pointcut pointcut = new VoidMethodMatcherPointcut();
+			factory.addAdvisor(new DefaultPointcutAdvisor(pointcut, interceptor));
+		} else {
+			factory.addAdvice(interceptor);
+		}
 		for (int i = 0; i < advices.length; i++) {
 			factory.addAdvice(advices[i]);
 		}
 		factory.setTarget(target);
 		return factory.getObject();
 	}
-	
+		
 }

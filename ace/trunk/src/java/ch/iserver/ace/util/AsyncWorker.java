@@ -62,7 +62,7 @@ public class AsyncWorker extends Worker implements AsyncExceptionHandler {
 		try {
 			invocation.proceed();
 		} catch (Throwable e) {
-			handler.handleException(e);
+			handler.handleException(new RuntimeException(getName(), e));
 		}
 	}
 	
