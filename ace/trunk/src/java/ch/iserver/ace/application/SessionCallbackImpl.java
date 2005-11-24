@@ -25,9 +25,13 @@ import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.Operation;
 import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.collaboration.SessionCallback;
+import ch.iserver.ace.application.editor.CollaborativeDocument;
 
 import ca.odell.glazedlists.BasicEventList;
 import ca.odell.glazedlists.EventList;
+
+import javax.swing.text.*;
+import java.awt.*;
 
 
 
@@ -35,27 +39,49 @@ public class SessionCallbackImpl implements SessionCallback {
 
 	private EventList participantSourceList;
 	protected ParticipationColorManager participationColorManager;
-//	private StyledDocument editorDocument;
+	private StyledDocument doc;
 
 	public SessionCallbackImpl() {
 		participantSourceList = new BasicEventList();
 		participationColorManager = new ParticipationColorManager();
 	}
+
+	/*public SessionCallbackImpl(StyledDocument doc) {
+		this.doc = doc;
+		participantSourceList = new BasicEventList();
+		participationColorManager = new ParticipationColorManager();
+	}*/
+	
+	public void setDoc(StyledDocument doc) {
+		this.doc = doc;
+	}
 	
 	public void participantJoined(Participant participant) {
-		participationColorManager.addParticipant(participant);
-		participantSourceList.add(new ParticipantItem(participant,
-			participationColorManager.getHighlightColor(participant)));
+		Color pColor = participationColorManager.addParticipant(participant);
+		participantSourceList.add(new ParticipantItem(participant, pColor));
 		
 		System.out.println("participantJoined");
+		Style pStyle = doc.getStyle("" + participant.getParticipantId());
+		if(pStyle != null) {
+			// style exists -> recolor document
+			StyleConstants.setBackground(pStyle, pColor);
+		} else {
+			// style doesnt exists -> add style
+			pStyle = doc.addStyle("" + participant.getParticipantId(), null);
+			StyleConstants.setBackground(pStyle, pColor);
+		}
+		
 	}
 	
 	public void participantLeft(Participant participant, int code) {
-		participantSourceList.remove(new ParticipantItem(participant,
-			participationColorManager.getHighlightColor(participant)));
+		Color pColor = participationColorManager.getHighlightColor(participant);
+		participantSourceList.remove(new ParticipantItem(participant, pColor));
 		participationColorManager.removeParticipant(participant);
 
 		System.out.println("participantLeft");
+		// set color from left participant to grey
+		Style pStyle = doc.getStyle("" + participant.getParticipantId());
+		StyleConstants.setBackground(pStyle, new Color(0xDD, 0xDD, 0xDD));
 	}	
 	
 	public void receiveCaretUpdate(Participant participant, CaretUpdate update) {
@@ -64,6 +90,12 @@ public class SessionCallbackImpl implements SessionCallback {
 
 	public void receiveOperation(Participant participant, Operation operation) {
 		System.out.println("receiveOperation");
+		Style pStyle = doc.getStyle("" + participant.getParticipantId());
+		try {
+			doc.insertString(0, "hallo", pStyle);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void sessionFailed(int reason, Exception e) {
