@@ -42,7 +42,7 @@ public class SessionFactoryImpl implements SessionFactory {
 	/**
 	 * 
 	 */
-	private AcknowledgeStrategyFactory acknowledgerManager;
+	private AcknowledgeStrategyFactory acknowledgeStrategyFactory;
 	
 	/**
 	 * @param threadDomain
@@ -76,15 +76,15 @@ public class SessionFactoryImpl implements SessionFactory {
 	/**
 	 * @return
 	 */
-	public AcknowledgeStrategyFactory getAcknowledgerManager() {
-		return acknowledgerManager;
+	public AcknowledgeStrategyFactory getAcknowledgeStrategyFactory() {
+		return acknowledgeStrategyFactory;
 	}
 	
 	/**
 	 * @param acknowledgerManager
 	 */
-	public void setAcknowledgerManager(AcknowledgeStrategyFactory acknowledgerManager) {
-		this.acknowledgerManager = acknowledgerManager;
+	public void setAcknowledgeStrategyFactory(AcknowledgeStrategyFactory acknowledgerManager) {
+		this.acknowledgeStrategyFactory = acknowledgerManager;
 	}
 	
 	/**
@@ -92,7 +92,7 @@ public class SessionFactoryImpl implements SessionFactory {
 	 */
 	public ConfigurableSession createSession() {
 		SessionImpl session = new SessionImpl();
-		session.setAcknowledgeStrategy(getAcknowledgerManager().createStrategy());
+		session.setAcknowledgeStrategy(getAcknowledgeStrategyFactory().createStrategy());
 		session.setThreadDomain(getThreadDomain());
 		session.setUserRegistry(getUserRegistry());
 		return session;

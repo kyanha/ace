@@ -33,6 +33,7 @@
   <bean id="sessionFactory" class="ch.iserver.ace.collaboration.jupiter.SessionFactoryImpl">
     <property name="threadDomain"><ref local="threadDomain"/></property>
     <property name="userRegistry"><ref local="userRegistry"/></property>
+    <property name="acknowledgeStrategyFactory"><ref local="acknowledgeStrategyFactory"/></property>
   </bean>
   
   <bean id="threadDomain" class="ch.iserver.ace.util.BoundedThreadDomain">
