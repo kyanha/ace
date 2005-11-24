@@ -42,8 +42,8 @@ public class ParticipantSessionCallbackImpl extends SessionCallbackImpl implemen
 	public synchronized void setDocument(PortableDocument doc) {
 		// IMPORTANT: this method is called first from the collaboration layer. set participants here.
 		System.out.println("setDocument");
-		documentItem.createEditorDocument();
-		CollaborativeDocument docu = documentItem.getEditorDocument();
+		CollaborativeDocument docu = new CollaborativeDocument();
+		documentItem.setEditorDocument(docu);
 		try {
 			docu.insertString(0, "huderi", null);
 		} catch(Exception e) {

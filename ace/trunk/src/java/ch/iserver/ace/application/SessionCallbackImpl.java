@@ -39,7 +39,7 @@ public class SessionCallbackImpl implements SessionCallback {
 
 	private EventList participantSourceList;
 	protected ParticipationColorManager participationColorManager;
-	private StyledDocument doc;
+	private CollaborativeDocument doc;
 
 	public SessionCallbackImpl() {
 		participantSourceList = new BasicEventList();
@@ -52,7 +52,7 @@ public class SessionCallbackImpl implements SessionCallback {
 		participationColorManager = new ParticipationColorManager();
 	}*/
 	
-	public void setDoc(StyledDocument doc) {
+	public void setDoc(CollaborativeDocument doc) {
 		this.doc = doc;
 	}
 	

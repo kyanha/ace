@@ -192,6 +192,10 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 	public CollaborativeDocument getEditorDocument() {
 		return editorDocument;
 	}
+
+	public void setEditorDocument(CollaborativeDocument editorDocument) {
+		this.editorDocument = editorDocument;
+	}
 	
 	public EventList getParticipantSourceList() {
 		return ((SessionCallbackImpl)sessionCallback).getParticipantSourceList();
@@ -252,10 +256,12 @@ BASCHTLE
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
+		DocumentModel docModel = new DocumentModel(documentContent, 0, 0, new DocumentDetails(title));
+
 		session = (Session)
 			//Spin.off(
 					collaborationService.publish((PublishedSessionCallback)sessionCallback,
-					new DocumentModel(documentContent, 0, 0, new DocumentDetails(title)));
+					docModel);
 			//);
 			
 		// editorDocument.setLocal(false);
