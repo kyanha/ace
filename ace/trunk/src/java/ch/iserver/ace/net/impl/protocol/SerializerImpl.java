@@ -150,6 +150,7 @@ public class SerializerImpl implements Serializer, ProtocolConstants {
 
 	public byte[] createResponse(int type, Object data1, Object data2) throws SerializeException {
 		try {
+			//TODO: don't use strings directly for tag names, instead use ProtocolConstants
 			TransformerHandler handler = createHandler();
 			ByteArrayOutputStream output = new ByteArrayOutputStream();
 			StreamResult result = new StreamResult(output);
@@ -184,20 +185,20 @@ public class SerializerImpl implements Serializer, ProtocolConstants {
 				handler.startElement("", "", "ace", attrs);
 				handler.startElement("", "", "response", attrs);
 				PublishedDocument publishedDoc = (PublishedDocument) data1;
-				attrs.addAttribute("", "", "id", "", publishedDoc.getId());
+				attrs.addAttribute("", "", ID, "", publishedDoc.getId());
 				String userid = NetworkServiceImpl.getInstance().getUserId();
-				attrs.addAttribute("", "", "userid", "", userid);
-				handler.startElement("", "", "document", attrs);
+				attrs.addAttribute("", "", USER_ID, "", userid);
+				handler.startElement("", "", TAG_JOIN_DOCUMENT, attrs);
 				PortableDocument doc = (PortableDocument) data2;
 				createParticipantTag(handler, doc);
 				attrs = new AttributesImpl();
-				handler.startElement("", "", "data", attrs);
+				handler.startElement("", "", DATA, attrs);
 				char[] data = TLVHandler.create(doc);
 				handler.startCDATA();
 				handler.characters(data, 0, data.length);
 				handler.endCDATA();
-				handler.endElement("", "", "data");
-				handler.endElement("", "", "document");
+				handler.endElement("", "", DATA);
+				handler.endElement("", "", TAG_JOIN_DOCUMENT);
 				handler.endElement("", "", "response");
 				handler.endElement("", "", "ace");
 				handler.endDocument();
@@ -213,13 +214,13 @@ public class SerializerImpl implements Serializer, ProtocolConstants {
 
 	private void createParticipantTag(TransformerHandler handler, PortableDocument doc) throws Exception	 {
 		AttributesImpl attrs = new AttributesImpl();
-		handler.startElement("", "", "participants", attrs);
+		handler.startElement("", "", PARTICIPANTS, attrs);
 		int[] ids = doc.getParticipantIds();
 		for (int i = 0; i < ids.length; i++) {
 			attrs = new AttributesImpl();
 			int id = ids[i];
 			attrs.addAttribute("", "", "id", "", Integer.toString(id));
-			handler.startElement("", "", "participant", attrs);
+			handler.startElement("", "", PARTICIPANT, attrs);
 			attrs = new AttributesImpl();
 			String userid, name, address, port, explicitDiscovery;
 			boolean isExplicitlyDiscovered;
@@ -242,27 +243,27 @@ public class SerializerImpl implements Serializer, ProtocolConstants {
 				isExplicitlyDiscovered = proxy.isExplicitlyDiscovered();
 				explicitDiscovery = Boolean.toString(isExplicitlyDiscovered);
 			}
-			attrs.addAttribute("", "", "id", "", userid);
-			attrs.addAttribute("", "", "name", "", name);
-			attrs.addAttribute("", "", "address", "", address);
-			attrs.addAttribute("", "", "port", "", port);
-			attrs.addAttribute("", "", "explicitDiscovery", "", explicitDiscovery);
-			handler.startElement("", "", "user", attrs);
+			attrs.addAttribute("", "", ID, "", userid);
+			attrs.addAttribute("", "", NAME, "", name);
+			attrs.addAttribute("", "", ADDRESS, "", address);
+			attrs.addAttribute("", "", PORT, "", port);
+			attrs.addAttribute("", "", EXPLICIT_DISCOVERY, "", explicitDiscovery);
+			handler.startElement("", "", USER, attrs);
 			if (isExplicitlyDiscovered) {
 				//TODO: add published documents of this user
 			}
-			handler.endElement("", "", "user");
+			handler.endElement("", "", USER);
 			attrs = new AttributesImpl();
 			CaretUpdate selection = doc.getSelection(id);
 			String mark = Integer.toString(selection.getMark());
-			attrs.addAttribute("", "", "mark", "", mark);
+			attrs.addAttribute("", "", MARK, "", mark);
 			String dot = Integer.toString(selection.getDot());
-			attrs.addAttribute("", "", "dot", "", dot);
-			handler.startElement("", "", "selection", attrs);
-			handler.endElement("", "", "selection");
-			handler.endElement("", "", "participant");
+			attrs.addAttribute("", "", DOT, "", dot);
+			handler.startElement("", "", SELECTION, attrs);
+			handler.endElement("", "", SELECTION);
+			handler.endElement("", "", PARTICIPANT);
 		}
-		handler.endElement("", "", "participants");
+		handler.endElement("", "", PARTICIPANTS);
 		
 	}
 

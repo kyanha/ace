@@ -34,6 +34,7 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 	private MutableUserDetails details;
 	private Map documents;
 	private boolean isSessionEstablished;
+	private boolean isExplicitlyDiscovered;
 	
 	public RemoteUserProxyImpl(String id, MutableUserDetails details) {
 		ParameterValidator.notNull("id", id);
@@ -42,8 +43,12 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 		this.details = details;
 		this.documents = new HashMap();
 		isSessionEstablished = false;
+		isExplicitlyDiscovered = false;
 	}
-
+	
+	/***********************************************/
+	/** methods from interface RemoteUserProxyExt **/
+	/***********************************************/
 	public String getId() {
 		return id;
 	}
@@ -52,16 +57,21 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 		return details;
 	}
 	
-	public MutableUserDetails getMutableUserDetails() {
-		return details;
-	}
-
 	public Collection getSharedDocuments() {
 		return documents.values();
 	}
 
 	public void invite(DocumentServerLogic logic) {
 		throw new UnsupportedOperationException();
+	}
+	
+	
+	/********************************************/
+	/** methods from interface RemoteUserProxy **/
+	/********************************************/
+	
+	public MutableUserDetails getMutableUserDetails() {
+		return details;
 	}
 
 	public void setMutableUserDetails(MutableUserDetails details) {
@@ -90,9 +100,12 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 		return isSessionEstablished;
 	}
 	
+	public void setExplicityDiscovered(boolean value) {
+		this.isExplicitlyDiscovered = value;
+	}
+	
 	public boolean isExplicitlyDiscovered() {
-		//TODO: explicit discovery
-		return false;
+		return isExplicitlyDiscovered;
 	}
 	
 	/**

@@ -45,4 +45,6 @@ public interface RemoteUserProxyExt extends RemoteUserProxy {
 	boolean isSessionEstablished();
 	
 	boolean isExplicitlyDiscovered();
+	
+	void setExplicityDiscovered(boolean value);
 }

@@ -86,7 +86,8 @@ public class CollaborationConnection extends AbstractConnection implements
 		this.port = port;
 		//intiate collaboration channel
 		try {
-			session.startChannel(this);
+			Channel channel = session.startChannel(RemoteUserSession.CHANNEL_COLLABORATION);
+			setChannel(channel);
 		} catch (ConnectionException ce) {
 			NetworkServiceImpl.getInstance().getCallback().serviceFailure(
 					FailureCodes.CHANNEL_FAILURE, "cannot start channel for collaboration", ce);

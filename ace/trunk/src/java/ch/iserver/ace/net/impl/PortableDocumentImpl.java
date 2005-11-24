@@ -40,6 +40,8 @@ public class PortableDocumentImpl implements PortableDocumentExt {
 	private List fragments;
 	private Map selections; 	//id to caretupdate
 	private Map proxies;		//id to remoteuserproxy
+	private String id;
+	private String publisherId;
 	
 	public PortableDocumentImpl() {
 		fragments = Collections.synchronizedList(new ArrayList());
@@ -61,6 +63,22 @@ public class PortableDocumentImpl implements PortableDocumentExt {
 	
 	public void setSelection(int participantId, CaretUpdate selection) {
 		selections.put(new Integer(participantId), selection);
+	}
+	
+	public void setDocumentId(String id) {
+		this.id = id;
+	}
+	
+	public String getDocumentId() {
+		return id;
+	}
+	
+	public void setPublisherId(String publisherId) {
+		this.publisherId = publisherId;
+	}
+	
+	public String getPublisherId() {
+		return publisherId;
 	}
 	
 	

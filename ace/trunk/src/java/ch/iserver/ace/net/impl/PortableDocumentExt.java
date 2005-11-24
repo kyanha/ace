@@ -37,4 +37,12 @@ public interface PortableDocumentExt extends PortableDocument {
 	
 	public void setSelection(int participantId, CaretUpdate selection);
 	
+	public void setDocumentId(String docId);
+	
+	public String getDocumentId();
+	
+	public void setPublisherId(String publisherId);
+	
+	public String getPublisherId();
+	
 }

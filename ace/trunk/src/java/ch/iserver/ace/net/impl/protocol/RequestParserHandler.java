@@ -66,14 +66,14 @@ public class RequestParserHandler extends ParserHandler {
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 		if (requestType == SEND_DOCUMENTS) {
 			String id = attributes.getValue(DOCUMENT_ID);
-			String name = attributes.getValue(DOCUMENT_NAME);
+			String name = attributes.getValue(NAME);
 			//TODO: userid not needed in documentinfo since we have it in the request
 			DocumentInfo doc = new DocumentInfo(id, name, userId);
 			requestPayload.add(doc);
 		} else if (requestType == PUBLISH) {
 			if (qName.equals(TAG_DOC)) {
 				String id = attributes.getValue(DOCUMENT_ID);
-				String name = attributes.getValue(DOCUMENT_NAME);
+				String name = attributes.getValue(NAME);
 				info = new DocumentInfo(id, name, userId);
 			} else {
 				LOG.warn("unkown tag in <"+TAG_PUBLISH+"> tag.");
@@ -88,7 +88,7 @@ public class RequestParserHandler extends ParserHandler {
 		} else if (requestType == DOCUMENT_DETAILS_CHANGED) {
 			if (qName.equals(TAG_DOC)) {
 				String id = attributes.getValue(DOCUMENT_ID);
-				String name = attributes.getValue(DOCUMENT_NAME);
+				String name = attributes.getValue(NAME);
 				info = new DocumentInfo(id, name, userId);
 			} else {
 				LOG.warn("unkown tag in <"+TAG_DOCUMENT_DETAILS_CHANGED+"> tag.");

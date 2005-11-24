@@ -31,5 +31,9 @@ public interface RemoteDocumentProxyExt extends RemoteDocumentProxy {
 
 	public void setDocumentDetails(DocumentDetails details);
 	
+	public void joinRejected(int code);
+	
+	public void joinAccepted(PortableDocumentExt document);
+	
 	
 }

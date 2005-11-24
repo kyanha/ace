@@ -111,9 +111,8 @@ public class RemoteUserSession {
 		return mainConnection;
 	}
 	
-	public void startChannel(CollaborationConnection connection) throws ConnectionException {
-		Channel channel = startNewChannel(CHANNEL_COLLABORATION);
-		connection.setChannel(channel);
+	public Channel startChannel(String type) throws ConnectionException {
+		return startNewChannel(type);
 	}
 	
 	private Channel startNewChannel(String type) throws ConnectionException {
@@ -126,7 +125,7 @@ public class RemoteUserSession {
 			if (type == CHANNEL_MAIN) {
 				handler = ProfileRegistryFactory.getMainRequestHandler();
 			} else if (type == CHANNEL_COLLABORATION) {
-				handler = new CollaborationRequestHandler();
+				handler = CollaborationRequestHandlerFactory.getInstance().createHandler();
 			} else {
 				//TODO: proxy channel?
 				throw new IllegalStateException("unknown channel type ["+type+"]");

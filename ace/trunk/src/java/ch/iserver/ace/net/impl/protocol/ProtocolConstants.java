@@ -45,6 +45,7 @@ public interface ProtocolConstants {
 	public static final String TAG_PUBLISH = "publishDocs";
 	public static final String TAG_CONCEAL = "concealDocs";
 	public static final String TAG_JOIN = "join";
+	public static final String TAG_JOIN_DOCUMENT = "document";
 	public static final String TAG_DOCUMENT_DETAILS_CHANGED = "docDetailsChanged";
 	public static final String TAG_DOC = "doc";
 	
@@ -54,10 +55,21 @@ public interface ProtocolConstants {
 	public static final String QUERY_TYPE= "type";
 	public static final String QUERY_TYPE_PUBLISHED_DOCUMENTS = "docs";
 	
-	public static final String DOCUMENT_NAME = "name";
+	public static final String NAME = "name";
 	public static final String DOCUMENT_ID = "id";
 	public static final String USER_ID = "userid";
 	
+	public static final String PARTICIPANTS = "participants";
+	public static final String PARTICIPANT = "participant";
+	public static final String ID = "id";
+	public static final String USER = "user";
+	public static final String ADDRESS = "address";
+	public static final String PORT = "port";
+	public static final String EXPLICIT_DISCOVERY = "explicitDiscovery";
+	public static final String DATA = "data";
+	public static final String SELECTION = "selection";
+	public static final String MARK = "mark";
+	public static final String DOT = "dot";
 
 	
 }

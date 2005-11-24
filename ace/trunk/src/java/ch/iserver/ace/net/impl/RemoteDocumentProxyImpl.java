@@ -21,9 +21,14 @@
 
 package ch.iserver.ace.net.impl;
 
+import org.apache.log4j.Logger;
+
 import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.net.JoinNetworkCallback;
 import ch.iserver.ace.net.RemoteUserProxy;
+import ch.iserver.ace.net.SessionConnection;
+import ch.iserver.ace.net.SessionConnectionCallback;
+import ch.iserver.ace.net.impl.protocol.CollaborationRequestHandler;
 import ch.iserver.ace.net.impl.protocol.ProtocolConstants;
 import ch.iserver.ace.net.impl.protocol.Request;
 import ch.iserver.ace.net.impl.protocol.RequestFilter;
@@ -35,11 +40,15 @@ import ch.iserver.ace.util.ParameterValidator;
  */
 public class RemoteDocumentProxyImpl implements RemoteDocumentProxyExt {
 
+	private static Logger LOG = Logger.getLogger(RemoteDocumentProxyImpl.class);
+	
 	private String id;
 	private DocumentDetails details;
 	private RemoteUserProxy publisher;
 	private JoinNetworkCallback callback;
 	private RequestFilter filterChain;
+	private SessionConnection sessionConnection;
+	private SessionConnectionCallback sessionConnectionCallback;
 	
 	public RemoteDocumentProxyImpl(String id, DocumentDetails details, RemoteUserProxy publisher, RequestFilter filter) {
 		ParameterValidator.notNull("id", id);
@@ -51,6 +60,36 @@ public class RemoteDocumentProxyImpl implements RemoteDocumentProxyExt {
 		this.publisher = publisher;
 		this.filterChain = filter;
 	}
+	
+	
+	/***************************************************/
+	/** methods from interface RemoteDocumentProxyExt **/
+	/***************************************************/
+	
+	/**
+	 * @see ch.iserver.ace.net.impl.RemoteDocumentProxyExt#setDocumentDetails(DocumentDetails)
+	 */
+	public void setDocumentDetails(DocumentDetails details) {
+		this.details = details;
+	}
+	
+	public void joinAccepted(PortableDocumentExt document) {
+		LOG.debug("--> joinAccepted()");
+		sessionConnection = new SessionConnectionImpl();
+		sessionConnectionCallback = callback.accepted(sessionConnection);
+		sessionConnectionCallback.setDocument(document);
+		LOG.debug("<-- joinAccepted()");
+	}
+	
+	public void joinRejected(int code) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	
+	/************************************************/
+	/** methods from interface RemoteDocumentProxy **/
+	/************************************************/
 	
 	/**
 	 * @see ch.iserver.ace.net.RemoteDocumentProxy#getId()
@@ -66,12 +105,7 @@ public class RemoteDocumentProxyImpl implements RemoteDocumentProxyExt {
 		return details;
 	}
 	
-	/**
-	 * @see ch.iserver.ace.net.impl.RemoteDocumentProxyExt#setDocumentDetails(DocumentDetails)
-	 */
-	public void setDocumentDetails(DocumentDetails details) {
-		this.details = details;
-	}
+
 
 	/**
 	 * @see ch.iserver.ace.net.RemoteDocumentProxy#getPublisher()

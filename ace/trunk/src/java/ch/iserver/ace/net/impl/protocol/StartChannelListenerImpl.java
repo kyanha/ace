@@ -46,6 +46,8 @@ public class StartChannelListenerImpl implements StartChannelListener {
 	public StartChannelListenerImpl(RequestHandler mainHandler, RequestHandler collaborationHandler) {
 		ParameterValidator.notNull("mainHandler", mainHandler);
 		this.mainHandler = mainHandler;
+		//TODO: collabrequesthandler discarded since for each collab session a 
+		//new CollaborationRequestHandler is created (see below)
 		this.collaborationHandler = collaborationHandler;
 	}
 	
@@ -67,7 +69,8 @@ public class StartChannelListenerImpl implements StartChannelListener {
 		if (data.equals(RemoteUserSession.CHANNEL_MAIN)) {
 			requestHandler = mainHandler;
 		} else if (data.equals(RemoteUserSession.CHANNEL_COLLABORATION)){
-			requestHandler = collaborationHandler;
+			//for each collaborative session create new CollaborationRequestHandler
+			requestHandler = CollaborationRequestHandlerFactory.getInstance().createHandler();
 		} else {
 			throw new StartChannelException(BEEPError.CODE_PARAMETER_INVALID, "channel type not known");
 		}

@@ -28,6 +28,8 @@ import org.apache.log4j.Logger;
 
 import ch.iserver.ace.Fragment;
 import ch.iserver.ace.net.PortableDocument;
+import ch.iserver.ace.net.impl.FragmentImpl;
+import ch.iserver.ace.net.impl.PortableDocumentExt;
 
 /**
  *
@@ -56,12 +58,29 @@ public class TLVHandler {
 				buffer.write(SPACE);
 		}
 		LOG.debug("create TLV of length "+buffer.size());
+		//drawback: toCharArray() returns copy of input data: can we avoid this?
 		return buffer.toCharArray();
 	}
 	
-	public static PortableDocument parse(char[] data) {
+	public static void parse(String data, PortableDocumentExt document) {
+		int endIndex = 0;
+		int startIndex = 0;
 		
-		return null;
+		 while ((endIndex = data.indexOf(SPACE, startIndex)) != -1) {
+			String tag = data.substring(startIndex, endIndex++);
+			startIndex = endIndex;
+			endIndex = data.indexOf(SPACE, startIndex);
+			String length = data.substring(startIndex, endIndex++);
+			startIndex = endIndex;
+			endIndex += Integer.parseInt(length);
+			String value = data.substring(startIndex, endIndex++);
+			LOG.debug("tag: '" + tag + "'");
+			LOG.debug("length: '" + length + "'");
+			LOG.debug("value: '" + value + "'");
+			Fragment fragment = new FragmentImpl(Integer.parseInt(tag), value);
+			document.addFragment(fragment);
+			startIndex = endIndex;
+		}	
 	}
 	
 	private static char[] createCharArray(int id) {

@@ -25,12 +25,23 @@ import org.apache.log4j.Logger;
 import org.beepcore.beep.core.InputDataStream;
 import org.beepcore.beep.core.MessageMSG;
 
+import ch.iserver.ace.net.impl.PortableDocumentExt;
+import ch.iserver.ace.net.impl.RemoteDocumentProxyExt;
+
 /**
  *
  */
 public class CollaborationRequestHandler extends AbstractRequestHandler {
 
 	private static Logger LOG = Logger.getLogger(CollaborationRequestHandler.class);
+	
+	private Deserializer deserializer;
+	private ParserHandler handler;
+	
+	public CollaborationRequestHandler(Deserializer deserializer, ParserHandler handler) {
+		this.deserializer = deserializer;
+		this.handler = handler;
+	}
 	
 	public void receiveMSG(MessageMSG message) {
 		LOG.info("--> recieveMSG()");
@@ -43,7 +54,25 @@ public class CollaborationRequestHandler extends AbstractRequestHandler {
 			if (rawData.length == PIGGYBACKED_MESSAGE_LENGTH) {
 				handlePiggybackedMessage(message);
 			} else {
-				LOG.debug("to be implemented...");
+				
+				//TODO: set collaboration connection to remoteusersession (docId to collabconn)!!
+				
+				//reception and processing of a joined document
+				deserializer.deserialize(rawData, handler);
+				Request response = handler.getResult();
+				if (response.getType() == ProtocolConstants.JOIN_DOCUMENT) {
+					PortableDocumentExt doc = (PortableDocumentExt) response.getPayload();
+					String publisherId = doc.getPublisherId();
+					String docId = doc.getDocumentId();
+					RemoteUserSession session = SessionManager.getInstance().getSession(publisherId);
+					RemoteDocumentProxyExt proxy = session.getUser().getSharedDocument(docId);
+					proxy.joinAccepted(doc);
+				}
+				try {				
+					message.sendNUL(); //confirm reception of msg
+				} catch (Exception e) {
+					LOG.error("could not send confirmation ["+e.getMessage()+"]");
+				}
 			}
 		} catch (Exception e) {
 			LOG.error("could not process request ["+e+"]");

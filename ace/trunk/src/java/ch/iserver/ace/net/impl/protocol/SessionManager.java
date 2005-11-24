@@ -99,7 +99,7 @@ public class SessionManager {
 	 * @param id the user id
 	 * @return the session of the user
 	 */
-	public RemoteUserSession getSession(String id) {
+	public synchronized RemoteUserSession getSession(String id) {
 		return (RemoteUserSession)sessions.get(id);
 	}
 	

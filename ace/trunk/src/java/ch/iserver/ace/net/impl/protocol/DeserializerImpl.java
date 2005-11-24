@@ -46,7 +46,8 @@ public class DeserializerImpl implements Deserializer {
 	/**
 	 * 
 	 */
-	public void deserialize(byte[] data, ParserHandler handler) throws DeserializeException {
+	//TODO: make sure that synchronization is imperative here 
+	public synchronized void deserialize(byte[] data, ParserHandler handler) throws DeserializeException {
 		try {
 			ByteArrayInputStream input = new ByteArrayInputStream(data);
 			SAXParserFactory factory;
