@@ -72,9 +72,9 @@ public class RemoteDocumentProxyImpl implements RemoteDocumentProxyExt {
 		this.details = details;
 	}
 	
-	public void joinAccepted(PortableDocumentExt document) {
+	public void joinAccepted(PortableDocumentExt document, SessionConnection connection) {
 		LOG.debug("--> joinAccepted()");
-//		sessionConnection = new SessionConnectionImpl();
+		sessionConnection = connection;
 		sessionConnectionCallback = callback.accepted(sessionConnection);
 		sessionConnectionCallback.setDocument(document);
 		LOG.debug("<-- joinAccepted()");

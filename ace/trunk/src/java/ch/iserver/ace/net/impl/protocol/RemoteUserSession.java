@@ -60,7 +60,7 @@ public class RemoteUserSession {
 	private int port;
 	private TCPSession session;
 	private MainConnection mainConnection;
-	private Map collabConnections;
+	private Map participantConnections, sessionConnections;
 	private RemoteUserProxyExt user;
 	private boolean isInitiated;
 	private boolean isAlive;
@@ -74,7 +74,8 @@ public class RemoteUserSession {
 		this.user = user;
 		isInitiated = false;
 		isAlive = true;
-		collabConnections = Collections.synchronizedMap(new LinkedHashMap());
+		participantConnections = Collections.synchronizedMap(new LinkedHashMap());
+		sessionConnections = Collections.synchronizedMap(new LinkedHashMap());
 	}
 	
 	public RemoteUserSession(TCPSession session, MainConnection connection, RemoteUserProxyExt user) {
@@ -86,7 +87,7 @@ public class RemoteUserSession {
 		this.user = user;
 		isInitiated = true;
 		isAlive = true;
-		collabConnections = Collections.synchronizedMap(new LinkedHashMap());
+		participantConnections = Collections.synchronizedMap(new LinkedHashMap());
 	}
 	
 	/**
@@ -123,9 +124,19 @@ public class RemoteUserSession {
 	}
 	
 
-	public SessionConnectionImpl createSessionConnection(String docId, Channel collaborationChannel) {
-		
-		return null;
+	/**
+	 * 
+	 * @param docId
+	 * @param collaborationChannel
+	 * @return
+	 */
+	public SessionConnectionImpl addSessionConnection(String docId, Channel collaborationChannel) {
+		LOG.debug("--> createSessionConnection() for doc ["+docId+", "+collaborationChannel+"]");
+		SessionConnectionImpl conn = new SessionConnectionImpl(docId, this, 
+				collaborationChannel, SerializerImpl.getInstance());
+		sessionConnections.put(docId, conn);
+		LOG.debug("<-- createSessionConnection()");
+		return conn;
 	}
 	
 	/**
@@ -133,17 +144,35 @@ public class RemoteUserSession {
 	 * @param docId
 	 * @return
 	 */
-	public CollaborationConnection createCollaborationConnection(String docId) {
-		//TODO: do i have to check for isAlive as well?
-		return createCollaborationConnection(docId, null);
+	public SessionConnectionImpl removeSessionConnection(String docId) {
+		return (SessionConnectionImpl) sessionConnections.remove(docId);
+	}
+
+	/**
+	 * 
+	 * @param docId
+	 * @return
+	 */
+	public boolean hasSessionConnection(String docId) {
+		return sessionConnections.containsKey(docId);
 	}
 	
-	public CollaborationConnection createCollaborationConnection(String docId, Channel collaborationChannel) {
+	
+	public SessionConnectionImpl getSessionConnection(String docId) {
+		return (SessionConnectionImpl) sessionConnections.get(docId);
+	}
+	
+	/**
+	 * 
+	 * @param docId
+	 * @return
+	 */
+	public ParticipantConnectionImpl createParticipantConnection(String docId) {
 		//TODO: do i have to check for isAlive as well?
-		LOG.debug("--> createCollaborationConnection() for doc ["+docId+", "+collaborationChannel+"]");
-		CollaborationConnection connection = new CollaborationConnection(docId, this, collaborationChannel, 
+		LOG.debug("--> createParticipantConnection() for doc ["+docId+"]");
+		ParticipantConnectionImpl connection = new ParticipantConnectionImpl(docId, this,
 				NullReplyListener.getListener(), SerializerImpl.getInstance());
-		collabConnections.put(docId, connection);
+		participantConnections.put(docId, connection);
 		LOG.debug("<-- createCollaborationConnection()");
 		return connection;
 	}
@@ -153,12 +182,12 @@ public class RemoteUserSession {
 	 * @param docId
 	 * @return
 	 */
-	public CollaborationConnection removeCollaborationConnection(String docId) {
-		return (CollaborationConnection) collabConnections.remove(docId);
+	public ParticipantConnectionImpl removeCollaborationConnection(String docId) {
+		return (ParticipantConnectionImpl) participantConnections.remove(docId);
 	}
 
 	public boolean hasCollaborationConnection(String docId) {
-		return collabConnections.containsKey(docId);
+		return participantConnections.containsKey(docId);
 	}
 	
 	/**

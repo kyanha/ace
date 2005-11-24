@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.beepcore.beep.core.Channel;
 import org.beepcore.beep.transport.tcp.TCPSession;
 
@@ -38,6 +39,8 @@ import ch.iserver.ace.net.impl.discovery.DiscoveryManagerFactory;
  */
 public class SessionManager {
 
+	private Logger LOG = Logger.getLogger(SessionManager.class);
+	
 	/**
 	 * A map of userId to RemoteUserSession mappings.
 	 */
@@ -84,6 +87,7 @@ public class SessionManager {
 	 * To be called on network layer shutdown.
 	 */
 	public void closeSessions() {
+		LOG.debug("--> closeSessions()");
 		synchronized(sessions) {
 			Iterator iter = sessions.values().iterator();
 			while (iter.hasNext()) {
@@ -91,6 +95,7 @@ public class SessionManager {
 				session.close();
 			}
 		}
+		LOG.debug("<-- closeSessions()");
 	}
 	
 	/**

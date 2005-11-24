@@ -58,7 +58,7 @@ public class SessionRequestHandlerFactory {
 	}
 	
 	public SessionRequestHandler createHandler() {
-		LOG.debug("create CollaborationRequestHandler()");
+		LOG.debug("create SessionRequestHandler()");
 		return new SessionRequestHandler(deserializer, handler);
 	}
 	

@@ -21,22 +21,44 @@
 
 package ch.iserver.ace.net.impl;
 
+import org.apache.log4j.Logger;
+import org.beepcore.beep.core.Channel;
+
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.Timestamp;
 import ch.iserver.ace.net.SessionConnection;
+import ch.iserver.ace.net.impl.protocol.AbstractConnection;
+import ch.iserver.ace.net.impl.protocol.RemoteUserSession;
+import ch.iserver.ace.net.impl.protocol.Serializer;
 
 /**
  *
  */
-public class SessionConnectionImpl implements SessionConnection {
+public class SessionConnectionImpl extends AbstractConnection implements SessionConnection {
 
-	/* (non-Javadoc)
+	private int participantId;
+	private String docId;
+	private RemoteUserSession session;
+	private Serializer serializer;
+	
+	public SessionConnectionImpl(String docId, RemoteUserSession session, Channel channel, Serializer serializer) {
+		super(channel);
+		this.docId = docId;
+		this.session = session;
+		this.serializer = serializer;
+		super.LOG = Logger.getLogger(SessionConnectionImpl.class);
+	}
+	
+	public void setParticipantId(int id) {
+		this.participantId = id;
+	}
+	
+	/*
 	 * @see ch.iserver.ace.net.SessionConnection#getParticipantId()
 	 */
 	public int getParticipantId() {
-		// TODO Auto-generated method stub
-		return 0;
+		return participantId;
 	}
 
 	/* (non-Javadoc)
