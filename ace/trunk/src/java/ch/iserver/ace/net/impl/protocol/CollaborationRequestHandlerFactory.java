@@ -21,7 +21,8 @@
 
 package ch.iserver.ace.net.impl.protocol;
 
-import ch.iserver.ace.net.impl.RemoteDocumentProxyFactory;
+import org.apache.log4j.Logger;
+
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
@@ -29,6 +30,8 @@ import ch.iserver.ace.util.ParameterValidator;
  */
 public class CollaborationRequestHandlerFactory {
 
+	private Logger LOG = Logger.getLogger(CollaborationRequestHandlerFactory.class);
+	
 	private Deserializer deserializer;
 	private ParserHandler handler;
 	
@@ -55,6 +58,7 @@ public class CollaborationRequestHandlerFactory {
 	}
 	
 	public CollaborationRequestHandler createHandler() {
+		LOG.debug("create CollaborationRequestHandler()");
 		return new CollaborationRequestHandler(deserializer, handler);
 	}
 	
