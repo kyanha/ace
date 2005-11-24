@@ -35,61 +35,39 @@ import ch.iserver.ace.net.RemoteUserProxy;
  * Null-object implementation of a ParticipantConnection. Logs all method
  * calls with log level info.
  */
-public final class NullParticipantConnection implements ParticipantConnection {
+public class NullParticipantConnection implements ParticipantConnection {
 	
 	/**
 	 * The Logger used to log method calls.
 	 */
 	private static final Logger LOG = Logger.getLogger(NullParticipantConnection.class);
-	
-	/**
-	 * The shared instance of this class.
-	 */
-	private static ParticipantConnection instance;
-	
-	/**
-	 * Hidden constructor to prohibit arbitrary instance creation.
-	 */
-	private NullParticipantConnection() {
-		// hidden
-	}
-	
-	/**
-	 * @return the shared singleton instance
-	 */
-	public static final synchronized ParticipantConnection getInstance() {
-		if (instance == null) {
-			instance = new NullParticipantConnection();
-		}
-		return instance;
-	}
-	
+			
 	/**
 	 * @see ch.iserver.ace.net.ParticipantConnection#setParticipantId(int)
 	 */
 	public void setParticipantId(int participantId) {
-		LOG.info("setParticipantId ignored");
+		LOG.debug("setParticipantId ignored");
 	}
 	
 	/**
 	 * @see ch.iserver.ace.net.ParticipantConnection#joinAccepted(ch.iserver.ace.net.ParticipantPort)
 	 */
 	public void joinAccepted(ParticipantPort port) {
-		LOG.info("joinAccepted ignored");
+		LOG.debug("joinAccepted ignored");
 	}
 	
 	/**
 	 * @see ch.iserver.ace.net.ParticipantConnection#joinRejected(int)
 	 */
 	public void joinRejected(int code) {
-		LOG.info("joinRejected ignored");
+		LOG.debug("joinRejected ignored");
 	}
 
 	/**
 	 * @see ch.iserver.ace.net.ParticipantConnection#getUser()
 	 */
 	public RemoteUserProxy getUser() {
-		LOG.info("getUser ignored");
+		LOG.debug("getUser ignored");
 		return null;
 	}
 
@@ -97,56 +75,56 @@ public final class NullParticipantConnection implements ParticipantConnection {
 	 * @see ch.iserver.ace.net.ParticipantConnection#sendDocument(ch.iserver.ace.net.PortableDocument)
 	 */
 	public void sendDocument(PortableDocument document) {
-		LOG.info("sendDocument ignored");
+		LOG.debug("sendDocument ignored");
 	}
 
 	/**
 	 * @see ch.iserver.ace.net.ParticipantConnection#sendRequest(int, ch.iserver.ace.algorithm.Request)
 	 */
 	public void sendRequest(int participantId, Request request) {
-		LOG.info("sendRequest ignored");
+		LOG.debug("sendRequest ignored");
 	}
 
 	/**
 	 * @see ch.iserver.ace.net.ParticipantConnection#sendCaretUpdateMessage(int, ch.iserver.ace.algorithm.CaretUpdateMessage)
 	 */
 	public void sendCaretUpdateMessage(int participantId, CaretUpdateMessage message) {
-		LOG.info("sendCaretUpdateMessage ignored");
+		LOG.debug("sendCaretUpdateMessage ignored");
 	}
 	
 	/**
 	 * @see ch.iserver.ace.net.ParticipantConnection#sendAcknowledge(int, ch.iserver.ace.algorithm.Timestamp)
 	 */
 	public void sendAcknowledge(int siteId, Timestamp timestamp) {
-		LOG.info("sendAcknowledge ignored");
+		LOG.debug("sendAcknowledge ignored");
 	}
 
 	/**
 	 * @see ch.iserver.ace.net.ParticipantConnection#sendParticipantJoined(int, ch.iserver.ace.net.RemoteUserProxy)
 	 */
 	public void sendParticipantJoined(int participantId, RemoteUserProxy proxy) {
-		LOG.info("sendParticipantJoined ignored");
+		LOG.debug("sendParticipantJoined ignored");
 	}
 
 	/**
 	 * @see ch.iserver.ace.net.ParticipantConnection#sendParticipantLeft(int, int)
 	 */
 	public void sendParticipantLeft(int participantId, int reason) {
-		LOG.info("sendParticipantLeft ignored");
+		LOG.debug("sendParticipantLeft ignored");
 	}
 
 	/**
 	 * @see ch.iserver.ace.net.ParticipantConnection#sendKicked()
 	 */
 	public void sendKicked() {
-		LOG.info("sendKicked ignored");
+		LOG.debug("sendKicked ignored");
 	}
 
 	/**
 	 * @see ch.iserver.ace.net.ParticipantConnection#close()
 	 */
 	public void close() {
-		LOG.info("close ignored");
+		LOG.debug("close ignored");
 	}
 
 }

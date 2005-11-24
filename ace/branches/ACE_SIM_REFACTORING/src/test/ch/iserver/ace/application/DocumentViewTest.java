@@ -21,6 +21,8 @@
 
 package ch.iserver.ace.application;
 
+import java.io.File;
+
 import javax.swing.SwingUtilities;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
@@ -31,8 +33,6 @@ import org.easymock.MockControl;
 
 import ch.iserver.ace.collaboration.RemoteDocumentStub;
 import ch.iserver.ace.collaboration.RemoteUserStub;
-import ch.iserver.ace.collaboration.jupiter.MutableRemoteDocument;
-import ch.iserver.ace.collaboration.jupiter.MutableRemoteUser;
 
 /**
  *
@@ -80,26 +80,19 @@ public class DocumentViewTest extends TestCase {
 	public void testItemPropertiesChanged() throws Exception {
 		MockControl listenerCtrl = MockControl.createControl(ListDataListener.class);
 		listenerCtrl.setDefaultMatcher(new ListDataEventMatcher());
-		ListDataListener listener = (ListDataListener) listenerCtrl.getMock();
+		final ListDataListener listener = (ListDataListener) listenerCtrl.getMock();
 		
 		// test fixture
-		DocumentViewController controller = new DocumentViewController();
-		DocumentView view = new DocumentView(new LocaleMessageSourceStub(), controller);
+		final DocumentViewController controller = new DocumentViewController();
+		final DocumentView view = new DocumentView(new LocaleMessageSourceStub(), controller);
+		final DocumentItem item = new DocumentItem("text");
 
-		final MutableRemoteUser user = new RemoteUserStub("X", "X");
-		final MutableRemoteDocument document = new RemoteDocumentStub("0", "z", user);
-		Item item = new DocumentItem(document);
-
-		controller.getViewSourceList().getReadWriteLock().writeLock().lock();
-		controller.getViewSourceList().add(new DocumentItem(new RemoteDocumentStub("1", "ZZZ", new RemoteUserStub("Z"))));
-		controller.getViewSourceList().add(item);
-		controller.getViewSourceList().getReadWriteLock().writeLock().unlock();
-		
-		Thread.sleep(5);
-		view.getList().getModel().addListDataListener(listener);
+		controller.getSourceList().getReadWriteLock().writeLock().lock();
+		controller.getSourceList().add(new DocumentItem(""));
+		controller.getSourceList().add(item);
+		controller.getSourceList().getReadWriteLock().writeLock().unlock();
 		
 		// define mock behavior
-		listener.contentsChanged(new ListDataEvent(view.getList().getModel(), ListDataEvent.CONTENTS_CHANGED, 1, 1));
 		listener.contentsChanged(new ListDataEvent(view.getList().getModel(), ListDataEvent.CONTENTS_CHANGED, 1, 1));
 		
 		// replay
@@ -108,8 +101,8 @@ public class DocumentViewTest extends TestCase {
 		// test
 		SwingUtilities.invokeAndWait(new Runnable() {
 			public void run() {
-				document.setTitle("collab.txt");
-				user.setName("a");
+				view.getList().getModel().addListDataListener(listener);
+				item.setFile(new File("bluberiblu"));
 			}
 		});
 		

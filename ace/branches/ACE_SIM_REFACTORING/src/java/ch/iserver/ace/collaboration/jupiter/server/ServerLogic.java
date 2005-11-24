@@ -21,8 +21,6 @@
 
 package ch.iserver.ace.collaboration.jupiter.server;
 
-import java.util.Iterator;
-
 import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.net.DocumentServerLogic;
 import ch.iserver.ace.net.ParticipantConnection;
@@ -36,23 +34,7 @@ public interface ServerLogic extends DocumentServerLogic {
 	 * The participant id of the publisher.
 	 */
 	int PUBLISHER_ID = 0;
-				
-	/**
-	 * Gets an Iterator over all the participant proxy objects in the
-	 * session.
-	 * 
-	 * @return an Iterator over all participant proxies
-	 */
-	Iterator getForwarders();
-	
-	/**
-	 * Retrieves the PublisherPort used by the publisher to send requests to
-	 * the logical server.
-	 * 
-	 * @return the port for the publisher
-	 */
-	PublisherPort getPublisherPort();
-	
+		
 	/**
 	 * Sets the document details object for the session.
 	 * 

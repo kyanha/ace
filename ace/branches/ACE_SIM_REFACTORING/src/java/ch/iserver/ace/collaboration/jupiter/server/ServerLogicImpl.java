@@ -61,7 +61,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	
 	private int nextParticipantId;
 	
-	private final Forwarder forwarder;
+	private final CompositeForwarder forwarder;
 		
 	private final HashMap proxies = new HashMap();
 	
@@ -101,7 +101,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 		ParameterValidator.notNull("registry", registry);
 		
 		this.nextParticipantId = 0;
-		this.forwarder = createForwarder(this);
+		this.forwarder = createForwarder();
 		
 		this.incomingDomain = incomingDomain;
 		this.outgoingDomain = outgoingDomain;
@@ -130,12 +130,10 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	 * Creates a new forwarder responsible to forward the results of the
 	 * command processor to all other participants.
 	 * 
-	 * @param logic the server logic used to retrieve the forwarders for
-	 *              each participant
 	 * @return the initialized forwarder
 	 */
-	protected Forwarder createForwarder(ServerLogic logic) {
-		return new CompositeForwarder(logic);
+	protected CompositeForwarder createForwarder() {
+		return new CompositeForwarderImpl();
 	}
 		
 	/**
@@ -170,7 +168,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 
 	public PublisherPort initPublisherConnection(PublisherConnection publisherConnection) {
 		this.publisherConnection = (PublisherConnection) outgoingDomain.wrap(
-						new ParticipantConnectionWrapper(publisherConnection, this), PublisherConnection.class);;
+						new PublisherConnectionWrapper(publisherConnection, this), PublisherConnection.class);;
 		this.publisherPort = createPublisherPort(this.publisherConnection);
 		return publisherPort;
 	}
@@ -266,7 +264,8 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	protected synchronized void removeParticipant(int participantId) {
 		Integer key = new Integer(participantId);
 		connections.remove(key);
-		proxies.remove(key);
+		Forwarder removed = (Forwarder) proxies.remove(key);
+		forwarder.removeForwarder(removed);
 	}
 		
 	protected synchronized ParticipantConnection getParticipantConnection(int id) {
@@ -278,6 +277,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 		Integer key = new Integer(participant.getParticipantId());
 		proxies.put(key, participant.getForwarder());
 		connections.put(key, participant.getParticipantConnection());
+		forwarder.addForwarder(participant.getForwarder());
 	}
 
 	// --> server logic methods <--

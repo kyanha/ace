@@ -31,6 +31,7 @@ import org.easymock.MockControl;
 import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.DocumentModel;
 import ch.iserver.ace.collaboration.JoinRequest;
+import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.collaboration.RemoteUserStub;
 import ch.iserver.ace.collaboration.jupiter.JoinRequestImpl;
 import ch.iserver.ace.collaboration.jupiter.PublisherConnection;
@@ -102,7 +103,12 @@ public class ServerLogicImplTest extends TestCase {
 		ParticipantConnection participant = (ParticipantConnection) participantCtrl.getMock();
 						
 		// define mock behavior
-		participant.joinRejected(JoinRequest.SHUTDOWN);
+		registry.getUser("0");
+		registryCtrl.setReturnValue(new RemoteUserStub("0"));
+		participant.getUser();
+		participantCtrl.setReturnValue(new RemoteUserProxyStub("0"));
+		connection.sendJoinRequest(null);
+		connectionCtrl.setMatcher(MockControl.ALWAYS_MATCHER);
 				
 		// replay
 		connectionCtrl.replay();
@@ -452,6 +458,7 @@ public class ServerLogicImplTest extends TestCase {
 		final ParticipantConnection participant = (ParticipantConnection) participantCtrl.getMock();
 		
 		// define mock behavior
+		connection.sendParticipantLeft(1, Participant.LEFT);
 		participant.close();
 				
 		// replay

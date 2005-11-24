@@ -41,8 +41,16 @@ public class SingleThreadDomain extends AbstractThreadDomain {
 	/**
 	 * The single worker thread.
 	 */
-	private final AsyncWorker worker;
+	private AsyncWorker worker;
 	
+	/**
+	 * Exception handler for the async workers.
+	 */
+	private final AsyncExceptionHandler handler;
+	
+	/**
+	 * Creates a new SingleThreadDomain object.
+	 */
 	public SingleThreadDomain() {
 		this(null);
 	}
@@ -52,17 +60,17 @@ public class SingleThreadDomain extends AbstractThreadDomain {
 	 */
 	public SingleThreadDomain(AsyncExceptionHandler handler) {
 		this.queue = new LinkedBlockingQueue();
-		this.worker = new AsyncWorker(queue);
-		if (handler != null) {
-			this.worker.setExceptionHandler(handler);
-		}
-		this.worker.start();
+		this.handler = handler;
 	}
 	
 	/**
 	 * @see ch.iserver.ace.util.ThreadDomain#wrap(java.lang.Object, java.lang.Class)
 	 */
 	public Object wrap(Object target, Class clazz) {
+		if (worker == null) {
+			this.worker = new AsyncWorker(queue);
+			this.worker.setExceptionHandler(handler);
+		}
 		Advice advice = new LoggingInterceptor(SingleThreadDomain.class);
 		return wrap(target, clazz, queue, advice);
 	}

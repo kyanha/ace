@@ -66,8 +66,6 @@ public class PublishedSessionImplTest extends TestCase {
 		DocumentDetails details = new DocumentDetails("collab.txt");
 		
 		// define mock behavior
-		logic.getPublisherPort();
-		logicCtrl.setReturnValue(port);
 		port.setDocumentDetails(details);
 		
 		// replay
@@ -76,6 +74,7 @@ public class PublishedSessionImplTest extends TestCase {
 		callbackCtrl.replay();
 		
 		// test
+		impl.setPublisherPort(port);
 		impl.setServerLogic(logic);
 		impl.setDocumentDetails(details);
 		
@@ -96,8 +95,6 @@ public class PublishedSessionImplTest extends TestCase {
 		Participant participant = new ParticipantImpl(1, new RemoteUserStub("1"));
 		
 		// define mock behavior
-		logic.getPublisherPort();
-		logicCtrl.setReturnValue(port);
 		port.kick(1);
 		
 		// replay
@@ -106,6 +103,7 @@ public class PublishedSessionImplTest extends TestCase {
 		portCtrl.replay();
 		
 		// test
+		impl.setPublisherPort(port);
 		impl.setServerLogic(logic);
 		impl.kick(participant);
 		
@@ -125,8 +123,6 @@ public class PublishedSessionImplTest extends TestCase {
 		PublishedSessionImpl impl = new PublishedSessionImpl(callback);
 		
 		// define mock behavior
-		logic.getPublisherPort();
-		logicCtrl.setReturnValue(port);
 		port.leave();
 		
 		// replay
@@ -135,6 +131,7 @@ public class PublishedSessionImplTest extends TestCase {
 		portCtrl.replay();
 		
 		// test
+		impl.setPublisherPort(port);
 		impl.setServerLogic(logic);
 		impl.leave();
 		
@@ -159,8 +156,6 @@ public class PublishedSessionImplTest extends TestCase {
 		Request request = new RequestImpl(0, null, operation);
 		
 		// define mock behavior
-		logic.getPublisherPort();
-		logicCtrl.setReturnValue(port);
 		algorithm.generateRequest(operation);
 		algorithmCtrl.setReturnValue(request);
 		port.receiveRequest(request);
@@ -176,6 +171,7 @@ public class PublishedSessionImplTest extends TestCase {
 		acknowledgeCtrl.replay();
 		
 		// test
+		impl.setPublisherPort(port);
 		impl.setServerLogic(logic);
 		impl.setAcknowledgeStrategy(acknowledge);
 		impl.lock();
@@ -202,8 +198,7 @@ public class PublishedSessionImplTest extends TestCase {
 		Operation operation = new InsertOperation(0, "x");
 		
 		// define mock behavior
-		logic.getPublisherPort();
-		logicCtrl.setReturnValue(port);
+		impl.setPublisherPort(port);
 		
 		// replay
 		algorithmCtrl.replay();
@@ -242,8 +237,6 @@ public class PublishedSessionImplTest extends TestCase {
 		CaretUpdateMessage message = new CaretUpdateMessage(0, null, update);
 		
 		// define mock behavior
-		logic.getPublisherPort();
-		logicCtrl.setReturnValue(port);
 		algorithm.generateCaretUpdateMessage(update);
 		algorithmCtrl.setReturnValue(message);
 		port.receiveCaretUpdate(message);
@@ -259,6 +252,7 @@ public class PublishedSessionImplTest extends TestCase {
 		acknowledgeCtrl.replay();
 		
 		// test
+		impl.setPublisherPort(port);
 		impl.setServerLogic(logic);
 		impl.setAcknowledgeStrategy(acknowledge);
 		impl.lock();
@@ -285,8 +279,6 @@ public class PublishedSessionImplTest extends TestCase {
 		CaretUpdate update = new CaretUpdate(0, 1);
 		
 		// define mock behavior
-		logic.getPublisherPort();
-		logicCtrl.setReturnValue(port);
 		
 		// replay
 		algorithmCtrl.replay();
@@ -295,6 +287,7 @@ public class PublishedSessionImplTest extends TestCase {
 		portCtrl.replay();
 		
 		// test
+		impl.setPublisherPort(port);
 		impl.setServerLogic(logic);
 		try {
 			impl.sendCaretUpdate(update);
@@ -329,8 +322,6 @@ public class PublishedSessionImplTest extends TestCase {
 		registryCtrl.setReturnValue(new RemoteUserStub("X"));
 		registry.addUser(new RemoteUserProxyStub("Y"));
 		registryCtrl.setReturnValue(new RemoteUserStub("Y"));
-		logic.getPublisherPort();
-		logicCtrl.setReturnValue(null);
 		callback.participantJoined(participant1);
 		callback.participantJoined(participant2);
 		callback.participantLeft(participant1, Participant.LEFT);

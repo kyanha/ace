@@ -22,55 +22,62 @@
 package ch.iserver.ace.collaboration.jupiter.server;
 
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.Operation;
 import ch.iserver.ace.net.RemoteUserProxy;
-import ch.iserver.ace.util.ParameterValidator;
 
 /**
  * A Forwarder implementation that forwards requests to several forwarders.
  * The forwarders are retrieved from the {@link ServerLogic}.
  */
-class CompositeForwarder implements Forwarder {
-	
+class CompositeForwarderImpl implements CompositeForwarder {
+		
 	/**
-	 * The server logic holding the list of participants.
+	 * List of forwarders.
 	 */
-	private final ServerLogic serverLogic;
+	private final List forwarders;
 	
 	/**
 	 * Creates a new CompositeForwarder instance.
 	 * 
 	 * @param logic the server logic
 	 */
-	public CompositeForwarder(ServerLogic logic) {
-		ParameterValidator.notNull("logic", logic);
-		this.serverLogic = logic;
+	public CompositeForwarderImpl() {
+		this.forwarders = new LinkedList();
 	}
 	
 	/**
-	 * @return the server logic
+	 * @see ch.iserver.ace.collaboration.jupiter.server.CompositeForwarder#addForwarder(ch.iserver.ace.collaboration.jupiter.server.Forwarder)
 	 */
-	public ServerLogic getServerLogic() {
-		return serverLogic;
+	public void addForwarder(Forwarder forwarder) {
+		forwarders.add(forwarder);
 	}
-	
+		
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.CompositeForwarder#removeForwarder(ch.iserver.ace.collaboration.jupiter.server.Forwarder)
+	 */
+	public void removeForwarder(Forwarder forwarder) {
+		forwarders.remove(forwarder);
+	}
+		
 	/**
 	 * @return gets an iterator over all the forwarders
 	 */
-	public Iterator getProxies() {
-		return getServerLogic().getForwarders();
+	public Iterator getForwarders() {
+		return forwarders.iterator();
 	}
 		
 	/**
 	 * @see ch.iserver.ace.collaboration.jupiter.server.Forwarder#sendCaretUpdate(int, ch.iserver.ace.CaretUpdate)
 	 */
 	public void sendCaretUpdate(int participantId, CaretUpdate update) {
-		Iterator it = getProxies();
+		Iterator it = getForwarders();
 		while (it.hasNext()) {
-			Forwarder proxy = (Forwarder) it.next();
-			proxy.sendCaretUpdate(participantId, update);
+			Forwarder forwarder = (Forwarder) it.next();
+			forwarder.sendCaretUpdate(participantId, update);
 		}
 	}
 	
@@ -78,10 +85,10 @@ class CompositeForwarder implements Forwarder {
 	 * @see ch.iserver.ace.collaboration.jupiter.server.Forwarder#sendOperation(int, ch.iserver.ace.Operation)
 	 */
 	public void sendOperation(int participantId, Operation op) {
-		Iterator it = getProxies();
+		Iterator it = getForwarders();
 		while (it.hasNext()) {
-			Forwarder proxy = (Forwarder) it.next();
-			proxy.sendOperation(participantId, op);			
+			Forwarder forwarder = (Forwarder) it.next();
+			forwarder.sendOperation(participantId, op);			
 		}
 	}
 	
@@ -89,10 +96,10 @@ class CompositeForwarder implements Forwarder {
 	 * @see ch.iserver.ace.collaboration.jupiter.server.Forwarder#sendParticipantLeft(int, int)
 	 */
 	public void sendParticipantLeft(int participantId, int reason) {
-		Iterator it = getProxies();
+		Iterator it = getForwarders();
 		while (it.hasNext()) {
-			Forwarder proxy = (Forwarder) it.next();
-			proxy.sendParticipantLeft(participantId, reason);
+			Forwarder forwarder = (Forwarder) it.next();
+			forwarder.sendParticipantLeft(participantId, reason);
 		}
 	}
 	
@@ -100,10 +107,10 @@ class CompositeForwarder implements Forwarder {
 	 * @see ch.iserver.ace.collaboration.jupiter.server.Forwarder#sendParticipantJoined(int, ch.iserver.ace.net.RemoteUserProxy)
 	 */
 	public void sendParticipantJoined(int participantId, RemoteUserProxy user) {
-		Iterator it = getProxies();
+		Iterator it = getForwarders();
 		while (it.hasNext()) {
-			Forwarder proxy = (Forwarder) it.next();
-			proxy.sendParticipantJoined(participantId, user);
+			Forwarder forwarder = (Forwarder) it.next();
+			forwarder.sendParticipantJoined(participantId, user);
 		}
 	}
 	
@@ -111,10 +118,11 @@ class CompositeForwarder implements Forwarder {
 	 * @see ch.iserver.ace.collaboration.jupiter.server.Forwarder#close()
 	 */
 	public void close() {
-		Iterator it = getProxies();
+		Iterator it = getForwarders();
 		while (it.hasNext()) {
-			Forwarder proxy = (Forwarder) it.next();
-			proxy.close();
+			Forwarder forwarder = (Forwarder) it.next();
+			removeForwarder(forwarder);
+			forwarder.close();
 		}
 	}
 	
