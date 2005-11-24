@@ -22,6 +22,7 @@
 package ch.iserver.ace.net.impl.protocol;
 
 import org.apache.log4j.Logger;
+import org.beepcore.beep.core.Channel;
 import org.beepcore.beep.core.InputDataStream;
 import org.beepcore.beep.core.MessageMSG;
 
@@ -54,9 +55,6 @@ public class CollaborationRequestHandler extends AbstractRequestHandler {
 			if (rawData.length == PIGGYBACKED_MESSAGE_LENGTH) {
 				handlePiggybackedMessage(message);
 			} else {
-				
-				//TODO: set collaboration connection to remoteusersession (docId to collabconn)!!
-				
 				//reception and processing of a joined document
 				deserializer.deserialize(rawData, handler);
 				Request response = handler.getResult();
@@ -65,6 +63,9 @@ public class CollaborationRequestHandler extends AbstractRequestHandler {
 					String publisherId = doc.getPublisherId();
 					String docId = doc.getDocumentId();
 					RemoteUserSession session = SessionManager.getInstance().getSession(publisherId);
+					if (!session.hasCollaborationConnection(docId)) {
+						session.createCollaborationConnection(docId, message.getChannel());
+					}
 					RemoteDocumentProxyExt proxy = session.getUser().getSharedDocument(docId);
 					proxy.joinAccepted(doc);
 				}
@@ -75,6 +76,7 @@ public class CollaborationRequestHandler extends AbstractRequestHandler {
 				}
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			LOG.error("could not process request ["+e+"]");
 		}
 		LOG.debug("<-- receiveMSG");

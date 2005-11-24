@@ -57,4 +57,8 @@ public class AbstractConnection {
 	public ReplyListener getReplyListener() {
 		return listener;
 	}
+	
+	public boolean isEstablished() {
+		return (channel != null);
+	}
 }

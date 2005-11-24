@@ -50,10 +50,12 @@ public class CollaborationConnection extends AbstractConnection implements
 	private boolean joinAccepted;
 	private Serializer serializer;
 	private int participantId;
+	private String docId;
 	private PublishedDocument publishedDoc;
 	
-	public CollaborationConnection(RemoteUserSession session, Channel channel, ReplyListener listener, Serializer serializer) {
+	public CollaborationConnection(String docId, RemoteUserSession session, Channel channel, ReplyListener listener, Serializer serializer) {
 		super(channel);
+		this.docId = docId;
 		this.session = session;
 		joinAccepted = false;
 		this.serializer = serializer;

@@ -25,7 +25,8 @@ import java.net.ConnectException;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.beepcore.beep.core.BEEPException;
@@ -59,7 +60,7 @@ public class RemoteUserSession {
 	private int port;
 	private TCPSession session;
 	private MainConnection mainConnection;
-	private List collabConnections;
+	private Map collabConnections;
 	private RemoteUserProxyExt user;
 	private boolean isInitiated;
 	private boolean isAlive;
@@ -73,7 +74,7 @@ public class RemoteUserSession {
 		this.user = user;
 		isInitiated = false;
 		isAlive = true;
-		collabConnections = Collections.synchronizedList(new ArrayList());
+		collabConnections = Collections.synchronizedMap(new LinkedHashMap());
 	}
 	
 	public RemoteUserSession(TCPSession session, MainConnection connection, RemoteUserProxyExt user) {
@@ -85,7 +86,7 @@ public class RemoteUserSession {
 		this.user = user;
 		isInitiated = true;
 		isAlive = true;
-		collabConnections = Collections.synchronizedList(new ArrayList());
+		collabConnections = Collections.synchronizedMap(new LinkedHashMap());
 	}
 	
 	/**
@@ -111,10 +112,79 @@ public class RemoteUserSession {
 		return mainConnection;
 	}
 	
+	/**
+	 * 
+	 * @param type
+	 * @return
+	 * @throws ConnectionException
+	 */
 	public Channel startChannel(String type) throws ConnectionException {
 		return startNewChannel(type);
 	}
 	
+
+	/**
+	 * 
+	 * @param docId
+	 * @return
+	 */
+	public CollaborationConnection createCollaborationConnection(String docId) {
+		//TODO: do i have to check for isAlive as well?
+		return createCollaborationConnection(docId, null);
+	}
+	
+	public CollaborationConnection createCollaborationConnection(String docId, Channel collaborationChannel) {
+		//TODO: do i have to check for isAlive as well?
+		LOG.debug("--> createCollaborationConnection() for doc ["+docId+", "+collaborationChannel+"]");
+		CollaborationConnection connection = new CollaborationConnection(docId, this, collaborationChannel, 
+				NullReplyListener.getListener(), SerializerImpl.getInstance());
+		collabConnections.put(docId, connection);
+		LOG.debug("<-- createCollaborationConnection()");
+		return connection;
+	}
+	
+	/**
+	 * 
+	 * @param docId
+	 * @return
+	 */
+	public CollaborationConnection removeCollaborationConnection(String docId) {
+		return (CollaborationConnection) collabConnections.remove(docId);
+	}
+
+	public boolean hasCollaborationConnection(String docId) {
+		return collabConnections.containsKey(docId);
+	}
+	
+	/**
+	 * Helper method to initiate the TCPSession for this 
+	 * RemoteUserSession.
+	 *
+	 * @see TCPSession
+	 */
+	private void initiate() throws ConnectionException {
+		try {
+			ProfileRegistry registry = ProfileRegistryFactory.getProfileRegistry();
+			session =  TCPSessionCreator.initiate(host, port, registry);
+			LOG.info("initiated session to "+host+":"+port);
+			isInitiated = true;
+		} catch (BEEPException be) {
+			//TODO: retry strategy?
+			LOG.error("could not initiate session ["+be+"]");
+			if (be.getCause() instanceof ConnectException) {
+				String msg = "connection refused to host [" + host + ":" + port + "]";
+				NetworkServiceImpl.getInstance().getCallback().serviceFailure(FailureCodes.CONNECTION_REFUSED, msg, be);
+			}
+			throw new ConnectionException("session init failed ["+be.getMessage()+"]");
+		}
+	}
+	
+	/**
+	 * 
+	 * @param type
+	 * @return
+	 * @throws ConnectionException
+	 */
 	private Channel startNewChannel(String type) throws ConnectionException {
 		try {
 			String uri = NetworkProperties.get(NetworkProperties.KEY_PROFILE_URI);
@@ -136,41 +206,6 @@ public class RemoteUserSession {
 			//TODO: retry strategy?
 			LOG.error("could not start channel ["+be+"]");
 			throw new ConnectionException("could not start channel");
-		}
-	}
-	
-	public CollaborationConnection createCollaborationConnection() {
-		//TODO: do i have to check for isAlive as well?
-		CollaborationConnection connection = new CollaborationConnection(this, null, 
-				NullReplyListener.getListener(), SerializerImpl.getInstance());
-		collabConnections.add(connection);
-		return connection;
-	}
-	
-	public boolean removeCollaborationConnection(CollaborationConnection connection) {
-		return collabConnections.remove(connection);
-	}
-
-	/**
-	 * Helper method to initiate the TCPSession for this 
-	 * RemoteUserSession.
-	 *
-	 * @see TCPSession
-	 */
-	private void initiate() throws ConnectionException {
-		try {
-			ProfileRegistry registry = ProfileRegistryFactory.getProfileRegistry();
-			session =  TCPSessionCreator.initiate(host, port, registry);
-			LOG.info("initiated session to "+host+":"+port);
-			isInitiated = true;
-		} catch (BEEPException be) {
-			//TODO: retry strategy?
-			LOG.error("could not initiate session ["+be+"]");
-			if (be.getCause() instanceof ConnectException) {
-				String msg = "connection refused to host [" + host + ":" + port + "]";
-				NetworkServiceImpl.getInstance().getCallback().serviceFailure(FailureCodes.CONNECTION_REFUSED, msg, be);
-			}
-			throw new ConnectionException("session init failed ["+be.getMessage()+"]");
 		}
 	}
 	

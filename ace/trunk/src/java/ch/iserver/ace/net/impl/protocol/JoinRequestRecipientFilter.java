@@ -50,7 +50,7 @@ public class JoinRequestRecipientFilter extends AbstractRequestFilter {
 				PublishedDocument documentToJoin = (PublishedDocument) publishedDocs.get(info.getDocId());
 				RemoteUserSession session = SessionManager.getInstance().getSession(request.getUserId());
 				
-				CollaborationConnection connection = session.createCollaborationConnection();
+				CollaborationConnection connection = session.createCollaborationConnection(info.getDocId());
 				connection.setPublishedDocument(documentToJoin);
 				documentToJoin.join(connection);
 				
