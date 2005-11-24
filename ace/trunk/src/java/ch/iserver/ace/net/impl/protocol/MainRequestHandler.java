@@ -21,13 +21,11 @@
 
 package ch.iserver.ace.net.impl.protocol;
 
-import java.io.ByteArrayOutputStream;
-
 import org.apache.log4j.Logger;
+import org.beepcore.beep.core.Channel;
 import org.beepcore.beep.core.InputDataStream;
 import org.beepcore.beep.core.MessageMSG;
 import org.beepcore.beep.transport.tcp.TCPSession;
-import org.beepcore.beep.util.BufferSegment;
 
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;
 import ch.iserver.ace.net.impl.discovery.DiscoveryManager;
@@ -79,7 +77,8 @@ public class MainRequestHandler extends AbstractRequestHandler {
 						RemoteUserProxyExt user = discoveryManager.getUser(userid);
 						LOG.debug("create new session for ["+user.getMutableUserDetails().getUsername()+"]");
 						SessionManager manager = SessionManager.getInstance();
-						manager.createSession(user, (TCPSession) message.getChannel().getSession());
+						Channel mainChannel = message.getChannel();
+						manager.createSession(user, (TCPSession) mainChannel.getSession(), channel);
 					}
 				}
 				request.setMessage(message);

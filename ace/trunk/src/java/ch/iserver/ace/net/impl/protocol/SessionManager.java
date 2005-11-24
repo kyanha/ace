@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.beepcore.beep.core.Channel;
 import org.beepcore.beep.transport.tcp.TCPSession;
 
 import ch.iserver.ace.net.impl.MutableUserDetails;
@@ -64,8 +65,8 @@ public class SessionManager {
 		return newSession;
 	}
 	
-	public RemoteUserSession createSession(RemoteUserProxyExt user, TCPSession session) {
-		RemoteUserSession newSession = new RemoteUserSession(session, user);
+	public RemoteUserSession createSession(RemoteUserProxyExt user, TCPSession session, Channel mainChannel) {
+		RemoteUserSession newSession = new RemoteUserSession(session, new MainConnection(mainChannel), user);
 		sessions.put(user.getId(), newSession);
 		DiscoveryManagerFactory.getDiscoveryManager(null).setSessionEstablished(user.getId());
 		return newSession;

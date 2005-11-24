@@ -74,10 +74,12 @@ public class RemoteUserSession {
 		collabConnections = Collections.synchronizedList(new ArrayList());
 	}
 	
-	public RemoteUserSession(TCPSession session, RemoteUserProxyExt user) {
+	public RemoteUserSession(TCPSession session, MainConnection connection, RemoteUserProxyExt user) {
 		ParameterValidator.notNull("session", session);
+		ParameterValidator.notNull("connection", connection);
 		ParameterValidator.notNull("user", user);
 		this.session = session;
+		this.mainConnection = connection;
 		this.user = user;
 		isInitiated = true;
 		isAlive = true;
@@ -99,8 +101,10 @@ public class RemoteUserSession {
 			initiate();
 		if (mainConnection == null) {
 			Channel channel = startNewChannel(CHANNEL_MAIN);
-			LOG.debug("channel started");
+			LOG.debug("main channel started");
 			mainConnection = new MainConnection(channel);
+		} else {
+			LOG.debug("main channel available");
 		}
 		return mainConnection;
 	}
