@@ -252,7 +252,6 @@ BASCHTLE
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println("asdf: " + documentContent);
 		session = (Session)
 			//Spin.off(
 					collaborationService.publish((PublishedSessionCallback)sessionCallback,
