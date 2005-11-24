@@ -64,6 +64,7 @@ public class AsyncInterceptor implements MethodInterceptor {
 	public synchronized Object invoke(MethodInvocation invocation) throws Throwable {
 		if (!invocation.getMethod().getReturnType().equals(Void.TYPE)) {
 			LOG.warn("WARN: invoking non-void return type method - " + invocation.getMethod());
+			return invocation.proceed();
 		}
 		queue.add(invocation);
 		return null;
