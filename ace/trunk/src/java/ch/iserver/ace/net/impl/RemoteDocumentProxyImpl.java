@@ -28,7 +28,6 @@ import ch.iserver.ace.net.JoinNetworkCallback;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.net.SessionConnection;
 import ch.iserver.ace.net.SessionConnectionCallback;
-import ch.iserver.ace.net.impl.protocol.CollaborationRequestHandler;
 import ch.iserver.ace.net.impl.protocol.ProtocolConstants;
 import ch.iserver.ace.net.impl.protocol.Request;
 import ch.iserver.ace.net.impl.protocol.RequestFilter;
@@ -75,7 +74,7 @@ public class RemoteDocumentProxyImpl implements RemoteDocumentProxyExt {
 	
 	public void joinAccepted(PortableDocumentExt document) {
 		LOG.debug("--> joinAccepted()");
-		sessionConnection = new SessionConnectionImpl();
+//		sessionConnection = new SessionConnectionImpl();
 		sessionConnectionCallback = callback.accepted(sessionConnection);
 		sessionConnectionCallback.setDocument(document);
 		LOG.debug("<-- joinAccepted()");
