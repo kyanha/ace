@@ -25,6 +25,7 @@ import ch.iserver.ace.Fragment;
 import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.collaboration.PortableDocument;
 import ch.iserver.ace.collaboration.ParticipantSessionCallback;
+import ch.iserver.ace.application.editor.*;
 
 import java.util.Iterator;
 
@@ -32,17 +33,28 @@ import java.util.Iterator;
 
 public class ParticipantSessionCallbackImpl extends SessionCallbackImpl implements ParticipantSessionCallback {
 
-	public ParticipantSessionCallbackImpl() {
+	private DocumentItem documentItem;
+
+	public ParticipantSessionCallbackImpl(DocumentItem documentItem) {
+		this.documentItem = documentItem;
 	}
 	
 	public synchronized void setDocument(PortableDocument doc) {
 		// IMPORTANT: this method is called first from the collaboration layer. set participants here.
 		System.out.println("setDocument");
+		documentItem.createEditorDocument();
+		CollaborativeDocument docu = documentItem.getEditorDocument();
+		try {
+			docu.insertString(0, "huderi", null);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 
 		// add all participants
 		Iterator pIter = doc.getParticipants().iterator();
 		while(pIter.hasNext()) {
 			Participant p = (Participant)pIter.next();
+			System.out.println("adding participant: " + p);
 			participationColorManager.addParticipant(p);
 		}
 		
@@ -52,6 +64,7 @@ public class ParticipantSessionCallbackImpl extends SessionCallbackImpl implemen
 			Fragment f = (Fragment)fIter.next();
 			System.out.println(f.getText() + "(" + f.getParticipantId() + ")");
 		}
+		
 	}
 	
 	public void sessionTerminated() {

@@ -41,7 +41,7 @@ public class JoinCallbackImpl implements JoinCallback {
 		documentItem.setSession(session);
 
 		// create and set session callback
-		ParticipantSessionCallback callback = new ParticipantSessionCallbackImpl();
+		ParticipantSessionCallback callback = new ParticipantSessionCallbackImpl(documentItem);
 		((SessionCallbackImpl)callback).setDoc(documentItem.getEditorDocument());
 		documentItem.setSessionCallback(callback);
 		
