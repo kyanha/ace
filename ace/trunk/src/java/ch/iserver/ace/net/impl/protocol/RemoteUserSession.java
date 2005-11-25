@@ -133,8 +133,9 @@ public class RemoteUserSession {
 	 */
 	public SessionConnectionImpl addSessionConnection(String docId, Channel collaborationChannel) {
 		LOG.debug("--> addSessionConnection() for doc ["+docId+"]");
+		CollaborationSerializer serializer = new CollaborationSerializer();
 		SessionConnectionImpl conn = new SessionConnectionImpl(docId, this, 
-				collaborationChannel, SerializerImpl.getInstance());
+				collaborationChannel, NullReplyListener.getListener(), serializer);
 		sessionConnections.put(docId, conn);
 		LOG.debug("<-- addSessionConnection()");
 		return conn;
@@ -208,8 +209,9 @@ public class RemoteUserSession {
 				handler = ProfileRegistryFactory.getMainRequestHandler();
 			} else if (type == CHANNEL_COLLABORATION) {
 //				handler = SessionRequestHandlerFactory.getInstance().createHandler();
-				//TODO: consider passing a reference to ParticipantPort
-				handler = new ParticipantRequestHandler();
+				CollaborationDeserializer deserializer = new CollaborationDeserializer();
+				CollaborationParserHandler parserHandler = new CollaborationParserHandler();
+				handler = new ParticipantRequestHandler(deserializer, parserHandler);
 			} else {
 				//TODO: proxy channel?
 				throw new IllegalStateException("unknown channel type ["+type+"]");
