@@ -31,6 +31,7 @@ import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.net.impl.MutableUserDetails;
 import ch.iserver.ace.net.impl.NetworkConstants;
 import ch.iserver.ace.net.impl.NetworkProperties;
+import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.PortableDocumentExt;
 import ch.iserver.ace.net.impl.PortableDocumentImpl;
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;
@@ -74,7 +75,10 @@ public class ResponseParserHandler extends ParserHandler {
 					String participantId = attributes.getValue(ID); 
 					currParticipantId = Integer.parseInt(participantId);
 				} else if (qName.equals(USER)) {
-					String userId = attributes.getValue(ID); 
+					String userId = attributes.getValue(ID);
+					if (userId.equals(NetworkServiceImpl.getInstance().getUserId())) {
+						document.setParticpantId(currParticipantId);
+					}
 					String userName = attributes.getValue(NAME);
 					String userAddress= attributes.getValue(ADDRESS);
 					String userPort = attributes.getValue(PORT);
