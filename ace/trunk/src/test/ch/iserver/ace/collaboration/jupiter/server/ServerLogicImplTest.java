@@ -408,9 +408,10 @@ public class ServerLogicImplTest extends TestCase {
 		
 		// define mock behavior
 		participant.getUser();
-		participantCtrl.setReturnValue(new RemoteUserProxyStub("X"));
+		participantCtrl.setDefaultReturnValue(new RemoteUserProxyStub("X"));
 		participant.sendKicked();
 		participant.close();
+		connection.sendParticipantLeft(1, Participant.KICKED);
 				
 		// replay
 		connectionCtrl.replay();
