@@ -37,7 +37,7 @@ import ch.iserver.ace.util.ParameterValidator;
 public class RemoteUserImpl implements MutableRemoteUser {
 	
 	/**
-	 * 
+	 * PropertyChangeSupport used for PropertyChangeListener management.
 	 */
 	private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 	
@@ -47,9 +47,9 @@ public class RemoteUserImpl implements MutableRemoteUser {
 	private final RemoteUserProxy proxy;
 	
 	/**
-	 * 
+	 * The nick name of the user.
 	 */
-	private String userName;
+	private String name;
 	
 	/**
 	 * Creates a new RemoteUserImpl object.
@@ -59,7 +59,7 @@ public class RemoteUserImpl implements MutableRemoteUser {
 	public RemoteUserImpl(RemoteUserProxy proxy) {
 		ParameterValidator.notNull("proxy", proxy);
 		this.proxy = proxy;
-		this.userName = proxy.getUserDetails().getUsername();
+		this.name = proxy.getUserDetails().getUsername();
 	}
 	
 	/**
@@ -80,13 +80,13 @@ public class RemoteUserImpl implements MutableRemoteUser {
 	 * @see ch.iserver.ace.collaboration.RemoteUser#getName()
 	 */
 	public String getName() {
-		return userName;
+		return name;
 	}
 	
 	public void setName(String userName) {
-		String old = this.userName;
+		String old = this.name;
 		if (!old.equals(userName)) {
-			this.userName = userName;
+			this.name = userName;
 			support.firePropertyChange(NAME_PROPERTY, old, userName);
 		}
 	}
@@ -100,13 +100,21 @@ public class RemoteUserImpl implements MutableRemoteUser {
 		getProxy().invite(logic);
 	}
 	
+	/**
+	 * @see ch.iserver.ace.collaboration.RemoteUser#addPropertyChangeListener(java.beans.PropertyChangeListener)
+	 */
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		support.addPropertyChangeListener(listener);		
 	}
 	
+	/**
+	 * @see ch.iserver.ace.collaboration.RemoteUser#removePropertyChangeListener(java.beans.PropertyChangeListener)
+	 */
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
 		support.removePropertyChangeListener(listener);
 	}
+	
+	// --> java.lang.Object methods <--
 
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
@@ -127,6 +135,13 @@ public class RemoteUserImpl implements MutableRemoteUser {
 	 */
 	public int hashCode() {
 		return getId().hashCode();
+	}
+	
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString() {
+		return "RemoteUser[id='" + getId() + "',name='" + getName() + "']";
 	}
 	
 }
