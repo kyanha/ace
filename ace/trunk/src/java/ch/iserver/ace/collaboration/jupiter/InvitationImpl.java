@@ -98,6 +98,9 @@ class InvitationImpl implements Invitation {
 		return document;
 	}
 
+	/**
+	 * @return
+	 */
 	private SessionFactory getSessionFactory() {
 		return sessionFactory;
 	}
@@ -106,6 +109,7 @@ class InvitationImpl implements Invitation {
 	 * @see ch.iserver.ace.collaboration.Invitation#accept(ch.iserver.ace.collaboration.ParticipantSessionCallback)
 	 */
 	public Session accept(ParticipantSessionCallback callback) {
+		ParameterValidator.notNull("callback", callback);
 		ConfigurableSession session = getSessionFactory().createSession();
 		session.setSessionCallback(callback);
 		SessionConnection connection = getProxy().accept(session);

@@ -75,6 +75,7 @@ class JoinNetworkCallbackImpl implements JoinNetworkCallback {
 	 * @see ch.iserver.ace.net.JoinNetworkCallback#accepted(ch.iserver.ace.net.SessionConnection)
 	 */
 	public SessionConnectionCallback accepted(SessionConnection connection) {
+		ParameterValidator.notNull("connection", connection);
 		ConfigurableSession session = getSessionFactory().createSession();
 		session.setConnection(connection);
 		session.setSessionCallback(getCallback().accepted(session));
