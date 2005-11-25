@@ -23,6 +23,7 @@ package ch.iserver.ace.collaboration.jupiter.server;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -31,6 +32,7 @@ import org.apache.log4j.Logger;
 
 import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.DocumentModel;
+import ch.iserver.ace.Fragment;
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.jupiter.Jupiter;
 import ch.iserver.ace.collaboration.JoinRequest;
@@ -112,7 +114,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 		this.failureHandler = (FailureHandler) incomingDomain.wrap(this, FailureHandler.class);
 		
 		this.document = createServerDocument(document);
-		this.proxies.put(new Integer(-1), new DocumentUpdater(this.document));
+		this.forwarder.addForwarder(new DocumentUpdater(this.document));
 	}
 	
 	/**
@@ -124,7 +126,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	 */
 	protected ServerDocument createServerDocument(DocumentModel document) {
 		ServerDocument doc = new ServerDocumentImpl();
-		doc.insertString(0, 0, document.getContent());
+		doc.insertString(0, 0, "blabla");
 		doc.updateCaret(0, document.getDot(), document.getMark());
 		return doc;
 	}
@@ -149,7 +151,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	protected PublisherPort createPublisherPort(ParticipantConnection connection) {
 		Algorithm algorithm = new Jupiter(false);
 		PublisherPort port = new PublisherPortImpl(this, 0, new AlgorithmWrapperImpl(algorithm), forwarder);
-		Forwarder proxy = createParticipantProxy(0, connection, algorithm);
+		Forwarder proxy = createForwarder(0, connection, algorithm);
 		addParticipant(new SessionParticipant(port, proxy, connection, null));
 		return (PublisherPort) incomingDomain.wrap(port, PublisherPort.class);
 	}
@@ -162,7 +164,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	 * @param algorithm the algorithm to be used for that participant
 	 * @return the forwarder for that particular participant
 	 */
-	protected Forwarder createParticipantProxy(int participantId, ParticipantConnection connection, Algorithm algorithm) {
+	protected Forwarder createForwarder(int participantId, ParticipantConnection connection, Algorithm algorithm) {
 		AcknowledgeStrategy acknowledger = getAcknowledgeStrategyFactory().createStrategy();
 		ParticipantProxy proxy = new ParticipantProxy(participantId, algorithm, connection);
 		proxy.setAcknowledgeStrategy(acknowledger);
@@ -357,11 +359,19 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 				
 				ParticipantPort portTarget = new ParticipantPortImpl(this, participantId, new AlgorithmWrapperImpl(algorithm), forwarder);
 				ParticipantPort port = (ParticipantPort) incomingDomain.wrap(portTarget, ParticipantPort.class);
-				Forwarder proxy = createParticipantProxy(participantId, connection, algorithm);
+				Forwarder proxy = createForwarder(participantId, connection, algorithm);
 				RemoteUserProxy user = connection.getUser();
 		
 				SessionParticipant participant = new SessionParticipant(portTarget, proxy, connection, user);
 				PortableDocument document = getDocument();
+				
+				System.out.println("server document ...");
+				Iterator it = document.getFragments();
+				while (it.hasNext()) {
+					Fragment fragment = (Fragment) it.next();
+					System.out.println(fragment.getParticipantId() + "| " + fragment.getText());
+				}
+				
 				connection.joinAccepted(port);
 				connection.sendDocument(document);
 				addParticipant(participant);
