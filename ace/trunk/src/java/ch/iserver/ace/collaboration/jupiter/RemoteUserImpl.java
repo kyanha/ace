@@ -87,7 +87,6 @@ public class RemoteUserImpl implements MutableRemoteUser {
 		String old = this.name;
 		if (!old.equals(userName)) {
 			this.name = userName;
-			System.err.println("fire property change: " + old + " -> " + userName + " (" + support.getPropertyChangeListeners().length + ")");
 			support.firePropertyChange(NAME_PROPERTY, old, userName);
 		}
 	}
@@ -105,16 +104,18 @@ public class RemoteUserImpl implements MutableRemoteUser {
 	 * @see ch.iserver.ace.collaboration.RemoteUser#addPropertyChangeListener(java.beans.PropertyChangeListener)
 	 */
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
-		System.err.println("adding listener: " + listener);
-		support.addPropertyChangeListener(listener);		
+		support.addPropertyChangeListener(listener);
 	}
 	
 	/**
 	 * @see ch.iserver.ace.collaboration.RemoteUser#removePropertyChangeListener(java.beans.PropertyChangeListener)
 	 */
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
-		System.err.println("removing listener: " + listener);
 		support.removePropertyChangeListener(listener);
+	}
+	
+	public PropertyChangeListener[] getPropertyChangeListeners() {
+		return support.getPropertyChangeListeners();
 	}
 	
 	// --> java.lang.Object methods <--
