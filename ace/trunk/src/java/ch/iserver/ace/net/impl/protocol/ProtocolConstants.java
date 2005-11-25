@@ -36,6 +36,7 @@ public interface ProtocolConstants {
 	public static final int DOCUMENT_DETAILS_CHANGED = 4;
 	public static final int JOIN = 5;
 	public static final int JOIN_DOCUMENT = 6;
+	public static final int LEAVE = 7;
 	
 	/********************/
 	/** Top level tags **/
@@ -48,6 +49,7 @@ public interface ProtocolConstants {
 	public static final String TAG_JOIN_DOCUMENT = "document";
 	public static final String TAG_DOCUMENT_DETAILS_CHANGED = "docDetailsChanged";
 	public static final String TAG_DOC = "doc";
+	public static final String TAG_LEAVE = "leave";
 	
 	/***********************************/
 	/** Sub-level tags 				**/
@@ -61,6 +63,8 @@ public interface ProtocolConstants {
 	
 	public static final String PARTICIPANTS = "participants";
 	public static final String PARTICIPANT = "participant";
+	public static final String PARTICIPANT_ID = "participantId";
+	public static final String DOC_ID = "docId";
 	public static final String ID = "id";
 	public static final String USER = "user";
 	public static final String ADDRESS = "address";
