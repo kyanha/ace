@@ -126,7 +126,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	 */
 	protected ServerDocument createServerDocument(DocumentModel document) {
 		ServerDocument doc = new ServerDocumentImpl();
-		doc.insertString(0, 0, "blabla");
+		doc.insertString(0, 0, document.getContent());
 		doc.updateCaret(0, document.getDot(), document.getMark());
 		return doc;
 	}
