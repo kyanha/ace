@@ -24,6 +24,7 @@ package ch.iserver.ace.application;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import ch.iserver.ace.text.InsertOperation;
 import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.DocumentModel;
 import ch.iserver.ace.collaboration.*;
@@ -267,6 +268,27 @@ BASCHTLE
 		// editorDocument.setSession(session);
 		((SessionCallbackImpl)sessionCallback).setDoc(editorDocument);
 		setType(PUBLISHED);
+		
+		
+		final Session ses = session;
+		new Thread() {
+			public void run() {
+				for(int i = 0; i < 25; i++) {
+					ses.lock();
+					String text = "" + Math.round(100 * Math.random()) + "-";
+					ses.sendOperation(new InsertOperation(0, text));
+					ses.unlock();
+					System.out.println("sending text: " + text);
+					try {
+						Thread.sleep(1000);
+					} catch(Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}.start();		
+		
+		
 	}
 	
 	public void conceal() {
