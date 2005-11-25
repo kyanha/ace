@@ -143,9 +143,20 @@ public class ServerDocumentImpl extends AbstractDocument implements
 		int participantId = getParticipantId(candidate.getAttributes());
 		int nparticipantId = getParticipantId(attr);
 
+//		System.out.println(participantId + " -> " + nparticipantId);
+//		System.out.println("element count: " + getDefaultRootElement().getElementCount());
+//		System.out.println("offset = " + offset + ", length = " + length + ", start = " + start + ", end = " + end);
+//		System.out.println("getLength() = " + getLength() + " / text = " + getText());
+		
 		if (participantId == nparticipantId) {
 			removed.add(candidate);
-			added.add(createLeafElement(defaultRoot, attr, start, end));
+			if (getDefaultRootElement().getElementCount() == 1) {
+				added.add(createLeafElement(defaultRoot, attr, start, end - 1));
+				added.add(createLeafElement(defaultRoot, candidate.getAttributes(), end, end));
+			} else {
+				added.add(createLeafElement(defaultRoot, attr, start, end));
+			}
+			
 		} else {
 			removed.add(candidate);
 			if (start < offset) {
@@ -265,6 +276,14 @@ public class ServerDocumentImpl extends AbstractDocument implements
 		} catch (BadLocationException e) {
 			// TODO: fix RuntimeException
 			throw new RuntimeException(e);
+		}
+		
+		Iterator it = getFragments();
+		System.out.println("has " + getDefaultRootElement().getElementCount() + " children");
+		System.out.println("printing fragments ...");
+		while (it.hasNext()) {
+			Fragment fragment = (Fragment) it.next();
+			System.out.println("   " + fragment);
 		}
 	}
 	
