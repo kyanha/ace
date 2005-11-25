@@ -48,6 +48,7 @@ public class RemoteDocumentProxyImpl implements RemoteDocumentProxyExt {
 	private RequestFilter filterChain;
 	private SessionConnection sessionConnection;
 	private SessionConnectionCallback sessionConnectionCallback;
+	private boolean isJoined;
 	
 	public RemoteDocumentProxyImpl(String id, DocumentDetails details, RemoteUserProxy publisher, RequestFilter filter) {
 		ParameterValidator.notNull("id", id);
@@ -58,6 +59,7 @@ public class RemoteDocumentProxyImpl implements RemoteDocumentProxyExt {
 		this.details = details;
 		this.publisher = publisher;
 		this.filterChain = filter;
+		isJoined = false;
 	}
 	
 	
@@ -74,6 +76,7 @@ public class RemoteDocumentProxyImpl implements RemoteDocumentProxyExt {
 	
 	public void joinAccepted(PortableDocumentExt document, SessionConnection connection) {
 		LOG.debug("--> joinAccepted()");
+		isJoined = true;
 		sessionConnection = connection;
 		sessionConnectionCallback = callback.accepted(sessionConnection);
 		sessionConnectionCallback.setDocument(document);
@@ -85,6 +88,16 @@ public class RemoteDocumentProxyImpl implements RemoteDocumentProxyExt {
 		
 	}
 	
+	public boolean isJoined() {
+		return isJoined;
+	}
+	
+	public void cleanupAfterLeave() {
+		isJoined = false;
+		sessionConnectionCallback = null;
+		callback = null;
+		sessionConnection = null;
+	}
 	
 	/************************************************/
 	/** methods from interface RemoteDocumentProxy **/
@@ -117,9 +130,12 @@ public class RemoteDocumentProxyImpl implements RemoteDocumentProxyExt {
 	 * @see ch.iserver.ace.net.RemoteDocumentProxy#join(ch.iserver.ace.net.JoinNetworkCallback)
 	 */
 	public void join(JoinNetworkCallback callback) {
+		LOG.debug("--> join("+callback+")");
+		ParameterValidator.notNull("callback", callback);
 		this.callback = callback;
 		Request request = new RequestImpl(ProtocolConstants.JOIN, publisher.getId(), id);
 		filterChain.process(request);
+		LOG.debug("<-- join()");
 	}
 	
 	/**

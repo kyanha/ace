@@ -36,5 +36,7 @@ public interface RemoteDocumentProxyExt extends RemoteDocumentProxy {
 	
 	public void joinAccepted(PortableDocumentExt document, SessionConnection connection);
 	
+	public void cleanupAfterLeave();
 	
+	public boolean isJoined();
 }
