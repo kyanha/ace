@@ -21,6 +21,7 @@
 
 package ch.iserver.ace.application.action;
 
+import ch.iserver.ace.collaboration.PublishedSession;
 import ch.iserver.ace.application.DocumentItem;
 import ch.iserver.ace.application.ParticipantItem;
 import ch.iserver.ace.application.DocumentManager;
@@ -57,6 +58,7 @@ public class NetKickParticipantAction extends DocumentItemSelectionChangeAction 
 		// need session here
 		if(currentDocumentItem != null && currentParticipantItem != null) {
 			System.out.println("NetKickParticipantAction: " + currentParticipantItem.getName());
+			((PublishedSession)currentDocumentItem.getSession()).kick(currentParticipantItem.getParticipant());
 		}
 	}
 
