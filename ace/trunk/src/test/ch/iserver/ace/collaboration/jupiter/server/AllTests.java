@@ -32,7 +32,7 @@ public class AllTests {
 		//$JUnit-BEGIN$
 		suite.addTestSuite(CompositeForwarderTest.class);
 		suite.addTestSuite(ServerDocumentImplTest.class);
-		suite.addTestSuite(ParticipantProxyTest.class);
+		suite.addTestSuite(ParticipantForwarderTest.class);
 		suite.addTestSuite(ParticipantPortImplTest.class);
 		suite.addTestSuite(CaretHandlerTest.class);
 		suite.addTestSuite(DocumentUpdaterTest.class);

@@ -45,9 +45,12 @@ import ch.iserver.ace.util.SemaphoreLock;
  * to one particular participant. The participant is represented
  * by a ParticipantConnection.
  */
-public class ParticipantProxy implements Forwarder {
+public class ParticipantForwarder implements Forwarder {
 	
-	private static final Logger LOG = Logger.getLogger(ParticipantProxy.class);
+	/**
+	 * Logger used by this class.
+	 */
+	private static final Logger LOG = Logger.getLogger(ParticipantForwarder.class);
 	
 	/**
 	 * The participant id of the participant represented by this proxy.
@@ -65,12 +68,15 @@ public class ParticipantProxy implements Forwarder {
 	private final ParticipantConnection connection;
 	
 	/**
-	 * 
+	 * The AcknowledgeStrategy used by this class.
 	 */
 	private AcknowledgeStrategy acknowledgeStrategy = new NullAcknowledgeStrategy();
 	
 	/**
-	 * 
+	 * The lock used to lock the algorithm. This lock is needed because
+	 * there are potentially two threads accessing the algorithm, the
+	 * single worker thread inside the server and the thread that runs
+	 * the acknowledge action.
 	 */
 	private final Lock lock;
 	
@@ -82,7 +88,7 @@ public class ParticipantProxy implements Forwarder {
 	 * @param connection the connection to the participant
 	 * @param acknowledgeStrategy
 	 */
-	public ParticipantProxy(int participantId, 
+	public ParticipantForwarder(int participantId, 
 					Algorithm algorithm, 
 					ParticipantConnection connection) {
 		this(participantId, new AlgorithmWrapperImpl(algorithm), connection);
@@ -96,7 +102,7 @@ public class ParticipantProxy implements Forwarder {
 	 * @param connection the connection to the participant
 	 * @param acknowledgeStrategy
 	 */
-	ParticipantProxy(int participantId,
+	ParticipantForwarder(int participantId,
 					AlgorithmWrapper algorithm,
 					ParticipantConnection connection) {
 		ParameterValidator.notNull("connection", connection);
@@ -107,6 +113,11 @@ public class ParticipantProxy implements Forwarder {
 		this.lock = new SemaphoreLock("proxy-lock-" + participantId);
 	}
 	
+	/**
+	 * Sets the AcknowledgeStrategy used by this forwarder.
+	 * 
+	 * @param acknowledger the new acknowledge strategy
+	 */
 	public void setAcknowledgeStrategy(AcknowledgeStrategy acknowledger) {
 		this.acknowledgeStrategy = acknowledger != null ? acknowledger : new NullAcknowledgeStrategy();
 		this.acknowledgeStrategy.init(new AcknowledgeAction() {
@@ -123,6 +134,9 @@ public class ParticipantProxy implements Forwarder {
 		});
 	}
 	
+	/**
+	 * @return the AcknowledgeStrategy used by this instance
+	 */
 	public AcknowledgeStrategy getAcknowledgeStrategy() {
 		return acknowledgeStrategy;
 	}
@@ -142,36 +156,36 @@ public class ParticipantProxy implements Forwarder {
 	}
 	
 	/**
-	 * 
+	 * Grabs the lock to access the algorithm.
 	 */
 	protected void lock() {
 		lock.lock();
 	}
 	
 	/**
-	 * 
+	 * Releases the lock to access the algorithm. Make sure calls to unlock
+	 * are balanced with previous calls to unlock.
 	 */
 	protected void unlock() {
 		lock.unlock();
 	}
 	
 	/**
-	 * 
+	 * Resets the acknowledge strategies timer.
 	 */
 	protected void resetAcknowledgeTimer() {
 		acknowledgeStrategy.resetTimer();
 	}
 	
 	/**
-	 * @see ch.iserver.ace.collaboration.jupiter.server.ParticipantProxy#sendCaretUpdate(int, ch.iserver.ace.CaretUpdate)
+	 * @see ch.iserver.ace.collaboration.jupiter.server.ParticipantForwarder#sendCaretUpdate(int, ch.iserver.ace.CaretUpdate)
 	 */
 	public void sendCaretUpdate(int participantId, CaretUpdate update) {
 		if (this.participantId != participantId) {
 			resetAcknowledgeTimer();
-			AlgorithmWrapper algorithm = getAlgorithm();
 			lock();
 			try {
-				CaretUpdateMessage message = algorithm.generateCaretUpdateMessage(update);
+				CaretUpdateMessage message = getAlgorithm().generateCaretUpdateMessage(update);
 				getConnection().sendCaretUpdateMessage(participantId, message);
 			} finally {
 				unlock();
@@ -180,15 +194,14 @@ public class ParticipantProxy implements Forwarder {
 	}
 	
 	/**
-	 * @see ch.iserver.ace.collaboration.jupiter.server.ParticipantProxy#sendOperation(int, ch.iserver.ace.Operation)
+	 * @see ch.iserver.ace.collaboration.jupiter.server.ParticipantForwarder#sendOperation(int, ch.iserver.ace.Operation)
 	 */
 	public void sendOperation(int participantId, Operation operation) {
 		if (this.participantId != participantId) {
 			resetAcknowledgeTimer();
-			AlgorithmWrapper algorithm = getAlgorithm();
 			lock();
 			try {
-				Request request = algorithm.generateRequest(operation);
+				Request request = getAlgorithm().generateRequest(operation);
 				getConnection().sendRequest(participantId, request);
 			} finally {
 				unlock();
@@ -197,21 +210,21 @@ public class ParticipantProxy implements Forwarder {
 	}
 		
 	/**
-	 * @see ch.iserver.ace.collaboration.jupiter.server.ParticipantProxy#sendParticipantLeft(int, int)
+	 * @see ch.iserver.ace.collaboration.jupiter.server.ParticipantForwarder#sendParticipantLeft(int, int)
 	 */
 	public void sendParticipantLeft(int participantId, int reason) {
-		LOG.debug("--> sendParticipantLeft: " + participantId + " (" + reason + ")");
 		if (this.participantId != participantId) {
+			LOG.debug("--> sendParticipantLeft: " + participantId + " (" + reason + ")");
 			getConnection().sendParticipantLeft(participantId, reason);
 		}
 	}
 	
 	/**
-	 * @see ch.iserver.ace.collaboration.jupiter.server.ParticipantProxy#sendParticipantJoined(int, ch.iserver.ace.net.RemoteUserProxy)
+	 * @see ch.iserver.ace.collaboration.jupiter.server.ParticipantForwarder#sendParticipantJoined(int, ch.iserver.ace.net.RemoteUserProxy)
 	 */
 	public void sendParticipantJoined(int participantId, RemoteUserProxy proxy) {
-		LOG.debug("--> sendParticipantJoined: " + participantId + " (" + proxy.getId() + ")");
 		if (this.participantId != participantId) {
+			LOG.debug("--> sendParticipantJoined: " + participantId + " (" + proxy.getId() + ")");
 			getConnection().sendParticipantJoined(participantId, proxy);
 		}
 	}
@@ -220,6 +233,7 @@ public class ParticipantProxy implements Forwarder {
 	 * @see ch.iserver.ace.collaboration.jupiter.server.Forwarder#close()
 	 */
 	public void close() {
+		LOG.debug("--> close");
 		try {
 			getConnection().close();
 		} finally {

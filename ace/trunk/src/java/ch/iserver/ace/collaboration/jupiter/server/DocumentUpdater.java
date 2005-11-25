@@ -34,7 +34,7 @@ import ch.iserver.ace.util.ParameterValidator;
 
 /**
  * A Forwarder that updates the server copy of the document. An instance
- * of this class is added to the list of proxy objects that receive transformed
+ * of this class is added to the list of forwarders that receive transformed
  * server-side operations and caret updates. The transformed operations and
  * caret updates are applied to a 
  * {@link ch.iserver.ace.collaboration.jupiter.server.ServerDocument} instance.
@@ -74,7 +74,7 @@ class DocumentUpdater implements Forwarder {
 	}
 	
 	/**
-	 * @see ch.iserver.ace.collaboration.jupiter.server.ParticipantProxy#sendOperation(int, ch.iserver.ace.Operation)
+	 * @see ch.iserver.ace.collaboration.jupiter.server.Forwarder#sendOperation(int, ch.iserver.ace.Operation)
 	 */
 	public void sendOperation(int participantId, Operation operation) {
 		ParameterValidator.notNull("operation", operation);
@@ -96,7 +96,7 @@ class DocumentUpdater implements Forwarder {
 	}
 
 	/**
-	 * @see ch.iserver.ace.collaboration.jupiter.server.ParticipantProxy#sendCaretUpdate(int, ch.iserver.ace.CaretUpdate)
+	 * @see ch.iserver.ace.collaboration.jupiter.server.Forwarder#sendCaretUpdate(int, ch.iserver.ace.CaretUpdate)
 	 */
 	public void sendCaretUpdate(int participantId, CaretUpdate update) {
 		ParameterValidator.notNull("update", update);
@@ -104,21 +104,21 @@ class DocumentUpdater implements Forwarder {
 	}
 	
 	/**
-	 * @see ch.iserver.ace.collaboration.jupiter.server.ParticipantProxy#sendParticipantLeft(int, int)
+	 * @see ch.iserver.ace.collaboration.jupiter.server.Forwarder#sendParticipantLeft(int, int)
 	 */
 	public void sendParticipantLeft(int participantId, int reason) {
 		getDocument().participantLeft(participantId);
 	}
 	
 	/**
-	 * @see ch.iserver.ace.collaboration.jupiter.server.ParticipantProxy#sendParticipantJoined(int, RemoteUserProxy)
+	 * @see ch.iserver.ace.collaboration.jupiter.server.Forwarder#sendParticipantJoined(int, ch.iserver.ace.net.RemoteUserProxy)
 	 */
 	public void sendParticipantJoined(int participantId, RemoteUserProxy proxy) {
 		getDocument().participantJoined(participantId, proxy);
 	}
 	
 	/**
-	 * @see ch.iserver.ace.collaboration.jupiter.server.ParticipantProxy#close()
+	 * @see ch.iserver.ace.collaboration.jupiter.server.Forwarder#close()
 	 */
 	public void close() {
 		// ignore

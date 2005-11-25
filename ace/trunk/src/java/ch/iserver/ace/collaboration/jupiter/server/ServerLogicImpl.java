@@ -178,7 +178,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	 */
 	protected Forwarder createForwarder(int participantId, ParticipantConnection connection, Algorithm algorithm) {
 		AcknowledgeStrategy acknowledger = getAcknowledgeStrategyFactory().createStrategy();
-		ParticipantProxy proxy = new ParticipantProxy(participantId, algorithm, connection);
+		ParticipantForwarder proxy = new ParticipantForwarder(participantId, algorithm, connection);
 		proxy.setAcknowledgeStrategy(acknowledger);
 		return proxy;
 	}

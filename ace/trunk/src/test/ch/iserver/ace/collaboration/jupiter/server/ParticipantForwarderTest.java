@@ -39,7 +39,7 @@ import ch.iserver.ace.net.RemoteUserProxyStub;
 import ch.iserver.ace.text.InsertOperation;
 
 
-public class ParticipantProxyTest extends TestCase {
+public class ParticipantForwarderTest extends TestCase {
 	
 	private MockControl algorithmCtrl;
 	
@@ -83,7 +83,7 @@ public class ParticipantProxyTest extends TestCase {
 		connectionCtrl.replay();
 		
 		// test
-		ParticipantProxy proxy = new ParticipantProxy(1, algorithm, connection);
+		ParticipantForwarder proxy = new ParticipantForwarder(1, algorithm, connection);
 		proxy.setAcknowledgeStrategy(acknowledger);
 		proxy.sendCaretUpdate(2, update);
 		
@@ -113,7 +113,7 @@ public class ParticipantProxyTest extends TestCase {
 		connectionCtrl.replay();
 		
 		// test
-		ParticipantProxy proxy = new ParticipantProxy(1, algorithm, connection);
+		ParticipantForwarder proxy = new ParticipantForwarder(1, algorithm, connection);
 		proxy.setAcknowledgeStrategy(acknowledger);
 		proxy.sendOperation(2, operation);
 		
@@ -133,7 +133,7 @@ public class ParticipantProxyTest extends TestCase {
 		connectionCtrl.replay();
 		
 		// test
-		ParticipantProxy proxy = new ParticipantProxy(1, algorithm, connection);
+		ParticipantForwarder proxy = new ParticipantForwarder(1, algorithm, connection);
 		proxy.sendParticipantJoined(2, user);
 	}
 
@@ -146,7 +146,7 @@ public class ParticipantProxyTest extends TestCase {
 		connectionCtrl.replay();
 		
 		// test
-		ParticipantProxy proxy = new ParticipantProxy(1, algorithm, connection);
+		ParticipantForwarder proxy = new ParticipantForwarder(1, algorithm, connection);
 		proxy.sendParticipantLeft(2, Participant.DISCONNECTED);
 	}
 
