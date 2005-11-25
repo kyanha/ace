@@ -53,7 +53,24 @@ public class CollaborativeEditorKit extends StyledEditorKit implements ViewFacto
 	}
 
 	public View create(Element elem) {
-		return new CollaborativeEditorView(elem);
+		System.out.println("createView: " + elem.getName());
+//		return new CollaborativeEditorView(elem);
+/*String kind = elem.getName();
+if (kind != null) {
+if (kind.equals(AbstractDocument.ContentElementName)) {
+return new CollaborativeEditorView(elem);
+} else if (kind.equals(AbstractDocument.ParagraphElementName)) {
+return new ParagraphView(elem);
+} else if (kind.equals(AbstractDocument.SectionElementName)) {
+return new BoxView(elem, View.Y_AXIS);
+} else if (kind.equals(StyleConstants.ComponentElementName)) {
+return new ComponentView(elem);
+} else if (kind.equals(StyleConstants.IconElementName)) {
+return new IconView(elem);
+}
+}*/
+return new CollaborativeEditorView(elem);
+
 	}
 	
 	public Action[] getActions() {

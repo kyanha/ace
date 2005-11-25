@@ -60,7 +60,7 @@ public class CollaborativeTextPane extends JTextPane {
 		}
 		super.setSize(d);
 	}
-	
+		
 	public boolean getScrollableTracksViewportWidth() {
 		return false;
 	}

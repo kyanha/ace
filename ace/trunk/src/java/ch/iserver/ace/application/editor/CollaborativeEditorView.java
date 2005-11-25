@@ -27,15 +27,22 @@ import java.awt.*;
 
 
 
-public class CollaborativeEditorView extends WrappedPlainView {
+public class CollaborativeEditorView extends BoxView { //WrappedPlainView {
 
 	public CollaborativeEditorView(Element elem) {
-		super(elem);
+		super(elem, View.Y_AXIS);
 	}
 	
 	public void paint(Graphics g, Shape a) {
 		super.paint(g, a);
 		g.drawString(".", 10, 10);
 	}
+
+
+/*public float getTabbedSpan(float x, TabExpander e) {
+float result = super.getTabbedSpan(x, e);
+this.preferenceChanged(this, true, false);
+return result;
+}*/
 
 }
