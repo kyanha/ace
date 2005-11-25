@@ -133,8 +133,8 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	 */
 	protected ServerDocument createServerDocument(DocumentModel document) {
 		ServerDocument doc = new ServerDocumentImpl();
-		doc.insertString(0, 0, document.getContent());
-		doc.updateCaret(0, document.getDot(), document.getMark());
+		doc.insertString(ParticipantConnection.PUBLISHER_ID, 0, document.getContent());
+		doc.updateCaret(ParticipantConnection.PUBLISHER_ID, document.getDot(), document.getMark());
 		return doc;
 	}
 	
@@ -163,7 +163,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 						PublisherConnection.PUBLISHER_ID, 
 						new AlgorithmWrapperImpl(algorithm), 
 						forwarder);
-		Forwarder proxy = createForwarder(0, connection, algorithm);
+		Forwarder proxy = createForwarder(ParticipantConnection.PUBLISHER_ID, connection, algorithm);
 		addParticipant(new SessionParticipant(port, proxy, connection, null));
 		return (PublisherPort) incomingDomain.wrap(port, PublisherPort.class);
 	}
