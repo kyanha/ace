@@ -236,15 +236,18 @@ public class DocumentManagerImpl implements ItemSelectionChangeListener, Prefere
 	 * @see ch.iserver.ace.application.DocumentManager#closeDocument(ch.iserver.ace.application.DocumentItem)
 	 */
 	public void closeDocument(DocumentItem item) {
-		if (item.getType() == DocumentItem.PUBLISHED) {
-			item.conceal();
-		} else if(item.getType() == DocumentItem.JOINED) {
+		if(item.getType() == DocumentItem.JOINED) {
+			// just leave joined items
 			item.leave();
-		}
-		int index = documentController.indexOf(item);
-		documentController.removeDocument(item);
-		if (documentController.getViewSourceList().size() > 0) {
-			documentController.setSelectedIndex(index == 0 ? 0 : index - 1);
+		} else {
+			if (item.getType() == DocumentItem.PUBLISHED) {
+				item.conceal();
+			}
+			int index = documentController.indexOf(item);
+			documentController.removeDocument(item);
+			if (documentController.getViewSourceList().size() > 0) {
+				documentController.setSelectedIndex(index == 0 ? 0 : index - 1);
+			}
 		}
 	}
 
@@ -258,12 +261,15 @@ public class DocumentManagerImpl implements ItemSelectionChangeListener, Prefere
 			Iterator it = documents.iterator();
 			while (it.hasNext()) {
 				DocumentItem item = (DocumentItem) it.next();
-				if (item.getType() == DocumentItem.PUBLISHED) {
-					item.conceal();
-				} else if(item.getType() == DocumentItem.JOINED) {
+				if(item.getType() == DocumentItem.JOINED) {
+					// just leave joined items
 					item.leave();
+				} else {
+					if (item.getType() == DocumentItem.PUBLISHED) {
+						item.conceal();
+					}
+					documentController.removeDocument(item);
 				}
-				documentController.removeDocument(item);
 			}
 		} finally {
 			documents.getReadWriteLock().readLock().unlock();
