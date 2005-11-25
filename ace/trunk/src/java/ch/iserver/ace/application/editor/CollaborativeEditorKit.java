@@ -53,7 +53,7 @@ public class CollaborativeEditorKit extends StyledEditorKit implements ViewFacto
 	}
 
 	public View create(Element elem) {
-		System.out.println("createView: " + elem.getName());
+//		System.out.println("createView: " + elem.getName());
 //		return new CollaborativeEditorView(elem);
 /*String kind = elem.getName();
 if (kind != null) {

@@ -27,10 +27,10 @@ import java.awt.*;
 
 
 
-public class CollaborativeEditorView extends BoxView { //WrappedPlainView {
+public class CollaborativeEditorView extends WrappedPlainView {
 
 	public CollaborativeEditorView(Element elem) {
-		super(elem, View.Y_AXIS);
+		super(elem);
 	}
 	
 	public void paint(Graphics g, Shape a) {
