@@ -106,10 +106,10 @@ public class RemoteUserSession {
 			initiate();
 		if (mainConnection == null) {
 			Channel channel = startNewChannel(CHANNEL_MAIN);
-			LOG.debug("main channel started");
+			LOG.debug("main channel to ["+user.getUserDetails().getUsername()+"] started");
 			mainConnection = new MainConnection(channel);
 		} else {
-			LOG.debug("main channel available");
+			LOG.debug("main channel to ["+user.getUserDetails().getUsername()+"] available");
 		}
 		return mainConnection;
 	}
@@ -132,7 +132,7 @@ public class RemoteUserSession {
 	 * @return
 	 */
 	public SessionConnectionImpl addSessionConnection(String docId, Channel collaborationChannel) {
-		LOG.debug("--> addSessionConnection() for doc ["+docId+", "+collaborationChannel+"]");
+		LOG.debug("--> addSessionConnection() for doc ["+docId+"]");
 		SessionConnectionImpl conn = new SessionConnectionImpl(docId, this, 
 				collaborationChannel, SerializerImpl.getInstance());
 		sessionConnections.put(docId, conn);

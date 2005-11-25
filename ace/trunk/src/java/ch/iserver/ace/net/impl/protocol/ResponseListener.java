@@ -71,6 +71,7 @@ public class ResponseListener implements ReplyListener {
 	 */
 	public void receiveRPY(Message message) throws AbortChannelException {
 		byte[] data = read(message);
+		LOG.error("--> receiveRPY("+(new String(data))+")");
 		try {
 			QueryInfo info = (QueryInfo) message.getChannel().getAppData();
 			handler.setMetaData(info);
@@ -84,6 +85,7 @@ public class ResponseListener implements ReplyListener {
 			//TODO: handling
 			LOG.error("could not deserialize ["+de.getMessage()+"]");
 		}
+		LOG.error("<-- receiveRPY()");
 	}
 
 

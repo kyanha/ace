@@ -64,20 +64,19 @@ public class StartChannelListenerImpl implements StartChannelListener {
 	 */
 	public void startChannel(Channel channel, String encoding, String data)
 			throws StartChannelException {
-		LOG.debug("--> startChannel("+channel+", "+encoding+", "+data+")");
+		LOG.debug("--> acceptChannel("+channel+", channel type =  ["+data+"] )");
 		RequestHandler requestHandler = null;
 		if (data.equals(RemoteUserSession.CHANNEL_MAIN)) {
 			requestHandler = mainHandler;
 		} else if (data.equals(RemoteUserSession.CHANNEL_COLLABORATION)){
-			//TODO: add a SessionRequestHandler
 			
-			//for each collaborative session create new CollaborationRequestHandler
+			//for each collaborative session create new SessionRequestHandler
 			requestHandler = SessionRequestHandlerFactory.getInstance().createHandler();
 		} else {
 			throw new StartChannelException(BEEPError.CODE_PARAMETER_INVALID, "channel type not known");
 		}
 		channel.setRequestHandler(requestHandler);
-		LOG.debug("<-- startChannel()");
+		LOG.debug("<-- acceptChannel()");
 	}
 
 	/**
