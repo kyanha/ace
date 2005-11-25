@@ -1,13 +1,8 @@
 package ch.iserver.ace.net.impl.protocol;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import junit.framework.TestCase;
 import ch.iserver.ace.net.impl.NetworkConstants;
-import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
+import ch.iserver.ace.net.impl.PortableDocumentExt;
 
 public class ResponseParserHandlerTest extends TestCase {
 
@@ -16,38 +11,48 @@ public class ResponseParserHandlerTest extends TestCase {
 		ResponseParserHandler handler = new ResponseParserHandler();
 		Deserializer deserializer = DeserializerImpl.getInstance();
 		
-		byte[] data = PUBLISHED_DOCUMENTS.getBytes(NetworkConstants.DEFAULT_ENCODING);
-		String userId = "asdf-aa234";
-		QueryInfo qInfo = new QueryInfo(userId, ProtocolConstants.PUBLISHED_DOCUMENTS);
+		byte[] data = XML_JOIN_DOCUMENT.getBytes(NetworkConstants.DEFAULT_ENCODING);
+		String userId = "adfasdf-21";
+		QueryInfo qInfo = new QueryInfo(userId, ProtocolConstants.JOIN_DOCUMENT);
 		handler.setMetaData(qInfo);
+		
 		deserializer.deserialize(data, handler);
 		Request result = handler.getResult();
 		
-		assertEquals(result.getType(), ProtocolConstants.PUBLISHED_DOCUMENTS);
-		
-		Map docs = new HashMap();
-		docs.put("WERS24-RE2", "testfile.txt");
-		docs.put("23SSWD-3ED", "meeting2.txt");
-		docs.put("ADSFBW-45S", "notes232.txt");
-		List payload = (List) result.getPayload();
-		Iterator iter = payload.iterator();
-		while (iter.hasNext()) {
-			DocumentInfo info = (DocumentInfo) iter.next();
-			assertTrue(docs.containsKey(info.getDocId()));
-			assertTrue(docs.containsValue(info.getName()));
-			assertEquals(userId, info.getUserId());
-			
-		}
+		assertEquals(result.getType(), ProtocolConstants.JOIN_DOCUMENT);
+		PortableDocumentExt doc = (PortableDocumentExt) result.getPayload();
+		assertEquals("ASDF-23", doc.getDocumentId());
+		assertEquals("adfasdf-21", doc.getPublisherId());
+		int[] ids = doc.getParticipantIds();
+		assertEquals(3, ids.length);
+		assertEquals(0, ids[0]);
+		assertEquals(1, ids[1]);
+		assertEquals(2, ids[2]);
+		//TODO: write all possible assertions
 	}
 
-	private static final String PUBLISHED_DOCUMENTS = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+	public static final String XML_JOIN_DOCUMENT = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
 	"<ace><response>" +
-	"<publishedDocs>" +
-	"<doc name=\"testfile.txt\" id=\"WERS24-RE2\" />" +
-	"<doc name=\"meeting2.txt\" id=\"ADSFBW-45S\" />" +
-	"<doc name=\"notes232.txt\" id=\"23SSWD-3ED\" />" +
-	"</publishedDocs>" +
-	"</response></ace>";
+	"<document id=\"ASDF-23\" userid=\"adfasdf-21\">" +
+	"<participants>" +
+	"<participant id=\"0\">" +
+	"<user id=\"adfasdf-21\" name=\"John Huderi\" address=\"254.23.12.98\" port=\"4123\" explicitDiscovery=\"false\"/>" +
+	"<selection mark=\"0\" dot=\"0\"/>" +
+	"</participant>" +
+	"<participant id=\"1\">" +
+	"<user id=\"sadfasd-24\" name=\"Jimmy Ritter\" address=\"123.43.45.21\" port=\"4123\" explicitDiscovery=\"false\"/>" +
+	"<selection mark=\"456\" dot=\"456\"/>" +
+	"</participant>" +
+	"<participant id=\"2\">" +
+	"<user id=\"cbvncvvc-24\" name=\"Samuel Fuchs\" address=\"123.43.12.197\" port=\"4123\" explicitDiscovery=\"false\"/>" +
+	"<selection mark=\"7\" dot=\"7\"/>" +
+	"</participant>" +
+	"</participants>" +
+	"<data>" +
+	"<![CDATA[0 11 Los gehts:  1 15 ich habe durst. 2 18  das sagst du mir? 1 20  dir sage ich alles!]]>" +
+	"</data>" +
+	"</document>" +
+	"</response></ace>";	
 	
 }
 

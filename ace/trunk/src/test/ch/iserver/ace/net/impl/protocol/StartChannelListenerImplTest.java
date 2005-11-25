@@ -36,7 +36,7 @@ public class StartChannelListenerImplTest extends TestCase {
 		channelCtrl.setDefaultMatcher(new RequestHandlerMatcher());
 		channelCtrl.replay();
 		
-		instance.startChannel(channel, "", "");
+		instance.startChannel(channel, "", RemoteUserSession.CHANNEL_MAIN);
 		
 		channelCtrl.verify();
 		handlerCtrl.verify();
