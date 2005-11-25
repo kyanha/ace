@@ -25,9 +25,9 @@ import org.apache.log4j.Logger;
 import org.beepcore.beep.core.InputDataStream;
 import org.beepcore.beep.core.MessageMSG;
 
-import ch.iserver.ace.net.SessionConnection;
 import ch.iserver.ace.net.impl.PortableDocumentExt;
 import ch.iserver.ace.net.impl.RemoteDocumentProxyExt;
+import ch.iserver.ace.net.impl.SessionConnectionImpl;
 
 /**
  * Client side request handler for a collaborative session.
@@ -66,7 +66,8 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 					if (!session.hasSessionConnection(docId)) {
 						session.addSessionConnection(docId, message.getChannel());
 					}
-					SessionConnection connection = session.getSessionConnection(docId);
+					SessionConnectionImpl connection = session.getSessionConnection(docId);
+					connection.setParticipantId(doc.getParticipantId());
 					RemoteDocumentProxyExt proxy = session.getUser().getSharedDocument(docId);
 					proxy.joinAccepted(doc, connection);
 				}
