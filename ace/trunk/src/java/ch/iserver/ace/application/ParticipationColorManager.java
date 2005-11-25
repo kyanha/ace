@@ -23,7 +23,6 @@ package ch.iserver.ace.application;
 
 import java.awt.Color;
 import java.util.HashMap;
-import java.util.Map;
 
 import ch.iserver.ace.collaboration.Participant;
 
@@ -31,7 +30,7 @@ import ch.iserver.ace.collaboration.Participant;
 
 public class ParticipationColorManager {
 
-	private Map participantColor;
+	private HashMap participantColorMap;
 	private int participantCount = 0;
 	private Color[] defaultColors = {
 		new Color(0xFF, 0x60, 0x60), new Color(0xFF, 0xDD, 0x60),
@@ -41,23 +40,34 @@ public class ParticipationColorManager {
 	};
 
 	public ParticipationColorManager() {
-		participantColor = new HashMap();//Collections.synchronizedMap(new HashMap());
+		participantColorMap = new HashMap();
 	}
 	
-	public synchronized Color addParticipant(Participant participant) {
-		Color newParticipantColor = defaultColors[participantCount++%8];
-		participantColor.put("" + participant.getParticipantId(), newParticipantColor);
-		return newParticipantColor;
+	public synchronized Color participantJoined(Participant participant) {
+		// add the new participant to the map and create new color for him
+		// or return the old color from this aprticipant
+		Color participantColor;
+		if(participantColorMap.containsKey("" + participant.getParticipantId())) {
+			// return old participant color
+			participantColor = getHighlightColor(participant);
+		} else {
+			// next participant color
+			participantColor = defaultColors[participantCount++%8];
+			participantColorMap.put("" + participant.getParticipantId(), participantColor);
+		}
+		return participantColor;
 	}
 	
-	public void removeParticipant(Participant participant) {
-		participantColor.remove("" + participant.getParticipantId());
+	public void participantLeft(Participant participant) {
+		// do nothing to keep the participants who left
+		//participantColorMap.remove("" + participant.getParticipantId());
 	}
 	
 	public Color getHighlightColor(Participant participant) {
-		if(participantColor.containsKey("" + participant.getParticipantId())) {
-			return (Color)participantColor.get("" + participant.getParticipantId());
+		if(participantColorMap.containsKey("" + participant.getParticipantId())) {
+			return (Color)participantColorMap.get("" + participant.getParticipantId());
 		}
 		return new Color(0xFF, 0xFF, 0xFF);
 	}
+
 }

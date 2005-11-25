@@ -32,6 +32,7 @@ import ca.odell.glazedlists.EventList;
 
 import javax.swing.text.*;
 import java.awt.*;
+import java.util.HashMap;
 
 
 
@@ -40,10 +41,12 @@ public class SessionCallbackImpl implements SessionCallback {
 	private EventList participantSourceList;
 	protected ParticipationColorManager participationColorManager;
 	private CollaborativeDocument doc;
+	private HashMap participantItemMap;
 
 	public SessionCallbackImpl() {
 		participantSourceList = new BasicEventList();
 		participationColorManager = new ParticipationColorManager();
+		participantItemMap = new HashMap();
 	}
 
 	/*public SessionCallbackImpl(StyledDocument doc) {
@@ -57,10 +60,14 @@ public class SessionCallbackImpl implements SessionCallback {
 	}
 	
 	public void participantJoined(Participant participant) {
-		Color pColor = participationColorManager.addParticipant(participant);
-		participantSourceList.add(new ParticipantItem(participant, pColor));
-		
+		// UPDATE MAP
+		Color pColor = participationColorManager.participantJoined(participant);
+		ParticipantItem mapParticipantItem = new ParticipantItem(participant, pColor);
+		participantItemMap.put("" + participant.getParticipantId(), mapParticipantItem);
+		participantSourceList.add(mapParticipantItem);		
 		System.out.println("participantJoined");
+
+		// create style for new participant or get his old style
 		Style pStyle = doc.getStyle("" + participant.getParticipantId());
 		if(pStyle != null) {
 			// style exists -> recolor document
@@ -70,15 +77,19 @@ public class SessionCallbackImpl implements SessionCallback {
 			pStyle = doc.addStyle("" + participant.getParticipantId(), null);
 			StyleConstants.setBackground(pStyle, pColor);
 		}
-		
+
 	}
 	
 	public void participantLeft(Participant participant, int code) {
-		Color pColor = participationColorManager.getHighlightColor(participant);
-		participantSourceList.remove(new ParticipantItem(participant, pColor));
-		participationColorManager.removeParticipant(participant);
-
+		// UPDATE MAP
+		participationColorManager.participantLeft(participant);
+		ParticipantItem mapParticipantItem = (ParticipantItem)participantItemMap.remove("" + participant.getParticipantId());
+		participantSourceList.remove(mapParticipantItem);
 		System.out.println("participantLeft");
+
+		// clean up listeners
+		mapParticipantItem.cleanUp();
+
 		// set color from left participant to grey
 		Style pStyle = doc.getStyle("" + participant.getParticipantId());
 		StyleConstants.setBackground(pStyle, new Color(0xDD, 0xDD, 0xDD));
