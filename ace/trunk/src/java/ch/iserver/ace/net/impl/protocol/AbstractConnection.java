@@ -26,9 +26,14 @@ public class AbstractConnection {
 			//AppData is kept only in-process
 			if (data != null)
 				channel.setAppData(data);
-			LOG.debug("--> sendMSG() with "+message.length+" bytes");
-			channel.sendMSG(output, listener);
-			LOG.debug("<-- sendMSG()");
+			
+			if (isEstablished()) {
+				LOG.debug("--> sendMSG() with "+message.length+" bytes");
+				channel.sendMSG(output, listener);
+				LOG.debug("<-- sendMSG()");
+			} else {
+				LOG.warn("channel not established, cannot send data.");
+			}
 		} catch (Exception e) {
 			throw new ProtocolException(e.getMessage());
 		}

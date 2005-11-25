@@ -26,6 +26,7 @@ import org.beepcore.beep.core.InputDataStream;
 import org.beepcore.beep.core.MessageMSG;
 
 import ch.iserver.ace.net.ParticipantPort;
+import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
 
 /**
  * Server side request handler for a collaborative session.
@@ -64,30 +65,13 @@ public class ParticipantRequestHandler extends AbstractRequestHandler {
 			if (rawData.length == PIGGYBACKED_MESSAGE_LENGTH) {
 				handlePiggybackedMessage(message);
 			} else {
-				
-				//TODO: implement (pass requests to ParticipantPort
-				
 				deserializer.deserialize(rawData, handler);
 				Request result = handler.getResult();
-				
-				
-				
-				
-				
-//				deserializer.deserialize(rawData, handler);
-//				Request response = handler.getResult();
-//				if (response.getType() == ProtocolConstants.JOIN_DOCUMENT) {
-//					PortableDocumentExt doc = (PortableDocumentExt) response.getPayload();
-//					String publisherId = doc.getPublisherId();
-//					String docId = doc.getDocumentId();
-//					RemoteUserSession session = SessionManager.getInstance().getSession(publisherId);
-//					if (!session.hasCollaborationConnection(docId)) {
-//						session.createCollaborationConnection(docId, message.getChannel());
-//					}
-//					RemoteDocumentProxyExt proxy = session.getUser().getSharedDocument(docId);
-//					proxy.joinAccepted(doc);
-//				}
-				
+				if (result.getType() == ProtocolConstants.LEAVE) {
+					port.leave();
+					LOG.debug("participant ["+((DocumentInfo)result.getPayload()).getParticipantId()+"] leave.");
+					//TODO: clean up participant...
+				}
 				
 				try {				
 					message.sendNUL(); //confirm reception of msg

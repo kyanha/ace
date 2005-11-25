@@ -73,11 +73,22 @@ public class RequestImpl implements Request {
 	static class DocumentInfo {
 		//TODO: user id can be removed, since we have it in the Request
 		private String docId, name, userId;
+		private int participantId;
 		
 		public DocumentInfo(String docId, String name, String userId) {
 			this.docId = docId;
 			this.name = name;
 			this.userId = userId;
+			participantId = -1;
+		}
+		
+		public DocumentInfo(String docId, int participantId) {
+			this.docId = docId;
+			this.participantId = participantId;
+		}
+		
+		public int getParticipantId() {
+			return participantId;
 		}
 
 		public String getDocId() {

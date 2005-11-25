@@ -126,9 +126,6 @@ public class RequestParserHandler extends ParserHandler {
 
 	}
 	
-	public void endElement(String uri, String localName, String qName) throws SAXException {
-	}
-	
 	
 	/* (non-Javadoc)
 	 * @see ch.iserver.ace.net.impl.protocol.ParserHandler#getResult()
