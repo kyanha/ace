@@ -21,6 +21,13 @@ public class ServerDocumentImplTest extends TestCase {
 		assertTrue(it.hasNext());
 		assertEquals(1, "x", (Fragment) it.next());
 		assertFalse(it.hasNext());
+		
+		doc = new ServerDocumentImpl();
+		doc.insertString(0, 0, "x");
+		assertEquals("x", doc.getText());
+		it = doc.getFragments();
+		assertTrue(it.hasNext());
+		assertEquals(0, "x", (Fragment) it.next());
 	}
 	
 	public void testSameParticipantInsertStart() {
