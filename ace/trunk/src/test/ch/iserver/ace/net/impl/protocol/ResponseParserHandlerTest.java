@@ -2,17 +2,19 @@ package ch.iserver.ace.net.impl.protocol;
 
 import junit.framework.TestCase;
 import ch.iserver.ace.net.impl.NetworkConstants;
+import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.PortableDocumentExt;
 
 public class ResponseParserHandlerTest extends TestCase {
 
 	
-	public void testPublishedDocuments() throws Exception {
+	public void testJoinDocument() throws Exception {
 		ResponseParserHandler handler = new ResponseParserHandler();
 		Deserializer deserializer = DeserializerImpl.getInstance();
 		
 		byte[] data = XML_JOIN_DOCUMENT.getBytes(NetworkConstants.DEFAULT_ENCODING);
-		String userId = "adfasdf-21";
+		String userId = "sadfasd-24";
+		NetworkServiceImpl.getInstance().setUserId(userId);
 		QueryInfo qInfo = new QueryInfo(userId, ProtocolConstants.JOIN_DOCUMENT);
 		handler.setMetaData(qInfo);
 		
@@ -21,6 +23,7 @@ public class ResponseParserHandlerTest extends TestCase {
 		
 		assertEquals(result.getType(), ProtocolConstants.JOIN_DOCUMENT);
 		PortableDocumentExt doc = (PortableDocumentExt) result.getPayload();
+		assertEquals(1, doc.getParticipantId());
 		assertEquals("ASDF-23", doc.getDocumentId());
 		assertEquals("adfasdf-21", doc.getPublisherId());
 		int[] ids = doc.getParticipantIds();
