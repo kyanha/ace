@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import ch.iserver.ace.DocumentDetails;
@@ -50,6 +51,8 @@ import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.PortableDocument;
 import ch.iserver.ace.net.RemoteUserProxy;
+import ch.iserver.ace.util.AopUtil;
+import ch.iserver.ace.util.LoggingInterceptor;
 import ch.iserver.ace.util.ParameterValidator;
 import ch.iserver.ace.util.ThreadDomain;
 
@@ -114,7 +117,11 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 		this.failureHandler = (FailureHandler) incomingDomain.wrap(this, FailureHandler.class);
 		
 		this.document = createServerDocument(document);
-		this.forwarder.addForwarder(new DocumentUpdater(this.document));
+		
+		Forwarder forwarderTarget = new DocumentUpdater(this.document);
+		LoggingInterceptor interceptor = new LoggingInterceptor(DocumentUpdater.class, Level.DEBUG);
+		Forwarder forwarder = (Forwarder) AopUtil.wrap(forwarderTarget, Forwarder.class, interceptor);
+		this.forwarder.addForwarder(forwarder);
 	}
 	
 	/**
@@ -437,6 +444,10 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 		if (connection == null) {
 			LOG.info("participant with id " + participantId + " not (or no longer) in session");
 		} else {
+			RemoteUserProxy user = connection.getUser();
+			if (user == null) {
+				System.out.println("user is null ...");
+			}
 			blacklist.add(connection.getUser().getId());
 			removeParticipant(participantId);
 			connection.sendKicked();
