@@ -38,10 +38,11 @@ import ch.iserver.ace.net.RemoteUserProxy;
 public class PortableDocumentImpl implements PortableDocumentExt {
 
 	private List fragments;
-	private Map selections; 	//id to caretupdate
-	private Map proxies;		//id to remoteuserproxy
-	private String id;
+	private Map selections; 	//participantId to caretupdate
+	private Map proxies;		//participantId to remoteuserproxy
+	private String docId;
 	private String publisherId;
+	private int participantId;
 	
 	public PortableDocumentImpl() {
 		fragments = Collections.synchronizedList(new ArrayList());
@@ -66,11 +67,11 @@ public class PortableDocumentImpl implements PortableDocumentExt {
 	}
 	
 	public void setDocumentId(String id) {
-		this.id = id;
+		this.docId = id;
 	}
 	
 	public String getDocumentId() {
-		return id;
+		return docId;
 	}
 	
 	public void setPublisherId(String publisherId) {
@@ -81,6 +82,13 @@ public class PortableDocumentImpl implements PortableDocumentExt {
 		return publisherId;
 	}
 	
+	public int getParticipantId() {
+		return participantId;
+	}
+	
+	public void setParticpantId(int id) {
+		this.participantId = id;
+	}
 	
 	/*********************************************/
 	/** methods from interface PortableDocument **/
@@ -122,7 +130,7 @@ public class PortableDocumentImpl implements PortableDocumentExt {
 	}
 	
 	public String toString() {
-		return "PortableDocumentImpl("+id+", "+publisherId+", "+proxies.size()+" participants, "+fragments.size()+" fragments, "+selections.size()+" selections)";
+		return "PortableDocumentImpl("+docId+", "+publisherId+", "+proxies.size()+" participants, "+fragments.size()+" fragments, "+selections.size()+" selections)";
 	}
 
 }

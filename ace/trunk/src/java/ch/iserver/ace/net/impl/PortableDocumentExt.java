@@ -30,6 +30,9 @@ import ch.iserver.ace.net.PortableDocument;
  */
 public interface PortableDocumentExt extends PortableDocument {
 
+	public int getParticipantId();
+	
+	public void setParticpantId(int id);
 	
 	public void addFragment(Fragment fragment);
 	
