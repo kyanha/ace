@@ -82,6 +82,9 @@ class AcknowledgeStrategyImpl implements AcknowledgeStrategy {
 		if (future == null) {
 			throw new IllegalStateException("cannot reset unscheduled AcknowledgeManager");
 		}
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("reset timer of AcknowledgeStrategy " + this);
+		}
 		future.cancel(false);
 		schedule();
 	}
@@ -91,9 +94,12 @@ class AcknowledgeStrategyImpl implements AcknowledgeStrategy {
 	 */
 	public void init(final AcknowledgeAction action) {
 		ParameterValidator.notNull("action", action);
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("initialize AcknowledgeStrategy " + this);
+		}
 		this.runnable= new Runnable() {
 			public void run() {
-				LOG.info("executing acknowledge action");
+				LOG.debug("executing acknowledge action ...");
 				action.execute();
 			}
 		};
@@ -104,6 +110,9 @@ class AcknowledgeStrategyImpl implements AcknowledgeStrategy {
 	 * @see ch.iserver.ace.collaboration.jupiter.AcknowledgeStrategy#destroy()
 	 */
 	public void destroy() {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("destroy AcknowledgeStrategy " + this);
+		}
 		future.cancel(false);
 	}
 	
@@ -111,6 +120,9 @@ class AcknowledgeStrategyImpl implements AcknowledgeStrategy {
 	 * Schedules the execution of the action with the executor service.
 	 */
 	protected void schedule() {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("reschedule execution of AcknowledgeStrategy " + this);
+		}
 		this.future = executorService.scheduleWithFixedDelay(runnable, delay, delay, TimeUnit.SECONDS);
 	}
 	

@@ -47,12 +47,15 @@
      <property name="sessionFactory"><ref local="sessionFactory"/></property>
   </bean>
   
-  <bean id="acknowledgeStrategyFactory" class="ch.iserver.ace.collaboration.jupiter.NullAcknowledgeStrategyFactory">
-    <!--<constructor-arg><ref local="acknowledgeStrategyExecutorService"/></constructor-arg> -->
+  <bean id="acknowledgeStrategyFactory" class="ch.iserver.ace.collaboration.jupiter.NullAcknowledgeStrategyFactory"/>
+  
+  <!--<bean id="acknowledgeStrategyFactory" class="ch.iserver.ace.collaboration.jupiter.AcknowledgeStrategyFactoryImpl">
+    <constructor-arg><ref local="acknowledgeStrategyExecutorService"/></constructor-arg>
+    <property name="delay"><value>120</value></property>
   </bean>
   
   <bean id="acknowledgeStrategyExecutorService" class="edu.emory.mathcs.backport.java.util.concurrent.ScheduledThreadPoolExecutor">
     <constructor-arg><value>3</value></constructor-arg>
-  </bean>
+  </bean>-->
   
 </beans>

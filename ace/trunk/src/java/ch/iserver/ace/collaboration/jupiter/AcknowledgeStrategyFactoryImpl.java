@@ -21,6 +21,8 @@
 
 package ch.iserver.ace.collaboration.jupiter;
 
+import org.apache.log4j.Logger;
+
 import ch.iserver.ace.util.ParameterValidator;
 import edu.emory.mathcs.backport.java.util.concurrent.ScheduledExecutorService;
 
@@ -29,6 +31,11 @@ import edu.emory.mathcs.backport.java.util.concurrent.ScheduledExecutorService;
  */
 public class AcknowledgeStrategyFactoryImpl implements AcknowledgeStrategyFactory {
 
+	/**
+	 * Logger used to create debug output.
+	 */
+	private static final Logger LOG = Logger.getLogger(AcknowledgeStrategyFactoryImpl.class);
+	
 	/**
 	 * The executor service passed as argument to the AcknowledgeStrategyImpl 
 	 * class.
@@ -75,6 +82,9 @@ public class AcknowledgeStrategyFactoryImpl implements AcknowledgeStrategyFactor
 	 * @see ch.iserver.ace.collaboration.jupiter.AcknowledgeStrategyFactory#createStrategy()
 	 */
 	public AcknowledgeStrategy createStrategy() {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("creating AcknowledgeStrategy using delay " + delay);
+		}
 		return new AcknowledgeStrategyImpl(executorService, delay);
 	}
 
