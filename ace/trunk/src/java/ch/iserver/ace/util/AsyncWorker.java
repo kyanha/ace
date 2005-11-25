@@ -32,14 +32,34 @@ import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
  */
 public class AsyncWorker extends Worker implements AsyncExceptionHandler {
 	
+	/**
+	 * The queue from which invocations are taken.
+	 */
 	private final BlockingQueue queue;
 	
+	/**
+	 * The AsyncExceptionHandler used by this class. 
+	 */
 	private AsyncExceptionHandler handler;
 	
+	/**
+	 * Creates a new AsyncWorker taking invocations from the given
+	 * queue.
+	 * 
+	 * @param queue the queue from which invocations are taken
+	 */
 	public AsyncWorker(BlockingQueue queue) {
 		this("async-worker", queue);
 	}
 	
+	/**
+	 * Creates a new AsyncWorker with the given name. It listens on the
+	 * given queue for AsyncMethodInvocation objects, which are then
+	 * executed on this worker thread.
+	 * 
+	 * @param name the name of the worker
+	 * @param queue the queue from which invocations are taken
+	 */
 	public AsyncWorker(String name, BlockingQueue queue) {
 		super("async-worker:" + name);
 		ParameterValidator.notNull("queue", queue);
@@ -48,10 +68,20 @@ public class AsyncWorker extends Worker implements AsyncExceptionHandler {
 		setDaemon(true);
 	}
 	
+	/**
+	 * Sets the exception handler for this worker.
+	 * 
+	 * @param handler the new exception handler
+	 */
 	public void setExceptionHandler(AsyncExceptionHandler handler) {
 		this.handler = handler == null ? this : handler;
 	}
 	
+	/**
+	 * Extracts a method invocation from the queue and executes it.
+	 * 
+	 * @see ch.iserver.ace.util.Worker#doWork()
+	 */
 	protected void doWork() throws InterruptedException {
 		AsyncMethodInvocation invocation = (AsyncMethodInvocation) queue.take();
 		try {
@@ -62,6 +92,10 @@ public class AsyncWorker extends Worker implements AsyncExceptionHandler {
 		}
 	}
 	
+	/**
+	 * Default exception handler. Prints a stack trace in the console.
+	 * @see ch.iserver.ace.util.AsyncExceptionHandler#handleException(ch.iserver.ace.util.AsyncExecutionException)
+	 */
 	public void handleException(AsyncExecutionException e) {
 		e.printStackTrace();
 	}
