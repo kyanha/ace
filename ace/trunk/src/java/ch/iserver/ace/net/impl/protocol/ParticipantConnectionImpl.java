@@ -125,36 +125,37 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 	}
 
 	public void sendRequest(int participantId, Request request) {
-		// TODO Auto-generated method stub
+		LOG.info("--> sendRequest("+participantId+", "+request+")");
 		
 	}
 
 	public void sendCaretUpdateMessage(int participantId, CaretUpdateMessage message) {
-		// TODO Auto-generated method stub
+		LOG.info("--> sendCaretUpdateMessage("+participantId+", "+message+")");
 		
 	}
 	
 	public void sendAcknowledge(int siteId, Timestamp timestamp) {
-		// TODO Auto-generated method stub
+		LOG.info("--> sendAcknowledge("+siteId+", "+timestamp+")");
 		
 	}
 
 	public void sendParticipantJoined(int participantId, RemoteUserProxy proxy) {
-		// TODO Auto-generated method stub
+		LOG.info("--> sendParticipantJoined("+participantId+", "+proxy.getUserDetails().getUsername()+")");
 		
 	}
 
 	public void sendParticipantLeft(int participantId, int reason) {
-		// TODO Auto-generated method stub
+		LOG.info("--> sendParticipantLeft("+participantId+", "+reason+")");
 		
 	}
 
 	public void sendKicked() {
-		// TODO Auto-generated method stub
+		LOG.info("--> sendKicked()");
 		
 	}
 	
 	public void close() {
+		LOG.info("--> close("+getParticipantId()+", "+session.getUser().getUserDetails().getUsername()+")");
 		//TODO: consider if on session shutdown it is more appropriate to 
 		//notify the participant on close() invocation or on DocumentServer.shutdown()
 		//invocation
@@ -163,6 +164,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 		} catch (BEEPException be) {
 			LOG.warn("could not close channel ["+be.getMessage()+"]");
 		}
+		LOG.info("<-- close()");
 	}
 	
 //	public boolean equals(Object obj) {
