@@ -69,7 +69,11 @@ public class UserRegistryImpl implements UserRegistry {
 	 * @see ch.iserver.ace.collaboration.jupiter.UserRegistry#addUser(ch.iserver.ace.net.RemoteUserProxy)
 	 */
 	public MutableRemoteUser addUser(RemoteUserProxy proxy) {
-		MutableRemoteUser user = new RemoteUserImpl(proxy);
+		MutableRemoteUser user = getUser(proxy.getId());
+		if (user != null) {
+			return user;
+		}
+		user = new RemoteUserImpl(proxy);
 		users.put(user.getId(), user);
 		return user;
 	}
