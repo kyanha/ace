@@ -120,8 +120,8 @@ class CompositeForwarderImpl implements CompositeForwarder {
 		Iterator it = getForwarders();
 		while (it.hasNext()) {
 			Forwarder forwarder = (Forwarder) it.next();
-			removeForwarder(forwarder);
 			forwarder.close();
+			it.remove();
 		}
 	}
 	
