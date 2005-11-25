@@ -446,9 +446,10 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 		} else {
 			RemoteUserProxy user = connection.getUser();
 			if (user == null) {
-				System.out.println("user is null ...");
+				LOG.warn("connection did not return user, cannot add user to blacklist");
+			} else {
+				blacklist.add(connection.getUser().getId());
 			}
-			blacklist.add(connection.getUser().getId());
 			removeParticipant(participantId);
 			connection.sendKicked();
 			connection.close();
