@@ -120,5 +120,9 @@ public class PortableDocumentImpl implements PortableDocumentExt {
 	public Iterator getFragments() {
 		return fragments.iterator();
 	}
+	
+	public String toString() {
+		return "PortableDocumentImpl("+id+", "+publisherId+", "+proxies.size()+" participants, "+fragments.size()+" fragments, "+selections.size()+" selections)";
+	}
 
 }

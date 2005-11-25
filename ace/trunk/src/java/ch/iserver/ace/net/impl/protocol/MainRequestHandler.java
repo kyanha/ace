@@ -75,7 +75,7 @@ public class MainRequestHandler extends AbstractRequestHandler {
 					DiscoveryManager discoveryManager = DiscoveryManagerFactory.getDiscoveryManager(null);
 					if (!discoveryManager.hasSessionEstablished(userid)) {
 						RemoteUserProxyExt user = discoveryManager.getUser(userid);
-						LOG.debug("create new session for ["+user.getMutableUserDetails().getUsername()+"]");
+						LOG.debug("create RemoteUserSession for ["+user.getMutableUserDetails().getUsername()+"]");
 						SessionManager manager = SessionManager.getInstance();
 						Channel mainChannel = message.getChannel();
 						manager.createSession(user, (TCPSession) mainChannel.getSession(), mainChannel);

@@ -64,7 +64,7 @@ public class StartChannelListenerImpl implements StartChannelListener {
 	 */
 	public void startChannel(Channel channel, String encoding, String data)
 			throws StartChannelException {
-		LOG.debug("--> acceptChannel("+channel+", channel type =  ["+data+"] )");
+		LOG.debug("--> acceptChannel("+channel+", type="+data+")");
 		RequestHandler requestHandler = null;
 		if (data.equals(RemoteUserSession.CHANNEL_MAIN)) {
 			requestHandler = mainHandler;

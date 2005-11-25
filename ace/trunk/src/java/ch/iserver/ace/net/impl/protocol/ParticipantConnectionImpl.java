@@ -83,7 +83,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 	}
 	
 	public void joinAccepted(ParticipantPort port) {
-		LOG.info("joinAccepted()");
+		LOG.info("--> joinAccepted()");
 		joinAccepted = true;
 		this.port = port;
 		//intiate collaboration channel
@@ -94,6 +94,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 			NetworkServiceImpl.getInstance().getCallback().serviceFailure(
 					FailureCodes.CHANNEL_FAILURE, "cannot start channel for collaboration", ce);
 		}
+		LOG.info("<-- joinAccepted()");
 	}
 	
 	public void joinRejected(int code) {

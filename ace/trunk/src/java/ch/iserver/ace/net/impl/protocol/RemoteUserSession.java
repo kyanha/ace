@@ -200,7 +200,7 @@ public class RemoteUserSession {
 	private Channel startNewChannel(String type) throws ConnectionException {
 		try {
 			String uri = NetworkProperties.get(NetworkProperties.KEY_PROFILE_URI);
-			LOG.debug("startChannel("+uri+", "+type+")");
+			LOG.debug("startChannel("+uri+", type="+type+")");
 			
 			StartChannelProfile profile = new StartChannelProfile(uri, false, type);
 			RequestHandler handler = null;
