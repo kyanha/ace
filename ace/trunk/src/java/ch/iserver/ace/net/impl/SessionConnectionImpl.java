@@ -89,6 +89,7 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 			byte[] data = serializer.createNotification(ProtocolConstants.LEAVE, this);
 			send(data, null, getReplyListener());
 		} catch (Exception e) {
+			e.printStackTrace();
 			LOG.error("exception processing leave ["+e+", "+e.getMessage()+"]");
 		}
 		LOG.debug("<-- leave()");

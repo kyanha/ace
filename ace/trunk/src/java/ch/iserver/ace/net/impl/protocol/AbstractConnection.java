@@ -29,12 +29,14 @@ public class AbstractConnection {
 			
 			if (isEstablished()) {
 				LOG.debug("--> sendMSG() with "+message.length+" bytes");
+				LOG.debug(message+" "+output+" "+channel+" "+listener);
 				channel.sendMSG(output, listener);
 				LOG.debug("<-- sendMSG()");
 			} else {
 				LOG.warn("channel not established, cannot send data.");
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new ProtocolException(e.getMessage());
 		}
 	}
