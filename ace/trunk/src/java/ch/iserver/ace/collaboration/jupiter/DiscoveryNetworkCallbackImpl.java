@@ -34,10 +34,23 @@ import ch.iserver.ace.util.ParameterValidator;
  */
 class DiscoveryNetworkCallbackImpl implements DiscoveryNetworkCallback {
 	
+	/**
+	 * The user registry used to get a RemoteUser for a RemoteUserProxy.
+	 */
 	private final UserRegistry registry;
 	
+	/**
+	 * The callback to be notified.
+	 */
 	private final DiscoveryCallback callback;
 	
+	/**
+	 * Creates a new DiscoveryNetworkCallbackImpl interface. The passed in
+	 * callback is notified when this callback is notified.
+	 * 
+	 * @param callback the callback to be notified
+	 * @param registry the user registry to be used to get the remote user
+	 */
 	DiscoveryNetworkCallbackImpl(DiscoveryCallback callback, UserRegistry registry) {
 		ParameterValidator.notNull("callback", callback);
 		ParameterValidator.notNull("registry", registry);
@@ -45,10 +58,16 @@ class DiscoveryNetworkCallbackImpl implements DiscoveryNetworkCallback {
 		this.registry = registry;
 	}
 	
+	/**
+	 * @return the discovery callback to be notified
+	 */
 	private DiscoveryCallback getCallback() {
 		return callback;
 	}
 	
+	/**
+	 * @return the user registry used to get a remote user for a proxy
+	 */
 	private UserRegistry getUserRegistry() {
 		return registry;
 	}
