@@ -22,10 +22,18 @@
 package ch.iserver.ace.util;
 
 /**
- *
+ * Exception handler for AsyncWorker. As an asynchronous execution happens
+ * on another thread than the callers, it is impossible to throw an
+ * exception back at the caller. The AsyncExceptionHandler is used in
+ * these cases to handle failing executions.
  */
 public interface AsyncExceptionHandler {
 	
+	/**
+	 * Handles an AsyncExecutionException.
+	 * 
+	 * @param e the exception
+	 */
 	void handleException(AsyncExecutionException e);
 	
 }
