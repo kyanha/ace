@@ -277,14 +277,6 @@ public class ServerDocumentImpl extends AbstractDocument implements
 			// TODO: fix RuntimeException
 			throw new RuntimeException(e);
 		}
-		
-		Iterator it = getFragments();
-		System.out.println("has " + getDefaultRootElement().getElementCount() + " children");
-		System.out.println("printing fragments ...");
-		while (it.hasNext()) {
-			Fragment fragment = (Fragment) it.next();
-			System.out.println("   " + fragment);
-		}
 	}
 	
 	/**
