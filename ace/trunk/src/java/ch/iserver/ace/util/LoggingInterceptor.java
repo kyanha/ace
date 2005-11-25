@@ -23,25 +23,68 @@ package ch.iserver.ace.util;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
- *
+ * Interceptor that logs the method invocations to the given logger category.
+ * The log level used to log can be specified as constructor argument. It
+ * defaults to Level.INFO.
  */
 public class LoggingInterceptor implements MethodInterceptor {
 	
+	/**
+	 * The Logger used by this instance.
+	 */
 	private Logger LOG;
 	
+	/**
+	 * Specifies whether method arguments should be logged. Defaults to true.
+	 */
 	private boolean loggingArguments = true;
 	
+	/**
+	 * The level to log messages.
+	 */
+	private Level level;
+	
+	/**
+	 * Creates a LoggingInterceptor using the given category. Standard
+	 * constructor logs with log level info.
+	 * 
+	 * @param category the log category
+	 */
 	public LoggingInterceptor(Class category) {
-		LOG = Logger.getLogger(category);
+		this(category, Level.INFO);
 	}
 	
+	/**
+	 * Creates a LoggingInterceptor using the given category and log
+	 * level to log.
+	 * 
+	 * @param category the log category
+	 * @param level the log level under which to log
+	 */
+	public LoggingInterceptor(Class category, Level level) {
+		LOG = Logger.getLogger(category);
+		this.level = level;
+	}
+	
+	/**
+	 * Specifies whether this interceptor logs the method arguments.
+	 * 
+	 * @return true iff method arguments are logged
+	 */
 	public boolean isLoggingArguments() {
 		return loggingArguments;
 	}
 	
+	/**
+	 * Sets the loggingArguments properties which specifies whether arguments
+	 * are logged.
+	 * 
+	 * @param loggingArguments true iff arguments should be logged
+	 */
 	public void setLoggingArguments(boolean loggingArguments) {
 		this.loggingArguments = loggingArguments;
 	}
@@ -50,17 +93,27 @@ public class LoggingInterceptor implements MethodInterceptor {
 	 * @see org.aopalliance.intercept.MethodInterceptor#invoke(org.aopalliance.intercept.MethodInvocation)
 	 */
 	public Object invoke(MethodInvocation invocation) throws Throwable {
-		logBefore(invocation);
-		try {
-			Object result = invocation.proceed();
-			logAfter(invocation, result);
-			return result;
-		} catch (Throwable t) {
-			logThrowable(invocation, t);
-			throw t;
+		if (!LOG.isEnabledFor(level)) {
+			return invocation.proceed();
+			
+		} else {
+			logBefore(invocation);
+			try {
+				Object result = invocation.proceed();
+				logAfter(invocation, result);
+				return result;
+			} catch (Throwable t) {
+				logThrowable(invocation, t);
+				throw t;
+			}
 		}
 	}
 	
+	/**
+	 * Prints a log statement before the invocation.
+	 * 
+	 * @param invocation the method invocation
+	 */
 	protected void logBefore(MethodInvocation invocation) {
 		StringBuffer buf = new StringBuffer();
 		buf.append("--> entering: ");
@@ -79,9 +132,15 @@ public class LoggingInterceptor implements MethodInterceptor {
 			}
 			buf.append(")");
 		}
-		LOG.info(buf.toString());
+		LOG.log(level, buf.toString());
 	}
 	
+	/**
+	 * Logs the result of the invocation.
+	 * 
+	 * @param invocation the method invocation
+	 * @param result the result
+	 */
 	protected void logAfter(MethodInvocation invocation, Object result) {
 		StringBuffer buf = new StringBuffer();
 		buf.append("<-- leaving: ");
@@ -90,9 +149,15 @@ public class LoggingInterceptor implements MethodInterceptor {
 			buf.append(": ");
 			buf.append(result);
 		}
-		LOG.info(buf.toString());
+		LOG.log(level, buf.toString());
 	}
 	
+	/**
+	 * Logs the throwing of an exception.
+	 * 
+	 * @param invocation the method invocation
+	 * @param th the exception thrown by the invocation
+	 */
 	protected void logThrowable(MethodInvocation invocation, Throwable th) {
 		StringBuffer buf = new StringBuffer();
 		buf.append("<-- ");
@@ -103,9 +168,15 @@ public class LoggingInterceptor implements MethodInterceptor {
 			buf.append("\n");
 			buf.append(th.toString());
 		}
-		LOG.info(buf.toString());
+		LOG.log(level, buf.toString());
 	}
 	
+	/**
+	 * Constructs the method signature.
+	 * 
+	 * @param invocation the method invocation
+	 * @return a String of the signature
+	 */
 	private String getSignature(MethodInvocation invocation) {
 		StringBuffer buf = new StringBuffer();
 		buf.append(invocation.getThis().getClass().getName());
