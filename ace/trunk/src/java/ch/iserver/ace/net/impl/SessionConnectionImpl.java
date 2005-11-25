@@ -23,12 +23,14 @@ package ch.iserver.ace.net.impl;
 
 import org.apache.log4j.Logger;
 import org.beepcore.beep.core.Channel;
+import org.beepcore.beep.core.ReplyListener;
 
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.Timestamp;
 import ch.iserver.ace.net.SessionConnection;
 import ch.iserver.ace.net.impl.protocol.AbstractConnection;
+import ch.iserver.ace.net.impl.protocol.ProtocolConstants;
 import ch.iserver.ace.net.impl.protocol.RemoteUserSession;
 import ch.iserver.ace.net.impl.protocol.Serializer;
 
@@ -42,17 +44,26 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 	private RemoteUserSession session;
 	private Serializer serializer;
 	
-	public SessionConnectionImpl(String docId, RemoteUserSession session, Channel channel, Serializer serializer) {
+	public SessionConnectionImpl(String docId, RemoteUserSession session, Channel channel, ReplyListener listener, Serializer serializer) {
 		super(channel);
 		this.docId = docId;
 		this.session = session;
 		this.serializer = serializer;
+		setReplyListener(listener);
 		super.LOG = Logger.getLogger(SessionConnectionImpl.class);
 	}
 	
 	public void setParticipantId(int id) {
 		this.participantId = id;
 	}
+	
+	public String getDocumentId() {
+		return docId;
+	}
+	
+	/***********************************************/
+	/** methods from interface SessionConnection  **/
+	/***********************************************/
 	
 	/*
 	 * @see ch.iserver.ace.net.SessionConnection#getParticipantId()
@@ -73,8 +84,14 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 	 * @see ch.iserver.ace.net.SessionConnection#leave()
 	 */
 	public void leave() {
-		// TODO Auto-generated method stub
-
+		LOG.debug("--> leave()");
+		try {
+			byte[] data = serializer.createNotification(ProtocolConstants.LEAVE, this);
+			send(data, null, getReplyListener());
+		} catch (Exception e) {
+			LOG.error("exception processing leave ["+e+", "+e.getMessage()+"]");
+		}
+		LOG.debug("<-- leave()");
 	}
 
 	/* (non-Javadoc)
