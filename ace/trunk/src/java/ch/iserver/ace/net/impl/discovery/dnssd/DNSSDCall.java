@@ -30,8 +30,6 @@ import org.apache.log4j.Logger;
  */
 abstract class DNSSDCall {
 	
-	private static Logger LOG = Logger.getLogger(DNSSDCall.class);
-	
 	/**
 	 * Executes the DNSSD call. In case of failure, a {@link RetryStrategy}
 	 * determines how many times the call should be retried.
@@ -45,7 +43,7 @@ abstract class DNSSDCall {
 		
 		while (strategy.shouldRetry()) {
 			try {
-				LOG.debug("--> makeCall()");
+				getLogger().debug("--> makeCall()");
 				return makeCall();
 			} catch (DNSSDCallException dex) {
 				try {
@@ -65,6 +63,8 @@ abstract class DNSSDCall {
 	 * @throws DNSSDCallException
 	 */
 	protected abstract Object makeCall() throws DNSSDCallException;
+	
+	protected abstract Logger getLogger();
 	
 	/**
 	 * Gets the {@link RetryStrategy}.

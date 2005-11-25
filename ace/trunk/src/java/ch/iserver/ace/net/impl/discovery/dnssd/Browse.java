@@ -21,6 +21,8 @@
 
 package ch.iserver.ace.net.impl.discovery.dnssd;
 
+import org.apache.log4j.Logger;
+
 import com.apple.dnssd.BrowseListener;
 import com.apple.dnssd.DNSSD;
 import com.apple.dnssd.DNSSDException;
@@ -31,6 +33,8 @@ import com.apple.dnssd.DNSSDService;
  */
 public class Browse extends DNSSDCall {
 
+	private Logger LOG = Logger.getLogger(Browse.class);
+	
 	private String registrationType;
 	private BrowseListener listener;
 	
@@ -54,5 +58,9 @@ public class Browse extends DNSSDCall {
 		} catch (DNSSDException de) {
 			throw new DNSSDCallException(de);
 		}
+	}
+
+	protected Logger getLogger() {
+		return LOG;
 	}
 }

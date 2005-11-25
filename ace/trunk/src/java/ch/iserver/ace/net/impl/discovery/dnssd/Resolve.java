@@ -21,6 +21,8 @@
 
 package ch.iserver.ace.net.impl.discovery.dnssd;
 
+import org.apache.log4j.Logger;
+
 import com.apple.dnssd.DNSSD;
 import com.apple.dnssd.DNSSDException;
 import com.apple.dnssd.ResolveListener;
@@ -30,6 +32,8 @@ import com.apple.dnssd.ResolveListener;
  */
 public class Resolve extends DNSSDCall {
 
+	private Logger LOG = Logger.getLogger(Resolve.class);
+	
 	private int flags, ifIndex;
 	private String serviceName, regType, domain;
 	private ResolveListener resolver;
@@ -62,6 +66,10 @@ public class Resolve extends DNSSDCall {
 		} catch (DNSSDException de) {
 			throw new DNSSDCallException(de);
 		}
+	}
+	
+	protected Logger getLogger() {
+		return LOG;
 	}
 
 }

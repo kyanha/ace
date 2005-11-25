@@ -21,6 +21,8 @@
 
 package ch.iserver.ace.net.impl.discovery.dnssd;
 
+import org.apache.log4j.Logger;
+
 import com.apple.dnssd.DNSRecord;
 import com.apple.dnssd.DNSSDException;
 import com.apple.dnssd.DNSSDRegistration;
@@ -30,6 +32,8 @@ import com.apple.dnssd.DNSSDRegistration;
  */
 public class TXTUpdate extends DNSSDCall {
 
+	private Logger LOG = Logger.getLogger(TXTUpdate.class);
+	
 	private DNSSDRegistration registration;
 	private byte[] rawTXT;
 	
@@ -50,6 +54,10 @@ public class TXTUpdate extends DNSSDCall {
 		} catch (DNSSDException de) {
 			throw new DNSSDCallException(de);
 		}
+	}
+	
+	protected Logger getLogger() {
+		return LOG;
 	}
 
 }

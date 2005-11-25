@@ -21,6 +21,8 @@
 
 package ch.iserver.ace.net.impl.discovery.dnssd;
 
+import org.apache.log4j.Logger;
+
 import com.apple.dnssd.DNSSD;
 import com.apple.dnssd.DNSSDException;
 import com.apple.dnssd.QueryListener;
@@ -30,6 +32,8 @@ import com.apple.dnssd.QueryListener;
  */
 public class QueryRecord extends DNSSDCall {
 
+	private Logger LOG = Logger.getLogger(QueryRecord.class);
+	
 	private int ifIndex, rrtype;
 	private String hostName;
 	private QueryListener listener;
@@ -58,6 +62,10 @@ public class QueryRecord extends DNSSDCall {
 		} catch (DNSSDException de) {
 			throw new DNSSDCallException(de);
 		}
+	}
+	
+	protected Logger getLogger() {
+		return LOG;
 	}
 
 }
