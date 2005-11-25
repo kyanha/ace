@@ -21,12 +21,16 @@
 
 package ch.iserver.ace.net.impl.discovery.dnssd;
 
+import org.apache.log4j.Logger;
+
 
 
 /**
  *
  */
 abstract class DNSSDCall {
+	
+	private static Logger LOG = Logger.getLogger(DNSSDCall.class);
 	
 	/**
 	 * Executes the DNSSD call. In case of failure, a {@link RetryStrategy}
@@ -41,6 +45,7 @@ abstract class DNSSDCall {
 		
 		while (strategy.shouldRetry()) {
 			try {
+				LOG.debug("--> makeCall()");
 				return makeCall();
 			} catch (DNSSDCallException dex) {
 				try {

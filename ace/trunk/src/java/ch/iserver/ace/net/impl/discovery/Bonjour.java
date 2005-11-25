@@ -59,8 +59,10 @@ public class Bonjour implements Discovery {
 	 * @inheritDoc
 	 */
 	public void execute() {
+		LOG.debug("--> execute()");
 		registration.register(username, userid);
 		peerDiscovery.browse();
+		LOG.debug("<-- execute()");
 	}
 	
 	public void abort() {
