@@ -30,5 +30,7 @@ public interface Item {
 	void addPropertyChangeListener(PropertyChangeListener listener);
 	
 	void removePropertyChangeListener(PropertyChangeListener listener);
+	
+	void cleanUp();
 
 }

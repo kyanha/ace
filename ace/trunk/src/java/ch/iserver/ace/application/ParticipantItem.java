@@ -61,15 +61,15 @@ public class ParticipantItem extends ItemImpl implements Comparable, PropertyCha
 		return participant;
 	}
 	
+	public void cleanUp() {
+		System.out.println("ParticipantItem::cleanUp()");
+		user.removePropertyChangeListener(this);
+	}
+	
 	public void propertyChange(PropertyChangeEvent evt) {
-		System.out.println("part: " + evt + "   newValue: " +evt.getNewValue());
-		try {
 		if(evt.getPropertyName().equals(RemoteUser.NAME_PROPERTY)) {
 			name = (String)evt.getNewValue();
 			firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.getNewValue());
-		}
-		}catch(Exception e) {
-			e.printStackTrace();
 		}
 	}
 

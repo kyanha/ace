@@ -270,12 +270,14 @@ BASCHTLE
 	}
 	
 	public void conceal() {
-		// editorDocument.setLocal(true);
+		// conceal a document
 		session.leave();
 		setType(LOCAL);
 	}
 	
 	public void leave() {
+		// leave a document
+		cleanUp();
 		session.leave();
 		setType(REMOTE);
 	}
@@ -308,7 +310,14 @@ BASCHTLE
 */
 	
 	
-	
+	public void cleanUp() {
+		System.out.println("DocumentItem::cleanUp()");
+		if(remoteDocument != null) {
+			remoteDocument.removePropertyChangeListener(this);
+			remoteDocument.getPublisher().removePropertyChangeListener(this);
+		}
+	}
+
 	public void propertyChange(PropertyChangeEvent evt) {
 		if(evt.getPropertyName().equals(RemoteDocument.TITLE_PROPERTY)) {
 			initDocumentItem(id, (String)evt.getNewValue(),

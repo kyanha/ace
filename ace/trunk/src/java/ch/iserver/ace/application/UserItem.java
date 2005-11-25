@@ -47,15 +47,15 @@ public class UserItem extends ItemImpl implements Comparable, PropertyChangeList
 		return user;
 	}
 	
+	public void cleanUp() {
+		System.out.println("UserItem::cleanUp()");
+		user.removePropertyChangeListener(this);
+	}
+	
 	public void propertyChange(PropertyChangeEvent evt) {
-		System.out.println("user: " + evt + "   newValue: " +evt.getNewValue());
-		try {
 		if(evt.getPropertyName().equals(RemoteUser.NAME_PROPERTY)) {
 			name = (String)evt.getNewValue();
 			firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.getNewValue());
-		}
-		}catch(Exception e) {
-			e.printStackTrace();
 		}
 	}
 
