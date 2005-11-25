@@ -62,10 +62,14 @@ public class ParticipantItem extends ItemImpl implements Comparable, PropertyCha
 	}
 	
 	public void propertyChange(PropertyChangeEvent evt) {
-//		System.out.println("" + evt);
+		System.out.println("part: " + evt + "   newValue: " +evt.getNewValue());
+		try {
 		if(evt.getPropertyName().equals(RemoteUser.NAME_PROPERTY)) {
 			name = (String)evt.getNewValue();
 			firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.getNewValue());
+		}
+		}catch(Exception e) {
+			e.printStackTrace();
 		}
 	}
 
