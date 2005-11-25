@@ -21,6 +21,8 @@
 
 package ch.iserver.ace.collaboration.jupiter.server;
 
+import org.apache.log4j.Logger;
+
 import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.Algorithm;
@@ -44,6 +46,8 @@ import ch.iserver.ace.util.SemaphoreLock;
  * by a ParticipantConnection.
  */
 public class ParticipantProxy implements Forwarder {
+	
+	private static final Logger LOG = Logger.getLogger(ParticipantProxy.class);
 	
 	/**
 	 * The participant id of the participant represented by this proxy.
@@ -196,6 +200,7 @@ public class ParticipantProxy implements Forwarder {
 	 * @see ch.iserver.ace.collaboration.jupiter.server.ParticipantProxy#sendParticipantLeft(int, int)
 	 */
 	public void sendParticipantLeft(int participantId, int reason) {
+		LOG.debug("--> sendParticipantLeft: " + participantId + " (" + reason + ")");
 		if (this.participantId != participantId) {
 			getConnection().sendParticipantLeft(participantId, reason);
 		}
@@ -205,6 +210,7 @@ public class ParticipantProxy implements Forwarder {
 	 * @see ch.iserver.ace.collaboration.jupiter.server.ParticipantProxy#sendParticipantJoined(int, ch.iserver.ace.net.RemoteUserProxy)
 	 */
 	public void sendParticipantJoined(int participantId, RemoteUserProxy proxy) {
+		LOG.debug("--> sendParticipantJoined: " + participantId + " (" + proxy.getId() + ")");
 		if (this.participantId != participantId) {
 			getConnection().sendParticipantJoined(participantId, proxy);
 		}
