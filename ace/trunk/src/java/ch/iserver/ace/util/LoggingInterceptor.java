@@ -145,7 +145,7 @@ public class LoggingInterceptor implements MethodInterceptor {
 		StringBuffer buf = new StringBuffer();
 		buf.append("<-- leaving: ");
 		buf.append(getSignature(invocation));
-		if (!void.class.equals(invocation.getMethod().getReturnType())) {
+		if (!Void.TYPE.equals(invocation.getMethod().getReturnType())) {
 			buf.append(": ");
 			buf.append(result);
 		}
