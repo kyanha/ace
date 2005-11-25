@@ -106,7 +106,7 @@ class DocumentRegistryImpl implements DocumentRegistry {
 	/**
 	 * @see ch.iserver.ace.collaboration.jupiter.DocumentRegistry#getDocument(ch.iserver.ace.net.RemoteDocumentProxy)
 	 */
-	public MutableRemoteDocument getDocument(RemoteDocumentProxy proxy) {
+	public synchronized MutableRemoteDocument getDocument(RemoteDocumentProxy proxy) {
 		RemoteUser publisher = getUserRegistry().getUser(proxy.getPublisher().getId());
 		MutableRemoteDocument doc = getDocument(proxy.getId());
 		if (doc == null) {
@@ -119,14 +119,14 @@ class DocumentRegistryImpl implements DocumentRegistry {
 	/**
 	 * @see ch.iserver.ace.collaboration.jupiter.DocumentRegistry#getDocument(java.lang.String)
 	 */
-	public MutableRemoteDocument getDocument(String id) {
+	public synchronized MutableRemoteDocument getDocument(String id) {
 		return (MutableRemoteDocument) documents.get(id);
 	}
 	
 	/**
 	 * @see ch.iserver.ace.collaboration.jupiter.DocumentRegistry#removeDocument(ch.iserver.ace.net.RemoteDocumentProxy)
 	 */
-	public MutableRemoteDocument removeDocument(RemoteDocumentProxy proxy) {
+	public synchronized MutableRemoteDocument removeDocument(RemoteDocumentProxy proxy) {
 		return (MutableRemoteDocument) documents.remove(proxy.getId());
 	}
 	

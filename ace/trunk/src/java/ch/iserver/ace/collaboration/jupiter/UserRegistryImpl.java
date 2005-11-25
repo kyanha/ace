@@ -68,7 +68,7 @@ public class UserRegistryImpl implements UserRegistry {
 	/**
 	 * @see ch.iserver.ace.collaboration.jupiter.UserRegistry#getUser(ch.iserver.ace.net.RemoteUserProxy)
 	 */
-	public MutableRemoteUser getUser(RemoteUserProxy proxy) {
+	public synchronized MutableRemoteUser getUser(RemoteUserProxy proxy) {
 		MutableRemoteUser user = getUser(proxy.getId());
 		if (user == null) {
 			user = new RemoteUserImpl(proxy);
@@ -80,14 +80,14 @@ public class UserRegistryImpl implements UserRegistry {
 	/**
 	 * @see ch.iserver.ace.collaboration.jupiter.UserRegistry#getUser(java.lang.String)
 	 */
-	public MutableRemoteUser getUser(String id) {
+	public synchronized MutableRemoteUser getUser(String id) {
 		return (MutableRemoteUser) users.get(id);
 	}
 	
 	/**
 	 * @see ch.iserver.ace.collaboration.jupiter.UserRegistry#removeUser(ch.iserver.ace.net.RemoteUserProxy)
 	 */
-	public MutableRemoteUser removeUser(RemoteUserProxy proxy) {
+	public synchronized MutableRemoteUser removeUser(RemoteUserProxy proxy) {
 		return (MutableRemoteUser) users.remove(proxy.getId());
 	}
 
