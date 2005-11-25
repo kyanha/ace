@@ -238,6 +238,8 @@ public class DocumentManagerImpl implements ItemSelectionChangeListener, Prefere
 	public void closeDocument(DocumentItem item) {
 		if (item.getType() == DocumentItem.PUBLISHED) {
 			item.conceal();
+		} else if(item.getType() == DocumentItem.JOINED) {
+			item.leave();
 		}
 		int index = documentController.indexOf(item);
 		documentController.removeDocument(item);
@@ -258,6 +260,8 @@ public class DocumentManagerImpl implements ItemSelectionChangeListener, Prefere
 				DocumentItem item = (DocumentItem) it.next();
 				if (item.getType() == DocumentItem.PUBLISHED) {
 					item.conceal();
+				} else if(item.getType() == DocumentItem.JOINED) {
+					item.leave();
 				}
 				documentController.removeDocument(item);
 			}
