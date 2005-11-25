@@ -70,11 +70,10 @@ public class UserRegistryImpl implements UserRegistry {
 	 */
 	public MutableRemoteUser addUser(RemoteUserProxy proxy) {
 		MutableRemoteUser user = getUser(proxy.getId());
-		if (user != null) {
-			return user;
+		if (user == null) {
+			user = new RemoteUserImpl(proxy);
+			users.put(user.getId(), user);
 		}
-		user = new RemoteUserImpl(proxy);
-		users.put(user.getId(), user);
 		return user;
 	}
 	

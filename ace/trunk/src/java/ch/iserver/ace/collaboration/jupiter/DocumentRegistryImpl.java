@@ -82,10 +82,16 @@ class DocumentRegistryImpl implements DocumentRegistry {
 		this.registry = registry;
 	}
 	
+	/**
+	 * @return
+	 */
 	public SessionFactory getSessionFactory() {
 		return sessionFactory;
 	}
 	
+	/**
+	 * @param sessionFactory
+	 */
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
@@ -102,8 +108,11 @@ class DocumentRegistryImpl implements DocumentRegistry {
 	 */
 	public MutableRemoteDocument addDocument(RemoteDocumentProxy proxy) {
 		RemoteUser publisher = getUserRegistry().getUser(proxy.getPublisher().getId());
-		MutableRemoteDocument doc = new RemoteDocumentImpl(proxy, getSessionFactory(), publisher);
-		documents.put(proxy.getId(), doc);
+		MutableRemoteDocument doc = getDocument(proxy.getId());
+		if (doc == null) {
+			doc = new RemoteDocumentImpl(proxy, getSessionFactory(), publisher);
+			documents.put(proxy.getId(), doc);
+		}
 		return doc;
 	}
 	
