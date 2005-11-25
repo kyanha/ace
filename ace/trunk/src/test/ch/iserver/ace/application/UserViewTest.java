@@ -21,6 +21,7 @@
 
 package ch.iserver.ace.application;
 
+import javax.swing.SwingUtilities;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
@@ -80,22 +81,19 @@ public class UserViewTest extends TestCase {
 	public void testItemPropertiesChanged() throws Exception {
 		MockControl listenerCtrl = MockControl.createControl(ListDataListener.class);
 		listenerCtrl.setDefaultMatcher(new ListDataEventMatcher());
-		ListDataListener listener = (ListDataListener) listenerCtrl.getMock();
+		final ListDataListener listener = (ListDataListener) listenerCtrl.getMock();
 		
 		// test fixture
 		UserViewController controller = new UserViewController();
-		UserView view = new UserView(new LocaleMessageSourceStub(), controller);
+		final UserView view = new UserView(new LocaleMessageSourceStub(), controller);
 
-		MutableRemoteUser user = new RemoteUserStub("X", "X");
+		final MutableRemoteUser user = new RemoteUserStub("X", "X");
 		Item item = new UserItem(user);
 
 		controller.getSourceList().getReadWriteLock().writeLock().lock();
 		controller.getSourceList().add(item);
 		controller.getSourceList().add(new UserItem(new RemoteUserStub("Z", "Z")));
 		controller.getSourceList().getReadWriteLock().writeLock().unlock();
-		
-		Thread.sleep(5);
-		view.getList().getModel().addListDataListener(listener);
 		
 		// define mock behavior
 		listener.contentsChanged(new ListDataEvent(view.getList().getModel(), ListDataEvent.CONTENTS_CHANGED, 0, 0));
@@ -104,10 +102,14 @@ public class UserViewTest extends TestCase {
 		listenerCtrl.replay();
 		
 		// test
-		user.setName("JIM");
+		SwingUtilities.invokeAndWait(new Runnable() {
+			public void run() {
+				view.getList().getModel().addListDataListener(listener);
+				user.setName("JIM");
+			}
+		});
 				
 		// verify
-		Thread.sleep(5);
 		listenerCtrl.verify();
 	}
 	
