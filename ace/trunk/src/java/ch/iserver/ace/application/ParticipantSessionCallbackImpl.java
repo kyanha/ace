@@ -55,13 +55,15 @@ public class ParticipantSessionCallbackImpl extends SessionCallbackImpl implemen
 		
 		// get document fragments
 		Iterator fIter = doc.getFragments();
+		int insertPos = 0;
 		while(fIter.hasNext()) {
 			Fragment f = (Fragment)fIter.next();
 			try {
-				docu.insertString(0, "text: " + f.getText() + "   participantId: " + f.getParticipantId() + "\n", null);
+				docu.insertString(insertPos, f.getText(), null);
 			} catch(Exception e) {
 				e.printStackTrace();
 			}
+			insertPos += f.getText().length();
 		}
 		
 	}
