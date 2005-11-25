@@ -22,6 +22,7 @@
 package ch.iserver.ace.application.action;
 
 import ch.iserver.ace.collaboration.Participant;
+import ch.iserver.ace.collaboration.PublishedSession;
 import ch.iserver.ace.application.DocumentItem;
 import ch.iserver.ace.application.UserItem;
 import ch.iserver.ace.application.DocumentManager;
