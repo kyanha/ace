@@ -26,14 +26,29 @@ import ch.iserver.ace.collaboration.RemoteUser;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
- *
+ * The default implementation of the Participant interface. It is a simple
+ * class holding both the participant id and the RemoteUser for the
+ * participant.
  */
 public class ParticipantImpl implements Participant {
 
+	/**
+	 * The RemoteUser of this participant.
+	 */
 	private final RemoteUser user;
 	
+	/**
+	 * The participant id of the participant.
+	 */
 	private final int participantId;
 	
+	/**
+	 * Creates a new ParticipantImpl instance with the given participant id
+	 * and remote user.
+	 * 
+	 * @param participantId the participant id
+	 * @param user the remote user
+	 */
 	public ParticipantImpl(int participantId, RemoteUser user) {
 		ParameterValidator.notNull("user", user);
 		this.user = user;
