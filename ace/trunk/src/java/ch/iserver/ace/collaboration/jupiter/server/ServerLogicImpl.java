@@ -369,7 +369,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 				Iterator it = document.getFragments();
 				while (it.hasNext()) {
 					Fragment fragment = (Fragment) it.next();
-					System.out.println(fragment.getParticipantId() + "| " + fragment.getText());
+					System.out.println(fragment.getParticipantId() + " | " + fragment.getText());
 				}
 				
 				connection.joinAccepted(port);
@@ -380,6 +380,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 		} finally {
 			// remove from list of joining users
 			joinSet.remove(connection.getUser().getId());
+			LOG.info("<-- join accepted");
 		}
 	}
 	
