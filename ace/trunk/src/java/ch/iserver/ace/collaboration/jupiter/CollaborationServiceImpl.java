@@ -165,7 +165,11 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	 * @see ch.iserver.ace.collaboration.CollaborationService#stop()
 	 */
 	public void stop() {
-		getNetworkService().stop();
+		try {
+			getNetworkService().stop();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
