@@ -105,7 +105,10 @@ public class SessionManager {
 	 * @return the session of the user
 	 */
 	public synchronized RemoteUserSession getSession(String id) {
-		return (RemoteUserSession)sessions.get(id);
+		RemoteUserSession session = (RemoteUserSession) sessions.get(id);
+		if (session == null) 
+			LOG.warn("session for ["+id+"] not found");
+		return session; 
 	}
 	
 	public int size() {
