@@ -89,6 +89,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 		//intiate collaboration channel
 		try {
 			Channel channel = session.startChannel(RemoteUserSession.CHANNEL_COLLABORATION);
+			((ParticipantRequestHandler) channel.getRequestHandler()).setParticipantPort(port);
 			setChannel(channel);
 		} catch (ConnectionException ce) {
 			NetworkServiceImpl.getInstance().getCallback().serviceFailure(

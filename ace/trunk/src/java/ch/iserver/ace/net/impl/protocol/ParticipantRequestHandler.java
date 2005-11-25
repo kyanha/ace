@@ -24,10 +24,8 @@ package ch.iserver.ace.net.impl.protocol;
 import org.apache.log4j.Logger;
 import org.beepcore.beep.core.InputDataStream;
 import org.beepcore.beep.core.MessageMSG;
-import org.beepcore.beep.core.RequestHandler;
 
-import ch.iserver.ace.net.impl.PortableDocumentExt;
-import ch.iserver.ace.net.impl.RemoteDocumentProxyExt;
+import ch.iserver.ace.net.ParticipantPort;
 
 /**
  * Server side request handler for a collaborative session.
@@ -39,11 +37,20 @@ public class ParticipantRequestHandler extends AbstractRequestHandler {
 	
 	private Deserializer deserializer;
 	private ParserHandler handler;
+	private ParticipantPort port;
 	
-	public ParticipantRequestHandler() {
+	public ParticipantRequestHandler(Deserializer deserializer, ParserHandler handler) {
 		LOG.debug("new ParticiantRequestHandler()");
-//		this.deserializer = deserializer;
-//		this.handler = handler;
+		this.deserializer = deserializer;
+		this.handler = handler;
+	}
+	
+	public void setParticipantPort(ParticipantPort port) {
+		this.port = port;
+	}
+	
+	public ParticipantPort getParticipantPort() {
+		return port;
 	}
 	
 	public void receiveMSG(MessageMSG message) {
@@ -59,7 +66,12 @@ public class ParticipantRequestHandler extends AbstractRequestHandler {
 			} else {
 				
 				//TODO: implement (pass requests to ParticipantPort
-				LOG.debug("to be implemented");
+				
+				deserializer.deserialize(rawData, handler);
+				Request result = handler.getResult();
+				
+				
+				
 				
 				
 //				deserializer.deserialize(rawData, handler);
