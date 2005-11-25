@@ -451,6 +451,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 				blacklist.add(connection.getUser().getId());
 			}
 			removeParticipant(participantId);
+			forwarder.sendParticipantLeft(participantId, Participant.KICKED);
 			connection.sendKicked();
 			connection.close();
 		}
