@@ -62,18 +62,22 @@ public class SingleThreadDomain extends AbstractThreadDomain {
 		this.queue = new LinkedBlockingQueue();
 		this.handler = handler;
 	}
-	
+		
 	/**
-	 * @see ch.iserver.ace.util.ThreadDomain#wrap(java.lang.Object, java.lang.Class)
+	 * @see ch.iserver.ace.util.ThreadDomain#wrap(java.lang.Object, java.lang.Class, boolean)
 	 */
-	public Object wrap(Object target, Class clazz) {
+	public synchronized Object wrap(Object target, Class clazz, boolean ignoreVoidMethods) {
 		if (worker == null) {
 			this.worker = new AsyncWorker(getName(), queue);
 			this.worker.setExceptionHandler(handler);
 			this.worker.start();
 		}
 		Advice advice = new LoggingInterceptor(SingleThreadDomain.class);
-		return wrap(target, clazz, queue, new Advice[] { advice }, true);
+		if (ignoreVoidMethods) {
+			return wrap(target, clazz, queue, new VoidMethodMatcherPointcut(), new Advice[] { advice });
+		} else {
+			return wrap(target, clazz, queue, advice);
+		}
 	}
 
 }

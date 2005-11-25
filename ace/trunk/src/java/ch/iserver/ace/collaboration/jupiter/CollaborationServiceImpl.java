@@ -53,14 +53,13 @@ import ch.iserver.ace.net.NetworkServiceCallback;
 import ch.iserver.ace.net.RemoteDocumentProxy;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.util.AopUtil;
-import ch.iserver.ace.util.AsyncExceptionHandler;
 import ch.iserver.ace.util.LoggingInterceptor;
 import ch.iserver.ace.util.ParameterValidator;
 import ch.iserver.ace.util.SingleThreadDomain;
 import ch.iserver.ace.util.ThreadDomain;
 
 /**
- *
+ * Default implementation of the CollaborationService interface.
  */
 public class CollaborationServiceImpl implements CollaborationService, NetworkServiceCallback {
 	
@@ -127,11 +126,7 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	}
 	
 	public ThreadDomain createIncomingDomain() {
-		return new SingleThreadDomain(new AsyncExceptionHandler() {
-				public void handleException(Throwable th) {
-					th.printStackTrace();
-				}
-		});
+		return new SingleThreadDomain();
 	}
 	
 	protected NetworkService getNetworkService() {

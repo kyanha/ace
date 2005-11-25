@@ -47,13 +47,18 @@ public class IsolatedThreadDomain extends AbstractThreadDomain {
 	}
 	
 	/**
-	 * @see ch.iserver.ace.util.ThreadDomain#wrap(java.lang.Object, java.lang.Class)
+	 * @see ch.iserver.ace.util.ThreadDomain#wrap(java.lang.Object, java.lang.Class, boolean)
 	 */
-	public synchronized Object wrap(Object target, Class clazz) {
+	public synchronized Object wrap(Object target, Class clazz, boolean ignoreVoidMethods) {
 		BlockingQueue queue = new LinkedBlockingQueue();
 		Worker worker = new AsyncWorker(queue);
 		worker.start();
-		Object wrapped = wrap(target, clazz, queue);
+		Object wrapped;
+		if (ignoreVoidMethods) {
+			wrapped = wrap(target, clazz, queue, new VoidMethodMatcherPointcut());
+		} else {
+			wrapped = wrap(target, clazz, queue);
+		}
 		addReference(worker, wrapped);
 		return wrapped;
 	}

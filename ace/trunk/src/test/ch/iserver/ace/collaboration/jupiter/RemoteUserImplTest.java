@@ -21,14 +21,17 @@
 
 package ch.iserver.ace.collaboration.jupiter;
 
+import java.beans.PropertyChangeListener;
+
 import junit.framework.TestCase;
 
 import org.easymock.MockControl;
 
 import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.net.RemoteUserProxy;
+import ch.iserver.ace.net.RemoteUserProxyStub;
 
-public class RemoteUserTest extends TestCase {
+public class RemoteUserImplTest extends TestCase {
 
 	public void testEquals() throws Exception {
 		MockControl proxy1Ctrl = MockControl.createControl(RemoteUserProxy.class);
@@ -73,6 +76,19 @@ public class RemoteUserTest extends TestCase {
 		proxy1Ctrl.verify();
 		proxy2Ctrl.verify();
 		proxy3Ctrl.verify();
+	}
+	
+	public void testListenerManagement() throws Exception {
+		MockControl listenerCtrl1 = MockControl.createControl(PropertyChangeListener.class);
+		PropertyChangeListener listener1 = (PropertyChangeListener) listenerCtrl1.getMock();
+		MockControl listenerCtrl2 = MockControl.createControl(PropertyChangeListener.class);
+		PropertyChangeListener listener2 = (PropertyChangeListener) listenerCtrl2.getMock();
+		
+		RemoteUserImpl user = new RemoteUserImpl(new RemoteUserProxyStub("X"));
+		user.addPropertyChangeListener(listener1);
+		user.addPropertyChangeListener(listener2);
+		
+		assertEquals(2, user.getPropertyChangeListeners().length);
 	}
 
 }

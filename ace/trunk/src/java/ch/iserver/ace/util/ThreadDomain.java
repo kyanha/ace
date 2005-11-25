@@ -58,4 +58,17 @@ public interface ThreadDomain {
 	 */
 	Object wrap(Object target, Class clazz);
 	
+	/**
+	 * Wraps the <var>target</var> object so that calls to it are executed
+	 * in this ThreadDomain. The <var>ignoreVoidMethods</var> parameter
+	 * determines whether the async interceptor is applied to methods
+	 * having a void return type.
+	 * 
+	 * @param target
+	 * @param clazz
+	 * @param ignoreVoidMethods
+	 * @return
+	 */
+	Object wrap(Object target, Class clazz, boolean ignoreVoidMethods);
+	
 }

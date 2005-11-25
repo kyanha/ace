@@ -21,9 +21,6 @@
 
 package ch.iserver.ace.util;
 
-import org.aopalliance.intercept.MethodInvocation;
-import org.apache.log4j.Logger;
-
 import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
 
 /**
@@ -34,8 +31,6 @@ import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
  * @see ch.iserver.ace.util.AsyncInterceptor
  */
 public class AsyncWorker extends Worker implements AsyncExceptionHandler {
-	
-	private static final Logger LOG = Logger.getLogger(AsyncWorker.class);
 	
 	private final BlockingQueue queue;
 	
@@ -54,20 +49,21 @@ public class AsyncWorker extends Worker implements AsyncExceptionHandler {
 	}
 	
 	public void setExceptionHandler(AsyncExceptionHandler handler) {
-		this.handler = handler;
+		this.handler = handler == null ? this : handler;
 	}
 	
 	protected void doWork() throws InterruptedException {
-		MethodInvocation invocation = (MethodInvocation) queue.take();
+		AsyncMethodInvocation invocation = (AsyncMethodInvocation) queue.take();
 		try {
 			invocation.proceed();
 		} catch (Throwable e) {
-			handler.handleException(new RuntimeException(getName(), e));
+			AsyncExecutionException ex = new AsyncExecutionException(e, invocation);
+			handler.handleException(ex);
 		}
 	}
 	
-	public void handleException(Throwable th) {
-		LOG.warn(th);
+	public void handleException(AsyncExecutionException e) {
+		e.printStackTrace();
 	}
 	
 }

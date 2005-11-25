@@ -22,8 +22,10 @@
 package ch.iserver.ace.util;
 
 import org.aopalliance.aop.Advice;
+import org.aopalliance.intercept.MethodInterceptor;
+import org.springframework.aop.Advisor;
 import org.springframework.aop.Pointcut;
-import org.springframework.aop.framework.ProxyFactoryBean;
+import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.aop.support.DefaultPointcutAdvisor;
 
 import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
@@ -38,10 +40,16 @@ abstract class AbstractThreadDomain implements ThreadDomain {
 	 */
 	private String name = "";
 	
+	/**
+	 * @see ch.iserver.ace.util.ThreadDomain#getName()
+	 */
 	public String getName() {
 		return name;
 	}
 	
+	/**
+	 * @see ch.iserver.ace.util.ThreadDomain#setName(java.lang.String)
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -59,7 +67,7 @@ abstract class AbstractThreadDomain implements ThreadDomain {
 	 * @return a dynamic proxy wrapping the given target object
 	 */
 	protected Object wrap(Object target, Class clazz, BlockingQueue queue) {
-		return wrap(target, clazz, queue, new Advice[0]);
+		return wrap(target, clazz, queue, null, new Advice[0]);
 	}
 	
 	/**
@@ -70,35 +78,89 @@ abstract class AbstractThreadDomain implements ThreadDomain {
 	 * @return
 	 */
 	protected Object wrap(Object target, Class clazz, BlockingQueue queue, Advice advice) {
-		return wrap(target, clazz, queue, new Advice[] { advice });
+		return wrap(target, clazz, queue, null, new Advice[] { advice });
 	}
 	
 	/**
 	 * @param target
 	 * @param clazz
 	 * @param queue
+	 * @param pointcut
 	 * @param advices
 	 * @return
 	 */
-	protected Object wrap(Object target, Class clazz, BlockingQueue queue, Advice[] advices) {
-		return wrap(target, clazz, queue, advices, false);
+	protected Object wrap(Object target, Class clazz, BlockingQueue queue, Pointcut pointcut, Advice[] advices) {
+		ProxyFactory factory = initFactory(target, clazz, queue, pointcut);
+		for (int i = 0; i < advices.length; i++) {
+			if (pointcut != null) {
+				factory.addAdvisor(new DefaultPointcutAdvisor(pointcut, advices[i]));
+			} else {
+				factory.addAdvice(advices[i]);
+			}
+		}
+		return factory.getProxy();
 	}
 	
-	protected Object wrap(Object target, Class clazz, BlockingQueue queue, Advice[] advices, boolean shortcutVoid) {
-		ProxyFactoryBean factory = new ProxyFactoryBean();
+	/**
+	 * @param target
+	 * @param clazz
+	 * @param queue
+	 * @param pointcut
+	 * @return
+	 */
+	protected Object wrap(Object target, Class clazz, BlockingQueue queue, Pointcut pointcut) {
+		return wrap(target, clazz, queue, pointcut, new Advisor[0]);
+	}
+	
+	/**
+	 * @param target
+	 * @param clazz
+	 * @param queue
+	 * @param pointcut
+	 * @param advisors
+	 * @return
+	 */
+	protected Object wrap(Object target, Class clazz, BlockingQueue queue, Pointcut pointcut, Advisor[] advisors) {
+		ProxyFactory factory = initFactory(target, clazz, queue, pointcut);
+		for (int i = 0; i < advisors.length; i++) {
+			factory.addAdvisor(advisors[i]);
+		}
+		return factory.getProxy();
+	}
+	
+	/**
+	 * @param target
+	 * @param clazz
+	 * @param queue
+	 * @param pointcut
+	 * @return
+	 */
+	protected ProxyFactory initFactory(Object target, Class clazz, BlockingQueue queue, Pointcut pointcut) {
+		ProxyFactory factory = new ProxyFactory();
 		factory.addInterface(clazz);
-		AsyncInterceptor interceptor = new AsyncInterceptor(queue);
-		if (shortcutVoid) {
-			Pointcut pointcut = new VoidMethodMatcherPointcut();
+		factory.setTarget(target);
+		MethodInterceptor interceptor = createAsyncInterceptor(queue);
+		if (pointcut != null) {
 			factory.addAdvisor(new DefaultPointcutAdvisor(pointcut, interceptor));
 		} else {
 			factory.addAdvice(interceptor);
 		}
-		for (int i = 0; i < advices.length; i++) {
-			factory.addAdvice(advices[i]);
-		}
-		factory.setTarget(target);
-		return factory.getObject();
+		return factory;
+	}
+	
+	/**
+	 * @param queue
+	 * @return
+	 */
+	protected MethodInterceptor createAsyncInterceptor(BlockingQueue queue) {
+		return new AsyncInterceptor(queue);
+	}
+
+	/**
+	 * @see ch.iserver.ace.util.ThreadDomain#wrap(java.lang.Object, java.lang.Class)
+	 */
+	public synchronized Object wrap(Object target, Class clazz) {
+		return wrap(target, clazz, false);
 	}
 		
 }

@@ -21,8 +21,6 @@
 
 package ch.iserver.ace.util;
 
-import org.aopalliance.aop.Advice;
-
 import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
 import edu.emory.mathcs.backport.java.util.concurrent.LinkedBlockingQueue;
 
@@ -63,9 +61,9 @@ public class BoundedThreadDomain extends AbstractThreadDomain {
 	}
 	
 	/**
-	 * @see ch.iserver.ace.util.ThreadDomain#wrap(java.lang.Object, java.lang.Class)
+	 * @see ch.iserver.ace.util.ThreadDomain#wrap(java.lang.Object, java.lang.Class, boolean)
 	 */
-	public synchronized Object wrap(Object target, Class clazz) {
+	public synchronized Object wrap(Object target, Class clazz, boolean ignoreVoidMethods) {
 		if (queues[index] == null) {
 			queues[index] = new LinkedBlockingQueue();
 			Worker worker = new AsyncWorker(queues[index]);
@@ -75,7 +73,11 @@ public class BoundedThreadDomain extends AbstractThreadDomain {
 		BlockingQueue queue = queues[index];		
 		index = (index + 1) % maxWorkers;
 		
-		return wrap(target, clazz, queue, new Advice[0], true);
+		if (ignoreVoidMethods) {
+			return wrap(target, clazz, queue, new VoidMethodMatcherPointcut());
+		} else {
+			return wrap(target, clazz, queue);
+		}
 	}
 	
 }

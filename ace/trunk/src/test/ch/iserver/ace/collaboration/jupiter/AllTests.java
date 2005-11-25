@@ -30,7 +30,7 @@ public class AllTests {
 		TestSuite suite = new TestSuite(
 						"Test for ch.iserver.ace.collaboration.jupiter");
 		//$JUnit-BEGIN$
-		suite.addTestSuite(RemoteUserTest.class);
+		suite.addTestSuite(RemoteUserImplTest.class);
 		suite.addTestSuite(DiscoveryNetworkCallbackImplTest.class);
 		suite.addTestSuite(PublishedSessionImplTest.class);
 		suite.addTestSuite(SessionImplTest.class);

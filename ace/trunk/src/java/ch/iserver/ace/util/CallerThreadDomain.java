@@ -46,5 +46,12 @@ public class CallerThreadDomain implements ThreadDomain {
 	public Object wrap(Object target, Class clazz) {
 		return target;
 	}
+	
+	/**
+	 * @see ch.iserver.ace.util.ThreadDomain#wrap(java.lang.Object, java.lang.Class, boolean)
+	 */
+	public Object wrap(Object target, Class clazz, boolean ignoreVoidMethods) {
+		return target;
+	}
 
 }

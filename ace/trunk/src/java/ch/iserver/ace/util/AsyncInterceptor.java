@@ -66,7 +66,9 @@ public class AsyncInterceptor implements MethodInterceptor {
 			LOG.warn("WARN: invoking non-void return type method - " + invocation.getMethod());
 			return invocation.proceed();
 		}
-		queue.add(invocation);
+		AsyncMethodInvocation wrapper = new AsyncMethodInvocation(invocation);
+		wrapper.setCallerStackTrace(new Throwable().getStackTrace());
+		queue.add(wrapper);
 		return null;
 	}
 	

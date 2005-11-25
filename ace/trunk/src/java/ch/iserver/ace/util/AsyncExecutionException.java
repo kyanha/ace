@@ -22,10 +22,30 @@
 package ch.iserver.ace.util;
 
 /**
- *
+ * Execution passed to an AsyncExceptionHandler whenever an async invocation
+ * causes failures.
  */
-public interface AsyncExceptionHandler {
+public class AsyncExecutionException extends RuntimeException {
+
+	private AsyncMethodInvocation invocation;
 	
-	void handleException(AsyncExecutionException e);
+	/**
+	 * 
+	 */
+	public AsyncExecutionException(Throwable cause, AsyncMethodInvocation invocation) {
+		super(cause);
+		this.invocation = invocation;
+	}
 	
+	public AsyncMethodInvocation getInvocation() {
+		return invocation;
+	}
+	
+	public String toString() {
+		StringBuffer buf = new StringBuffer(super.toString());
+		buf.append("\n\tAsync Method Invocation:\n\t");
+		buf.append(getInvocation());
+		return buf.toString();
+	}
+
 }
