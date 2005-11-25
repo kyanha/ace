@@ -50,7 +50,7 @@ public class ParticipantSessionCallbackImpl extends SessionCallbackImpl implemen
 		while(pIter.hasNext()) {
 			Participant p = (Participant)pIter.next();
 			//System.out.println("adding participant: " + p);
-			participationColorManager.addParticipant(p);
+			participationColorManager.participantJoined(p);
 		}
 		
 		// get document fragments
