@@ -35,7 +35,7 @@ public interface UserRegistry {
 	 * @param proxy the proxy object from the network layer
 	 * @return the newly created MutableRemoteUser
 	 */
-	MutableRemoteUser addUser(RemoteUserProxy proxy);
+	MutableRemoteUser getUser(RemoteUserProxy proxy);
 	
 	/**
 	 * Gets the user with the given id from the registry. If there is no

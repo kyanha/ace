@@ -50,7 +50,7 @@ public class ServerTest extends TestCase {
 		UserRegistry registry = new UserRegistryImpl();
 		
 		for (int i = 1; i < PARTICIPANTS; i++) {
-			registry.addUser(new RemoteUserProxyStub("" + i));
+			registry.getUser(new RemoteUserProxyStub("" + i));
 		}
 		
 		MockControl[] controls = new MockControl[PARTICIPANTS];

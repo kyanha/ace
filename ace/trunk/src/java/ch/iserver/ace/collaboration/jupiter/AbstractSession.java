@@ -217,7 +217,7 @@ abstract class AbstractSession implements Session {
 	 * @return a Participant instance
 	 */
 	protected Participant createParticipant(int participantId, RemoteUserProxy proxy) {
-		return new ParticipantImpl(participantId, getUserRegistry().addUser(proxy));
+		return new ParticipantImpl(participantId, getUserRegistry().getUser(proxy));
 	}
 
 	/**

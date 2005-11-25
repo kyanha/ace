@@ -300,7 +300,7 @@ public class SessionImplTest extends TestCase {
 		callback.participantJoined(new ParticipantImpl(1, new RemoteUserStub("1")));
 		callback.participantLeft(new ParticipantImpl(1, new RemoteUserStub("1")), Participant.LEFT);
 		
-		registry.addUser(new RemoteUserProxyStub("1"));
+		registry.getUser(new RemoteUserProxyStub("1"));
 		registryCtrl.setDefaultReturnValue(new RemoteUserStub("1"));
 		
 		// replay

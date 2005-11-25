@@ -64,7 +64,7 @@ class DiscoveryNetworkCallbackImpl implements DiscoveryNetworkCallback {
 	 * @see ch.iserver.ace.net.DiscoveryNetworkCallback#userDiscoverySucceeded(ch.iserver.ace.net.RemoteUserProxy)
 	 */
 	public void userDiscoverySucceeded(RemoteUserProxy proxy) {
-		RemoteUser user = getUserRegistry().addUser(proxy);
+		RemoteUser user = getUserRegistry().getUser(proxy);
 		getCallback().discovered(new DiscoveryResult(user));
 	}
 

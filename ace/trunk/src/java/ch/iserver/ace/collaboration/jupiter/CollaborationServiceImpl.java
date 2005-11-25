@@ -292,7 +292,7 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 			if (getDocumentRegistry().getDocument(proxies[i].getId()) != null) {
 				LOG.warn("document with id " + proxies[i].getId() + " discovered before");
 			} else {
-				tmp.add(getDocumentRegistry().addDocument(proxies[i]));
+				tmp.add(getDocumentRegistry().getDocument(proxies[i]));
 			}
 		}
 		
@@ -349,7 +349,7 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 			LOG.warn("user with id " + proxy.getId() + " discovered before: discarding notification");
 			return;
 		}
-		RemoteUser user = getUserRegistry().addUser(proxy);
+		RemoteUser user = getUserRegistry().getUser(proxy);
 		UserListener[] listeners = (UserListener[]) this.listeners.getListeners(UserListener.class);
 		for (int i = 0; i < listeners.length; i++) {
 			UserListener listener = listeners[i];

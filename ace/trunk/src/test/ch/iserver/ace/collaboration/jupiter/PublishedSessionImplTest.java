@@ -276,9 +276,9 @@ public class PublishedSessionImplTest extends TestCase {
 		Participant participant2 = new ParticipantImpl(2, new RemoteUserStub("Y"));
 
 		// define mock behavior
-		registry.addUser(new RemoteUserProxyStub("X"));
+		registry.getUser(new RemoteUserProxyStub("X"));
 		registryCtrl.setReturnValue(new RemoteUserStub("X"));
-		registry.addUser(new RemoteUserProxyStub("Y"));
+		registry.getUser(new RemoteUserProxyStub("Y"));
 		registryCtrl.setReturnValue(new RemoteUserStub("Y"));
 		callback.participantJoined(participant1);
 		callback.participantJoined(participant2);

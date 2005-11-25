@@ -82,7 +82,7 @@ public class ServerLogicTest extends MockObjectTestCase {
 		}
 		
 		for (int i = 0; i < USERS; i++) {
-			registry.addUser(new RemoteUserProxyStub("" + i));
+			registry.getUser(new RemoteUserProxyStub("" + i));
 		}
 		
 		ServerLogicImpl logic = new ServerLogicImpl(new SingleThreadDomain(), 

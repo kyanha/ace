@@ -34,7 +34,7 @@ public interface DocumentRegistry {
 	 * @param proxy the proxy of the document
 	 * @return a new MutableRemoteDocument wrapping the proxy
 	 */
-	MutableRemoteDocument addDocument(RemoteDocumentProxy proxy);
+	MutableRemoteDocument getDocument(RemoteDocumentProxy proxy);
 	
 	/**
 	 * Gets the document with the given id.

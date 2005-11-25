@@ -71,7 +71,7 @@ public class DiscoveryNetworkCallbackImplTest extends TestCase {
 		
 		// define mock behavior
 		callback.discovered(new DiscoveryResult(user));
-		registry.addUser(proxy);
+		registry.getUser(proxy);
 		registryCtrl.setReturnValue(user);
 		
 		// replay

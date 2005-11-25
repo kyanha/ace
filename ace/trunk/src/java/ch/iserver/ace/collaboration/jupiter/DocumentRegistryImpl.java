@@ -104,9 +104,9 @@ class DocumentRegistryImpl implements DocumentRegistry {
 	}
 	
 	/**
-	 * @see ch.iserver.ace.collaboration.jupiter.DocumentRegistry#addDocument(ch.iserver.ace.net.RemoteDocumentProxy)
+	 * @see ch.iserver.ace.collaboration.jupiter.DocumentRegistry#getDocument(ch.iserver.ace.net.RemoteDocumentProxy)
 	 */
-	public MutableRemoteDocument addDocument(RemoteDocumentProxy proxy) {
+	public MutableRemoteDocument getDocument(RemoteDocumentProxy proxy) {
 		RemoteUser publisher = getUserRegistry().getUser(proxy.getPublisher().getId());
 		MutableRemoteDocument doc = getDocument(proxy.getId());
 		if (doc == null) {
