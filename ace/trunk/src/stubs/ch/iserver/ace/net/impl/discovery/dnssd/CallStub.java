@@ -21,11 +21,15 @@
 
 package ch.iserver.ace.net.impl.discovery.dnssd;
 
+import org.apache.log4j.Logger;
+
 /**
  *
  */
 public class CallStub extends DNSSDCall {
 
+	private Logger LOG = Logger.getLogger(CallStub.class);
+	
 	private int callCount = 0;
 	
 	/**
@@ -38,6 +42,10 @@ public class CallStub extends DNSSDCall {
 	
 	public int getCallCount() {
 		return callCount;
+	}
+
+	protected Logger getLogger() {
+		return LOG;
 	}
 
 }
