@@ -88,6 +88,7 @@ public class RemoteUserSession {
 		isInitiated = true;
 		isAlive = true;
 		participantConnections = Collections.synchronizedMap(new LinkedHashMap());
+		sessionConnections = Collections.synchronizedMap(new LinkedHashMap());
 	}
 	
 	/**
@@ -131,11 +132,11 @@ public class RemoteUserSession {
 	 * @return
 	 */
 	public SessionConnectionImpl addSessionConnection(String docId, Channel collaborationChannel) {
-		LOG.debug("--> createSessionConnection() for doc ["+docId+", "+collaborationChannel+"]");
+		LOG.debug("--> addSessionConnection() for doc ["+docId+", "+collaborationChannel+"]");
 		SessionConnectionImpl conn = new SessionConnectionImpl(docId, this, 
 				collaborationChannel, SerializerImpl.getInstance());
 		sessionConnections.put(docId, conn);
-		LOG.debug("<-- createSessionConnection()");
+		LOG.debug("<-- addSessionConnection()");
 		return conn;
 	}
 	
