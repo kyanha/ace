@@ -35,12 +35,14 @@ public class ParticipantItem extends ItemImpl implements Comparable, PropertyCha
 	private String name;
 	private Color color;
 	private RemoteUser user;
+	private Participant participant;
 
 	public ParticipantItem(Participant participant, Color color) {
 		user = participant.getUser();
 		user.addPropertyChangeListener(this);
 		name = user.getName();
 		this.color = color;
+		this.participant = participant;
 	}
 
 	public String getName() {
@@ -53,6 +55,10 @@ public class ParticipantItem extends ItemImpl implements Comparable, PropertyCha
 	
 	public RemoteUser getUser() {
 		return user;
+	}
+	
+	public Participant getParticipant() {
+		return participant;
 	}
 	
 	public void propertyChange(PropertyChangeEvent evt) {
