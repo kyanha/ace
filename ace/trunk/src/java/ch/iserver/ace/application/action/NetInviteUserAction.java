@@ -21,6 +21,8 @@
 
 package ch.iserver.ace.application.action;
 
+import ch.iserver.ace.collaboration.Participant;
+import ch.iserver.ace.application.ParticipantViewController;
 import ch.iserver.ace.application.DocumentItem;
 import ch.iserver.ace.application.UserItem;
 import ch.iserver.ace.application.DocumentManager;
@@ -31,6 +33,7 @@ import ch.iserver.ace.application.UserViewController;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import java.awt.event.*;
+import java.util.*;
 
 
 
@@ -41,22 +44,24 @@ public class NetInviteUserAction extends DocumentItemSelectionChangeAction {
 	private UserItem currentUserItem;
 	private DocumentViewController viewController;
 	private UserViewController userController;
+	private ParticipantViewController participantController;
 
 	public NetInviteUserAction(LocaleMessageSource messageSource, DocumentManager documentManager,
-			DocumentViewController viewController, UserViewController userController) {
+			DocumentViewController viewController, UserViewController userController, ParticipantViewController participantController) {
 		super(messageSource.getMessage("mNetInvite"), messageSource.getIcon("iMenuNetInvite"), viewController);
 		putValue(SHORT_DESCRIPTION, messageSource.getMessage("mNetInviteTT"));
 		userController.addItemSelectionChangeListener(this);
-		/*userController.getViewList().addMouseListener(new MouseAdapter() {
+		userController.getViewList().addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				if(e.getClickCount() == 2) {
 					inviteUser();
 				}
 			}
-		});*/
+		});
 		this.documentManager = documentManager;
 		this.viewController = viewController;
 		this.userController = userController;
+		this.participantController = participantController;
 		setEnabled(false);
 	}
 	
@@ -65,14 +70,14 @@ public class NetInviteUserAction extends DocumentItemSelectionChangeAction {
 	}
 
 	private void inviteUser() {
-		if(currentDocumentItem != null && currentUserItem != null) {
-			System.out.println("NetInviteUserAction");
+		if(canInvite()) {
+			currentUserItem.getUser().invite((PublishedSession)currentDocumentItem.getSession());
 		}
 	}
 
 	public void itemSelectionChanged(ItemSelectionChangeEvent e) {
 		// HANDLE USER & DOCUMENT ITEM SELECTION CHANGES
-		/*if(e.getSource() == viewController) {
+		if(e.getSource() == viewController) {
 			if(e.getItem() == null) {
 				currentDocumentItem = null;
 			} else {
@@ -85,13 +90,27 @@ public class NetInviteUserAction extends DocumentItemSelectionChangeAction {
 				currentUserItem = (UserItem)e.getItem();
 			}
 		}
-		
-		if(currentDocumentItem != null && currentUserItem != null) {
+
+		if(canInvite()) {
 			setEnabled(true);
 		} else {
 			setEnabled(false);
-		}*/
+		}
 		
+	}
+	
+	private boolean canInvite() {
+		if(currentDocumentItem != null && currentUserItem != null &&
+				currentDocumentItem.getType() == DocumentItem.PUBLISHED) {
+			Set participants = currentDocumentItem.getSession().getParticipants();
+			Iterator iter = participants.iterator();
+			boolean inSession = false;
+			while(iter.hasNext()) {
+				inSession |= (currentUserItem.getUser().getId() == ((Participant)iter.next()).getUser().getId());
+			}
+			return !inSession;
+		}
+		return false;
 	}
 
 }
