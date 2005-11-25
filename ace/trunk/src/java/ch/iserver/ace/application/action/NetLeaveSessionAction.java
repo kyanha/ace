@@ -33,6 +33,8 @@ import javax.swing.AbstractAction;
 
 public class NetLeaveSessionAction extends DocumentItemSelectionChangeAction {
 
+	private DocumentItem currentDocumentItem;
+	
 	public NetLeaveSessionAction(LocaleMessageSource messageSource, DocumentViewController viewController) {
 		super(messageSource.getMessage("mNetLeave"), messageSource.getIcon("iMenuNetLeave"), viewController);
 		putValue(SHORT_DESCRIPTION, messageSource.getMessage("mNetLeaveTT"));
@@ -40,17 +42,18 @@ public class NetLeaveSessionAction extends DocumentItemSelectionChangeAction {
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		//documentManager.leaveSession();
-		// session.leave();
+		currentDocumentItem.leave();
 	}
 
 	public void itemSelectionChanged(ItemSelectionChangeEvent e) {
 		if(e.getItem() == null) {
+			currentDocumentItem = null;
 			setEnabled(false);
 		} else {
 			DocumentItem item = (DocumentItem)e.getItem();
-			if(item.getType() == DocumentItem.REMOTE || item.getType() == DocumentItem.AWAITING) {
-				// enabled for remote documents only
+			currentDocumentItem = item;
+			if(item.getType() == DocumentItem.JOINED) {
+				// enabled for joined documents only
 				setEnabled(true);
 			} else {
 				setEnabled(false);
