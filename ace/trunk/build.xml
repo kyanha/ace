@@ -312,6 +312,7 @@
 		       printsummary="yes" 
 		       fork="true" 
                haltonerror="true" 
+			   dir="${basedir}"
 			   haltonfailure="true">
 			<jvmarg value="-enableassertions"/>
 			<jvmarg value="-Djava.awt.headless=true"/>
