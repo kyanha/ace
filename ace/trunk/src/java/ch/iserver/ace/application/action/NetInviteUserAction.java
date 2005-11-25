@@ -22,7 +22,6 @@
 package ch.iserver.ace.application.action;
 
 import ch.iserver.ace.collaboration.Participant;
-import ch.iserver.ace.application.ParticipantViewController;
 import ch.iserver.ace.application.DocumentItem;
 import ch.iserver.ace.application.UserItem;
 import ch.iserver.ace.application.DocumentManager;
@@ -44,10 +43,9 @@ public class NetInviteUserAction extends DocumentItemSelectionChangeAction {
 	private UserItem currentUserItem;
 	private DocumentViewController viewController;
 	private UserViewController userController;
-	private ParticipantViewController participantController;
 
 	public NetInviteUserAction(LocaleMessageSource messageSource, DocumentManager documentManager,
-			DocumentViewController viewController, UserViewController userController, ParticipantViewController participantController) {
+			DocumentViewController viewController, UserViewController userController) {
 		super(messageSource.getMessage("mNetInvite"), messageSource.getIcon("iMenuNetInvite"), viewController);
 		putValue(SHORT_DESCRIPTION, messageSource.getMessage("mNetInviteTT"));
 		userController.addItemSelectionChangeListener(this);
@@ -61,7 +59,6 @@ public class NetInviteUserAction extends DocumentItemSelectionChangeAction {
 		this.documentManager = documentManager;
 		this.viewController = viewController;
 		this.userController = userController;
-		this.participantController = participantController;
 		setEnabled(false);
 	}
 	
