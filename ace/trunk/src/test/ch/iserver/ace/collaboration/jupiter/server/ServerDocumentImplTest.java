@@ -3,8 +3,11 @@ package ch.iserver.ace.collaboration.jupiter.server;
 
 import java.util.Iterator;
 
+import javax.swing.text.Element;
+
 import junit.framework.TestCase;
 import ch.iserver.ace.Fragment;
+import ch.iserver.ace.collaboration.jupiter.server.ServerDocumentImpl.FragmentElement;
 
 public class ServerDocumentImplTest extends TestCase {
 	
@@ -13,15 +16,28 @@ public class ServerDocumentImplTest extends TestCase {
 		assertEquals(text, f.getText());
 	}
 	
+	protected void dump(String indent, Element element) {
+		if (element instanceof FragmentElement) {
+			FragmentElement fragment = (FragmentElement) element;
+			System.err.println(indent + fragment.getParticipantId() + " | " + fragment.getText());
+		} else {
+			System.err.println(indent + element.getName());
+		}
+		for (int i = 0; i < element.getElementCount(); i++) {
+			dump(indent + "  ", element.getElement(i));
+		}
+	}
+	
 	public void testSimpleInsert() {
 		ServerDocumentImpl doc = new ServerDocumentImpl();
+		
 		doc.insertString(1, 0, "x");
 		assertEquals("x", doc.getText());
 		Iterator it = doc.getFragments();
 		assertTrue(it.hasNext());
 		assertEquals(1, "x", (Fragment) it.next());
 		assertFalse(it.hasNext());
-		
+
 		doc = new ServerDocumentImpl();
 		doc.insertString(0, 0, "x");
 		assertEquals("x", doc.getText());
@@ -105,7 +121,7 @@ public class ServerDocumentImplTest extends TestCase {
 		assertEquals(2, "XY", (Fragment) it.next());
 		assertEquals(1, "blub", (Fragment) it.next());
 		assertFalse(it.hasNext());
-		
+
 		doc.removeString(3, 3);
 		assertEquals("tesblub", doc.getText());
 		it = doc.getFragments();

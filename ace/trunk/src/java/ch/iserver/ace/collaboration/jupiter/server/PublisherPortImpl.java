@@ -37,8 +37,8 @@ public class PublisherPortImpl extends ParticipantPortImpl implements PublisherP
 	 * @param algorithm the algorithm used by the port
 	 * @param forwarder
 	 */
-	public PublisherPortImpl(ServerLogic logic, int participantId, AlgorithmWrapper algorithm, Forwarder forwarder) {
-		super(logic, participantId, algorithm, forwarder);
+	public PublisherPortImpl(ServerLogic logic, FailureHandler handler, int participantId, AlgorithmWrapper algorithm, Forwarder forwarder) {
+		super(logic, handler, participantId, algorithm, forwarder);
 	}
 	
 	/**

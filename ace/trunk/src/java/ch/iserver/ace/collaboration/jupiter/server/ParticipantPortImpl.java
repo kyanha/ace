@@ -59,6 +59,11 @@ public class ParticipantPortImpl implements ParticipantPort {
 	 * The algorithm used to transform requests.
 	 */
 	private final AlgorithmWrapper algorithm;
+	
+	/**
+	 * The failure handler used by the port.
+	 */
+	private final FailureHandler failureHandler;
 		
 	/**
 	 * Creates a new ParticipantPortImpl using the passed in server logic
@@ -69,12 +74,13 @@ public class ParticipantPortImpl implements ParticipantPort {
 	 * @param algorithm the algorithm used to transform requests
 	 * @param forwarder
 	 */
-	public ParticipantPortImpl(ServerLogic logic, int participantId, AlgorithmWrapper algorithm, Forwarder forwarder) {
+	public ParticipantPortImpl(ServerLogic logic, FailureHandler handler, int participantId, AlgorithmWrapper algorithm, Forwarder forwarder) {
 		ParameterValidator.notNull("algorithm", algorithm);
 		this.logic = logic;
 		this.participantId = participantId;
 		this.algorithm = algorithm;
 		this.forwarder = forwarder;
+		this.failureHandler = handler;
 	}
 
 	/**
@@ -98,12 +104,18 @@ public class ParticipantPortImpl implements ParticipantPort {
 		return participantId;
 	}
 	
+	/**
+	 * @return
+	 */
 	protected Forwarder getForwarder() {
 		return forwarder;
 	}
 	
+	/**
+	 * @return
+	 */
 	protected FailureHandler getFailureHandler() {
-		return (FailureHandler) getLogic();
+		return failureHandler;
 	}
 
 	/**

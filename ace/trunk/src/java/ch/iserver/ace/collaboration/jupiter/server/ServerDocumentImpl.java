@@ -78,7 +78,7 @@ public class ServerDocumentImpl extends AbstractDocument implements
 	}
 	
 	protected int getParticipantId(AttributeSet attr) {
-		int participantId = 0;
+		int participantId = -1;
 		Integer pid = (Integer) attr.getAttribute(ServerDocumentImpl.PARTICIPANT_ATTR);
 		if (pid != null) {
 			participantId = pid.intValue();
@@ -142,23 +142,13 @@ public class ServerDocumentImpl extends AbstractDocument implements
 		
 		int participantId = getParticipantId(candidate.getAttributes());
 		int nparticipantId = getParticipantId(attr);
-
-//		System.out.println(participantId + " -> " + nparticipantId);
-//		System.out.println("element count: " + getDefaultRootElement().getElementCount());
-//		System.out.println("offset = " + offset + ", length = " + length + ", start = " + start + ", end = " + end);
-//		System.out.println("getLength() = " + getLength() + " / text = " + getText());
 		
+		removed.add(candidate);
+
 		if (participantId == nparticipantId) {
-			removed.add(candidate);
-			if (getDefaultRootElement().getElementCount() == 1) {
-				added.add(createLeafElement(defaultRoot, attr, start, end - 1));
-				added.add(createLeafElement(defaultRoot, candidate.getAttributes(), end, end));
-			} else {
-				added.add(createLeafElement(defaultRoot, attr, start, end));
-			}
+			added.add(createLeafElement(defaultRoot, attr, start, end));
 			
 		} else {
-			removed.add(candidate);
 			if (start < offset) {
 				added.add(createLeafElement(defaultRoot, candidate.getAttributes(), start, offset));
 			}

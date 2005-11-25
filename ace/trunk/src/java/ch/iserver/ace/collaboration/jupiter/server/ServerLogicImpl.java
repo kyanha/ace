@@ -157,7 +157,12 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	 */
 	protected PublisherPort createPublisherPort(ParticipantConnection connection) {
 		Algorithm algorithm = new Jupiter(false);
-		PublisherPort port = new PublisherPortImpl(this, 0, new AlgorithmWrapperImpl(algorithm), forwarder);
+		PublisherPort port = new PublisherPortImpl(
+						this, 
+						this, 
+						PublisherConnection.PUBLISHER_ID, 
+						new AlgorithmWrapperImpl(algorithm), 
+						forwarder);
 		Forwarder proxy = createForwarder(0, connection, algorithm);
 		addParticipant(new SessionParticipant(port, proxy, connection, null));
 		return (PublisherPort) incomingDomain.wrap(port, PublisherPort.class);
@@ -364,7 +369,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 				int participantId = getParticipantId(connection.getUser().getId());
 				connection.setParticipantId(participantId);
 				
-				ParticipantPort portTarget = new ParticipantPortImpl(this, participantId, new AlgorithmWrapperImpl(algorithm), forwarder);
+				ParticipantPort portTarget = new ParticipantPortImpl(this, this, participantId, new AlgorithmWrapperImpl(algorithm), forwarder);
 				ParticipantPort port = (ParticipantPort) incomingDomain.wrap(portTarget, ParticipantPort.class);
 				Forwarder proxy = createForwarder(participantId, connection, algorithm);
 				RemoteUserProxy user = connection.getUser();
