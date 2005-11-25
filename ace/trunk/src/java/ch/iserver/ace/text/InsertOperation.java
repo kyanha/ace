@@ -252,7 +252,9 @@ public class InsertOperation implements Operation {
 		int hashcode = position;
 		hashcode += 13 * origin;
 		hashcode += 13 * text.hashCode();
-		hashcode += 13 * original.hashCode();
+		if (original != null) { 
+			hashcode += 13 * original.hashCode();
+		}
 		return hashcode;
 	}
 

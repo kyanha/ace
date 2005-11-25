@@ -134,7 +134,9 @@ public class NoOperation implements Operation {
 	 */
 	public int hashCode() {
 		int hashcode = 37;
-		hashcode += 13 * original.hashCode();
+		if (original != null) {
+			hashcode += 13 * original.hashCode();
+		}
 		return hashcode;
 	}
 }
