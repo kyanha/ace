@@ -111,7 +111,7 @@ return new CollaborativeEditorView(elem);
 	public static class CollaborativeDeletePrevCharAction extends DeletePrevCharAction {
 		public void actionPerformed(ActionEvent e) {
 			if(getTextComponent(e) instanceof CollaborativeTextPane) {
-				System.out.println("CollaborativeDeletePrevCharAction");
+//				System.out.println("CollaborativeDeletePrevCharAction");
 				super.actionPerformed(e);
 			} else {
 				super.actionPerformed(e);
@@ -122,7 +122,7 @@ return new CollaborativeEditorView(elem);
 	public static class CollaborativeDeleteNextCharAction extends DeleteNextCharAction {
 		public void actionPerformed(ActionEvent e) {
 			if(getTextComponent(e) instanceof CollaborativeTextPane) {
-				System.out.println("CollaborativeDeleteNextCharAction");
+//				System.out.println("CollaborativeDeleteNextCharAction");
 				super.actionPerformed(e);
 			} else {
 				super.actionPerformed(e);
@@ -133,7 +133,7 @@ return new CollaborativeEditorView(elem);
 	public static class CollaborativeCutAction extends CutAction {
 		public void actionPerformed(ActionEvent e) {
 			if(getTextComponent(e) instanceof CollaborativeTextPane) {
-				System.out.println("CollaborativeCutAction");
+//				System.out.println("CollaborativeCutAction");
 				super.actionPerformed(e);
 			} else {
 				super.actionPerformed(e);

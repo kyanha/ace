@@ -47,7 +47,7 @@ public class CollaborativeTextPane extends JTextPane {
 			super.replaceSelection(content);
 		} else {
 			// lock
-			System.out.println("CollaborativeReplaceSelection");
+//			System.out.println("CollaborativeReplaceSelection");
 			super.replaceSelection(content);
 			//super.replaceSelection(content);
 			// unlock
