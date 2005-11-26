@@ -33,6 +33,7 @@ import ch.iserver.ace.net.impl.protocol.AbstractConnection;
 import ch.iserver.ace.net.impl.protocol.ProtocolConstants;
 import ch.iserver.ace.net.impl.protocol.RemoteUserSession;
 import ch.iserver.ace.net.impl.protocol.Serializer;
+import ch.iserver.ace.net.impl.protocol.SessionRequestHandler;
 
 /**
  *
@@ -43,6 +44,7 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 	private String docId;
 	private RemoteUserSession session;
 	private Serializer serializer;
+	private boolean hasLeft;
 	
 	public SessionConnectionImpl(String docId, RemoteUserSession session, Channel channel, ReplyListener listener, Serializer serializer) {
 		super(channel);
@@ -51,6 +53,7 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 		this.serializer = serializer;
 		setReplyListener(listener);
 		super.LOG = Logger.getLogger(SessionConnectionImpl.class);
+		hasLeft = false;
 	}
 	
 	public void setParticipantId(int id) {
@@ -61,6 +64,22 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 		return docId;
 	}
 	
+	public boolean hasLeft() {
+		return hasLeft;
+	}
+	
+	/*****************************************************/
+	/** methods from abstract class AbstractConnection  **/
+	/*****************************************************/
+	public void cleanup() {
+		session = null;
+		serializer = null;
+		Channel channel = getChannel();
+		((SessionRequestHandler)channel.getRequestHandler()).cleanup();
+		setChannel(null);
+		setReplyListener(null);
+	}
+	
 	/***********************************************/
 	/** methods from interface SessionConnection  **/
 	/***********************************************/
@@ -69,6 +88,9 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 	 * @see ch.iserver.ace.net.SessionConnection#getParticipantId()
 	 */
 	public int getParticipantId() {
+		if (hasLeft()) {
+			throw new IllegalStateException("session left.");
+		}
 		return participantId;
 	}
 
@@ -76,7 +98,9 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 	 * @see ch.iserver.ace.net.SessionConnection#isAlive()
 	 */
 	public boolean isAlive() {
-		// TODO Auto-generated method stub
+		if (hasLeft()) {
+			throw new IllegalStateException("session left.");
+		}
 		return false;
 	}
 
@@ -85,6 +109,7 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 	 */
 	public void leave() {
 		LOG.debug("--> leave()");
+		hasLeft = true;
 		try {
 			byte[] data = serializer.createNotification(ProtocolConstants.LEAVE, this);
 			send(data, null, getReplyListener());
@@ -99,6 +124,9 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 	 * @see ch.iserver.ace.net.SessionConnection#sendRequest(ch.iserver.ace.algorithm.Request)
 	 */
 	public void sendRequest(Request request) {
+		if (hasLeft()) {
+			throw new IllegalStateException("session left.");
+		}
 		// TODO Auto-generated method stub
 
 	}
@@ -107,7 +135,9 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 	 * @see ch.iserver.ace.net.SessionConnection#sendCaretUpdateMessage(ch.iserver.ace.algorithm.CaretUpdateMessage)
 	 */
 	public void sendCaretUpdateMessage(CaretUpdateMessage message) {
-		// TODO Auto-generated method stub
+		if (hasLeft()) {
+			throw new IllegalStateException("session left.");
+		}
 
 	}
 
@@ -115,7 +145,9 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 	 * @see ch.iserver.ace.net.SessionConnection#sendAcknowledge(int, ch.iserver.ace.algorithm.Timestamp)
 	 */
 	public void sendAcknowledge(int siteId, Timestamp timestamp) {
-		// TODO Auto-generated method stub
+		if (hasLeft()) {
+			throw new IllegalStateException("session left.");
+		}
 
 	}
 
