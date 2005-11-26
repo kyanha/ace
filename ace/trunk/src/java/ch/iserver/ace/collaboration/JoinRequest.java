@@ -60,6 +60,12 @@ public interface JoinRequest {
 	int IN_PROGRESS = 5;
 	
 	/**
+	 * Rejection code specifying that the user trying to join is already part
+	 * of the session.
+	 */
+	int JOINED = 6;
+	
+	/**
 	 * Gets the user that whishes to join the published document.
 	 * 
 	 * @return the user trying to join

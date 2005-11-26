@@ -95,6 +95,8 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	
 	private final Set joinSet = new HashSet();
 	
+	private final Set participants = new HashSet();
+	
 	private final Map userParticipantMapping = new HashMap();
 	
 	private AcknowledgeStrategyFactory acknowledgeStrategyFactory = new NullAcknowledgeStrategyFactory();
@@ -298,7 +300,10 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 			
 	protected void removeParticipant(int participantId) {
 		Integer key = new Integer(participantId);
-		connections.remove(key);
+		ParticipantConnection connection = (ParticipantConnection) connections.remove(key);
+		if (connection != null) {
+			participants.remove(connection.getUser().getId());
+		}
 		Forwarder removed = (Forwarder) proxies.remove(key);
 		forwarder.removeForwarder(removed);
 	}
@@ -307,9 +312,9 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 		return (ParticipantConnection) connections.get(new Integer(id));
 	}
 	
-	
-	public void addParticipant(SessionParticipant participant) {
+	protected void addParticipant(SessionParticipant participant) {
 		Integer key = new Integer(participant.getParticipantId());
+		participants.add(participant.getUserProxy().getId());
 		proxies.put(key, participant.getForwarder());
 		connections.put(key, participant.getParticipantConnection());
 		forwarder.addForwarder(participant.getForwarder());
@@ -328,6 +333,12 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 		}
 		
 		String id = target.getUser().getId();
+		
+		if (participants.contains(id)) {
+			target.joinRejected(JoinRequest.JOINED);
+			return;
+		}
+		
 		if (blacklist.contains(id)) {
 			target.joinRejected(JoinRequest.BLACKLISTED);
 			return;
