@@ -90,6 +90,12 @@ public class MainRequestHandler extends AbstractRequestHandler {
 		LOG.debug("<-- receiveMSG");
 	}
 	
+
+	public void cleanup() {
+		//TODO: consider a thorough and cleanup
+		throw new UnsupportedOperationException();
+	}
+	
 	protected Logger getLogger() {
 		return LOG;
 	}

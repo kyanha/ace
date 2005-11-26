@@ -50,6 +50,12 @@ public class MainConnection extends AbstractConnection {
 		} catch (BEEPException be) {
 			LOG.warn("could not close channel ["+be.getMessage()+"]");
 		}
+		//TODO: consider a thorough cleanup
+		setChannel(null);
+	}
+	
+	public void cleanup() {
+		throw new UnsupportedOperationException();
 	}
 	
 	public String toString() {
