@@ -83,8 +83,16 @@ public class StartChannelListenerImpl implements StartChannelListener {
 	 * @see org.beepcore.beep.core.StartChannelListener#closeChannel(org.beepcore.beep.core.Channel)
 	 */
 	public void closeChannel(Channel channel) throws CloseChannelException {
-		//Called when the underlying BEEP framework receives  a "close" element.
-		LOG.debug("closeChannel("+channel+")");
+		LOG.debug("--> closeChannel("+channel+")");
+		
+		RequestHandler handler = channel.getRequestHandler();
+		if (handler instanceof SessionRequestHandler) {
+			SessionRequestHandler theHandler = (SessionRequestHandler) handler;
+			SessionCleanup cleanup = new SessionCleanup(theHandler.getDocumentId(), theHandler.getPublisherId());
+			//TODO: make session cleanup a thread ?
+			cleanup.execute();
+		}
 		channel.setRequestHandler(null);
+		LOG.debug("<-- closeChannel()");
 	}
 }

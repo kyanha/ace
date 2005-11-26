@@ -38,6 +38,7 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 	
 	private Deserializer deserializer;
 	private ParserHandler handler;
+	private String docId, publisherId;
 	
 	public SessionRequestHandler(Deserializer deserializer, ParserHandler handler) {
 		this.deserializer = deserializer;
@@ -60,8 +61,8 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 				Request response = handler.getResult();
 				if (response.getType() == ProtocolConstants.JOIN_DOCUMENT) {
 					PortableDocumentExt doc = (PortableDocumentExt) response.getPayload();
-					String publisherId = doc.getPublisherId();
-					String docId = doc.getDocumentId();
+					publisherId = doc.getPublisherId();
+					docId = doc.getDocumentId();
 					RemoteUserSession session = SessionManager.getInstance().getSession(publisherId);
 					if (!session.hasSessionConnection(docId)) {
 						session.addSessionConnection(docId, message.getChannel());
@@ -83,6 +84,19 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 		}
 		LOG.debug("<-- receiveMSG");
 		
+	}
+	
+	public void cleanup() {
+		deserializer = null;
+		handler = null;
+	}
+	
+	public String getDocumentId() {
+		return docId;
+	}
+	
+	public String getPublisherId() {
+		return publisherId;
 	}
 	
 	protected Logger getLogger() {

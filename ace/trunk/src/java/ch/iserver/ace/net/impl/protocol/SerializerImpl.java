@@ -178,7 +178,7 @@ public class SerializerImpl implements Serializer, ProtocolConstants {
 				handler.endElement("", "", "response");
 				handler.endElement("", "", "ace");
 				handler.endDocument();
-			} else if (type == JOIN_DOCUMENT) {
+			} else if (type == JOIN_DOCUMENT) { //TODO: bring JOIN_DOCUMENT to CollaborationSerializer and use that one instead of SerializerImpl
 				handler.setResult(result);
 				handler.startDocument();
 				AttributesImpl attrs = new AttributesImpl();

@@ -46,7 +46,6 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 		ParticipantConnection {
 
 	private RemoteUserSession session;
-	private ParticipantPort port;
 	private boolean joinAccepted;
 	private Serializer serializer;
 	private int participantId;
@@ -75,6 +74,21 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 		return publishedDoc;
 	}
 
+	/*****************************************************/
+	/** methods from abstract class AbstractConnection  **/
+	/*****************************************************/
+	public void cleanup() {
+		LOG.debug("--> cleanup()");
+		session = null;
+		publishedDoc = null;
+		serializer = null;
+		setReplyListener(null);
+		Channel channel = getChannel();
+		((ParticipantRequestHandler)channel.getRequestHandler()).cleanup();
+		setChannel(null);
+		LOG.debug("<-- cleanup()");
+	}
+	
 	/***************************************************/
 	/** methods from interface ParticipantConnection  **/
 	/***************************************************/
@@ -85,7 +99,6 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 	public void joinAccepted(ParticipantPort port) {
 		LOG.info("--> joinAccepted()");
 		joinAccepted = true;
-		this.port = port;
 		//intiate collaboration channel
 		try {
 			Channel channel = session.startChannel(RemoteUserSession.CHANNEL_COLLABORATION);
@@ -164,6 +177,11 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 		} catch (BEEPException be) {
 			LOG.warn("could not close channel ["+be.getMessage()+"]");
 		}
+		
+		//clean up participant resources
+		ParticipantCleanup cleanup = new ParticipantCleanup(getPublishedDocument().getId(), session.getUser().getId());
+		cleanup.execute();
+		
 		LOG.info("<-- close()");
 	}
 	

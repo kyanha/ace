@@ -147,7 +147,9 @@ public class RemoteUserSession {
 	 * @return
 	 */
 	public SessionConnectionImpl removeSessionConnection(String docId) {
-		return (SessionConnectionImpl) sessionConnections.remove(docId);
+		SessionConnectionImpl connection = (SessionConnectionImpl) sessionConnections.remove(docId);
+		connection.cleanup();
+		return connection;
 	}
 
 	/**
@@ -184,11 +186,13 @@ public class RemoteUserSession {
 	 * @param docId
 	 * @return
 	 */
-	public ParticipantConnectionImpl removeCollaborationConnection(String docId) {
-		return (ParticipantConnectionImpl) participantConnections.remove(docId);
+	public ParticipantConnectionImpl removeParticipantConnection(String docId) {
+		ParticipantConnectionImpl conn = (ParticipantConnectionImpl) participantConnections.remove(docId);
+		conn.cleanup();
+		return conn;
 	}
 
-	public boolean hasCollaborationConnection(String docId) {
+	public boolean hasParticipantConnection(String docId) {
 		return participantConnections.containsKey(docId);
 	}
 	

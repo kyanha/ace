@@ -8,7 +8,7 @@ import org.beepcore.beep.util.BufferSegment;
 
 import ch.iserver.ace.util.ParameterValidator;
 
-public class AbstractConnection {
+public abstract class AbstractConnection {
 
 	protected Logger LOG = Logger.getLogger(AbstractConnection.class);
 	
@@ -26,7 +26,7 @@ public class AbstractConnection {
 			//AppData is kept only in-process
 			if (data != null)
 				channel.setAppData(data);
-			
+
 			if (isEstablished()) {
 				LOG.debug("--> sendMSG() with "+message.length+" bytes");
 				LOG.debug(message+" "+output+" "+channel+" "+listener);
@@ -68,4 +68,10 @@ public class AbstractConnection {
 	public boolean isEstablished() {
 		return (channel != null);
 	}
+	
+	/**
+	 * Cleans up this connection and frees any resources.
+	 *
+	 */
+	public abstract void cleanup();
 }

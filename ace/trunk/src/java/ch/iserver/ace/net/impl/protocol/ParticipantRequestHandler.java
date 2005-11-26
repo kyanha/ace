@@ -54,6 +54,12 @@ public class ParticipantRequestHandler extends AbstractRequestHandler {
 		return port;
 	}
 	
+	public void cleanup() {
+		deserializer = null;
+		handler = null;
+		port = null;
+	}
+	
 	public void receiveMSG(MessageMSG message) {
 		LOG.info("--> recieveMSG()");
 		
@@ -69,8 +75,8 @@ public class ParticipantRequestHandler extends AbstractRequestHandler {
 				Request result = handler.getResult();
 				if (result.getType() == ProtocolConstants.LEAVE) {
 					port.leave();
-					LOG.debug("participant ["+((DocumentInfo)result.getPayload()).getParticipantId()+"] leave.");
-					//TODO: clean up participant...
+					LOG.debug("participant ["+((DocumentInfo)result.getPayload()).getParticipantId()+"] left.");
+					//clean up of participant is done in ParticipantConnectionImpl.close()
 				}
 				
 				try {				

@@ -66,5 +66,7 @@ public abstract class AbstractRequestHandler implements RequestHandler {
 		return out.toByteArray();
 	}
 	
+	public abstract void cleanup();
+	
 	protected abstract Logger getLogger();
 }
