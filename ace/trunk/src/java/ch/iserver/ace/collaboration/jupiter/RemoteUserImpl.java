@@ -97,6 +97,7 @@ public class RemoteUserImpl implements MutableRemoteUser {
 	public void invite(PublishedSession s) {
 		PublishedSessionImpl session = (PublishedSessionImpl) s;
 		ServerLogic logic = session.getLogic();
+		logic.invite(this);
 		getProxy().invite(logic);
 	}
 	

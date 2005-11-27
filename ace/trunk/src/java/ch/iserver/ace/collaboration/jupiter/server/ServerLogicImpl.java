@@ -151,6 +151,11 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	private final Set participants = new HashSet();
 	
 	/**
+	 * The set of invited users.
+	 */
+	private final Set invited = new HashSet();
+	
+	/**
 	 * A mapping from user id to participant id.
 	 */
 	private final Map userParticipantMapping = new HashMap();
@@ -457,6 +462,12 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 		
 		String id = target.getUser().getId();
 		
+		if (invited.contains(id)) {
+			invited.remove(id);
+			acceptJoin(target);
+			return;
+		}
+		
 		if (participants.contains(id)) {
 			target.joinRejected(JoinRequest.JOINED);
 			return;
@@ -499,28 +510,32 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 			if (!isAcceptingJoins()) {
 				LOG.info("join accepted by publisher but shutdown is in progress");
 			} else {
-				Algorithm algorithm = new Jupiter(false);
-				int participantId = getParticipantId(connection.getUser().getId());
-				connection.setParticipantId(participantId);
-				
-				ParticipantPort portTarget = new ParticipantPortImpl(this, this, participantId, new AlgorithmWrapperImpl(algorithm), forwarder);
-				ParticipantPort port = (ParticipantPort) incomingDomain.wrap(portTarget, ParticipantPort.class);
-				Forwarder proxy = createForwarder(participantId, connection, algorithm);
-				RemoteUserProxy user = connection.getUser();
-		
-				SessionParticipant participant = new SessionParticipant(participantId, proxy, connection, user);
-				PortableDocument document = getDocument();
-							
-				connection.joinAccepted(port);
-				connection.sendDocument(document);
-				addParticipant(participant);
-				forwarder.sendParticipantJoined(participantId, user);
+				acceptJoin(connection);
 			}
 		} finally {
 			// remove from list of joining users
 			joinSet.remove(connection.getUser().getId());
 			LOG.info("<-- join accepted");
 		}
+	}
+	
+	protected void acceptJoin(ParticipantConnection connection) {
+		Algorithm algorithm = new Jupiter(false);
+		int participantId = getParticipantId(connection.getUser().getId());
+		connection.setParticipantId(participantId);
+		
+		ParticipantPort portTarget = new ParticipantPortImpl(this, this, participantId, new AlgorithmWrapperImpl(algorithm), forwarder);
+		ParticipantPort port = (ParticipantPort) incomingDomain.wrap(portTarget, ParticipantPort.class);
+		Forwarder proxy = createForwarder(participantId, connection, algorithm);
+		RemoteUserProxy user = connection.getUser();
+
+		SessionParticipant participant = new SessionParticipant(participantId, proxy, connection, user);
+		PortableDocument document = getDocument();
+					
+		connection.joinAccepted(port);
+		connection.sendDocument(document);
+		addParticipant(participant);
+		forwarder.sendParticipantJoined(participantId, user);
 	}
 	
 	/**
@@ -587,6 +602,15 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 			connection.sendKicked();
 			connection.close();
 		}
+	}
+	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerLogic#invite(ch.iserver.ace.collaboration.RemoteUser)
+	 */
+	public void invite(RemoteUser user) {
+		ParameterValidator.notNull("user", user);
+		blacklist.remove(user.getId());
+		invited.add(user.getId());
 	}
 	
 	/**

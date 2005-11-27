@@ -22,6 +22,7 @@
 package ch.iserver.ace.collaboration.jupiter.server;
 
 import ch.iserver.ace.DocumentDetails;
+import ch.iserver.ace.collaboration.RemoteUser;
 import ch.iserver.ace.net.DocumentServerLogic;
 import ch.iserver.ace.net.ParticipantConnection;
 
@@ -65,6 +66,11 @@ public interface ServerLogic extends DocumentServerLogic {
 	 * @param connection
 	 */
 	void joinAccepted(ParticipantConnection connection);
+	
+	/**
+	 * @param user
+	 */
+	void invite(RemoteUser user);
 	
 	/**
 	 * Shuts the server logic down. The server logic takes care that the
