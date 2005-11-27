@@ -22,7 +22,6 @@
 package ch.iserver.ace.collaboration.jupiter.server;
 
 import ch.iserver.ace.net.ParticipantConnection;
-import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.RemoteUserProxy;
 
 /**
@@ -40,16 +39,16 @@ public class SessionParticipant {
 	private final RemoteUserProxy userProxy;
 	
 	/**
-	 * @param port
+	 * @param participantId
 	 * @param proxy
 	 * @param connection
 	 * @param userProxy
 	 */
-	public SessionParticipant(ParticipantPort port, 
+	public SessionParticipant(int participantId, 
 					Forwarder proxy, 
 					ParticipantConnection connection, 
 					RemoteUserProxy userProxy) {
-		this.participantId = port.getParticipantId();
+		this.participantId = participantId;
 		this.participantConnection = connection;
 		this.forwarder = proxy;
 		this.userProxy = userProxy;

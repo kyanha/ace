@@ -23,7 +23,6 @@ package ch.iserver.ace.collaboration.jupiter.server;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -33,7 +32,6 @@ import org.apache.log4j.Logger;
 
 import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.DocumentModel;
-import ch.iserver.ace.Fragment;
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.jupiter.Jupiter;
 import ch.iserver.ace.collaboration.JoinRequest;
@@ -120,11 +118,6 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	 * The connection to the publisher of the document.
 	 */
 	private PublisherConnection publisherConnection;
-	
-	/**
-	 * The port used by the publisher of the document.
-	 */
-	private PublisherPort publisherPort;
 	
 	/**
 	 * The server copy of the current document. This document is sent to
@@ -228,14 +221,15 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	 */
 	protected PublisherPort createPublisherPort(ParticipantConnection connection) {
 		Algorithm algorithm = new Jupiter(false);
+		int participantId = ParticipantConnection.PUBLISHER_ID;
 		PublisherPort port = new PublisherPortImpl(
 						this, 
 						this, 
-						PublisherConnection.PUBLISHER_ID, 
+						participantId, 
 						new AlgorithmWrapperImpl(algorithm), 
 						forwarder);
-		Forwarder proxy = createForwarder(ParticipantConnection.PUBLISHER_ID, connection, algorithm);
-		addParticipant(new SessionParticipant(port, proxy, connection, null));
+		Forwarder proxy = createForwarder(participantId, connection, algorithm);
+		addParticipant(new SessionParticipant(participantId, proxy, connection, null));
 		return (PublisherPort) incomingDomain.wrap(port, PublisherPort.class);
 	}
 	
@@ -266,8 +260,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 								publisherConnection, 
 								getFailureHandler()),
 						PublisherConnection.class);
-		this.publisherPort = createPublisherPort(this.publisherConnection);
-		return publisherPort;
+		return createPublisherPort(this.publisherConnection);
 	}
 		
 	/**
@@ -348,23 +341,12 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 		acceptingJoins = true;
 	}
 	
-	public void dispose() {
-		acceptingJoins = false;
-	}
-	
 	/**
 	 * @return the connection object for the publisher of the session
 	 */
 	protected PublisherConnection getPublisherConnection() {
 		return publisherConnection;
 	}
-	
-//	/**
-//	 * @return the port object for the publisher of the session
-//	 */
-//	protected PublisherPort getPublisherPort() {
-//		return publisherPort;
-//	}
 	
 	/**
 	 * @return the current access control strategy of the session
@@ -526,16 +508,9 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 				Forwarder proxy = createForwarder(participantId, connection, algorithm);
 				RemoteUserProxy user = connection.getUser();
 		
-				SessionParticipant participant = new SessionParticipant(portTarget, proxy, connection, user);
+				SessionParticipant participant = new SessionParticipant(participantId, proxy, connection, user);
 				PortableDocument document = getDocument();
-				
-				System.out.println("server document ...");
-				Iterator it = document.getFragments();
-				while (it.hasNext()) {
-					Fragment fragment = (Fragment) it.next();
-					System.out.println(fragment.getParticipantId() + " | " + fragment.getText());
-				}
-				
+							
 				connection.joinAccepted(port);
 				connection.sendDocument(document);
 				addParticipant(participant);
@@ -619,6 +594,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	 */
 	public void shutdown() {
 		LOG.info("--> shutdown");
+		acceptingJoins = false;
 		if (getDocumentServer() != null) {
 			getDocumentServer().prepareShutdown();
 		}
@@ -626,6 +602,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 		if (getDocumentServer() != null) {
 			getDocumentServer().shutdown();
 		}
+		LOG.info("<-- shutdown");
 	}
 	
 	// --> start FailureHandler methods <--
