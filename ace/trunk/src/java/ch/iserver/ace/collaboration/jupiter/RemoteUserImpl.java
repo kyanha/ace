@@ -26,7 +26,7 @@ import java.beans.PropertyChangeSupport;
 
 import ch.iserver.ace.collaboration.PublishedSession;
 import ch.iserver.ace.collaboration.RemoteUser;
-import ch.iserver.ace.net.DocumentServerLogic;
+import ch.iserver.ace.collaboration.jupiter.server.ServerLogic;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.util.ParameterValidator;
 
@@ -96,7 +96,7 @@ public class RemoteUserImpl implements MutableRemoteUser {
 	 */
 	public void invite(PublishedSession s) {
 		PublishedSessionImpl session = (PublishedSessionImpl) s;
-		DocumentServerLogic logic = session.getLogic();
+		ServerLogic logic = session.getLogic();
 		getProxy().invite(logic);
 	}
 	
