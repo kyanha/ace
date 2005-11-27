@@ -84,7 +84,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	/**
 	 * The mapping from participant id to Forwarder objects.
 	 */
-	private final HashMap proxies = new HashMap();
+	private final HashMap forwarders = new HashMap();
 	
 	/**
 	 * The mapping from participant id to ParticipantConnection objects.
@@ -432,7 +432,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 		if (connection != null) {
 			participants.remove(connection.getUser().getId());
 		}
-		Forwarder removed = (Forwarder) proxies.remove(key);
+		Forwarder removed = (Forwarder) forwarders.remove(key);
 		forwarder.removeForwarder(removed);
 	}
 		
@@ -456,7 +456,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 		if (participant.getUserProxy() != null) {
 			participants.add(participant.getUserProxy().getId());
 		}
-		proxies.put(key, participant.getForwarder());
+		forwarders.put(key, participant.getForwarder());
 		connections.put(key, participant.getParticipantConnection());
 		forwarder.addForwarder(participant.getForwarder());
 	}
