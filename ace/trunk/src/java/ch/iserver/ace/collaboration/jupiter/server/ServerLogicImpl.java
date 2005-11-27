@@ -314,7 +314,9 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	
 	protected void addParticipant(SessionParticipant participant) {
 		Integer key = new Integer(participant.getParticipantId());
-		participants.add(participant.getUserProxy().getId());
+		if (participant.getUserProxy() != null) {
+			participants.add(participant.getUserProxy().getId());
+		}
 		proxies.put(key, participant.getForwarder());
 		connections.put(key, participant.getParticipantConnection());
 		forwarder.addForwarder(participant.getForwarder());
