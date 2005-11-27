@@ -61,46 +61,115 @@ import ch.iserver.ace.util.ThreadDomain;
  */
 public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessControlStrategy {
 	
+	/**
+	 * The logger used by instances of this class.
+	 */
 	private static final Logger LOG = Logger.getLogger(ServerLogicImpl.class);
 	
+	/**
+	 * The next participant id to be given to a new user.
+	 */
 	private int nextParticipantId;
 	
+	/**
+	 * The CompositeForwarder used to forward events to other participants.
+	 */
 	private final CompositeForwarder forwarder;
 	
+	/**
+	 * The FailureHandler used to handle failures in this class.
+	 */
 	private final FailureHandler failureHandler;
 		
+	/**
+	 * The mapping from participant id to Forwarder objects.
+	 */
 	private final HashMap proxies = new HashMap();
 	
+	/**
+	 * The mapping from participant id to ParticipantConnection objects.
+	 */
 	private final TreeMap connections = new TreeMap();
 	
+	/**
+	 * The DocumentServer object from the network layer.
+	 */
 	private DocumentServer server;
 	
+	/**
+	 * ThreadDomain used to wrap all incoming operations.
+	 */
 	private final ThreadDomain incomingDomain;
 	
+	/**
+	 * ThreadDomain used to wrap all outgoing operations.
+	 */
 	private final ThreadDomain outgoingDomain;
 	
+	/**
+	 * The AccessControlStrategy used by this object.
+	 */
 	private AccessControlStrategy accessControlStrategy;
 	
+	/**
+	 * The factory used to create AcknowledgeStrategy objects.
+	 */
+	private AcknowledgeStrategyFactory acknowledgeStrategyFactory = new NullAcknowledgeStrategyFactory();
+
+	/**
+	 * The connection to the publisher of the document.
+	 */
 	private PublisherConnection publisherConnection;
 	
+	/**
+	 * The port used by the publisher of the document.
+	 */
 	private PublisherPort publisherPort;
 	
+	/**
+	 * The server copy of the current document. This document is sent to
+	 * joining users.
+	 */
 	private final ServerDocument document;
 	
+	/**
+	 * The user registry of the application.
+	 */
 	private final UserRegistry registry;
 	
+	/**
+	 * Flag indicating whether this object is accepting joins.
+	 */
 	private boolean acceptingJoins;
 	
+	/**
+	 * The blacklist of this session.
+	 */
 	private final Set blacklist = new HashSet();
 	
+	/**
+	 * The set of currently joining users.
+	 */
 	private final Set joinSet = new HashSet();
 	
+	/**
+	 * The set of users that are currently in the session.
+	 */
 	private final Set participants = new HashSet();
 	
+	/**
+	 * A mapping from user id to participant id.
+	 */
 	private final Map userParticipantMapping = new HashMap();
-	
-	private AcknowledgeStrategyFactory acknowledgeStrategyFactory = new NullAcknowledgeStrategyFactory();
-		
+			
+	/**
+	 * Creates a new ServerLogicImpl instance.
+	 * 
+	 * @param incomingDomain
+	 * @param outgoingDomain
+	 * @param document
+	 * @param registry
+	 */
 	public ServerLogicImpl(ThreadDomain incomingDomain,
 	                       ThreadDomain outgoingDomain, 
 	                       DocumentModel document,
@@ -201,32 +270,55 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 		return publisherPort;
 	}
 		
-	public boolean isAcceptingJoins() {
+	/**
+	 * @return whether this server logic is accepting joins
+	 */
+	protected boolean isAcceptingJoins() {
 		return acceptingJoins;
 	}
 	
-	public PortableDocument getDocument() {
+	/**
+	 * @return the current copy of the server-side document
+	 */
+	protected PortableDocument getDocument() {
 		return document.toPortableDocument();
 	}
 	
+	/**
+	 * @return the user registry of the application
+	 */
 	protected UserRegistry getUserRegistry() {
 		return registry;
 	}
 	
+	/**
+	 * @return the document server of this session
+	 */
 	protected DocumentServer getDocumentServer() {
 		return server;
 	}
 	
+	/**
+	 * Sets the document server of this session.
+	 * 
+	 * @param server the server of this session
+	 */
 	public void setDocumentServer(DocumentServer server) {
 		ParameterValidator.notNull("server", server);
 		this.server = server;
 	}
 			
-	public Forwarder getForwarder() {
+	/**
+	 * @return gets the forwarder used to forward events
+	 */
+	protected Forwarder getForwarder() {
 		return forwarder;
 	}
 	
-	public FailureHandler getFailureHandler() {
+	/**
+	 * @return gets the failure handler of this server logic
+	 */
+	protected FailureHandler getFailureHandler() {
 		return failureHandler;
 	}
 	
@@ -260,35 +352,65 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 		acceptingJoins = false;
 	}
 	
+	/**
+	 * @return the connection object for the publisher of the session
+	 */
 	protected PublisherConnection getPublisherConnection() {
 		return publisherConnection;
 	}
 	
-	public PublisherPort getPublisherPort() {
-		LOG.info("--> getPublisherPort");
-		return publisherPort;
-	}
+//	/**
+//	 * @return the port object for the publisher of the session
+//	 */
+//	protected PublisherPort getPublisherPort() {
+//		return publisherPort;
+//	}
 	
+	/**
+	 * @return the current access control strategy of the session
+	 */
 	protected AccessControlStrategy getAccessControlStrategy() {
 		return accessControlStrategy;
 	}
 	
+	/**
+	 * Sets the new access control strategy of the session.
+	 * 
+	 * @param strategy the new strategy
+	 */
 	public void setAccessControlStrategy(AccessControlStrategy strategy) {
 		this.accessControlStrategy = strategy;
 	}
 	
+	/**
+	 * Sets the new AcknowledgeStrategyFactory object.
+	 * 
+	 * @param factory the factory for AcknowledgeStrategy objects
+	 */
 	public void setAcknowledgeStrategyFactory(AcknowledgeStrategyFactory factory) {
 		this.acknowledgeStrategyFactory = factory;
 	}
 	
-	public AcknowledgeStrategyFactory getAcknowledgeStrategyFactory() {
+	/**
+	 * @return the factory to create acknowledge strategy objects
+	 */
+	protected AcknowledgeStrategyFactory getAcknowledgeStrategyFactory() {
 		return acknowledgeStrategyFactory;
 	}
 	
+	/**
+	 * @return the next available participant id
+	 */
 	protected synchronized int nextParticipantId() {
 		return ++nextParticipantId;
 	}
 	
+	/**
+	 * Gets a participant id for a user.
+	 * 
+	 * @param userId the user id
+	 * @return a participant id for the user
+	 */
 	protected int getParticipantId(String userId) {
 		Integer id = (Integer) userParticipantMapping.get(userId);
 		if (id == null) {
@@ -298,6 +420,12 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 		return id.intValue();
 	}
 			
+	/**
+	 * Removes the participant specified with the given id from the
+	 * session.
+	 * 
+	 * @param participantId the participant to be removed
+	 */
 	protected void removeParticipant(int participantId) {
 		Integer key = new Integer(participantId);
 		ParticipantConnection connection = (ParticipantConnection) connections.remove(key);
@@ -308,10 +436,21 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 		forwarder.removeForwarder(removed);
 	}
 		
+	/**
+	 * Gets the participant connection for a participant.
+	 * 
+	 * @param id the participant id
+	 * @return the participant connection for the given participant or null
+	 */
 	protected ParticipantConnection getParticipantConnection(int id) {
 		return (ParticipantConnection) connections.get(new Integer(id));
 	}
 	
+	/**
+	 * Adds a new participant to the session.
+	 * 
+	 * @param participant the participant to be added
+	 */
 	protected void addParticipant(SessionParticipant participant) {
 		Integer key = new Integer(participant.getParticipantId());
 		if (participant.getUserProxy() != null) {
@@ -476,7 +615,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	}
 	
 	/**
-	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerLogic#prepareShutdown()
+	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerLogic#shutdown()
 	 */
 	public void shutdown() {
 		LOG.info("--> shutdown");
