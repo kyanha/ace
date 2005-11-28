@@ -72,6 +72,7 @@ public class PublishDocumentReceiveFilter extends AbstractRequestFilter {
 				super.process(request);
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			LOG.error("exception processing request ["+e+", "+e.getMessage()+"]");
 		}
 	}
