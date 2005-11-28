@@ -51,15 +51,17 @@ public class RequestParserHandler extends ParserHandler {
 	}
 	
 	public void endDocument() throws SAXException {
-		if (getType() == PUBLISHED_DOCUMENTS) {
-			result = new RequestImpl(getType(), userId, null);
-		} else if (getType() == PUBLISH 
-				|| getType() == CONCEAL 
-				|| getType() == DOCUMENT_DETAILS_CHANGED 
-				|| getType() == JOIN) {
-			result = new RequestImpl(getType(), userId, info);
-		} else if (getType() == SEND_DOCUMENTS) {
-			result = new RequestImpl(getType(), userId, requestPayload);
+		int type = getType();
+		if (type == PUBLISHED_DOCUMENTS) {
+			result = new RequestImpl(PUBLISHED_DOCUMENTS, userId, null);
+		} else if (type == PUBLISH 
+				|| type == CONCEAL 
+				|| type == DOCUMENT_DETAILS_CHANGED 
+				|| type == JOIN
+				|| type == INVITE) {
+			result = new RequestImpl(type, userId, info);
+		} else if (type == SEND_DOCUMENTS) {
+			result = new RequestImpl(SEND_DOCUMENTS, userId, requestPayload);
 		}
 	}
 	
@@ -100,6 +102,9 @@ public class RequestParserHandler extends ParserHandler {
 			} else {
 				LOG.warn("unkown tag in <"+TAG_JOIN+"> tag.");
 			}
+		} else if (requestType == INVITE) {
+			String id = attributes.getValue(DOCUMENT_ID);
+			info = new DocumentInfo(id, null, userId);
 		} else if (qName.equals(TAG_QUERY)) { //TODO: remove tag query, is discarded
 			if (attributes.getValue(QUERY_TYPE).equals(QUERY_TYPE_PUBLISHED_DOCUMENTS)) {
 				requestType = PUBLISHED_DOCUMENTS;
@@ -122,6 +127,9 @@ public class RequestParserHandler extends ParserHandler {
 		} else if (qName.equals(TAG_JOIN)) {
 			userId = attributes.getValue(USER_ID);
 			requestType = JOIN;
+		} else if (qName.equals(TAG_INVITE)) {
+			userId = attributes.getValue(USER_ID);
+			requestType = INVITE;
 		}
 
 	}

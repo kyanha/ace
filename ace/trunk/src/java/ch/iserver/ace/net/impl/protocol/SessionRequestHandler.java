@@ -25,9 +25,11 @@ import org.apache.log4j.Logger;
 import org.beepcore.beep.core.InputDataStream;
 import org.beepcore.beep.core.MessageMSG;
 
+import ch.iserver.ace.net.SessionConnectionCallback;
 import ch.iserver.ace.net.impl.PortableDocumentExt;
 import ch.iserver.ace.net.impl.RemoteDocumentProxyExt;
 import ch.iserver.ace.net.impl.SessionConnectionImpl;
+import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
 
 /**
  * Client side request handler for a collaborative session.
@@ -39,6 +41,7 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 	private Deserializer deserializer;
 	private ParserHandler handler;
 	private String docId, publisherId;
+	private SessionConnectionCallback sessionCallback;
 	
 	public SessionRequestHandler(Deserializer deserializer, ParserHandler handler) {
 		this.deserializer = deserializer;
@@ -56,22 +59,39 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 			if (rawData.length == PIGGYBACKED_MESSAGE_LENGTH) {
 				handlePiggybackedMessage(message);
 			} else {
-				//reception and processing of a joined document
-				deserializer.deserialize(rawData, handler);
-				Request response = handler.getResult();
-				if (response.getType() == ProtocolConstants.JOIN_DOCUMENT) {
+				Request response = null;
+				synchronized(this) {
+					//deserializer and handler are shared by all SessionRequestHandler instances, thus synchronize
+					deserializer.deserialize(rawData, handler);
+					response = handler.getResult();
+				}
+				int type = response.getType();
+				if (type == ProtocolConstants.JOIN_DOCUMENT) {
+					//reception and processing of a joined document
 					PortableDocumentExt doc = (PortableDocumentExt) response.getPayload();
 					publisherId = doc.getPublisherId();
 					docId = doc.getDocumentId();
 					RemoteUserSession session = SessionManager.getInstance().getSession(publisherId);
+					SessionConnectionImpl connection = null;
 					if (!session.hasSessionConnection(docId)) {
-						session.addSessionConnection(docId, message.getChannel());
+						connection = session.addSessionConnection(docId, message.getChannel());
+					} else {
+						connection = session.getSessionConnection(docId);
+						connection.setChannel(message.getChannel());
+						connection.setState(AbstractConnection.STATE_ACTIVE);
 					}
-					SessionConnectionImpl connection = session.getSessionConnection(docId);
 					connection.setParticipantId(doc.getParticipantId());
 					RemoteDocumentProxyExt proxy = session.getUser().getSharedDocument(docId);
-					proxy.joinAccepted(doc, connection);
+					sessionCallback = proxy.joinAccepted(doc, connection);
+				} else if (type == ProtocolConstants.KICKED) {
+					String docId = ((DocumentInfo) response.getPayload()).getDocId();
+					LOG.debug("user kicked for doc [" + docId + "]");
+					sessionCallback.kicked();
+				}	else if (type == ProtocolConstants.REQUEST) {
+					//TODO:
+//					sessionCallback.receiveRequest(participantId, request);
 				}
+				
 				try {				
 					message.sendNUL(); //confirm reception of msg
 				} catch (Exception e) {
@@ -89,6 +109,7 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 	public void cleanup() {
 		deserializer = null;
 		handler = null;
+		sessionCallback = null;
 	}
 	
 	public String getDocumentId() {

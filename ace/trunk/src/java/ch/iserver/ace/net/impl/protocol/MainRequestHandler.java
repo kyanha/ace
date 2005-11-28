@@ -38,8 +38,6 @@ public class MainRequestHandler extends AbstractRequestHandler {
 	
 	private static Logger LOG = Logger.getLogger(MainRequestHandler.class);
 	
-	private static Object MUTEX = new Object();
-	
 	private RequestFilter filter;
 	private Deserializer deserializer;
 	private RequestParserHandler handler;	
@@ -68,19 +66,21 @@ public class MainRequestHandler extends AbstractRequestHandler {
 			} else {
 				Request request = null;
 				//TODO: use SingleThreadedDomain instead of synchronized
-				synchronized (MUTEX) {
+				synchronized (this) {
 					deserializer.deserialize(rawData, handler);
 					request = handler.getResult();
-					String userid = request.getUserId();
-					DiscoveryManager discoveryManager = DiscoveryManagerFactory.getDiscoveryManager(null);
-					if (!discoveryManager.hasSessionEstablished(userid)) {
-						RemoteUserProxyExt user = discoveryManager.getUser(userid);
-						LOG.debug("create RemoteUserSession for ["+user.getMutableUserDetails().getUsername()+"]");
-						SessionManager manager = SessionManager.getInstance();
-						Channel mainChannel = message.getChannel();
-						manager.createSession(user, (TCPSession) mainChannel.getSession(), mainChannel);
-					}
 				}
+				//TODO: the following code must not be synchronized right?
+				String userid = request.getUserId();
+				DiscoveryManager discoveryManager = DiscoveryManagerFactory.getDiscoveryManager(null);
+				if (!discoveryManager.hasSessionEstablished(userid)) {
+					RemoteUserProxyExt user = discoveryManager.getUser(userid);
+					LOG.debug("create RemoteUserSession for ["+user.getMutableUserDetails().getUsername()+"]");
+					SessionManager manager = SessionManager.getInstance();
+					Channel mainChannel = message.getChannel();
+					manager.createSession(user, (TCPSession) mainChannel.getSession(), mainChannel);
+				}
+				
 				request.setMessage(message);
 				filter.process(request);
 			}
@@ -92,7 +92,7 @@ public class MainRequestHandler extends AbstractRequestHandler {
 	
 
 	public void cleanup() {
-		//TODO: consider a thorough and cleanup
+		//TODO: consider a thorough and meaningful cleanup
 		throw new UnsupportedOperationException();
 	}
 	

@@ -47,7 +47,6 @@ public class RemoteDocumentProxyImpl implements RemoteDocumentProxyExt {
 	private JoinNetworkCallback callback;
 	private RequestFilter filterChain;
 	private SessionConnection sessionConnection;
-	private SessionConnectionCallback sessionConnectionCallback;
 	private boolean isJoined;
 	
 	public RemoteDocumentProxyImpl(String id, DocumentDetails details, RemoteUserProxy publisher, RequestFilter filter) {
@@ -74,13 +73,14 @@ public class RemoteDocumentProxyImpl implements RemoteDocumentProxyExt {
 		this.details = details;
 	}
 	
-	public void joinAccepted(PortableDocumentExt document, SessionConnection connection) {
+	public SessionConnectionCallback joinAccepted(PortableDocumentExt document, SessionConnection connection) {
 		LOG.debug("--> joinAccepted()");
 		isJoined = true;
 		sessionConnection = connection;
-		sessionConnectionCallback = callback.accepted(sessionConnection);
-		sessionConnectionCallback.setDocument(document);
+		SessionConnectionCallback sessionCallback = callback.accepted(sessionConnection);
+		sessionCallback.setDocument(document);
 		LOG.debug("<-- joinAccepted()");
+		return sessionCallback;
 	}
 	
 	public void joinRejected(int code) {
@@ -94,7 +94,6 @@ public class RemoteDocumentProxyImpl implements RemoteDocumentProxyExt {
 	
 	public void cleanupAfterLeave() {
 		isJoined = false;
-		sessionConnectionCallback = null;
 		callback = null;
 		sessionConnection = null;
 	}

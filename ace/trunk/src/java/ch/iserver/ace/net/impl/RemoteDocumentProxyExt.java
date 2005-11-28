@@ -24,6 +24,7 @@ package ch.iserver.ace.net.impl;
 import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.net.RemoteDocumentProxy;
 import ch.iserver.ace.net.SessionConnection;
+import ch.iserver.ace.net.SessionConnectionCallback;
 
 /**
  *
@@ -34,7 +35,7 @@ public interface RemoteDocumentProxyExt extends RemoteDocumentProxy {
 	
 	public void joinRejected(int code);
 	
-	public void joinAccepted(PortableDocumentExt document, SessionConnection connection);
+	public SessionConnectionCallback joinAccepted(PortableDocumentExt document, SessionConnection connection);
 	
 	public void cleanupAfterLeave();
 	

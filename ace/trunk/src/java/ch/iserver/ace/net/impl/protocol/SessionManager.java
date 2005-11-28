@@ -69,6 +69,7 @@ public class SessionManager {
 	}
 	
 	public RemoteUserSession createSession(RemoteUserProxyExt user, TCPSession session, Channel mainChannel) {
+		//TODO: must not be synchronized right?
 		RemoteUserSession newSession = new RemoteUserSession(session, new MainConnection(mainChannel), user);
 		sessions.put(user.getId(), newSession);
 		DiscoveryManagerFactory.getDiscoveryManager(null).setSessionEstablished(user.getId());
@@ -104,7 +105,7 @@ public class SessionManager {
 	 * @param id the user id
 	 * @return the session of the user
 	 */
-	public synchronized RemoteUserSession getSession(String id) {
+	public RemoteUserSession getSession(String id) {
 		RemoteUserSession session = (RemoteUserSession) sessions.get(id);
 		if (session == null) 
 			LOG.warn("session for ["+id+"] not found");

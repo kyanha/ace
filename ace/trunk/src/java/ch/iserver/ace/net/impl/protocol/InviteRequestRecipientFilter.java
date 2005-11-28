@@ -27,7 +27,6 @@ import ch.iserver.ace.net.InvitationProxy;
 import ch.iserver.ace.net.NetworkServiceCallback;
 import ch.iserver.ace.net.RemoteDocumentProxy;
 import ch.iserver.ace.net.impl.InvitationProxyFactory;
-import ch.iserver.ace.net.impl.InvitationProxyImpl;
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
 

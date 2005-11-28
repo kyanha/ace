@@ -21,14 +21,18 @@
 package ch.iserver.ace.net.impl;
 
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import ch.iserver.ace.UserDetails;
-import ch.iserver.ace.net.DocumentServerLogic;
 import ch.iserver.ace.util.ParameterValidator;
 
 public class RemoteUserProxyImpl implements RemoteUserProxyExt {
+	
+	private static Logger LOG = Logger.getLogger(RemoteUserProxyImpl.class);
 	
 	private String id;
 	private MutableUserDetails details;
@@ -41,14 +45,14 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 		ParameterValidator.notNull("details", details);
 		this.id = id;
 		this.details = details;
-		this.documents = new HashMap();
+		this.documents = Collections.synchronizedMap(new LinkedHashMap());
 		isSessionEstablished = false;
 		isExplicitlyDiscovered = false;
 	}
 	
-	/***********************************************/
-	/** methods from interface RemoteUserProxyExt **/
-	/***********************************************/
+	/********************************************/
+	/** methods from interface RemoteUserProxy **/
+	/********************************************/
 	public String getId() {
 		return id;
 	}
@@ -60,15 +64,11 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 	public Collection getSharedDocuments() {
 		return documents.values();
 	}
-
-	public void invite(DocumentServerLogic logic) {
-		throw new UnsupportedOperationException();
-	}
 	
 	
-	/********************************************/
-	/** methods from interface RemoteUserProxy **/
-	/********************************************/
+	/***********************************************/
+	/** methods from interface RemoteUserProxyExt **/
+	/***********************************************/
 	
 	public MutableUserDetails getMutableUserDetails() {
 		return details;

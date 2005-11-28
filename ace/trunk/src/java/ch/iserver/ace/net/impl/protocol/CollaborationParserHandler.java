@@ -50,8 +50,9 @@ public class CollaborationParserHandler extends ParserHandler {
 	}
 	
 	public void endDocument() throws SAXException {
-		if (getType() == LEAVE) {
-			result = new RequestImpl(LEAVE, null, info);
+		int type = getType();
+		if (type == LEAVE || type == KICKED) {
+			result = new RequestImpl(type, null, info);
 		}
 	}
 	
@@ -61,6 +62,10 @@ public class CollaborationParserHandler extends ParserHandler {
 			String docId = attributes.getValue(DOC_ID);
 			String participantId = attributes.getValue(PARTICIPANT_ID);
 			info = new DocumentInfo(docId, Integer.parseInt(participantId));
+		} else if (qName.equals(TAG_KICKED)) {
+			requestType = KICKED;
+			String docId = attributes.getValue(DOC_ID);
+			info = new DocumentInfo(docId, -1));
 		}
 	}
 	

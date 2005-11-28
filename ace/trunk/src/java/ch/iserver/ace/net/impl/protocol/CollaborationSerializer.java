@@ -97,6 +97,11 @@ public class CollaborationSerializer implements Serializer, ProtocolConstants {
 				attrs.addAttribute("", "", PARTICIPANT_ID, "", Integer.toString(conn.getParticipantId()));
 				handler.startElement("", "", TAG_LEAVE, attrs);
 				handler.endElement("", "", TAG_LEAVE);
+			} else if (type == KICKED) {
+				String docId = (String) data;
+				attrs.addAttribute("", "", DOC_ID, "", docId);
+				handler.startElement("", "", TAG_KICKED, attrs);
+				handler.endElement("", "", TAG_KICKED);
 			} else {
 				LOG.error("unknown notification type ["+type+"]");
 			}

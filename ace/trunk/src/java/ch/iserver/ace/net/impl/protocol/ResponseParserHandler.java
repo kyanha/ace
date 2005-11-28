@@ -35,6 +35,7 @@ import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.PortableDocumentExt;
 import ch.iserver.ace.net.impl.PortableDocumentImpl;
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;
+import ch.iserver.ace.net.impl.RemoteUserProxyFactory;
 import ch.iserver.ace.net.impl.RemoteUserProxyImpl;
 
 /**
@@ -92,7 +93,7 @@ public class ResponseParserHandler extends ParserHandler {
 					
 					MutableUserDetails details = new MutableUserDetails(userName, 
 							address, Integer.parseInt(userPort));
-					RemoteUserProxyExt proxy = new RemoteUserProxyImpl(userId, details);
+					RemoteUserProxyExt proxy = RemoteUserProxyFactory.getInstance().createProxy(userId, details);
 					proxy.setExplicityDiscovered(Boolean.getBoolean(explicitDiscovery));
 					document.addParticipant(currParticipantId, proxy);
 				} else { //selection

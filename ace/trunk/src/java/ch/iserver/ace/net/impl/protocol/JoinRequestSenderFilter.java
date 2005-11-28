@@ -43,16 +43,12 @@ public class JoinRequestSenderFilter extends AbstractRequestFilter {
 	public void process(Request request) {
 		try {
 			if (request.getType() == ProtocolConstants.JOIN) {
-				LOG.info("--> process()");
-				
-				synchronized(this) { //synchronize precautionary
-					byte[] data = serializer.createRequest(ProtocolConstants.JOIN, request.getPayload());
-					RemoteUserSession session = SessionManager.getInstance().getSession(request.getUserId());
-					MainConnection connection = session.getMainConnection();
-					LOG.debug("send data to ["+session.getUser().getUserDetails().getUsername()+"] ["+(new String(data))+"]");
-					connection.send(data, session.getUser().getUserDetails().getUsername(), listener);
-				}
-				
+				LOG.info("--> process()");		
+				byte[] data = serializer.createRequest(ProtocolConstants.JOIN, request.getPayload());
+				RemoteUserSession session = SessionManager.getInstance().getSession(request.getUserId());
+				MainConnection connection = session.getMainConnection();
+				LOG.debug("send data to ["+session.getUser().getUserDetails().getUsername()+"] ["+(new String(data))+"]");
+				connection.send(data, session.getUser().getUserDetails().getUsername(), listener);
 				LOG.info("<-- process()");
 			} else {
 				super.process(request);

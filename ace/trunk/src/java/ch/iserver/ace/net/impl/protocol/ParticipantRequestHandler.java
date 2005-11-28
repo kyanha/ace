@@ -73,10 +73,11 @@ public class ParticipantRequestHandler extends AbstractRequestHandler {
 			} else {
 				deserializer.deserialize(rawData, handler);
 				Request result = handler.getResult();
+				
 				if (result.getType() == ProtocolConstants.LEAVE) {
 					port.leave();
 					LOG.debug("participant ["+((DocumentInfo)result.getPayload()).getParticipantId()+"] left.");
-					//clean up of participant is done in ParticipantConnectionImpl.close()
+					//cleanup of participant resources is done in ParticipantConnectionImpl.close()
 				}
 				
 				try {				
