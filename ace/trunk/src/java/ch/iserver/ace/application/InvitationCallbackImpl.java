@@ -25,6 +25,7 @@ import javax.swing.JOptionPane;
 
 import ch.iserver.ace.collaboration.Invitation;
 import ch.iserver.ace.collaboration.InvitationCallback;
+import ch.iserver.ace.collaboration.ParticipantSessionCallback;
 
 
 
@@ -32,25 +33,35 @@ public class InvitationCallbackImpl implements InvitationCallback {
 
 	private DialogController dialogController;
 	
-	public InvitationCallbackImpl() {
+	public InvitationCallbackImpl(DialogController dialogController) {
+		this.dialogController = dialogController;
 	}
 	
 	public void invitationReceived(Invitation invitation) {
-		/*int result = dialogController.showInvitationReceived(user, docTitle);
+		String inviterName = invitation.getInviter().getName();
+		String docTitle = invitation.getDocument().getTitle();
+		int result = dialogController.showInvitationReceived(inviterName, docTitle);
 		if (result == JOptionPane.OK_OPTION) {
 			// accepted
+			/*System.out.println("invitation auto accepted");
+			// create new document item
+			DocumentItem documentItem = new DocumentItem(invitation.getDocument());
+			
+			// create and set session callback
+			ParticipantSessionCallback callback = new ParticipantSessionCallbackImpl(documentItem);
+			documentItem.setSessionCallback(callback);
+	
+			// set session
+			documentItem.setSession(invitation.accept(callback));
+	
+			// TODO: add item to document view
+			documentItem.setType(DocumentItem.JOINED);*/
+
 		} else {
 			// rejected
-		}*/
+			invitation.reject();
+		}
 		
-		// 1. create document item with remote document
-/*		doc = new DocumentItem(invitation.getDocument());
-		// 2. create participant callback
-		ParticipantCallback callback = doc.createParticipantCallback();
-		// 3. accept
-		Session session = invitation.accept(callback);
-		// 4. set session
-		doc.setSession(session);*/
 	}
 	
 }

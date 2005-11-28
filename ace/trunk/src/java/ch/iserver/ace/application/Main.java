@@ -32,6 +32,7 @@ import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.application.action.ToggleFullScreenEditingAction;
 import ch.iserver.ace.application.preferences.PreferencesStore;
 import ch.iserver.ace.collaboration.CollaborationService;
+import ch.iserver.ace.collaboration.InvitationCallback;
 import ch.iserver.ace.util.UUID;
 
 
@@ -93,7 +94,7 @@ public class Main {
 		collaborationService.setUserId(id);
 		UserDetails details = getUserDetails(preferencesStore);
 		collaborationService.setUserDetails(details);
-		collaborationService.setInvitationCallback(new InvitationCallbackImpl());
+		collaborationService.setInvitationCallback((InvitationCallback)context.getBean("invitationCallback"));
 
 		// 3. preference listeners
 		preferencesStore.addPreferenceChangeListener(
