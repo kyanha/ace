@@ -153,6 +153,7 @@ public class ParticipantManagerImpl implements ParticipantManager {
 	 */
 	public void addParticipant(int participantId, Forwarder forwarder,
 					ParticipantConnection connection) {
+		LOG.info("addParticipant: " + participantId);
 		Integer key = new Integer(participantId);
 		RemoteUserProxy user = connection.getUser();
 		if (user != null) {
@@ -169,6 +170,7 @@ public class ParticipantManagerImpl implements ParticipantManager {
 	 * @see ch.iserver.ace.collaboration.jupiter.server.ParticipantManager#removeParticipant(int)
 	 */
 	public void removeParticipant(int participantId) {
+		LOG.info("removeParticipant: " + participantId);
 		Integer key = new Integer(participantId);
 		ParticipantConnection connection = getConnection(participantId);
 		if (connection != null) {
@@ -193,6 +195,7 @@ public class ParticipantManagerImpl implements ParticipantManager {
 	 * @see ch.iserver.ace.collaboration.jupiter.server.ParticipantManager#participantLeft(int)
 	 */
 	public void participantLeft(int participantId) {
+		LOG.info("participantLeft: " + participantId);
 		String user = getUser(participantId);
 		if (user != null) {
 			participants.remove(new Integer(participantId));
