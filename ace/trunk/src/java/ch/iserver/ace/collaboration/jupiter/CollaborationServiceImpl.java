@@ -395,6 +395,7 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	 * @see ch.iserver.ace.net.NetworkServiceCallback#invitationReceived(ch.iserver.ace.net.InvitationProxy)
 	 */
 	public void invitationReceived(InvitationProxy proxy) {
+		ParameterValidator.notNull("proxy", proxy);
 		RemoteDocument document = getDocumentRegistry().getDocument(proxy.getDocument().getId());
 		InvitationImpl invitation = new InvitationImpl(
 						proxy,
