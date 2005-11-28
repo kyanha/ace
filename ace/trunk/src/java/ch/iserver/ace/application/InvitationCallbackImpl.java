@@ -37,10 +37,13 @@ public class InvitationCallbackImpl implements InvitationCallback {
 
 	private DialogController dialogController;
 	private DocumentViewController viewController;
+	private BrowseViewController browseViewController;
 	
-	public InvitationCallbackImpl(DialogController dialogController, DocumentViewController viewController) {
+	public InvitationCallbackImpl(DialogController dialogController, DocumentViewController viewController,
+			BrowseViewController browseViewController) {
 		this.dialogController = dialogController;
 		this.viewController = viewController;
+		this.browseViewController = browseViewController;
 	}
 	
 	public void invitationReceived(final Invitation invitation) {
@@ -54,21 +57,22 @@ public class InvitationCallbackImpl implements InvitationCallback {
 				if (result == JOptionPane.OK_OPTION) {
 					// accepted
 					// create new document item
-					DocumentItem newItem = new DocumentItem(invitation.getDocument());
-					newItem.setEditorDocument(new CollaborativeDocument());
+					//DocumentItem newItem = new DocumentItem(invitation.getDocument());
+					//newItem.setEditorDocument(new CollaborativeDocument());
+					
+					// get document item from browse view
+					DocumentItem inviteItem = browseViewController.findItem(invitation.getDocument());
+					inviteItem.setEditorDocument(new CollaborativeDocument());
 					
 					// create and set session callback
-					ParticipantSessionCallback callback = new ParticipantSessionCallbackImpl(newItem, viewController);
-					newItem.setSessionCallback(callback);
+					ParticipantSessionCallback callback = new ParticipantSessionCallbackImpl(inviteItem, viewController);
+					inviteItem.setSessionCallback(callback);
 			
 					// set session
-					newItem.setSession(invitation.accept(callback));
+					inviteItem.setSession(invitation.accept(callback));
 			
-					// add item to document view
-					viewController.addDocument(newItem);
-					
 					// set type
-					newItem.setType(DocumentItem.JOINED);
+					inviteItem.setType(DocumentItem.JOINED);
 		
 				} else {
 					// rejected

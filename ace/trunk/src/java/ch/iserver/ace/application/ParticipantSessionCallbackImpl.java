@@ -49,6 +49,7 @@ public class ParticipantSessionCallbackImpl extends SessionCallbackImpl implemen
 		// IMPORTANT: this method is called first from the collaboration layer. set participants here.
 		// add all participants
 		int myParticipantId = documentItem.getSession().getParticipantId();
+		System.out.println("my participant id: " + myParticipantId);
 		Iterator pIter = doc.getParticipants().iterator();
 		while(pIter.hasNext()) {
 			Participant participant = (Participant)pIter.next();

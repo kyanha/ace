@@ -66,6 +66,16 @@ public class BrowseViewController extends ViewControllerImpl implements Document
 			}
 		}
 	}
+	
+	public DocumentItem findItem(RemoteDocument document) {
+		// TODO: return correct item
+		browseSourceList.getReadWriteLock().readLock().lock();
+		try {
+			return (DocumentItem)browseSourceList.get(browseSourceList.indexOf(new DocumentItem(document)));
+		} finally {
+			browseSourceList.getReadWriteLock().readLock().unlock();
+		}
+	}
 		
 	public BrowseView getBrowseView() {
 		if(view == null) throw new IllegalStateException("View have to be set before using getView()!");
