@@ -22,6 +22,8 @@
 package ch.iserver.ace.net.impl.protocol;
 
 import java.io.ByteArrayOutputStream;
+import java.util.Iterator;
+import java.util.Map;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -33,7 +35,15 @@ import javax.xml.transform.stream.StreamResult;
 import org.apache.log4j.Logger;
 import org.xml.sax.helpers.AttributesImpl;
 
+import ch.iserver.ace.CaretUpdate;
+import ch.iserver.ace.ServerInfo;
+import ch.iserver.ace.net.ParticipantConnection;
+import ch.iserver.ace.net.PortableDocument;
+import ch.iserver.ace.net.impl.MutableUserDetails;
 import ch.iserver.ace.net.impl.NetworkConstants;
+import ch.iserver.ace.net.impl.NetworkServiceImpl;
+import ch.iserver.ace.net.impl.PublishedDocument;
+import ch.iserver.ace.net.impl.RemoteUserProxyExt;
 import ch.iserver.ace.net.impl.SessionConnectionImpl;
 
 /**
@@ -73,9 +83,99 @@ public class CollaborationSerializer implements Serializer, ProtocolConstants {
 	 */
 	public byte[] createResponse(int type, Object data1, Object data2)
 			throws SerializeException {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			TransformerHandler handler = createHandler();
+			ByteArrayOutputStream output = new ByteArrayOutputStream();
+			StreamResult result = new StreamResult(output);
+			if (type == JOIN_DOCUMENT) {
+				handler.setResult(result);
+				handler.startDocument();
+				AttributesImpl attrs = new AttributesImpl();
+				handler.startElement("", "", "ace", attrs);
+				handler.startElement("", "", "response", attrs);
+				PublishedDocument publishedDoc = (PublishedDocument) data1;
+				attrs.addAttribute("", "", ID, "", publishedDoc.getId());
+				String userid = NetworkServiceImpl.getInstance().getUserId();
+				attrs.addAttribute("", "", USER_ID, "", userid);
+				handler.startElement("", "", TAG_JOIN_DOCUMENT, attrs);
+				PortableDocument doc = (PortableDocument) data2;
+				createParticipantTag(handler, doc);
+				attrs = new AttributesImpl();
+				handler.startElement("", "", DATA, attrs);
+				char[] data = TLVHandler.create(doc);
+				handler.startCDATA();
+				handler.characters(data, 0, data.length);
+				handler.endCDATA();
+				handler.endElement("", "", DATA);
+				handler.endElement("", "", TAG_JOIN_DOCUMENT);
+				handler.endElement("", "", "response");
+				handler.endElement("", "", "ace");
+				handler.endDocument();
+			}
+			output.flush();
+			return output.toByteArray();
+		} catch (Exception e) {
+			e.printStackTrace();
+			LOG.error("could not serialize ["+e+", "+e.getMessage()+"]");
+			throw new SerializeException(e.getMessage());
+		}
 	}
+	
+	private void createParticipantTag(TransformerHandler handler, PortableDocument doc) throws Exception	 {
+		AttributesImpl attrs = new AttributesImpl();
+		handler.startElement("", "", PARTICIPANTS, attrs);
+		int[] ids = doc.getParticipantIds();
+		for (int i = 0; i < ids.length; i++) {
+			attrs = new AttributesImpl();
+			int id = ids[i];
+			attrs.addAttribute("", "", "id", "", Integer.toString(id));
+			handler.startElement("", "", PARTICIPANT, attrs);
+			attrs = new AttributesImpl();
+			String userid, name, address, port, explicitDiscovery;
+			boolean isExplicitlyDiscovered;
+			if (id == ParticipantConnection.PUBLISHER_ID) {
+				NetworkServiceImpl service = NetworkServiceImpl.getInstance();
+				userid = service.getUserId();
+				name = service.getUserDetails().getUsername();
+				ServerInfo info = service.getServerInfo();
+				address = info.getAddress().getHostAddress();
+				port = Integer.toString(info.getPort());
+				isExplicitlyDiscovered = false;
+				explicitDiscovery = Boolean.toString(isExplicitlyDiscovered);
+			} else {
+				RemoteUserProxyExt proxy = (RemoteUserProxyExt) doc.getUserProxy(id);
+				userid = proxy.getId();
+				MutableUserDetails details = proxy.getMutableUserDetails();
+				name = details.getUsername();
+				address = details.getAddress().getHostAddress();
+				port = Integer.toString(details.getPort());
+				isExplicitlyDiscovered = proxy.isExplicitlyDiscovered();
+				explicitDiscovery = Boolean.toString(isExplicitlyDiscovered);
+			}
+			attrs.addAttribute("", "", ID, "", userid);
+			attrs.addAttribute("", "", NAME, "", name);
+			attrs.addAttribute("", "", ADDRESS, "", address);
+			attrs.addAttribute("", "", PORT, "", port);
+			attrs.addAttribute("", "", EXPLICIT_DISCOVERY, "", explicitDiscovery);
+			handler.startElement("", "", USER, attrs);
+			if (isExplicitlyDiscovered) {
+				//TODO: add published documents of this user
+			}
+			handler.endElement("", "", USER);
+			attrs = new AttributesImpl();
+			CaretUpdate selection = doc.getSelection(id);
+			String mark = Integer.toString(selection.getMark());
+			attrs.addAttribute("", "", MARK, "", mark);
+			String dot = Integer.toString(selection.getDot());
+			attrs.addAttribute("", "", DOT, "", dot);
+			handler.startElement("", "", SELECTION, attrs);
+			handler.endElement("", "", SELECTION);
+			handler.endElement("", "", PARTICIPANT);
+		}
+		handler.endElement("", "", PARTICIPANTS);
+		
+	}
+	
 
 	/**
 	 * @see ch.iserver.ace.net.impl.protocol.Serializer#createNotification(int, java.lang.Object)

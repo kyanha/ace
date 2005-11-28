@@ -186,8 +186,9 @@ public class RemoteUserSession {
 		//TODO: do i have to check for isAlive as well?
 		LOG.debug("--> createParticipantConnection() for doc ["+docId+"]");
 		assert !participantConnections.containsKey(docId);
+		CollaborationSerializer serializer = new CollaborationSerializer();
 		ParticipantConnectionImpl connection = new ParticipantConnectionImpl(docId, this,
-				NullReplyListener.getListener(), SerializerImpl.getInstance());
+				NullReplyListener.getListener(), serializer);
 		participantConnections.put(docId, connection);
 		LOG.debug("<-- createCollaborationConnection()");
 		return connection;

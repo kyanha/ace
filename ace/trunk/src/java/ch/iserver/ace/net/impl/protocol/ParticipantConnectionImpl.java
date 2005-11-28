@@ -116,7 +116,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 	
 	public void joinRejected(int code) {
 		//TODO: do not initiate collaboration channel, instead return via JoinRejectedFilter
-		LOG.info("joinRejected()");
+		LOG.info("joinRejected(" + code + ")");
 		
 		//TODO: cleanup
 	}
