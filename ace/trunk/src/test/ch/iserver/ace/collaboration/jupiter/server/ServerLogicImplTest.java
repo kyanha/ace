@@ -397,6 +397,7 @@ public class ServerLogicImplTest extends TestCase {
 		// define mock behavior
 		participant.getUser();
 		participantCtrl.setReturnValue(new RemoteUserProxyStub("X"));
+		participant.joinRejected(JoinRequest.REJECTED);
 		connection.getUser();
 		connectionCtrl.setDefaultReturnValue(null);
 		

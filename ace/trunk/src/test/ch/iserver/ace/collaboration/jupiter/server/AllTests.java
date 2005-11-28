@@ -38,6 +38,7 @@ public class AllTests {
 		suite.addTestSuite(DocumentUpdaterTest.class);
 		suite.addTestSuite(ParticipantConnectionWrapperTest.class);
 		suite.addTestSuite(ServerLogicImplTest.class);
+		suite.addTestSuite(ParticipantManagerImplTest.class);
 		//$JUnit-END$
 		return suite;
 	}
