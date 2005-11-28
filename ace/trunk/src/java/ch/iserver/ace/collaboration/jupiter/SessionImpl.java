@@ -63,7 +63,7 @@ public class SessionImpl extends AbstractSession
 	private SessionConnection connection;
 
 	/**
-	 * 
+	 * The ThreadDomain used to wrap the session connection.
 	 */
 	private ThreadDomain threadDomain;
 	

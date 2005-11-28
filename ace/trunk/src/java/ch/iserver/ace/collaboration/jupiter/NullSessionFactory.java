@@ -22,16 +22,27 @@
 package ch.iserver.ace.collaboration.jupiter;
 
 /**
- *
+ * Null object for SessionFactory interface.
  */
 public final class NullSessionFactory implements SessionFactory {
 	
+	/**
+	 * The singleton instance. 
+	 */
 	private static SessionFactory instance;
 	
+	/**
+	 * Private hidden constructor.
+	 */
 	private NullSessionFactory() {
 		// hidden
 	}
 	
+	/**
+	 * Retrieves the singleton instance of this class.
+	 * 
+	 * @return the singleton instance
+	 */
 	public static final synchronized SessionFactory getInstance() {
 		if (instance == null) {
 			instance = new NullSessionFactory();

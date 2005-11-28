@@ -36,7 +36,7 @@ import ch.iserver.ace.util.ParameterValidator;
 class RemoteDocumentImpl implements MutableRemoteDocument {
 		
 	/**
-	 * 
+	 * PropertyChangeSupport used to manage PropertyChangeListeners
 	 */
 	private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 	
@@ -51,20 +51,22 @@ class RemoteDocumentImpl implements MutableRemoteDocument {
 	private final RemoteUser publisher;
 	
 	/**
-	 * 
+	 * The SessionFactory used to create sessions.
 	 */
 	private final SessionFactory sessionFactory;
 	
 	/**
-	 * 
+	 * The title of the document.
 	 */
 	private String title;
-	
-	
 	
 	/**
 	 * Creates a new RemoteDocumentImpl passing most requests directly to
 	 * the passed in RemoteDocumentProxy.
+	 * 
+	 * @param proxy the document proxy
+	 * @param sessionFactory the session factory
+	 * @param publisher the publisher of the document
 	 */
 	RemoteDocumentImpl(RemoteDocumentProxy proxy, SessionFactory sessionFactory, RemoteUser publisher) {
 		ParameterValidator.notNull("proxy", proxy);
@@ -77,6 +79,9 @@ class RemoteDocumentImpl implements MutableRemoteDocument {
 		this.title = this.title == null ? "" : title;
 	}
 	
+	/**
+	 * @return gets the session factory
+	 */
 	private SessionFactory getSessionFactory() {
 		return sessionFactory;
 	}

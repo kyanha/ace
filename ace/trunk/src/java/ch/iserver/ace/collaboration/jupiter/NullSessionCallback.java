@@ -25,10 +25,9 @@ import org.apache.log4j.Logger;
 
 import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.Operation;
-import ch.iserver.ace.collaboration.JoinRequest;
 import ch.iserver.ace.collaboration.Participant;
-import ch.iserver.ace.collaboration.PortableDocument;
 import ch.iserver.ace.collaboration.ParticipantSessionCallback;
+import ch.iserver.ace.collaboration.PortableDocument;
 
 /**
  * Null object of a SessionCallback. Logs a warning if methods are called on
@@ -36,14 +35,28 @@ import ch.iserver.ace.collaboration.ParticipantSessionCallback;
  */
 final class NullSessionCallback implements ParticipantSessionCallback {
 	
+	/**
+	 * Logger used by the singleton.
+	 */
 	private static final Logger LOG = Logger.getLogger(NullSessionCallback.class);
 	
+	/**
+	 * The singleton instance.
+	 */
 	private static ParticipantSessionCallback instance;
 	
+	/**
+	 * Private hidden constructor.
+	 */
 	private NullSessionCallback() {
 		// hidden constructor
 	}
 	
+	/**
+	 * Retrieves the single instance of this class.
+	 * 
+	 * @return the singleton instance
+	 */
 	public static final synchronized ParticipantSessionCallback getInstance() {
 		if (instance == null) {
 			instance = new NullSessionCallback();
@@ -51,14 +64,16 @@ final class NullSessionCallback implements ParticipantSessionCallback {
 		return instance;
 	}
 	
-	public void joinRequest(JoinRequest request) {
-		LOG.warn("SessionCallback not set on Session (joinRequest called)");
-	}
-	
+	/**
+	 * @see ch.iserver.ace.collaboration.SessionCallback#participantJoined(ch.iserver.ace.collaboration.Participant)
+	 */
 	public void participantJoined(Participant participant) {
 		LOG.warn("SessionCallback not set on Session (participantJoined called)");
 	}
 	
+	/**
+	 * @see ch.iserver.ace.collaboration.SessionCallback#participantLeft(ch.iserver.ace.collaboration.Participant, int)
+	 */
 	public void participantLeft(Participant participant, int code) {
 		LOG.warn("SessionCallback not set on Session (participantLeft called)");
 	}
@@ -85,21 +100,21 @@ final class NullSessionCallback implements ParticipantSessionCallback {
 	}
 
 	/**
-	 * @see ch.iserver.ace.collaboration.PublishedSessionCallback#receiveOperation(ch.iserver.ace.collaboration.Participant, ch.iserver.ace.Operation)
+	 * @see ch.iserver.ace.collaboration.SessionCallback#receiveOperation(ch.iserver.ace.collaboration.Participant, ch.iserver.ace.Operation)
 	 */
 	public void receiveOperation(Participant participant, Operation operation) {
 		LOG.warn("SessionCallback not set on Session (receiveOperation called)");
 	}
 
 	/**
-	 * @see ch.iserver.ace.collaboration.PublishedSessionCallback#receiveCaretUpdate(ch.iserver.ace.collaboration.Participant, ch.iserver.ace.CaretUpdate)
+	 * @see ch.iserver.ace.collaboration.SessionCallback#receiveCaretUpdate(ch.iserver.ace.collaboration.Participant, ch.iserver.ace.CaretUpdate)
 	 */
 	public void receiveCaretUpdate(Participant participant, CaretUpdate update) {
 		LOG.warn("SessionCallback not set on Session (receiveCaretUpdate called)");
 	}
 	
 	/**
-	 * @see ch.iserver.ace.collaboration.PublishedSessionCallback#sessionFailed(int, java.lang.Exception)
+	 * @see ch.iserver.ace.collaboration.SessionCallback#sessionFailed(int, java.lang.Exception)
 	 */
 	public void sessionFailed(int reason, Exception e) {
 		LOG.warn("SessionCallback not set on Session (sessionFailed called)");

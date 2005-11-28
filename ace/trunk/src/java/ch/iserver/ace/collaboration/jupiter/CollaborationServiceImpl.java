@@ -63,26 +63,62 @@ import ch.iserver.ace.util.ThreadDomain;
  */
 public class CollaborationServiceImpl implements CollaborationService, NetworkServiceCallback {
 	
+	/**
+	 * Logger used by instances of this class.
+	 */
 	private static final Logger LOG = Logger.getLogger(CollaborationServiceImpl.class);
-	
+
+	/**
+	 * Listener list for document and user listeners. 
+	 */
+	private final EventListenerList listeners = new EventListenerList();
+
+	/**
+	 * The network service object from the network layer.
+	 */
 	private final NetworkService service;
 	
-	private final EventListenerList listeners = new EventListenerList();
-	
+	/**
+	 * The callback from the application layer for invitations from other users. 
+	 */
 	private InvitationCallback callback = NullInvitationCallback.getInstance();
 	
+	/**
+	 * The failure handler for failures in this or in the network layer.
+	 */
 	private ServiceFailureHandler failureHandler;
 	
+	/**
+	 * The user registry holding all currently known users.
+	 */
 	private UserRegistry userRegistry;
 	
-	private DocumentRegistry documentRegistry;;
+	/**
+	 * The document registry holding all currently known documents.
+	 */
+	private DocumentRegistry documentRegistry;
 	
+	/**
+	 * The session factory used to create sessions.
+	 */
 	private SessionFactory sessionFactory;
 		
+	/**
+	 * The thread domain used for outgoing participant connections.
+	 */
 	private ThreadDomain publisherThreadDomain;
 	
+	/**
+	 * The factory to create AcknowledgeStrategy objects.
+	 */
 	private AcknowledgeStrategyFactory acknowledgeStrategyFactory = new NullAcknowledgeStrategyFactory();
 	
+	/**
+	 * Creates a new CollaborationServiceImp instance using the passed in 
+	 * network service.
+	 * 
+	 * @param service the network service object from the lower layer
+	 */
 	public CollaborationServiceImpl(NetworkService service) {
 		ParameterValidator.notNull("service", service);
 		this.service = service;
@@ -90,57 +126,132 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 		this.service.setTimestampFactory(new JupiterTimestampFactory());
 	}
 		
+	/**
+	 * The user registry of the application. This object holds all currently 
+	 * known users.
+	 * 
+	 * @return the user registry of the application
+	 */
 	public UserRegistry getUserRegistry() {
 		return userRegistry;
 	}
 	
+	/**
+	 * Sets the user registry of the application.
+	 * 
+	 * @param registry the new registry of the application
+	 */
 	public void setUserRegistry(UserRegistry registry) {
 		ParameterValidator.notNull("registry", registry);
 		this.userRegistry = registry;
 	}
 	
+	/**
+	 * The document registry of the application. This object holds all currently
+	 * known documents.
+	 * 
+	 * @return the document registry of the application
+	 */
 	public DocumentRegistry getDocumentRegistry() {
 		return documentRegistry;
 	}
 	
+	/**
+	 * Sets the document registry of the application.
+	 * 
+	 * @param registry the new document registry
+	 */
 	public void setDocumentRegistry(DocumentRegistry registry) {
 		ParameterValidator.notNull("registry", registry);
 		this.documentRegistry = registry;
 	}
 		
+	/**
+	 * Gets the session factory used to create participant session objects.
+	 * 
+	 * @return the session factory
+	 */
 	public SessionFactory getSessionFactory() {
 		return sessionFactory;
 	}
 	
+	/**
+	 * Sets the session factory used to create participant sessions.
+	 * 
+	 * @param sessionFactory the new factory
+	 */
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
 	
+	/**
+	 * Gets the publisher thread domain of the collaboration service. The
+	 * publisher thread domain is used by the publisher to wrap outgoing
+	 * participant connections.
+	 * 
+	 * @return the publisher thread domain
+	 */
 	public ThreadDomain getPublisherThreadDomain() {
 		return publisherThreadDomain;
 	}
 	
+	/**
+	 * Sets the publisher thread domain of the collaboration service.
+	 * 
+	 * @param domain the new publisher thread domain
+	 */
 	public void setPublisherThreadDomain(ThreadDomain domain) {
 		ParameterValidator.notNull("domain", domain);
 		this.publisherThreadDomain = domain;
 	}
 	
+	/**
+	 * Creates the thread domain for a published session. This should be
+	 * a {@link SingleThreadDomain} unless you are sure that only one
+	 * thread is accessing the ServerLogic and ParticipantPort objects,
+	 * in which case you can use {@link ch.iserver.ace.util.CallerThreadDomain}.
+	 * However, this happens mostly in test scenarios where multiple
+	 * threads are unwelcome.
+	 * 
+	 * @return the new single thread domain for the published session
+	 */
 	public ThreadDomain createIncomingDomain() {
 		return new SingleThreadDomain();
 	}
 	
+	/**
+	 * Gets the network service object from the network layer.
+	 * 
+	 * @return the network service
+	 */
 	protected NetworkService getNetworkService() {
 		return service;
 	}
 	
+	/**
+	 * Gets the invitation callback from the application layer.
+	 * 
+	 * @return the invitation callback
+	 */
 	protected InvitationCallback getInvitationCallback() {
 		return callback;
 	}
 	
-	public void setAcknowledgeStrategyFactory(AcknowledgeStrategyFactory acknowledgerManager) {
-		this.acknowledgeStrategyFactory = acknowledgerManager;
+	/**
+	 * Sets the acknowledge strategy factory of the collaboration service.
+	 * 
+	 * @param factory the new factory
+	 */
+	public void setAcknowledgeStrategyFactory(AcknowledgeStrategyFactory factory) {
+		this.acknowledgeStrategyFactory = factory;
 	}
 	
+	/**
+	 * Gets the acknowledge strategy factory used by the collaboration
+	 * service.
+	 * 
+	 * @return the acknowledge strategy factory
+	 */
 	public AcknowledgeStrategyFactory getAcknowledgeStrategyFactory() {
 		return acknowledgeStrategyFactory;
 	}
@@ -257,7 +368,6 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 		session.setPublisherPort(port);
 		
 		ServerLogic logic = (ServerLogic) threadDomain.wrap(target, ServerLogic.class);
-		session.setServerLogic(logic);
 		DocumentServer server = getNetworkService().publish(logic, document.getDetails());
 		target.setDocumentServer(server);
 		target.start();

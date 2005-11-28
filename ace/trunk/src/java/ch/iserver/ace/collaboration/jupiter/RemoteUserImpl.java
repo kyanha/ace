@@ -81,6 +81,9 @@ public class RemoteUserImpl implements MutableRemoteUser {
 		return name;
 	}
 	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.MutableRemoteUser#setName(java.lang.String)
+	 */
 	public void setName(String userName) {
 		String old = this.name;
 		if (!old.equals(userName)) {

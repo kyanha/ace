@@ -35,7 +35,6 @@ import ch.iserver.ace.collaboration.PublishedSession;
 import ch.iserver.ace.collaboration.PublishedSessionCallback;
 import ch.iserver.ace.collaboration.RemoteUser;
 import ch.iserver.ace.collaboration.jupiter.server.PublisherPort;
-import ch.iserver.ace.collaboration.jupiter.server.ServerLogic;
 import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.PortableDocument;
 import ch.iserver.ace.net.RemoteUserProxy;
@@ -43,49 +42,74 @@ import ch.iserver.ace.util.ParameterValidator;
 import ch.iserver.ace.util.SemaphoreLock;
 
 /**
- *
+ * Default implementation of the PublishedSession interface.
  */
 public class PublishedSessionImpl extends AbstractSession 
 		implements PublishedSession, PublisherConnection {
-	
-	private ServerLogic logic;
-	
+		
+	/**
+	 * The PublisherPort used to communicate with the session server.
+	 */
 	private PublisherPort port;
 	
+	/**
+	 * The session callback for the published session. This is passed in from
+	 * the application layer.
+	 */
 	private final PublishedSessionCallback callback;
 	
+	/**
+	 * Creates a new PublishedSessionImpl instance.
+	 * 
+	 * @param callback the callback to the application layer
+	 */
 	public PublishedSessionImpl(PublishedSessionCallback callback) {
 		this(callback, new AlgorithmWrapperImpl(new Jupiter(true)));
 	}
 	
+	/**
+	 * Creates a new PublishedSessionImpl instance.
+	 * 
+	 * @param callback the callback to the application layer
+	 * @param wrapper the client-side algorithm used by this class
+	 */
 	public PublishedSessionImpl(PublishedSessionCallback callback, AlgorithmWrapper wrapper) {
 		super(wrapper, new SemaphoreLock("client-lock"));
 		ParameterValidator.notNull("callback", callback);
 		this.callback = callback;
 	}
-		
-	public void setServerLogic(ServerLogic logic) {
-		ParameterValidator.notNull("logic", logic);
-		this.logic = logic;
-	}
 	
+	/**
+	 * Sets the publisher port for this session implementation.
+	 * 
+	 * @param port the publisher port
+	 */
 	public void setPublisherPort(PublisherPort port) {
 		ParameterValidator.notNull("port", port);
 		this.port = port;
 	}
 	
-	public ServerLogic getLogic() {
-		return logic;
-	}
-	
-	protected PublisherPort getPort() {
+	/**
+	 * Gets the publisher port of the session.
+	 * 
+	 * @return the publisher port
+	 */
+	protected PublisherPort getPublisherPort() {
 		return port;
 	}
 	
+	/**
+	 * Gets the session callback instance.
+	 * 
+	 * @return the session callback
+	 */
 	protected PublishedSessionCallback getCallback() {
 		return callback;
 	}
 	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.AbstractSession#createAcknowledgeAction()
+	 */
 	protected AcknowledgeAction createAcknowledgeAction() {
 		return new AcknowledgeAction() {
 			public void execute() {
@@ -93,7 +117,7 @@ public class PublishedSessionImpl extends AbstractSession
 				try {
 					Timestamp timestamp = getAlgorithm().getTimestamp();
 					int siteId = getAlgorithm().getSiteId();
-					getPort().receiveAcknowledge(siteId, timestamp);
+					getPublisherPort().receiveAcknowledge(siteId, timestamp);
 				} finally {
 					unlock();
 				}
@@ -105,28 +129,28 @@ public class PublishedSessionImpl extends AbstractSession
 	 * @see ch.iserver.ace.collaboration.PublishedSession#setDocumentDetails(ch.iserver.ace.DocumentDetails)
 	 */
 	public void setDocumentDetails(DocumentDetails details) {
-		getPort().setDocumentDetails(details);
+		getPublisherPort().setDocumentDetails(details);
 	}
 
 	/**
 	 * @see ch.iserver.ace.collaboration.PublishedSession#invite(ch.iserver.ace.collaboration.RemoteUser)
 	 */
 	public void invite(RemoteUser user) {
-		getPort().invite(user);
+		getPublisherPort().invite(user);
 	}
 	
 	/**
 	 * @see ch.iserver.ace.collaboration.PublishedSession#kick(ch.iserver.ace.collaboration.Participant)
 	 */
 	public void kick(Participant participant) {
-		getPort().kick(participant.getParticipantId());
+		getPublisherPort().kick(participant.getParticipantId());
 	}
 
 	/**
 	 * @see ch.iserver.ace.collaboration.Session#getParticipantId()
 	 */
 	public int getParticipantId() {
-		return getPort().getParticipantId();
+		return getPublisherPort().getParticipantId();
 	}
 
 	/**
@@ -134,7 +158,7 @@ public class PublishedSessionImpl extends AbstractSession
 	 */
 	public void leave() {
 		try {
-			getPort().leave();
+			getPublisherPort().leave();
 		} finally {
 			destroy();
 		}
@@ -147,7 +171,7 @@ public class PublishedSessionImpl extends AbstractSession
 		checkLockUsage();
 		resetAcknowledgeTimer();
 		Request request = getAlgorithm().generateRequest(operation);
-		getPort().receiveRequest(request);
+		getPublisherPort().receiveRequest(request);
 	}
 
 	/**
@@ -157,7 +181,7 @@ public class PublishedSessionImpl extends AbstractSession
 		checkLockUsage();
 		resetAcknowledgeTimer();
 		CaretUpdateMessage message = getAlgorithm().generateCaretUpdateMessage(update);
-		getPort().receiveCaretUpdate(message);
+		getPublisherPort().receiveCaretUpdate(message);
 	}
 		
 	// --> start ParticipantConnection implementation <--

@@ -24,10 +24,16 @@ package ch.iserver.ace.collaboration.jupiter;
 import ch.iserver.ace.collaboration.RemoteUser;
 
 /**
- *
+ * Mutable variant of the RemoteUser interface. Adds a method to set
+ * the user's name.
  */
 public interface MutableRemoteUser extends RemoteUser {
 	
+	/**
+	 * Sets the name of the user.
+	 * 
+	 * @param userName the new user name
+	 */
 	void setName(String userName);
 	
 }

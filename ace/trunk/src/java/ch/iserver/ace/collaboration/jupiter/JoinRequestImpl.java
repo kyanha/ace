@@ -28,16 +28,32 @@ import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
- *
+ * The default implementation of the JoinRequest interface.
  */
 public class JoinRequestImpl implements JoinRequest {
 
+	/**
+	 * The user that wants to join.
+	 */
 	private RemoteUser user;
 	
+	/**
+	 * The ParticipantConnection to the joining user.
+	 */
 	private ParticipantConnection connection;
 	
+	/**
+	 * The ServerLogic of the session to which the participant wants to join.
+	 */
 	private ServerLogic logic;
 	
+	/**
+	 * Creates a new JoinRequestImpl instance.
+	 * 
+	 * @param logic the ServerLogic of the session
+	 * @param user the user that wants to join
+	 * @param connection the connection to the joining user
+	 */
 	public JoinRequestImpl(ServerLogic logic, RemoteUser user, ParticipantConnection connection) {
 		ParameterValidator.notNull("user", user);
 		ParameterValidator.notNull("connection", connection);

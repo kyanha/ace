@@ -29,20 +29,37 @@ import ch.iserver.ace.net.SessionConnection;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
- *
+ * Fail safe wrapper class for SessionConnection objects.
  */
 public class SessionConnectionWrapper implements SessionConnection {
 	
+	/**
+	 * The target SessionConnection.
+	 */
 	private final SessionConnection target;
 	
+	/**
+	 * The failure handler for the target connection.
+	 */
 	private final SessionConnectionFailureHandler handler;
 	
+	/**
+	 * Creates a new SessionConnectionWrapper class.
+	 * 
+	 * @param target the target connection
+	 * @param handler the handler for failures
+	 */
 	public SessionConnectionWrapper(SessionConnection target, SessionConnectionFailureHandler handler) {
 		ParameterValidator.notNull("target", target);
 		this.target = target;
 		this.handler = handler;
 	}
 	
+	/**
+	 * Gets the failure handler of this connection wrapper.
+	 * 
+	 * @return the failure handler
+	 */
 	protected SessionConnectionFailureHandler getFailureHandler() {
 		return handler;
 	}

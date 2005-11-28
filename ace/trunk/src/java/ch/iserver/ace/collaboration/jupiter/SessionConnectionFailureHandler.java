@@ -22,10 +22,16 @@
 package ch.iserver.ace.collaboration.jupiter;
 
 /**
- *
+ * Failure handler for SessionConnections.
  */
 public interface SessionConnectionFailureHandler {
 	
+	/**
+	 * Handle a failure with the given reason code and exception.
+	 * 
+	 * @param reason the reason code
+	 * @param e the exception that was thrown by the target connection
+	 */
 	void handleFailure(int reason, Exception e);
 	
 }

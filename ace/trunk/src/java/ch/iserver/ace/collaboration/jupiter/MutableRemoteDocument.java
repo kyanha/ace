@@ -24,10 +24,16 @@ package ch.iserver.ace.collaboration.jupiter;
 import ch.iserver.ace.collaboration.RemoteDocument;
 
 /**
- *
+ * Mutable variant of the RemoteDocument interface. Adds a method to change
+ * the title of the document.
  */
 public interface MutableRemoteDocument extends RemoteDocument {
 	
+	/**
+	 * Sets the title of the document.
+	 * 
+	 * @param title the new title
+	 */
 	void setTitle(String title);
 	
 }

@@ -61,7 +61,7 @@ class DocumentRegistryImpl implements DocumentRegistry {
 	private final UserRegistry registry;
 		
 	/**
-	 * 
+	 * The session factory used to create session objects.
 	 */
 	private SessionFactory sessionFactory;
 	

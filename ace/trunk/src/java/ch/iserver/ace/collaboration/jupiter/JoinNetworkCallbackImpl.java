@@ -42,7 +42,7 @@ class JoinNetworkCallbackImpl implements JoinNetworkCallback {
 	private final JoinCallback callback;
 	
 	/**
-	 * 
+	 * The session factory used to create session objects.
 	 */
 	private final SessionFactory sessionFactory;
 	
@@ -67,6 +67,9 @@ class JoinNetworkCallbackImpl implements JoinNetworkCallback {
 		return callback;
 	}
 		
+	/**
+	 * @return the session factory
+	 */
 	private SessionFactory getSessionFactory() {
 		return sessionFactory;
 	}

@@ -87,6 +87,9 @@ abstract class AbstractSession implements Session {
 		this.algorithm = algorithm;
 	}
 	
+	/**
+	 * @return true iff the session has been destroyed
+	 */
 	public boolean isDestroyed() {
 		return destroyed;
 	}
@@ -152,6 +155,12 @@ abstract class AbstractSession implements Session {
 		}
 	}
 	
+	/**
+	 * Checks the session's state. If the session is destroyed, an 
+	 * IllegalStateException is thrown.
+	 * 
+	 * @throws IllegalStateException if the session has been destroyed
+	 */
 	protected final void checkSessionState() {
 		if (isDestroyed()) {
 			throw new IllegalStateException("session is disposed");

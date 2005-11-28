@@ -23,10 +23,15 @@ package ch.iserver.ace.collaboration.jupiter;
 
 
 /**
- *
+ * Factory object for participant sessions.
  */
 public interface SessionFactory {
 	
+	/**
+	 * Creates a new ParticipipantSession.
+	 * 
+	 * @return the newly created session
+	 */
 	ConfigurableSession createSession();
 	
 }

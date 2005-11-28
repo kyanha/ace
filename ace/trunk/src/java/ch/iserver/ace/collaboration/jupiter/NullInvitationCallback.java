@@ -29,12 +29,24 @@ import ch.iserver.ace.collaboration.InvitationCallback;
  */
 final class NullInvitationCallback implements InvitationCallback {
 	
+	/**
+	 * Singleton instance.
+	 */
 	private static InvitationCallback instance;
 	
+	/**
+	 * Hidden constructor.
+	 */
 	private NullInvitationCallback() {
 		// hidden constructor
 	}
 	
+	/**
+	 * Retrieve the single instance of the NullInvitationCallback
+	 * object.
+	 * 
+	 * @return the singleton instance
+	 */
 	public static synchronized InvitationCallback getInstance() {
 		if (instance == null) {
 			instance = new NullInvitationCallback();

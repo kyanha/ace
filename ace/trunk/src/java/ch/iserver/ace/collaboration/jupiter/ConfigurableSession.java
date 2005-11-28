@@ -27,12 +27,24 @@ import ch.iserver.ace.net.SessionConnection;
 import ch.iserver.ace.net.SessionConnectionCallback;
 
 /**
- *
+ * ConfigurableSession objects are returned from the session factory. They can
+ * be configured, most specifically the connection and session callback can
+ * be set.
  */
 public interface ConfigurableSession extends Session, SessionConnectionCallback {
 	
+	/**
+	 * Sets the session callback of this session.
+	 * 
+	 * @param callback the session callback
+	 */
 	void setSessionCallback(ParticipantSessionCallback callback);
 	
+	/**
+	 * Sets the session connection of this session.
+	 * 
+	 * @param connection the session connection
+	 */
 	void setConnection(SessionConnection connection);
 	
 }
