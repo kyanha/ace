@@ -122,7 +122,6 @@ public class SerializerImpl implements Serializer, ProtocolConstants {
 			AttributesImpl attrs = new AttributesImpl();
 			handler.startElement("", "", "ace", attrs);
 			String userid = NetworkServiceImpl.getInstance().getUserId();
-			//TODO: test tag INVITE
 			if (type == JOIN) {
 				String docId = (String) data;
 				createRequest(handler, TAG_JOIN, userid, docId);
@@ -186,30 +185,6 @@ public class SerializerImpl implements Serializer, ProtocolConstants {
 				handler.endElement("", "", "response");
 				handler.endElement("", "", "ace");
 				handler.endDocument();
-			} else if (type == JOIN_DOCUMENT) { //TODO: bring JOIN_DOCUMENT to CollaborationSerializer and use that one instead of SerializerImpl
-				handler.setResult(result);
-				handler.startDocument();
-				AttributesImpl attrs = new AttributesImpl();
-				handler.startElement("", "", "ace", attrs);
-				handler.startElement("", "", "response", attrs);
-				PublishedDocument publishedDoc = (PublishedDocument) data1;
-				attrs.addAttribute("", "", ID, "", publishedDoc.getId());
-				String userid = NetworkServiceImpl.getInstance().getUserId();
-				attrs.addAttribute("", "", USER_ID, "", userid);
-				handler.startElement("", "", TAG_JOIN_DOCUMENT, attrs);
-				PortableDocument doc = (PortableDocument) data2;
-				createParticipantTag(handler, doc);
-				attrs = new AttributesImpl();
-				handler.startElement("", "", DATA, attrs);
-				char[] data = TLVHandler.create(doc);
-				handler.startCDATA();
-				handler.characters(data, 0, data.length);
-				handler.endCDATA();
-				handler.endElement("", "", DATA);
-				handler.endElement("", "", TAG_JOIN_DOCUMENT);
-				handler.endElement("", "", "response");
-				handler.endElement("", "", "ace");
-				handler.endDocument();
 			}
 			output.flush();
 			return output.toByteArray();
@@ -218,61 +193,6 @@ public class SerializerImpl implements Serializer, ProtocolConstants {
 			LOG.error("could not serialize ["+e+", "+e.getMessage()+"]");
 			throw new SerializeException(e.getMessage());
 		}
-	}
-
-	private void createParticipantTag(TransformerHandler handler, PortableDocument doc) throws Exception	 {
-		AttributesImpl attrs = new AttributesImpl();
-		handler.startElement("", "", PARTICIPANTS, attrs);
-		int[] ids = doc.getParticipantIds();
-		for (int i = 0; i < ids.length; i++) {
-			attrs = new AttributesImpl();
-			int id = ids[i];
-			attrs.addAttribute("", "", "id", "", Integer.toString(id));
-			handler.startElement("", "", PARTICIPANT, attrs);
-			attrs = new AttributesImpl();
-			String userid, name, address, port, explicitDiscovery;
-			boolean isExplicitlyDiscovered;
-			if (id == ParticipantConnection.PUBLISHER_ID) {
-				NetworkServiceImpl service = NetworkServiceImpl.getInstance();
-				userid = service.getUserId();
-				name = service.getUserDetails().getUsername();
-				ServerInfo info = service.getServerInfo();
-				address = info.getAddress().getHostAddress();
-				port = Integer.toString(info.getPort());
-				isExplicitlyDiscovered = false;
-				explicitDiscovery = Boolean.toString(isExplicitlyDiscovered);
-			} else {
-				RemoteUserProxyExt proxy = (RemoteUserProxyExt) doc.getUserProxy(id);
-				userid = proxy.getId();
-				MutableUserDetails details = proxy.getMutableUserDetails();
-				name = details.getUsername();
-				address = details.getAddress().getHostAddress();
-				port = Integer.toString(details.getPort());
-				isExplicitlyDiscovered = proxy.isExplicitlyDiscovered();
-				explicitDiscovery = Boolean.toString(isExplicitlyDiscovered);
-			}
-			attrs.addAttribute("", "", ID, "", userid);
-			attrs.addAttribute("", "", NAME, "", name);
-			attrs.addAttribute("", "", ADDRESS, "", address);
-			attrs.addAttribute("", "", PORT, "", port);
-			attrs.addAttribute("", "", EXPLICIT_DISCOVERY, "", explicitDiscovery);
-			handler.startElement("", "", USER, attrs);
-			if (isExplicitlyDiscovered) {
-				//TODO: add published documents of this user
-			}
-			handler.endElement("", "", USER);
-			attrs = new AttributesImpl();
-			CaretUpdate selection = doc.getSelection(id);
-			String mark = Integer.toString(selection.getMark());
-			attrs.addAttribute("", "", MARK, "", mark);
-			String dot = Integer.toString(selection.getDot());
-			attrs.addAttribute("", "", DOT, "", dot);
-			handler.startElement("", "", SELECTION, attrs);
-			handler.endElement("", "", SELECTION);
-			handler.endElement("", "", PARTICIPANT);
-		}
-		handler.endElement("", "", PARTICIPANTS);
-		
 	}
 
 	public byte[] createNotification(int type, Object data) throws SerializeException {
