@@ -53,7 +53,7 @@ class InvitationImpl implements Invitation {
 	private final RemoteDocument document;
 	
 	/**
-	 * 
+	 * The session factory used to create the sessions.
 	 */
 	private final SessionFactory sessionFactory;
 	
