@@ -49,21 +49,42 @@ public class ParticipantManagerImplTest extends TestCase {
 		ParticipantManager manager = new ParticipantManagerImpl(forwarder);
 		manager.joinRequested(USER_ID);
 		assertTrue(manager.isJoining(USER_ID));
-		manager.addParticipant(1, null, connection);
-		manager.joinRequestAccepted(USER_ID);
+		manager.joinRequestAccepted(1, null, connection);
 		assertFalse(manager.isJoining(USER_ID));
 		assertTrue(manager.isParticipant(USER_ID));
 		
 		manager.participantLeft(1);
-		manager.removeParticipant(1);
 		assertFalse(manager.isParticipant(USER_ID));
 		
 		manager.joinRequested(USER_ID);
 		assertTrue(manager.isJoining(USER_ID));
-		manager.addParticipant(1, null, connection);
-		manager.joinRequestAccepted(USER_ID);
+		manager.joinRequestAccepted(1, null, connection);
 		assertFalse(manager.isJoining(USER_ID));
 		assertTrue(manager.isParticipant(USER_ID));
+		
+		// verify
+		connectionCtrl.verify();
+	}
+	
+	public void testKick() throws Exception {
+		CompositeForwarder forwarder = new CompositeForwarderImpl();
+		
+		MockControl connectionCtrl = MockControl.createControl(ParticipantConnection.class);
+		ParticipantConnection connection = (ParticipantConnection) connectionCtrl.getMock();
+		
+		// define mock behavior
+		connection.getUser();
+		connectionCtrl.setDefaultReturnValue(new RemoteUserProxyStub("X"));
+		
+		// replay
+		connectionCtrl.replay();
+		
+		// test
+		ParticipantManager manager = new ParticipantManagerImpl(forwarder);
+		manager.joinRequestAccepted(1, null, connection);
+		manager.participantKicked(1);
+		assertTrue(manager.isBlackListed("X"));
+		assertFalse(manager.isParticipant("X"));
 		
 		// verify
 		connectionCtrl.verify();

@@ -34,7 +34,30 @@ import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
- * The default implementation of the ParticipantManager interface.
+ * The default implementation of the ParticipantManager interface. This 
+ * implementation keeps a number of collections to keep track of the state
+ * of different users.
+ * 
+ * <h3>Join Set</h3>
+ * Whenever a user sends a join requests, he is added to the join set of
+ * this class. Users are removed from this set when either 
+ * {@link #joinRequestRejected(String)} or
+ * {@link #joinRequestAccepted(int, Forwarder, ParticipantConnection)} is
+ * called.
+ * 
+ * <h3>Blacklist</h3>
+ * The blacklist keeps track of all the users that have been kicked from
+ * the session. Blacklisted users cannot join the document again, unless
+ * they are invited. To add a user to the blacklist, simply call
+ * {@link #participantKicked(int)}.
+ * 
+ * <h3>Current Participants</h3>
+ * There is a map that contains a mapping from participant id to user
+ * id. Users are added to that map as soon as they join with
+ * {@link #joinRequestAccepted(int, Forwarder, ParticipantConnection)}
+ * and are removed from that map if they are either kicked or
+ * leave the session otherwise
+ * ({@link #participantLeft(int)}). 
  */
 class ParticipantManagerImpl implements ParticipantManager {
 	
@@ -166,8 +189,8 @@ class ParticipantManagerImpl implements ParticipantManager {
 		RemoteUserProxy user = connection.getUser();
 		if (user != null) {
 			participants.put(new Integer(participantId), user.getId());
-		} else if (participantId != 0) {
-			LOG.warn("could not add to participants: " + participantId);
+		} else {
+			participants.put(new Integer(participantId), null);
 		}
 		forwarders.put(key, forwarder);
 		connections.put(key, connection);
@@ -175,14 +198,16 @@ class ParticipantManagerImpl implements ParticipantManager {
 	}
 
 	/**
-	 * @see ch.iserver.ace.collaboration.jupiter.server.ParticipantManager#removeParticipant(int)
+	 * Remove the participant with the given id from the manager.
+	 * 
+	 * @param participantId the participant to be removed
 	 */
-	public void removeParticipant(int participantId) {
+	protected void removeParticipant(int participantId) {
 		LOG.info("removeParticipant: " + participantId);
 		Integer key = new Integer(participantId);
 		ParticipantConnection connection = getConnection(participantId);
 		if (connection != null) {
-			participants.remove(connection.getUser().getId());
+			participants.remove(new Integer(participantId));
 		}
 		Forwarder removed = (Forwarder) forwarders.remove(key);
 		compositeForwarder.removeForwarder(removed);
@@ -192,11 +217,14 @@ class ParticipantManagerImpl implements ParticipantManager {
 	 * @see ch.iserver.ace.collaboration.jupiter.server.ParticipantManager#participantKicked(int)
 	 */
 	public void participantKicked(int participantId) {
+		LOG.info("participantKicked: " + participantId);
 		String user = getUser(participantId);
 		if (user != null) {
-			participants.remove(new Integer(participantId));
 			blacklist.add(user);
+		} else {
+			LOG.warn("  user id is null");
 		}
+		removeParticipant(participantId);
 	}
 	
 	/**
@@ -204,10 +232,7 @@ class ParticipantManagerImpl implements ParticipantManager {
 	 */
 	public void participantLeft(int participantId) {
 		LOG.info("participantLeft: " + participantId);
-		String user = getUser(participantId);
-		if (user != null) {
-			participants.remove(new Integer(participantId));
-		}
+		removeParticipant(participantId);
 	}
 	
 	/**
@@ -239,11 +264,12 @@ class ParticipantManagerImpl implements ParticipantManager {
 	}
 
 	/**
-	 * @see ch.iserver.ace.collaboration.jupiter.server.ParticipantManager#joinRequestAccepted(String)
+	 * @see ch.iserver.ace.collaboration.jupiter.server.ParticipantManager#joinRequestAccepted(int, ch.iserver.ace.collaboration.jupiter.server.Forwarder, ch.iserver.ace.net.ParticipantConnection)
 	 */
-	public void joinRequestAccepted(String userId) {
-		ParameterValidator.notNull("userId", userId);
-		joinSet.remove(userId);
+	public void joinRequestAccepted(int participantId, Forwarder forwarder, ParticipantConnection connection) {		
+		LOG.info("joinRequestAccepted: " + participantId);
+		addParticipant(participantId, forwarder, connection);
+		joinSet.remove(connection.getUser().getId());
 	}
 
 	/**

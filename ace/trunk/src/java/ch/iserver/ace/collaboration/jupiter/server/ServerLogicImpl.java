@@ -157,7 +157,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	 * 
 	 * @return the newly created participant manager
 	 */
-	protected ParticipantManagerImpl createParticipantManager(CompositeForwarder forwarder) {
+	protected ParticipantManager createParticipantManager(CompositeForwarder forwarder) {
 		return new ParticipantManagerImpl(forwarder);
 	}
 	
@@ -342,16 +342,6 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 		return acknowledgeStrategyFactory;
 	}
 			
-	/**
-	 * Removes the participant specified with the given id from the
-	 * session.
-	 * 
-	 * @param participantId the participant to be removed
-	 */
-	protected void removeParticipant(int participantId) {
-		participants.removeParticipant(participantId);
-	}
-	
 	// --> server logic methods <--
 
 	/**
@@ -385,6 +375,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 			if (user == null) {
 				target.joinRejected(JoinRequest.UNKNOWN_USER);
 			} else {
+				participants.joinRequested(user.getId());
 				ServerLogic wrapped = (ServerLogic) incomingDomain.wrap(this, ServerLogic.class);
 				JoinRequest request = new JoinRequestImpl(wrapped, user, connection);
 				getAccessControlStrategy().joinRequest(getPublisherConnection(), request);
@@ -397,16 +388,14 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	 */
 	public void joinAccepted(ParticipantConnection connection) {
 		LOG.info("--> join accepted");
-		try {
-			if (!isAcceptingJoins()) {
-				LOG.info("join accepted by publisher but shutdown is in progress");
-			} else {
-				acceptJoin(connection);
-			}
-		} finally {
-			participants.joinRequestAccepted(connection.getUser().getId());
-			LOG.info("<-- join accepted");
+		if (!isAcceptingJoins()) {
+			LOG.info("join accepted by publisher but shutdown is in progress");
+			participants.joinRequestRejected(connection.getUser().getId());
+			connection.joinRejected(JoinRequest.SHUTDOWN);
+		} else {
+			acceptJoin(connection);
 		}
+		LOG.info("<-- join accepted");
 	}
 	
 	protected void acceptJoin(ParticipantConnection connection) {
@@ -420,10 +409,11 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 		RemoteUserProxy user = connection.getUser();
 
 		PortableDocument document = getDocument();
-					
+		
+		participants.joinRequestAccepted(participantId, forwarder, connection);
+		
 		connection.joinAccepted(port);
 		connection.sendDocument(document);
-		participants.addParticipant(participantId, forwarder, connection);
 		compositeForwarder.sendParticipantJoined(participantId, user);
 	}
 	
@@ -457,10 +447,9 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 			LOG.warn("participant with id " + participantId + " not (or no longer) in session");
 			return;
 		}
-		connection.close();
-		removeParticipant(participantId);
 		participants.participantLeft(participantId);
 		compositeForwarder.sendParticipantLeft(participantId, Participant.LEFT);
+		connection.close();
 	}
 	
 	/**
@@ -476,13 +465,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 		if (connection == null) {
 			LOG.info("participant with id " + participantId + " not (or no longer) in session");
 		} else {
-			RemoteUserProxy user = connection.getUser();
-			if (user == null) {
-				LOG.warn("connection did not return user, cannot add user to blacklist");
-			} else {
-				participants.participantKicked(participantId);
-			}
-			removeParticipant(participantId);
+			participants.participantKicked(participantId);
 			compositeForwarder.sendParticipantLeft(participantId, Participant.KICKED);
 			connection.sendKicked();
 			connection.close();
@@ -523,7 +506,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 			getPublisherConnection().sessionFailed(reason, null);
 			shutdown();
 		} else {
-			removeParticipant(participantId);
+			participants.participantLeft(participantId);
 			getCompositeForwarder().sendParticipantLeft(participantId, Participant.DISCONNECTED);
 		}
 	}

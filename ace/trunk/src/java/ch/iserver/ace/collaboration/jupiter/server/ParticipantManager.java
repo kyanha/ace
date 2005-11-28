@@ -74,21 +74,14 @@ interface ParticipantManager {
 	boolean isInvited(String userId);
 	
 	/**
-	 * Adds a participant to the participant manager.
+	 * Adds a participant to the session.
 	 * 
 	 * @param participantId the id of the participant
-	 * @param forwarder the forwarder for the new participant
-	 * @param connection the connection to the new participant
+	 * @param forwarder the forwarder for the participant
+	 * @param connection the connection to the participant
 	 */
 	void addParticipant(int participantId, Forwarder forwarder, ParticipantConnection connection);
-	
-	/**
-	 * Removes the given participant from the session.
-	 * 
-	 * @param participantId the participant to be removed
-	 */
-	void removeParticipant(int participantId);
-	
+		
 	/**
 	 * Notifies the participant manager that the given participant has been kicked.
 	 * 
@@ -123,9 +116,11 @@ interface ParticipantManager {
 	 * Notifies the participant manager that the user's join request was
 	 * accepted.
 	 * 
-	 * @param userId the user id of the joining user
+	 * @param participantId the id of the participant
+	 * @param forwarder the forwarder for that participant
+	 * @param connection the connection for that participant
 	 */
-	void joinRequestAccepted(String userId);
+	void joinRequestAccepted(int participantId, Forwarder forwarder, ParticipantConnection connection);
 	
 	/**
 	 * Notifies the participant manager that the user's join request was

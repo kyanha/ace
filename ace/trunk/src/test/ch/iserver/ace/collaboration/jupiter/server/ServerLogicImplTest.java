@@ -21,9 +21,6 @@
 
 package ch.iserver.ace.collaboration.jupiter.server;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import junit.framework.TestCase;
 
 import org.easymock.MockControl;
@@ -319,6 +316,7 @@ public class ServerLogicImplTest extends TestCase {
 		// define mock behavior
 		participant.getUser();
 		participantCtrl.setReturnValue(new RemoteUserProxyStub("X"));
+		participant.joinRejected(JoinRequest.SHUTDOWN);
 		connection.getUser();
 		connectionCtrl.setDefaultReturnValue(null);
 		
@@ -432,42 +430,45 @@ public class ServerLogicImplTest extends TestCase {
 		MockControl participantCtrl = MockControl.createControl(ParticipantConnection.class);
 		final ParticipantConnection participant = (ParticipantConnection) participantCtrl.getMock();
 		
+		MockControl managerCtrl = MockControl.createControl(ParticipantManager.class);
+		final ParticipantManager manager = (ParticipantManager) managerCtrl.getMock();
+		
 		// define mock behavior
+		manager.addParticipant(0, null, null);
+		managerCtrl.setMatcher(MockControl.ALWAYS_MATCHER);
+		manager.joinRequestAccepted(1, null, participant);
+		manager.getConnection(1);
+		managerCtrl.setReturnValue(participant);
+		manager.participantKicked(1);
+		
 		participant.getUser();
 		participantCtrl.setDefaultReturnValue(new RemoteUserProxyStub("X"));
 		participant.sendKicked();
 		participant.close();
+		
 		connection.getUser();
 		connectionCtrl.setDefaultReturnValue(null);
-		connection.sendParticipantLeft(1, Participant.KICKED);
 				
 		// replay
 		connectionCtrl.replay();
+		managerCtrl.replay();
 		participantCtrl.replay();
 		registryCtrl.replay();
 
 		// test
-		final List removed = new ArrayList();
 		ServerLogicImpl logic = new ServerLogicImpl(new CallerThreadDomain(), new CallerThreadDomain(), document, registry) {
-			protected synchronized void removeParticipant(int participantId) {
-				super.removeParticipant(participantId);
-				removed.add(new Integer(participantId));
+			protected ParticipantManager createParticipantManager(CompositeForwarder forwarder) {
+				return manager;
 			}
 		};
 		logic.initPublisherConnection(connection);
-		logic.getParticipantManager().addParticipant(1, null, participant);
+		logic.getParticipantManager().joinRequestAccepted(1, null, participant);
 		logic.start();
 		logic.kick(1);
 		
-		// assertions
-		assertEquals(1, removed.size());
-		assertEquals(new Integer(1), removed.get(0));
-		
-		// TODO: fix test
-		//assertEquals("X", logic.getBlacklist().iterator().next());
-				
 		// verify
 		connectionCtrl.verify();
+		managerCtrl.verify();
 		participantCtrl.verify();
 		registryCtrl.verify();
 	}
@@ -487,38 +488,44 @@ public class ServerLogicImplTest extends TestCase {
 		MockControl participantCtrl = MockControl.createControl(ParticipantConnection.class);
 		final ParticipantConnection participant = (ParticipantConnection) participantCtrl.getMock();
 		
+		MockControl managerCtrl = MockControl.createControl(ParticipantManager.class);
+		final ParticipantManager manager = (ParticipantManager) managerCtrl.getMock();
+
 		// define mock behavior
+		manager.addParticipant(0, null, null);
+		managerCtrl.setMatcher(MockControl.ALWAYS_MATCHER);
+		manager.joinRequestAccepted(1, null, participant);
+		manager.getConnection(1);
+		managerCtrl.setReturnValue(participant);
+		manager.participantLeft(1);
+		
 		connection.getUser();
 		connectionCtrl.setDefaultReturnValue(null);
-		connection.sendParticipantLeft(1, Participant.LEFT);
+		
 		participant.getUser();
 		participantCtrl.setDefaultReturnValue(new RemoteUserProxyStub("X"));
 		participant.close();
 				
 		// replay
 		connectionCtrl.replay();
+		managerCtrl.replay();
 		participantCtrl.replay();
 		registryCtrl.replay();
 
 		// test
-		final List removed = new ArrayList();
 		ServerLogicImpl logic = new ServerLogicImpl(new CallerThreadDomain(), new CallerThreadDomain(), document, registry) {
-			protected synchronized void removeParticipant(int participantId) {
-				super.removeParticipant(participantId);
-				removed.add(new Integer(participantId));
+			protected ParticipantManager createParticipantManager(CompositeForwarder forwarder) {
+				return manager;
 			}
 		};
 		logic.initPublisherConnection(connection);
-		logic.getParticipantManager().addParticipant(1, null, participant);
+		logic.getParticipantManager().joinRequestAccepted(1, null, participant);
 		logic.start();
 		logic.leave(1);
-		
-		// assertions
-		assertEquals(1, removed.size());
-		assertEquals(new Integer(1), removed.get(0));
 				
 		// verify
 		connectionCtrl.verify();
+		managerCtrl.verify();
 		participantCtrl.verify();
 		registryCtrl.verify();
 	}
