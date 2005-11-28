@@ -145,7 +145,8 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 		this.document = createServerDocument(document);
 				
 		this.failureHandler = (FailureHandler) incomingDomain.wrap(this, FailureHandler.class);
-				
+		
+		// add the document updater to the composite forwarder
 		Forwarder forwarderTarget = new DocumentUpdater(this.document);
 		LoggingInterceptor interceptor = new LoggingInterceptor(DocumentUpdater.class, Level.DEBUG);
 		Forwarder forwarder = (Forwarder) AopUtil.wrap(forwarderTarget, Forwarder.class, interceptor);
