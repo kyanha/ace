@@ -24,6 +24,7 @@ package ch.iserver.ace.net.impl.protocol;
 import org.apache.log4j.Logger;
 
 import ch.iserver.ace.net.impl.RemoteDocumentProxyExt;
+import ch.iserver.ace.util.ParameterValidator;
 
 /**
  *
@@ -35,6 +36,8 @@ public class SessionCleanup {
 	private String docId, userId;
 	
 	public SessionCleanup(String docId, String userId) {
+		ParameterValidator.notNull("docId", docId);
+		ParameterValidator.notNull("userId", userId);
 		this.docId = docId;
 		this.userId = userId;
 	}
