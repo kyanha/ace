@@ -37,6 +37,7 @@ import ch.iserver.ace.collaboration.jupiter.AlgorithmWrapperImpl;
 import ch.iserver.ace.collaboration.jupiter.JoinRequestImpl;
 import ch.iserver.ace.collaboration.jupiter.NullAcknowledgeStrategyFactory;
 import ch.iserver.ace.collaboration.jupiter.PublisherConnection;
+import ch.iserver.ace.collaboration.jupiter.RemoteUserImpl;
 import ch.iserver.ace.collaboration.jupiter.UserRegistry;
 import ch.iserver.ace.net.DocumentServer;
 import ch.iserver.ace.net.ParticipantConnection;
@@ -493,6 +494,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	public void invite(RemoteUser user) {
 		ParameterValidator.notNull("user", user);
 		participants.userInvited(user.getId());
+		getDocumentServer().invite(((RemoteUserImpl) user).getProxy());
 	}
 	
 	/**
