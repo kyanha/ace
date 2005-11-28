@@ -277,7 +277,6 @@ BASCHTLE
 
 	public void join(DocumentViewController documentViewController) {
 		// join document
-		System.out.println(editorDocument);
 		editorDocument = new CollaborativeDocument();
 		remoteDocument.join(new JoinCallbackImpl(this, documentViewController));
 		setType(AWAITING);

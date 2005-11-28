@@ -45,7 +45,6 @@ public class InvitationCallbackImpl implements InvitationCallback {
 		int result = dialogController.showInvitationReceived(inviterName, docTitle);
 		if (result == JOptionPane.OK_OPTION) {
 			// accepted
-			System.out.println("invitation accepted");
 			// create new document item
 			DocumentItem newItem = new DocumentItem(invitation.getDocument());
 			
@@ -64,7 +63,6 @@ public class InvitationCallbackImpl implements InvitationCallback {
 
 		} else {
 			// rejected
-			System.out.println("invitation rejected");
 			invitation.reject();
 		}
 		
