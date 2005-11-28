@@ -21,6 +21,7 @@
 
 package ch.iserver.ace.application.editor;
 
+import ch.iserver.ace.collaboration.Session;
 import javax.swing.JPanel;
 import javax.swing.text.StyledDocument;
 import javax.swing.Action;
@@ -32,6 +33,10 @@ public interface Editor {
 	public void setTitle(String title);
 	
 	public void setDocument(CollaborativeDocument document);
+	
+	public void setSession(Session session);
+	
+	public void setLocalEditing(boolean localEditing);
 	
 	public void setEnabled(boolean enabled);
 	

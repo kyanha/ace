@@ -22,6 +22,7 @@
 package ch.iserver.ace.application.editor;
 
 import ch.iserver.ace.application.*;
+import ch.iserver.ace.collaboration.*;
 import ch.iserver.ace.application.action.ToggleFullScreenEditingAction;
 import java.awt.*;
 import java.awt.event.*;
@@ -67,6 +68,14 @@ public class CollaborativeEditor extends EditorImpl {
 
 	public void setDocument(CollaborativeDocument document) {
 		cTextPane.setDocument(document);
+	}
+	
+	public void setSession(Session session) {
+		cTextPane.setSession(session);
+	}
+	
+	public void setLocalEditing(boolean localEditing) {
+		cTextPane.setLocalEditing(localEditing);
 	}
 
 	public void setEnabled(boolean enabled) {

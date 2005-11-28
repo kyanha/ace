@@ -56,45 +56,47 @@ public class EditorController implements ItemSelectionChangeListener, Preference
 	
 	public void itemSelectionChanged(ItemSelectionChangeEvent e) {
 		if(e.getItem() == null) {
-			setEditorEnabled(false);
+			disableEditor();
 		} else {
 			DocumentItem item = (DocumentItem)e.getItem();
-			if(item.getType() == DocumentItem.LOCAL || item.getType() == DocumentItem.PUBLISHED ||
-			   		item.getType() == DocumentItem.JOINED) {
+			if(item.getType() == DocumentItem.LOCAL) {
 				// enable editor
-				CollaborativeDocument doc = item.getEditorDocument();			
-				editor.setDocument(doc);
-				editor.setTitle(item.getExtendedTitle());
-				editor.setEnabled(true);
+				enableEditor(item);
+				// set to local editing
+				editor.setLocalEditing(true);
+				// there are no participants for local editing
+				participantViewController.setParticipantList(new BasicEventList());
+
+			} else if(item.getType() == DocumentItem.PUBLISHED || item.getType() == DocumentItem.JOINED) {
+				// enable editor
+				enableEditor(item);
+				// set session
+				editor.setSession(item.getSession());
+				editor.setLocalEditing(false);
 				// set participantlist
-				if(item.getType() == DocumentItem.LOCAL) {
-					// there are no participants for local editing
-					participantViewController.setParticipantList(new BasicEventList());
-				} else {
-					participantViewController.setParticipantList(item.getParticipantSourceList());
-				}
+				participantViewController.setParticipantList(item.getParticipantSourceList());
+
 			} else {
-				setEditorEnabled(false);
+				disableEditor();
 			}
 		}
 	}
 	
-	private void setEditorEnabled(boolean enabled) {
-		if(enabled) {
-			/*// enable editor
-			editor.setDocument(item.getEditorDocument());
-			editor.setTitle(item.getExtendedTitle());
-			editor.setEnabled(true);
-			// set participantlist
-			participantViewController.setParticipantList(item.getParticipantSourceList());*/
-		} else {
-			// disable editor
-			editor.setDocument(new CollaborativeDocument());
-			editor.setTitle(" ");
-			editor.setEnabled(false);
-			// set participantlist
-			participantViewController.setParticipantList(new BasicEventList());
-		}
+	private void enableEditor(DocumentItem item) {
+		// enabled editor
+		CollaborativeDocument doc = item.getEditorDocument();			
+		editor.setDocument(doc);
+		editor.setTitle(item.getExtendedTitle());
+		editor.setEnabled(true);
+	}
+	
+	private void disableEditor() {
+		// disable editor
+		editor.setDocument(new CollaborativeDocument());
+		editor.setTitle(" ");
+		editor.setEnabled(false);
+		// set participantlist
+		participantViewController.setParticipantList(new BasicEventList());
 	}
 	
 	private int getFontSize(PreferencesStore preferences, int def) {

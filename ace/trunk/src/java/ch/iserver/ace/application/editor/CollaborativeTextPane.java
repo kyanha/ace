@@ -21,6 +21,10 @@
 
 package ch.iserver.ace.application.editor;
 
+import ch.iserver.ace.collaboration.*;
+import ch.iserver.ace.collaboration.util.*;
+import ch.iserver.ace.*;
+import ch.iserver.ace.text.*;
 import javax.swing.*;
 import javax.swing.text.*;
 import java.awt.*;
@@ -30,8 +34,18 @@ import java.awt.*;
 public class CollaborativeTextPane extends JTextPane {
 
 	private boolean localEditing = true;
+	Session session;
+	
 
 	public CollaborativeTextPane() {
+	}
+	
+	public void setSession(Session session) {
+		this.session = session;
+	}
+	
+	public Session getSession() {
+		return session;
 	}
 	
 	public boolean isLocalEditing() {
@@ -42,15 +56,41 @@ public class CollaborativeTextPane extends JTextPane {
 		this.localEditing = localEditing;
 	}
 
-	public void replaceSelection(String content) {
-		if(!localEditing) {
+	public void replaceSelection(final String content) {
+		if(localEditing) {
 			super.replaceSelection(content);
 		} else {
-			// lock
-//			System.out.println("CollaborativeReplaceSelection");
-			super.replaceSelection(content);
-			//super.replaceSelection(content);
-			// unlock
+			final JTextComponent target = this;
+
+			SessionTemplate template = new SessionTemplate(session);
+			template.execute(new SessionTemplateCallback() {
+				public void execute(Session session) {
+
+					// COPY & PASTE FROM ORIGINAL
+					Document doc = target.getDocument();
+					Caret caret = target.getCaret();
+					if (doc != null) {
+						try {
+							int p0 = Math.min(caret.getDot(), caret.getMark());
+							int p1 = Math.max(caret.getDot(), caret.getMark());
+							if (p0 != p1) {
+								Operation op = new DeleteOperation(p0, doc.getText(p0, p1 - p0));
+								System.out.println(op);
+								session.sendOperation(op);
+							}
+							if (content != null && content.length() > 0) {
+								Operation op = new InsertOperation(p0, content);
+								System.out.println(op);
+								session.sendOperation(op);
+							}
+						} catch (BadLocationException e) {
+						}
+					}
+					// END COPY & PASTE
+					CollaborativeTextPane.super.replaceSelection(content);
+				}
+			});
+
 		}
 	}
 	

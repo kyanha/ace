@@ -21,6 +21,10 @@
 
 package ch.iserver.ace.application.editor;
 
+import ch.iserver.ace.collaboration.*;
+import ch.iserver.ace.collaboration.util.*;
+import ch.iserver.ace.*;
+import ch.iserver.ace.text.*;
 import javax.swing.*;
 import javax.swing.text.*;
 import java.awt.*;
@@ -111,9 +115,64 @@ return new CollaborativeEditorView(elem);
 	public static class CollaborativeDeletePrevCharAction extends DeletePrevCharAction {
 		public void actionPerformed(ActionEvent e) {
 			if(getTextComponent(e) instanceof CollaborativeTextPane) {
-//				System.out.println("CollaborativeDeletePrevCharAction");
-				super.actionPerformed(e);
+
+				CollaborativeTextPane cTextPane = (CollaborativeTextPane)getTextComponent(e);
+				if(cTextPane.isLocalEditing()) {
+					// local editing
+					super.actionPerformed(e);
+				} else {
+					// collab editing -> session
+					final JTextComponent target = getTextComponent(e);
+	
+					Session session = cTextPane.getSession();
+					SessionTemplate template = new SessionTemplate(session);
+					template.execute(new SessionTemplateCallback() {
+						public void execute(Session session) {
+
+							// COPY & PASTE FROM ORIGINAL
+							//JTextComponent target = getTextComponent(e);
+							boolean beep = true;
+							if ((target != null) && (target.isEditable())) {
+								try {
+									Document doc = target.getDocument();
+									Caret caret = target.getCaret();
+									int dot = caret.getDot();
+									int mark = caret.getMark();
+									if (dot != mark) {
+										Operation op = new DeleteOperation(Math.min(dot, mark), doc.getText(Math.min(dot, mark), Math.abs(dot - mark)));
+										doc.remove(Math.min(dot, mark), Math.abs(dot - mark));
+										System.out.println(op);
+										session.sendOperation(op);
+										beep = false;
+									} else if (dot > 0) {
+										int delChars = 1;
+									   
+										if (dot > 1) {
+											String dotChars = doc.getText(dot - 2, 2);
+											char c0 = dotChars.charAt(0);
+											char c1 = dotChars.charAt(1);
+										   
+											if (c0 >= '\uD800' && c0 <= '\uDBFF' &&
+												c1 >= '\uDC00' && c1 <= '\uDFFF') {
+												delChars = 2;
+											}
+										}
+										Operation op = new DeleteOperation(dot - delChars, doc.getText(dot - delChars, delChars));
+										doc.remove(dot - delChars, delChars);
+										System.out.println(op);
+										session.sendOperation(op);
+										beep = false;
+									}
+								} catch (BadLocationException bl) {
+								}
+							}
+							// END COPY & PASTE
+
+						}
+					});				
+   				}
 			} else {
+				// other component
 				super.actionPerformed(e);
 			}
 		}
@@ -122,9 +181,64 @@ return new CollaborativeEditorView(elem);
 	public static class CollaborativeDeleteNextCharAction extends DeleteNextCharAction {
 		public void actionPerformed(ActionEvent e) {
 			if(getTextComponent(e) instanceof CollaborativeTextPane) {
-//				System.out.println("CollaborativeDeleteNextCharAction");
-				super.actionPerformed(e);
+
+				CollaborativeTextPane cTextPane = (CollaborativeTextPane)getTextComponent(e);
+				if(cTextPane.isLocalEditing()) {
+					// local editing
+					super.actionPerformed(e);
+				} else {
+					// collab editing -> session
+					final JTextComponent target = getTextComponent(e);
+	
+					Session session = cTextPane.getSession();
+					SessionTemplate template = new SessionTemplate(session);
+					template.execute(new SessionTemplateCallback() {
+						public void execute(Session session) {
+
+							// COPY & PASTE FROM ORIGINAL
+							//JTextComponent target = getTextComponent(e);
+							boolean beep = true;
+							if ((target != null) && (target.isEditable())) {
+								try {
+									Document doc = target.getDocument();
+									Caret caret = target.getCaret();
+									int dot = caret.getDot();
+									int mark = caret.getMark();
+									if (dot != mark) {
+										Operation op = new DeleteOperation(Math.min(dot, mark), doc.getText(Math.min(dot, mark), Math.abs(dot - mark)));
+										doc.remove(Math.min(dot, mark), Math.abs(dot - mark));
+										System.out.println(op);
+										session.sendOperation(op);
+										beep = false;
+									} else if (dot < doc.getLength()) {
+										int delChars = 1;
+									   
+										if (dot < doc.getLength() - 1) {
+											String dotChars = doc.getText(dot, 2);
+											char c0 = dotChars.charAt(0);
+											char c1 = dotChars.charAt(1);
+										   
+											if (c0 >= '\uD800' && c0 <= '\uDBFF' &&
+												c1 >= '\uDC00' && c1 <= '\uDFFF') {
+												delChars = 2;
+											}
+										}
+										Operation op = new DeleteOperation(dot, doc.getText(dot, delChars));
+										doc.remove(dot, delChars);
+										System.out.println(op);
+										session.sendOperation(op);
+										beep = false;
+									}
+								} catch (BadLocationException bl) {
+								}
+							}
+							// END COPY & PASTE
+
+						}
+					});				
+   				}
 			} else {
+				// other component
 				super.actionPerformed(e);
 			}
 		}
@@ -133,9 +247,48 @@ return new CollaborativeEditorView(elem);
 	public static class CollaborativeCutAction extends CutAction {
 		public void actionPerformed(ActionEvent e) {
 			if(getTextComponent(e) instanceof CollaborativeTextPane) {
-//				System.out.println("CollaborativeCutAction");
-				super.actionPerformed(e);
+
+				CollaborativeTextPane cTextPane = (CollaborativeTextPane)getTextComponent(e);
+				if(cTextPane.isLocalEditing()) {
+					// local editing
+					super.actionPerformed(e);
+				} else {
+					// collab editing -> session
+					final JTextComponent target = getTextComponent(e);
+	
+					Session session = cTextPane.getSession();
+					SessionTemplate template = new SessionTemplate(session);
+					template.execute(new SessionTemplateCallback() {
+						public void execute(Session session) {
+							// OWN IMPLEMENTATION
+							//JTextComponent target = getTextComponent(e);
+							boolean beep = true;
+							if ((target != null) && (target.isEditable())) {
+								try {
+									Document doc = target.getDocument();
+									Caret caret = target.getCaret();
+									int dot = caret.getDot();
+									int mark = caret.getMark();
+									if (dot != mark) {
+										Operation op = new DeleteOperation(Math.min(dot, mark), doc.getText(Math.min(dot, mark), Math.abs(dot - mark)));
+										System.out.println(op);
+										session.sendOperation(op);
+										beep = false;
+									}
+								} catch (BadLocationException bl) {
+								}
+							}							
+							// COPY & PASTE FROM ORIGINAL
+							if (target != null) {
+								target.cut();
+							}
+							// END COPY & PASTE
+
+						}
+					});				
+   				}
 			} else {
+				// other component
 				super.actionPerformed(e);
 			}
 		}
