@@ -32,7 +32,7 @@ import javax.xml.parsers.SAXParserFactory;
 public class DeserializerImpl implements Deserializer {
 
 	private static DeserializerImpl instance;
-	private static SAXParserFactory factory;;
+	private static SAXParserFactory factory;
 	
 	private DeserializerImpl() {
 		factory = SAXParserFactory.newInstance();

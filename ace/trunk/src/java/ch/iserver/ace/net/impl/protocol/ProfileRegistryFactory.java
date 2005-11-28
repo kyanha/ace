@@ -41,7 +41,7 @@ public class ProfileRegistryFactory {
 			Deserializer deserializer = DeserializerImpl.getInstance();
 			RequestFilter filter = RequestFilterFactory.createServerChain();
 			mainHandler = new MainRequestHandler(deserializer, filter);
-			ResponseParserHandler handler = new ResponseParserHandler();
+			CollaborationParserHandler handler = new CollaborationParserHandler();
 			SessionRequestHandlerFactory.init(deserializer, handler);
 			RequestHandler collab = SessionRequestHandlerFactory.getInstance().createHandler();
 			StartChannelListener listener = new StartChannelListenerImpl(mainHandler, collab);

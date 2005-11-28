@@ -103,6 +103,7 @@ public class DiscoveryCallbackImpl implements DiscoveryCallback {
 				SessionManager.getInstance().removeSession(proxy.getId());
 			session.cleanup();
 		}
+		//TODO: also cleanup session connections and alike
 		//--> session and user proxy ready to be garbage collected
 		
 		LOG.debug("<-- userDiscarded()");

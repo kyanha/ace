@@ -85,6 +85,7 @@ public class MainRequestHandler extends AbstractRequestHandler {
 				filter.process(request);
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			LOG.error("could not process request ["+e+"]");
 		}
 		LOG.debug("<-- receiveMSG");

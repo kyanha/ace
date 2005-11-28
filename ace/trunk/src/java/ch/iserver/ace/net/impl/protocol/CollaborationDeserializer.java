@@ -31,7 +31,11 @@ import javax.xml.parsers.SAXParserFactory;
  */
 public class CollaborationDeserializer implements Deserializer {
 
+	private static SAXParserFactory factory;
 	
+	public CollaborationDeserializer() {
+		factory = SAXParserFactory.newInstance();
+	}
 	
 	/**
 	 * @see ch.iserver.ace.net.impl.protocol.Deserializer#deserialize(byte[], ch.iserver.ace.net.impl.protocol.ParserHandler)
@@ -40,10 +44,8 @@ public class CollaborationDeserializer implements Deserializer {
 			throws DeserializeException {
 		try {
 			ByteArrayInputStream input = new ByteArrayInputStream(data);
-			SAXParserFactory factory;
 			//TODO: add xml validating, write xml schema
 			//factory.setValidating(true)
-			factory = SAXParserFactory.newInstance();
 			SAXParser saxParser = factory.newSAXParser();
 			saxParser.parse( input, handler );
 		} catch (Exception e) {
