@@ -31,7 +31,15 @@ public class JDKPreferencesStore extends AbstractPreferencesStore
 	
 	private Preferences preferences;
 	
+	public JDKPreferencesStore() {
+		// ignore
+	}
+	
 	public JDKPreferencesStore(String path) {
+		setPath(path);
+	}
+	
+	public void setPath(String path) {
 		this.preferences = Preferences.userRoot().node(path);
 		this.preferences.addPreferenceChangeListener(this);
 	}

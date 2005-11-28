@@ -28,12 +28,11 @@
 	<property name="src.osx" value="${src.dir}/osx"/>
 	<property name="src.windows" value="${src.dir}/windows"/>	
 
-	<!-- compiler settings javac (override on command line if desired) -->
+	<!-- override on command line if desired -->
     <property name="debug" value="true"/>
     <property name="optimize" value="false"/>
-    
-    <!-- debugger settings (override on command line if desired) -->
     <property name="suspend" value="n"/>
+	<property name="preferences.path" value="ch/iserver/ace"/>
 	
 	<artifact:remoteRepository id="remote.repository.ace" url="http://ace.iserver.ch/maven2/" />
 	<artifact:remoteRepository id="remote.repository.maven" url="http://repo1.maven.org/maven2"/>
@@ -255,6 +254,7 @@
 		<java classname="ch.iserver.ace.application.Main" 
 		      fork="true" 
 		      classpathref="classpath.run">
+			<jvmarg value="-Dch.iserver.ace.preferences=${preferences.path}"/>
 		</java>
 	</target>
 	

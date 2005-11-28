@@ -34,10 +34,10 @@
   </bean>
 
   <bean id="preferencesStore" class="ch.iserver.ace.application.preferences.JDKPreferencesStore">
-    <constructor-arg><value>ch/iserver/ace</value></constructor-arg>
+    <property name="path"><value>${ch.iserver.ace.preferences}</value></property>
   </bean>
 
-
+  <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"/> 
 
 
 

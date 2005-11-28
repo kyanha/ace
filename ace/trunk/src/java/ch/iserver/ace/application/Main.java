@@ -52,7 +52,10 @@ public class Main {
 			customizer = loadCustomizer(classname);
 		}
 
-
+		String propertiesPath = System.getProperty("ch.iserver.ace.preferences");
+		if (propertiesPath == null) {
+			System.setProperty("ch.iserver.ace.preferences", "ch/iserver/ace");
+		}
 
 		// LOAD BEANS
 		final ApplicationContext context = new ClassPathXmlApplicationContext(CONTEXT_FILES);
