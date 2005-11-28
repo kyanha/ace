@@ -26,6 +26,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.util.ParameterValidator;
@@ -34,6 +36,8 @@ import ch.iserver.ace.util.ParameterValidator;
  * The default implementation of the ParticipantManager interface.
  */
 public class ParticipantManagerImpl implements ParticipantManager {
+	
+	private static final Logger LOG = Logger.getLogger(ParticipantManager.class);
 	
 	/**
 	 * The mapping from user id to participant id.
@@ -153,6 +157,8 @@ public class ParticipantManagerImpl implements ParticipantManager {
 		RemoteUserProxy user = connection.getUser();
 		if (user != null) {
 			participants.put(new Integer(participantId), user.getId());
+		} else if (participantId != 0) {
+			LOG.warn("could not add to participants: " + participantId);
 		}
 		forwarders.put(key, forwarder);
 		connections.put(key, connection);
