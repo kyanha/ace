@@ -402,6 +402,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	protected void acceptJoin(ParticipantConnection connection) {
 		Algorithm algorithm = new Jupiter(false);
 		int participantId = participants.getParticipantId(connection.getUser().getId());
+		LOG.info("setting participant id " + participantId + " for user " + connection.getUser().getId());
 		connection.setParticipantId(participantId);
 		
 		ParticipantPort portTarget = new ParticipantPortImpl(this, this, participantId, new AlgorithmWrapperImpl(algorithm), compositeForwarder);
