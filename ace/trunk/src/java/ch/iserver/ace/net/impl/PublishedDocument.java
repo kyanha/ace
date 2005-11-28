@@ -21,12 +21,16 @@
 
 package ch.iserver.ace.net.impl;
 
+import java.util.Iterator;
+import java.util.Map;
+
 import org.apache.log4j.Logger;
 
 import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.net.DocumentServer;
 import ch.iserver.ace.net.DocumentServerLogic;
 import ch.iserver.ace.net.ParticipantConnection;
+import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.net.impl.protocol.NullRequestFilter;
 import ch.iserver.ace.net.impl.protocol.ProtocolConstants;
 import ch.iserver.ace.net.impl.protocol.Request;
@@ -64,6 +68,10 @@ public class PublishedDocument implements DocumentServer {
 		return details;
 	}
 	
+	public DocumentServerLogic getDocumentServerLogic() {
+		return docServer;
+	}
+	
 	public void join(ParticipantConnection connection) {
 		docServer.join(connection);
 	}
@@ -87,6 +95,15 @@ public class PublishedDocument implements DocumentServer {
 	/********************************************/
 	/** methods from interface DocumentServer  **/
 	/********************************************/
+	
+	public void invite(RemoteUserProxy user) {
+		LOG.debug("--> invite("+user+")");
+		Request request = new RequestImpl(ProtocolConstants.INVITE, user.getId(), docId);
+		filter.process(request);
+		LOG.debug("<-- invite()");
+	}
+	
+	
 	public void setDocumentDetails(DocumentDetails details) {
 		if (isShutdown()) { 
 			throw new IllegalStateException("document has been shutdown");
