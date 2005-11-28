@@ -91,6 +91,9 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 		return proxies;
 	}
 
+	/**
+	 * Called when the TCPSession for a user has been established.
+	 */
 	public void setSessionEstablished(String userId) {
 		peersWithEstablishedSession.put(userId, remoteUserProxies.get(userId));
 		

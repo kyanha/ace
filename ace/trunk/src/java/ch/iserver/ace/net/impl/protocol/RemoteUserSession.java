@@ -42,6 +42,7 @@ import ch.iserver.ace.net.impl.NetworkProperties;
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;
 import ch.iserver.ace.net.impl.SessionConnectionImpl;
+import ch.iserver.ace.net.impl.discovery.DiscoveryManagerFactory;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
@@ -249,11 +250,13 @@ public class RemoteUserSession {
 	 * @see TCPSession
 	 */
 	private void initiateTCPSession() throws ConnectionException {
+		LOG.debug("--> initiateTCPSession()");
 		try {
 			ProfileRegistry registry = ProfileRegistryFactory.getProfileRegistry();
 			session =  TCPSessionCreator.initiate(host, port, registry);
 			LOG.info("initiated session to "+host+":"+port);
 			isInitiated = true;
+			DiscoveryManagerFactory.getDiscoveryManager(null).setSessionEstablished(user.getId());
 		} catch (BEEPException be) {
 			//TODO: retry strategy?
 			LOG.error("could not initiate session ["+be+"]");
@@ -263,6 +266,7 @@ public class RemoteUserSession {
 			}
 			throw new ConnectionException("session init failed ["+be.getMessage()+"]");
 		}
+		LOG.debug("<-- initiateTCPSession()");
 	}
 	
 	/**

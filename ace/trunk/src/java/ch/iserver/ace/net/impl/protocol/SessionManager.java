@@ -64,7 +64,7 @@ public class SessionManager {
 		MutableUserDetails details = user.getMutableUserDetails();
 		RemoteUserSession newSession = new RemoteUserSession(details.getAddress(), details.getPort(), user);
 		sessions.put(id, newSession);
-		DiscoveryManagerFactory.getDiscoveryManager(null).setSessionEstablished(user.getId());
+//		DiscoveryManagerFactory.getDiscoveryManager(null).setSessionEstablished(user.getId());
 		return newSession;
 	}
 	
