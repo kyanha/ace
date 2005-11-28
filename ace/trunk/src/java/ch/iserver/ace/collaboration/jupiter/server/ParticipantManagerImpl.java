@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.collections.map.LRUMap;
 import org.apache.log4j.Logger;
 
 import ch.iserver.ace.net.ParticipantConnection;
@@ -37,14 +38,21 @@ import ch.iserver.ace.util.ParameterValidator;
  */
 public class ParticipantManagerImpl implements ParticipantManager {
 	
+	/**
+	 * The logger of the participant manager.
+	 */
 	private static final Logger LOG = Logger.getLogger(ParticipantManager.class);
 	
 	/**
-	 * The mapping from user id to participant id.
-	 * 
-	 * TODO: use LRU map instead
+	 * The number of mappings from user id to participant id that are kept in
+	 * the system.
 	 */
-	private final Map userParticipantMapping = new HashMap();
+	private static final int HISTORY_SIZE = 1000;
+	
+	/**
+	 * The mapping from user id to participant id.
+	 */
+	private final Map userParticipantMapping = new LRUMap(HISTORY_SIZE);
 	
 	/**
 	 * The current participant id. The next unknown user joining the
