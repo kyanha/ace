@@ -162,9 +162,9 @@ public class ServerLogicImplTest extends TestCase {
 		// test
 		ServerLogicImpl logic = new ServerLogicImpl(new CallerThreadDomain(), new CallerThreadDomain(), document, registry);
 		logic.initPublisherConnection(connection);
+		logic.start();		
 		logic.getParticipantManager().addParticipant(1, null, participant);
 		logic.kick(1);
-		logic.start();		
 		logic.join(participant);
 		
 		// verify

@@ -178,6 +178,7 @@ public class ParticipantManagerImpl implements ParticipantManager {
 	public void participantKicked(int participantId) {
 		String user = getUser(participantId);
 		if (user != null) {
+			participants.remove(new Integer(participantId));
 			blacklist.add(user);
 		}
 	}
