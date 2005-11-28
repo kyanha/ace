@@ -34,6 +34,7 @@ import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.net.impl.DiscoveryCallback;
 import ch.iserver.ace.net.impl.MutableUserDetails;
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;
+import ch.iserver.ace.net.impl.RemoteUserProxyFactory;
 import ch.iserver.ace.net.impl.RemoteUserProxyImpl;
 import ch.iserver.ace.util.ParameterValidator;
 
@@ -136,7 +137,7 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 		MutableUserDetails details = new MutableUserDetails(username);
 		details.setPort(port);
 		
-		RemoteUserProxyImpl proxy = new RemoteUserProxyImpl(userId, details);
+		RemoteUserProxyExt proxy = RemoteUserProxyFactory.getInstance().createProxy(userId, details);
 		remoteUserProxies.put(userId, proxy);
 		services.put(serviceName, userId);
 		
