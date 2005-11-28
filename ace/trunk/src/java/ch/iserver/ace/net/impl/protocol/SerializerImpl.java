@@ -33,6 +33,7 @@ import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.log4j.Logger;
+import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 import ch.iserver.ace.CaretUpdate;
@@ -120,20 +121,14 @@ public class SerializerImpl implements Serializer, ProtocolConstants {
 			handler.startDocument();
 			AttributesImpl attrs = new AttributesImpl();
 			handler.startElement("", "", "ace", attrs);
-			
+			String userid = NetworkServiceImpl.getInstance().getUserId();
+			//TODO: test tag INVITE
 			if (type == JOIN) {
-				attrs = new AttributesImpl();
-				handler.startElement("", "", "request", attrs);
-				String userid = NetworkServiceImpl.getInstance().getUserId();
-				attrs.addAttribute("", "", "userid", "", userid);	
-				handler.startElement("", "", TAG_JOIN, attrs);
 				String docId = (String) data;
-				attrs = new AttributesImpl();
-				attrs.addAttribute("", "", "id", "", docId);
-				handler.startElement("", "", "doc", attrs);
-				handler.endElement("", "", "doc");
-				handler.endElement("", "", TAG_JOIN);
-				handler.endElement("", "", "request");
+				createRequest(handler, TAG_JOIN, userid, docId);
+			} else if (type == INVITE) {
+				String docId = (String) data;
+				createRequest(handler, TAG_INVITE, userid, docId);
 			} else {
 				LOG.error("unknown notification type ["+type+"]");
 			}
@@ -145,6 +140,19 @@ public class SerializerImpl implements Serializer, ProtocolConstants {
 			LOG.error("could not serialize ["+e.getMessage()+"]");
 			throw new SerializeException(e.getMessage());
 		}
+	}
+	
+	private void createRequest(TransformerHandler handler, String type, String userid, String docId) throws SAXException {
+		AttributesImpl attrs = new AttributesImpl();
+		handler.startElement("", "", "request", attrs);
+		attrs.addAttribute("", "", USER_ID, "", userid);	
+		handler.startElement("", "", type, attrs);
+		attrs = new AttributesImpl();
+		attrs.addAttribute("", "", "id", "", docId);
+		handler.startElement("", "", "doc", attrs);
+		handler.endElement("", "", "doc");
+		handler.endElement("", "", type);
+		handler.endElement("", "", "request");
 	}
 	
 

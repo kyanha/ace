@@ -32,8 +32,10 @@ import javax.xml.parsers.SAXParserFactory;
 public class DeserializerImpl implements Deserializer {
 
 	private static DeserializerImpl instance;
+	private static SAXParserFactory factory;;
 	
 	private DeserializerImpl() {
+		factory = SAXParserFactory.newInstance();
 	}
 	
 	public static DeserializerImpl getInstance() {
@@ -46,14 +48,12 @@ public class DeserializerImpl implements Deserializer {
 	/**
 	 * 
 	 */
-	//TODO: make sure that synchronization is imperative here 
-	public synchronized void deserialize(byte[] data, ParserHandler handler) throws DeserializeException {
+	//TODO: is synchronization needed here? 
+	public void deserialize(byte[] data, ParserHandler handler) throws DeserializeException {
 		try {
 			ByteArrayInputStream input = new ByteArrayInputStream(data);
-			SAXParserFactory factory;
 			//TODO: add xml validating, write xml schema
 			//factory.setValidating(true)
-			factory = SAXParserFactory.newInstance();
 			SAXParser saxParser = factory.newSAXParser();
 			saxParser.parse( input, handler );
 		} catch (Exception e) {
