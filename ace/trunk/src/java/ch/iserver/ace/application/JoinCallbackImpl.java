@@ -30,9 +30,11 @@ import ch.iserver.ace.collaboration.ParticipantSessionCallback;
 public class JoinCallbackImpl implements JoinCallback {
 
 	private DocumentItem documentItem;
+	private DocumentViewController documentViewController;
 	
-	public JoinCallbackImpl(DocumentItem documentItem) {
+	public JoinCallbackImpl(DocumentItem documentItem, DocumentViewController documentViewController) {
 		this.documentItem = documentItem;
+		this.documentViewController = documentViewController;
 	}
 	
 	public ParticipantSessionCallback accepted(Session session) {
@@ -41,7 +43,7 @@ public class JoinCallbackImpl implements JoinCallback {
 		documentItem.setSession(session);
 
 		// create and set session callback
-		ParticipantSessionCallback callback = new ParticipantSessionCallbackImpl(documentItem);
+		ParticipantSessionCallback callback = new ParticipantSessionCallbackImpl(documentItem, documentViewController);
 		documentItem.setSessionCallback(callback);
 		
 		documentItem.setType(DocumentItem.JOINED);

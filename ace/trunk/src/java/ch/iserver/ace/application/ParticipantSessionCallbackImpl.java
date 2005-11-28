@@ -29,6 +29,7 @@ import ch.iserver.ace.application.editor.*;
 
 import java.awt.Color;
 import java.util.Iterator;
+import javax.swing.event.*;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 
@@ -37,8 +38,11 @@ import javax.swing.text.StyleConstants;
 
 public class ParticipantSessionCallbackImpl extends SessionCallbackImpl implements ParticipantSessionCallback {
 
-	public ParticipantSessionCallbackImpl(DocumentItem documentItem) {
+	private DocumentViewController viewController;
+
+	public ParticipantSessionCallbackImpl(DocumentItem documentItem, DocumentViewController viewController) {
 		super(documentItem);
+		this.viewController = viewController;
 	}
 	
 	public synchronized void setDocument(PortableDocument doc) {
@@ -78,11 +82,29 @@ public class ParticipantSessionCallbackImpl extends SessionCallbackImpl implemen
 	
 	public void sessionTerminated() {
 		System.out.println("sessionTerminated");
+		// create local copy of the document
+		DocumentItem newItem = new DocumentItem("Copy (terminated) of: " + documentItem.getTitle());
+
+		newItem.setEditorDocument(documentItem.createEditorDocumentCopy());
+
+		// add item to document view
+		viewController.addDocument(newItem);
+
+		// set type
+		documentItem.setType(DocumentItem.REMOTE);
 	}
 	
 	public void kicked() {
 		System.out.println("kicked");
 		// create local copy of the document
+		DocumentItem newItem = new DocumentItem("Copy (kicked) of: " + documentItem.getTitle());
+
+		newItem.setEditorDocument(documentItem.createEditorDocumentCopy());
+
+		// add item to document view
+		viewController.addDocument(newItem);
+
+		// set type
 		documentItem.setType(DocumentItem.REMOTE);
 	}
 	

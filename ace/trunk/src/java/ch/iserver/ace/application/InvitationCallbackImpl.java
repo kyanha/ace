@@ -32,9 +32,11 @@ import ch.iserver.ace.collaboration.ParticipantSessionCallback;
 public class InvitationCallbackImpl implements InvitationCallback {
 
 	private DialogController dialogController;
+	private DocumentViewController viewController;
 	
-	public InvitationCallbackImpl(DialogController dialogController) {
+	public InvitationCallbackImpl(DialogController dialogController, DocumentViewController viewController) {
 		this.dialogController = dialogController;
+		this.viewController = viewController;
 	}
 	
 	public void invitationReceived(Invitation invitation) {
@@ -43,22 +45,26 @@ public class InvitationCallbackImpl implements InvitationCallback {
 		int result = dialogController.showInvitationReceived(inviterName, docTitle);
 		if (result == JOptionPane.OK_OPTION) {
 			// accepted
-			/*System.out.println("invitation auto accepted");
+			System.out.println("invitation accepted");
 			// create new document item
-			DocumentItem documentItem = new DocumentItem(invitation.getDocument());
+			DocumentItem newItem = new DocumentItem(invitation.getDocument());
 			
 			// create and set session callback
-			ParticipantSessionCallback callback = new ParticipantSessionCallbackImpl(documentItem);
-			documentItem.setSessionCallback(callback);
+			ParticipantSessionCallback callback = new ParticipantSessionCallbackImpl(newItem, viewController);
+			newItem.setSessionCallback(callback);
 	
 			// set session
-			documentItem.setSession(invitation.accept(callback));
+			newItem.setSession(invitation.accept(callback));
 	
-			// TODO: add item to document view
-			documentItem.setType(DocumentItem.JOINED);*/
+			// add item to document view
+			viewController.addDocument(newItem);
+			
+			// set type
+			newItem.setType(DocumentItem.JOINED);
 
 		} else {
 			// rejected
+			System.out.println("invitation rejected");
 			invitation.reject();
 		}
 		

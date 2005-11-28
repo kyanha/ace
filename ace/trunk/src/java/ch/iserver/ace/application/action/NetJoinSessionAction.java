@@ -27,6 +27,7 @@ import ch.iserver.ace.application.ItemSelectionChangeEvent;
 import ch.iserver.ace.application.ItemSelectionChangeListener;
 import ch.iserver.ace.application.LocaleMessageSource;
 import ch.iserver.ace.application.BrowseViewController;
+import ch.iserver.ace.application.DocumentViewController;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import java.awt.event.*;
@@ -36,8 +37,10 @@ import java.awt.event.*;
 public class NetJoinSessionAction extends AbstractAction implements ItemSelectionChangeListener {
 	
 	private DocumentItem currentBrowseItem;
+	private DocumentViewController documentViewController;
 
-	public NetJoinSessionAction(LocaleMessageSource messageSource, BrowseViewController browseController) {
+	public NetJoinSessionAction(LocaleMessageSource messageSource, BrowseViewController browseController,
+			DocumentViewController documentViewController) {
 		super(messageSource.getMessage("mNetJoin"), messageSource.getIcon("iMenuNetJoin"));
 		putValue(SHORT_DESCRIPTION, messageSource.getMessage("mNetJoinTT"));
 		browseController.addItemSelectionChangeListener(this);
@@ -48,6 +51,7 @@ public class NetJoinSessionAction extends AbstractAction implements ItemSelectio
 				}
 			}
 		});
+		this.documentViewController = documentViewController;
 		setEnabled(false);
 	}
 	
@@ -57,7 +61,7 @@ public class NetJoinSessionAction extends AbstractAction implements ItemSelectio
 	
 	private void joinSession() {
 		if(currentBrowseItem != null && currentBrowseItem.getType() == DocumentItem.REMOTE) {
-			currentBrowseItem.join();
+			currentBrowseItem.join(documentViewController);
 		}
 	}
 
