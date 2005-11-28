@@ -51,6 +51,12 @@ public class InviteRequestRecipientFilter extends AbstractRequestFilter {
 				RemoteDocumentProxy proxy = session.getUser().getSharedDocument(info.getDocId());
 				InvitationProxy invitation = InvitationProxyFactory.getInstance().createProxy(proxy, session);
 				callback.invitationReceived(invitation);
+				try {
+					//confirm reception of msg				
+					request.getMessage().sendNUL();
+				} catch (Exception e) {
+					LOG.error("could not send confirmation ["+e+", "+e.getMessage()+"]");
+				}
 				LOG.info("<-- process()");
 			} else {
 				super.process(request);
