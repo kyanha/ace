@@ -139,6 +139,7 @@ public class RemoteUserSession {
 		SessionConnectionImpl conn = new SessionConnectionImpl(docId, this, 
 				collaborationChannel, ResponseListener.getInstance(), serializer);
 		sessionConnections.put(docId, conn);
+		LOG.debug(sessionConnections.size() + " SessionConnections for " + getUser().getUserDetails().getUsername());
 		LOG.debug("<-- addSessionConnection()");
 		return conn;
 	}
@@ -149,6 +150,7 @@ public class RemoteUserSession {
 		CollaborationSerializer serializer = new CollaborationSerializer();
 		SessionConnectionImpl conn = new SessionConnectionImpl(docId, this, ResponseListener.getInstance(), serializer);
 		sessionConnections.put(docId, conn);
+		LOG.debug(sessionConnections.size() + " SessionConnections for " + getUser().getUserDetails().getUsername());
 		LOG.debug("<-- addSessionConnection()");
 		return conn;
 	}
@@ -160,7 +162,12 @@ public class RemoteUserSession {
 	 */
 	public SessionConnectionImpl removeSessionConnection(String docId) {
 		SessionConnectionImpl connection = (SessionConnectionImpl) sessionConnections.remove(docId);
-		connection.cleanup();
+		if (connection == null) {
+			LOG.warn("SessionConnection to remove for [" + docId + "] is already removed");
+		} else {
+			connection.cleanup();
+		}
+		LOG.debug(sessionConnections.size() + " SessionConnections for " + getUser().getUserDetails().getUsername());
 		return connection;
 	}
 
@@ -191,7 +198,8 @@ public class RemoteUserSession {
 		ParticipantConnectionImpl connection = new ParticipantConnectionImpl(docId, this,
 				ResponseListener.getInstance(), serializer);
 		participantConnections.put(docId, connection);
-		LOG.debug("<-- createCollaborationConnection()");
+		LOG.debug(participantConnections.size() + " ParticipantConnections for " + getUser().getUserDetails().getUsername());
+		LOG.debug("<-- createParticipantConnection()");
 		return connection;
 	}
 	
@@ -203,6 +211,7 @@ public class RemoteUserSession {
 	public ParticipantConnectionImpl removeParticipantConnection(String docId) {
 		ParticipantConnectionImpl conn = (ParticipantConnectionImpl) participantConnections.remove(docId);
 		conn.cleanup();
+		LOG.debug(participantConnections.size() + " ParticipantConnections for " + getUser().getUserDetails().getUsername());
 		return conn;
 	}
 

@@ -32,6 +32,7 @@ import ch.iserver.ace.net.SessionConnection;
 import ch.iserver.ace.net.SessionConnectionCallback;
 import ch.iserver.ace.net.impl.protocol.AbstractConnection;
 import ch.iserver.ace.net.impl.protocol.ProtocolConstants;
+import ch.iserver.ace.net.impl.protocol.ProtocolException;
 import ch.iserver.ace.net.impl.protocol.RemoteUserSession;
 import ch.iserver.ace.net.impl.protocol.Serializer;
 import ch.iserver.ace.net.impl.protocol.SessionRequestHandler;
@@ -129,7 +130,7 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 		LOG.debug("--> leave()");
 		try {
 			byte[] data = serializer.createNotification(ProtocolConstants.LEAVE, this);
-			send(data, null, getReplyListener());
+			sendToPeer(data);
 		} catch (Exception e) {
 			e.printStackTrace();
 			LOG.error("exception processing leave ["+e+", "+e.getMessage()+"]");
@@ -167,6 +168,15 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 			throw new IllegalStateException("session left.");
 		}
 
+	}
+	
+	private void sendToPeer(byte[] data) {
+		try {
+			send(data, session.getUser().getUserDetails().getUsername(), getReplyListener());
+		} catch (ProtocolException pe) {
+			//TODO: error handling?
+			LOG.error("protocol exception ["+pe.getMessage()+"]");
+		}
 	}
 
 }

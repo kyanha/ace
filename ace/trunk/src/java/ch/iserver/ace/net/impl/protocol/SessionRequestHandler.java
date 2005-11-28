@@ -71,17 +71,19 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 					PortableDocumentExt doc = (PortableDocumentExt) response.getPayload();
 					publisherId = doc.getPublisherId();
 					docId = doc.getDocumentId();
+					int participantId = doc.getParticipantId();
 					RemoteUserSession session = SessionManager.getInstance().getSession(publisherId);
 					SessionConnectionImpl connection = null;
 					if (!session.hasSessionConnection(docId)) { //upon join request
 						LOG.debug("addSessionConnection()");
 						connection = session.addSessionConnection(docId, message.getChannel());
-						connection.setParticipantId(doc.getParticipantId());
+						connection.setParticipantId(participantId);
 						RemoteDocumentProxyExt proxy = session.getUser().getSharedDocument(docId);
 						sessionCallback = proxy.joinAccepted(connection);
 					} else { //upon invitation
 						LOG.debug("turn SessionConnection ACTIVE");
 						connection = session.getSessionConnection(docId);
+						connection.setParticipantId(participantId);
 						connection.setChannel(message.getChannel());
 						connection.setState(AbstractConnection.STATE_ACTIVE);
 						sessionCallback = connection.getSessionConnectionCallback();

@@ -198,7 +198,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 	
 	private void sendToPeer(byte[] data) {
 		try {
-			send(data, null, getReplyListener());
+			send(data, session.getUser().getUserDetails().getUsername(), getReplyListener());
 		} catch (ProtocolException pe) {
 			//TODO: error handling?
 			LOG.error("protocol exception ["+pe.getMessage()+"]");
