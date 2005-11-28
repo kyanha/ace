@@ -357,10 +357,6 @@
 		
 	<target name="publish-api" depends="javadoc">
         <description>publishes the API</description>
-        <!--<sshexec host="ace.iserver.ch"
-                 username="${username}"
-                 password="${password}"
-                 command="rm -rf /home/ace/ace.iserver.ch/www/api"/>-->
 		<scp todir="${username}:${password}@ace.iserver.ch:/home/ace/ace.iserver.ch/www/api">
 			<fileset dir="${build.javadoc}"/>
 		</scp>
