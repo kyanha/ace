@@ -43,8 +43,6 @@ public class ParticipantSessionCallbackImpl extends SessionCallbackImpl implemen
 	
 	public synchronized void setDocument(PortableDocument doc) {
 		// IMPORTANT: this method is called first from the collaboration layer. set participants here.
-		System.out.println("setDocument");
-
 		// add all participants
 		int myParticipantId = documentItem.getSession().getParticipantId();
 		Iterator pIter = doc.getParticipants().iterator();
@@ -58,8 +56,6 @@ public class ParticipantSessionCallbackImpl extends SessionCallbackImpl implemen
 
 				Style pStyle = cDocument.addStyle("" + participant.getParticipantId(), null);
 				StyleConstants.setBackground(pStyle, pColor);
-
-				System.out.println("setDocument::participant added: " + participant  + "   (Color: " + pColor+ ")");
 			}
 		}
 		
