@@ -52,14 +52,18 @@ class CompositeForwarderImpl implements CompositeForwarder {
 	 * @see ch.iserver.ace.collaboration.jupiter.server.CompositeForwarder#addForwarder(ch.iserver.ace.collaboration.jupiter.server.Forwarder)
 	 */
 	public void addForwarder(Forwarder forwarder) {
-		forwarders.add(forwarder);
+		if (forwarder != null) {
+			forwarders.add(forwarder);
+		}
 	}
 		
 	/**
 	 * @see ch.iserver.ace.collaboration.jupiter.server.CompositeForwarder#removeForwarder(ch.iserver.ace.collaboration.jupiter.server.Forwarder)
 	 */
 	public void removeForwarder(Forwarder forwarder) {
-		forwarders.remove(forwarder);
+		if (forwarder != null) {
+			forwarders.remove(forwarder);
+		}
 	}
 		
 	/**

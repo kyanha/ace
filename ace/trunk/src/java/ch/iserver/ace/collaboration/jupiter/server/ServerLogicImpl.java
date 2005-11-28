@@ -21,12 +21,6 @@
 
 package ch.iserver.ace.collaboration.jupiter.server;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
@@ -65,30 +59,15 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	private static final Logger LOG = Logger.getLogger(ServerLogicImpl.class);
 	
 	/**
-	 * The next participant id to be given to a new user.
-	 */
-	private int nextParticipantId;
-	
-	/**
 	 * The CompositeForwarder used to forward events to other participants.
 	 */
-	private final CompositeForwarder forwarder;
+	private final CompositeForwarder compositeForwarder;
 	
 	/**
 	 * The FailureHandler used to handle failures in this class.
 	 */
 	private final FailureHandler failureHandler;
 		
-	/**
-	 * The mapping from participant id to Forwarder objects.
-	 */
-	private final HashMap forwarders = new HashMap();
-	
-	/**
-	 * The mapping from participant id to ParticipantConnection objects.
-	 */
-	private final TreeMap connections = new TreeMap();
-	
 	/**
 	 * The DocumentServer object from the network layer.
 	 */
@@ -134,31 +113,11 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	 * Flag indicating whether this object is accepting joins.
 	 */
 	private boolean acceptingJoins;
-	
+		
 	/**
-	 * The blacklist of this session.
+	 * The ParticipantManager of the session.
 	 */
-	private final Set blacklist = new HashSet();
-	
-	/**
-	 * The set of currently joining users.
-	 */
-	private final Set joinSet = new HashSet();
-	
-	/**
-	 * The set of users that are currently in the session.
-	 */
-	private final Set participants = new HashSet();
-	
-	/**
-	 * The set of invited users.
-	 */
-	private final Set invited = new HashSet();
-	
-	/**
-	 * A mapping from user id to participant id.
-	 */
-	private final Map userParticipantMapping = new HashMap();
+	private final ParticipantManager participants;
 			
 	/**
 	 * Creates a new ServerLogicImpl instance.
@@ -175,22 +134,30 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 		ParameterValidator.notNull("document", document);
 		ParameterValidator.notNull("registry", registry);
 		
-		this.nextParticipantId = 0;
-		this.forwarder = createForwarder();
-		
 		this.incomingDomain = incomingDomain;
 		this.outgoingDomain = outgoingDomain;
 		this.registry = registry;
 		this.accessControlStrategy = this;
-		
-		this.failureHandler = (FailureHandler) incomingDomain.wrap(this, FailureHandler.class);
-		
+
+		this.compositeForwarder = createForwarder();
+		this.participants = createParticipantManager(compositeForwarder);
 		this.document = createServerDocument(document);
-		
+				
+		this.failureHandler = (FailureHandler) incomingDomain.wrap(this, FailureHandler.class);
+				
 		Forwarder forwarderTarget = new DocumentUpdater(this.document);
 		LoggingInterceptor interceptor = new LoggingInterceptor(DocumentUpdater.class, Level.DEBUG);
 		Forwarder forwarder = (Forwarder) AopUtil.wrap(forwarderTarget, Forwarder.class, interceptor);
-		this.forwarder.addForwarder(forwarder);
+		this.compositeForwarder.addForwarder(forwarder);
+	}
+
+	/**
+	 * Creates a new ParticipantManager for this session.
+	 * 
+	 * @return the newly created participant manager
+	 */
+	protected ParticipantManagerImpl createParticipantManager(CompositeForwarder forwarder) {
+		return new ParticipantManagerImpl(forwarder);
 	}
 	
 	/**
@@ -232,9 +199,9 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 						this, 
 						participantId, 
 						new AlgorithmWrapperImpl(algorithm), 
-						forwarder);
-		Forwarder proxy = createForwarder(participantId, connection, algorithm);
-		addParticipant(new SessionParticipant(participantId, proxy, connection, null));
+						compositeForwarder);
+		Forwarder forwarder = createForwarder(participantId, connection, algorithm);
+		participants.addParticipant(participantId, forwarder, connection);
 		return (PublisherPort) incomingDomain.wrap(port, PublisherPort.class);
 	}
 	
@@ -305,12 +272,19 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 		ParameterValidator.notNull("server", server);
 		this.server = server;
 	}
-			
+	
+	/**
+	 * @return
+	 */
+	protected ParticipantManager getParticipantManager() {
+		return participants;
+	}
+	
 	/**
 	 * @return gets the forwarder used to forward events
 	 */
-	protected Forwarder getForwarder() {
-		return forwarder;
+	protected Forwarder getCompositeForwarder() {
+		return compositeForwarder;
 	}
 	
 	/**
@@ -319,29 +293,11 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	protected FailureHandler getFailureHandler() {
 		return failureHandler;
 	}
-	
-	/**
-	 * Gets the blacklist of the session. The black list is a collection of
-	 * user ids (element type is String), which are no longer allowed to join
-	 * the session.
-	 * 
-	 * @return the black list of the session
-	 */
-	protected Set getBlacklist() {
-		return blacklist;
-	}
-	
-	/**
-	 * Gets the set of user ids who have tried to join the session but have
-	 * not been accepted or rejected. This list is used to reject join
-	 * requests for users that have already issued an unanswered join request.
-	 * 
-	 * @return the join set of the session
-	 */
-	protected Set getJoinSet() {
-		return joinSet;
-	}
 		
+	/**
+	 * Starts the server logic. Unless this method is called, no joins are
+	 * accepted.
+	 */
 	public void start() {
 		acceptingJoins = true;
 	}
@@ -384,28 +340,6 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	protected AcknowledgeStrategyFactory getAcknowledgeStrategyFactory() {
 		return acknowledgeStrategyFactory;
 	}
-	
-	/**
-	 * @return the next available participant id
-	 */
-	protected synchronized int nextParticipantId() {
-		return ++nextParticipantId;
-	}
-	
-	/**
-	 * Gets a participant id for a user.
-	 * 
-	 * @param userId the user id
-	 * @return a participant id for the user
-	 */
-	protected int getParticipantId(String userId) {
-		Integer id = (Integer) userParticipantMapping.get(userId);
-		if (id == null) {
-			id = new Integer(nextParticipantId());
-			userParticipantMapping.put(userId, id);
-		}
-		return id.intValue();
-	}
 			
 	/**
 	 * Removes the participant specified with the given id from the
@@ -414,40 +348,9 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	 * @param participantId the participant to be removed
 	 */
 	protected void removeParticipant(int participantId) {
-		Integer key = new Integer(participantId);
-		ParticipantConnection connection = (ParticipantConnection) connections.remove(key);
-		if (connection != null) {
-			participants.remove(connection.getUser().getId());
-		}
-		Forwarder removed = (Forwarder) forwarders.remove(key);
-		forwarder.removeForwarder(removed);
-	}
-		
-	/**
-	 * Gets the participant connection for a participant.
-	 * 
-	 * @param id the participant id
-	 * @return the participant connection for the given participant or null
-	 */
-	protected ParticipantConnection getParticipantConnection(int id) {
-		return (ParticipantConnection) connections.get(new Integer(id));
+		participants.removeParticipant(participantId);
 	}
 	
-	/**
-	 * Adds a new participant to the session.
-	 * 
-	 * @param participant the participant to be added
-	 */
-	protected void addParticipant(SessionParticipant participant) {
-		Integer key = new Integer(participant.getParticipantId());
-		if (participant.getUserProxy() != null) {
-			participants.add(participant.getUserProxy().getId());
-		}
-		forwarders.put(key, participant.getForwarder());
-		connections.put(key, participant.getParticipantConnection());
-		forwarder.addForwarder(participant.getForwarder());
-	}
-
 	// --> server logic methods <--
 
 	/**
@@ -462,43 +365,30 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 		
 		String id = target.getUser().getId();
 		
-		if (invited.contains(id)) {
-			invited.remove(id);
+		if (participants.isInvited(id)) {
 			acceptJoin(target);
-			return;
-		}
-		
-		if (participants.contains(id)) {
+		} else if (participants.isParticipant(id)) {
 			target.joinRejected(JoinRequest.JOINED);
-			return;
-		}
-		
-		if (blacklist.contains(id)) {
+		} else if (participants.isBlackListed(id)) {
 			target.joinRejected(JoinRequest.BLACKLISTED);
-			return;
-		}
-		
-		if (joinSet.contains(id)) {
+		} else if (participants.isJoining(id)) {
 			target.joinRejected(JoinRequest.IN_PROGRESS);
-			return;
-		}
-
-		ParticipantConnection connection = (ParticipantConnection) outgoingDomain.wrap(
+		} else {
+			ParticipantConnection connection = (ParticipantConnection) outgoingDomain.wrap(
 						new ParticipantConnectionWrapper(
 								target, 
 								getFailureHandler()), 
 						ParticipantConnection.class);
-		RemoteUser user = getUserRegistry().getUser(id);
+			RemoteUser user = getUserRegistry().getUser(id);
 		
-		if (user == null) {
-			target.joinRejected(JoinRequest.UNKNOWN_USER);
-			return;
+			if (user == null) {
+				target.joinRejected(JoinRequest.UNKNOWN_USER);
+			} else {
+				ServerLogic wrapped = (ServerLogic) incomingDomain.wrap(this, ServerLogic.class);
+				JoinRequest request = new JoinRequestImpl(wrapped, user, connection);
+				getAccessControlStrategy().joinRequest(getPublisherConnection(), request);
+			}
 		}
-		
-		joinSet.add(id);
-		ServerLogic wrapped = (ServerLogic) incomingDomain.wrap(this, ServerLogic.class);
-		JoinRequest request = new JoinRequestImpl(wrapped, user, connection);
-		getAccessControlStrategy().joinRequest(getPublisherConnection(), request);
 	}
 	
 	/**
@@ -513,29 +403,27 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 				acceptJoin(connection);
 			}
 		} finally {
-			// remove from list of joining users
-			joinSet.remove(connection.getUser().getId());
+			participants.joinRequestAccepted(connection.getUser().getId());
 			LOG.info("<-- join accepted");
 		}
 	}
 	
 	protected void acceptJoin(ParticipantConnection connection) {
 		Algorithm algorithm = new Jupiter(false);
-		int participantId = getParticipantId(connection.getUser().getId());
+		int participantId = participants.getParticipantId(connection.getUser().getId());
 		connection.setParticipantId(participantId);
 		
-		ParticipantPort portTarget = new ParticipantPortImpl(this, this, participantId, new AlgorithmWrapperImpl(algorithm), forwarder);
+		ParticipantPort portTarget = new ParticipantPortImpl(this, this, participantId, new AlgorithmWrapperImpl(algorithm), compositeForwarder);
 		ParticipantPort port = (ParticipantPort) incomingDomain.wrap(portTarget, ParticipantPort.class);
-		Forwarder proxy = createForwarder(participantId, connection, algorithm);
+		Forwarder forwarder = createForwarder(participantId, connection, algorithm);
 		RemoteUserProxy user = connection.getUser();
 
-		SessionParticipant participant = new SessionParticipant(participantId, proxy, connection, user);
 		PortableDocument document = getDocument();
 					
 		connection.joinAccepted(port);
 		connection.sendDocument(document);
-		addParticipant(participant);
-		forwarder.sendParticipantJoined(participantId, user);
+		participants.addParticipant(participantId, forwarder, connection);
+		compositeForwarder.sendParticipantJoined(participantId, user);
 	}
 	
 	/**
@@ -550,8 +438,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 				connection.joinRejected(JoinRequest.REJECTED);
 			}
 		} finally {
-			// remove from list of joining users
-			joinSet.remove(connection.getUser().getId());
+			participants.joinRequestRejected(connection.getUser().getId());
 		}
 	}
 	
@@ -568,14 +455,14 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	 */
 	public void leave(int participantId) {
 		LOG.info("--> leave");
-		ParticipantConnection connection = getParticipantConnection(participantId);
+		ParticipantConnection connection = participants.getConnection(participantId);
 		if (connection == null) {
 			LOG.warn("participant with id " + participantId + " not (or no longer) in session");
 			return;
 		}
 		connection.close();
 		removeParticipant(participantId);
-		forwarder.sendParticipantLeft(participantId, Participant.LEFT);
+		compositeForwarder.sendParticipantLeft(participantId, Participant.LEFT);
 	}
 	
 	/**
@@ -587,7 +474,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 			throw new IllegalArgumentException("cannot kick publisher of session");
 		}
 		LOG.info("kicking participant " + participantId);
-		ParticipantConnection connection = getParticipantConnection(participantId);
+		ParticipantConnection connection = participants.getConnection(participantId);
 		if (connection == null) {
 			LOG.info("participant with id " + participantId + " not (or no longer) in session");
 		} else {
@@ -595,10 +482,10 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 			if (user == null) {
 				LOG.warn("connection did not return user, cannot add user to blacklist");
 			} else {
-				blacklist.add(connection.getUser().getId());
+				participants.participantKicked(participantId);
 			}
 			removeParticipant(participantId);
-			forwarder.sendParticipantLeft(participantId, Participant.KICKED);
+			compositeForwarder.sendParticipantLeft(participantId, Participant.KICKED);
 			connection.sendKicked();
 			connection.close();
 		}
@@ -609,8 +496,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	 */
 	public void invite(RemoteUser user) {
 		ParameterValidator.notNull("user", user);
-		blacklist.remove(user.getId());
-		invited.add(user.getId());
+		participants.userInvited(user.getId());
 	}
 	
 	/**
@@ -622,7 +508,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 		if (getDocumentServer() != null) {
 			getDocumentServer().prepareShutdown();
 		}
-		forwarder.close();
+		compositeForwarder.close();
 		if (getDocumentServer() != null) {
 			getDocumentServer().shutdown();
 		}
@@ -642,7 +528,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 			shutdown();
 		} else {
 			removeParticipant(participantId);
-			getForwarder().sendParticipantLeft(participantId, Participant.DISCONNECTED);
+			getCompositeForwarder().sendParticipantLeft(participantId, Participant.DISCONNECTED);
 		}
 	}
 	
