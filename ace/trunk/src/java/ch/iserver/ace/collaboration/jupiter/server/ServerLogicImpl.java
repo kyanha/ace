@@ -432,11 +432,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	public void joinRejected(ParticipantConnection connection) {
 		LOG.info("--> joinRejected");
 		try {
-			if (!isAcceptingJoins()) {
-				LOG.info("join rejected by publisher but shutdown is in progress");
-			} else {
-				connection.joinRejected(JoinRequest.REJECTED);
-			}
+			connection.joinRejected(JoinRequest.REJECTED);
 		} finally {
 			participants.joinRequestRejected(connection.getUser().getId());
 		}
