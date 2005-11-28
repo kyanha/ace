@@ -54,6 +54,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 	
 	public ParticipantConnectionImpl(String docId, RemoteUserSession session, ReplyListener listener, Serializer serializer) {
 		super(null);
+		setState(STATE_INITIALIZED);
 		this.docId = docId;
 		this.session = session;
 		joinAccepted = false;
@@ -86,6 +87,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 		Channel channel = getChannel();
 		((ParticipantRequestHandler)channel.getRequestHandler()).cleanup();
 		setChannel(null);
+		setState(STATE_CLOSED);
 		LOG.debug("<-- cleanup()");
 	}
 	
@@ -99,11 +101,12 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 	public void joinAccepted(ParticipantPort port) {
 		LOG.info("--> joinAccepted()");
 		joinAccepted = true;
-		//intiate collaboration channel
+		//initiate collaboration channel
 		try {
 			Channel channel = session.startChannel(RemoteUserSession.CHANNEL_COLLABORATION);
 			((ParticipantRequestHandler) channel.getRequestHandler()).setParticipantPort(port);
 			setChannel(channel);
+			setState(STATE_ACTIVE);
 		} catch (ConnectionException ce) {
 			NetworkServiceImpl.getInstance().getCallback().serviceFailure(
 					FailureCodes.CHANNEL_FAILURE, "cannot start channel for collaboration", ce);
@@ -114,6 +117,8 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 	public void joinRejected(int code) {
 		//TODO: do not initiate collaboration channel, instead return via JoinRejectedFilter
 		LOG.info("joinRejected()");
+		
+		//TODO: cleanup
 	}
 
 	public RemoteUserProxy getUser() {
@@ -123,14 +128,13 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 	public void sendDocument(PortableDocument document) {
 		if (joinAccepted) {
 			LOG.info("--> sendDocument()");
+			byte[] data = null;
 			try {
-				byte [] data = serializer.createResponse(ProtocolConstants.JOIN_DOCUMENT, getPublishedDocument(), document);
-				send(data, null, getReplyListener());
+				data = serializer.createResponse(ProtocolConstants.JOIN_DOCUMENT, getPublishedDocument(), document);
 			} catch (SerializeException se) {
 				LOG.error("could not serialize document ["+se.getMessage()+"]");
-			} catch (ProtocolException pe) {
-				LOG.error("protocol exception ["+pe.getMessage()+"]");
 			}
+			sendToPeer(data);
 			LOG.info("<-- sendDocument()");
 		} else {
 			throw new IllegalStateException("cannot send document before join has been accepted.");
@@ -164,7 +168,14 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 
 	public void sendKicked() {
 		LOG.info("--> sendKicked()");
-		
+		byte [] data = null;
+		try {
+			data = serializer.createNotification(ProtocolConstants.KICKED, docId);
+		} catch (SerializeException se) {
+			LOG.error("could not serialize document ["+se.getMessage()+"]");
+		}
+		sendToPeer(data);
+		LOG.info("<-- sendKicked()");
 	}
 	
 	public void close() {
@@ -183,6 +194,15 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 		cleanup.execute();
 		
 		LOG.info("<-- close()");
+	}
+	
+	private void sendToPeer(byte[] data) {
+		try {
+			send(data, null, getReplyListener());
+		} catch (ProtocolException pe) {
+			//TODO: error handling?
+			LOG.error("protocol exception ["+pe.getMessage()+"]");
+		}
 	}
 	
 //	public boolean equals(Object obj) {

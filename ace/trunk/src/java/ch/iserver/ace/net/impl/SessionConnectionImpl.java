@@ -34,6 +34,7 @@ import ch.iserver.ace.net.impl.protocol.ProtocolConstants;
 import ch.iserver.ace.net.impl.protocol.RemoteUserSession;
 import ch.iserver.ace.net.impl.protocol.Serializer;
 import ch.iserver.ace.net.impl.protocol.SessionRequestHandler;
+import ch.iserver.ace.util.ParameterValidator;
 
 /**
  *
@@ -48,6 +49,18 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 	
 	public SessionConnectionImpl(String docId, RemoteUserSession session, Channel channel, ReplyListener listener, Serializer serializer) {
 		super(channel);
+		setState((channel == null) ? STATE_INITIALIZED : STATE_ACTIVE);
+		this.docId = docId;
+		this.session = session;
+		this.serializer = serializer;
+		setReplyListener(listener);
+		super.LOG = Logger.getLogger(SessionConnectionImpl.class);
+		hasLeft = false;
+	}
+	
+	public SessionConnectionImpl(String docId, RemoteUserSession session, ReplyListener listener, Serializer serializer) {
+		super(null);
+		setState(STATE_INITIALIZED);
 		this.docId = docId;
 		this.session = session;
 		this.serializer = serializer;
@@ -76,8 +89,9 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 		serializer = null;
 		Channel channel = getChannel();
 		((SessionRequestHandler)channel.getRequestHandler()).cleanup();
-		setChannel(null);
 		setReplyListener(null);
+		setChannel(null);
+		setState(STATE_CLOSED);
 	}
 	
 	/***********************************************/

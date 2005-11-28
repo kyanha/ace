@@ -12,8 +12,15 @@ public abstract class AbstractConnection {
 
 	protected Logger LOG = Logger.getLogger(AbstractConnection.class);
 	
+	public static final int STATE_INITIALIZED = 0;
+	public static final int STATE_ACTIVE = 1;
+	public static final int STATE_DIRTY = 2;
+	public static final int STATE_ABORTED = 3;
+	public static final int STATE_CLOSED = 4;
+	
 	private Channel channel;
 	private ReplyListener listener;
+	private int state;
 	
 	public AbstractConnection(Channel channel) {
 		this.channel = channel;
@@ -21,15 +28,16 @@ public abstract class AbstractConnection {
 	
 	public synchronized void send(byte[] message, Object data, ReplyListener listener) throws ProtocolException {
 		ParameterValidator.notNull("channel", channel);
+		
 		try {
 			OutputDataStream output = prepare(message);
-			//AppData is kept only in-process
+			//AppData is kept in-process only
 			if (data != null)
 				channel.setAppData(data);
 
-			if (isEstablished()) {
+			if (isEstablished()) { //TODO: replace isEstablished by (getState() != STATE_ACTIVE) 
 				LOG.debug("--> sendMSG() with "+message.length+" bytes");
-				LOG.debug(message+" "+output+" "+channel+" "+listener);
+//				LOG.debug(message+" "+output+" "+channel+" "+listener);
 				channel.sendMSG(output, listener);
 				LOG.debug("<-- sendMSG()");
 			} else {
@@ -49,8 +57,10 @@ public abstract class AbstractConnection {
 		return output;
 	}
 	
-	public void setChannel(Channel channel) {
+	public synchronized void setChannel(Channel channel) {
 		this.channel = channel;
+		//do not use setState() method here since we are already in a synchronized method!
+//		state = (channel != null) ? STATE_ACTIVE: getState();
 	}
 	
 	public Channel getChannel() {
@@ -65,8 +75,16 @@ public abstract class AbstractConnection {
 		return listener;
 	}
 	
-	public boolean isEstablished() {
+	public synchronized boolean isEstablished() {
 		return (channel != null);
+	}
+	
+	public int getState() {
+		return state;
+	}
+	
+	public synchronized void setState(int newState) {
+		this.state = newState;
 	}
 	
 	/**
