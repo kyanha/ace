@@ -54,5 +54,4 @@ public interface RemoteUserProxy {
 	 * @return the shared documents of the represented remote user
 	 */
 	Collection getSharedDocuments();
-		
 }
