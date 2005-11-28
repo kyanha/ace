@@ -51,6 +51,8 @@ public class ParticipantView extends ViewImpl {
 		super(controller, messageSource);
 		// create view toolbar & actions
 		participantToolBar = new JToolBar();
+		participantToolBar.setFloatable(false);
+		participantToolBar.setRollover(true);
 
 		// create data list & filters
 		setSourceList(new ObservableElementList(controller.getCompositeSourceList(), GlazedLists.beanConnector(ParticipantItem.class)));

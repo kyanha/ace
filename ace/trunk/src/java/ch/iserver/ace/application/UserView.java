@@ -58,6 +58,8 @@ public class UserView extends ViewImpl {
 		super(controller, messageSource);
 		// create view toolbar & actions
 		userToolBar = new JToolBar();
+		userToolBar.setFloatable(false);
+		userToolBar.setRollover(true);
 		
 		// create data list & filters
 		JTextField userFilterField = new JTextField();

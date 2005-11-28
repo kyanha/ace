@@ -58,6 +58,8 @@ public class BrowseView extends ViewImpl {
 		super(controller, messageSource);
 		// create view toolbar & actions
 		browseToolBar = new JToolBar();
+		browseToolBar.setFloatable(false);
+		browseToolBar.setRollover(true);
 
 		// create data list & filters
 		JTextField browseFilterField = new JTextField();

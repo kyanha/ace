@@ -56,6 +56,8 @@ public class DocumentView extends ViewImpl {
 				
 		// create view toolbar & actions
 		documentToolBar = new JToolBar();
+		documentToolBar.setFloatable(false);
+		documentToolBar.setRollover(true);
 
 		// create data list & filters
 		Matcher documentViewMatcher = new Matcher() {
