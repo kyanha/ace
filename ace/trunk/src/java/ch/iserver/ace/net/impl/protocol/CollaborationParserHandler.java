@@ -65,7 +65,7 @@ public class CollaborationParserHandler extends ParserHandler {
 		} else if (qName.equals(TAG_KICKED)) {
 			requestType = KICKED;
 			String docId = attributes.getValue(DOC_ID);
-			info = new DocumentInfo(docId, -1));
+			info = new DocumentInfo(docId, -1);
 		}
 	}
 	
