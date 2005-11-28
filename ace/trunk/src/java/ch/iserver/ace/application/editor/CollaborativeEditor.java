@@ -49,6 +49,8 @@ public class CollaborativeEditor extends EditorImpl {
 		this.messageSource = messageSource;
 		// create toolbar
 		editorToolBar = new JToolBar();
+		editorToolBar.setFloatable(false);
+		editorToolBar.setRollover(true);
 
 		// create editor
 		cTextPane = new CollaborativeTextPane();
