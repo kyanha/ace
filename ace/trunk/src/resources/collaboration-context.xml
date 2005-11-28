@@ -28,13 +28,14 @@
     <property name="documentRegistry"><ref local="documentRegistry"/></property>
     <property name="publisherThreadDomain"><ref local="threadDomain"/></property>
     <property name="acknowledgeStrategyFactory"><ref local="acknowledgeStrategyFactory"/></property>
-  </bean>
+    <property name="sessionFactory"><ref local="sessionFactory"/></property>
+   </bean>
   
   <bean id="sessionFactory" class="ch.iserver.ace.collaboration.jupiter.SessionFactoryImpl">
     <property name="threadDomain"><ref local="threadDomain"/></property>
     <property name="userRegistry"><ref local="userRegistry"/></property>
     <property name="acknowledgeStrategyFactory"><ref local="acknowledgeStrategyFactory"/></property>
-  </bean>
+ </bean>
   
   <bean id="threadDomain" class="ch.iserver.ace.util.BoundedThreadDomain">
     <constructor-arg><value>5</value></constructor-arg>
