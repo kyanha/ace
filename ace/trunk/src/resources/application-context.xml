@@ -86,6 +86,12 @@
 
 
 
+  <bean id="invitationCallback" class="ch.iserver.ace.application.InvitationCallbackImpl">
+    <constructor-arg><ref local="dialogController"/></constructor-arg>
+  </bean>
+
+
+
 
 
 
