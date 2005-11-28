@@ -139,7 +139,7 @@ public class RemoteUserSession {
 		SessionConnectionImpl conn = new SessionConnectionImpl(docId, this, 
 				collaborationChannel, ResponseListener.getInstance(), serializer);
 		sessionConnections.put(docId, conn);
-		LOG.debug(sessionConnections.size() + " SessionConnections for " + getUser().getUserDetails().getUsername());
+		LOG.debug(sessionConnections.size() + " SessionConnections with " + getUser().getUserDetails().getUsername());
 		LOG.debug("<-- addSessionConnection()");
 		return conn;
 	}
@@ -150,7 +150,7 @@ public class RemoteUserSession {
 		CollaborationSerializer serializer = new CollaborationSerializer();
 		SessionConnectionImpl conn = new SessionConnectionImpl(docId, this, ResponseListener.getInstance(), serializer);
 		sessionConnections.put(docId, conn);
-		LOG.debug(sessionConnections.size() + " SessionConnections for " + getUser().getUserDetails().getUsername());
+		LOG.debug(sessionConnections.size() + " SessionConnections with " + getUser().getUserDetails().getUsername());
 		LOG.debug("<-- addSessionConnection()");
 		return conn;
 	}
@@ -167,7 +167,7 @@ public class RemoteUserSession {
 		} else {
 			connection.cleanup();
 		}
-		LOG.debug(sessionConnections.size() + " SessionConnections for " + getUser().getUserDetails().getUsername());
+		LOG.debug(sessionConnections.size() + " SessionConnections with " + getUser().getUserDetails().getUsername());
 		return connection;
 	}
 

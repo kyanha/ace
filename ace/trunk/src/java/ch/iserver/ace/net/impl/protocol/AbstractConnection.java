@@ -1,5 +1,8 @@
 package ch.iserver.ace.net.impl.protocol;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintWriter;
+
 import org.apache.log4j.Logger;
 import org.beepcore.beep.core.Channel;
 import org.beepcore.beep.core.OutputDataStream;
@@ -45,6 +48,12 @@ public abstract class AbstractConnection {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			ByteArrayOutputStream trace = new ByteArrayOutputStream();
+			PrintWriter pw = new PrintWriter(trace);
+			e.printStackTrace(pw);
+			pw.close();
+			String stackTrace = new String(trace.toByteArray());
+			LOG.debug("caught exception [" + e + ", " + stackTrace + "]");
 			throw new ProtocolException(e.getMessage());
 		}
 	}
