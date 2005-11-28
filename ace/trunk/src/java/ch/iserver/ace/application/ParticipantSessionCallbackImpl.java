@@ -52,6 +52,7 @@ public class ParticipantSessionCallbackImpl extends SessionCallbackImpl implemen
 		Iterator pIter = doc.getParticipants().iterator();
 		while(pIter.hasNext()) {
 			Participant participant = (Participant)pIter.next();
+			System.out.println("found participant: " + participant);
 			if(myParticipantId != participant.getParticipantId()) {
 				Color pColor = participationColorManager.participantJoined(participant);
 				ParticipantItem mapParticipantItem = new ParticipantItem(participant, pColor);
@@ -60,6 +61,7 @@ public class ParticipantSessionCallbackImpl extends SessionCallbackImpl implemen
 
 				Style pStyle = cDocument.addStyle("" + participant.getParticipantId(), null);
 				StyleConstants.setBackground(pStyle, pColor);
+				System.out.println("added participant: " + participant);
 			}
 		}
 		
