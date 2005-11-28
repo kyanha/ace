@@ -24,6 +24,7 @@ package ch.iserver.ace.collaboration;
 import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.net.DocumentServer;
 import ch.iserver.ace.net.DocumentServerLogic;
+import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
@@ -58,6 +59,10 @@ public class DocumentServerStub implements DocumentServer {
 	
 	public int getSetDocumentDetailsCnt() {
 		return setDocumentDetailsCnt;
+	}
+	
+	public void invite(RemoteUserProxy user) {
+		
 	}
 	
 	public void prepareShutdown() {
