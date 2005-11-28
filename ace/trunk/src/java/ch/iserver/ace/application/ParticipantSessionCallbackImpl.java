@@ -27,43 +27,49 @@ import ch.iserver.ace.collaboration.PortableDocument;
 import ch.iserver.ace.collaboration.ParticipantSessionCallback;
 import ch.iserver.ace.application.editor.*;
 
+import java.awt.Color;
 import java.util.Iterator;
+import javax.swing.text.Style;
 
 
 
 public class ParticipantSessionCallbackImpl extends SessionCallbackImpl implements ParticipantSessionCallback {
 
-	private DocumentItem documentItem;
-
 	public ParticipantSessionCallbackImpl(DocumentItem documentItem) {
-		this.documentItem = documentItem;
+		super(documentItem);
 	}
 	
 	public synchronized void setDocument(PortableDocument doc) {
 		// IMPORTANT: this method is called first from the collaboration layer. set participants here.
 		System.out.println("setDocument");
-		CollaborativeDocument docu = new CollaborativeDocument();
-		documentItem.setEditorDocument(docu);
 
 		// add all participants
+		int myParticipantId = documentItem.getSession().getParticipantId();
 		Iterator pIter = doc.getParticipants().iterator();
 		while(pIter.hasNext()) {
-			Participant p = (Participant)pIter.next();
-			//System.out.println("adding participant: " + p);
-			participationColorManager.participantJoined(p);
+			Participant participant = (Participant)pIter.next();
+			if(myParticipantId != participant.getParticipantId()) {
+				Color pColor = participationColorManager.participantJoined(participant);
+				ParticipantItem mapParticipantItem = new ParticipantItem(participant, pColor);
+				participantItemMap.put("" + participant.getParticipantId(), mapParticipantItem);
+				participantSourceList.add(mapParticipantItem);		
+				System.out.println("setDocument::participant added");
+			}
 		}
 		
 		// get document fragments
 		Iterator fIter = doc.getFragments();
 		int insertPos = 0;
 		while(fIter.hasNext()) {
-			Fragment f = (Fragment)fIter.next();
+			Fragment fragment = (Fragment)fIter.next();
+			// get participant style
+			Style pStyle = cDocument.getStyle("" + fragment.getParticipantId());
 			try {
-				docu.insertString(insertPos, f.getText(), null);
+				cDocument.insertString(insertPos, fragment.getText(), pStyle);
 			} catch(Exception e) {
 				e.printStackTrace();
 			}
-			insertPos += f.getText().length();
+			insertPos += fragment.getText().length();
 		}
 		
 	}

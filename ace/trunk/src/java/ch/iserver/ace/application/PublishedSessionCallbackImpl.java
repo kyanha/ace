@@ -23,12 +23,14 @@ package ch.iserver.ace.application;
 
 import ch.iserver.ace.collaboration.JoinRequest;
 import ch.iserver.ace.collaboration.PublishedSessionCallback;
+import ch.iserver.ace.application.editor.CollaborativeDocument;
 
 
 
 public class PublishedSessionCallbackImpl extends SessionCallbackImpl implements PublishedSessionCallback {
 
-	public PublishedSessionCallbackImpl() {
+	public PublishedSessionCallbackImpl(DocumentItem documentItem) {
+		super(documentItem);
 	}
 	
 	public void joinRequest(JoinRequest request) {

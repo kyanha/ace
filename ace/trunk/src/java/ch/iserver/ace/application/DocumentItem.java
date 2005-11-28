@@ -79,30 +79,30 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 		createEditorDocument();
 		
 		
-		/*CollaborativeDocument doc = (CollaborativeDocument)editorDocument;
+		//CollaborativeDocument doc = (CollaborativeDocument)editorDocument;
 		
-		Style pStyle = doc.addStyle("" + 1, null);
+		/*Style pStyle = editorDocument.addStyle("" + 1, null);
 		StyleConstants.setBackground(pStyle, Color.RED.brighter());
 
-		Style pStyle2 = doc.addStyle("" + 2, null);
+		Style pStyle2 = editorDocument.addStyle("" + 2, null);
 		StyleConstants.setBackground(pStyle2, Color.BLUE.brighter());
 		
 		try {
-			doc.insertString(0, "tescht!", doc.getStyle("" + 1));
-			doc.insertString(0, "x ", doc.getStyle("" + 2));
-			doc.insertString(0, "x ", doc.getStyle("" + 2));
-			doc.insertString(0, "chline ", doc.getStyle("" + 2));
-			doc.insertString(0, "e ", doc.getStyle("" + 1));
-			doc.insertString(0, "x ", doc.getStyle("" + 2));
-			doc.insertString(0, "isch ", doc.getStyle("" + 1));
-			doc.insertString(0, "x ", doc.getStyle("" + 2));
-			doc.insertString(0, "das ", doc.getStyle("" + 1));
+			editorDocument.insertString(0, "tescht!", editorDocument.getStyle("" + 1));
+			editorDocument.insertString(0, "x ", editorDocument.getStyle("" + 2));
+			editorDocument.insertString(0, "x ", editorDocument.getStyle("" + 2));
+			editorDocument.insertString(0, "chline ", editorDocument.getStyle("" + 2));
+			editorDocument.insertString(0, "e ", editorDocument.getStyle("" + 1));
+			editorDocument.insertString(0, "x ", editorDocument.getStyle("" + 2));
+			editorDocument.insertString(0, "isch ", editorDocument.getStyle("" + 1));
+			editorDocument.insertString(0, "x ", editorDocument.getStyle("" + 2));
+			editorDocument.insertString(0, "das ", editorDocument.getStyle("" + 1));
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
 
 		
-		pStyle = doc.getStyle("" + 1);
+		pStyle = editorDocument.getStyle("" + 1);
 		StyleConstants.setBackground(pStyle, Color.GREEN.brighter());*/
 		
 
@@ -137,7 +137,7 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 		title = newTitle;
 		extendedTitle = newExtendedTitle;
 		toolTip = newToolTip;
-		if(!title.equals(oldTitle)) {
+		if( !title.equals(oldTitle) ) {
 			firePropertyChange(TITLE_PROPERTY, oldTitle, title);
 		}
 	}
@@ -164,7 +164,7 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 	
 	public void setType(int type) {
 		int oldType = this.type;
-		if(oldType != type) {
+		if (oldType != type) {
 			this.type = type;
 			firePropertyChange(TYPE_PROPERTY, new Integer(oldType), new Integer(type));
 		}		
@@ -175,7 +175,7 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 	}
 	
 	public void setDirty(boolean value) {
-		if(isDirty != value) {
+		if (isDirty != value) {
 			isDirty = value;
 			firePropertyChange(DIRTY_PROPERTY, new Boolean(!isDirty), new Boolean(isDirty));
 		}
@@ -249,7 +249,7 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 BASCHTLE
 */
 	public void publish(CollaborationService collaborationService) {
-		sessionCallback = new PublishedSessionCallbackImpl();
+		sessionCallback = new PublishedSessionCallbackImpl(this);
 		String documentContent = "";
 		try {
 			documentContent = editorDocument.getText(0, editorDocument.getLength());
@@ -266,11 +266,10 @@ BASCHTLE
 			
 		// editorDocument.setLocal(false);
 		// editorDocument.setSession(session);
-		((SessionCallbackImpl)sessionCallback).setDoc(editorDocument);
 		setType(PUBLISHED);
 		
 		
-		final Session ses = session;
+/*		final Session ses = session;
 		new Thread() {
 			public void run() {
 				for(int i = 0; i < 25; i++) {
@@ -286,7 +285,7 @@ BASCHTLE
 					}
 				}
 			}
-		}.start();		
+		}.start();*/
 		
 		
 	}
@@ -306,6 +305,8 @@ BASCHTLE
 
 	public void join() {
 		// join document
+		System.out.println(editorDocument);
+		editorDocument = new CollaborativeDocument();
 		remoteDocument.join(new JoinCallbackImpl(this));
 		setType(AWAITING);
 	}

@@ -21,6 +21,7 @@
 
 package ch.iserver.ace.application;
 
+import ch.iserver.ace.text.*;
 import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.Operation;
 import ch.iserver.ace.collaboration.Participant;
@@ -38,25 +39,18 @@ import java.util.HashMap;
 
 public class SessionCallbackImpl implements SessionCallback {
 
-	private EventList participantSourceList;
+	protected EventList participantSourceList;
 	protected ParticipationColorManager participationColorManager;
-	private CollaborativeDocument doc;
-	private HashMap participantItemMap;
+	protected CollaborativeDocument cDocument;
+	protected HashMap participantItemMap;
+	protected DocumentItem documentItem;
 
-	public SessionCallbackImpl() {
+	public SessionCallbackImpl(DocumentItem documentItem) {
 		participantSourceList = new BasicEventList();
 		participationColorManager = new ParticipationColorManager();
 		participantItemMap = new HashMap();
-	}
-
-	/*public SessionCallbackImpl(StyledDocument doc) {
-		this.doc = doc;
-		participantSourceList = new BasicEventList();
-		participationColorManager = new ParticipationColorManager();
-	}*/
-	
-	public void setDoc(CollaborativeDocument doc) {
-		this.doc = doc;
+		this.documentItem = documentItem;
+		cDocument = documentItem.getEditorDocument();
 	}
 	
 	public void participantJoined(Participant participant) {
@@ -68,13 +62,13 @@ public class SessionCallbackImpl implements SessionCallback {
 		System.out.println("participantJoined");
 
 		// create style for new participant or get his old style
-		Style pStyle = doc.getStyle("" + participant.getParticipantId());
+		Style pStyle = cDocument.getStyle("" + participant.getParticipantId());
 		if(pStyle != null) {
 			// style exists -> recolor document
 			StyleConstants.setBackground(pStyle, pColor);
 		} else {
 			// style doesnt exists -> add style
-			pStyle = doc.addStyle("" + participant.getParticipantId(), null);
+			pStyle = cDocument.addStyle("" + participant.getParticipantId(), null);
 			StyleConstants.setBackground(pStyle, pColor);
 		}
 
@@ -91,7 +85,7 @@ public class SessionCallbackImpl implements SessionCallback {
 		mapParticipantItem.cleanUp();
 
 		// set color from left participant to grey
-		Style pStyle = doc.getStyle("" + participant.getParticipantId());
+		Style pStyle = cDocument.getStyle("" + participant.getParticipantId());
 		StyleConstants.setBackground(pStyle, new Color(0xDD, 0xDD, 0xDD));
 	}	
 	
@@ -101,11 +95,38 @@ public class SessionCallbackImpl implements SessionCallback {
 
 	public void receiveOperation(Participant participant, Operation operation) {
 		System.out.println("receiveOperation");
-		Style pStyle = doc.getStyle("" + participant.getParticipantId());
-		try {
-			doc.insertString(0, "hallo", pStyle);
-		} catch(Exception e) {
-			e.printStackTrace();
+		Style pStyle = cDocument.getStyle("" + participant.getParticipantId());
+		applyOperation(operation, pStyle);
+	}
+
+
+	
+	private void applyOperation(Operation operation, Style style) {
+		if(operation instanceof SplitOperation) {
+			// split operation
+			SplitOperation op = (SplitOperation)operation;
+			System.out.println("split... " + op);
+			applyOperation(op.getSecond(), style);
+			applyOperation(op.getFirst(), style);
+		} else if(operation instanceof InsertOperation) {
+			// insert operation
+			InsertOperation op = (InsertOperation)operation;
+			try {
+				cDocument.insertString(op.getPosition(), op.getText(), style);
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		} else if(operation instanceof DeleteOperation) {
+			// delete operation
+			DeleteOperation op = (DeleteOperation)operation;
+			try {
+				cDocument.remove(op.getPosition(), op.getTextLength());
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		} else if (operation instanceof NoOperation) {
+			NoOperation op = (NoOperation)operation;
+			System.out.println("no operation..." + op);
 		}
 	}
 	
