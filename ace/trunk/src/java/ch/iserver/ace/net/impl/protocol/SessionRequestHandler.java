@@ -78,7 +78,7 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 						connection = session.addSessionConnection(docId, message.getChannel());
 						connection.setParticipantId(doc.getParticipantId());
 						RemoteDocumentProxyExt proxy = session.getUser().getSharedDocument(docId);
-						sessionCallback = proxy.joinAccepted(doc, connection);
+						sessionCallback = proxy.joinAccepted(connection);
 					} else { //upon invitation
 						LOG.debug("turn SessionConnection ACTIVE");
 						connection = session.getSessionConnection(docId);
