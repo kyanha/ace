@@ -40,6 +40,13 @@ public interface DocumentServer {
 	void setDocumentDetails(DocumentDetails details);
 	
 	/**
+	 * Invites the user to this document session.
+	 * 
+	 * @param user the user to be invited
+	 */
+	void invite(RemoteUserProxy user);
+	
+	/**
 	 * Shuts down the DocumentServer. The DocumentServer should take care that
 	 * the document is no longer published on the network. Further, any
 	 * resources associated with this particular document can be released.

@@ -22,6 +22,7 @@
 package ch.iserver.ace.collaboration.jupiter.server;
 
 import ch.iserver.ace.DocumentDetails;
+import ch.iserver.ace.collaboration.RemoteUser;
 import ch.iserver.ace.collaboration.jupiter.AlgorithmWrapper;
 
 /**
@@ -48,6 +49,13 @@ public class PublisherPortImpl extends ParticipantPortImpl implements PublisherP
 		if (participantId != getParticipantId()) {
 			getLogic().kick(participantId);
 		}
+	}
+	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.PublisherPort#invite(ch.iserver.ace.collaboration.RemoteUser)
+	 */
+	public void invite(RemoteUser user) {
+		getLogic().invite(user);
 	}
 	
 	/**

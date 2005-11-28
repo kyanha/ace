@@ -33,6 +33,7 @@ import ch.iserver.ace.collaboration.JoinRequest;
 import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.collaboration.PublishedSession;
 import ch.iserver.ace.collaboration.PublishedSessionCallback;
+import ch.iserver.ace.collaboration.RemoteUser;
 import ch.iserver.ace.collaboration.jupiter.server.PublisherPort;
 import ch.iserver.ace.collaboration.jupiter.server.ServerLogic;
 import ch.iserver.ace.net.ParticipantPort;
@@ -107,6 +108,13 @@ public class PublishedSessionImpl extends AbstractSession
 		getPort().setDocumentDetails(details);
 	}
 
+	/**
+	 * @see ch.iserver.ace.collaboration.PublishedSession#invite(ch.iserver.ace.collaboration.RemoteUser)
+	 */
+	public void invite(RemoteUser user) {
+		getPort().invite(user);
+	}
+	
 	/**
 	 * @see ch.iserver.ace.collaboration.PublishedSession#kick(ch.iserver.ace.collaboration.Participant)
 	 */

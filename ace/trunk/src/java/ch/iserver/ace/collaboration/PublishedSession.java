@@ -42,6 +42,13 @@ public interface PublishedSession extends Session {
 	void setDocumentDetails(DocumentDetails details);
 	
 	/**
+	 * Invites the given <var>user</var> to the session.
+	 * 
+	 * @param user the user to be invited
+	 */
+	void invite(RemoteUser user);
+	
+	/**
 	 * Kicks the given participant from the session.
 	 *
 	 * @param participant the participant to kick from the session

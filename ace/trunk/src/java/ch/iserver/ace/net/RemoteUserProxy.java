@@ -54,15 +54,5 @@ public interface RemoteUserProxy {
 	 * @return the shared documents of the represented remote user
 	 */
 	Collection getSharedDocuments();
-	
-	/**
-	 * Invites the represented user to the given locally shared document.
-	 * The DocumentServerLogic is the logic layer server object that allows
-	 * the network layer to join a new user (should the remote user accept
-	 * the invitation).
-	 * 
-	 * @param logic the logic layer server object of the shared document
-	 */
-	void invite(DocumentServerLogic logic);
-	
+		
 }

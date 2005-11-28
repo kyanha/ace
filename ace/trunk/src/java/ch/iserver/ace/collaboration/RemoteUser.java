@@ -52,6 +52,7 @@ public interface RemoteUser {
 	 * session.
 	 *
 	 * @param session the session for which the user is invited
+	 * @deprecated use {@link PublishedSession#invite(RemoteUser)} instead
 	 */
 	void invite(PublishedSession session);
 	
