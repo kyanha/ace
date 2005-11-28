@@ -459,6 +459,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 		}
 		connection.close();
 		removeParticipant(participantId);
+		participants.participantLeft(participantId);
 		compositeForwarder.sendParticipantLeft(participantId, Participant.LEFT);
 	}
 	
