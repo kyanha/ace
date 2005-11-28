@@ -102,9 +102,6 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 	 * @see ch.iserver.ace.net.SessionConnection#getParticipantId()
 	 */
 	public int getParticipantId() {
-		if (hasLeft()) {
-			throw new IllegalStateException("session left.");
-		}
 		return participantId;
 	}
 
@@ -112,10 +109,7 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 	 * @see ch.iserver.ace.net.SessionConnection#isAlive()
 	 */
 	public boolean isAlive() {
-		if (hasLeft()) {
-			throw new IllegalStateException("session left.");
-		}
-		return false;
+		return !hasLeft() && (getState() == STATE_ACTIVE || getState() == STATE_INITIALIZED);
 	}
 
 	/* (non-Javadoc)
@@ -123,7 +117,6 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 	 */
 	public void leave() {
 		LOG.debug("--> leave()");
-		hasLeft = true;
 		try {
 			byte[] data = serializer.createNotification(ProtocolConstants.LEAVE, this);
 			send(data, null, getReplyListener());
@@ -131,6 +124,7 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 			e.printStackTrace();
 			LOG.error("exception processing leave ["+e+", "+e.getMessage()+"]");
 		}
+		hasLeft = true;
 		LOG.debug("<-- leave()");
 	}
 
