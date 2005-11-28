@@ -179,7 +179,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 	}
 	
 	public void close() {
-		LOG.info("--> close("+getParticipantId()+", "+session.getUser().getUserDetails().getUsername()+")");
+		LOG.info("--> close("+getParticipantId()+", "+getUser().getUserDetails().getUsername()+")");
 		//TODO: consider if on session shutdown it is more appropriate to 
 		//notify the participant on close() invocation or on DocumentServer.shutdown()
 		//invocation

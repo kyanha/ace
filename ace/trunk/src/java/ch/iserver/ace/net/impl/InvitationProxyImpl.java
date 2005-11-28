@@ -21,6 +21,8 @@
 
 package ch.iserver.ace.net.impl;
 
+import javax.xml.parsers.SAXParserFactory;
+
 import org.apache.log4j.Logger;
 
 import ch.iserver.ace.net.InvitationProxy;
@@ -68,8 +70,10 @@ public class InvitationProxyImpl implements InvitationProxy {
 	}
 
 	public void reject() {
-		// TODO Auto-generated method stub
+		LOG.debug("--> reject()");
 		
+		
+		LOG.debug("<-- reject()");
 	}
 
 }

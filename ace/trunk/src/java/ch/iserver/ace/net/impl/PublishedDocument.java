@@ -21,9 +21,6 @@
 
 package ch.iserver.ace.net.impl;
 
-import java.util.Iterator;
-import java.util.Map;
-
 import org.apache.log4j.Logger;
 
 import ch.iserver.ace.DocumentDetails;

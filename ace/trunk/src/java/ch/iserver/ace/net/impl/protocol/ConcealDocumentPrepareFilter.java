@@ -73,7 +73,8 @@ public class ConcealDocumentPrepareFilter extends AbstractRequestFilter {
 				}
 				
 			} catch (Exception e) {
-				LOG.error("caught exception ["+e.getMessage()+"]");
+				e.printStackTrace();
+				LOG.error("caught exception [" + e + ", " + e.getMessage()+"]");
 			}
 			LOG.info("<-- process()");
 		} else {
