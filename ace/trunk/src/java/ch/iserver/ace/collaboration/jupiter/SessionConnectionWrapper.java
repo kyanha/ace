@@ -41,7 +41,7 @@ public class SessionConnectionWrapper implements SessionConnection {
 	/**
 	 * The failure handler for the target connection.
 	 */
-	private final SessionConnectionFailureHandler handler;
+	private final FailureHandler handler;
 	
 	/**
 	 * Creates a new SessionConnectionWrapper class.
@@ -49,7 +49,7 @@ public class SessionConnectionWrapper implements SessionConnection {
 	 * @param target the target connection
 	 * @param handler the handler for failures
 	 */
-	public SessionConnectionWrapper(SessionConnection target, SessionConnectionFailureHandler handler) {
+	public SessionConnectionWrapper(SessionConnection target, FailureHandler handler) {
 		ParameterValidator.notNull("target", target);
 		this.target = target;
 		this.handler = handler;
@@ -60,7 +60,7 @@ public class SessionConnectionWrapper implements SessionConnection {
 	 * 
 	 * @return the failure handler
 	 */
-	protected SessionConnectionFailureHandler getFailureHandler() {
+	protected FailureHandler getFailureHandler() {
 		return handler;
 	}
 	
@@ -120,6 +120,23 @@ public class SessionConnectionWrapper implements SessionConnection {
 		} catch (Exception e) {
 			getFailureHandler().handleFailure(Session.SEND_FAILED, e);
 		}
+	}
+	
+	// --> FailureHandler interface <--
+	
+	/**
+	 * FailureHandler for SessionConnectionWrapper objects.
+	 */
+	public static interface FailureHandler {
+		
+		/**
+		 * Handle a failure of this connection.
+		 * 
+		 * @param reason the reason
+		 * @param e the exception cause, may be null
+		 */
+		void handleFailure(int reason, Exception e);
+		
 	}
 
 }

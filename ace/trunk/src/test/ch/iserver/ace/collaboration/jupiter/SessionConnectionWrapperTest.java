@@ -38,8 +38,8 @@ public class SessionConnectionWrapperTest extends TestCase {
 	public void testLeave() throws Exception {
 		MockControl targetCtrl = MockControl.createControl(SessionConnection.class);
 		SessionConnection target = (SessionConnection) targetCtrl.getMock();
-		MockControl handlerCtrl = MockControl.createControl(SessionConnectionFailureHandler.class);
-		SessionConnectionFailureHandler handler = (SessionConnectionFailureHandler) handlerCtrl.getMock();
+		MockControl handlerCtrl = MockControl.createControl(SessionConnectionWrapper.FailureHandler.class);
+		SessionConnectionWrapper.FailureHandler handler = (SessionConnectionWrapper.FailureHandler) handlerCtrl.getMock();
 		
 		// fixture
 		RuntimeException e = new RuntimeException();
@@ -65,8 +65,8 @@ public class SessionConnectionWrapperTest extends TestCase {
 	public void testSendCaretUpdateMessage() throws Exception {
 		MockControl targetCtrl = MockControl.createControl(SessionConnection.class);
 		SessionConnection target = (SessionConnection) targetCtrl.getMock();
-		MockControl handlerCtrl = MockControl.createControl(SessionConnectionFailureHandler.class);
-		SessionConnectionFailureHandler handler = (SessionConnectionFailureHandler) handlerCtrl.getMock();
+		MockControl handlerCtrl = MockControl.createControl(SessionConnectionWrapper.FailureHandler.class);
+		SessionConnectionWrapper.FailureHandler handler = (SessionConnectionWrapper.FailureHandler) handlerCtrl.getMock();
 		
 		// fixture
 		CaretUpdateMessage message = new CaretUpdateMessage(0, null, null);
@@ -88,8 +88,8 @@ public class SessionConnectionWrapperTest extends TestCase {
 	public void testSendRequest() throws Exception {
 		MockControl targetCtrl = MockControl.createControl(SessionConnection.class);
 		SessionConnection target = (SessionConnection) targetCtrl.getMock();
-		MockControl handlerCtrl = MockControl.createControl(SessionConnectionFailureHandler.class);
-		SessionConnectionFailureHandler handler = (SessionConnectionFailureHandler) handlerCtrl.getMock();
+		MockControl handlerCtrl = MockControl.createControl(SessionConnectionWrapper.FailureHandler.class);
+		SessionConnectionWrapper.FailureHandler handler = (SessionConnectionWrapper.FailureHandler) handlerCtrl.getMock();
 		
 		// fixture
 		Request request = new RequestImpl(0, null, null);

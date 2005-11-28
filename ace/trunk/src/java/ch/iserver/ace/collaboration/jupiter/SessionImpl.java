@@ -35,6 +35,7 @@ import ch.iserver.ace.algorithm.jupiter.Jupiter;
 import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.collaboration.ParticipantSessionCallback;
 import ch.iserver.ace.collaboration.Session;
+import ch.iserver.ace.collaboration.jupiter.SessionConnectionWrapper.FailureHandler;
 import ch.iserver.ace.net.PortableDocument;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.net.SessionConnection;
@@ -50,7 +51,7 @@ import ch.iserver.ace.util.ThreadDomain;
  * on SessionConnections.
  */
 public class SessionImpl extends AbstractSession 
-		implements ConfigurableSession, SessionConnectionCallback, SessionConnectionFailureHandler {
+		implements ConfigurableSession, SessionConnectionCallback, FailureHandler {
 	
 	/**
 	 * The SessionCallback from the application layer.
@@ -311,7 +312,7 @@ public class SessionImpl extends AbstractSession
 	// --> FailureHandler implementation <--
 	
 	/**
-	 * @see ch.iserver.ace.collaboration.jupiter.SessionConnectionFailureHandler#handleFailure(int, java.lang.Exception)
+	 * @see ch.iserver.ace.collaboration.jupiter.SessionConnectionWrapper.FailureHandler#handleFailure(int, java.lang.Exception)
 	 */
 	public synchronized void handleFailure(int reason, Exception e) {
 		getCallback().sessionFailed(reason, e);
