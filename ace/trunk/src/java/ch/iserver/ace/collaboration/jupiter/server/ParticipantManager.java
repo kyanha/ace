@@ -24,7 +24,7 @@ package ch.iserver.ace.collaboration.jupiter.server;
 import ch.iserver.ace.net.ParticipantConnection;
 
 /**
- *
+ * Class that manages a set of participants.
  */
 public interface ParticipantManager {
 	
