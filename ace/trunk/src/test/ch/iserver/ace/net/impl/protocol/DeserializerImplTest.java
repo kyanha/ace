@@ -7,10 +7,10 @@ public class DeserializerImplTest extends TestCase {
 	
 	public void testDeserializePublishedDocumentsRequest() throws Exception {
 		
-		ResponseParserHandler handler = new ResponseParserHandler();
+		CollaborationParserHandler handler = new CollaborationParserHandler();
 		Deserializer deserializer = DeserializerImpl.getInstance();
 		
-		byte[] data = ResponseParserHandlerTest.XML_JOIN_DOCUMENT.getBytes(NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
+		byte[] data = CollaborationParserHandlerTest.XML_JOIN_DOCUMENT.getBytes(NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 		deserializer.deserialize(data, handler);
 		Request result = handler.getResult();
 		
