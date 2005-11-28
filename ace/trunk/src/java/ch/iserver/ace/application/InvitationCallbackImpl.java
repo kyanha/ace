@@ -21,8 +21,12 @@
 
 package ch.iserver.ace.application;
 
+import java.lang.reflect.InvocationTargetException;
+import javax.swing.SwingUtilities;
+
 import javax.swing.JOptionPane;
 
+import ch.iserver.ace.application.editor.CollaborativeDocument;
 import ch.iserver.ace.collaboration.Invitation;
 import ch.iserver.ace.collaboration.InvitationCallback;
 import ch.iserver.ace.collaboration.ParticipantSessionCallback;
@@ -39,32 +43,39 @@ public class InvitationCallbackImpl implements InvitationCallback {
 		this.viewController = viewController;
 	}
 	
-	public void invitationReceived(Invitation invitation) {
-		String inviterName = invitation.getInviter().getName();
-		String docTitle = invitation.getDocument().getTitle();
-		int result = dialogController.showInvitationReceived(inviterName, docTitle);
-		if (result == JOptionPane.OK_OPTION) {
-			// accepted
-			// create new document item
-			DocumentItem newItem = new DocumentItem(invitation.getDocument());
-			
-			// create and set session callback
-			ParticipantSessionCallback callback = new ParticipantSessionCallbackImpl(newItem, viewController);
-			newItem.setSessionCallback(callback);
+	public void invitationReceived(final Invitation invitation) {
 	
-			// set session
-			newItem.setSession(invitation.accept(callback));
-	
-			// add item to document view
-			viewController.addDocument(newItem);
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				String inviterName = invitation.getInviter().getName();
+				String docTitle = invitation.getDocument().getTitle();
+				int result = dialogController.showInvitationReceived(inviterName, docTitle);
+				//int result = dialogController.showInvitationReceived(inviterName, docTitle);
+				if (result == JOptionPane.OK_OPTION) {
+					// accepted
+					// create new document item
+					DocumentItem newItem = new DocumentItem(invitation.getDocument());
+					newItem.setEditorDocument(new CollaborativeDocument());
+					
+					// create and set session callback
+					ParticipantSessionCallback callback = new ParticipantSessionCallbackImpl(newItem, viewController);
+					newItem.setSessionCallback(callback);
 			
-			// set type
-			newItem.setType(DocumentItem.JOINED);
-
-		} else {
-			// rejected
-			invitation.reject();
-		}
+					// set session
+					newItem.setSession(invitation.accept(callback));
+			
+					// add item to document view
+					viewController.addDocument(newItem);
+					
+					// set type
+					newItem.setType(DocumentItem.JOINED);
+		
+				} else {
+					// rejected
+					invitation.reject();
+				}
+			}
+		});
 		
 	}
 	
