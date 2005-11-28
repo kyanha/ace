@@ -333,7 +333,7 @@ public class ApplicationControllerImpl implements ApplicationController, Applica
 		DialogResult result = getDialogController().showDiscoverUser();
 		
 		if (result.getOption() == JOptionPane.OK_OPTION) {
-			/*ServerInfo info = (ServerInfo)*/ result.getResult();
+			// ServerInfo info = (ServerInfo) result.getResult();
 			// TODO: implement discovery
 		}
 	}
