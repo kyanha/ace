@@ -8,6 +8,7 @@ import org.easymock.MockControl;
 
 import ch.iserver.ace.net.NetworkServiceCallback;
 import ch.iserver.ace.net.impl.discovery.DiscoveryManagerFactory;
+import ch.iserver.ace.net.impl.protocol.LogFilter;
 import ch.iserver.ace.net.impl.protocol.SessionManager;
 
 public class DiscoveryCallbackImplTest extends TestCase {
@@ -20,7 +21,9 @@ public class DiscoveryCallbackImplTest extends TestCase {
 		
 		DiscoveryCallbackImpl discoveryCallback = new DiscoveryCallbackImpl(callback, service);
 		DiscoveryManagerFactory.getDiscoveryManager(discoveryCallback);
-		RemoteUserProxyExt proxy = new RemoteUserProxyImpl("testid", new MutableUserDetails("testuser", InetAddress.getLocalHost(), 4123));
+		RemoteUserProxyFactory.init(new LogFilter(null, false));
+		RemoteUserProxyExt proxy = RemoteUserProxyFactory.getInstance().
+					createProxy("testid", new MutableUserDetails("testuser", InetAddress.getLocalHost(), 4123));
 		SessionManager.getInstance().createSession(proxy);
 		
 		//define mock behavior

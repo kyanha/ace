@@ -11,6 +11,7 @@ import ch.iserver.ace.net.impl.DiscoveryCallback;
 import ch.iserver.ace.net.impl.DiscoveryCallbackImpl;
 import ch.iserver.ace.net.impl.MutableUserDetails;
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;
+import ch.iserver.ace.net.impl.RemoteUserProxyFactory;
 import ch.iserver.ace.net.impl.RemoteUserProxyImpl;
 import ch.iserver.ace.net.impl.discovery.DiscoveryManagerFactory;
 
@@ -27,7 +28,8 @@ public class SessionManagerTest extends TestCase {
 		InetAddress address = InetAddress.getLocalHost();
 		int port = 45123;
 		MutableUserDetails details = new MutableUserDetails("test-username", address, port);
-		RemoteUserProxyExt proxy = new RemoteUserProxyImpl(id, details);
+		RemoteUserProxyFactory.init(new LogFilter(null, false));
+		RemoteUserProxyExt proxy = RemoteUserProxyFactory.getInstance().createProxy(id, details);
 		
 		MockControl callbackCtrl = MockControl.createControl(NetworkServiceCallback.class);
 		NetworkServiceCallback callback = (NetworkServiceCallback)callbackCtrl.getMock();

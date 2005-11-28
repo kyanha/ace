@@ -12,7 +12,9 @@ import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.net.impl.DiscoveryCallback;
 import ch.iserver.ace.net.impl.MutableUserDetails;
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;
+import ch.iserver.ace.net.impl.RemoteUserProxyFactory;
 import ch.iserver.ace.net.impl.RemoteUserProxyImpl;
+import ch.iserver.ace.net.impl.protocol.LogFilter;
 
 /**
  * 
@@ -41,7 +43,8 @@ public class DiscoveryCallbackAdapterTest extends TestCase {
 		MutableUserDetails details = new MutableUserDetails("testuser");
 		int port = 8888;
 		details.setPort(port);
-		RemoteUserProxyExt proxy = new RemoteUserProxyImpl("test-id", details);
+		RemoteUserProxyFactory.init(new LogFilter(null, false));
+		RemoteUserProxyExt proxy = RemoteUserProxyFactory.getInstance().createProxy("test-id", details);
 		
 		testUserDiscovered(port, proxy);
 		

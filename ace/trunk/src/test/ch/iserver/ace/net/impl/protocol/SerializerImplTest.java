@@ -19,6 +19,7 @@ import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.PortableDocumentExt;
 import ch.iserver.ace.net.impl.PortableDocumentImpl;
 import ch.iserver.ace.net.impl.PublishedDocument;
+import ch.iserver.ace.net.impl.RemoteUserProxyFactory;
 import ch.iserver.ace.net.impl.RemoteUserProxyImpl;
 
 public class SerializerImplTest extends TestCase {
@@ -110,6 +111,19 @@ public class SerializerImplTest extends TestCase {
 		assertEquals(XML_JOIN, actual);
 	}
 	
+	public void testCreateRequestInvite() throws Exception {
+		Serializer serializer = SerializerImpl.getInstance();
+		String userId = "vnmv-qqw2345";
+		NetworkServiceImpl.getInstance().setUserId(userId);
+		
+		String docId = "doc-id-234b";
+		
+		byte[] data = serializer.createRequest(ProtocolConstants.INVITE, docId);
+		String actual = new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
+
+		assertEquals(XML_INVITE, actual);
+	}
+	
 	public void testCreateResponseForJoin() throws Exception {
 		Serializer serializer = SerializerImpl.getInstance();
 		String userId = "adfasdf-21";
@@ -122,9 +136,9 @@ public class SerializerImplTest extends TestCase {
 		
 		PortableDocumentExt document = new PortableDocumentImpl();
 		document.addParticipant(ParticipantConnection.PUBLISHER_ID, null);
-		document.addParticipant(1, new RemoteUserProxyImpl("sadfasd-24", 
+		document.addParticipant(1, RemoteUserProxyFactory.getInstance().createProxy("sadfasd-24", 
 				new MutableUserDetails("Jimmy Ritter", InetAddress.getByName("123.43.45.21"), 4123)));
-		document.addParticipant(2, new RemoteUserProxyImpl("cbvncvvc-24", 
+		document.addParticipant(2, RemoteUserProxyFactory.getInstance().createProxy("cbvncvvc-24", 
 				new MutableUserDetails("Samuel Fuchs", InetAddress.getByName("123.43.12.197"), 4123)));
 		document.setSelection(0, new CaretUpdate(0, 0));
 		document.setSelection(1, new CaretUpdate(456, 456));
@@ -191,6 +205,13 @@ public class SerializerImplTest extends TestCase {
 			"<doc id=\"doc-id-234b\"/>" +
 			"</join>" +
 			"</request></ace>";
+	
+	private static final String XML_INVITE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+	"<ace><request>" +
+	"<invite userid=\"vnmv-qqw2345\">" +
+	"<doc id=\"doc-id-234b\"/>" +
+	"</invite>" +
+	"</request></ace>";
 	
 	private static final String XML_JOIN_DOCUMENT = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
 			"<ace><response>" +

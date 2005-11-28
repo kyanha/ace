@@ -19,9 +19,25 @@ public class CollaborationSerializerTest extends TestCase {
 		assertEquals(XML_LEAVE, actual);
 	}
 	
+	public void testCreateNotificationKicked() throws Exception {
+		CollaborationSerializer serializer = new CollaborationSerializer();
+		
+		String docId = "sdaf-2";
+		
+		byte[] data = serializer.createNotification(ProtocolConstants.KICKED, docId);
+		String actual = new String(data);
+		
+		assertEquals(XML_KICKED, actual);
+	}
+	
 	private static final String XML_LEAVE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
 			"<ace><notification>" +
 			"<leave docId=\"dic-1231\" participantId=\"13\"/>" +
 			"</notification></ace>";
+	
+	private static final String XML_KICKED = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+	"<ace><notification>" +
+	"<kicked docId=\"sdaf-2\"/>" +
+	"</notification></ace>";
 	
 }

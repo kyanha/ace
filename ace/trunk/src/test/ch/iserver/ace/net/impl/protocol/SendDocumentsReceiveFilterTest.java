@@ -18,6 +18,7 @@ import ch.iserver.ace.net.impl.MutableUserDetails;
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.RemoteDocumentProxyImpl;
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;
+import ch.iserver.ace.net.impl.RemoteUserProxyFactory;
 import ch.iserver.ace.net.impl.RemoteUserProxyImpl;
 import ch.iserver.ace.net.impl.discovery.DiscoveryManagerFactory;
 import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
@@ -33,7 +34,7 @@ public class SendDocumentsReceiveFilterTest extends TestCase {
 		
 		NetworkServiceImpl.getInstance().setCallback(callback);
 		
-		RemoteUserProxyExt user = new RemoteUserProxyImpl("userid1", new MutableUserDetails("user1", InetAddress.getLocalHost(), 41234));
+		RemoteUserProxyExt user = RemoteUserProxyFactory.getInstance().createProxy("userid1", new MutableUserDetails("user1", InetAddress.getLocalHost(), 41234));
 		DiscoveryCallbackImpl discoveryCallback = new DiscoveryCallbackImpl(callback, NetworkServiceImpl.getInstance());
 		DiscoveryManagerFactory.getDiscoveryManager(discoveryCallback);
 		SessionManager.getInstance().createSession(user);
