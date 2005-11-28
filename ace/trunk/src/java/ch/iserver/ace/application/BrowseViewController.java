@@ -68,9 +68,11 @@ public class BrowseViewController extends ViewControllerImpl implements Document
 	}
 	
 	public DocumentItem findItem(RemoteDocument document) {
-		// TODO: return correct item
 		browseSourceList.getReadWriteLock().readLock().lock();
 		try {
+			//System.out.println("remote item: " + document.getTitle() + "   (publisher: " + document.getPublisher() + ")");
+			//DocumentItem item = (DocumentItem)browseSourceList.get(browseSourceList.indexOf(new DocumentItem(document)));
+			//System.out.println("found item: " + item.getTitle() + "");
 			return (DocumentItem)browseSourceList.get(browseSourceList.indexOf(new DocumentItem(document)));
 		} finally {
 			browseSourceList.getReadWriteLock().readLock().unlock();
