@@ -179,4 +179,13 @@ public interface DialogController {
 	 */
 	int showInvitationReceived(String user, String docTitle);
 	
+	/**
+	 * Shows the show kicked dialog, which tells who kicked you from which
+	 * document.
+	 * 
+	 * @param user the publisher of the document
+	 * @param docTitle the title of the document
+	 */
+	void showKicked(String user, String docTitle);
+	
 }

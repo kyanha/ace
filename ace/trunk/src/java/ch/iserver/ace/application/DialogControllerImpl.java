@@ -301,6 +301,19 @@ public class DialogControllerImpl implements DialogController {
 						JOptionPane.YES_NO_OPTION);
 	}
 	
+	/**
+	 * @see ch.iserver.ace.application.DialogController#showKicked(java.lang.String, java.lang.String)
+	 */
+	public void showKicked(String user, String docTitle) {
+		String title = getMessages().getMessage("dKickedTitle");
+		String message = getMessages().getMessage("dKickedMessage", new Object[] { user, docTitle });
+		JOptionPane.showMessageDialog(
+						getMainFrame(),
+						message,
+						title,
+						JOptionPane.WARNING_MESSAGE);
+	}
+	
 	// --> dispose dialogs <--
 	
 	public void destroy() {
