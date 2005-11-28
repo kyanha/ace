@@ -103,9 +103,9 @@ public class RemoteUserSession {
 			throw new ConnectionException("session has been ended");
 		
 		if (!isInitiated())
-			initiate();
+			initiateTCPSession();
 		if (mainConnection == null) {
-			Channel channel = startNewChannel(CHANNEL_MAIN);
+			Channel channel = startChannel(CHANNEL_MAIN);
 			LOG.debug("main channel to ["+user.getUserDetails().getUsername()+"] started");
 			mainConnection = new MainConnection(channel);
 		} else {
@@ -121,7 +121,7 @@ public class RemoteUserSession {
 	 * @throws ConnectionException
 	 */
 	public Channel startChannel(String type) throws ConnectionException {
-		return startNewChannel(type);
+		return startChannelImpl(type);
 	}
 	
 
@@ -132,10 +132,21 @@ public class RemoteUserSession {
 	 * @return
 	 */
 	public SessionConnectionImpl addSessionConnection(String docId, Channel collaborationChannel) {
+		//TODO: must not be snychronized right?
 		LOG.debug("--> addSessionConnection() for doc ["+docId+"]");
 		CollaborationSerializer serializer = new CollaborationSerializer();
 		SessionConnectionImpl conn = new SessionConnectionImpl(docId, this, 
 				collaborationChannel, NullReplyListener.getListener(), serializer);
+		sessionConnections.put(docId, conn);
+		LOG.debug("<-- addSessionConnection()");
+		return conn;
+	}
+	
+	public SessionConnectionImpl addSessionConnection(String docId) {
+		//TODO: must not be snychronized right?
+		LOG.debug("--> addSessionConnection() for doc ["+docId+"]");
+		CollaborationSerializer serializer = new CollaborationSerializer();
+		SessionConnectionImpl conn = new SessionConnectionImpl(docId, this, NullReplyListener.getListener(), serializer);
 		sessionConnections.put(docId, conn);
 		LOG.debug("<-- addSessionConnection()");
 		return conn;
@@ -174,6 +185,7 @@ public class RemoteUserSession {
 	public ParticipantConnectionImpl createParticipantConnection(String docId) {
 		//TODO: do i have to check for isAlive as well?
 		LOG.debug("--> createParticipantConnection() for doc ["+docId+"]");
+		assert !participantConnections.containsKey(docId);
 		ParticipantConnectionImpl connection = new ParticipantConnectionImpl(docId, this,
 				NullReplyListener.getListener(), SerializerImpl.getInstance());
 		participantConnections.put(docId, connection);
@@ -202,7 +214,7 @@ public class RemoteUserSession {
 	 * @return
 	 * @throws ConnectionException
 	 */
-	private Channel startNewChannel(String type) throws ConnectionException {
+	private Channel startChannelImpl(String type) throws ConnectionException {
 		try {
 			String uri = NetworkProperties.get(NetworkProperties.KEY_PROFILE_URI);
 			LOG.debug("startChannel("+uri+", type="+type+")");
@@ -235,7 +247,7 @@ public class RemoteUserSession {
 	 *
 	 * @see TCPSession
 	 */
-	private void initiate() throws ConnectionException {
+	private void initiateTCPSession() throws ConnectionException {
 		try {
 			ProfileRegistry registry = ProfileRegistryFactory.getProfileRegistry();
 			session =  TCPSessionCreator.initiate(host, port, registry);
