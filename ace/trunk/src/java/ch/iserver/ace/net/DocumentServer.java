@@ -54,19 +54,6 @@ public interface DocumentServer {
 	 * <p><b>Note:</b> calling further methods on this object is an error
 	 * and results in an IllegalStateException beeing thrown.</p>
 	 */
-	void shutdown();
-	
-	/**
-	 * Notifies the document server that the collaboration layer is no longer
-	 * accepting joins on the DocumentServerLogic. Further attempts to invoke
-	 * join on the DocumentServerLogic will fail with an exception.
-	 * 
-	 * <p>The document should not be unpublished on the network. Wait until
-	 * the shutdown method is called to unpublish the document.</p>
-	 * 
-	 * <p>TODO: JavaDoc Exception</p>
-	 */
-	void prepareShutdown();
-	
+	void shutdown();	
 	
 }
