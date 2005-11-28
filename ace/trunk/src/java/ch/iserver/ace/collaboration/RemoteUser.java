@@ -46,15 +46,6 @@ public interface RemoteUser {
 	 * @return
 	 */
 	String getName();
-			
-	/**
-	 * Invites the user represented by this instance to a given published
-	 * session.
-	 *
-	 * @param session the session for which the user is invited
-	 * @deprecated use {@link PublishedSession#invite(RemoteUser)} instead
-	 */
-	void invite(PublishedSession session);
 	
 	/**
 	 * @param listener

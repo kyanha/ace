@@ -24,7 +24,6 @@ package ch.iserver.ace.collaboration.jupiter;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-import ch.iserver.ace.collaboration.PublishedSession;
 import ch.iserver.ace.collaboration.RemoteUser;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.util.ParameterValidator;
@@ -88,13 +87,6 @@ public class RemoteUserImpl implements MutableRemoteUser {
 			this.name = userName;
 			support.firePropertyChange(NAME_PROPERTY, old, userName);
 		}
-	}
-
-	/**
-	 * @see ch.iserver.ace.collaboration.RemoteUser#invite(ch.iserver.ace.collaboration.PublishedSession)
-	 */
-	public void invite(PublishedSession s) {
-		s.invite(this);
 	}
 	
 	/**
