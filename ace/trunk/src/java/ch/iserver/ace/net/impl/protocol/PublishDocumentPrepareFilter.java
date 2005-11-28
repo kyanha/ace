@@ -89,7 +89,7 @@ public class PublishDocumentPrepareFilter extends AbstractRequestFilter {
 					}
 				} catch (Exception e) {
 					//TODO: handling
-					LOG.error("caught exception ["+e.getMessage()+"]");
+					LOG.error("caught exception [" + e + ", " + e.getMessage() + "]");
 				}
 			} else {
 				LOG.debug("no discovered peers available for publish.");

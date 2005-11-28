@@ -77,8 +77,7 @@ public class SessionManager {
 	}
 	
 	public synchronized RemoteUserSession removeSession(String userid) {
-		RemoteUserSession session = null;
-		session = (RemoteUserSession) sessions.remove(userid);
+		RemoteUserSession session = (RemoteUserSession) sessions.remove(userid);
 		DiscoveryManagerFactory.getDiscoveryManager(null).setSessionTerminated(userid);
 		return session;
 	}

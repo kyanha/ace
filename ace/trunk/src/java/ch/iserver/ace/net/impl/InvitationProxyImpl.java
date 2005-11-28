@@ -60,8 +60,9 @@ public class InvitationProxyImpl implements InvitationProxy {
 		LOG.debug("--> accept("+callback+")");
 		
 		String docId = proxy.getId();
-		
-		SessionConnection connection = session.addSessionConnection(docId);
+
+		SessionConnectionImpl connection = session.addSessionConnection(docId);
+		connection.setSessionConnectionCallback(callback);
 		Request request = new RequestImpl(ProtocolConstants.JOIN, proxy.getPublisher().getId(), docId);
 		filter.process(request);
 		

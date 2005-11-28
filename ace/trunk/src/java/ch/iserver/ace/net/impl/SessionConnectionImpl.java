@@ -29,12 +29,12 @@ import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.Timestamp;
 import ch.iserver.ace.net.SessionConnection;
+import ch.iserver.ace.net.SessionConnectionCallback;
 import ch.iserver.ace.net.impl.protocol.AbstractConnection;
 import ch.iserver.ace.net.impl.protocol.ProtocolConstants;
 import ch.iserver.ace.net.impl.protocol.RemoteUserSession;
 import ch.iserver.ace.net.impl.protocol.Serializer;
 import ch.iserver.ace.net.impl.protocol.SessionRequestHandler;
-import ch.iserver.ace.util.ParameterValidator;
 
 /**
  *
@@ -44,6 +44,7 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 	private int participantId;
 	private String docId;
 	private RemoteUserSession session;
+	private SessionConnectionCallback callback;
 	private Serializer serializer;
 	private boolean hasLeft;
 	
@@ -81,12 +82,21 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 		return hasLeft;
 	}
 	
+	public void setSessionConnectionCallback(SessionConnectionCallback callback) {
+		this.callback = callback;
+	}
+	
+	public SessionConnectionCallback getSessionConnectionCallback() {
+		return callback;
+	}
+	
 	/*****************************************************/
 	/** methods from abstract class AbstractConnection  **/
 	/*****************************************************/
 	public void cleanup() {
 		session = null;
 		serializer = null;
+		callback = null;
 		Channel channel = getChannel();
 		((SessionRequestHandler)channel.getRequestHandler()).cleanup();
 		setReplyListener(null);
