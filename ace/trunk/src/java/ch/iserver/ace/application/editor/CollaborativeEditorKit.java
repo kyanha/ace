@@ -28,7 +28,7 @@ import java.awt.event.*;
 
 
 
-public class CollaborativeEditorKit extends StyledEditorKit implements ViewFactory {
+public class CollaborativeEditorKit extends StyledEditorKit {//implements ViewFactory {
 
 	private ActionMap actionMap;
 
@@ -48,9 +48,9 @@ public class CollaborativeEditorKit extends StyledEditorKit implements ViewFacto
 
 	}
 
-	public ViewFactory getViewFactory() {
+	/*public ViewFactory getViewFactory() {
 		return this;
-	}
+	}*/
 
 	public View create(Element elem) {
 //		System.out.println("createView: " + elem.getName());
