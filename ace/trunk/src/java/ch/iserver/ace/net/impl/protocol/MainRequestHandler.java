@@ -53,7 +53,7 @@ public class MainRequestHandler extends AbstractRequestHandler {
 	/**
 	 * @see org.beepcore.beep.core.RequestHandler#receiveMSG(org.beepcore.beep.core.MessageMSG)
 	 */
-	public void receiveMSG(MessageMSG message) {
+	public synchronized void receiveMSG(MessageMSG message) {
 		LOG.debug("--> receiveMSG");
 
 		InputDataStream input = message.getDataStream();
@@ -66,10 +66,10 @@ public class MainRequestHandler extends AbstractRequestHandler {
 			} else {
 				Request request = null;
 				//TODO: use SingleThreadedDomain instead of synchronized
-				synchronized (this) {
+//				synchronized (this) {
 					deserializer.deserialize(rawData, handler);
 					request = handler.getResult();
-				}
+//				}
 				//TODO: the following code must not be synchronized right?
 				String userid = request.getUserId();
 				DiscoveryManager discoveryManager = DiscoveryManagerFactory.getDiscoveryManager(null);
