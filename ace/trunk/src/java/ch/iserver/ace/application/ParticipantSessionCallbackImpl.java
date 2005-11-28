@@ -30,6 +30,8 @@ import ch.iserver.ace.application.editor.*;
 import java.awt.Color;
 import java.util.Iterator;
 import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+
 
 
 
@@ -52,8 +54,13 @@ public class ParticipantSessionCallbackImpl extends SessionCallbackImpl implemen
 				Color pColor = participationColorManager.participantJoined(participant);
 				ParticipantItem mapParticipantItem = new ParticipantItem(participant, pColor);
 				participantItemMap.put("" + participant.getParticipantId(), mapParticipantItem);
-				participantSourceList.add(mapParticipantItem);		
-				System.out.println("setDocument::participant added");
+				participantSourceList.add(mapParticipantItem);
+				
+				Style pStyle = cDocument.addStyle("" + participant.getParticipantId(), null);
+				StyleConstants.setBackground(pStyle, pColor);
+
+				
+				System.out.println("setDocument::participant added: " + participant  + "   (Color: " + pColor+ ")");
 			}
 		}
 		
