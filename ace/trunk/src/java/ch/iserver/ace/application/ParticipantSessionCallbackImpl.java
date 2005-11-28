@@ -55,11 +55,10 @@ public class ParticipantSessionCallbackImpl extends SessionCallbackImpl implemen
 				ParticipantItem mapParticipantItem = new ParticipantItem(participant, pColor);
 				participantItemMap.put("" + participant.getParticipantId(), mapParticipantItem);
 				participantSourceList.add(mapParticipantItem);
-				
+
 				Style pStyle = cDocument.addStyle("" + participant.getParticipantId(), null);
 				StyleConstants.setBackground(pStyle, pColor);
 
-				
 				System.out.println("setDocument::participant added: " + participant  + "   (Color: " + pColor+ ")");
 			}
 		}
@@ -87,6 +86,8 @@ public class ParticipantSessionCallbackImpl extends SessionCallbackImpl implemen
 	
 	public void kicked() {
 		System.out.println("kicked");
+		// create local copy of the document
+		documentItem.setType(DocumentItem.REMOTE);
 	}
 	
 }
