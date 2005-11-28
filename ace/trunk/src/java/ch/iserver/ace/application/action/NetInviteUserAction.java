@@ -69,7 +69,7 @@ public class NetInviteUserAction extends DocumentItemSelectionChangeAction {
 
 	private void inviteUser() {
 		if(canInvite()) {
-			currentUserItem.getUser().invite((PublishedSession)currentDocumentItem.getSession());
+			((PublishedSession)currentDocumentItem.getSession()).invite(currentUserItem.getUser());
 		}
 	}
 

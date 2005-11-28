@@ -56,7 +56,7 @@ public class NetKickParticipantAction extends DocumentItemSelectionChangeAction 
 	
 	public void actionPerformed(ActionEvent e) {
 		// need session here
-		if(currentDocumentItem != null && currentParticipantItem != null) {
+		if(canKick()) {
 			System.out.println("NetKickParticipantAction: " + currentParticipantItem.getName());
 			((PublishedSession)currentDocumentItem.getSession()).kick(currentParticipantItem.getParticipant());
 		}
@@ -78,11 +78,19 @@ public class NetKickParticipantAction extends DocumentItemSelectionChangeAction 
 			}
 		}
 		
-		if(currentDocumentItem != null && currentParticipantItem != null) {
+		if(canKick()) {
 			setEnabled(true);
 		} else {
 			setEnabled(false);
 		}
+	}
+
+	private boolean canKick() {
+		if(currentDocumentItem != null && currentParticipantItem != null &&
+				currentDocumentItem.getType() == DocumentItem.PUBLISHED) {
+			return true;
+		}
+		return false;
 	}
 
 }
