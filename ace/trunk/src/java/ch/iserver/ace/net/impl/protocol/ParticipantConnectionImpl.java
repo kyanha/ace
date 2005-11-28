@@ -36,6 +36,7 @@ import ch.iserver.ace.net.PortableDocument;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.PublishedDocument;
+import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
 
 /**
  * This connection does not establish its channel until <code>joinAccepted(ParticipantPort)</code> is 
@@ -130,7 +131,8 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 			LOG.info("--> sendDocument()");
 			byte[] data = null;
 			try {
-				data = serializer.createResponse(ProtocolConstants.JOIN_DOCUMENT, getPublishedDocument(), document);
+				DocumentInfo info = new DocumentInfo(getPublishedDocument().getId(), getParticipantId());
+				data = serializer.createResponse(ProtocolConstants.JOIN_DOCUMENT, info, document);
 			} catch (SerializeException se) {
 				LOG.error("could not serialize document ["+se.getMessage()+"]");
 			}

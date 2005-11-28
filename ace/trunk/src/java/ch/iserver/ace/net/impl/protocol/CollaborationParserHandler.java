@@ -78,9 +78,9 @@ public class CollaborationParserHandler extends ParserHandler {
 					currParticipantId = Integer.parseInt(participantId);
 				} else if (qName.equals(USER)) {
 					String userId = attributes.getValue(ID);
-					if (userId.equals(NetworkServiceImpl.getInstance().getUserId())) {
-						document.setParticpantId(currParticipantId);
-					}
+//					if (userId.equals(NetworkServiceImpl.getInstance().getUserId())) {
+//						document.setParticpantId(currParticipantId);
+//					}
 					String userName = attributes.getValue(NAME);
 					String userAddress= attributes.getValue(ADDRESS);
 					String userPort = attributes.getValue(PORT);
@@ -117,6 +117,9 @@ public class CollaborationParserHandler extends ParserHandler {
 			document.setDocumentId(docid);
 			String userid = attributes.getValue(USER_ID);
 			document.setPublisherId(userid);
+			String participantId = attributes.getValue(PARTICIPANT_ID);
+			int myParticipantId = Integer.parseInt(participantId);
+			document.setParticpantId(myParticipantId);
 			participants = false;
 			documentData = false;
 		} else if (qName.equals(TAG_LEAVE)) {

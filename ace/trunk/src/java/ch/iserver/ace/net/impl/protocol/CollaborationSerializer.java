@@ -22,8 +22,6 @@
 package ch.iserver.ace.net.impl.protocol;
 
 import java.io.ByteArrayOutputStream;
-import java.util.Iterator;
-import java.util.Map;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -42,9 +40,9 @@ import ch.iserver.ace.net.PortableDocument;
 import ch.iserver.ace.net.impl.MutableUserDetails;
 import ch.iserver.ace.net.impl.NetworkConstants;
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
-import ch.iserver.ace.net.impl.PublishedDocument;
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;
 import ch.iserver.ace.net.impl.SessionConnectionImpl;
+import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
 
 /**
  * Serializes XML messages directly used in a collaborative session.
@@ -93,10 +91,11 @@ public class CollaborationSerializer implements Serializer, ProtocolConstants {
 				AttributesImpl attrs = new AttributesImpl();
 				handler.startElement("", "", "ace", attrs);
 				handler.startElement("", "", "response", attrs);
-				PublishedDocument publishedDoc = (PublishedDocument) data1;
-				attrs.addAttribute("", "", ID, "", publishedDoc.getId());
+				DocumentInfo publishedDoc = (DocumentInfo) data1;
+				attrs.addAttribute("", "", ID, "", publishedDoc.getDocId());
 				String userid = NetworkServiceImpl.getInstance().getUserId();
 				attrs.addAttribute("", "", USER_ID, "", userid);
+				attrs.addAttribute("", "", PARTICIPANT_ID, "", Integer.toString(publishedDoc.getParticipantId()));
 				handler.startElement("", "", TAG_JOIN_DOCUMENT, attrs);
 				PortableDocument doc = (PortableDocument) data2;
 				createParticipantTag(handler, doc);

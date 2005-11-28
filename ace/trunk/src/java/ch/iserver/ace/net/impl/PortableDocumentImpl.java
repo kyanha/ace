@@ -28,6 +28,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.Fragment;
 import ch.iserver.ace.net.RemoteUserProxy;
@@ -37,6 +39,8 @@ import ch.iserver.ace.net.RemoteUserProxy;
  */
 public class PortableDocumentImpl implements PortableDocumentExt {
 
+	private static Logger LOG = Logger.getLogger(PortableDocumentImpl.class);
+	
 	private List fragments;
 	private Map selections; 	//participantId to caretupdate
 	private Map proxies;		//participantId to remoteuserproxy
@@ -87,6 +91,7 @@ public class PortableDocumentImpl implements PortableDocumentExt {
 	}
 	
 	public void setParticpantId(int id) {
+		LOG.debug("setParticipantId(" + id + ")");
 		this.participantId = id;
 	}
 	
