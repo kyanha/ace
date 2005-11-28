@@ -26,7 +26,7 @@ import ch.iserver.ace.net.ParticipantConnection;
 /**
  * Class that manages a set of participants.
  */
-public interface ParticipantManager {
+interface ParticipantManager {
 	
 	/**
 	 * The participant id for the given user. It is up to the implementation to

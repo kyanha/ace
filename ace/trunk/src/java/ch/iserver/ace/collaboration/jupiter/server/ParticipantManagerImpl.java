@@ -36,7 +36,7 @@ import ch.iserver.ace.util.ParameterValidator;
 /**
  * The default implementation of the ParticipantManager interface.
  */
-public class ParticipantManagerImpl implements ParticipantManager {
+class ParticipantManagerImpl implements ParticipantManager {
 	
 	/**
 	 * The logger of the participant manager.
@@ -104,7 +104,7 @@ public class ParticipantManagerImpl implements ParticipantManager {
 	 * 
 	 * @param forwarder the composite forwarder
 	 */
-	public ParticipantManagerImpl(CompositeForwarder forwarder) {
+	ParticipantManagerImpl(CompositeForwarder forwarder) {
 		ParameterValidator.notNull("forwarder", forwarder);
 		this.compositeForwarder = forwarder;
 	}
