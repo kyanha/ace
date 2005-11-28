@@ -137,7 +137,7 @@ public class RemoteUserSession {
 		LOG.debug("--> addSessionConnection() for doc ["+docId+"]");
 		CollaborationSerializer serializer = new CollaborationSerializer();
 		SessionConnectionImpl conn = new SessionConnectionImpl(docId, this, 
-				collaborationChannel, NullReplyListener.getListener(), serializer);
+				collaborationChannel, ResponseListener.getInstance(), serializer);
 		sessionConnections.put(docId, conn);
 		LOG.debug("<-- addSessionConnection()");
 		return conn;
@@ -147,7 +147,7 @@ public class RemoteUserSession {
 		//TODO: must not be snychronized right?
 		LOG.debug("--> addSessionConnection() for doc ["+docId+"]");
 		CollaborationSerializer serializer = new CollaborationSerializer();
-		SessionConnectionImpl conn = new SessionConnectionImpl(docId, this, NullReplyListener.getListener(), serializer);
+		SessionConnectionImpl conn = new SessionConnectionImpl(docId, this, ResponseListener.getInstance(), serializer);
 		sessionConnections.put(docId, conn);
 		LOG.debug("<-- addSessionConnection()");
 		return conn;
@@ -189,7 +189,7 @@ public class RemoteUserSession {
 		assert !participantConnections.containsKey(docId);
 		CollaborationSerializer serializer = new CollaborationSerializer();
 		ParticipantConnectionImpl connection = new ParticipantConnectionImpl(docId, this,
-				NullReplyListener.getListener(), serializer);
+				ResponseListener.getInstance(), serializer);
 		participantConnections.put(docId, connection);
 		LOG.debug("<-- createCollaborationConnection()");
 		return connection;
