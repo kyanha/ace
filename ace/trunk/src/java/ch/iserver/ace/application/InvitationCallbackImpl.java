@@ -21,6 +21,8 @@
 
 package ch.iserver.ace.application;
 
+import javax.swing.JOptionPane;
+
 import ch.iserver.ace.collaboration.Invitation;
 import ch.iserver.ace.collaboration.InvitationCallback;
 
@@ -28,11 +30,19 @@ import ch.iserver.ace.collaboration.InvitationCallback;
 
 public class InvitationCallbackImpl implements InvitationCallback {
 
+	private DialogController dialogController;
+	
 	public InvitationCallbackImpl() {
 	}
 	
 	public void invitationReceived(Invitation invitation) {
-		System.out.println("auto accepted invitation");
+		/*int result = dialogController.showInvitationReceived(user, docTitle);
+		if (result == JOptionPane.OK_OPTION) {
+			// accepted
+		} else {
+			// rejected
+		}*/
+		
 		// 1. create document item with remote document
 /*		doc = new DocumentItem(invitation.getDocument());
 		// 2. create participant callback

@@ -169,4 +169,14 @@ public interface DialogController {
 	 */
 	void showDocumentWithSameNameExists(String title, File file);
 	
+	/**
+	 * Shows a dialog which asks the user whether he wants to accept an
+	 * invitation.
+	 * 
+	 * @param user the name of the inviter
+	 * @param docTitle the name of the document
+	 * @return the result of the confirmation dialog
+	 */
+	int showInvitationReceived(String user, String docTitle);
+	
 }

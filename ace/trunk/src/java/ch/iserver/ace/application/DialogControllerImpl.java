@@ -288,6 +288,18 @@ public class DialogControllerImpl implements DialogController {
 						JOptionPane.ERROR_MESSAGE);
 	}
 	
+	/**
+	 * @see ch.iserver.ace.application.DialogController#showInvitationReceived(java.lang.String, java.lang.String)
+	 */
+	public int showInvitationReceived(String user, String docTitle) {
+		String title = getMessages().getMessage("dInvitationReceivedTitle");
+		String message = getMessages().getMessage("dInvitationReceivedMessage", new Object[] { user, docTitle });
+		return JOptionPane.showConfirmDialog(
+						getMainFrame(),
+						message,
+						title,
+						JOptionPane.YES_NO_OPTION);
+	}
 	
 	// --> dispose dialogs <--
 	
