@@ -45,6 +45,9 @@ import ch.iserver.ace.application.editor.*;
 
 import ca.odell.glazedlists.EventList;
 import spin.Spin;
+import java.lang.reflect.InvocationTargetException;
+
+import javax.swing.SwingUtilities;
 
 
 
@@ -77,39 +80,6 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 		initDocumentItem(UUID.nextUUID(), title, title, title);
 		type = LOCAL;
 		createEditorDocument();
-		
-		
-		//CollaborativeDocument doc = (CollaborativeDocument)editorDocument;
-		
-		/*Style pStyle = editorDocument.addStyle("" + 1, null);
-		StyleConstants.setBackground(pStyle, Color.RED.brighter());
-
-		Style pStyle2 = editorDocument.addStyle("" + 2, null);
-		StyleConstants.setBackground(pStyle2, Color.BLUE.brighter());
-		
-		try {
-			editorDocument.insertString(0, "tescht!", editorDocument.getStyle("" + 1));
-			editorDocument.insertString(0, "x ", editorDocument.getStyle("" + 2));
-			editorDocument.insertString(0, "x ", editorDocument.getStyle("" + 2));
-			editorDocument.insertString(0, "chline ", editorDocument.getStyle("" + 2));
-			editorDocument.insertString(0, "e ", editorDocument.getStyle("" + 1));
-			editorDocument.insertString(0, "x ", editorDocument.getStyle("" + 2));
-			editorDocument.insertString(0, "isch ", editorDocument.getStyle("" + 1));
-			editorDocument.insertString(0, "x ", editorDocument.getStyle("" + 2));
-			editorDocument.insertString(0, "das ", editorDocument.getStyle("" + 1));
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-
-		
-		pStyle = editorDocument.getStyle("" + 1);
-		StyleConstants.setBackground(pStyle, Color.GREEN.brighter());*/
-		
-
-
-
-
-
 	}
 	
 	public DocumentItem(File file) {
@@ -162,11 +132,16 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 		return type;
 	}
 	
-	public void setType(int type) {
-		int oldType = this.type;
+	public void setType(final int type) {
+		final int oldType = this.type;
 		if (oldType != type) {
 			this.type = type;
-			firePropertyChange(TYPE_PROPERTY, new Integer(oldType), new Integer(type));
+			// TODO: understand why it works that way and not with invokeAndWait
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					firePropertyChange(TYPE_PROPERTY, new Integer(oldType), new Integer(type));
+				}
+			});
 		}		
 	}
 	
@@ -239,6 +214,25 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 	
 	
 	
+	public CollaborativeDocument createEditorDocumentCopy() {
+		CollaborativeDocument newDoc = new CollaborativeDocument();
+		try {
+			newDoc.insertString(0, editorDocument.getText(0, editorDocument.getLength()), null);
+		} catch(BadLocationException e) {
+			e.printStackTrace();
+		}
+		newDoc.addDocumentListener(new DocumentListener() {
+			public void changedUpdate(DocumentEvent e) {
+			}
+			public void insertUpdate(DocumentEvent e) {
+				setDirty(true);
+			}
+			public void removeUpdate(DocumentEvent e) {
+				setDirty(true);
+			}
+		});
+		return newDoc;
+	}
 	
 	
 	
@@ -264,30 +258,8 @@ BASCHTLE
 					docModel);
 			//);
 			
-		// editorDocument.setLocal(false);
-		// editorDocument.setSession(session);
 		setType(PUBLISHED);
-		
-		
-/*		final Session ses = session;
-		new Thread() {
-			public void run() {
-				for(int i = 0; i < 25; i++) {
-					ses.lock();
-					String text = "" + Math.round(100 * Math.random()) + "-";
-					ses.sendOperation(new InsertOperation(0, text));
-					ses.unlock();
-					System.out.println("sending text: " + text);
-					try {
-						Thread.sleep(1000);
-					} catch(Exception e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		}.start();*/
-		
-		
+
 	}
 	
 	public void conceal() {
@@ -303,11 +275,11 @@ BASCHTLE
 		setType(REMOTE);
 	}
 
-	public void join() {
+	public void join(DocumentViewController documentViewController) {
 		// join document
 		System.out.println(editorDocument);
 		editorDocument = new CollaborativeDocument();
-		remoteDocument.join(new JoinCallbackImpl(this));
+		remoteDocument.join(new JoinCallbackImpl(this, documentViewController));
 		setType(AWAITING);
 	}
 
