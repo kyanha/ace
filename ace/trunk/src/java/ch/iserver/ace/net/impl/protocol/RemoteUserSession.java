@@ -243,7 +243,11 @@ public class RemoteUserSession {
 				//TODO: proxy channel?
 				throw new IllegalStateException("unknown channel type ["+type+"]");
 			}
-			return session.startChannel(profile, handler);
+			if (type == CHANNEL_MAIN) {
+				return session.startChannel(uri, handler);
+			} else {
+				return session.startChannel(profile, handler);
+			}
 //			return session.startChannel(uri, false, type);
 		} catch (BEEPException be) {
 			//TODO: retry strategy?

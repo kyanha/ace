@@ -73,7 +73,8 @@ public class StartChannelListenerImpl implements StartChannelListener {
 			//for each collaborative session create new SessionRequestHandler
 			requestHandler = SessionRequestHandlerFactory.getInstance().createHandler();
 		} else {
-			throw new StartChannelException(BEEPError.CODE_PARAMETER_INVALID, "channel type not known");
+			//throw new StartChannelException(BEEPError.CODE_PARAMETER_INVALID, "channel type not known");
+			requestHandler = mainHandler;
 		}
 		channel.setRequestHandler(requestHandler);
 		LOG.debug("<-- acceptChannel()");
