@@ -17,6 +17,7 @@ import ch.iserver.ace.net.impl.PortableDocumentImpl;
 import ch.iserver.ace.net.impl.PublishedDocument;
 import ch.iserver.ace.net.impl.RemoteUserProxyFactory;
 import ch.iserver.ace.net.impl.SessionConnectionImpl;
+import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
 
 public class CollaborationSerializerTest extends TestCase {
 
@@ -73,9 +74,8 @@ public class CollaborationSerializerTest extends TestCase {
 		fragment = new FragmentImpl(1, " dir sage ich alles!");
 		document.addFragment(fragment);
 		
-		PublishedDocument doc = new PublishedDocument(docId, null, null, null, null);
-		
-		byte [] data = serializer.createResponse(ProtocolConstants.JOIN_DOCUMENT, doc, document);
+		DocumentInfo info = new DocumentInfo(docId, 3);
+		byte [] data = serializer.createResponse(ProtocolConstants.JOIN_DOCUMENT, info, document);
 		
 		String actual = new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 		assertEquals(XML_JOIN_DOCUMENT, actual);
@@ -93,7 +93,7 @@ public class CollaborationSerializerTest extends TestCase {
 	
 	private static final String XML_JOIN_DOCUMENT = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
 	"<ace><response>" +
-	"<document id=\"ASDF-23\" userid=\"adfasdf-21\">" +
+	"<document id=\"ASDF-23\" userid=\"adfasdf-21\" participantId=\"3\">" +
 	"<participants>" +
 	"<participant id=\"0\">" +
 	"<user id=\"adfasdf-21\" name=\"John Huderi\" address=\"254.23.12.98\" port=\"4123\" explicitDiscovery=\"false\"/>" +

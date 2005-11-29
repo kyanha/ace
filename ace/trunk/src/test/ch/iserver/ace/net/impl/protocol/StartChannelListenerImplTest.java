@@ -11,36 +11,40 @@ import org.easymock.MockControl;
 public class StartChannelListenerImplTest extends TestCase {
 	
 	public void testAdvertiseProfile() throws Exception {
-		MockControl handlerCtrl = MockControl.createControl(RequestHandler.class);
-		RequestHandler handler = (RequestHandler)handlerCtrl.getMock();
-		StartChannelListener instance = new StartChannelListenerImpl(handler, null);
-		
-		handlerCtrl.replay();
+		StartChannelListener instance = new StartChannelListenerImpl(getFactory());
 		
 		assertTrue(instance.advertiseProfile(null));
-		
-		handlerCtrl.verify();
 	}
 	
 	public void testStartChannel() throws Exception {
-		MockControl handlerCtrl = MockControl.createControl(RequestHandler.class);
-		RequestHandler handler = (RequestHandler)handlerCtrl.getMock();
-		handlerCtrl.replay();
-		StartChannelListener instance = new StartChannelListenerImpl(handler, null);
+		StartChannelListener instance = new StartChannelListenerImpl(getFactory());
 		
 		MockControl channelCtrl = MockControl.createControl(Channel.class);
 		Channel channel = (Channel)channelCtrl.getMock();
 		
-		channel.setRequestHandler(handler);
+		channel.setRequestHandler(null);
 		channelCtrl.setDefaultReturnValue(null);
-		channelCtrl.setDefaultMatcher(new RequestHandlerMatcher());
+		channelCtrl.setDefaultMatcher(MockControl.ALWAYS_MATCHER);
 		channelCtrl.replay();
 		
 		instance.startChannel(channel, "", RemoteUserSession.CHANNEL_MAIN);
 		
 		channelCtrl.verify();
-		handlerCtrl.verify();
 	}
+	
+	public DefaultRequestHandlerFactory getFactory() {
+		MockControl handlerCtrl = MockControl.createControl(RequestHandler.class);
+		RequestHandler handler = (RequestHandler)handlerCtrl.getMock();
+		handlerCtrl.replay();
+		MockControl deserializerCtrl = MockControl.createControl(Deserializer.class);
+		Deserializer deserializer = (Deserializer)deserializerCtrl.getMock();
+		deserializerCtrl.replay();
+		//only for testing
+		ResponseParserHandler parserHandler = new ResponseParserHandler();
+		DefaultRequestHandlerFactory.init(handler, deserializer, parserHandler);
+		return DefaultRequestHandlerFactory.getInstance();
+	}
+	
 	
 }
 

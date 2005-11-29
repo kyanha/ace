@@ -50,7 +50,7 @@ public class CollaborationParserHandlerTest extends TestCase {
 		
 		assertEquals(result.getType(), ProtocolConstants.JOIN_DOCUMENT);
 		PortableDocumentExt doc = (PortableDocumentExt) result.getPayload();
-		assertEquals(1, doc.getParticipantId());
+		assertEquals(3, doc.getParticipantId());
 		assertEquals("ASDF-23", doc.getDocumentId());
 		assertEquals("adfasdf-21", doc.getPublisherId());
 		int[] ids = doc.getParticipantIds();
@@ -73,7 +73,7 @@ public class CollaborationParserHandlerTest extends TestCase {
 	
 	public static final String XML_JOIN_DOCUMENT = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
 	"<ace><response>" +
-	"<document id=\"ASDF-23\" userid=\"adfasdf-21\">" +
+	"<document id=\"ASDF-23\" userid=\"adfasdf-21\" participantId=\"3\">" +
 	"<participants>" +
 	"<participant id=\"0\">" +
 	"<user id=\"adfasdf-21\" name=\"John Huderi\" address=\"254.23.12.98\" port=\"4123\" explicitDiscovery=\"false\"/>" +
