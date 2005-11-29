@@ -14,6 +14,7 @@ import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.net.impl.MutableUserDetails;
 import ch.iserver.ace.net.impl.RemoteDocumentProxyImpl;
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;
+import ch.iserver.ace.net.impl.RemoteUserProxyFactory;
 import ch.iserver.ace.net.impl.RemoteUserProxyImpl;
 import ch.iserver.ace.util.UUID;
 
@@ -25,7 +26,7 @@ public class DocumentDiscoveryTest extends TestCase {
 	private MockControl filterCtrl;
 	
 	public DocumentDiscoveryTest() throws Exception {
-		user = new RemoteUserProxyImpl(UUID.nextUUID(), 
+		user = RemoteUserProxyFactory.getInstance().createProxy(UUID.nextUUID(), 
 				new MutableUserDetails("test-user", InetAddress.getLocalHost(), 54321));
 		docs = new RemoteDocumentProxy[NUM_DOCS];
 		filterCtrl = MockControl.createControl(RequestFilter.class);
