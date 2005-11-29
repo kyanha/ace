@@ -74,7 +74,6 @@ public class ServerDocumentImpl extends AbstractDocument implements
 	
 	private void setCaretHandler(int participantId, CaretHandler handler) {
 		carets.put(new Integer(participantId), handler);
-		addDocumentListener(handler);
 	}
 	
 	protected int getParticipantId(AttributeSet attr) {
@@ -210,13 +209,15 @@ public class ServerDocumentImpl extends AbstractDocument implements
 		super.removeUpdate(chng);
 	}
 		
-	// --> ServerDocumentl methods <--
+	// --> ServerDocument methods <--
 	
 	/**
 	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerDocument#participantJoined(int, ch.iserver.ace.net.RemoteUserProxy)
 	 */
 	public void participantJoined(int participantId, RemoteUserProxy proxy) {
-		setCaretHandler(participantId, new CaretHandler(-1, -1));
+		CaretHandler handler = new CaretHandler(0, 0);
+		setCaretHandler(participantId, handler);
+		addDocumentListener(handler);
 		addParticipant(participantId, proxy);
 	}
 	

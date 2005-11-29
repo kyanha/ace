@@ -53,7 +53,7 @@ class CaretHandler implements DocumentListener {
 	}
 	
 	protected void setDot(int dot, int length) {
-		this.dot = Math.max(Math.min(dot, length), -1);
+		this.dot = Math.max(Math.min(dot, length), 0);
 	}
 	
 	public int getMark() {
@@ -65,7 +65,7 @@ class CaretHandler implements DocumentListener {
 	}
 	
 	protected void setMark(int mark, int length) {
-		this.mark = Math.max(Math.min(mark, length), -1);
+		this.mark = Math.max(Math.min(mark, length), 0);
 	}
 	
 	public void changedUpdate(DocumentEvent e) {
