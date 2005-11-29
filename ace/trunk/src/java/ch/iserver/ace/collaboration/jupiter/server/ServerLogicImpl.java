@@ -370,7 +370,8 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 						new ParticipantConnectionWrapper(
 								target, 
 								getFailureHandler()), 
-						ParticipantConnection.class);
+						ParticipantConnection.class,
+						true);
 			RemoteUser user = getUserRegistry().getUser(id);
 		
 			if (user == null) {
@@ -400,6 +401,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	}
 	
 	protected void acceptJoin(ParticipantConnection connection) {
+		ParameterValidator.notNull("connection", connection);
 		Algorithm algorithm = new Jupiter(false);
 		int participantId = participants.getParticipantId(connection.getUser().getId());
 		LOG.info("setting participant id " + participantId + " for user " + connection.getUser().getId());
