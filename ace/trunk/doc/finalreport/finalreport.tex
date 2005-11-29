@@ -16,8 +16,12 @@ pdfcreator={pdftex},
 
 \begin{document}
 
+\newtheorem{defn}{Definition}
+
 \setlength{\parskip}{6pt}
 \setlength{\parindent}{0pt}
+
+\bibliographystyle{plain}
 
 \include{titlepage}
 
@@ -52,5 +56,7 @@ pdfcreator={pdftex},
 \include{appendix/frameworks}
 
 \include{appendix/tools}
+
+\bibliography{ace}
 
 \end{document}
