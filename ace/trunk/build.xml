@@ -267,7 +267,8 @@
 		      fork="true" 
 		      classpathref="classpath.run">
 		      <jvmarg value="-Djava.security.manager"/>
-		      <jvmarg value="-Djava.security.policy=${build.resources}/ace.policy"/>
+		      <jvmarg value="-Djava.security.policy==${build.resources}/ace.policy"/>
+		      <!--jvmarg value="-Djava.security.debug=policy,scl"/-->
 		</java>
 	</target>
 
