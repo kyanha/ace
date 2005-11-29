@@ -66,9 +66,9 @@ public class StartChannelListenerImpl implements StartChannelListener {
 			throws StartChannelException {
 		LOG.debug("--> acceptChannel("+channel+", type="+data+")");
 		RequestHandler requestHandler = null;
-		if (data.equals(RemoteUserSession.CHANNEL_MAIN)) {
+		if (data != null && data.equals(RemoteUserSession.CHANNEL_MAIN)) {
 			requestHandler = mainHandler;
-		} else if (data.equals(RemoteUserSession.CHANNEL_COLLABORATION)){
+		} else if (data != null && data.equals(RemoteUserSession.CHANNEL_COLLABORATION)){
 			
 			//for each collaborative session create new SessionRequestHandler
 			requestHandler = SessionRequestHandlerFactory.getInstance().createHandler();
