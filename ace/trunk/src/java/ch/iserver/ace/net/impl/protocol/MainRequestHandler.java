@@ -44,10 +44,10 @@ public class MainRequestHandler extends AbstractRequestHandler {
 	
 	
 	//TODO: write integration-test for this class
-	public MainRequestHandler(Deserializer deserializer, RequestFilter filter) {
+	public MainRequestHandler(Deserializer deserializer, RequestFilter filter, RequestParserHandler handler) {
 		this.deserializer = deserializer;
 		this.filter = filter;
-		handler = new RequestParserHandler();
+		this.handler = handler;
 	}
 	
 	/**
