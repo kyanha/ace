@@ -42,7 +42,7 @@ import ch.iserver.ace.net.SessionConnection;
 import ch.iserver.ace.net.SessionConnectionCallback;
 import ch.iserver.ace.util.Lock;
 import ch.iserver.ace.util.ParameterValidator;
-import ch.iserver.ace.util.SemaphoreLock;
+import ch.iserver.ace.util.ReentrantLock;
 import ch.iserver.ace.util.ThreadDomain;
 
 /**
@@ -102,7 +102,7 @@ public class SessionImpl extends AbstractSession
 	 * @param callback the callback for the session
 	 */
 	protected SessionImpl(AlgorithmWrapper algorithm, ParticipantSessionCallback callback) {
-		super(algorithm, new SemaphoreLock("client-lock"));
+		super(algorithm, new ReentrantLock());
 		setSessionCallback(callback);
 	}
 	

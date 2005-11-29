@@ -38,7 +38,7 @@ import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.util.Lock;
 import ch.iserver.ace.util.ParameterValidator;
-import ch.iserver.ace.util.SemaphoreLock;
+import ch.iserver.ace.util.ReentrantLock;
 
 /**
  * Forwarder implementation that is responsible to forward events
@@ -110,7 +110,7 @@ public class ParticipantForwarder implements Forwarder {
 		this.participantId = participantId;
 		this.algorithm = algorithm;
 		this.connection = connection;
-		this.lock = new SemaphoreLock("proxy-lock-" + participantId);
+		this.lock = new ReentrantLock();
 	}
 	
 	/**

@@ -39,7 +39,7 @@ import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.PortableDocument;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.util.ParameterValidator;
-import ch.iserver.ace.util.SemaphoreLock;
+import ch.iserver.ace.util.ReentrantLock;
 
 /**
  * Default implementation of the PublishedSession interface.
@@ -74,7 +74,7 @@ public class PublishedSessionImpl extends AbstractSession
 	 * @param wrapper the client-side algorithm used by this class
 	 */
 	public PublishedSessionImpl(PublishedSessionCallback callback, AlgorithmWrapper wrapper) {
-		super(wrapper, new SemaphoreLock("client-lock"));
+		super(wrapper, new ReentrantLock());
 		ParameterValidator.notNull("callback", callback);
 		this.callback = callback;
 	}
