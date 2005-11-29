@@ -128,7 +128,7 @@ public class SessionImpl extends AbstractSession
 	public void setConnection(SessionConnection connection) {
 		ParameterValidator.notNull("connection", connection);
 		this.connection = (SessionConnection) getThreadDomain().wrap(
-				new SessionConnectionWrapper(connection, this), SessionConnection.class);
+				new SessionConnectionWrapper(connection, this), SessionConnection.class, true);
 	}
 	
 	/**
