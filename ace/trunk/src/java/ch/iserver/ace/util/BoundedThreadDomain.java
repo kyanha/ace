@@ -45,6 +45,11 @@ public class BoundedThreadDomain extends AbstractThreadDomain {
 	private final BlockingQueue[] queues;
 	
 	/**
+	 * The workers used by this thread domain.
+	 */
+	private final Worker[] workers;
+	
+	/**
 	 * The current index.
 	 */
 	private int index;
@@ -56,8 +61,10 @@ public class BoundedThreadDomain extends AbstractThreadDomain {
 	 * @param maxWorkers the maximum number of workers
 	 */
 	public BoundedThreadDomain(int maxWorkers) {
+		ParameterValidator.notNegative("maxWorkers", maxWorkers);
 		this.maxWorkers = maxWorkers;
 		this.queues = new BlockingQueue[maxWorkers];
+		this.workers = new Worker[maxWorkers];
 	}
 	
 	/**
@@ -66,8 +73,8 @@ public class BoundedThreadDomain extends AbstractThreadDomain {
 	public synchronized Object wrap(Object target, Class clazz, boolean ignoreVoidMethods) {
 		if (queues[index] == null) {
 			queues[index] = new LinkedBlockingQueue();
-			Worker worker = new AsyncWorker(queues[index]);
-			worker.start();
+			workers[index] = new AsyncWorker(queues[index]);
+			workers[index].start();
 		}
 		
 		BlockingQueue queue = queues[index];		
@@ -77,6 +84,18 @@ public class BoundedThreadDomain extends AbstractThreadDomain {
 			return wrap(target, clazz, queue, new VoidMethodMatcherPointcut());
 		} else {
 			return wrap(target, clazz, queue);
+		}
+	}
+	
+	/**
+	 * @see ch.iserver.ace.util.ThreadDomain#dispose()
+	 */
+	public void dispose() {
+		for (int i = 0; i < workers.length; i++) {
+			Worker worker = (Worker) workers[i];
+			if (worker != null) {
+				worker.kill();
+			}
 		}
 	}
 	

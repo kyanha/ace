@@ -32,10 +32,16 @@ package ch.iserver.ace.util;
  */
 public class CallerThreadDomain implements ThreadDomain {
 	
+	/**
+	 * @see ch.iserver.ace.util.ThreadDomain#getName()
+	 */
 	public String getName() {
 		return "caller-thread-domain";
 	}
 	
+	/**
+	 * @see ch.iserver.ace.util.ThreadDomain#setName(java.lang.String)
+	 */
 	public void setName(String name) {
 		// ignored
 	}
@@ -52,6 +58,16 @@ public class CallerThreadDomain implements ThreadDomain {
 	 */
 	public Object wrap(Object target, Class clazz, boolean ignoreVoidMethods) {
 		return target;
+	}
+	
+	/**
+	 * A CallerThreadDomain does not have to be disposed as there are no
+	 * worker threads.
+	 * 
+	 * @see ch.iserver.ace.util.ThreadDomain#dispose()
+	 */
+	public void dispose() {
+		// nothing to dispose
 	}
 
 }

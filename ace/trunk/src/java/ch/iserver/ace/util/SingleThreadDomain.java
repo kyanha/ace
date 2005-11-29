@@ -79,5 +79,14 @@ public class SingleThreadDomain extends AbstractThreadDomain {
 			return wrap(target, clazz, queue, advice);
 		}
 	}
+	
+	/**
+	 * @see ch.iserver.ace.util.ThreadDomain#dispose()
+	 */
+	public void dispose() {
+		if (worker != null) {
+			worker.kill();
+		}
+	}
 
 }

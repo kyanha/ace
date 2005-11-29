@@ -63,4 +63,11 @@ public class IsolatedThreadDomain extends AbstractThreadDomain {
 		return wrapped;
 	}
 	
+	/**
+	 * @see ch.iserver.ace.util.ThreadDomain#dispose()
+	 */
+	public void dispose() {
+		// dispose happens through week references
+	}
+	
 }

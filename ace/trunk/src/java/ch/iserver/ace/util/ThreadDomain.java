@@ -71,4 +71,9 @@ public interface ThreadDomain {
 	 */
 	Object wrap(Object target, Class clazz, boolean ignoreVoidMethods);
 	
+	/**
+	 * Disposes this thread domain.
+	 */
+	void dispose();
+	
 }
