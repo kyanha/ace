@@ -204,7 +204,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 						compositeForwarder);
 		Forwarder forwarder = createForwarder(participantId, connection, algorithm);
 		participants.addParticipant(participantId, forwarder, connection);
-		return (PublisherPort) incomingDomain.wrap(port, PublisherPort.class);
+		return (PublisherPort) incomingDomain.wrap(port, PublisherPort.class, true);
 	}
 	
 	/**

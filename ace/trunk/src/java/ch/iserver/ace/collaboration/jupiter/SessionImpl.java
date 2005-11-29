@@ -54,6 +54,11 @@ public class SessionImpl extends AbstractSession
 		implements ConfigurableSession, SessionConnectionCallback, FailureHandler {
 	
 	/**
+	 * The participant id of the participant.
+	 */
+	private int participantId = -1;
+	
+	/**
 	 * The SessionCallback from the application layer.
 	 */
 	private ParticipantSessionCallback callback = NullSessionCallback.getInstance();
@@ -127,6 +132,7 @@ public class SessionImpl extends AbstractSession
 	 */
 	public void setConnection(SessionConnection connection) {
 		ParameterValidator.notNull("connection", connection);
+		this.participantId = connection.getParticipantId();
 		this.connection = (SessionConnection) getThreadDomain().wrap(
 				new SessionConnectionWrapper(connection, this), SessionConnection.class, true);
 	}
@@ -177,7 +183,7 @@ public class SessionImpl extends AbstractSession
 	 * @see ch.iserver.ace.collaboration.Session#getParticipantId()
 	 */
 	public int getParticipantId() {
-		return connection.getParticipantId();
+		return participantId;
 	}
 
 	/**
