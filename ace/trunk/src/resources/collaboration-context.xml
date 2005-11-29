@@ -37,7 +37,7 @@
     <property name="acknowledgeStrategyFactory"><ref local="acknowledgeStrategyFactory"/></property>
  </bean>
   
-  <bean id="threadDomain" class="ch.iserver.ace.util.BoundedThreadDomain">
+  <bean id="threadDomain" class="ch.iserver.ace.util.BoundedThreadDomain" destroy-method="dispose">
     <constructor-arg><value>5</value></constructor-arg>
   </bean>
   

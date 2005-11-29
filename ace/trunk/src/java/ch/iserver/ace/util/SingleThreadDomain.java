@@ -23,9 +23,6 @@ package ch.iserver.ace.util;
 
 import org.aopalliance.aop.Advice;
 
-import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
-import edu.emory.mathcs.backport.java.util.concurrent.LinkedBlockingQueue;
-
 /**
  * SingleThreadDomain creates one single worker thread and associated queue
  * that is used by all proxies returned from {@link #wrap(Object, Class)}
@@ -33,11 +30,8 @@ import edu.emory.mathcs.backport.java.util.concurrent.LinkedBlockingQueue;
  */
 public class SingleThreadDomain extends AbstractThreadDomain {
 	
-	/**
-	 * The queue used for the single worker.
-	 */
-	private final BlockingQueue queue;
-	
+	private final AsyncQueueManager manager;
+		
 	/**
 	 * The single worker thread.
 	 */
@@ -58,25 +52,25 @@ public class SingleThreadDomain extends AbstractThreadDomain {
 	/**
 	 * Creates a new SingleThreadDomain object.
 	 */
-	public SingleThreadDomain( AsyncExceptionHandler handler) {
-		this.queue = new LinkedBlockingQueue();
+	public SingleThreadDomain(AsyncExceptionHandler handler) {
 		this.handler = handler;
+		this.manager = new AsyncQueueManager();
 	}
 		
 	/**
 	 * @see ch.iserver.ace.util.ThreadDomain#wrap(java.lang.Object, java.lang.Class, boolean)
 	 */
-	public synchronized Object wrap(Object target, Class clazz, boolean ignoreVoidMethods) {
+	public synchronized Object wrap(Object target, Class clazz, boolean ignoreNonVoidMethods) {
 		if (worker == null) {
-			this.worker = new AsyncWorker(getName(), queue);
+			this.worker = new AsyncWorker(getName(), manager.getTargetQueue());
 			this.worker.setExceptionHandler(handler);
 			this.worker.start();
 		}
 		Advice advice = new LoggingInterceptor(SingleThreadDomain.class);
-		if (ignoreVoidMethods) {
-			return wrap(target, clazz, queue, new VoidMethodMatcherPointcut(), new Advice[] { advice });
+		if (ignoreNonVoidMethods) {
+			return wrap(target, clazz, manager.getQueue(), new VoidMethodMatcherPointcut(), new Advice[] { advice });
 		} else {
-			return wrap(target, clazz, queue, advice);
+			return wrap(target, clazz, manager.getQueue(), advice);
 		}
 	}
 	
@@ -85,6 +79,7 @@ public class SingleThreadDomain extends AbstractThreadDomain {
 	 */
 	public void dispose() {
 		if (worker != null) {
+			manager.close();
 			worker.kill();
 		}
 	}

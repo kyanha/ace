@@ -22,7 +22,6 @@
 package ch.iserver.ace.util;
 
 import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
-import edu.emory.mathcs.backport.java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * BoundedThreadDomain creates only a certain number of worker threads and
@@ -40,10 +39,10 @@ public class BoundedThreadDomain extends AbstractThreadDomain {
 	private final int maxWorkers;
 	
 	/**
-	 * The blocking queues used by the maxWorkers worker threads.
+	 * 
 	 */
-	private final BlockingQueue[] queues;
-	
+	private final AsyncQueueManager[] managers;
+		
 	/**
 	 * The workers used by this thread domain.
 	 */
@@ -63,7 +62,7 @@ public class BoundedThreadDomain extends AbstractThreadDomain {
 	public BoundedThreadDomain(int maxWorkers) {
 		ParameterValidator.notNegative("maxWorkers", maxWorkers);
 		this.maxWorkers = maxWorkers;
-		this.queues = new BlockingQueue[maxWorkers];
+		this.managers = new AsyncQueueManager[maxWorkers];
 		this.workers = new Worker[maxWorkers];
 	}
 	
@@ -71,13 +70,13 @@ public class BoundedThreadDomain extends AbstractThreadDomain {
 	 * @see ch.iserver.ace.util.ThreadDomain#wrap(java.lang.Object, java.lang.Class, boolean)
 	 */
 	public synchronized Object wrap(Object target, Class clazz, boolean ignoreVoidMethods) {
-		if (queues[index] == null) {
-			queues[index] = new LinkedBlockingQueue();
-			workers[index] = new AsyncWorker(queues[index]);
+		if (managers[index] == null) {
+			managers[index] = new AsyncQueueManager();
+			workers[index] = new AsyncWorker(managers[index].getTargetQueue());
 			workers[index].start();
 		}
 		
-		BlockingQueue queue = queues[index];		
+		BlockingQueue queue = managers[index].getQueue();
 		index = (index + 1) % maxWorkers;
 		
 		if (ignoreVoidMethods) {
@@ -92,6 +91,10 @@ public class BoundedThreadDomain extends AbstractThreadDomain {
 	 */
 	public void dispose() {
 		for (int i = 0; i < workers.length; i++) {
+			AsyncQueueManager manager = managers[i];
+			if (manager != null) {
+				manager.close();
+			}
 			Worker worker = (Worker) workers[i];
 			if (worker != null) {
 				worker.kill();

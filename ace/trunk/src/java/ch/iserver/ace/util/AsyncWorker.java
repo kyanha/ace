@@ -46,7 +46,7 @@ public class AsyncWorker extends Worker implements AsyncExceptionHandler {
 	 * Creates a new AsyncWorker taking invocations from the given
 	 * queue.
 	 * 
-	 * @param queue the queue from which invocations are taken
+	 * @param	 queue the queue from which invocations are taken
 	 */
 	public AsyncWorker(BlockingQueue queue) {
 		this("async-worker", queue);
@@ -66,6 +66,20 @@ public class AsyncWorker extends Worker implements AsyncExceptionHandler {
 		this.queue = queue;
 		this.handler = this;
 		setDaemon(true);
+	}
+	
+	/**
+	 * @see ch.iserver.ace.util.Worker#kill()
+	 */
+	public void kill() {
+		while (queue.size() > 0) {
+			try {
+				Thread.sleep(5);
+			} catch (InterruptedException e) {
+				// ignore
+			}
+		}
+		super.kill();
 	}
 	
 	/**

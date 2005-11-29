@@ -489,13 +489,15 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	public void shutdown() {
 		LOG.info("--> shutdown");
 		acceptingJoins = false;
-		incomingDomain.dispose();
-		outgoingDomain.dispose();
 		compositeForwarder.close();
-		if (getDocumentServer() != null) {
-			getDocumentServer().shutdown();
+		try {
+			if (getDocumentServer() != null) {
+				getDocumentServer().shutdown();
+			}
+		} finally {
+			incomingDomain.dispose();
+			LOG.info("<-- shutdown");
 		}
-		LOG.info("<-- shutdown");
 	}
 	
 	// --> start FailureHandler methods <--

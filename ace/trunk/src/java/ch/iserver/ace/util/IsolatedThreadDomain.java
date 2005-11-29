@@ -30,18 +30,52 @@ import edu.emory.mathcs.backport.java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * ThreadDomain that creates a new worker thread per invocation of the
- * {@link #wrap(Object, Class)} method.
+ * {@link #wrap(Object, Class)} method. When an IsolatedThreadDomain
+ * is created it is important to pass in a ReferenceQueue which is
+ * also passed to a {@link ch.iserver.ace.util.WorkerCollector}. See
+ * the following code for an example:
+ * 
+ * <pre>
+ *  ReferenceQueue queue = new ReferenceQueue();
+ *  ThreadDomain domain = new IsolatedThreadDomain(queue);
+ *  WorkerCollector collector = new WorkerCollector(queue);
+ *  Thread thread = new Thread(collector);
+ *  thread.start();
+ * </pre>
+ * 
+ * Of course you can schedule the execution of the collector on a
+ * separate thread.
+ * 
+ * @see java.lang.ref.ReferenceQueue
  */
 public class IsolatedThreadDomain extends AbstractThreadDomain {
 	
+	/**
+	 * The reference queue to which references to wrapped objects
+	 * are added.
+	 */
 	private final ReferenceQueue queue;
 	
+	/**
+	 * The list of weak references that are kept around.
+	 */
 	private List references = new LinkedList();
 	
+	/**
+	 * Creates a new IsolatedThreadDomain instance.
+	 * 
+	 * @param queue the reference queue
+	 */
 	public IsolatedThreadDomain(ReferenceQueue queue) {
 		this.queue = queue;
 	}
 		
+	/**
+	 * Adds a reference to the given referent.
+	 * 
+	 * @param worker the worker thread
+	 * @param referent the referent object
+	 */
 	protected void addReference(Worker worker, Object referent) {
 		references.add(new AsyncReference(referent, queue, worker));
 	}

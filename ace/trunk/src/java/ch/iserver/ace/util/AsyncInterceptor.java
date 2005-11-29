@@ -48,6 +48,11 @@ public class AsyncInterceptor implements MethodInterceptor {
 	private final BlockingQueue queue;
 	
 	/**
+	 * Flag indicating whether to accept invocations.
+	 */
+	private boolean disposed;
+	
+	/**
 	 * Creates a new AsyncInterceptor that adds MethodInvocations to the given
 	 * <var>queue</var>.
 	 * 
@@ -59,16 +64,60 @@ public class AsyncInterceptor implements MethodInterceptor {
 	}
 	
 	/**
+	 * Disposes this AsyncInterceptor. After disposing, additional calls to 
+	 * {@link #invoke(MethodInvocation)} should throw an
+	 * {@link IllegalStateException}.
+	 */
+	public synchronized void dispose() {
+		this.disposed = true;
+	}
+	
+	/**
+	 * Determines whether this AsyncInterceptor has been disposed.
+	 * 
+	 * @return true iff the interceptor has been disposed
+	 */
+	public boolean isDisposed() {
+		return disposed;
+	}
+	
+	/**
 	 * @see org.aopalliance.intercept.MethodInterceptor#invoke(org.aopalliance.intercept.MethodInvocation)
 	 */
 	public synchronized Object invoke(MethodInvocation invocation) throws Throwable {
-		if (!invocation.getMethod().getReturnType().equals(Void.TYPE)) {
-			LOG.warn("WARN: invoking non-void return type method - " + invocation.getMethod());
-			return invocation.proceed();
+		if (isDisposed()) {
+			throw new IllegalStateException("AsyncInterceptor has been disposed");
 		}
+		if (!invocation.getMethod().getReturnType().equals(Void.TYPE)) {
+			return invokeNonVoidMethod(invocation);
+		} else {
+			invokeAsync(invocation);
+			return null;
+		}
+	}
+	
+	/**
+	 * Invokes the method invocation asynchronously.
+	 * 
+	 * @param invocation the invocation
+	 */
+	protected void invokeAsync(MethodInvocation invocation) {
 		AsyncMethodInvocation wrapper = new AsyncMethodInvocation(invocation);
 		wrapper.setCallerStackTrace(new Throwable().getStackTrace());
 		queue.add(wrapper);
+	}
+	
+	/**
+	 * Invokes a method with a non-void return type. This method can be
+	 * overriden to customize the behavior in this case.
+	 * 
+	 * @param invocation the method invocation
+	 * @return the result of the invocation or null if the method was invoked
+	 *         asynchronously
+	 */
+	protected Object invokeNonVoidMethod(MethodInvocation invocation) {
+		LOG.info("invoking void method asynchronously");
+		invokeAsync(invocation);
 		return null;
 	}
 	
