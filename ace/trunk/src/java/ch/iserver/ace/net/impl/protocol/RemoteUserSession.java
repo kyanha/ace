@@ -234,20 +234,19 @@ public class RemoteUserSession {
 			RequestHandler handler = null;
 			if (type == CHANNEL_MAIN) {
 				handler = ProfileRegistryFactory.getMainRequestHandler();
+				uri += "?main";
 			} else if (type == CHANNEL_COLLABORATION) {
 //				handler = SessionRequestHandlerFactory.getInstance().createHandler();
 				CollaborationDeserializer deserializer = new CollaborationDeserializer();
 				CollaborationParserHandler parserHandler = new CollaborationParserHandler();
 				handler = new ParticipantRequestHandler(deserializer, parserHandler);
+				uri += "?coll";
 			} else {
 				//TODO: proxy channel?
 				throw new IllegalStateException("unknown channel type ["+type+"]");
 			}
-			if (type == CHANNEL_MAIN) {
-				return session.startChannel(uri, handler);
-			} else {
-				return session.startChannel(profile, handler);
-			}
+			LOG.debug("URI: "+uri);
+			return session.startChannel(uri, handler);
 //			return session.startChannel(uri, false, type);
 		} catch (BEEPException be) {
 			//TODO: retry strategy?
