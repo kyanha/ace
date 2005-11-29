@@ -116,7 +116,7 @@ public class AsyncInterceptor implements MethodInterceptor {
 	 *         asynchronously
 	 */
 	protected Object invokeNonVoidMethod(MethodInvocation invocation) {
-		LOG.info("invoking void method asynchronously");
+		LOG.info("invoking void method asynchronously: " + invocation);
 		invokeAsync(invocation);
 		return null;
 	}
