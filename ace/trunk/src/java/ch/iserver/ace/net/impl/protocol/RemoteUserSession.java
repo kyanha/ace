@@ -30,12 +30,14 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.beepcore.beep.core.BEEPException;
 import org.beepcore.beep.core.Channel;
+import org.beepcore.beep.core.OutputDataStream;
 import org.beepcore.beep.core.ProfileRegistry;
 import org.beepcore.beep.core.RequestHandler;
 import org.beepcore.beep.core.StartChannelProfile;
 import org.beepcore.beep.lib.NullReplyListener;
 import org.beepcore.beep.transport.tcp.TCPSession;
 import org.beepcore.beep.transport.tcp.TCPSessionCreator;
+import org.beepcore.beep.util.BufferSegment;
 
 import ch.iserver.ace.FailureCodes;
 import ch.iserver.ace.net.impl.NetworkProperties;
@@ -232,27 +234,36 @@ public class RemoteUserSession {
 			
 			StartChannelProfile profile = new StartChannelProfile(uri, false, type);
 			RequestHandler handler = null;
+			String channelType;
 			if (type == CHANNEL_MAIN) {
 				handler = ProfileRegistryFactory.getMainRequestHandler();
-				uri += "?main";
+				channelType = "<ace><channel type=\"main\"/></ace>";
 			} else if (type == CHANNEL_COLLABORATION) {
-//				handler = SessionRequestHandlerFactory.getInstance().createHandler();
 				CollaborationDeserializer deserializer = new CollaborationDeserializer();
 				CollaborationParserHandler parserHandler = new CollaborationParserHandler();
 				handler = new ParticipantRequestHandler(deserializer, parserHandler);
-				uri += "?coll";
+				channelType = "<ace><channel type=\"coll\"/></ace>";
 			} else {
 				//TODO: proxy channel?
 				throw new IllegalStateException("unknown channel type ["+type+"]");
 			}
-			LOG.debug("URI: "+uri);
-			return session.startChannel(uri, handler);
-//			return session.startChannel(uri, false, type);
-		} catch (BEEPException be) {
+			Channel channel = session.startChannel(uri, handler);
+			OutputDataStream output = prepare(channelType.getBytes(NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING)));
+			channel.sendMSG(output, ResponseListener.getInstance());
+			return channel;
+		} catch (Exception be) {
 			//TODO: retry strategy?
 			LOG.error("could not start channel ["+be+"]");
 			throw new ConnectionException("could not start channel");
 		}
+	}
+	
+	private OutputDataStream prepare(byte[] data) {
+		BufferSegment buffer = new BufferSegment(data);
+		OutputDataStream output = new OutputDataStream();
+		output.add(buffer);
+		output.setComplete();
+		return output;
 	}
 	
 	/**

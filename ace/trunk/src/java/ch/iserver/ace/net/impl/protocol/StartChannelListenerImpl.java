@@ -65,19 +65,23 @@ public class StartChannelListenerImpl implements StartChannelListener {
 	public void startChannel(Channel channel, String encoding, String data)
 			throws StartChannelException {
 		
+		LOG.debug("--> acceptChannel("+channel+", type="+data+")");
 		
-		LOG.debug("--> acceptChannel("+channel.getProfile()+", type="+data+")");
 		RequestHandler requestHandler = null;
-		if (data != null && data.equals(RemoteUserSession.CHANNEL_MAIN) || channel.getProfile().indexOf("main") > 0) {
-			requestHandler = mainHandler;
-		} else if (data != null && data.equals(RemoteUserSession.CHANNEL_COLLABORATION) || channel.getProfile().indexOf("coll") > 0){
-			
-			//for each collaborative session create new SessionRequestHandler
-			requestHandler = SessionRequestHandlerFactory.getInstance().createHandler();
-		} else {
-			//throw new StartChannelException(BEEPError.CODE_PARAMETER_INVALID, "channel type not known");
-			requestHandler = mainHandler;
-		}
+//		if (data != null && data.equals(RemoteUserSession.CHANNEL_MAIN) || channel.getProfile().indexOf("main") > 0) {
+//			requestHandler = mainHandler;
+//		} else if (data != null && data.equals(RemoteUserSession.CHANNEL_COLLABORATION) || channel.getProfile().indexOf("coll") > 0){
+//			
+//			//for each collaborative session create new SessionRequestHandler
+//			requestHandler = SessionRequestHandlerFactory.getInstance().createHandler();
+//		} else {
+//			//throw new StartChannelException(BEEPError.CODE_PARAMETER_INVALID, "channel type not known");
+//			requestHandler = mainHandler;
+//		}
+		
+		requestHandler = new DefaultRequestHandler(mainHandler);
+		
+		
 		channel.setRequestHandler(requestHandler);
 		LOG.debug("<-- acceptChannel()");
 	}
