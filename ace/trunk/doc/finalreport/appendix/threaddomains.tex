@@ -1,0 +1,62 @@
+\chapter{Thread Domains}
+
+In an application like ACE there are many subsystems. A lot of calls from
+one subsystem to another are pure notifications without results. For instance
+the collaboration layer does not want to slow down the logic server of the
+session when one connection to a participant is slow. Therefore it is
+often desirable to decouple the caller from the receiver by executing calls
+on other threads.
+
+That is where the idea of thread domains started. Instead of manually coding
+the code to execute a method on another thread we decided to create a general
+approach that works universally over an arbitrary interface.
+
+Unfortunately, introducint threading can make automatic and deterministic
+tests very difficult. Therefore it would be desirable if the threading
+behavior could be controlled in a flexible way.
+
+
+\section{Architecture}
+
+The core interface is the \texttt{ch.iserver.ace.util.ThreadDomain} interface.
+The most important methods exposed by that interface are the \texttt{wrap}
+methods. These methods allow to wrap an object so that it is executed in
+that thread domain.
+
+So what is a thread domain? A thread domain is controlling on which thread
+the wrapped object's methods are executed. A simple thread domain suitable
+for testing can simply return the object unwrapped. Thus, all the method
+invocations on that object are executed on the caller's thread. In fact, 
+there is such an implementation of the \texttt{ThreadDomain} interface called
+\texttt{CallerThreadDomain}. However, this thread domain is usually really
+only interesting in testing.
+
+Thread domains that cause the method calls to an object to be executed on
+another thread are more interesting.
+
+
+\subsection{Interceptors}
+One of the requirements was that thread domains should work universally across
+different classes. This is achieved by using the facilities provided by
+Java 1.3, namely dynamic proxies. Although the implementation does not use
+these dynamic proxies directly, it uses them through the Spring AOP facilities.
+
+The interceptor is responsible to \emph{intercept} calls to the wrapped
+target object, wrap the call in an object containing all information 
+necessary to execute it later, and pass the wrapped object to a queue.
+
+\subsection{Worker Thread}
+On the other side of the queue, there is a worker thread trying to grab
+method invocations from the queue. Whenever a method invocation is added
+to that queue, the worker thread executes it.
+
+
+
+\section{Implementation}
+
+The code to \emph{wrap} an object in a thread domain can be found in the
+abstract base class \texttt{ch.iserver.ace.util.AbstractThreadDomain}. The
+core classes used in the protected \texttt{wrap} methods are the
+\texttt{org.springfactory.aop.framework.ProxyFactory} class and the 
+\texttt{org.aopalliance.intercept.MethodInterceptor}. 
+
