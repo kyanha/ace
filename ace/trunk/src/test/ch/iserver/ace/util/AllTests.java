@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace;
+package ch.iserver.ace.util;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -27,15 +27,9 @@ import junit.framework.TestSuite;
 public class AllTests {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for ch.iserver.ace");
+		TestSuite suite = new TestSuite("Test for ch.iserver.ace.util");
 		//$JUnit-BEGIN$
-		suite.addTest(ch.iserver.ace.algorithm.jupiter.AllTests.suite());
-		suite.addTest(ch.iserver.ace.application.AllTests.suite());
-		suite.addTest(ch.iserver.ace.collaboration.jupiter.AllTests.suite());
-		suite.addTest(ch.iserver.ace.collaboration.jupiter.server.AllTests.suite());
-		suite.addTest(ch.iserver.ace.test.AllTests.suite());
-		suite.addTest(ch.iserver.ace.text.AllTests.suite());
-		suite.addTest(ch.iserver.ace.util.AllTests.suite());
+		suite.addTestSuite(CaretHandlerTest.class);
 		//$JUnit-END$
 		return suite;
 	}

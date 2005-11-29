@@ -41,6 +41,7 @@ import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.Fragment;
 import ch.iserver.ace.net.PortableDocument;
 import ch.iserver.ace.net.RemoteUserProxy;
+import ch.iserver.ace.util.CaretHandler;
 import ch.iserver.ace.util.CompareUtil;
 
 /**

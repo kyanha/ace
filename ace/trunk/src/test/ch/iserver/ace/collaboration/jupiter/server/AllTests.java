@@ -34,7 +34,6 @@ public class AllTests {
 		suite.addTestSuite(ServerDocumentImplTest.class);
 		suite.addTestSuite(ParticipantForwarderTest.class);
 		suite.addTestSuite(ParticipantPortImplTest.class);
-		suite.addTestSuite(CaretHandlerTest.class);
 		suite.addTestSuite(DocumentUpdaterTest.class);
 		suite.addTestSuite(ParticipantConnectionWrapperTest.class);
 		suite.addTestSuite(ServerLogicImplTest.class);
