@@ -50,15 +50,17 @@ public class SessionImplTest extends TestCase {
 		
 		SessionImpl impl = new SessionImpl();
 		impl.setThreadDomain(new CallerThreadDomain());
-		impl.setConnection(connection);
 		
 		// define mock behavior
+		connection.getParticipantId();
+		connectionCtrl.setDefaultReturnValue(1);
 		connection.leave();
 		
 		// replay
 		connectionCtrl.replay();
 		
 		// test
+		impl.setConnection(connection);
 		impl.leave();
 		
 		// verify
@@ -73,17 +75,19 @@ public class SessionImplTest extends TestCase {
 		
 		SessionImpl impl = new SessionImpl(algorithm);
 		impl.setThreadDomain(new CallerThreadDomain());
-		impl.setConnection(connection);
 		
 		// define mock behavior
 		algorithm.generateRequest(null);
 		algorithmCtrl.setReturnValue(null);
+		connection.getParticipantId();
+		connectionCtrl.setDefaultReturnValue(1);
 		connection.sendRequest(null);
 		
 		// replay
 		algorithmCtrl.replay();
 		connectionCtrl.replay();
 		
+		impl.setConnection(connection);
 		impl.lock();
 		impl.sendOperation(null);
 		impl.unlock();
@@ -101,13 +105,17 @@ public class SessionImplTest extends TestCase {
 		
 		SessionImpl impl = new SessionImpl(algorithm);
 		impl.setThreadDomain(new CallerThreadDomain());
-		impl.setConnection(connection);
-		
+
+		// define mock behavior
+		connection.getParticipantId();
+		connectionCtrl.setDefaultReturnValue(1);
+
 		// replay
 		algorithmCtrl.replay();
 		connectionCtrl.replay();
 		
 		try {
+			impl.setConnection(connection);
 			impl.sendOperation(null);
 			fail("sending operations without locking must fail");
 		} catch (IllegalMonitorStateException e) {
@@ -127,17 +135,19 @@ public class SessionImplTest extends TestCase {
 		
 		SessionImpl impl = new SessionImpl(algorithm);
 		impl.setThreadDomain(new CallerThreadDomain());
-		impl.setConnection(connection);
 		
 		// define mock behavior
 		algorithm.generateCaretUpdateMessage(null);
 		algorithmCtrl.setReturnValue(null);
+		connection.getParticipantId();
+		connectionCtrl.setDefaultReturnValue(1);
 		connection.sendCaretUpdateMessage(null);
 		
 		// replay
 		algorithmCtrl.replay();
 		connectionCtrl.replay();
 		
+		impl.setConnection(connection);
 		impl.lock();
 		impl.sendCaretUpdate(null);
 		impl.unlock();
@@ -155,13 +165,17 @@ public class SessionImplTest extends TestCase {
 		
 		SessionImpl impl = new SessionImpl(algorithm);
 		impl.setThreadDomain(new CallerThreadDomain());
-		impl.setConnection(connection);
-		
+
+		// define mock behavior
+		connection.getParticipantId();
+		connectionCtrl.setDefaultReturnValue(1);
+
 		// replay
 		algorithmCtrl.replay();
 		connectionCtrl.replay();
 		
 		try {
+			impl.setConnection(connection);
 			impl.sendCaretUpdate(null);
 			fail("sending caret updates without locking must fail");
 		} catch (IllegalMonitorStateException e) {
