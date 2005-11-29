@@ -23,7 +23,6 @@ package ch.iserver.ace.net.impl.protocol;
 
 import org.beepcore.beep.core.BEEPException;
 import org.beepcore.beep.core.ProfileRegistry;
-import org.beepcore.beep.core.RequestHandler;
 import org.beepcore.beep.core.StartChannelListener;
 
 import ch.iserver.ace.net.impl.NetworkProperties;
@@ -40,11 +39,12 @@ public class ProfileRegistryFactory {
 		if (instance == null) {
 			Deserializer deserializer = DeserializerImpl.getInstance();
 			RequestFilter filter = RequestFilterFactory.createServerChain();
-			mainHandler = new MainRequestHandler(deserializer, filter);
+			RequestParserHandler requestHandler = new RequestParserHandler();
+			mainHandler = new MainRequestHandler(deserializer, filter, requestHandler);
+			DefaultRequestHandlerFactory.init(mainHandler, deserializer, requestHandler);
 			CollaborationParserHandler handler = new CollaborationParserHandler();
 			SessionRequestHandlerFactory.init(deserializer, handler);
-			RequestHandler collab = SessionRequestHandlerFactory.getInstance().createHandler();
-			StartChannelListener listener = new StartChannelListenerImpl(mainHandler, collab);
+			StartChannelListener listener = new StartChannelListenerImpl(DefaultRequestHandlerFactory.getInstance());
 			DefaultProfile profile = new DefaultProfile(listener);
 			StartChannelListener channelListener = null;
 			try {

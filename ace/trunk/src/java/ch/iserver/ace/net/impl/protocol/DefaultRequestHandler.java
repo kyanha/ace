@@ -30,16 +30,23 @@ import org.beepcore.beep.core.RequestHandler;
 import ch.iserver.ace.net.impl.NetworkProperties;
 
 /**
- *
+ * Determines the correct RequestHandler a Channel, i.e. it sets
+ * the correct request handler to a newly initiated channel.
  */
 public class DefaultRequestHandler extends AbstractRequestHandler {
 
 	private static Logger LOG = Logger.getLogger(DefaultRequestHandler.class);
 	
-	private RequestHandler mainHandler;
+	private static Object MUTEX = new Object();
 	
-	public DefaultRequestHandler(RequestHandler mainHandler) {
+	private RequestHandler mainHandler;
+	private Deserializer deserializer;
+	private ParserHandler handler;
+	
+	public DefaultRequestHandler(RequestHandler mainHandler, Deserializer deserializer, ParserHandler handler) {
 		this.mainHandler = mainHandler;
+		this.deserializer = deserializer;
+		this.handler = handler;
 	}
 	
 	
@@ -51,13 +58,17 @@ public class DefaultRequestHandler extends AbstractRequestHandler {
 		try {
 			InputDataStream input = message.getDataStream();
 			byte[] rawData = readData(input);
-			String channelTypeXML = new String(rawData, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
-			LOG.debug("received data: [" + channelTypeXML + "]");
+			Request response = null;
+			synchronized(MUTEX) {
+				deserializer.deserialize(rawData, handler);
+				response = handler.getResult();
+			}
 			RequestHandler handler;
 			Channel channel = message.getChannel();
-			if (channelTypeXML.indexOf("main") > 0) {
+			int type = response.getType();
+			if (type == ProtocolConstants.CHANNEL_MAIN) {
 				handler = mainHandler;
-			} else if (channelTypeXML.indexOf("coll") > 0) {
+			} else if (type == ProtocolConstants.CHANNEL_SESSION) {
 				handler = SessionRequestHandlerFactory.getInstance().createHandler();
 			} else {
 				LOG.warn("unkown channel type, use main as default");

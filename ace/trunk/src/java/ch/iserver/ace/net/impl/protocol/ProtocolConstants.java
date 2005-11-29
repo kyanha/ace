@@ -41,6 +41,11 @@ public interface ProtocolConstants {
 	public static final int KICKED = 9;
 	public static final int INVITE = 10;
 	
+	public static final int CHANNEL_MAIN = 100;
+	public static final int CHANNEL_SESSION = 101;
+	//for future use
+	public static final int CHANNEL_PROXY = 102;
+	
 	/********************/
 	/** Top level tags **/
 	/********************/
@@ -55,6 +60,7 @@ public interface ProtocolConstants {
 	public static final String TAG_LEAVE = "leave";
 	public static final String TAG_KICKED = "kicked";
 	public static final String TAG_INVITE = "invite";
+	public static final String TAG_CHANNEL = "channel";
 	
 	/***********************************/
 	/** Sub-level tags 				**/
@@ -79,6 +85,7 @@ public interface ProtocolConstants {
 	public static final String SELECTION = "selection";
 	public static final String MARK = "mark";
 	public static final String DOT = "dot";
+	public static final String TYPE = "type";
 
 	
 }

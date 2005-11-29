@@ -22,7 +22,6 @@
 package ch.iserver.ace.net.impl.protocol;
 
 import org.apache.log4j.Logger;
-import org.beepcore.beep.core.BEEPError;
 import org.beepcore.beep.core.BEEPException;
 import org.beepcore.beep.core.Channel;
 import org.beepcore.beep.core.CloseChannelException;
@@ -40,15 +39,10 @@ public class StartChannelListenerImpl implements StartChannelListener {
 
 	private static Logger LOG = Logger.getLogger(StartChannelListenerImpl.class);
 	
-	private RequestHandler mainHandler;
-	private RequestHandler collaborationHandler;
+	private DefaultRequestHandlerFactory factory;
 	
-	public StartChannelListenerImpl(RequestHandler mainHandler, RequestHandler collaborationHandler) {
-		ParameterValidator.notNull("mainHandler", mainHandler);
-		this.mainHandler = mainHandler;
-		//TODO: collabrequesthandler discarded since for each collab session a 
-		//new CollaborationRequestHandler is created (see below)
-		this.collaborationHandler = collaborationHandler;
+	public StartChannelListenerImpl(DefaultRequestHandlerFactory factory) {
+		this.factory = factory;
 	}
 	
 	/**
@@ -64,24 +58,8 @@ public class StartChannelListenerImpl implements StartChannelListener {
 	 */
 	public void startChannel(Channel channel, String encoding, String data)
 			throws StartChannelException {
-		
 		LOG.debug("--> acceptChannel("+channel+", type="+data+")");
-		
-		RequestHandler requestHandler = null;
-//		if (data != null && data.equals(RemoteUserSession.CHANNEL_MAIN) || channel.getProfile().indexOf("main") > 0) {
-//			requestHandler = mainHandler;
-//		} else if (data != null && data.equals(RemoteUserSession.CHANNEL_COLLABORATION) || channel.getProfile().indexOf("coll") > 0){
-//			
-//			//for each collaborative session create new SessionRequestHandler
-//			requestHandler = SessionRequestHandlerFactory.getInstance().createHandler();
-//		} else {
-//			//throw new StartChannelException(BEEPError.CODE_PARAMETER_INVALID, "channel type not known");
-//			requestHandler = mainHandler;
-//		}
-		
-		requestHandler = new DefaultRequestHandler(mainHandler);
-		
-		
+		RequestHandler requestHandler = factory.createHandler();
 		channel.setRequestHandler(requestHandler);
 		LOG.debug("<-- acceptChannel()");
 	}

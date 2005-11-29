@@ -34,7 +34,6 @@ import org.beepcore.beep.core.OutputDataStream;
 import org.beepcore.beep.core.ProfileRegistry;
 import org.beepcore.beep.core.RequestHandler;
 import org.beepcore.beep.core.StartChannelProfile;
-import org.beepcore.beep.lib.NullReplyListener;
 import org.beepcore.beep.transport.tcp.TCPSession;
 import org.beepcore.beep.transport.tcp.TCPSessionCreator;
 import org.beepcore.beep.util.BufferSegment;
@@ -53,7 +52,7 @@ import ch.iserver.ace.util.ParameterValidator;
 public class RemoteUserSession {
 	
 	public static final String CHANNEL_MAIN = "main";
-	public static final String CHANNEL_COLLABORATION = "coll";
+	public static final String CHANNEL_SESSION = "session";
 	//TODO: could open a channel to a host which acts as a proxy to another host inside that subnet
 	public static final String CHANNEL_PROXY = "proxy";
 
@@ -230,32 +229,38 @@ public class RemoteUserSession {
 	private Channel startChannelImpl(String type) throws ConnectionException {
 		try {
 			String uri = NetworkProperties.get(NetworkProperties.KEY_PROFILE_URI);
-			LOG.debug("startChannel("+uri+", type="+type+")");
+			LOG.debug("startChannel(type="+type+")");
 			
-			StartChannelProfile profile = new StartChannelProfile(uri, false, type);
 			RequestHandler handler = null;
 			String channelType;
 			if (type == CHANNEL_MAIN) {
 				handler = ProfileRegistryFactory.getMainRequestHandler();
-				channelType = "<ace><channel type=\"main\"/></ace>";
-			} else if (type == CHANNEL_COLLABORATION) {
+				channelType = getChannelTypeXML(CHANNEL_MAIN);
+			} else if (type == CHANNEL_SESSION) {
 				CollaborationDeserializer deserializer = new CollaborationDeserializer();
 				CollaborationParserHandler parserHandler = new CollaborationParserHandler();
 				handler = new ParticipantRequestHandler(deserializer, parserHandler);
-				channelType = "<ace><channel type=\"coll\"/></ace>";
+				channelType = getChannelTypeXML(CHANNEL_SESSION);
 			} else {
 				//TODO: proxy channel?
 				throw new IllegalStateException("unknown channel type ["+type+"]");
 			}
 			Channel channel = session.startChannel(uri, handler);
-			OutputDataStream output = prepare(channelType.getBytes(NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING)));
+			byte[] data = channelType.getBytes(NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
+			OutputDataStream output = prepare(data);
+			LOG.debug("--> sendMSG() for channel type");
 			channel.sendMSG(output, ResponseListener.getInstance());
+			LOG.debug("<-- sendMSG()");
 			return channel;
 		} catch (Exception be) {
 			//TODO: retry strategy?
 			LOG.error("could not start channel ["+be+"]");
 			throw new ConnectionException("could not start channel");
 		}
+	}
+	
+	private String getChannelTypeXML(String type) {
+		 return "<ace><channel type=\"" + type + "\"/></ace>";
 	}
 	
 	private OutputDataStream prepare(byte[] data) {

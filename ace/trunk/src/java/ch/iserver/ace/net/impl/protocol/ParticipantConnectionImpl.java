@@ -104,7 +104,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 		joinAccepted = true;
 		//initiate collaboration channel
 		try {
-			Channel channel = session.startChannel(RemoteUserSession.CHANNEL_COLLABORATION);
+			Channel channel = session.startChannel(RemoteUserSession.CHANNEL_SESSION);
 			((ParticipantRequestHandler) channel.getRequestHandler()).setParticipantPort(port);
 			setChannel(channel);
 			setState(STATE_ACTIVE);

@@ -22,7 +22,6 @@
 package ch.iserver.ace.net.impl.protocol;
 
 import java.net.InetAddress;
-import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.xml.sax.Attributes;
@@ -30,7 +29,6 @@ import org.xml.sax.SAXException;
 
 import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.net.impl.MutableUserDetails;
-import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.PortableDocumentExt;
 import ch.iserver.ace.net.impl.PortableDocumentImpl;
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;
