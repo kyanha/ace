@@ -62,6 +62,8 @@ public class RequestParserHandler extends ParserHandler {
 			result = new RequestImpl(type, userId, info);
 		} else if (type == SEND_DOCUMENTS) {
 			result = new RequestImpl(SEND_DOCUMENTS, userId, requestPayload);
+		} else if (type == CHANNEL_MAIN || type == CHANNEL_SESSION) {
+			result = new RequestImpl(type, null, null);
 		}
 	}
 	
@@ -130,6 +132,16 @@ public class RequestParserHandler extends ParserHandler {
 		} else if (qName.equals(TAG_INVITE)) {
 			userId = attributes.getValue(USER_ID);
 			requestType = INVITE;
+		} else if (qName.equals(TAG_CHANNEL)) {
+			String type = attributes.getValue(TYPE);
+			if (type.equals(RemoteUserSession.CHANNEL_MAIN)) {
+				requestType = CHANNEL_MAIN;
+			} else if (type.equals(RemoteUserSession.CHANNEL_SESSION)) {
+				requestType = CHANNEL_SESSION;
+			} else {
+				LOG.warn("unkown channel type ["+type+"], use '" + RemoteUserSession.CHANNEL_MAIN + " as default.");
+				requestType = CHANNEL_MAIN;
+			}
 		}
 
 	}
