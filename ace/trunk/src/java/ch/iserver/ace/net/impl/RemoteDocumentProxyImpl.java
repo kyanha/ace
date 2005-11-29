@@ -78,6 +78,7 @@ public class RemoteDocumentProxyImpl implements RemoteDocumentProxyExt {
 		isJoined = true;
 		sessionConnection = connection;
 		SessionConnectionCallback sessionCallback = callback.accepted(sessionConnection);
+		ParameterValidator.notNull("sesionCallback", sessionCallback);
 		LOG.debug("<-- joinAccepted()");
 		return sessionCallback;
 	}
