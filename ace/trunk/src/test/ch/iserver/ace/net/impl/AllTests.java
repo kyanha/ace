@@ -1,5 +1,5 @@
 /*
- * $Id:AllTests.java 1205 2005-11-14 07:57:10Z zbinl $
+ * $Id$
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -19,22 +19,24 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.net.impl.discovery;
+package ch.iserver.ace.net.impl;
 
 import junit.framework.Test;
-import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-public class AllTests extends TestCase {
-	
+/**
+ *
+ */
+public class AllTests {
+
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for ch.iserver.ace.net.impl.discovery");
+		TestSuite suite = new TestSuite("Test for ch.iserver.ace.net.impl");
 		//$JUnit-BEGIN$
-		suite.addTestSuite(BonjourTest.class);
-		suite.addTestSuite(DiscoveryCallbackAdapterTest.class);
-		suite.addTestSuite(DiscoveryManagerImplTest.class);
-		suite.addTestSuite(TXTRecordProxyTest.class);
+		suite.addTestSuite(DiscoveryCallbackImpl.class);
+		suite.addTestSuite(NetworkPropertiesTest.class);
+		suite.addTestSuite(NetworkServiceImplTest.class);
 		//$JUnit-END$
 		return suite;
 	}
+	
 }

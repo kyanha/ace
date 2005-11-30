@@ -1,5 +1,5 @@
 /*
- * $Id:AllTests.java 1205 2005-11-14 07:57:10Z zbinl $
+ * $Id$
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -19,22 +19,34 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.net.impl.discovery;
+package ch.iserver.ace.net.impl.protocol;
 
 import junit.framework.Test;
-import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-public class AllTests extends TestCase {
-	
+/**
+ *
+ */
+public class AllTests {
+
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for ch.iserver.ace.net.impl.discovery");
+		TestSuite suite = new TestSuite("Test for ch.iserver.ace.net.impl.protocol");
 		//$JUnit-BEGIN$
-		suite.addTestSuite(BonjourTest.class);
-		suite.addTestSuite(DiscoveryCallbackAdapterTest.class);
-		suite.addTestSuite(DiscoveryManagerImplTest.class);
-		suite.addTestSuite(TXTRecordProxyTest.class);
+		suite.addTestSuite(CollaborationParserHandlerTest.class);
+		suite.addTestSuite(CollaborationSerializerTest.class);
+		suite.addTestSuite(ConcealDocumentPrepareFilterTest.class);
+		suite.addTestSuite(ConcealDocumentReceiveFilterTest.class);
+		suite.addTestSuite(DeserializerImplTest.class);
+		suite.addTestSuite(ParticipantConnectionImplTest.class);
+		suite.addTestSuite(RequestParserHandlerTest.class);
+		suite.addTestSuite(ResponseParserHandlerTest.class);
+		suite.addTestSuite(SendDocumentsReceiveFilterTest.class);
+		suite.addTestSuite(SerializerImplTest.class);
+		suite.addTestSuite(SessionManagerTest.class);
+		suite.addTestSuite(StartChannelListenerImplTest.class);
+		suite.addTestSuite(TLVHandlerTest.class);
 		//$JUnit-END$
 		return suite;
 	}
+	
 }
