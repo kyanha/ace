@@ -23,7 +23,7 @@ public abstract class AbstractConnection {
 	
 	private Channel channel;
 	private ReplyListener listener;
-	private int state;
+	private int state = -1;
 	
 	public AbstractConnection(Channel channel) {
 		this.channel = channel;
