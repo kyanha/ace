@@ -270,6 +270,7 @@ class ParticipantManagerImpl implements ParticipantManager {
 		LOG.info("joinRequestAccepted: " + participantId);
 		addParticipant(participantId, forwarder, connection);
 		joinSet.remove(connection.getUser().getId());
+		invited.remove(connection.getUser().getId());
 	}
 
 	/**
