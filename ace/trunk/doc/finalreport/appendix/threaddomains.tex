@@ -187,14 +187,18 @@ of the application in spite of multithreading. Each call to a
 \texttt{wrap} method simply returns the target object unmodified. It
 is implemented in the class \texttt{ch.iserver.ace.util.CallerThreadDomain}.
 This class is probably most useful for automatic tests as it does not cause
-methods to be invoked by another thread.
+methods to be invoked on another thread.
 
 \subsubsection{Single Thread Domain}
 The single thread domain maintains one worker thread with its associated
 queue. It is implemented in the class
 \texttt{ch.iserver.ace.util.SingleThreadDomain}.
 
-% TODO: image
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=10cm,height=7.1cm]{../images/finalreport/threaddomain_single.eps}
+ \caption{Single thread domain - only one shared queue for all wrapped target objects}
+\end{figure}
 
 \subsubsection{Bounded Thread Domain}
 The bounded thread domain starts a bounded number of worker threads. It
@@ -203,7 +207,11 @@ The queus with the associated workers are assigned according to
 a round-robin scheme to the proxy objects. The number of worker threads
 is bounded and does not grow.
 
-% TODO: image
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=10cm,height=6.4cm]{../images/finalreport/threaddomain_bounded.eps}
+ \caption{Bounded thread domain - bounded number of shared queues per wrapped target object}
+\end{figure}
 
 \subsubsection{Isolated Thread Domain}
 The isolated thread domain creates a new queue and associated worker
@@ -215,7 +223,11 @@ proxy associated with that worker is only weakly referenced (by a weak
 reference from the thread domain). The worker thread can then be
 safely closed.
 
-% TODO: image
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=10cm,height=9.4cm]{../images/finalreport/threaddomain_isolated.eps}
+ \caption{Isolated thread domain - one queue per wrapped target object}
+\end{figure}
 
 
 \section{Conclusion}
