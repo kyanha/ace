@@ -29,6 +29,7 @@ import org.apache.log4j.Logger;
 
 import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.Operation;
+import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.util.ParameterValidator;
 
@@ -117,7 +118,8 @@ class CompositeForwarderImpl implements CompositeForwarder {
 		try {
 			forwarder.sendCaretUpdate(participantId, update);
 		} catch (Exception e) {
-			LOG.warn("forwarding to main forwarder failed: " + e);
+			LOG.warn("forwarding caret update to main forwarder failed: " + e);
+			getFailureHandler().handleFailure(participantId, Participant.DOCUMENT_MODIFICATION_FAILED);
 			return;
 		}
 
@@ -135,7 +137,8 @@ class CompositeForwarderImpl implements CompositeForwarder {
 		try {
 			forwarder.sendOperation(participantId, op);
 		} catch (Exception e) {
-			LOG.warn("forwarding to main forwarder failed: " + e);
+			LOG.warn("forwarding operation to main forwarder failed: " + e);
+			getFailureHandler().handleFailure(participantId, Participant.DOCUMENT_MODIFICATION_FAILED);
 			return;
 		}
 		
