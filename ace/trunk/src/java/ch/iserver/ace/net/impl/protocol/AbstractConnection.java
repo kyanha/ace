@@ -31,31 +31,32 @@ public abstract class AbstractConnection {
 	
 	public synchronized void send(byte[] message, Object data, ReplyListener listener) throws ProtocolException {
 		ParameterValidator.notNull("channel", channel);
-		
 		try {
-			OutputDataStream output = prepare(message);
-			//AppData is kept in-process only
-			if (data != null)
-				channel.setAppData(data);
-
-			if (isEstablished()) { //TODO: replace isEstablished by (getState() != STATE_ACTIVE) 
+			if (getState() == STATE_ACTIVE) {
+				OutputDataStream output = prepare(message);
+				//AppData is kept in-process only
+				if (data != null)
+					channel.setAppData(data);
+				
 				LOG.debug("--> sendMSG() with "+message.length+" bytes");
-//				LOG.debug(message+" "+output+" "+channel+" "+listener);
 				channel.sendMSG(output, listener);
 				LOG.debug("<-- sendMSG()");
 			} else {
-				LOG.warn("channel not established, cannot send data.");
+				LOG.error("cannot send data, channel not in STATE_ACTIVE but in ["+getStateString()+"]");
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			ByteArrayOutputStream trace = new ByteArrayOutputStream();
-			PrintWriter pw = new PrintWriter(trace);
-			e.printStackTrace(pw);
-			pw.close();
-			String stackTrace = new String(trace.toByteArray());
-			LOG.debug("caught exception [" + e + ", " + stackTrace + "]");
+			String trace = getStackTrace(e);
+			LOG.debug("caught exception [" + e + ", " + trace + "]");
 			throw new ProtocolException(e.getMessage());
 		}
+	}
+	
+	private String getStackTrace(Exception e) {
+		ByteArrayOutputStream trace = new ByteArrayOutputStream();
+		PrintWriter pw = new PrintWriter(trace);
+		e.printStackTrace(pw);
+		pw.close();
+		return new String(trace.toByteArray());
 	}
 	
 	private OutputDataStream prepare(byte[] data) {
@@ -68,8 +69,6 @@ public abstract class AbstractConnection {
 	
 	public synchronized void setChannel(Channel channel) {
 		this.channel = channel;
-		//do not use setState() method here since we are already in a synchronized method!
-//		state = (channel != null) ? STATE_ACTIVE: getState();
 	}
 	
 	public Channel getChannel() {
@@ -84,16 +83,29 @@ public abstract class AbstractConnection {
 		return listener;
 	}
 	
-	public synchronized boolean isEstablished() {
-		return (channel != null);
-	}
-	
 	public int getState() {
 		return state;
 	}
 	
 	public synchronized void setState(int newState) {
 		this.state = newState;
+	}
+	
+	public String getStateString() {
+		switch(state) {
+			case STATE_ABORTED:
+				return "aborted";
+			case STATE_ACTIVE:
+				return "active";
+			case STATE_CLOSED:
+				return "closed";
+			case STATE_DIRTY:
+				return "dirty";
+			case STATE_INITIALIZED:
+				return "initialized";
+			default:
+				return "unkown";
+		}
 	}
 	
 	/**
