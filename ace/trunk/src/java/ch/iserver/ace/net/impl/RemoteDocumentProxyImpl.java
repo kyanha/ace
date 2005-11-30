@@ -84,8 +84,9 @@ public class RemoteDocumentProxyImpl implements RemoteDocumentProxyExt {
 	}
 	
 	public void joinRejected(int code) {
-		// TODO Auto-generated method stub
-		
+		LOG.debug("--> joinRejected("+code+")");
+		callback.rejected(code);
+		LOG.debug("<-- joinRejected()");
 	}
 	
 	public boolean isJoined() {
