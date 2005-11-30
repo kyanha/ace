@@ -441,7 +441,11 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	public synchronized void documentDiscarded(RemoteDocumentProxy[] proxies) {
 		List tmp = new ArrayList();
 		for (int i = 0; i < proxies.length; i++) {
-			RemoteDocument doc = getDocumentRegistry().removeDocument(proxies[i]);
+			RemoteDocumentProxy proxy = proxies[i];
+			if (proxy == null) {
+				throw new IllegalArgumentException("proxies array cannot contain null elements");
+			}
+			RemoteDocument doc = getDocumentRegistry().removeDocument(proxy);
 			if (doc == null) {
 				LOG.error("documentDiscarded called without previous documentDiscovered call");
 			}
