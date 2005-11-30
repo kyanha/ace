@@ -21,6 +21,7 @@
 
 package ch.iserver.ace.application.editor;
 
+import ch.iserver.ace.application.*;
 import ch.iserver.ace.collaboration.Session;
 import javax.swing.JPanel;
 import javax.swing.text.StyledDocument;
@@ -35,7 +36,7 @@ public interface Editor {
 	
 	public void setDocument(CollaborativeDocument document);
 
-	public void setCaretHandlerMap(HashMap caretHandlerMap);
+	public void setCaretHandlerMap(PropertyChangeHashMap caretHandlerMap);
 
 	public void setParticipationColorMap(HashMap participationColorMap);
 
