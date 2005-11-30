@@ -80,7 +80,7 @@ public class CollaborativeEditor extends EditorImpl {
 		cTextPane.setDocument(document);
 	}
 	
-	public void setCaretHandlerMap(HashMap caretHandlerMap) {
+	public void setCaretHandlerMap(PropertyChangeHashMap caretHandlerMap) {
 		cTextPane.setCaretHandlerMap(caretHandlerMap);
 	}
 	
