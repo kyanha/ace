@@ -1,26 +1,14 @@
 package ch.iserver.ace.net.impl.protocol;
 
-import java.net.InetAddress;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import junit.framework.TestCase;
-import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.DocumentDetails;
-import ch.iserver.ace.Fragment;
-import ch.iserver.ace.ServerInfo;
-import ch.iserver.ace.UserDetails;
-import ch.iserver.ace.net.ParticipantConnection;
-import ch.iserver.ace.net.impl.FragmentImpl;
-import ch.iserver.ace.net.impl.MutableUserDetails;
 import ch.iserver.ace.net.impl.NetworkConstants;
 import ch.iserver.ace.net.impl.NetworkProperties;
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
-import ch.iserver.ace.net.impl.PortableDocumentExt;
-import ch.iserver.ace.net.impl.PortableDocumentImpl;
 import ch.iserver.ace.net.impl.PublishedDocument;
-import ch.iserver.ace.net.impl.RemoteUserProxyFactory;
-import ch.iserver.ace.net.impl.RemoteUserProxyImpl;
 
 public class SerializerImplTest extends TestCase {
 	
@@ -124,6 +112,31 @@ public class SerializerImplTest extends TestCase {
 		assertEquals(XML_INVITE, actual);
 	}
 	
+	public void testCreateResponseInviteRejected() throws Exception {
+		String userId = "vnmv-qqw2345";
+		NetworkServiceImpl.getInstance().setUserId(userId);
+		Serializer serializer = SerializerImpl.getInstance();
+		
+		String docId = "doc-id-234b";
+		
+		byte[] data = serializer.createResponse(ProtocolConstants.INVITE_REJECTED, docId, null);
+		String actual = new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
+
+		assertEquals(XML_INVITE_REJECTED, actual);
+	}
+	
+	public void testCreateResponseJoinRejected() throws Exception {
+		String userId = "vnmv-qqw2345";
+		NetworkServiceImpl.getInstance().setUserId(userId);
+		Serializer serializer = SerializerImpl.getInstance();
+		
+		String docId = "doc-id-234b";
+		
+		byte[] data = serializer.createResponse(ProtocolConstants.JOIN_REJECTED, docId, "501");
+		String actual = new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
+
+		assertEquals(XML_JOIN_REJECTED, actual);
+	}
 
 	
 	private static final String EXPECTED_QUERY = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
@@ -178,4 +191,18 @@ public class SerializerImplTest extends TestCase {
 	"<doc id=\"doc-id-234b\"/>" +
 	"</invite>" +
 	"</request></ace>";	
+	
+	private static final String XML_INVITE_REJECTED = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+	"<ace><response>" +
+	"<inviteRejected userid=\"vnmv-qqw2345\">" +
+	"<doc id=\"doc-id-234b\"/>" +
+	"</inviteRejected>" +
+	"</response></ace>";
+	
+	private static final String XML_JOIN_REJECTED = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+	"<ace><response>" +
+	"<joinRejected docId=\"doc-id-234b\" userid=\"vnmv-qqw2345\">" +
+	"<reason code=\"501\"/>" +
+	"</joinRejected>" +
+	"</response></ace>";
 }

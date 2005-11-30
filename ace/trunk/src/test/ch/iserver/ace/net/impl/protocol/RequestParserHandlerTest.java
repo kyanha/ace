@@ -76,6 +76,17 @@ public class RequestParserHandlerTest extends TestCase {
 		assertEquals("asdfadsf-23", request.getUserId());
 	}
 	
+	public void testJoinRejected() throws Exception {
+		deserializer.deserialize(JOIN_REJECTED.getBytes(NetworkConstants.DEFAULT_ENCODING), handler);
+		
+		Request request = handler.getResult();
+		assertEquals(ProtocolConstants.JOIN_REJECTED, request.getType());
+		DocumentInfo info = (DocumentInfo) request.getPayload();
+		assertEquals("doc-id-234b", info.getDocId());
+		assertEquals("vnmv-qqw2345", request.getUserId());
+		assertEquals(501, info.getParticipantId());
+	}
+	
 	private static final String PUBLISH = "<ace><notification>" +
 		"<publishDocs userid=\"asdf-w2\">" +
 		"<doc id=\"WERS24-RE2\" name=\"collab.txt\" />" +
@@ -102,4 +113,11 @@ public class RequestParserHandlerTest extends TestCase {
 		"<doc id=\"doc-id-234b\"/>" +
 		"</join>" +
 		"</request></ace>";
+	
+	private static final String JOIN_REJECTED = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+	"<ace><response>" +
+	"<joinRejected docId=\"doc-id-234b\" userid=\"vnmv-qqw2345\">" +
+	"<reason code=\"501\"/>" +
+	"</joinRejected>" +
+	"</response></ace>";
 }
