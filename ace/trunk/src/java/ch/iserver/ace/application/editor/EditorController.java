@@ -98,7 +98,6 @@ public class EditorController implements ItemSelectionChangeListener, Preference
 	
 	private void disableEditor() {
 		// disable editor
-		System.out.println("asdfasdkfjasldkjfh");
 		editor.setLocalEditing(true);
 		editor.setSession(null);
 		editor.setDocument(new CollaborativeDocument());
