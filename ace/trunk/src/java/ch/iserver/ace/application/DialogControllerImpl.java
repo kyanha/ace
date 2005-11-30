@@ -254,7 +254,7 @@ public class DialogControllerImpl implements DialogController {
 	public DialogResult showDiscoverUser() {
 		String title = getMessages().getMessage("dDiscoverUserTitle");
 		String message = getMessages().getMessage("dDiscoverUserMessage");
-		String host = JOptionPane.showInputDialog(getMainFrame(), message, title);
+		String host = JOptionPane.showInputDialog(getMainFrame(), message, title, JOptionPane.QUESTION_MESSAGE);
 		if (host != null) {
 			try {
 				InetAddress addr = InetAddress.getByName(host);
