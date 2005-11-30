@@ -36,10 +36,12 @@ public interface ProtocolConstants {
 	public static final int DOCUMENT_DETAILS_CHANGED = 4;
 	public static final int JOIN = 5;
 	public static final int JOIN_DOCUMENT = 6;
+	public static final int JOIN_REJECTED = 12;
 	public static final int LEAVE = 7;
 	public static final int REQUEST = 8;
 	public static final int KICKED = 9;
 	public static final int INVITE = 10;
+	public static final int INVITE_REJECTED = 11;
 	
 	public static final int CHANNEL_MAIN = 100;
 	public static final int CHANNEL_SESSION = 101;
@@ -54,13 +56,16 @@ public interface ProtocolConstants {
 	public static final String TAG_PUBLISH = "publishDocs";
 	public static final String TAG_CONCEAL = "concealDocs";
 	public static final String TAG_JOIN = "join";
+	public static final String TAG_JOIN_REJECTED = "joinRejected";
 	public static final String TAG_JOIN_DOCUMENT = "document";
 	public static final String TAG_DOCUMENT_DETAILS_CHANGED = "docDetailsChanged";
 	public static final String TAG_DOC = "doc";
 	public static final String TAG_LEAVE = "leave";
 	public static final String TAG_KICKED = "kicked";
 	public static final String TAG_INVITE = "invite";
+	public static final String TAG_INVITE_REJECTED = "inviteRejected";
 	public static final String TAG_CHANNEL = "channel";
+	public static final String TAG_REASON = "reason";
 	
 	/***********************************/
 	/** Sub-level tags 				**/
@@ -86,6 +91,7 @@ public interface ProtocolConstants {
 	public static final String MARK = "mark";
 	public static final String DOT = "dot";
 	public static final String TYPE = "type";
+	public static final String CODE = "code";
 
 	
 }
