@@ -69,13 +69,18 @@ public class BrowseViewController extends ViewControllerImpl implements Document
 		}
 	}
 	
-	public DocumentItem findItem(RemoteDocument document) {
+	public synchronized DocumentItem findItem(RemoteDocument document) {
 		browseSourceList.getReadWriteLock().readLock().lock();
 		try {
 			//System.out.println("remote item: " + document.getTitle() + "   (publisher: " + document.getPublisher() + ")");
 			//DocumentItem item = (DocumentItem)browseSourceList.get(browseSourceList.indexOf(new DocumentItem(document)));
 			//System.out.println("found item: " + item.getTitle() + "");
-			return (DocumentItem)browseSourceList.get(browseSourceList.indexOf(new DocumentItem(document, dialogController)));
+			int index = browseSourceList.indexOf(new DocumentItem(document, dialogController));
+			try {
+				return (DocumentItem)browseSourceList.get(index);
+			} catch(IndexOutOfBoundsException e) {
+				return null;
+			}
 		} finally {
 			browseSourceList.getReadWriteLock().readLock().unlock();
 		}
