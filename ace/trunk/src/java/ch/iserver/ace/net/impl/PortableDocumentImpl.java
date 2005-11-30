@@ -135,7 +135,7 @@ public class PortableDocumentImpl implements PortableDocumentExt {
 	}
 	
 	public String toString() {
-		return "PortableDocumentImpl("+docId+", "+publisherId+", "+proxies.size()+" participants, "+fragments.size()+" fragments, "+selections.size()+" selections)";
+		return "PortableDocumentImpl("+docId+", "+publisherId+", "+proxies.keySet()+" participants, "+fragments.size()+" fragments, "+selections.keySet()+" selections)";
 	}
 
 }
