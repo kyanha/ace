@@ -86,8 +86,11 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 		serializer = null;
 		setReplyListener(null);
 		Channel channel = getChannel();
-		((ParticipantRequestHandler)channel.getRequestHandler()).cleanup();
-		setChannel(null);
+		LOG.debug("channel: "+channel);
+		if (channel != null) {
+			((ParticipantRequestHandler)channel.getRequestHandler()).cleanup();
+			setChannel(null);
+		}
 		setState(STATE_CLOSED);
 		LOG.debug("<-- cleanup()");
 	}
@@ -117,9 +120,22 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 	
 	public void joinRejected(int code) {
 		//TODO: do not initiate collaboration channel, instead return via JoinRejectedFilter
-		LOG.info("joinRejected(" + code + ")");
+		LOG.info("--> joinRejected(" + code + ")");
 		
-		//TODO: cleanup
+		//TODO: could put the following code in a separate RequestFilter for consistency reasons
+		try {
+			byte[] data = serializer.createResponse(ProtocolConstants.JOIN_REJECTED, 
+										getPublishedDocument().getId() , Integer.toString(code));
+			MainConnection connection = session.getMainConnection();
+			connection.send(data, session.getUser().getUserDetails().getUsername(), getReplyListener());
+		} catch (SerializeException se) {
+			LOG.error("could not serialize document ["+se.getMessage()+"]");
+		} catch (Exception e) {
+			e.printStackTrace();
+			LOG.error("exception processing request ["+e+", "+e.getMessage()+"]");
+		}
+		executeCleanup();
+		LOG.info("<-- joinRejected()");
 	}
 
 	public RemoteUserProxy getUser() {
@@ -190,11 +206,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 		} catch (BEEPException be) {
 			LOG.warn("could not close channel ["+be.getMessage()+"]");
 		}
-		
-		//clean up participant resources
-		ParticipantCleanup cleanup = new ParticipantCleanup(getPublishedDocument().getId(), session.getUser().getId());
-		cleanup.execute();
-		
+		executeCleanup();
 		LOG.info("<-- close()");
 	}
 	
@@ -205,6 +217,12 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 			//TODO: error handling?
 			LOG.error("protocol exception ["+pe.getMessage()+"]");
 		}
+	}
+	
+	private void executeCleanup() {
+		//clean up participant resources
+		ParticipantCleanup cleanup = new ParticipantCleanup(getPublishedDocument().getId(), session.getUser().getId());
+		cleanup.execute();
 	}
 	
 //	public boolean equals(Object obj) {
