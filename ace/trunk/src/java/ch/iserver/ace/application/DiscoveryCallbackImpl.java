@@ -23,14 +23,19 @@ package ch.iserver.ace.application;
 
 import ch.iserver.ace.collaboration.DiscoveryCallback;
 import ch.iserver.ace.collaboration.DiscoveryResult;
+import ch.iserver.ace.application.DialogController;
 
 
 
 public class DiscoveryCallbackImpl implements DiscoveryCallback {
 
-	public DiscoveryCallbackImpl() {
+	private DialogController dialogController;
+
+	public DiscoveryCallbackImpl(DialogController dialogController) {
+		this.dialogController = dialogController;
 	}
 	
 	public void discovered(DiscoveryResult result) {
+		System.out.println("discovered: " + result);
 	}
 }

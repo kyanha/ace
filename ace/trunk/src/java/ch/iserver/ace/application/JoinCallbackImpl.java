@@ -24,17 +24,22 @@ package ch.iserver.ace.application;
 import ch.iserver.ace.collaboration.JoinCallback;
 import ch.iserver.ace.collaboration.Session;
 import ch.iserver.ace.collaboration.ParticipantSessionCallback;
+import javax.swing.*;
+import java.awt.*;
 
 
 
 public class JoinCallbackImpl implements JoinCallback {
 
 	private DocumentItem documentItem;
+	private DialogController dialogController;
 	private DocumentViewController documentViewController;
 	
-	public JoinCallbackImpl(DocumentItem documentItem, DocumentViewController documentViewController) {
+	public JoinCallbackImpl(DocumentItem documentItem, DocumentViewController documentViewController,
+			DialogController dialogController) {
 		this.documentItem = documentItem;
 		this.documentViewController = documentViewController;
+		this.dialogController = dialogController;
 	}
 	
 	public ParticipantSessionCallback accepted(Session session) {
@@ -42,15 +47,23 @@ public class JoinCallbackImpl implements JoinCallback {
 		documentItem.setSession(session);
 
 		// create and set session callback
-		ParticipantSessionCallback callback = new ParticipantSessionCallbackImpl(documentItem, documentViewController);
+		ParticipantSessionCallback callback = new ParticipantSessionCallbackImpl(documentItem, documentViewController, dialogController);
 		documentItem.setSessionCallback(callback);
 		
 		documentItem.setType(DocumentItem.JOINED);
 		return callback;
 	}
 	
-	public void rejected(int code) {
-		System.out.println("rejected");
+	public void rejected(final int code) {
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				documentItem.setType(DocumentItem.REMOTE);
+
+				String docTitle = documentItem.getTitle();
+				String user = documentItem.getPublisher();
+				dialogController.showInvitationRejected(user, docTitle, code);
+			}
+		});
 	}
 
 }

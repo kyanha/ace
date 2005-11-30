@@ -34,72 +34,119 @@ import ca.odell.glazedlists.EventList;
 import javax.swing.text.*;
 import java.awt.*;
 import java.util.HashMap;
+import ch.iserver.ace.util.CaretHandler;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+
+
 
 
 
 public class SessionCallbackImpl implements SessionCallback {
 
 	protected EventList participantSourceList;
-	protected ParticipationColorManager participationColorManager;
 	protected CollaborativeDocument cDocument;
 	protected HashMap participantItemMap;
+	protected HashMap participantCaretMap;
+	protected HashMap participantColorMap;
 	protected DocumentItem documentItem;
+	protected DialogController dialogController;
 
-	public SessionCallbackImpl(DocumentItem documentItem) {
+	private int participantCount = 0;
+	private Color[] defaultParticipantColors = {
+		new Color(0xFF, 0x60, 0x60), new Color(0xFF, 0xDD, 0x60),
+		new Color(0xFF, 0xFF, 0x60), new Color(0x60, 0xDD, 0x60),
+		new Color(0x60, 0xFF, 0xFF), new Color(0x60, 0x60, 0xFF),
+		new Color(0xDD, 0x60, 0xFF), new Color(0xFF, 0x60, 0xDD),
+	};
+
+
+
+	public SessionCallbackImpl(DocumentItem documentItem, DialogController dialogController) {
+		this.dialogController = dialogController;
 		participantSourceList = new BasicEventList();
-		participationColorManager = new ParticipationColorManager();
-		participantItemMap = new HashMap();
+		participantItemMap = new HashMap();		
+		participantCaretMap = new HashMap();
+		participantColorMap = new HashMap();
 		this.documentItem = documentItem;
 		cDocument = documentItem.getEditorDocument();
+		
+		// own caret
+		CaretHandler pCaretHandler = new CaretHandler(0, 0);
+		cDocument.addDocumentListener(pCaretHandler);
+		participantCaretMap.put("0", pCaretHandler);
 	}
 	
 	public void participantJoined(Participant participant) {
+		String pId = "" + participant.getParticipantId();
 		// UPDATE MAP
-		Color pColor = participationColorManager.participantJoined(participant);
+		Color pColor = participantColorJoined(pId);
 		ParticipantItem mapParticipantItem = new ParticipantItem(participant, pColor);
-		participantItemMap.put("" + participant.getParticipantId(), mapParticipantItem);
+		participantItemMap.put(pId, mapParticipantItem);
 		participantSourceList.add(mapParticipantItem);		
-		System.out.println("participantJoined");
+		System.out.println("participantJoined: " + participant);
+		
+		// add caret handler
+		CaretHandler pCaretHandler = new CaretHandler(0, 0);
+		cDocument.addDocumentListener(pCaretHandler);
+		participantCaretMap.put(pId, pCaretHandler);
 
 		// create style for new participant or get his old style
-		Style pStyle = cDocument.getStyle("" + participant.getParticipantId());
+		Style pStyle = cDocument.getStyle(pId);
 		if(pStyle != null) {
 			// style exists -> recolor document
 			StyleConstants.setBackground(pStyle, pColor);
 		} else {
 			// style doesnt exists -> add style
-			pStyle = cDocument.addStyle("" + participant.getParticipantId(), null);
+			pStyle = cDocument.addStyle(pId, null);
 			StyleConstants.setBackground(pStyle, pColor);
 		}
 
 	}
 	
 	public void participantLeft(Participant participant, int code) {
+		String pId = "" + participant.getParticipantId();
 		// UPDATE MAP
-		participationColorManager.participantLeft(participant);
-		ParticipantItem mapParticipantItem = (ParticipantItem)participantItemMap.remove("" + participant.getParticipantId());
+		participantColorLeft(pId);
+		ParticipantItem mapParticipantItem = (ParticipantItem)participantItemMap.remove(pId);
 		participantSourceList.remove(mapParticipantItem);
-		System.out.println("participantLeft");
+		System.out.println("participantLeft: " + participant + "   code: " + code);
+		
+		// remove caret handler
+		CaretHandler pCaretHandler = (CaretHandler)participantCaretMap.remove(pId);
+		cDocument.removeDocumentListener(pCaretHandler);
 
 		// clean up listeners
 		mapParticipantItem.cleanUp();
 
 		// set color from left participant to grey
-		Style pStyle = cDocument.getStyle("" + participant.getParticipantId());
+		Style pStyle = cDocument.getStyle(pId);
 		StyleConstants.setBackground(pStyle, new Color(0xDD, 0xDD, 0xDD));
 	}	
 	
 	public void receiveCaretUpdate(Participant participant, CaretUpdate update) {
-		System.out.println("receiveCaretUpdate");
+		String pId = "" + participant.getParticipantId();
+		System.out.println("receiveCaretUpdate: " + update);
+		// update caret handler
+		CaretHandler pCaretHandler = (CaretHandler)participantCaretMap.get(pId);
+		pCaretHandler.setDot(update.getDot());
+		pCaretHandler.setMark(update.getMark());
 	}
 
 	public void receiveOperation(Participant participant, Operation operation) {
-		System.out.println("receiveOperation");
-		Style pStyle = cDocument.getStyle("" + participant.getParticipantId());
+		String pId = "" + participant.getParticipantId();
+		System.out.println("receiveOperation: " + operation);
+		Style pStyle = cDocument.getStyle(pId);
 		applyOperation(operation, pStyle);
 	}
 
-
+	public HashMap getCaretHandlerMap() {
+		return participantCaretMap;
+	}
+	
+	public HashMap getParticipationColorMap() {
+		return participantColorMap;
+	}
 	
 	private void applyOperation(Operation operation, Style style) {
 		if(operation instanceof SplitOperation) {
@@ -130,13 +177,33 @@ public class SessionCallbackImpl implements SessionCallback {
 		}
 	}
 	
-	public void sessionFailed(int reason, Exception e) {
-		System.out.println("sessionFailed");
-		e.printStackTrace();
+	public void sessionFailed(final int reason, Exception e) {
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				dialogController.showSessionFailed(documentItem.getPublisher(), documentItem.getTitle(), reason);
+			}
+		});
 	}
 	
 	public EventList getParticipantSourceList() {
 		return participantSourceList;
+	}
+	
+	protected Color participantColorJoined(String pId) {
+		Color pColor;
+		if(participantColorMap.containsKey(pId)) {
+			// return old participant color
+			pColor = (Color)participantColorMap.get(pId);
+		} else {
+			// next participant color
+			pColor = defaultParticipantColors[participantCount++%8];
+			participantColorMap.put(pId, pColor);
+		}
+		return pColor;
+	}
+	
+	protected void participantColorLeft(String pId) {
+		// do nothing on color map (save color)
 	}
 
 }

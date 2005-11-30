@@ -314,6 +314,64 @@ public class DialogControllerImpl implements DialogController {
 						JOptionPane.WARNING_MESSAGE);
 	}
 	
+
+
+
+
+	
+	
+	public void showSessionTerminated(String user, String docTitle) {
+		String title = "showSessionTerminated";
+		String message = "showSessionTerminated";
+		JOptionPane.showMessageDialog(
+						getMainFrame(),
+						message,
+						title,
+						JOptionPane.WARNING_MESSAGE);
+	}
+	
+	public void showSessionFailed(String user, String docTitle, int reason) {
+		String title = "showSessionFailed";
+		String message = "showSessionFailed";
+		JOptionPane.showMessageDialog(
+						getMainFrame(),
+						message,
+						title,
+						JOptionPane.WARNING_MESSAGE);
+	}
+	
+	public int showJoinRequest(String user, String docTitle) {
+		String title = "showJoinRequest";
+		String message = "showJoinRequest";
+		return JOptionPane.showConfirmDialog(
+						getMainFrame(),
+						message,
+						title,
+						JOptionPane.YES_NO_OPTION);
+	}
+	
+	//void showInvitationAccepted();
+
+	public void showInvitationRejected(String user, String docTitle, int code) {
+		String title = "showInvitationRejected";
+		String message = "showInvitationRejected";
+		JOptionPane.showMessageDialog(
+						getMainFrame(),
+						message,
+						title,
+						JOptionPane.WARNING_MESSAGE);
+	}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	// --> dispose dialogs <--
 	
 	public void destroy() {

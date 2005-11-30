@@ -32,6 +32,8 @@ import java.util.Iterator;
 import javax.swing.event.*;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 
 
@@ -40,8 +42,9 @@ public class ParticipantSessionCallbackImpl extends SessionCallbackImpl implemen
 
 	private DocumentViewController viewController;
 
-	public ParticipantSessionCallbackImpl(DocumentItem documentItem, DocumentViewController viewController) {
-		super(documentItem);
+	public ParticipantSessionCallbackImpl(DocumentItem documentItem, DocumentViewController viewController,
+			DialogController dialogController) {
+		super(documentItem, dialogController);
 		this.viewController = viewController;
 	}
 	
@@ -53,14 +56,16 @@ public class ParticipantSessionCallbackImpl extends SessionCallbackImpl implemen
 		Iterator pIter = doc.getParticipants().iterator();
 		while(pIter.hasNext()) {
 			Participant participant = (Participant)pIter.next();
+			String pId = "" + participant.getParticipantId();
 			System.out.println("found participant: " + participant);
 			if(myParticipantId != participant.getParticipantId()) {
-				Color pColor = participationColorManager.participantJoined(participant);
+				
+				Color pColor = participantColorJoined(pId);
 				ParticipantItem mapParticipantItem = new ParticipantItem(participant, pColor);
-				participantItemMap.put("" + participant.getParticipantId(), mapParticipantItem);
+				participantItemMap.put(pId, mapParticipantItem);
 				participantSourceList.add(mapParticipantItem);
 
-				Style pStyle = cDocument.addStyle("" + participant.getParticipantId(), null);
+				Style pStyle = cDocument.addStyle(pId, null);
 				StyleConstants.setBackground(pStyle, pColor);
 				System.out.println("added participant: " + participant);
 			}
@@ -84,9 +89,13 @@ public class ParticipantSessionCallbackImpl extends SessionCallbackImpl implemen
 	}
 	
 	public void sessionTerminated() {
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				dialogController.showSessionTerminated(documentItem.getPublisher(), documentItem.getTitle());
+
 		System.out.println("sessionTerminated");
 		// create local copy of the document
-		DocumentItem newItem = new DocumentItem("Copy (terminated) of: " + documentItem.getTitle());
+		DocumentItem newItem = new DocumentItem("Copy (terminated) of: " + documentItem.getTitle(), dialogController);
 
 		newItem.setEditorDocument(documentItem.createEditorDocumentCopy());
 
@@ -95,12 +104,19 @@ public class ParticipantSessionCallbackImpl extends SessionCallbackImpl implemen
 
 		// set type
 		documentItem.setType(DocumentItem.REMOTE);
+
+			}
+		});
 	}
 	
 	public void kicked() {
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				dialogController.showKicked(documentItem.getPublisher(), documentItem.getTitle());
+
 		System.out.println("kicked");
 		// create local copy of the document
-		DocumentItem newItem = new DocumentItem("Copy (kicked) of: " + documentItem.getTitle());
+		DocumentItem newItem = new DocumentItem("Copy (kicked) of: " + documentItem.getTitle(), dialogController);
 
 		newItem.setEditorDocument(documentItem.createEditorDocumentCopy());
 
@@ -109,6 +125,9 @@ public class ParticipantSessionCallbackImpl extends SessionCallbackImpl implemen
 
 		// set type
 		documentItem.setType(DocumentItem.REMOTE);
+
+			}
+		});
 	}
 	
 }

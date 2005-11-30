@@ -65,7 +65,7 @@ public class InvitationCallbackImpl implements InvitationCallback {
 					inviteItem.setEditorDocument(new CollaborativeDocument());
 					
 					// create and set session callback
-					ParticipantSessionCallback callback = new ParticipantSessionCallbackImpl(inviteItem, viewController);
+					ParticipantSessionCallback callback = new ParticipantSessionCallbackImpl(inviteItem, viewController, dialogController);
 					inviteItem.setSessionCallback(callback);
 			
 					// set session

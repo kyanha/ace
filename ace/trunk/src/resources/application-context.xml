@@ -17,6 +17,7 @@
   <bean id="applicationController" class="ch.iserver.ace.application.ApplicationControllerImpl">
     <property name="dialogController" ref="dialogController"/>
     <property name="documentManager" ref="documentManager"/>
+    <property name="collaborationService" ref="collaborationService"/>
   </bean>
   
   <bean id="dialogController" 
@@ -28,8 +29,9 @@
   </bean>
 
   <bean id="documentManager" class="ch.iserver.ace.application.DocumentManagerImpl">
-    <constructor-arg><ref local="documentViewController"/></constructor-arg>
-    <constructor-arg><ref local="preferencesStore"/></constructor-arg>
+    <constructor-arg index="0"><ref local="documentViewController"/></constructor-arg>
+    <constructor-arg index="1"><ref local="preferencesStore"/></constructor-arg>
+    <constructor-arg index="2"><ref local="dialogController"/></constructor-arg>
     <property name="collaborationService"><ref bean="collaborationService"/></property>
   </bean>
 
@@ -122,6 +124,7 @@
 
   <bean id="browseViewController" class="ch.iserver.ace.application.BrowseViewController">
     <constructor-arg><ref local="sourceList"/></constructor-arg>
+    <constructor-arg><ref local="dialogController"/></constructor-arg>
   </bean>
 
   <bean id="browseView" class="ch.iserver.ace.application.BrowseView">

@@ -188,4 +188,14 @@ public interface DialogController {
 	 */
 	void showKicked(String user, String docTitle);
 	
+	void showSessionTerminated(String user, String docTitle);
+	
+	void showSessionFailed(String user, String docTitle, int reason);
+	
+	int showJoinRequest(String user, String docTitle);
+	
+	//void showInvitationAccepted();
+
+	void showInvitationRejected(String user, String docTitle, int code);
+	
 }

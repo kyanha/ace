@@ -24,18 +24,28 @@ package ch.iserver.ace.application;
 import ch.iserver.ace.collaboration.JoinRequest;
 import ch.iserver.ace.collaboration.PublishedSessionCallback;
 import ch.iserver.ace.application.editor.CollaborativeDocument;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 
 
 public class PublishedSessionCallbackImpl extends SessionCallbackImpl implements PublishedSessionCallback {
 
-	public PublishedSessionCallbackImpl(DocumentItem documentItem) {
-		super(documentItem);
+	public PublishedSessionCallbackImpl(DocumentItem documentItem, DialogController dialogController) {
+		super(documentItem, dialogController);
 	}
 	
-	public void joinRequest(JoinRequest request) {
-		System.out.println("join request automaticaly accepted");
-		request.accept();
+	public void joinRequest(final JoinRequest request) {
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				int result = dialogController.showJoinRequest(documentItem.getPublisher(), documentItem.getTitle());
+				if (result == JOptionPane.OK_OPTION) {
+					request.accept();
+				} else {
+					request.reject();
+				}
+			}
+		});
 	}
 	
 }

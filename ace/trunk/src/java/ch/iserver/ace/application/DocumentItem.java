@@ -58,6 +58,9 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 	public final static int REMOTE		= 3;
 	public final static int AWAITING	= 4;
 	public final static int JOINED		= 5;
+	public final static int PUBLISHING	= 6;
+	public final static int CONCEALING	= 7;
+	public final static int LEAVING		= 8;
 	public final static String TYPE_PROPERTY = "type";
 	public final static String TITLE_PROPERTY = "title";
 	public final static String DIRTY_PROPERTY = "dirty";
@@ -72,26 +75,56 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 	private Session session;
 	private PublishedSessionCallbackImpl publishedSessionCallback;
 	private SessionCallback sessionCallback;
+	private DialogController dialogController;
 
 
 
 	public DocumentItem(String title) {
+		// create local document (ONLY FOR TEST USAGE)
+		initDocumentItem(UUID.nextUUID(), title, title, title);
+		type = LOCAL;
+		createEditorDocument();
+	}
+	
+	public DocumentItem(String title, DialogController dialogController) {
 		// create local document
+		this.dialogController = dialogController;
 		initDocumentItem(UUID.nextUUID(), title, title, title);
 		type = LOCAL;
 		createEditorDocument();
 	}
 	
 	public DocumentItem(File file) {
-		// create local document
+		// create local document (ONLY FOR TEST USAGE)
 		initDocumentItem(UUID.nextUUID(), file.getName(), file.getAbsolutePath(), file.getAbsolutePath());
 		this.file = file;
 		type = LOCAL;
 		createEditorDocument();
 	}
 	
-	public DocumentItem(RemoteDocument document) {
+	public DocumentItem(File file, DialogController dialogController) {
+		// create local document
+		this.dialogController = dialogController;
+		initDocumentItem(UUID.nextUUID(), file.getName(), file.getAbsolutePath(), file.getAbsolutePath());
+		this.file = file;
+		type = LOCAL;
+		createEditorDocument();
+	}
+	
+	public DocumentItem(RemoteDocument document, DialogController dialogController) {
 		// create remote document (used in the joining process)
+		this.dialogController = dialogController;
+		initDocumentItem(document.getId(), document.getTitle(),
+			document.getPublisher().getName() + " - " + document.getTitle(),
+			document.getPublisher().getName() + " - " + document.getTitle());
+		remoteDocument = document;
+		type = REMOTE;
+		document.addPropertyChangeListener(this);
+		document.getPublisher().addPropertyChangeListener(this);
+	}
+	
+	public DocumentItem(RemoteDocument document) {
+		// create remote document (used in the joining process) (ONLY FOR TEST USAGE)
 		initDocumentItem(document.getId(), document.getTitle(),
 			document.getPublisher().getName() + " - " + document.getTitle(),
 			document.getPublisher().getName() + " - " + document.getTitle());
@@ -166,6 +199,20 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 	
 	public CollaborativeDocument getEditorDocument() {
 		return editorDocument;
+	}
+	
+	public HashMap getCaretHandlerMap() {
+		if(sessionCallback != null) {
+			return ((SessionCallbackImpl)sessionCallback).getCaretHandlerMap();
+		}
+		return new HashMap();
+	}
+
+	public HashMap getParticipationColorMap() {
+		if(sessionCallback != null) {
+			return ((SessionCallbackImpl)sessionCallback).getParticipationColorMap();
+		}
+		return new HashMap();
 	}
 
 	public void setEditorDocument(CollaborativeDocument editorDocument) {
@@ -243,7 +290,7 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 BASCHTLE
 */
 	public void publish(CollaborationService collaborationService) {
-		sessionCallback = new PublishedSessionCallbackImpl(this);
+		sessionCallback = new PublishedSessionCallbackImpl(this, dialogController);
 		String documentContent = "";
 		try {
 			documentContent = editorDocument.getText(0, editorDocument.getLength());
@@ -252,24 +299,36 @@ BASCHTLE
 		}
 		DocumentModel docModel = new DocumentModel(documentContent, 0, 0, new DocumentDetails(title));
 
-		session = (Session)
-			//Spin.off(
-					collaborationService.publish((PublishedSessionCallback)sessionCallback,
-					docModel);
-			//);
-			
-		setType(PUBLISHED);
+//		setType(PUBLISHING);
+//		session = (Session)Spin.off(collaborationService.publish((PublishedSessionCallback)sessionCallback, docModel));
+		session = (Session)collaborationService.publish((PublishedSessionCallback)sessionCallback, docModel);
 
+
+		// enable coloring
+//		Style pStyle = editorDocument.addStyle("myStyle", null);
+//		StyleConstants.setBackground(pStyle, new Color(0x80, 0x80, 0xDD));
+
+
+		setType(PUBLISHED);
 	}
 	
 	public void conceal() {
 		// conceal a document
+//		setType(CONCEALING);
+		//spin.off(session.leave());
 		session.leave();
+
+
+		// disable coloring
+//		Style pStyle = editorDocument.addStyle("myStyle", null);
+//		StyleConstants.setBackground(pStyle, Color.WHITE);
+
 		setType(LOCAL);
 	}
 	
 	public void leave() {
 		// leave a document
+		//setType(LEAVING);
 		cleanUp();
 		session.leave();
 		setType(REMOTE);
@@ -278,7 +337,7 @@ BASCHTLE
 	public void join(DocumentViewController documentViewController) {
 		// join document
 		editorDocument = new CollaborativeDocument();
-		remoteDocument.join(new JoinCallbackImpl(this, documentViewController));
+		remoteDocument.join(new JoinCallbackImpl(this, documentViewController, dialogController));
 		setType(AWAITING);
 	}
 

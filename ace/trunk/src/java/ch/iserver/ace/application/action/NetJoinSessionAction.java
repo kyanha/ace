@@ -28,6 +28,7 @@ import ch.iserver.ace.application.ItemSelectionChangeListener;
 import ch.iserver.ace.application.LocaleMessageSource;
 import ch.iserver.ace.application.BrowseViewController;
 import ch.iserver.ace.application.DocumentViewController;
+import ch.iserver.ace.application.DialogController;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import java.awt.event.*;

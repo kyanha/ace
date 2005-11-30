@@ -32,13 +32,15 @@ public class BrowseViewController extends ViewControllerImpl implements Document
 
 	private EventList browseSourceList;
 	private DocumentViewController docViewController;
+	private DialogController dialogController;
 
 	public BrowseViewController() {
 		this.browseSourceList = new BasicEventList();
 	}
 	
-	public BrowseViewController(EventList browseSourceList) {
+	public BrowseViewController(EventList browseSourceList, DialogController dialogController) {
 		this.browseSourceList = browseSourceList;// = new BasicEventList();
+		this.dialogController = dialogController;
 	}
 
 	public void documentsDiscarded(RemoteDocument[] documents) {
@@ -47,7 +49,7 @@ public class BrowseViewController extends ViewControllerImpl implements Document
 		for(int i = 0; i < documents.length; i++ ) {
 			browseSourceList.getReadWriteLock().writeLock().lock();
 			try {
-				browseSourceList.remove(new DocumentItem(documents[i]));
+				browseSourceList.remove(new DocumentItem(documents[i], dialogController));
 			} finally {
 				browseSourceList.getReadWriteLock().writeLock().unlock();
 			}
@@ -60,7 +62,7 @@ public class BrowseViewController extends ViewControllerImpl implements Document
 		for(int i = 0; i < documents.length; i++ ) {
 			browseSourceList.getReadWriteLock().writeLock().lock();
 			try {
-				browseSourceList.add(new DocumentItem(documents[i]));
+				browseSourceList.add(new DocumentItem(documents[i], dialogController));
 			} finally {
 				browseSourceList.getReadWriteLock().writeLock().unlock();
 			}
@@ -73,7 +75,7 @@ public class BrowseViewController extends ViewControllerImpl implements Document
 			//System.out.println("remote item: " + document.getTitle() + "   (publisher: " + document.getPublisher() + ")");
 			//DocumentItem item = (DocumentItem)browseSourceList.get(browseSourceList.indexOf(new DocumentItem(document)));
 			//System.out.println("found item: " + item.getTitle() + "");
-			return (DocumentItem)browseSourceList.get(browseSourceList.indexOf(new DocumentItem(document)));
+			return (DocumentItem)browseSourceList.get(browseSourceList.indexOf(new DocumentItem(document, dialogController)));
 		} finally {
 			browseSourceList.getReadWriteLock().readLock().unlock();
 		}

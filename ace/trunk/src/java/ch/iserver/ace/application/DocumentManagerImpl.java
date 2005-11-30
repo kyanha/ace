@@ -55,12 +55,15 @@ public class DocumentManagerImpl implements ItemSelectionChangeListener, Prefere
 	private DocumentViewController documentController;
 	private CollaborationService collaborationService;
 	private DocumentItem currentDocumentItem;
+	private DialogController dialogController;
 	
 	private String defaultEncoding;
 
-	public DocumentManagerImpl(DocumentViewController documentController, PreferencesStore preferences) {
+	public DocumentManagerImpl(DocumentViewController documentController, PreferencesStore preferences,
+			DialogController dialogController) {
 		documentController.addItemSelectionChangeListener(this);
 		this.documentController = documentController;
+		this.dialogController = dialogController;
 		
 		// get default encoding
 		defaultEncoding = preferences.get(PreferencesStore.CHARSET_KEY, "ISO-8859-1");
@@ -116,7 +119,7 @@ public class DocumentManagerImpl implements ItemSelectionChangeListener, Prefere
 	 * @see ch.iserver.ace.application.DocumentManager#newDocument()
 	 */
 	public void newDocument() {
-		DocumentItem newItem = new DocumentItem("Untitled Document " + counter++);
+		DocumentItem newItem = new DocumentItem("Untitled Document " + counter++, dialogController);
 		documentController.addDocument(newItem);
 		documentController.setSelectedItem(newItem);
 	}
@@ -129,7 +132,7 @@ public class DocumentManagerImpl implements ItemSelectionChangeListener, Prefere
 		if (existing != null) {
 			documentController.setSelectedItem(existing);
 		} else {
-			final DocumentItem item = new DocumentItem(file);
+			final DocumentItem item = new DocumentItem(file, dialogController);
 			String content = FileUtils.readFileToString(file, getDefaultEncoding());
 			
 			try {
@@ -292,17 +295,9 @@ public class DocumentManagerImpl implements ItemSelectionChangeListener, Prefere
 	}
 	
 	public void leaveSession() {
-		//currentDocumentItem.leave();
 	}
 	
 	public void joinSession(DocumentItem item) {
-		// 1. create doc item
-		//DocumentItem newItem = new DocumentItem(item.getDocument());
-		// 2. add to doc view
-//		documentController.addDocument(item);
-//		documentController.setSelectedItem(item);
-		// 3. set browse item type
-		item.setType(DocumentItem.AWAITING);
 	}
 	
 	// --> ItemSelectionChangeListener methods <--

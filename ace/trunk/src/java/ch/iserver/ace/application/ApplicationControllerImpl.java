@@ -43,6 +43,8 @@ import ch.iserver.ace.application.dialog.DialogResult;
 import ch.iserver.ace.application.dialog.SaveFilesDialog;
 import ch.iserver.ace.collaboration.CollaborationService;
 import ch.iserver.ace.util.CompareUtil;
+import ch.iserver.ace.ServerInfo;
+import java.net.InetAddress;
 
 /**
  * 
@@ -333,8 +335,10 @@ public class ApplicationControllerImpl implements ApplicationController, Applica
 		DialogResult result = getDialogController().showDiscoverUser();
 		
 		if (result.getOption() == JOptionPane.OK_OPTION) {
-			// ServerInfo info = (ServerInfo) result.getResult();
 			// TODO: implement discovery
+			ServerInfo info = (ServerInfo) result.getResult();
+			collaborationService.discoverUser(new DiscoveryCallbackImpl(getDialogController()),
+				info.getAddress(), info.getPort());
 		}
 	}
 	
