@@ -1,15 +1,24 @@
 \chapter{Thread Domains}
 
-In an application like ACE there are many subsystems. A lot of calls from
-one subsystem to another are pure notifications without results. For instance
-the collaboration layer does not want to slow down the logic server of the
-session when one connection to a participant is slow. Therefore it is
-often desirable to decouple the caller from the receiver by executing calls
-on other threads.
+ACE is split into three distinct layers. Events are passed from layer to
+layer over interfaces. The responses to these events are often passed over
+a different interface back to the calling layer. Most of these interfaces
+have methods with a void return type. Instead of waiting for a method
+to complete its execution, it could be executed asynchronously by
+another thread. This allows the caller thread to process another event
+in the layer.
 
-That is where the idea of thread domains started. Instead of manually coding
-the code to execute a method on another thread we decided to create a general
-approach that works universally with objects implementing arbitrary interfaces.
+The prime reason to invoke methods asynchronously arouse in the session server
+logic of the collaboration layer. The processing of incoming requests
+must be serialized, that is only one request at a time is processed by
+the logic (see \ref{chapter:algorithm}). However, the sending of the
+resulting transformed requests to the other participants should be executed
+on another thread. Imagine how a slow network connection to one participant
+could slow down the whole processing of requests on the server and thus
+the whole editing session. Clearly a situation that is not tolerable.
+
+The problems described above lead us to think about a general solution that 
+solves them as well as some other related problems.
 
 
 
@@ -26,14 +35,10 @@ domain concept.
  \item keep code testable in presence of potential multithreading
 \end{itemize}
 
-The most important requirement was to invoke methods asynchronously. 
-The caller of methods with a void return type often do not want to wait
-for the end of the execution. For instance if the collaboration layer wants
-to send a request to a participant it does not want to wait for the end
-of the transmission, because that may be a potentially slow operation. 
-Further, if the collaboration layer would wait until each message is sent,
-it would slow down the whole processing of other requests, which is highly
-undesirable.
+The most important requirement was \textbf{asynchronous method invocation}. 
+The caller of methods with a void return type often does not want to wait
+for the end of the execution. Thread domains provide a solution to that
+problem.
 
 It would be easy to achieve the asynchronous method invocation requirement
 with custom code. One naive solution consists in simply implementing the target
@@ -41,9 +46,9 @@ interface by creating and starting a thread which then does the method
 invocation.
 
 \small{\begin{verbatim}
- public class ServiceImpl implements Service {
+ public class ServiceProxy implements Service {
    protected Service target;
-   public void doService(String message) {
+   public void doService(final String message) {
      new Thread() {
        public void run() {
          target.doService(message);
@@ -54,25 +59,43 @@ invocation.
 \end{verbatim}}
 
 Implementing this pattern whenever an asynchronous invocation is desired
-is tedious at best. Beside the obvious problem of starting a new thread
-each time a method is invoked, which could be remedied by the use of
-a thread pool, it is still less than ideal, because it needs custom code
-to invoke the target method. Further, this has nothing to do with the
+is tedious at best. The obvious problem of starting a new thread
+each time a method is invoked could be remedied by the use of an
+executor service using a thread pool (Java 1.5).
+
+\small{\begin{verbatim}
+ public class ServiceProxy implements Service {
+   protected Service target;
+   protected ExecutorService executor;
+   public void doService(final String message) {
+     executor.execute(new Runnable() {
+       public void run() {
+         target.doService(message);
+       }
+     });
+   }
+ }
+\end{verbatim}}
+
+However, this solution is still less than ideal, because it needs custom code
+to invoke each target method. Further, this has nothing to do with the
 target objects logic. In AOP (aspect oriented programming) parlance this
 is clearly a cross-cutting concern. Invoking methods asynchronously can 
-be applied to any object, no matter how it is implemented. It is therefore
-required that the implemented solution is generally applicable.
+be applied to any object, no matter how it is implemented. The implementation
+of the \texttt{Runnable} above can be created once and for all using the
+facilities provided by dynamic proxies. It is therefore
+required that the implemented solution is \textbf{generally applicable}.
 
 Placing thread creation code in a lot of different places in an application
 makes it difficult to manage and tune the usage of threads (see for instance
-the code example above). Thread domains should help to control the
-number and reuse of threads in an application.
+the code example above). Thread domains should help to \textbf{control the
+number and reuse of threads in a flexible way}.
 
 One drawback of introducing multithreading in a codebase is loss of
 testability. As soon as there are multiple threads in a system, it is
-hard to achieve deterministic tests, thus resulting in a less testable
+hard to create deterministic tests, thus resulting in a less testable
 system. Therefore, thread domains should help to introduce multithreading
-without sacrificing testability.
+without sacrificing \textbf{testability}.
 
 
 \subsection{Idea}
@@ -94,7 +117,7 @@ to a particular subsystem are properly wrapped if it is the purpose to
 make sure that only one thread (or the thread domain's set of threads)
 executes code in the subsystem. If thread domains are simply used to
 invoke methods asynchronously such measures have not to be taken. The
-concept is still applicable and useful.
+concept is still applicable and useful though.
 
 
 \subsection{Basic Design}
@@ -107,12 +130,12 @@ to be invoked, as well as all the method parameters. This proxy then adds
 the method invocation to a queue. After these few steps the proxy returns
 to the caller. As there is no return value available from the method 
 invocation (the real method has not been invoked yet), the proxy returns
-the null for objects, zero, or false depending on the return type of the
+null, zero, or false depending on the return type of the
 invoked method.
 
 A worker thread is waiting on the blocking queue for method invocations.
 Whenever a method invocation is available that method invocation object
-is removed from the queue and executed on the worker thread.
+is removed from the queue and executed on the worker thread. 
 
 \begin{figure}[H]
  \centering
@@ -126,16 +149,36 @@ is removed from the queue and executed on the worker thread.
 \section{Implementation}
 
 \subsection{ThreadDomain Interface}
-The core interface is \texttt{ch.iserver.ace.util.ThreadDomain}.
-The most important methods exposed by that interface are the \texttt{wrap}
-methods. These methods allow to wrap an object so that all method invocations
-to that object are executed in that thread domain. This interface is the only 
-interface users of thread domains need to know.
+The core interface is \texttt{ch.iserver.ace.util.ThreadDomain} 
+(see figure \ref{fig:threaddomain.interface}). Thread domains can be given
+a name, which is useful for debugging purposes. The worker threads created
+from a thread domain are given a name derived from the name of the thread
+domain.
 
-The basic principle was already described earlier 
-(see \ref{sect:threaddomain.introduction.principle}). However the exact
-implementation of thread domains can vary significantly. The most significant
-differences are found in the management of worker threads.
+However, the most important methods exposed by that interface are the 
+\texttt{wrap} methods. These methods allow to wrap an object so that all 
+method invocations to that object are executed in that thread domain. This 
+interface is the only interface users of thread domains need to know. The
+second \texttt{wrap} method has a flag parameter that indicates whether
+methods with non-void return type should be executed asynchronously (resulting
+in an invalid return value) or synchronously.
+
+Thread domains could be extended to make the selection of methods that should
+be executed asynchronously even more flexible. This was not required in
+the diploma project, thus there is no such facility.
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=11.4cm,height=4.2cm]{../images/finalreport/threaddomain_uml.eps}
+ \caption{ThreadDomain interface}
+ \label{fig:threaddomain_interface}
+\end{figure}
+
+The \texttt{dispose} method disposes the thread domain, shutting down 
+any created worker thread and releasing resources used by the thread domain.
+
+The exact implementation of thread domains can vary significantly. The most 
+significant differences are found in the management of worker threads.
 
 
 \subsection{Proxy Implementation}
@@ -203,7 +246,7 @@ queue. It is implemented in the class
 \subsubsection{Bounded Thread Domain}
 The bounded thread domain starts a bounded number of worker threads. It
 is implemented in the class \texttt{ch.iserver.ace.util.BoundedThreadDomain}.
-The queus with the associated workers are assigned according to
+The queues with the associated workers are assigned according to
 a round-robin scheme to the proxy objects. The number of worker threads
 is bounded and does not grow.
 
@@ -221,7 +264,9 @@ uses a weak reference and a reference queue in order to detect when
 a worker is no longer needed. A worker thread is no longer needed if the
 proxy associated with that worker is only weakly referenced (by a weak
 reference from the thread domain). The worker thread can then be
-safely closed.
+safely stoppe. Checking for unused worker threads should happen 
+periodically by a collector thread (similar to the garbage collector). The
+implementation of thread domains is in an experimental state.
 
 \begin{figure}[H]
  \centering
@@ -230,11 +275,12 @@ safely closed.
 \end{figure}
 
 
+
 \section{Conclusion}
 
 Thread domains proved to be a very useful tool in developing ACE. The
 chapter about the collaboration layer describes where and why thread
-domains were used.
+domains were used (see \ref{chapter:collaborationlayer}).
 
 
 \subsection{Advantages}
@@ -256,11 +302,11 @@ Thread domains can be use widely with any interface. It is not necessary to
 write custom code to asynchronously invoke methods for a new interface type.
 
 Thread domains allow to control how many threads are running in a system.
-Thread domain implementations can create worker threads in flexible way. For
+Thread domain implementations can create worker threads in a flexible way. For
 instance a thread pool could be used to create workers. The number of
 threads in the pool could shrink or grow, as is needed by the application.
 
-The last advantage is obvious. When calling methods with a void return type,
+When calling methods with a void return type,
 in some cases the caller does not want to wait for the end of the method.
 In ACE, sending events over the network may take some time. The collaboration
 layer does not want to wait (and block the processing of further events)
@@ -298,8 +344,29 @@ Asynchronous method invocations return always null (or the corresponding
 default value) for methods with a non-void return type. This can cause
 unexpected behavior in the caller's code. Therefore, it is best either to
 invoke methods with non-void return type synchronously (see \texttt{wrap}
-method with two parameters) or avoid wrapping interfaces that contain
+method with three parameters) or avoid wrapping interfaces that contain
 methods with non-void return types unless you are absolutely sure that
 what you are doing is safe.
 
+
+\subsection{Possible Improvements}
+The pattern employed by the wrapper objects for \texttt{ParticipantConnection}
+and \texttt{SessionConnection} could be generalized. That is instead of
+writing custom code each time exceptions from the asynchronous method invocation
+should be handled in a special way, the exception handling of thread domains
+could be improved so that it would be usable in these situations.
+
+In some cases if a target object fails, further calls on that object are not
+expected to succeed. However, it is still possible that there are method
+invocation objects in the queue. Executing these does not make any sense
+in that case, but removing them from the queue is also not very elegant.
+The solution consists in replacing the target object with a null object, that
+is an object implementing the same interface but simply ignoring the calls.
+The Spring framework's AOP support has the interesting concept of
+hot swappable target sources that would fit this situation. Target sources
+are asked for the target object each time a method is invoked on the
+proxy. The hot swappable target source allows to swap the target with a
+null object. For more information about the AOP support of Spring see
+the documentation at 
+\href{http://www.springframework.org/}{http://www.springframework.org/}.
 
