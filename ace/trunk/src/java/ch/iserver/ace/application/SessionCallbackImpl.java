@@ -44,6 +44,8 @@ import javax.swing.SwingUtilities;
 
 public class SessionCallbackImpl implements SessionCallback {
 
+	// TODO: property change constants
+
 	protected EventList participantSourceList;
 	protected CollaborativeDocument cDocument;
 	protected HashMap participantItemMap;
