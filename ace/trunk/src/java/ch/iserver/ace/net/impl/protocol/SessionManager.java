@@ -64,7 +64,6 @@ public class SessionManager {
 		MutableUserDetails details = user.getMutableUserDetails();
 		RemoteUserSession newSession = new RemoteUserSession(details.getAddress(), details.getPort(), user);
 		sessions.put(id, newSession);
-//		DiscoveryManagerFactory.getDiscoveryManager(null).setSessionEstablished(user.getId());
 		return newSession;
 	}
 	
@@ -72,6 +71,7 @@ public class SessionManager {
 		//TODO: must not be synchronized right?
 		RemoteUserSession newSession = new RemoteUserSession(session, new MainConnection(mainChannel), user);
 		sessions.put(user.getId(), newSession);
+		//TODO: test discoveryManager
 		DiscoveryManagerFactory.getDiscoveryManager(null).setSessionEstablished(user.getId());
 		return newSession;
 	}
@@ -88,6 +88,7 @@ public class SessionManager {
 	 */
 	public void closeSessions() {
 		LOG.debug("--> closeSessions()");
+		//TODO: could end up in deadlock?
 		synchronized(sessions) {
 			Iterator iter = sessions.values().iterator();
 			while (iter.hasNext()) {
