@@ -21,8 +21,6 @@
 
 package ch.iserver.ace.net.impl;
 
-import javax.xml.parsers.SAXParserFactory;
-
 import org.apache.log4j.Logger;
 
 import ch.iserver.ace.net.InvitationProxy;
@@ -71,10 +69,14 @@ public class InvitationProxyImpl implements InvitationProxy {
 	}
 
 	public void reject() {
-		LOG.debug("--> reject()");
-		
-		
-		LOG.debug("<-- reject()");
+		LOG.debug("invitation for '"+getDocument().getDocumentDetails().getTitle()+"' rejected.");
+		proxy = null;
+		session = null;
+		filter = null;
+//		LOG.debug("--> reject(doc='" + getDocument().getDocumentDetails().getTitle() + "')");
+//		Request request = new RequestImpl(ProtocolConstants.INVITE_REJECTED, getDocument().getId(), session);
+//		filter.process(request);
+//		LOG.debug("<-- reject()");
 	}
 
 }
