@@ -65,7 +65,7 @@ public class EditorController implements ItemSelectionChangeListener, Preference
 				enableEditor(item);
 				// there are no participants for local editing
 				participantViewController.setParticipantList(new BasicEventList());
-				editor.setCaretHandlerMap(new HashMap());
+				editor.setCaretHandlerMap(new PropertyChangeHashMapImpl());
 				editor.setParticipationColorMap(new HashMap());
 
 				// set to local editing
@@ -98,6 +98,9 @@ public class EditorController implements ItemSelectionChangeListener, Preference
 	
 	private void disableEditor() {
 		// disable editor
+		System.out.println("asdfasdkfjasldkjfh");
+		editor.setLocalEditing(true);
+		editor.setSession(null);
 		editor.setDocument(new CollaborativeDocument());
 		editor.setTitle(" ");
 		editor.setEnabled(false);
