@@ -21,6 +21,7 @@
 
 package ch.iserver.ace.application.editor;
 
+import ch.iserver.ace.application.*;
 import ch.iserver.ace.collaboration.*;
 import ch.iserver.ace.collaboration.util.*;
 import ch.iserver.ace.*;
@@ -32,27 +33,31 @@ import java.awt.*;
 import java.util.HashMap;
 import ch.iserver.ace.util.*;
 import java.util.*;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
 
 
 
-public class CollaborativeTextPane extends JTextPane implements CaretListener {
+public class CollaborativeTextPane extends JTextPane implements CaretListener, PropertyChangeListener {
 
 	private boolean localEditing = true;
 	Session session;
-	HashMap caretHandlerMap;
-	HashMap paintCaretHandlerMap;
+	PropertyChangeHashMap caretHandlerMap;
 	HashMap participationColorMap;
 
 	public CollaborativeTextPane() {
-		caretHandlerMap = new HashMap();
+		caretHandlerMap = new PropertyChangeHashMapImpl();
 	}
 	
-	public void setCaretHandlerMap(HashMap caretHandlerMap) {
+	public void setCaretHandlerMap(PropertyChangeHashMap caretHandlerMap) {
+		// unregister old map
+		this.caretHandlerMap.removePropertyChangeListener(this);
 		this.caretHandlerMap = caretHandlerMap;
-		paintCaretHandlerMap = new HashMap();
+		// register new map
+		this.caretHandlerMap.addPropertyChangeListener(this);
 	}
 	
-	public HashMap getCaretHandlerMap() {
+	public PropertyChangeHashMap getCaretHandlerMap() {
 		return caretHandlerMap;
 	}
 	
@@ -173,7 +178,20 @@ public class CollaborativeTextPane extends JTextPane implements CaretListener {
 		return false;
 	}
 	
-	
+	public void propertyChange(PropertyChangeEvent evt) {
+		/*if(evt.getPropertyName().equals(RemoteDocument.TITLE_PROPERTY)) {
+			initDocumentItem(id, (String)evt.getNewValue(),
+				getRemoteDocument().getPublisher().getName() + " - " + title,
+				getRemoteDocument().getPublisher().getName() + " - " + title);
+			//title = (String)evt.getNewValue();
+			//extendedTitle = getRemoteDocument().getPublisher().getName() + " - " + title;
+			//toolTip = getRemoteDocument().getPublisher().getName() + " - " + title;
+			//firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.getNewValue());
+		} else if (RemoteUser.NAME_PROPERTY.equals(evt.getPropertyName())) {
+			firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.getNewValue());
+		}*/
+		System.out.println("textpane::property changed -> repaint: " + evt);
+	}
 	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
