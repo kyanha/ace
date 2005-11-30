@@ -32,7 +32,7 @@ import java.awt.event.*;
 
 
 
-public class CollaborativeEditorKit extends StyledEditorKit {//implements ViewFactory {
+public class CollaborativeEditorKit extends StyledEditorKit { //implements ViewFactory {
 
 	private ActionMap actionMap;
 
@@ -52,30 +52,30 @@ public class CollaborativeEditorKit extends StyledEditorKit {//implements ViewFa
 
 	}
 
-	/*public ViewFactory getViewFactory() {
+/*	public ViewFactory getViewFactory() {
 		return this;
-	}*/
+	}
 
 	public View create(Element elem) {
 //		System.out.println("createView: " + elem.getName());
 //		return new CollaborativeEditorView(elem);
-/*String kind = elem.getName();
+String kind = elem.getName();
 if (kind != null) {
-if (kind.equals(AbstractDocument.ContentElementName)) {
-return new CollaborativeEditorView(elem);
-} else if (kind.equals(AbstractDocument.ParagraphElementName)) {
-return new ParagraphView(elem);
-} else if (kind.equals(AbstractDocument.SectionElementName)) {
-return new BoxView(elem, View.Y_AXIS);
-} else if (kind.equals(StyleConstants.ComponentElementName)) {
-return new ComponentView(elem);
-} else if (kind.equals(StyleConstants.IconElementName)) {
-return new IconView(elem);
+	if (kind.equals(AbstractDocument.ContentElementName)) {
+		return new CollaborativeEditorView(elem);
+	} else if (kind.equals(AbstractDocument.ParagraphElementName)) {
+		return new ParagraphView(elem);
+	} else if (kind.equals(AbstractDocument.SectionElementName)) {
+		return new BoxView(elem, View.Y_AXIS);
+	} else if (kind.equals(StyleConstants.ComponentElementName)) {
+		return new ComponentView(elem);
+	} else if (kind.equals(StyleConstants.IconElementName)) {
+		return new IconView(elem);
+	}
 }
-}*/
 return new CollaborativeEditorView(elem);
 
-	}
+	}*/
 	
 	public Action[] getActions() {
 		// create action array
@@ -141,7 +141,7 @@ return new CollaborativeEditorView(elem);
 									if (dot != mark) {
 										Operation op = new DeleteOperation(Math.min(dot, mark), doc.getText(Math.min(dot, mark), Math.abs(dot - mark)));
 										doc.remove(Math.min(dot, mark), Math.abs(dot - mark));
-										System.out.println(op);
+//										System.out.println(op);
 										session.sendOperation(op);
 										beep = false;
 									} else if (dot > 0) {
@@ -159,7 +159,7 @@ return new CollaborativeEditorView(elem);
 										}
 										Operation op = new DeleteOperation(dot - delChars, doc.getText(dot - delChars, delChars));
 										doc.remove(dot - delChars, delChars);
-										System.out.println(op);
+//										System.out.println(op);
 										session.sendOperation(op);
 										beep = false;
 									}
@@ -207,7 +207,7 @@ return new CollaborativeEditorView(elem);
 									if (dot != mark) {
 										Operation op = new DeleteOperation(Math.min(dot, mark), doc.getText(Math.min(dot, mark), Math.abs(dot - mark)));
 										doc.remove(Math.min(dot, mark), Math.abs(dot - mark));
-										System.out.println(op);
+//										System.out.println(op);
 										session.sendOperation(op);
 										beep = false;
 									} else if (dot < doc.getLength()) {
@@ -225,7 +225,7 @@ return new CollaborativeEditorView(elem);
 										}
 										Operation op = new DeleteOperation(dot, doc.getText(dot, delChars));
 										doc.remove(dot, delChars);
-										System.out.println(op);
+//										System.out.println(op);
 										session.sendOperation(op);
 										beep = false;
 									}
@@ -271,7 +271,7 @@ return new CollaborativeEditorView(elem);
 									int mark = caret.getMark();
 									if (dot != mark) {
 										Operation op = new DeleteOperation(Math.min(dot, mark), doc.getText(Math.min(dot, mark), Math.abs(dot - mark)));
-										System.out.println(op);
+//										System.out.println(op);
 										session.sendOperation(op);
 										beep = false;
 									}

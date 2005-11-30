@@ -34,6 +34,7 @@ import javax.swing.text.*;
 import org.apache.log4j.Logger;
 import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.BasicEventList;
+import java.util.HashMap;
 
 
 
@@ -62,20 +63,25 @@ public class EditorController implements ItemSelectionChangeListener, Preference
 			if(item.getType() == DocumentItem.LOCAL) {
 				// enable editor
 				enableEditor(item);
-				// set to local editing
-				editor.setLocalEditing(true);
 				// there are no participants for local editing
 				participantViewController.setParticipantList(new BasicEventList());
+				editor.setCaretHandlerMap(new HashMap());
+				editor.setParticipationColorMap(new HashMap());
 
+				// set to local editing
+				editor.setLocalEditing(true);
 			} else if(item.getType() == DocumentItem.PUBLISHED || item.getType() == DocumentItem.JOINED) {
 				// enable editor
 				enableEditor(item);
 				// set session
 				editor.setSession(item.getSession());
-				editor.setLocalEditing(false);
 				// set participantlist
 				participantViewController.setParticipantList(item.getParticipantSourceList());
+				editor.setCaretHandlerMap(item.getCaretHandlerMap());
+				editor.setParticipationColorMap(item.getParticipationColorMap());
 
+				// set local editing
+				editor.setLocalEditing(false);
 			} else {
 				disableEditor();
 			}
@@ -84,7 +90,7 @@ public class EditorController implements ItemSelectionChangeListener, Preference
 	
 	private void enableEditor(DocumentItem item) {
 		// enabled editor
-		CollaborativeDocument doc = item.getEditorDocument();			
+		CollaborativeDocument doc = item.getEditorDocument();
 		editor.setDocument(doc);
 		editor.setTitle(item.getExtendedTitle());
 		editor.setEnabled(true);

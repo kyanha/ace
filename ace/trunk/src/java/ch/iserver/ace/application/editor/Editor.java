@@ -21,10 +21,12 @@
 
 package ch.iserver.ace.application.editor;
 
+import ch.iserver.ace.application.ParticipationColorManager;
 import ch.iserver.ace.collaboration.Session;
 import javax.swing.JPanel;
 import javax.swing.text.StyledDocument;
 import javax.swing.Action;
+import java.util.*;
 
 
 
@@ -33,7 +35,11 @@ public interface Editor {
 	public void setTitle(String title);
 	
 	public void setDocument(CollaborativeDocument document);
-	
+
+	public void setCaretHandlerMap(HashMap caretHandlerMap);
+
+	public void setParticipationColorMap(HashMap participationColorMap);
+
 	public void setSession(Session session);
 	
 	public void setLocalEditing(boolean localEditing);

@@ -24,11 +24,14 @@ package ch.iserver.ace.application.editor;
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.Style;
 import javax.swing.text.*;
+import java.awt.*;
+
 
 
 public class CollaborativeDocument extends DefaultStyledDocument {
 
 	public CollaborativeDocument() {
+
 	}
 	
 	protected void styleChanged(Style style) {
@@ -81,5 +84,5 @@ public class CollaborativeDocument extends DefaultStyledDocument {
             }
         }
 	}
-
+	
 }

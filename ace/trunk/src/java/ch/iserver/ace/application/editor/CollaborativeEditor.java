@@ -32,6 +32,7 @@ import javax.swing.text.StyledDocument;
 import java.util.List;
 import com.jgoodies.uif_lite.panel.SimpleInternalFrame;
 import java.beans.*;
+import java.util.*;
 
 
 
@@ -72,6 +73,13 @@ public class CollaborativeEditor extends EditorImpl {
 		cTextPane.setDocument(document);
 	}
 	
+	public void setCaretHandlerMap(HashMap caretHandlerMap) {
+		cTextPane.setCaretHandlerMap(caretHandlerMap);
+	}
+	
+	public void setParticipationColorMap(HashMap participationColorMap) {
+		cTextPane.setParticipationColorMap(participationColorMap);
+	}
 	public void setSession(Session session) {
 		cTextPane.setSession(session);
 	}

@@ -27,18 +27,42 @@ import ch.iserver.ace.*;
 import ch.iserver.ace.text.*;
 import javax.swing.*;
 import javax.swing.text.*;
+import javax.swing.event.*;
 import java.awt.*;
+import java.util.HashMap;
+import ch.iserver.ace.util.*;
+import java.util.*;
 
 
 
-public class CollaborativeTextPane extends JTextPane {
+public class CollaborativeTextPane extends JTextPane implements CaretListener {
 
 	private boolean localEditing = true;
 	Session session;
-	
+	HashMap caretHandlerMap;
+	HashMap paintCaretHandlerMap;
+	HashMap participationColorMap;
 
 	public CollaborativeTextPane() {
+		caretHandlerMap = new HashMap();
 	}
+	
+	public void setCaretHandlerMap(HashMap caretHandlerMap) {
+		this.caretHandlerMap = caretHandlerMap;
+		paintCaretHandlerMap = new HashMap();
+	}
+	
+	public HashMap getCaretHandlerMap() {
+		return caretHandlerMap;
+	}
+	
+	public void setParticipationColorMap(HashMap participationColorMap) {
+		this.participationColorMap = participationColorMap;
+	}
+	
+	public HashMap getParticipationColorMap() {
+		return participationColorMap;
+	}	
 	
 	public void setSession(Session session) {
 		this.session = session;
@@ -54,10 +78,42 @@ public class CollaborativeTextPane extends JTextPane {
 
 	public void setLocalEditing(boolean localEditing) {
 		this.localEditing = localEditing;
+		if (localEditing) {
+			removeCaretListener(this);
+		} else {
+			addCaretListener(this);
+		}
+	}
+	
+	public void caretUpdate(CaretEvent e) {
+		if (localEditing) {
+		} else {
+
+			// check if caret moved from text manipulation
+			CaretHandler pCaretHandler = (CaretHandler)caretHandlerMap.get("0");
+			if(pCaretHandler.getDot() != e.getDot() || pCaretHandler.getMark() != e.getMark()) {
+				// set new dot & mark for caret handler
+				pCaretHandler.setDot(e.getDot());
+				pCaretHandler.setMark(e.getMark());
+
+				// send updates
+				final int dot = e.getDot();
+				final int mark = e.getMark();
+				SessionTemplate template = new SessionTemplate(session);
+				template.execute(new SessionTemplateCallback() {
+					public void execute(Session session) {
+						CaretUpdate cu = new CaretUpdate(dot, mark);
+//						System.out.println(cu);
+						session.sendCaretUpdate(cu);
+					}
+				});
+
+			}
+		}
 	}
 
 	public void replaceSelection(final String content) {
-		if(localEditing) {
+		if (localEditing) {
 			super.replaceSelection(content);
 		} else {
 			final JTextComponent target = this;
@@ -75,19 +131,31 @@ public class CollaborativeTextPane extends JTextPane {
 							int p1 = Math.max(caret.getDot(), caret.getMark());
 							if (p0 != p1) {
 								Operation op = new DeleteOperation(p0, doc.getText(p0, p1 - p0));
-								System.out.println(op);
+//								System.out.println(op);
 								session.sendOperation(op);
+								try {
+									doc.remove(p0, p1 - p0);
+								} catch(BadLocationException e) {}
+
 							}
 							if (content != null && content.length() > 0) {
 								Operation op = new InsertOperation(p0, content);
-								System.out.println(op);
+//								System.out.println(op);
 								session.sendOperation(op);
+
+								StyledDocument styledDoc = (StyledDocument)doc;
+								Style pStyle = styledDoc.getStyle("myStyle");
+								try {
+									styledDoc.insertString(p0, content, pStyle);
+								} catch(BadLocationException e) {}
+
 							}
 						} catch (BadLocationException e) {
 						}
 					}
 					// END COPY & PASTE
-					CollaborativeTextPane.super.replaceSelection(content);
+//					CollaborativeTextPane.super.replaceSelection(content);
+
 				}
 			});
 
@@ -104,5 +172,55 @@ public class CollaborativeTextPane extends JTextPane {
 	public boolean getScrollableTracksViewportWidth() {
 		return false;
 	}
+	
+	
+	
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
 
+/*
+		
+		if(!localEditing && caretHandlerMap.size() > 0) {// && participationColorMap.size() > 0) {
+
+			try {
+
+
+				String mpId = "" + session.getParticipantId();
+				Iterator iter = caretHandlerMap.keySet().iterator();
+				while(iter.hasNext()) {
+					String pId = (String)iter.next(); 
+					if(!pId.equals(mpId)) {
+						// for all carets except the own one
+						
+						//System.out.println("mpId: " + mpId + "   pId: " + pId);
+						CaretHandler pCaretHandler = (CaretHandler)caretHandlerMap.get(pId);
+						
+						// 1. get old positions to clear
+						//if(paintCaretHandlerMap.containsKey(participantId + "oldDot")) {
+						//	int oldDot = ((Integer)paintCaretHandlerMap.get(participantId + "oldDot")).intValue();
+						//}
+	
+						// 2. draw new
+						g.setColor((Color)participationColorMap.get(pId));
+						Rectangle rect = modelToView(pCaretHandler.getDot());
+						g.drawLine(rect.x-1, rect.y+rect.height-1, rect.x, rect.y+rect.height-2);
+						g.drawLine(rect.x+1, rect.y+rect.height-1, rect.x, rect.y+rect.height-2);
+						g.drawLine(rect.x-2, rect.y+rect.height-1, rect.x, rect.y+rect.height-3);
+						g.drawLine(rect.x+2, rect.y+rect.height-1, rect.x, rect.y+rect.height-3);
+	
+						// 3. save new positions
+	
+					}
+				}
+
+
+
+			} catch(BadLocationException ble) {
+				ble.printStackTrace();
+			}
+
+
+
+		}*/
+	}
 }

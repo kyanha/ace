@@ -24,10 +24,12 @@ package ch.iserver.ace.application.editor;
 import javax.swing.*;
 import javax.swing.text.*;
 import java.awt.*;
+import ch.iserver.ace.util.*;
+import java.util.HashMap;
 
 
 
-public class CollaborativeEditorView extends WrappedPlainView {
+public class CollaborativeEditorView extends LabelView {
 
 	public CollaborativeEditorView(Element elem) {
 		super(elem);
@@ -36,6 +38,34 @@ public class CollaborativeEditorView extends WrappedPlainView {
 	public void paint(Graphics g, Shape a) {
 		super.paint(g, a);
 		g.drawString(".", 10, 10);
+		CollaborativeTextPane cTextPane = (CollaborativeTextPane)getContainer();
+		HashMap caretHandlerMap = cTextPane.getCaretHandlerMap();
+		HashMap participationColorMap = cTextPane.getParticipationColorMap();
+		
+		if(!cTextPane.isLocalEditing()) {
+
+try{
+						String pId = "0";
+						
+						CaretHandler pCaretHandler = (CaretHandler)caretHandlerMap.get(pId);
+						g.setColor((Color)participationColorMap.get(pId));
+						
+						//Rectangle rect = modelToView(pCaretHandler.getDot());
+						Shape shape = modelToView(pCaretHandler.getDot(), a, Position.Bias.Forward);
+						System.out.println(a);
+						Rectangle rect = shape.getBounds();
+						System.out.println(rect);
+						
+						g.drawLine(rect.x-1, rect.y+rect.height-1, rect.x, rect.y+rect.height-2);
+						g.drawLine(rect.x+1, rect.y+rect.height-1, rect.x, rect.y+rect.height-2);
+						g.drawLine(rect.x-2, rect.y+rect.height-1, rect.x, rect.y+rect.height-3);
+						g.drawLine(rect.x+2, rect.y+rect.height-1, rect.x, rect.y+rect.height-3);
+} catch(BadLocationException e) {}
+
+
+
+		}
+
 	}
 
 
