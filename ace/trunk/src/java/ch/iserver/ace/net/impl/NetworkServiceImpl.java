@@ -127,15 +127,19 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	
 	public void stop() {
 		LOG.debug("--> stop()");
-		//TODO: what if at the same time a new message is received and processed?
-		//abort discovery
-		discovery.abort();
-		//close all open sessions
-		SessionManager.getInstance().closeSessions();
-		//stop beep session listener
-		sessionListener.terminate();
+		try {
+			//TODO: what if at the same time a new message is received and processed?
+			//abort discovery
+			discovery.abort();
+			//close all open sessions
+			SessionManager.getInstance().closeSessions();
+			//stop beep session listener
+			sessionListener.terminate();
 		
-		//TODO: conceal message for documents not necessary -> check with raess
+			//TODO: conceal message for documents not necessary -> check with raess
+		} catch (Exception e) {
+			LOG.warn("could not stop network layer smoothly ["+e+", "+e.getMessage()+"]");
+		}
 		LOG.debug("<-- stop()");
 	}
 	
