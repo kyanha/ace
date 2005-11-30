@@ -201,11 +201,11 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 		return editorDocument;
 	}
 	
-	public HashMap getCaretHandlerMap() {
+	public PropertyChangeHashMap getCaretHandlerMap() {
 		if(sessionCallback != null) {
 			return ((SessionCallbackImpl)sessionCallback).getCaretHandlerMap();
 		}
-		return new HashMap();
+		return new PropertyChangeHashMapImpl();
 	}
 
 	public HashMap getParticipationColorMap() {
@@ -330,8 +330,8 @@ BASCHTLE
 		// leave a document
 		//setType(LEAVING);
 		cleanUp();
-		session.leave();
 		setType(REMOTE);
+		session.leave();
 	}
 
 	public void join(DocumentViewController documentViewController) {
