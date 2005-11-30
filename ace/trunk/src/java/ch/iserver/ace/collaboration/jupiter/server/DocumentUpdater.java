@@ -51,7 +51,7 @@ class DocumentUpdater implements Forwarder {
 	 * are applied to.
 	 */
 	private final ServerDocument document;
-	
+		
 	/**
 	 * Creates a new DocumentUpdateProxy using the given ServerDocument as target
 	 * for applying operations and caret updates.

@@ -47,7 +47,10 @@ public class CompositeForwarderTest extends TestCase {
 	private List proxies;
 	
 	public void setUp() {
-		forwarder = new CompositeForwarderImpl();
+		MockControl defaultForwarderCtrl = MockControl.createNiceControl(Forwarder.class);
+		Forwarder defaultForwarder = (Forwarder) defaultForwarderCtrl.getMock();
+		
+		forwarder = new CompositeForwarderImpl(defaultForwarder, null);
 		
 		controls = new ArrayList();
 		proxies = new ArrayList();

@@ -55,6 +55,13 @@ public interface Participant {
 	int RECEPTION_FAILED = 4;
 	
 	/**
+	 * Constant used in notifications when receiving things from a participant
+	 * fails. The participant is then no longer considered part of the
+	 * session.
+	 */
+	int DOCUMENT_MODIFICATION_FAILED = 5;
+	
+	/**
 	 * Gets the remote user corresponding to this participant.
 	 *
 	 * @return the remote user corresponding to this participant

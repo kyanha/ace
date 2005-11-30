@@ -61,6 +61,7 @@ public interface ServerDocument {
 	 * @param participantId the id of the participant
 	 * @param offset the insertion index
 	 * @param text the text to insert
+	 * @throws ServerDocumentException if the insertion fails
 	 */
 	void insertString(int participantId, int offset, String text);
 	
@@ -69,6 +70,7 @@ public interface ServerDocument {
 	 * 
 	 * @param offset the start offset
 	 * @param length the number of characters to delete
+	 * @throws ServerDocumentException if the removal fails
 	 */
 	void removeString(int offset, int length);
 	

@@ -31,7 +31,8 @@ import junit.framework.TestCase;
 public class ParticipantManagerImplTest extends TestCase {
 	
 	public void testJoinLeaveJoin() throws Exception {
-		CompositeForwarder forwarder = new CompositeForwarderImpl();
+		MockControl forwarderCtrl = MockControl.createNiceControl(CompositeForwarder.class);
+		CompositeForwarder forwarder = (CompositeForwarder) forwarderCtrl.getMock();
 		
 		MockControl connectionCtrl = MockControl.createControl(ParticipantConnection.class);
 		ParticipantConnection connection = (ParticipantConnection) connectionCtrl.getMock();
@@ -71,7 +72,8 @@ public class ParticipantManagerImplTest extends TestCase {
 	}
 	
 	public void testKick() throws Exception {
-		CompositeForwarder forwarder = new CompositeForwarderImpl();
+		MockControl forwarderCtrl = MockControl.createNiceControl(CompositeForwarder.class);
+		CompositeForwarder forwarder = (CompositeForwarder) forwarderCtrl.getMock();
 		
 		MockControl connectionCtrl = MockControl.createControl(ParticipantConnection.class);
 		ParticipantConnection connection = (ParticipantConnection) connectionCtrl.getMock();

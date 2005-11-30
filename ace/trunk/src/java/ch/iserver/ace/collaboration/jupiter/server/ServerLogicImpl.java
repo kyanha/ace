@@ -141,17 +141,16 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 		this.registry = registry;
 		this.accessControlStrategy = this;
 
-		this.compositeForwarder = createForwarder();
-		this.participants = createParticipantManager(compositeForwarder);
 		this.document = createServerDocument(document);
-				
 		this.failureHandler = (FailureHandler) incomingDomain.wrap(this, FailureHandler.class);
 		
 		// add the document updater to the composite forwarder
 		Forwarder forwarderTarget = new DocumentUpdater(this.document);
 		LoggingInterceptor interceptor = new LoggingInterceptor(DocumentUpdater.class, Level.DEBUG);
 		Forwarder forwarder = (Forwarder) AopUtil.wrap(forwarderTarget, Forwarder.class, interceptor);
-		this.compositeForwarder.addForwarder(forwarder);
+		
+		this.compositeForwarder = createForwarder(forwarder, this);
+		this.participants = createParticipantManager(compositeForwarder);
 	}
 
 	/**
@@ -181,10 +180,12 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	 * Creates a new forwarder responsible to forward the results of the
 	 * command processor to all other participants.
 	 * 
+	 * @param forwarder the default forwarder
+	 * @param failureHandler the failure handler of the session
 	 * @return the initialized forwarder
 	 */
-	protected CompositeForwarder createForwarder() {
-		return new CompositeForwarderImpl();
+	protected CompositeForwarder createForwarder(Forwarder forwarder, FailureHandler failureHandler) {
+		return new CompositeForwarderImpl(forwarder, failureHandler);
 	}
 		
 	/**

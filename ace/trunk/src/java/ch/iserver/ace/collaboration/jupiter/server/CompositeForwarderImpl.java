@@ -25,27 +25,55 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.Operation;
 import ch.iserver.ace.net.RemoteUserProxy;
+import ch.iserver.ace.util.ParameterValidator;
 
 /**
  * A Forwarder implementation that forwards requests to several forwarders.
  */
 class CompositeForwarderImpl implements CompositeForwarder {
-		
+	
+	/**
+	 * Logger instance used by this class.
+	 */
+	private static final Logger LOG = Logger.getLogger(CompositeForwarderImpl.class);
+	
 	/**
 	 * List of forwarders.
 	 */
 	private final List forwarders;
 	
 	/**
+	 * The default forwarder of this object.
+	 */
+	private final Forwarder forwarder;
+	
+	/**
+	 * The failure handler of the session.
+	 */
+	private final FailureHandler failureHandler;
+	
+	/**
 	 * Creates a new CompositeForwarder instance.
 	 * 
-	 * @param logic the server logic
+	 * @param forwarder the default forwarder
 	 */
-	public CompositeForwarderImpl() {
+	public CompositeForwarderImpl(Forwarder forwarder, FailureHandler failureHandler) {
+		ParameterValidator.notNull("forwarder", forwarder);
 		this.forwarders = new LinkedList();
+		this.forwarder = forwarder;
+		this.failureHandler = failureHandler;
+	}
+	
+	/**
+	 * @return the FailureHandler of the session
+	 */
+	protected FailureHandler getFailureHandler() {
+		return failureHandler;
 	}
 	
 	/**
@@ -77,6 +105,13 @@ class CompositeForwarderImpl implements CompositeForwarder {
 	 * @see ch.iserver.ace.collaboration.jupiter.server.Forwarder#sendCaretUpdate(int, ch.iserver.ace.CaretUpdate)
 	 */
 	public void sendCaretUpdate(int participantId, CaretUpdate update) {
+		try {
+			forwarder.sendCaretUpdate(participantId, update);
+		} catch (Exception e) {
+			LOG.warn("forwarding to main forwarder failed: " + e);
+			return;
+		}
+
 		Iterator it = getForwarders();
 		while (it.hasNext()) {
 			Forwarder forwarder = (Forwarder) it.next();
@@ -88,6 +123,13 @@ class CompositeForwarderImpl implements CompositeForwarder {
 	 * @see ch.iserver.ace.collaboration.jupiter.server.Forwarder#sendOperation(int, ch.iserver.ace.Operation)
 	 */
 	public void sendOperation(int participantId, Operation op) {
+		try {
+			forwarder.sendOperation(participantId, op);
+		} catch (Exception e) {
+			LOG.warn("forwarding to main forwarder failed: " + e);
+			return;
+		}
+		
 		Iterator it = getForwarders();
 		while (it.hasNext()) {
 			Forwarder forwarder = (Forwarder) it.next();

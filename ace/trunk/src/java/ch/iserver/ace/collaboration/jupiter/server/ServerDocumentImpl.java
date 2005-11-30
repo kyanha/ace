@@ -51,14 +51,29 @@ import ch.iserver.ace.util.CaretHandler;
  */
 public class ServerDocumentImpl extends AbstractDocument implements ServerDocument {
 
+	/**
+	 * The name of the attribute used to store the participant id.
+	 */
 	public static final String PARTICIPANT_ATTR = "participant";
 
+	/**
+	 * The mapping from participant id to caret handlers.
+	 */
 	private final Map carets = new HashMap();
 
+	/**
+	 * The default root object of the document.
+	 */
 	private BranchElement defaultRoot;
 	
+	/**
+	 * The mapping from participant id to remote user proxy.
+	 */
 	private final Map participants = new TreeMap();
 
+	/**
+	 * Creates a new ServerDocumentImpl instance.
+	 */
 	public ServerDocumentImpl() {
 		super(new GapContent());
 		defaultRoot = (BranchElement) createDefaultRoot();
@@ -68,14 +83,34 @@ public class ServerDocumentImpl extends AbstractDocument implements ServerDocume
 	
 	// --> utility methods <--
 	
+	/**
+	 * Gets the participant with that participant id.
+	 * 
+	 * @param participantId the participant id
+	 * @return the CaretHandler of that participant or null if the participant
+	 *         is unknown
+	 */
 	private CaretHandler getCaretHandler(int participantId) {
 		return (CaretHandler) carets.get(new Integer(participantId));
 	}
 	
+	/**
+	 * Sets the CaretHandler for that particular participant.
+	 * 
+	 * @param participantId the participant id
+	 * @param handler the new CaretHandler
+	 */
 	private void setCaretHandler(int participantId, CaretHandler handler) {
 		carets.put(new Integer(participantId), handler);
 	}
 	
+	/**
+	 * Gets the participant id from the attribute set. If the attribute set
+	 * does not define a participant id, -1 is returned.
+	 * 
+	 * @param attr the attribute set
+	 * @return the participant id or -1 if there is none
+	 */
 	protected int getParticipantId(AttributeSet attr) {
 		int participantId = -1;
 		Integer pid = (Integer) attr.getAttribute(ServerDocumentImpl.PARTICIPANT_ATTR);
@@ -85,16 +120,32 @@ public class ServerDocumentImpl extends AbstractDocument implements ServerDocume
 		return participantId;
 	}
 	
+	/**
+	 * Adds a participant to the mapping.
+	 * 
+	 * @param participantId the id of the participant
+	 * @param proxy the remote user proxy of the participant
+	 */
 	private void addParticipant(int participantId, RemoteUserProxy proxy) {
 		participants.put(new Integer(participantId), proxy);
 	}
 	
+	/**
+	 * Removes a participant from the mapping.
+	 * 
+	 * @param participantId the participant to be removed
+	 */
 	private void removeParticipant(int participantId) {
 		participants.remove(new Integer(participantId));
 	}
 	
 	// --> AbstractDocument methods <--
 	
+	/**
+	 * Creates the default root element of the document.
+	 * 
+	 * @return the default root element
+	 */
 	protected AbstractElement createDefaultRoot() {
 		BranchElement map = (BranchElement) createBranchElement(null, null);
 		Element line = createLeafElement(map, null, 0, 1);
@@ -251,8 +302,8 @@ public class ServerDocumentImpl extends AbstractDocument implements ServerDocume
 			handler = new CaretHandler(dot, mark);
 			setCaretHandler(participantId, handler);
 		} else {
-			handler.setDot(dot);
-			handler.setMark(mark);
+			handler.setDot(Math.max(0, Math.min(getLength() - 1, dot)));
+			handler.setMark(Math.max(0, Math.min(getLength() - 1, mark)));
 		}
 	}
 
@@ -263,9 +314,9 @@ public class ServerDocumentImpl extends AbstractDocument implements ServerDocume
 		SimpleAttributeSet attr = new SimpleAttributeSet();
 		attr.addAttribute(PARTICIPANT_ATTR, new Integer(participantId));
 		try {
-			super.insertString(offset, text, attr);
+			insertString(offset, text, attr);
 		} catch (BadLocationException e) {
-			throw new RuntimeException(e);
+			throw new ServerDocumentException(e);
 		}
 	}
 	
@@ -274,9 +325,9 @@ public class ServerDocumentImpl extends AbstractDocument implements ServerDocume
 	 */
 	public void removeString(int offset, int length) {
 		try {
-			super.remove(offset, length);
+			remove(offset, length);
 		} catch (BadLocationException e) {
-			throw new RuntimeException(e);
+			throw new ServerDocumentException(e);
 		}
 	}
 	
@@ -346,40 +397,98 @@ public class ServerDocumentImpl extends AbstractDocument implements ServerDocume
 			return null;
 		}
 	}
+	
+	/**
+	 * Gets an Iterator over the fragments of the document.
+	 * 
+	 * @return an Iterator that iterates over Fragment objects
+	 */
+	protected Iterator getFragments() {
+		final BranchElement root = (BranchElement) getDefaultRootElement();
+		return new Iterator() {
+			private int idx = 0;
+			public Object next() {
+				if (!hasNext()) {
+					throw new NoSuchElementException();
+				}
+				return root.getChildAt(idx++);
+			}		
+			public boolean hasNext() {
+				return idx < root.getChildCount() - 1;
+			}
+			public void remove() {
+				throw new UnsupportedOperationException();
+			}		
+		};
+	}
 
+	/**
+	 * Helper object to contain information about a participant.
+	 */
 	protected static class ParticipantInfo {
 		
+		/**
+		 * The participant id. 
+		 */
 		private final int id;
 		
+		/**
+		 * The remote user of the participant.
+		 */
 		private final RemoteUserProxy user;
 		
+		/**
+		 * The participant's selection.
+		 */
 		private final CaretUpdate selection;
 		
+		/**
+		 * Creates a new ParticipantInfo object.
+		 * 
+		 * @param id the participant id
+		 * @param user the user
+		 * @param selection the current selection
+		 */
 		protected ParticipantInfo(int id, RemoteUserProxy user, CaretUpdate selection) {
 			this.id = id;
 			this.user = user;
 			this.selection = selection;
 		}
 		
-		public int getId() {
+		protected int getId() {
 			return id;
 		}
 		
-		public CaretUpdate getSelection() {
+		protected CaretUpdate getSelection() {
 			return selection;
 		}
 		
-		public RemoteUserProxy getUser() {
+		protected RemoteUserProxy getUser() {
 			return user;
 		}
 	}
 	
+	/**
+	 * Implementation of the Fragment interface.
+	 */
 	protected static class FragmentImpl implements Fragment {
 		
+		/**
+		 * The participant id of the fragment.
+		 */
 		private final int id;
 		
+		/**
+		 * The text of the fragment.
+		 */
 		private final String text;
 		
+		/**
+		 * Creates a new FragmentImpl instance.
+		 * 
+		 * @param id the participant id
+		 * @param text the text
+		 */
 		protected FragmentImpl(int id, String text) {
 			this.id = id;
 			this.text = text;
@@ -407,25 +516,57 @@ public class ServerDocumentImpl extends AbstractDocument implements ServerDocume
 		}
 	}
 	
+	/**
+	 * Implementation of the PortableDocument interface from the network layer.
+	 */
 	protected static class PortableDocumentImpl implements PortableDocument {
 		
+		/**
+		 * A list of ParticipantInfo objects.
+		 */
 		private final List participants;
 		
+		/**
+		 * A list of Fragment objects.
+		 */
 		private final List fragments;
 		
+		/**
+		 * True if the object is frozen. Changes are no longer allowed in
+		 * frozen state.
+		 */
 		private boolean frozen;
 		
+		/**
+		 * The array of participant ids. Initialized after the freeze method.
+		 */
 		private int[] participantIds;
 		
+		/**
+		 * The mapping from participant id to user. Initialized after the
+		 * freeze method.
+		 */
 		private Map users;
 		
+		/**
+		 * The mapping from participant id to selection. Initialized after
+		 * the freeze method.
+		 */
 		private Map selections;
 		
+		/**
+		 * Creates a new PortableDocumentImpl instance.
+		 */
 		public PortableDocumentImpl() {
 			fragments = new LinkedList();
 			participants = new ArrayList();
 		}
 		
+		/**
+		 * Adds a copy of the given fragment to the document.
+		 * 
+		 * @param fragment the fragment to be added
+		 */
 		protected void addFragment(Fragment fragment) {
 			if (isFrozen()) {
 				throw new IllegalStateException("cannot mofify in frozen state");
@@ -433,6 +574,13 @@ public class ServerDocumentImpl extends AbstractDocument implements ServerDocume
 			fragments.add(new FragmentImpl(fragment.getParticipantId(), fragment.getText()));
 		}
 		
+		/**
+		 * Adds a participant to the list of participants.
+		 * 
+		 * @param id the participant id
+		 * @param user the user proxy
+		 * @param selection the selection of that participant
+		 */
 		protected void addParticipant(int id, RemoteUserProxy user, CaretUpdate selection) {
 			if (isFrozen()) {
 				throw new IllegalStateException("cannot mofify in frozen state");
@@ -440,6 +588,9 @@ public class ServerDocumentImpl extends AbstractDocument implements ServerDocume
 			participants.add(new ParticipantInfo(id, user, selection));
 		}
 		
+		/**
+		 * Freezes this object. Further modifications are not allowed.
+		 */
 		protected void freeze() {
 			this.frozen = true;
 			this.participantIds = new int[participants.size()];
@@ -454,6 +605,9 @@ public class ServerDocumentImpl extends AbstractDocument implements ServerDocume
 			}
 		}
 		
+		/**
+		 * @return true iff this object has been freezed
+		 */
 		protected boolean isFrozen() {
 			return frozen;
 		}
@@ -487,29 +641,7 @@ public class ServerDocumentImpl extends AbstractDocument implements ServerDocume
 		}
 		
 	}
-	
-	/**
-	 * @see ch.iserver.ace.collaboration.PortableDocument#getFragments()
-	 */
-	public Iterator getFragments() {
-		final BranchElement root = (BranchElement) getDefaultRootElement();
-		return new Iterator() {
-			private int idx = 0;
-			public Object next() {
-				if (!hasNext()) {
-					throw new NoSuchElementException();
-				}
-				return root.getChildAt(idx++);
-			}		
-			public boolean hasNext() {
-				return idx < root.getChildCount() - 1;
-			}
-			public void remove() {
-				throw new UnsupportedOperationException();
-			}		
-		};
-	}
-			
+				
 	// --> Fragment Element <--
 	
 	/**
