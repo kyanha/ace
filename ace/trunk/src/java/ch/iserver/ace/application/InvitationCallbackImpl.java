@@ -54,6 +54,9 @@ public class InvitationCallbackImpl implements InvitationCallback {
 				String docTitle = "\"" + invitation.getDocument().getTitle() + "\"";
 				int result = dialogController.showInvitationReceived(inviterName, docTitle);
 				//int result = dialogController.showInvitationReceived(inviterName, docTitle);
+				
+				DocumentItem inviteItem = browseViewController.findItem(invitation.getDocument());
+
 				if (result == JOptionPane.OK_OPTION) {
 					// accepted
 					// create new document item
@@ -61,7 +64,9 @@ public class InvitationCallbackImpl implements InvitationCallback {
 					//newItem.setEditorDocument(new CollaborativeDocument());
 					
 					// get document item from browse view
-					DocumentItem inviteItem = browseViewController.findItem(invitation.getDocument());
+					if(inviteItem ==  null) {
+						return;
+					}
 					inviteItem.setEditorDocument(new CollaborativeDocument());
 					
 					// create and set session callback
@@ -76,6 +81,9 @@ public class InvitationCallbackImpl implements InvitationCallback {
 		
 				} else {
 					// rejected
+					if(inviteItem ==  null) {
+						return;
+					}
 					invitation.reject();
 				}
 			}
