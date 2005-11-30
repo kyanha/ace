@@ -83,7 +83,11 @@ public class CollaborationServiceTest extends TestCase {
 		// create the needed objects
 		ThreadDomain threadDomain = new CallerThreadDomain();
 		UserRegistry registry = new UserRegistryImpl();		
-		CollaborationServiceImpl service = new CollaborationServiceImpl(networkService);
+		CollaborationServiceImpl service = new CollaborationServiceImpl(networkService) {
+			public ThreadDomain createIncomingDomain() {
+				return new CallerThreadDomain();
+			}
+		};
 		service.setUserRegistry(registry);
 		service.setPublisherThreadDomain(threadDomain);
 		
@@ -124,6 +128,7 @@ public class CollaborationServiceTest extends TestCase {
 		connection1.joinAccepted(null);
 		connectionCtrl1.setMatcher(MockControl.ALWAYS_MATCHER);
 		connection1.sendDocument(expectedDocument.toPortableDocument());
+		connectionCtrl1.setMatcher(MockControl.ALWAYS_MATCHER);
 		connection1.sendParticipantJoined(2, new RemoteUserProxyStub("Y"));
 		connection1.close();
 		
@@ -149,6 +154,7 @@ public class CollaborationServiceTest extends TestCase {
 		connection2.joinAccepted(null);
 		connectionCtrl2.setMatcher(MockControl.ALWAYS_MATCHER);
 		connection2.sendDocument(expectedDocument.toPortableDocument());
+		connectionCtrl2.setMatcher(MockControl.ALWAYS_MATCHER);
 		connection2.close();
 		
 		// replay / test

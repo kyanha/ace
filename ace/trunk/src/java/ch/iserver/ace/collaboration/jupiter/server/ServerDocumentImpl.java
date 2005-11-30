@@ -22,12 +22,13 @@
 package ch.iserver.ace.collaboration.jupiter.server;
 
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Set;
 import java.util.TreeMap;
 
 import javax.swing.text.AbstractDocument;
@@ -42,15 +43,13 @@ import ch.iserver.ace.Fragment;
 import ch.iserver.ace.net.PortableDocument;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.util.CaretHandler;
-import ch.iserver.ace.util.CompareUtil;
 
 /**
  * Default implementation of the ServerDocument. Implements also the
  * PortableDocument interface from the network layer. Uses the 
  * Swing Document classes to keep the structure of the document.
  */
-public class ServerDocumentImpl extends AbstractDocument implements
-				ServerDocument, ch.iserver.ace.net.PortableDocument {
+public class ServerDocumentImpl extends AbstractDocument implements ServerDocument {
 
 	public static final String PARTICIPANT_ATTR = "participant";
 
@@ -266,7 +265,6 @@ public class ServerDocumentImpl extends AbstractDocument implements
 		try {
 			super.insertString(offset, text, attr);
 		} catch (BadLocationException e) {
-			// TODO: fix RuntimeException
 			throw new RuntimeException(e);
 		}
 	}
@@ -278,7 +276,6 @@ public class ServerDocumentImpl extends AbstractDocument implements
 		try {
 			super.remove(offset, length);
 		} catch (BadLocationException e) {
-			// TODO: fix RuntimeException
 			throw new RuntimeException(e);
 		}
 	}
@@ -287,10 +284,209 @@ public class ServerDocumentImpl extends AbstractDocument implements
 	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerDocument#toPortableDocument()
 	 */
 	public PortableDocument toPortableDocument() {
-		return this;
+		PortableDocumentImpl result = new PortableDocumentImpl();
+		addParticipants(result);
+		addFragments(result);
+		result.freeze();
+		return result;
 	}
-			
-	// --> PortableDocument methods <--
+	
+	/**
+	 * Adds all the participants to the copy of the document.
+	 * 
+	 * @param result the document beeing built
+	 */
+	protected void addParticipants(PortableDocumentImpl result) {
+		Iterator it = participants.keySet().iterator();
+		while (it.hasNext()) {
+			int id = ((Integer) it.next()).intValue();
+			RemoteUserProxy user = getUserProxy(id);
+			CaretUpdate selection = getSelection(id);
+			result.addParticipant(id, user, selection);			
+		}
+	}
+	
+	/**
+	 * Adds all the fragments to the copy of the document.
+	 * 
+	 * @param result the document beeing built
+	 */
+	protected void addFragments(PortableDocumentImpl result) {
+		BranchElement root = (BranchElement) getDefaultRootElement();
+		Enumeration en = root.children();
+		while (en.hasMoreElements()) {
+			Fragment fragment = (Fragment) en.nextElement();
+			if (en.hasMoreElements()) {
+				result.addFragment(fragment);
+			}
+		}
+	}
+		
+	/**
+	 * Gets the user proxy for the given participant id.
+	 * 
+	 * @param participantId the participants id
+	 * @return the user proxy for that participant or null
+	 */
+	protected RemoteUserProxy getUserProxy(int participantId) {
+		return (RemoteUserProxy) participants.get(new Integer(participantId));
+	}
+	
+	/**
+	 * Gets the selection of a particular participant.
+	 * 
+	 * @param participantId the participants id
+	 * @return the selection of the participant or null
+	 */
+	protected CaretUpdate getSelection(int participantId) {
+		CaretHandler handler = getCaretHandler(participantId);
+		if (handler != null) {
+			return new CaretUpdate(handler.getDot(), handler.getMark());
+		} else {
+			return null;
+		}
+	}
+
+	protected static class ParticipantInfo {
+		
+		private final int id;
+		
+		private final RemoteUserProxy user;
+		
+		private final CaretUpdate selection;
+		
+		protected ParticipantInfo(int id, RemoteUserProxy user, CaretUpdate selection) {
+			this.id = id;
+			this.user = user;
+			this.selection = selection;
+		}
+		
+		public int getId() {
+			return id;
+		}
+		
+		public CaretUpdate getSelection() {
+			return selection;
+		}
+		
+		public RemoteUserProxy getUser() {
+			return user;
+		}
+	}
+	
+	protected static class FragmentImpl implements Fragment {
+		
+		private final int id;
+		
+		private final String text;
+		
+		protected FragmentImpl(int id, String text) {
+			this.id = id;
+			this.text = text;
+		}
+		
+		/**
+		 * @see ch.iserver.ace.Fragment#getParticipantId()
+		 */
+		public int getParticipantId() {
+			return id;
+		}
+		
+		/**
+		 * @see ch.iserver.ace.Fragment#getText()
+		 */
+		public String getText() {
+			return text;
+		}
+		
+		/**
+		 * @see java.lang.Object#toString()
+		 */
+		public String toString() {
+			return "[" + id + "|" + text + "]";
+		}
+	}
+	
+	protected static class PortableDocumentImpl implements PortableDocument {
+		
+		private final List participants;
+		
+		private final List fragments;
+		
+		private boolean frozen;
+		
+		private int[] participantIds;
+		
+		private Map users;
+		
+		private Map selections;
+		
+		public PortableDocumentImpl() {
+			fragments = new LinkedList();
+			participants = new ArrayList();
+		}
+		
+		protected void addFragment(Fragment fragment) {
+			if (isFrozen()) {
+				throw new IllegalStateException("cannot mofify in frozen state");
+			}
+			fragments.add(new FragmentImpl(fragment.getParticipantId(), fragment.getText()));
+		}
+		
+		protected void addParticipant(int id, RemoteUserProxy user, CaretUpdate selection) {
+			if (isFrozen()) {
+				throw new IllegalStateException("cannot mofify in frozen state");
+			}
+			participants.add(new ParticipantInfo(id, user, selection));
+		}
+		
+		protected void freeze() {
+			this.frozen = true;
+			this.participantIds = new int[participants.size()];
+			this.users = new HashMap();
+			this.selections = new HashMap();
+			for (int i = 0; i < participantIds.length; i++) {
+				ParticipantInfo info = (ParticipantInfo) participants.get(i);
+				Integer key = new Integer(info.getId());
+				this.participantIds[i] = info.getId();
+				this.users.put(key, info.getUser());
+				this.selections.put(key, info.getSelection());
+			}
+		}
+		
+		protected boolean isFrozen() {
+			return frozen;
+		}
+		
+		/**
+		 * @see ch.iserver.ace.net.PortableDocument#getFragments()
+		 */
+		public Iterator getFragments() {
+			return fragments.iterator();
+		}
+		
+		/**
+		 * @see ch.iserver.ace.net.PortableDocument#getParticipantIds()
+		 */
+		public int[] getParticipantIds() {
+			return participantIds;
+		}
+		
+		/**
+		 * @see ch.iserver.ace.net.PortableDocument#getSelection(int)
+		 */
+		public CaretUpdate getSelection(int participantId) {
+			return (CaretUpdate) selections.get(new Integer(participantId));
+		}
+		
+		/**
+		 * @see ch.iserver.ace.net.PortableDocument#getUserProxy(int)
+		 */
+		public RemoteUserProxy getUserProxy(int participantId) {
+			return (RemoteUserProxy) users.get(new Integer(participantId));
+		}
+		
+	}
 	
 	/**
 	 * @see ch.iserver.ace.collaboration.PortableDocument#getFragments()
@@ -313,88 +509,7 @@ public class ServerDocumentImpl extends AbstractDocument implements
 			}		
 		};
 	}
-	
-	/**
-	 * @see ch.iserver.ace.net.PortableDocument#getParticipantIds()
-	 */
-	public int[] getParticipantIds() {
-		Set ids = participants.keySet();
-		int[] result = new int[ids.size()];
-		int idx = 0;
-		Iterator it = ids.iterator();
-		while (it.hasNext()) {
-			Integer id = (Integer) it.next();
-			result[idx++] = id.intValue(); 
-		}
-		return result;
-	}
-	
-	/**
-	 * @see ch.iserver.ace.net.PortableDocument#getUserProxy(int)
-	 */
-	public RemoteUserProxy getUserProxy(int participantId) {
-		return (RemoteUserProxy) participants.get(new Integer(participantId));
-	}
-	
-	/**
-	 * @see ch.iserver.ace.collaboration.PortableDocument#getSelection(int)
-	 */
-	public CaretUpdate getSelection(int participantId) {
-		CaretHandler handler = getCaretHandler(participantId);
-		if (handler != null) {
-			return new CaretUpdate(handler.getDot(), handler.getMark());
-		} else {
-			return null;
-		}
-	}
-	
-	// --> java.lang.Object methods <--
-	
-	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		} else if (obj instanceof PortableDocument) {
-			PortableDocument doc = (PortableDocument) obj;
-			if (!CompareUtil.arrayEquals(getParticipantIds(), doc.getParticipantIds())) {
-				return false;
-			}
-			int[] ids = getParticipantIds();
-			for (int i = 0; i < ids.length; i++) {
-				int id = ids[i];
-				if (!CompareUtil.nullSafeEquals(getSelection(id), doc.getSelection(id))) {
-					return false;
-				}
-			}
-			return CompareUtil.iteratorEquals(getFragments(), doc.getFragments());
-		} else {
-			return false;
-		}
-	}
-	
-	/**
-	 * @see java.lang.Object#toString()
-	 */
-	public String toString() {
-		StringBuffer buf = new StringBuffer();
-		buf.append("ServerDocument\n  ");
-		int[] ids = getParticipantIds();
-		for (int i = 0; i < ids.length; i++) {
-			buf.append(ids[i]);
-			buf.append("(");
-			buf.append(getSelection(i));
-			buf.append(")");
-			if (i + 1 < ids.length) {
-				buf.append(",");
-			}
-		}
-		buf.append("\n  ");
-		buf.append(getText());
-		return buf.toString();
-	}
-		
+			
 	// --> Fragment Element <--
 	
 	/**
@@ -422,7 +537,7 @@ public class ServerDocumentImpl extends AbstractDocument implements
 			try {
 				return getDocument().getText(getStartOffset(), length);
 			} catch (BadLocationException e) {
-				// TODO: fix RuntimeException
+				// unexpected code path
 				throw new RuntimeException(e);
 			}
 		}
