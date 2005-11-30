@@ -436,7 +436,7 @@ public class ServerLogicImplTest extends TestCase {
 		// define mock behavior
 		manager.addParticipant(0, null, null);
 		managerCtrl.setMatcher(MockControl.ALWAYS_MATCHER);
-		manager.joinRequestAccepted(1, null, participant);
+		manager.addParticipant(1, null, participant);
 		manager.getConnection(1);
 		managerCtrl.setReturnValue(participant);
 		manager.participantKicked(1);
@@ -462,7 +462,7 @@ public class ServerLogicImplTest extends TestCase {
 			}
 		};
 		logic.initPublisherConnection(connection);
-		logic.getParticipantManager().joinRequestAccepted(1, null, participant);
+		logic.getParticipantManager().addParticipant(1, null, participant);
 		logic.start();
 		logic.kick(1);
 		
@@ -494,7 +494,7 @@ public class ServerLogicImplTest extends TestCase {
 		// define mock behavior
 		manager.addParticipant(0, null, null);
 		managerCtrl.setMatcher(MockControl.ALWAYS_MATCHER);
-		manager.joinRequestAccepted(1, null, participant);
+		manager.addParticipant(1, null, participant);
 		manager.getConnection(1);
 		managerCtrl.setReturnValue(participant);
 		manager.participantLeft(1);
@@ -519,7 +519,7 @@ public class ServerLogicImplTest extends TestCase {
 			}
 		};
 		logic.initPublisherConnection(connection);
-		logic.getParticipantManager().joinRequestAccepted(1, null, participant);
+		logic.getParticipantManager().addParticipant(1, null, participant);
 		logic.start();
 		logic.leave(1);
 				
