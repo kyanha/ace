@@ -41,11 +41,15 @@ public class PublishedSessionCallbackImpl extends SessionCallbackImpl implements
 				String user = "\"" + request.getUser().getName() + "\"";
 				String title = "\"" + documentItem.getTitle() + "\"";
 				int result = dialogController.showJoinRequest(user, title);
-				if (result == JOptionPane.OK_OPTION) {
-					request.accept();
-				} else {
-					request.reject();
-				}
+				try {
+					if (result == JOptionPane.OK_OPTION) {
+						request.accept();
+					} else {
+						request.reject();
+					}
+				} catch(IllegalStateException e) {
+					// TODO: log exception
+				}				
 			}
 		});
 	}
