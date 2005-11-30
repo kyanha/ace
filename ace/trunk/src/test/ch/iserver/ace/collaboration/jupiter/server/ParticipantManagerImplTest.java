@@ -49,7 +49,9 @@ public class ParticipantManagerImplTest extends TestCase {
 		ParticipantManager manager = new ParticipantManagerImpl(forwarder);
 		manager.joinRequested(USER_ID);
 		assertTrue(manager.isJoining(USER_ID));
+		manager.joinRequested(USER_ID);
 		manager.addParticipant(1, null, connection);
+		manager.joinRequestAccepted(USER_ID);
 		assertFalse(manager.isJoining(USER_ID));
 		assertTrue(manager.isParticipant(USER_ID));
 		
@@ -58,7 +60,9 @@ public class ParticipantManagerImplTest extends TestCase {
 		
 		manager.joinRequested(USER_ID);
 		assertTrue(manager.isJoining(USER_ID));
+		manager.joinRequested(USER_ID);
 		manager.addParticipant(1, null, connection);
+		manager.joinRequestAccepted(USER_ID);
 		assertFalse(manager.isJoining(USER_ID));
 		assertTrue(manager.isParticipant(USER_ID));
 		
