@@ -127,19 +127,22 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	
 	public void stop() {
 		LOG.debug("--> stop()");
-		try {
-			//TODO: what if at the same time a new message is received and processed?
-			//abort discovery
-			discovery.abort();
-			//close all open sessions
-			SessionManager.getInstance().closeSessions();
-			//stop beep session listener
-			sessionListener.terminate();
 		
-			//TODO: conceal message for documents not necessary -> check with raess
-		} catch (Exception e) {
-			LOG.warn("could not stop network layer smoothly ["+e+", "+e.getMessage()+"]");
-		}
+		//TODO: workout shutdown
+		
+//		try {
+//			//TODO: what if at the same time a new message is received and processed?
+//			//abort discovery
+//			discovery.abort();
+//			//close all open sessions
+//			SessionManager.getInstance().closeSessions();
+//			//stop beep session listener
+//			sessionListener.terminate();
+//		
+//			//TODO: conceal message for documents not necessary -> check with raess
+//		} catch (Exception e) {
+//			LOG.warn("could not stop network layer smoothly ["+e+", "+e.getMessage()+"]");
+//		}
 		LOG.debug("<-- stop()");
 	}
 	
@@ -177,6 +180,9 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	/**********************************************/
 	/** Methods from interface NetworkServiceExt **/
 	/**********************************************/
+	public TimestampFactory getTimestampFactory() {
+		return timestampFactory;
+	}
 	
 	public synchronized void conceal(String docId) {
 		publishedDocs.remove(docId);
