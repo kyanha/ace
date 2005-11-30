@@ -117,6 +117,7 @@
     <constructor-arg index="1"><ref local="documentViewController"/></constructor-arg>
     <property name="toolBarActions">
       <list>
+        <ref bean="netLeaveSessionAction"/>
         <ref bean="netPublishConcealDocumentToggleAction"/>
       </list>
     </property>

@@ -91,20 +91,19 @@ public class ParticipantSessionCallbackImpl extends SessionCallbackImpl implemen
 	public void sessionTerminated() {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
+				// create local copy of the document
+				DocumentItem newItem = new DocumentItem("Copy (terminated) of: " + documentItem.getTitle(), dialogController);
+		
+				newItem.setEditorDocument(documentItem.createEditorDocumentCopy());
+		
+				// add item to document view
+				viewController.addDocument(newItem);
+		
+				// set type
+				documentItem.setType(DocumentItem.REMOTE);
+
+				// show info dialog
 				dialogController.showSessionTerminated(documentItem.getPublisher(), documentItem.getTitle());
-
-		System.out.println("sessionTerminated");
-		// create local copy of the document
-		DocumentItem newItem = new DocumentItem("Copy (terminated) of: " + documentItem.getTitle(), dialogController);
-
-		newItem.setEditorDocument(documentItem.createEditorDocumentCopy());
-
-		// add item to document view
-		viewController.addDocument(newItem);
-
-		// set type
-		documentItem.setType(DocumentItem.REMOTE);
-
 			}
 		});
 	}
@@ -112,20 +111,19 @@ public class ParticipantSessionCallbackImpl extends SessionCallbackImpl implemen
 	public void kicked() {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
+				// create local copy of the document
+				DocumentItem newItem = new DocumentItem("Copy (kicked) of: " + documentItem.getTitle(), dialogController);
+
+				newItem.setEditorDocument(documentItem.createEditorDocumentCopy());
+
+				// add item to document view
+				viewController.addDocument(newItem);
+
+				// set type
+				documentItem.setType(DocumentItem.REMOTE);
+
+				// show info dialog
 				dialogController.showKicked(documentItem.getPublisher(), documentItem.getTitle());
-
-		System.out.println("kicked");
-		// create local copy of the document
-		DocumentItem newItem = new DocumentItem("Copy (kicked) of: " + documentItem.getTitle(), dialogController);
-
-		newItem.setEditorDocument(documentItem.createEditorDocumentCopy());
-
-		// add item to document view
-		viewController.addDocument(newItem);
-
-		// set type
-		documentItem.setType(DocumentItem.REMOTE);
-
 			}
 		});
 	}
