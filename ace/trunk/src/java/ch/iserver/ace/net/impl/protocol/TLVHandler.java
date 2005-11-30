@@ -21,15 +21,22 @@
 
 package ch.iserver.ace.net.impl.protocol;
 
+import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.CharArrayWriter;
+import java.io.OutputStreamWriter;
 import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 
+import sun.misc.BASE64Encoder;
+
 import ch.iserver.ace.Fragment;
 import ch.iserver.ace.net.PortableDocument;
 import ch.iserver.ace.net.impl.FragmentImpl;
+import ch.iserver.ace.net.impl.NetworkProperties;
 import ch.iserver.ace.net.impl.PortableDocumentExt;
+import ch.iserver.ace.util.Base64;
 
 /**
  *
@@ -41,46 +48,62 @@ public class TLVHandler {
 	private static final char SPACE = ' ';
 	
 	public static char[] create(PortableDocument doc) {
-		Iterator iter = doc.getFragments();
-		CharArrayWriter buffer = new CharArrayWriter();
-		while (iter.hasNext()) {
-			Fragment fragment = (Fragment) iter.next();
-			int participantId = fragment.getParticipantId();
-			char[] tag = createCharArray(participantId);
-			char[] value = fragment.getText().toCharArray();
-			char[] length = createCharArray(value.length);
-			buffer.write(tag, 0, tag.length);
-			buffer.write(SPACE);
-			buffer.write(length, 0, length.length);
-			buffer.write(SPACE);
-			buffer.write(value, 0, value.length);
-			if (iter.hasNext())
+		String result = null;
+		try {
+			Iterator iter = doc.getFragments();
+			ByteArrayOutputStream output = new ByteArrayOutputStream();
+			BufferedWriter buffer = new BufferedWriter(new OutputStreamWriter(output));
+			while (iter.hasNext()) {
+				Fragment fragment = (Fragment) iter.next();
+				int participantId = fragment.getParticipantId();
+				char[] tag = createCharArray(participantId);
+				char[] value = fragment.getText().toCharArray();
+				char[] length = createCharArray(value.length);
+				buffer.write(tag, 0, tag.length);
 				buffer.write(SPACE);
+				buffer.write(length, 0, length.length);
+				buffer.write(SPACE);
+				buffer.write(value, 0, value.length);
+				if (iter.hasNext())
+					buffer.write(SPACE);
+			}
+			buffer.flush();
+			LOG.debug("--> encode("+output.size()+" bytes)");
+			result = Base64.encodeBytes(output.toByteArray(), Base64.GZIP);
+			LOG.debug("<-- encode("+result.length()+" bytes)");
+		} catch (Exception e) {
+			e.printStackTrace();
+			LOG.error("could not create TLV ["+e+", "+e.getMessage()+"]");
 		}
-		LOG.debug("create TLV of length "+buffer.size());
-		//drawback: toCharArray() returns copy of input data: can we avoid this?
-		return buffer.toCharArray();
+		//TODO: TLV creation not optimal: the payload data resides 3 times in memory!!
+		return result.toCharArray();
 	}
 	
-	public static void parse(String data, PortableDocumentExt document) {
+	public static void parse(String payload, PortableDocumentExt document) {
 		int endIndex = 0;
 		int startIndex = 0;
-		
-		 while ((endIndex = data.indexOf(SPACE, startIndex)) != -1) {
-			String tag = data.substring(startIndex, endIndex++);
-			startIndex = endIndex;
-			endIndex = data.indexOf(SPACE, startIndex);
-			String length = data.substring(startIndex, endIndex++);
-			startIndex = endIndex;
-			endIndex += Integer.parseInt(length);
-			String value = data.substring(startIndex, endIndex++);
-//			LOG.debug("tag: '" + tag + "'");
-//			LOG.debug("length: '" + length + "'");
-//			LOG.debug("value: '" + value + "'");
-			Fragment fragment = new FragmentImpl(Integer.parseInt(tag), value);
-			document.addFragment(fragment);
-			startIndex = endIndex;
-		}	
+		try {
+			LOG.debug("--> decode("+payload.length()+" bytes)");
+			byte[] decoded = Base64.decode(payload);
+			String data = new String(decoded, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
+			LOG.debug("<-- decode("+data.length()+")");
+			
+			 while ((endIndex = data.indexOf(SPACE, startIndex)) != -1) {
+				String tag = data.substring(startIndex, endIndex++);
+				startIndex = endIndex;
+				endIndex = data.indexOf(SPACE, startIndex);
+				String length = data.substring(startIndex, endIndex++);
+				startIndex = endIndex;
+				endIndex += Integer.parseInt(length);
+				String value = data.substring(startIndex, endIndex++);
+				Fragment fragment = new FragmentImpl(Integer.parseInt(tag), value);
+				document.addFragment(fragment);
+				startIndex = endIndex;
+			}	
+		} catch (Exception e) {
+			e.printStackTrace();
+			LOG.error("could not parse TLV ["+e+", "+e.getMessage()+"]");
+		}
 	}
 	
 	private static char[] createCharArray(int id) {
