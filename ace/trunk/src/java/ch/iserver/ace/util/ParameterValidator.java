@@ -22,7 +22,7 @@
 package ch.iserver.ace.util;
 
 /**
- *
+ * Utility class for validation of method parameters.
  */
 public final class ParameterValidator {
 	
@@ -30,18 +30,41 @@ public final class ParameterValidator {
 		// do nothing
 	}
 	
+	/**
+	 * Validates that the parameter value with the given <var>name</var> is not
+	 * null. 
+	 * 
+	 * @param name the name of the parameter
+	 * @param value the value of the parameter
+	 * @throws IllegalArgumentException if the parameter is null
+	 */
 	public static void notNull(String name, Object value) {
 		if (value == null) {
 			throw new IllegalArgumentException(name + " cannot be null");
 		}
 	}
 	
+	/**
+	 * Validates that the parameter value is not negative.
+	 * 
+	 * @param name the name of the parameter
+	 * @param value the value of the parameter
+	 * @throws IllegalArgumentException if the value is negative
+	 */
 	public static void notNegative(String name, int value) {
 		if (value < 0) {
 			throw new IllegalArgumentException(name + " cannot be negative");
 		}
 	}
 	
+	/**
+	 * Validates that the parameter is in the given range.
+	 * 
+	 * @param name the name of the parameter
+	 * @param value the value of the parameter
+	 * @param min the minimum value (inclusive)
+	 * @param max the maximum value (inclusive)
+	 */
 	public static void inRange(String name, int value, int min, int max) {
 		if ( !(min <= value && value <= max) ) {
 			throw new IllegalArgumentException(name + " is not in range.");

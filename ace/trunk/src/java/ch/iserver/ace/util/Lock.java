@@ -22,14 +22,33 @@
 package ch.iserver.ace.util;
 
 /**
- *
+ * Simple interface for locks. The interface hides the actual implementation
+ * of the lock from the application. A possible implementation could use
+ * the {@link java.util.concurrent.locks.ReentrantLock} or another
+ * lock implementation. Further, the actual implementation can be switched
+ * easily without affecting the client code.
  */
 public interface Lock {
 	
+	/**
+	 * Determines whether the given thread is holding the lock at the
+	 * moment.
+	 * 
+	 * @param thread the thread
+	 * @return true iff the thread is the holder of the lock
+	 */
 	boolean isOwner(Thread thread);
 	
+	/**
+	 * Grabs the lock.
+	 * 
+	 * @throws InterruptedRuntimeException if the operation was interrupted
+	 */
 	void lock() throws InterruptedRuntimeException;
 	
+	/**
+	 * Releases the lock.
+	 */
 	void unlock();
 	
 }

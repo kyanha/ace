@@ -22,25 +22,45 @@
 package ch.iserver.ace.util;
 
 /**
- *
+ * Non-reentrant Lock implementation based on a Semaphore. 
  */
 public class SemaphoreLock implements Lock {
 	
+	/**
+	 * The Semaphore used to implement the lock.
+	 */
 	private final Semaphore semaphore;
 
+	/**
+	 * The name of the lock.
+	 */
 	private final String name;
 	
+	/**
+	 * The current owner of the lock.
+	 */
 	private Thread owner;
 	
+	/**
+	 * Creats a SemaphoreLock with the given name.
+	 * 
+	 * @param name the name of the lock
+	 */
 	public SemaphoreLock(String name) {
 		this.semaphore = new CountingSemaphore(1);
 		this.name = name;
 	}
 	
+	/**
+	 * @return the name of the lock
+	 */
 	public String getName() {
 		return name;
 	}
 	
+	/**
+	 * @see ch.iserver.ace.util.Lock#isOwner(java.lang.Thread)
+	 */
 	public boolean isOwner(Thread thread) {
 		return thread == owner;
 	}

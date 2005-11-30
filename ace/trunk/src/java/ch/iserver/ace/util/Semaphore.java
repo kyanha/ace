@@ -22,7 +22,7 @@
 package ch.iserver.ace.util;
 
 /**
- *
+ * Interface representing a Semaphore.
  */
 public interface Semaphore {
 	
