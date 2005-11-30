@@ -481,8 +481,10 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	 */
 	public void invite(RemoteUser user) {
 		ParameterValidator.notNull("user", user);
-		participants.userInvited(user.getId());
-		getDocumentServer().invite(((RemoteUserImpl) user).getProxy());
+		if (!participants.isInvited(user.getId())) {
+			participants.userInvited(user.getId());
+			getDocumentServer().invite(((RemoteUserImpl) user).getProxy());
+		}
 	}
 	
 	/**
