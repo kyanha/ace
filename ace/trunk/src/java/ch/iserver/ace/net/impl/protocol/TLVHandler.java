@@ -74,9 +74,9 @@ public class TLVHandler {
 			startIndex = endIndex;
 			endIndex += Integer.parseInt(length);
 			String value = data.substring(startIndex, endIndex++);
-			LOG.debug("tag: '" + tag + "'");
-			LOG.debug("length: '" + length + "'");
-			LOG.debug("value: '" + value + "'");
+//			LOG.debug("tag: '" + tag + "'");
+//			LOG.debug("length: '" + length + "'");
+//			LOG.debug("value: '" + value + "'");
 			Fragment fragment = new FragmentImpl(Integer.parseInt(tag), value);
 			document.addFragment(fragment);
 			startIndex = endIndex;

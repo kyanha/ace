@@ -99,8 +99,10 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 //					sessionCallback.receiveRequest(participantId, request);
 				}
 				
-				try {				
-					message.sendNUL(); //confirm reception of msg
+				try {
+					if (type != ProtocolConstants.KICKED) { //on KICKED message, channel is already closed here
+						message.sendNUL(); //confirm reception of msg
+					}
 				} catch (Exception e) {
 					LOG.error("could not send confirmation ["+e.getMessage()+"]");
 				}
