@@ -140,7 +140,7 @@ public class RemoteUserSession {
 		SessionConnectionImpl conn = new SessionConnectionImpl(docId, this, 
 				collaborationChannel, ResponseListener.getInstance(), serializer);
 		sessionConnections.put(docId, conn);
-		LOG.debug(sessionConnections.size() + " SessionConnections with " + getUser().getUserDetails().getUsername());
+		LOG.debug(sessionConnections.size() + " SessionConnection(s) with " + getUser().getUserDetails().getUsername());
 		LOG.debug("<-- addSessionConnection()");
 		return conn;
 	}
@@ -151,7 +151,7 @@ public class RemoteUserSession {
 		CollaborationSerializer serializer = new CollaborationSerializer();
 		SessionConnectionImpl conn = new SessionConnectionImpl(docId, this, ResponseListener.getInstance(), serializer);
 		sessionConnections.put(docId, conn);
-		LOG.debug(sessionConnections.size() + " SessionConnections with " + getUser().getUserDetails().getUsername());
+		LOG.debug(sessionConnections.size() + " SessionConnection(s) with " + getUser().getUserDetails().getUsername());
 		LOG.debug("<-- addSessionConnection()");
 		return conn;
 	}
@@ -168,7 +168,7 @@ public class RemoteUserSession {
 		} else {
 			connection.cleanup();
 		}
-		LOG.debug(sessionConnections.size() + " SessionConnections with " + getUser().getUserDetails().getUsername());
+		LOG.debug(sessionConnections.size() + " SessionConnection(s) with " + getUser().getUserDetails().getUsername()+" remain.");
 		return connection;
 	}
 
@@ -199,7 +199,7 @@ public class RemoteUserSession {
 		ParticipantConnectionImpl connection = new ParticipantConnectionImpl(docId, this,
 				ResponseListener.getInstance(), serializer);
 		participantConnections.put(docId, connection);
-		LOG.debug(participantConnections.size() + " ParticipantConnections for " + getUser().getUserDetails().getUsername());
+		LOG.debug(participantConnections.size() + " ParticipantConnection(s) for " + getUser().getUserDetails().getUsername());
 		LOG.debug("<-- createParticipantConnection()");
 		return connection;
 	}
@@ -212,7 +212,7 @@ public class RemoteUserSession {
 	public ParticipantConnectionImpl removeParticipantConnection(String docId) {
 		ParticipantConnectionImpl conn = (ParticipantConnectionImpl) participantConnections.remove(docId);
 		conn.cleanup();
-		LOG.debug(participantConnections.size() + " ParticipantConnections for " + getUser().getUserDetails().getUsername());
+		LOG.debug(participantConnections.size() + " ParticipantConnection(s) for " + getUser().getUserDetails().getUsername()+" remain.");
 		return conn;
 	}
 
