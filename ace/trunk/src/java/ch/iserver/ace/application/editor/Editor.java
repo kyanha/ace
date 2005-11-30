@@ -21,7 +21,6 @@
 
 package ch.iserver.ace.application.editor;
 
-import ch.iserver.ace.application.ParticipationColorManager;
 import ch.iserver.ace.collaboration.Session;
 import javax.swing.JPanel;
 import javax.swing.text.StyledDocument;
