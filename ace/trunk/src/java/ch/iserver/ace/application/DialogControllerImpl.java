@@ -260,8 +260,8 @@ public class DialogControllerImpl implements DialogController {
 				InetAddress addr = InetAddress.getByName(host);
 				return new DialogResult(JOptionPane.OK_OPTION, new ServerInfo(addr, 0));
 			} catch (UnknownHostException e) {
-				title = getMessages().getMessage("dDisocverUserFailedTitle");
-				message = getMessages().getMessage("dDiscoverUserFailedMessage", new Object[] { e.getMessage() });
+				title = getMessages().getMessage("dDiscoverUserFailedTitle");
+				message = getMessages().getMessage("dDiscoverUserFailedMessage", new Object[] { "\"" + host + "\"" });
 				JOptionPane.showMessageDialog(
 								getMainFrame(),
 								message,
