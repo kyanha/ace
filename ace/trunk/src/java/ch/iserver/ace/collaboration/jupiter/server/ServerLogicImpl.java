@@ -40,6 +40,7 @@ import ch.iserver.ace.collaboration.jupiter.PublisherConnection;
 import ch.iserver.ace.collaboration.jupiter.RemoteUserImpl;
 import ch.iserver.ace.collaboration.jupiter.UserRegistry;
 import ch.iserver.ace.net.DocumentServer;
+import ch.iserver.ace.net.InvitationPort;
 import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.PortableDocument;
@@ -349,16 +350,15 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	 * @see ch.iserver.ace.net.DocumentServerLogic#join(ch.iserver.ace.net.ParticipantConnection)
 	 */
 	public void join(ParticipantConnection target) {
+		ParameterValidator.notNull("target", target);
 		LOG.info("--> join");
+		String id = target.getUser().getId();
+
 		if (!isAcceptingJoins()) {
 			target.joinRejected(JoinRequest.SHUTDOWN);
-			return;
-		}
-		
-		String id = target.getUser().getId();
-		
-		if (participants.isInvited(id)) {
+		} else if (participants.isInvited(id)) {
 			acceptJoin(target);
+			participants.invitationAccepted(id);
 		} else if (participants.isParticipant(id)) {
 			target.joinRejected(JoinRequest.JOINED);
 		} else if (participants.isBlackListed(id)) {
@@ -396,6 +396,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 			connection.joinRejected(JoinRequest.SHUTDOWN);
 		} else {
 			acceptJoin(connection);
+			participants.joinRequestAccepted(connection.getUser().getId());
 		}
 		LOG.info("<-- join accepted");
 	}
@@ -413,8 +414,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 		RemoteUserProxy user = connection.getUser();
 
 		PortableDocument document = getDocument();
-		
-		participants.joinRequestAccepted(participantId, forwarder, connection);
+		participants.addParticipant(participantId, forwarder, connection);
 		
 		connection.joinAccepted(port);
 		connection.sendDocument(document);
@@ -483,7 +483,51 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 		ParameterValidator.notNull("user", user);
 		if (!participants.isInvited(user.getId())) {
 			participants.userInvited(user.getId());
-			getDocumentServer().invite(((RemoteUserImpl) user).getProxy());
+			final RemoteUserProxy proxy = ((RemoteUserImpl) user).getProxy();
+			getDocumentServer().invite(new InvitationPort() {
+				
+				public void reject() {
+					invitationRejected(proxy);			
+				}
+			
+				public void accept(ParticipantConnection connection) {
+					ParameterValidator.notNull("connection", connection);
+					invitationAccepted(connection);
+				}
+			
+				public RemoteUserProxy getUser() {
+					return proxy;
+				}
+			});
+		}
+	}
+	
+	public void invitationRejected(RemoteUserProxy proxy) {
+		ParameterValidator.notNull("proxy", proxy);
+		participants.invitationRejected(proxy.getId());
+	}
+	
+	public void invitationAccepted(ParticipantConnection target) {
+		ParameterValidator.notNull("target", target);
+		if (!isAcceptingJoins()) {
+			target.joinRejected(JoinRequest.SHUTDOWN);
+		} else {
+			ParticipantConnection connection = (ParticipantConnection) outgoingDomain.wrap(
+							new ParticipantConnectionWrapper(
+									target, 
+									getFailureHandler()), 
+							ParticipantConnection.class,
+							true);
+			
+			String userId = target.getUser().getId();
+			RemoteUser user = getUserRegistry().getUser(userId);
+			
+			if (user == null) {
+				target.joinRejected(JoinRequest.UNKNOWN_USER);
+			} else {
+				acceptJoin(connection);
+				participants.invitationAccepted(userId);
+			}
 		}
 	}
 	

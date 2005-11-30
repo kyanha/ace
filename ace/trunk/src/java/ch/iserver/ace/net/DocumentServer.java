@@ -28,7 +28,7 @@ import ch.iserver.ace.DocumentDetails;
  * DocumentServer instances can be obtained from the NetworkService by 
  * publishing a document.
  *
- * @see ch.iserver.ace.net.NetworkService#publish(DocumentServerLogic)
+ * @see ch.iserver.ace.net.NetworkService#publish(DocumentServerLogic, DocumentDetails)
  */
 public interface DocumentServer {
 	
@@ -40,11 +40,12 @@ public interface DocumentServer {
 	void setDocumentDetails(DocumentDetails details);
 	
 	/**
-	 * Invites the user to this document session.
+	 * Passes an invitation to the document server. The document server is
+	 * responsible to forward the invitation to the invited user.
 	 * 
-	 * @param user the user to be invited
+	 * @param port the invitation port object
 	 */
-	void invite(RemoteUserProxy user);
+	void invite(InvitationPort port);
 	
 	/**
 	 * Shuts down the DocumentServer. The DocumentServer should take care that

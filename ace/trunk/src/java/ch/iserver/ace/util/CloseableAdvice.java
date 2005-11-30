@@ -58,8 +58,9 @@ public class CloseableAdvice implements MethodInterceptor {
 	public synchronized Object invoke(MethodInvocation invocation) throws Throwable {
 		if (isClosed()) {
 			throw new IllegalStateException("cannot access closed object");
+		} else {
+			return invocation.proceed();
 		}
-		return invocation.proceed();
 	}
 
 }

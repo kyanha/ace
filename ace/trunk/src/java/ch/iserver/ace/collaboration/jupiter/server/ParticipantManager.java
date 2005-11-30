@@ -106,6 +106,22 @@ interface ParticipantManager {
 	void userInvited(String userId);
 	
 	/**
+	 * Notifies the participant manager that the given user has rejected an
+	 * invitation.
+	 * 
+	 * @param userId the user id of the user that rejected an invitation
+	 */
+	void invitationRejected(String userId);
+	
+	/**
+	 * Notifies the participant manager that the given user has accepted an
+	 * invitation.
+	 * 
+	 * @param userId the user id of the user that accepted an invitation
+	 */
+	void invitationAccepted(String userId);
+	
+	/**
 	 * Notifies the participant manager that the user wants to join.
 	 * 
 	 * @param userId the user id of the joining user
@@ -116,11 +132,9 @@ interface ParticipantManager {
 	 * Notifies the participant manager that the user's join request was
 	 * accepted.
 	 * 
-	 * @param participantId the id of the participant
-	 * @param forwarder the forwarder for that participant
-	 * @param connection the connection for that participant
+	 * @param userId the user whose join request was accepted
 	 */
-	void joinRequestAccepted(int participantId, Forwarder forwarder, ParticipantConnection connection);
+	void joinRequestAccepted(String userId);
 	
 	/**
 	 * Notifies the participant manager that the user's join request was

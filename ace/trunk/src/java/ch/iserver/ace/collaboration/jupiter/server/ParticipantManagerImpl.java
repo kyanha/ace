@@ -254,6 +254,20 @@ class ParticipantManagerImpl implements ParticipantManager {
 		blacklist.remove(userId);
 		invited.add(userId);
 	}
+	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.ParticipantManager#invitationAccepted(java.lang.String)
+	 */
+	public void invitationAccepted(String userId) {
+		invited.remove(userId);
+	}
+	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.server.ParticipantManager#invitationRejected(java.lang.String)
+	 */
+	public void invitationRejected(String userId) {
+		invited.remove(userId);
+	}
 
 	/**
 	 * @see ch.iserver.ace.collaboration.jupiter.server.ParticipantManager#joinRequested(java.lang.String)
@@ -263,14 +277,10 @@ class ParticipantManagerImpl implements ParticipantManager {
 		joinSet.add(userId);
 	}
 
-	/**
-	 * @see ch.iserver.ace.collaboration.jupiter.server.ParticipantManager#joinRequestAccepted(int, ch.iserver.ace.collaboration.jupiter.server.Forwarder, ch.iserver.ace.net.ParticipantConnection)
-	 */
-	public void joinRequestAccepted(int participantId, Forwarder forwarder, ParticipantConnection connection) {		
-		LOG.info("joinRequestAccepted: " + participantId);
-		addParticipant(participantId, forwarder, connection);
-		joinSet.remove(connection.getUser().getId());
-		invited.remove(connection.getUser().getId());
+	public void joinRequestAccepted(String userId) {		
+		LOG.info("joinRequestAccepted: " + userId);
+		joinSet.remove(userId);
+		invited.remove(userId);
 	}
 
 	/**

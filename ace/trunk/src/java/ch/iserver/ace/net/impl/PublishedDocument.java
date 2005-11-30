@@ -26,6 +26,7 @@ import org.apache.log4j.Logger;
 import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.net.DocumentServer;
 import ch.iserver.ace.net.DocumentServerLogic;
+import ch.iserver.ace.net.InvitationPort;
 import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.net.impl.protocol.NullRequestFilter;
@@ -93,9 +94,10 @@ public class PublishedDocument implements DocumentServer {
 	/** methods from interface DocumentServer  **/
 	/********************************************/
 	
-	public void invite(RemoteUserProxy user) {
-		LOG.debug("--> invite("+user+")");
-		Request request = new RequestImpl(ProtocolConstants.INVITE, user.getId(), docId);
+	public void invite(InvitationPort invitation) {
+		// TODO: implement handling of invitations
+		LOG.debug("--> invite("+invitation.getUser()+")");
+		Request request = new RequestImpl(ProtocolConstants.INVITE, invitation.getUser().getId(), docId);
 		filter.process(request);
 		LOG.debug("<-- invite()");
 	}
