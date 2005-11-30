@@ -103,7 +103,9 @@ public class ParticipantSessionCallbackImpl extends SessionCallbackImpl implemen
 				documentItem.setType(DocumentItem.REMOTE);
 
 				// show info dialog
-				dialogController.showSessionTerminated(documentItem.getPublisher(), documentItem.getTitle());
+				String user = "\"" + documentItem.getPublisher() + "\"";
+				String title = "\"" + documentItem.getTitle() + "\"";
+				dialogController.showSessionTerminated(user, title);
 			}
 		});
 	}
@@ -123,7 +125,9 @@ public class ParticipantSessionCallbackImpl extends SessionCallbackImpl implemen
 				documentItem.setType(DocumentItem.REMOTE);
 
 				// show info dialog
-				dialogController.showKicked(documentItem.getPublisher(), documentItem.getTitle());
+				String user = "\"" + documentItem.getPublisher() + "\"";
+				String title = "\"" + documentItem.getTitle() + "\"";
+				dialogController.showKicked(user, title);
 			}
 		});
 	}

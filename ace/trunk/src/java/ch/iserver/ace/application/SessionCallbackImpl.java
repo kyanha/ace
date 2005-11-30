@@ -180,7 +180,9 @@ public class SessionCallbackImpl implements SessionCallback {
 	public void sessionFailed(final int reason, Exception e) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				dialogController.showSessionFailed(documentItem.getPublisher(), documentItem.getTitle(), reason);
+				String user = "\"" + documentItem.getPublisher() + "\"";
+				String title = "\"" + documentItem.getTitle() + "\"";
+				dialogController.showSessionFailed(user, title, reason);
 			}
 		});
 	}

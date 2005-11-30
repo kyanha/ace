@@ -39,6 +39,7 @@ import ch.iserver.ace.application.dialog.DialogResult;
 import ch.iserver.ace.application.dialog.PreferencesDialog;
 import ch.iserver.ace.application.dialog.SaveFilesDialog;
 import ch.iserver.ace.application.preferences.PreferencesStore;
+import ch.iserver.ace.collaboration.JoinRequest;
 
 /**
  *
@@ -332,7 +333,8 @@ public class DialogControllerImpl implements DialogController {
 	 */
 	public void showSessionFailed(String user, String docTitle, int reason) {
 		String title = getMessages().getMessage("dSessionFailedTitle");
-		String message = getMessages().getMessage("dSessionFailedMessage", new Object[] { user, docTitle, "" + reason });
+		String strReason = getMessages().getMessage("dSessionReason." + reason) + " (" + reason + ")";
+		String message = getMessages().getMessage("dSessionFailedMessage", new Object[] { user, docTitle, strReason });
 		JOptionPane.showMessageDialog(
 						getMainFrame(),
 						message,
@@ -360,7 +362,8 @@ public class DialogControllerImpl implements DialogController {
 	 */
 	public void showInvitationRejected(String user, String docTitle, int code) {
 		String title = getMessages().getMessage("dInvitationRejectedTitle");
-		String message = getMessages().getMessage("dInvitationRejectedMessage", new Object[] { user, docTitle, "" + code });
+		String strCode = getMessages().getMessage("dJoinReason." + code) + " (" + code + ")";
+		String message = getMessages().getMessage("dInvitationRejectedMessage", new Object[] { user, docTitle, strCode });
 		JOptionPane.showMessageDialog(
 						getMainFrame(),
 						message,

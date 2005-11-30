@@ -58,9 +58,8 @@ public class JoinCallbackImpl implements JoinCallback {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				documentItem.setType(DocumentItem.REMOTE);
-
-				String docTitle = documentItem.getTitle();
-				String user = documentItem.getPublisher();
+				String docTitle = "\"" + documentItem.getTitle() + "\"";
+				String user = "\"" + documentItem.getPublisher() + "\"";
 				dialogController.showInvitationRejected(user, docTitle, code);
 			}
 		});
