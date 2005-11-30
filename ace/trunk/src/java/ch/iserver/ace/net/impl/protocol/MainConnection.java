@@ -37,6 +37,7 @@ public class MainConnection extends AbstractConnection {
 	
 	public MainConnection(Channel channel) {
 		super(channel);
+		setState((channel == null) ? STATE_INITIALIZED : STATE_ACTIVE);
 		super.LOG = Logger.getLogger(MainConnection.class);
 	}
 
@@ -46,12 +47,16 @@ public class MainConnection extends AbstractConnection {
 	 */
 	public void close() {
 		try {
-			getChannel().close();
+			if (getState() == STATE_ACTIVE) {
+				//TODO: consider if there could be other states upon which a close() should be done
+				getChannel().close();
+			}
 		} catch (BEEPException be) {
 			LOG.warn("could not close channel ["+be.getMessage()+"]");
 		}
 		//TODO: consider a thorough cleanup
 		setChannel(null);
+		setState(STATE_CLOSED);
 	}
 	
 	public void cleanup() {
