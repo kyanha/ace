@@ -145,6 +145,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 	public void sendDocument(PortableDocument document) {
 		if (joinAccepted) {
 			LOG.info("--> sendDocument()");
+			LOG.debug("PortableDocument: "+document);
 			byte[] data = null;
 			try {
 				DocumentInfo info = new DocumentInfo(getPublishedDocument().getId(), getParticipantId());
