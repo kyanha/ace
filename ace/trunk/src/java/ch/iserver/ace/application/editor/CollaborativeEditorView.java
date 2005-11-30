@@ -21,6 +21,7 @@
 
 package ch.iserver.ace.application.editor;
 
+import ch.iserver.ace.application.*;
 import javax.swing.*;
 import javax.swing.text.*;
 import java.awt.*;
@@ -39,7 +40,7 @@ public class CollaborativeEditorView extends LabelView {
 		super.paint(g, a);
 		g.drawString(".", 10, 10);
 		CollaborativeTextPane cTextPane = (CollaborativeTextPane)getContainer();
-		HashMap caretHandlerMap = cTextPane.getCaretHandlerMap();
+		PropertyChangeHashMap caretHandlerMap = cTextPane.getCaretHandlerMap();
 		HashMap participationColorMap = cTextPane.getParticipationColorMap();
 		
 		if(!cTextPane.isLocalEditing()) {
