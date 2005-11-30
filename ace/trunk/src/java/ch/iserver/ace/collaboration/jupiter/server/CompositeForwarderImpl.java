@@ -34,6 +34,15 @@ import ch.iserver.ace.util.ParameterValidator;
 
 /**
  * A Forwarder implementation that forwards requests to several forwarders.
+ * This implementation has a default forwarder, which is set as constructor
+ * argument. The default forwarder is always passed the forwarding events
+ * first. If it fails processing the event, the event is not forwarded
+ * to the other forwarders in this composite forwarder. The collaboration
+ * layer sets as default forwarder the 
+ * {@link ch.iserver.ace.collaboration.jupiter.server.DocumentUpdater},
+ * which is responsible to update the document. Further the participant
+ * that caused the failure is excluded from the session through
+ * a {@link ch.iserver.ace.collaboration.jupiter.server.FailureHandler}.
  */
 class CompositeForwarderImpl implements CompositeForwarder {
 	
