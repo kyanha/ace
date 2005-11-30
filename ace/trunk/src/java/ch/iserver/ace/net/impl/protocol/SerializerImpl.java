@@ -161,13 +161,16 @@ public class SerializerImpl implements Serializer, ProtocolConstants {
 			TransformerHandler handler = createHandler();
 			ByteArrayOutputStream output = new ByteArrayOutputStream();
 			StreamResult result = new StreamResult(output);
+			handler.setResult(result);
+			handler.startDocument();
+			AttributesImpl attrs = new AttributesImpl();
+			handler.startElement("", "", "ace", attrs);
+			handler.startElement("", "", "response", attrs);
+			//TODO: find a smoother way to get userid
+			String userid = NetworkServiceImpl.getInstance().getUserId();
+			
 			if (type == PUBLISHED_DOCUMENTS) {
 				//TODO: published documents obsolete
-				handler.setResult(result);
-				handler.startDocument();
-				AttributesImpl attrs = new AttributesImpl();
-				handler.startElement("", "", "ace", attrs);
-				handler.startElement("", "", "response", attrs);
 				handler.startElement("", "", TAG_PUBLISHED_DOCS, attrs);
 				Map docs = (Map)data1;
 				synchronized(docs) {
@@ -182,10 +185,19 @@ public class SerializerImpl implements Serializer, ProtocolConstants {
 					}
 				}
 				handler.endElement("", "", TAG_PUBLISHED_DOCS);
-				handler.endElement("", "", "response");
-				handler.endElement("", "", "ace");
-				handler.endDocument();
+			} else if (type == INVITE_REJECTED) {
+				attrs.addAttribute("", "", USER_ID, "", userid);
+				handler.startElement("", "", TAG_INVITE_REJECTED, attrs);
+				attrs = new AttributesImpl();
+				String docId = (String) data1;
+				attrs.addAttribute("", "", ID, "", docId);
+				handler.startElement("", "", TAG_DOC, attrs);
+				handler.endElement("", "", TAG_DOC);
+				handler.endElement("", "", TAG_INVITE_REJECTED);
 			}
+			handler.endElement("", "", "response");
+			handler.endElement("", "", "ace");
+			handler.endDocument();
 			output.flush();
 			return output.toByteArray();
 		} catch (Exception e) {

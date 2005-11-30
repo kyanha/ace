@@ -85,15 +85,16 @@ public class CollaborationSerializer implements Serializer, ProtocolConstants {
 			TransformerHandler handler = createHandler();
 			ByteArrayOutputStream output = new ByteArrayOutputStream();
 			StreamResult result = new StreamResult(output);
+			handler.setResult(result);
+			handler.startDocument();
+			AttributesImpl attrs = new AttributesImpl();
+			handler.startElement("", "", "ace", attrs);
+			handler.startElement("", "", "response", attrs);
+			String userid = NetworkServiceImpl.getInstance().getUserId();
+			
 			if (type == JOIN_DOCUMENT) {
-				handler.setResult(result);
-				handler.startDocument();
-				AttributesImpl attrs = new AttributesImpl();
-				handler.startElement("", "", "ace", attrs);
-				handler.startElement("", "", "response", attrs);
 				DocumentInfo publishedDoc = (DocumentInfo) data1;
 				attrs.addAttribute("", "", ID, "", publishedDoc.getDocId());
-				String userid = NetworkServiceImpl.getInstance().getUserId();
 				attrs.addAttribute("", "", USER_ID, "", userid);
 				attrs.addAttribute("", "", PARTICIPANT_ID, "", Integer.toString(publishedDoc.getParticipantId()));
 				handler.startElement("", "", TAG_JOIN_DOCUMENT, attrs);
@@ -107,10 +108,21 @@ public class CollaborationSerializer implements Serializer, ProtocolConstants {
 				handler.endCDATA();
 				handler.endElement("", "", DATA);
 				handler.endElement("", "", TAG_JOIN_DOCUMENT);
-				handler.endElement("", "", "response");
-				handler.endElement("", "", "ace");
-				handler.endDocument();
+			} else if (type == JOIN_REJECTED) {
+				String docid = (String) data1;
+				attrs.addAttribute("", "", DOC_ID, "", docid);
+				attrs.addAttribute("", "", USER_ID, "", userid);
+				handler.startElement("", "", TAG_JOIN_REJECTED, attrs);
+				attrs = new AttributesImpl();
+				String code = (String) data2;
+				attrs.addAttribute("", "", CODE, "", code);
+				handler.startElement("", "", TAG_REASON, attrs);
+				handler.endElement("", "", TAG_REASON);
+				handler.endElement("", "", TAG_JOIN_REJECTED);
 			}
+			handler.endElement("", "", "response");
+			handler.endElement("", "", "ace");
+			handler.endDocument();
 			output.flush();
 			return output.toByteArray();
 		} catch (Exception e) {
