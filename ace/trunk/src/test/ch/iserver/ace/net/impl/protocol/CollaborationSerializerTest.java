@@ -81,6 +81,19 @@ public class CollaborationSerializerTest extends TestCase {
 		assertEquals(XML_JOIN_DOCUMENT, actual);
 	}
 	
+	public void testCreateResponseJoinRejected() throws Exception {
+		String userId = "vnmv-qqw2345";
+		NetworkServiceImpl.getInstance().setUserId(userId);
+		Serializer serializer = new CollaborationSerializer();
+		
+		String docId = "doc-id-234b";
+		
+		byte[] data = serializer.createResponse(ProtocolConstants.JOIN_REJECTED, docId, "501");
+		String actual = new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
+
+		assertEquals(XML_JOIN_REJECTED, actual);
+	}
+	
 	private static final String XML_LEAVE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
 			"<ace><notification>" +
 			"<leave docId=\"dic-1231\" participantId=\"13\"/>" +
@@ -113,4 +126,11 @@ public class CollaborationSerializerTest extends TestCase {
 	"</data>" +
 	"</document>" +
 	"</response></ace>";	
+	
+	private static final String XML_JOIN_REJECTED = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+	"<ace><response>" +
+	"<joinRejected docId=\"doc-id-234b\" userid=\"vnmv-qqw2345\">" +
+	"<reason code=\"501\"/>" +
+	"</joinRejected>" +
+	"</response></ace>";
 }

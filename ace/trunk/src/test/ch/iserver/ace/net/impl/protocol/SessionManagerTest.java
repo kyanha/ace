@@ -16,12 +16,6 @@ import ch.iserver.ace.net.impl.RemoteUserProxyImpl;
 import ch.iserver.ace.net.impl.discovery.DiscoveryManagerFactory;
 
 public class SessionManagerTest extends TestCase {
-
-	private SessionManager manager;
-	
-	public void setUp() {
-		manager = SessionManager.getInstance();
-	}
 	
 	public void testCreateAndGetSession() throws Exception {
 		String id = "ads214";
@@ -31,18 +25,13 @@ public class SessionManagerTest extends TestCase {
 		RemoteUserProxyFactory.init(new LogFilter(null, false));
 		RemoteUserProxyExt proxy = RemoteUserProxyFactory.getInstance().createProxy(id, details);
 		
-		MockControl callbackCtrl = MockControl.createControl(NetworkServiceCallback.class);
-		NetworkServiceCallback callback = (NetworkServiceCallback)callbackCtrl.getMock();
-		callbackCtrl.replay();
-		DiscoveryCallbackImpl discoveryCallback = new DiscoveryCallbackImpl(callback, null);
-		DiscoveryManagerFactory.getDiscoveryManager(discoveryCallback);
-		
+		SessionManager manager = SessionManager.getInstance();
 		manager.createSession(proxy);
 		
-		assertEquals(manager.size(), 1);
-		assertEquals(manager.getSession(id).getUser().getId(), id);
-		assertEquals(manager.getSession(id).getHost(), address);
-		assertEquals(manager.getSession(id).getPort(), port);
+		assertEquals(1, manager.size());
+		assertEquals(id ,manager.getSession(id).getUser().getId());
+		assertEquals(address, manager.getSession(id).getHost());
+		assertEquals(port, manager.getSession(id).getPort());
 		assertFalse(manager.getSession(id).isInitiated());
 	}
 	
