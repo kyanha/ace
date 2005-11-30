@@ -90,6 +90,10 @@ public class RequestImpl implements Request {
 		public int getParticipantId() {
 			return participantId;
 		}
+		
+		public void setParticipantId(int id) {
+			this.participantId = id;
+		}
 
 		public String getDocId() {
 			return docId;
