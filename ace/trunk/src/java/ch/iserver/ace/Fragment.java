@@ -24,12 +24,22 @@ package ch.iserver.ace;
 
 
 /**
- *
+ * A text fragment.
  */
 public interface Fragment {
 	
+	/**
+	 * The participant id of the creator of that fragment of text.
+	 * 
+	 * @return the participant id
+	 */
 	public int getParticipantId();
 
+	/**
+	 * The text of that particular fragment.
+	 * 
+	 * @return the text
+	 */
 	public String getText();
 	
 }
