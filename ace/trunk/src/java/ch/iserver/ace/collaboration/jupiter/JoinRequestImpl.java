@@ -72,7 +72,7 @@ public class JoinRequestImpl implements JoinRequest {
 	/**
 	 * @see ch.iserver.ace.collaboration.JoinRequest#accept()
 	 */
-	public void accept() {		
+	public void accept() {
 		logic.joinAccepted(connection);
 	}
 
