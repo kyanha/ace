@@ -52,6 +52,13 @@ public class CollaborativeEditor extends EditorImpl {
 		editorToolBar = new JToolBar();
 		editorToolBar.setFloatable(false);
 		editorToolBar.setRollover(true);
+		
+		/*String[] defaultJoinValues = { "Auto", "Blubb", "hubahuba" };
+		JComboBox defaultJoinRules = new JComboBox(defaultJoinValues);
+		JPanel comboPanel = new JPanel();
+		comboPanel.add(defaultJoinRules);
+		comboPanel.setBorder(BorderFactory.createEmptyBorder());
+		editorToolBar.add(comboPanel);*/
 
 		// create editor
 		cTextPane = new CollaborativeTextPane();

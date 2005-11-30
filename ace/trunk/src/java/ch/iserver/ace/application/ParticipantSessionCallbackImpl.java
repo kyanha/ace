@@ -92,7 +92,7 @@ public class ParticipantSessionCallbackImpl extends SessionCallbackImpl implemen
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				// create local copy of the document
-				DocumentItem newItem = new DocumentItem("Copy (terminated) of: " + documentItem.getTitle(), dialogController);
+				DocumentItem newItem = new DocumentItem(documentItem.getTitle() + "(copy)", dialogController);
 		
 				newItem.setEditorDocument(documentItem.createEditorDocumentCopy());
 		
@@ -112,7 +112,7 @@ public class ParticipantSessionCallbackImpl extends SessionCallbackImpl implemen
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				// create local copy of the document
-				DocumentItem newItem = new DocumentItem("Copy (kicked) of: " + documentItem.getTitle(), dialogController);
+				DocumentItem newItem = new DocumentItem(documentItem.getTitle() + "(copy)", dialogController);
 
 				newItem.setEditorDocument(documentItem.createEditorDocumentCopy());
 
