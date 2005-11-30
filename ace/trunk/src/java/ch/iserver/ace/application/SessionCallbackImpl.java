@@ -44,9 +44,9 @@ import javax.swing.SwingUtilities;
 
 public class SessionCallbackImpl implements SessionCallback {
 
-	public final static String ADDED_PROPERTY	= caretUpdate;
-	public final static String REMOVED_PROPERTY	= "caretUpdate";
-	public final static String UPDATE_PROPERTY	= "caretUpdate";
+	public final static String ADDED_PROPERTY	= "caretAdded";
+	public final static String REMOVED_PROPERTY	= "caretRemoved";
+	public final static String UPDATED_PROPERTY	= "caretUpdates";
 
 
 	protected EventList participantSourceList;
