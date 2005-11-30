@@ -38,7 +38,7 @@ public class PublishedSessionCallbackImpl extends SessionCallbackImpl implements
 	public void joinRequest(final JoinRequest request) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				int result = dialogController.showJoinRequest(documentItem.getPublisher(), documentItem.getTitle());
+				int result = dialogController.showJoinRequest(request.getUser().getName(), documentItem.getTitle());
 				if (result == JOptionPane.OK_OPTION) {
 					request.accept();
 				} else {

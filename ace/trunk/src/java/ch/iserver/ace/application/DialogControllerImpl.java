@@ -313,16 +313,13 @@ public class DialogControllerImpl implements DialogController {
 						title,
 						JOptionPane.WARNING_MESSAGE);
 	}
-	
 
-
-
-
-	
-	
+	/**
+	 * @see ch.iserver.ace.application.DialogController#showSessionTerminated(java.lang.String, java.lang.String)
+	 */
 	public void showSessionTerminated(String user, String docTitle) {
-		String title = "showSessionTerminated";
-		String message = "showSessionTerminated";
+		String title = getMessages().getMessage("dSessionTerminatedTitle");
+		String message = getMessages().getMessage("dSessionTerminatedMessage", new Object[] { user, docTitle });
 		JOptionPane.showMessageDialog(
 						getMainFrame(),
 						message,
@@ -330,9 +327,12 @@ public class DialogControllerImpl implements DialogController {
 						JOptionPane.WARNING_MESSAGE);
 	}
 	
+	/**
+	 * @see ch.iserver.ace.application.DialogController#showSessionFailed(java.lang.String, java.lang.String, int)
+	 */
 	public void showSessionFailed(String user, String docTitle, int reason) {
-		String title = "showSessionFailed";
-		String message = "showSessionFailed";
+		String title = getMessages().getMessage("dSessionFailedTitle");
+		String message = getMessages().getMessage("dSessionFailedMessage", new Object[] { user, docTitle, "" + reason });
 		JOptionPane.showMessageDialog(
 						getMainFrame(),
 						message,
@@ -340,9 +340,12 @@ public class DialogControllerImpl implements DialogController {
 						JOptionPane.WARNING_MESSAGE);
 	}
 	
+	/**
+	 * @see ch.iserver.ace.application.DialogController#showJoinRequest(java.lang.String, java.lang.String)
+	 */
 	public int showJoinRequest(String user, String docTitle) {
-		String title = "showJoinRequest";
-		String message = "showJoinRequest";
+		String title = getMessages().getMessage("dJoinRequestTitle");
+		String message = getMessages().getMessage("dJoinRequestMessage", new Object[] { user, docTitle });
 		return JOptionPane.showConfirmDialog(
 						getMainFrame(),
 						message,
@@ -352,9 +355,12 @@ public class DialogControllerImpl implements DialogController {
 	
 	//void showInvitationAccepted();
 
+	/**
+	 * @see ch.iserver.ace.application.DialogController#showInvitationRejected(java.lang.String, java.lang.String, int)
+	 */
 	public void showInvitationRejected(String user, String docTitle, int code) {
-		String title = "showInvitationRejected";
-		String message = "showInvitationRejected";
+		String title = getMessages().getMessage("dInvitationRejectedTitle");
+		String message = getMessages().getMessage("dInvitationRejectedMessage", new Object[] { user, docTitle, "" + code });
 		JOptionPane.showMessageDialog(
 						getMainFrame(),
 						message,
