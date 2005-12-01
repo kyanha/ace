@@ -105,7 +105,6 @@ public class SplitOperation implements Operation {
 	 */
 	public void setOriginalOperation(Operation op) {
 		original = op;
-		LOG.info("setOriginalOperation(" + op + ")");
 	}
 	
 	/**

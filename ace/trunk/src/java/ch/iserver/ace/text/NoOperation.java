@@ -96,7 +96,6 @@ public class NoOperation implements Operation {
 	 */
 	public void setOriginalOperation(Operation op) {
 		original = op;
-		LOG.info("setOriginalOperation(" + op + ")");
 	}
 
 	/**
