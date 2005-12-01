@@ -210,7 +210,7 @@ public class CollaborativeTextPane extends JTextPane implements CaretListener, P
 							CaretHandler pCaretHandler = (CaretHandler)caretHandlerMap.get(pId);
 							Rectangle rect = modelToView(pCaretHandler.getDot());
 							//System.out.println("mpId: " + mpId + "   pId: " + pId + "    view: " + rect);
-							System.out.println("caret update received. repainting rect: " + rect);
+//							System.out.println("caret update received. repainting rect: " + rect);
 							repaint(rect);
 						} catch(BadLocationException e) {
 						}
@@ -243,7 +243,7 @@ public class CollaborativeTextPane extends JTextPane implements CaretListener, P
 		
 		if(!localEditing && caretHandlerMap.size() > 0) {// && participationColorMap.size() > 0) {
 
-			System.out.println("paint: " + g.getClipBounds() + "\n");
+//			System.out.println("paint: " + g.getClipBounds() + "\n");
 
 			try {
 

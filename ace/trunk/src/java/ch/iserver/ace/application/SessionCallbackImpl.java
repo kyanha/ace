@@ -144,7 +144,7 @@ public class SessionCallbackImpl implements SessionCallback {
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
 				public void run() {
-					System.out.println("caretupdate receivend. sending caret update...");
+//					System.out.println("caretupdate receivend. sending caret update...");
 					participantCaretMap.firePropertyChange(UPDATED_PROPERTY, oldCaretUpdate, newCaretUpdate);
 				}
 			});
@@ -171,7 +171,7 @@ public class SessionCallbackImpl implements SessionCallback {
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
 				public void run() {
-					System.out.println("operation receivend. sending caret update...");
+//					System.out.println("operation receivend. sending caret update...");
 					participantCaretMap.firePropertyChange(UPDATED_PROPERTY, oldCaretUpdate, newCaretUpdate);
 				}
 			});
