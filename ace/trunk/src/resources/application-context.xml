@@ -94,6 +94,10 @@
     <constructor-arg><ref local="browseViewController"/></constructor-arg>
   </bean>
 
+  <bean id="serviceFailureHandler" class="ch.iserver.ace.application.ServiceFailureHandlerImpl">
+    <constructor-arg><ref local="dialogController"/></constructor-arg>
+  </bean>
+
 
 
 
