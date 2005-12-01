@@ -144,7 +144,7 @@ public class SessionCallbackImpl implements SessionCallback {
 
 	public void receiveOperation(Participant participant, Operation operation) {
 		String pId = "" + participant.getParticipantId();
-		System.out.println("receiveOperation: " + operation);
+		//System.out.println("receiveOperation: " + operation);
 		Style pStyle = cDocument.getStyle(pId);
 		applyOperation(operation, pStyle);
 	}
