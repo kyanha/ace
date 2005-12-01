@@ -59,10 +59,11 @@ public class CollaborationParserHandler extends ParserHandler {
 	private boolean participants, isTextEncoded;
 	private int currParticipantId, totalOriginalCount;
 	private StringBuffer buffer;
-	private String participantId, siteId;
+	private String participantId, siteId, reason;
 	private Timestamp timestamp;
 	private Operation currOperation;
 	private CaretUpdateMessage caretMsg;
+	private RemoteUserProxyExt proxy;
 	
 	private TimestampFactory factory;
 	
@@ -101,6 +102,10 @@ public class CollaborationParserHandler extends ParserHandler {
 		} else if (type == CARET_UPDATE) {
 			result = new RequestImpl(CARET_UPDATE, participantId, caretMsg);
 			caretMsg = null;
+		} else if (type == PARTICIPANT_JOINED) {
+			result = new RequestImpl(PARTICIPANT_JOINED, participantId, proxy);
+		} else if (type == PARTICIPANT_LEFT) {
+			result = new RequestImpl(PARTICIPANT_LEFT, participantId, reason);
 		}
 		buffer = null;
 	}
@@ -112,7 +117,8 @@ public class CollaborationParserHandler extends ParserHandler {
 					String participantId = attributes.getValue(ID); 
 					currParticipantId = Integer.parseInt(participantId);
 				} else if (qName.equals(USER)) {
-					handleUser(attributes);
+					RemoteUserProxyExt proxy = handleUser(attributes);
+					document.addParticipant(currParticipantId, proxy);
 				} else { //selection
 					String dot = attributes.getValue(DOT);
 					String mark = attributes.getValue(MARK);
@@ -124,6 +130,8 @@ public class CollaborationParserHandler extends ParserHandler {
 			} else if (qName.equals(DATA)) {
 				buffer = new StringBuffer();
 			}
+		} else if (currentType == PARTICIPANT_JOINED) {
+			proxy = handleUser(attributes);
 		} else if (qName.equals(TAG_JOIN_DOCUMENT)) {
 			initJoinDocumentParsing(attributes);
 		} else if (qName.equals(TAG_LEAVE)) {
@@ -196,6 +204,16 @@ public class CollaborationParserHandler extends ParserHandler {
 			int mark = Integer.parseInt(markStr);
 			CaretUpdate update = new CaretUpdate(dot, mark);
 			caretMsg = new CaretUpdateMessage(Integer.parseInt(siteId), timestamp, update);
+		} else if (qName.equals(TAG_PARTICIPANT_JOINED)) {
+			resultType = PARTICIPANT_JOINED;
+			currentType = resultType;
+			participantId = attributes.getValue(ID);
+		} else if (qName.equals(TAG_PARTICIPANT_LEFT)) {
+			resultType = PARTICIPANT_LEFT;
+			currentType = resultType;
+			participantId = attributes.getValue(ID);
+		} else if (qName.equals(TAG_REASON)) {
+			reason = attributes.getValue(CODE);
 		}
 	}
 	
@@ -263,7 +281,12 @@ public class CollaborationParserHandler extends ParserHandler {
 		participants = false;
 	}
 
-	private void handleUser(Attributes attributes) {
+	/**
+	 * Constructs a RemoteUserProxy from a given set of attributes.
+	 * @param attributes
+	 * @return
+	 */
+	private RemoteUserProxyExt handleUser(Attributes attributes) {
 		String userId = attributes.getValue(ID);
 		String userName = attributes.getValue(NAME);
 		String userAddress= attributes.getValue(ADDRESS);
@@ -279,7 +302,7 @@ public class CollaborationParserHandler extends ParserHandler {
 				address, Integer.parseInt(userPort));
 		RemoteUserProxyExt proxy = RemoteUserProxyFactory.getInstance().createProxy(userId, details);
 		proxy.setExplicityDiscovered(Boolean.getBoolean(explicitDiscovery));
-		document.addParticipant(currParticipantId, proxy);
+		return proxy;
 	}
 	
 	

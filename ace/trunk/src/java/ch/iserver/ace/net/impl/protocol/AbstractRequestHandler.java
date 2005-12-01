@@ -57,12 +57,11 @@ public abstract class AbstractRequestHandler implements RequestHandler {
 		do {
             	BufferSegment b = stream.waitForNextSegment();
              if (b == null) {
-             	out.flush();
                  break;
              }
              out.write(b.getData());
         } while (!stream.isComplete());
-		
+		out.flush();
 		return out.toByteArray();
 	}
 	

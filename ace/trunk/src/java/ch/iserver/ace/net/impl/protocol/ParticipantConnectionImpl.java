@@ -203,15 +203,15 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 	}
 
 	public void sendParticipantJoined(int participantId, RemoteUserProxy proxy) {
-		LOG.info("--> sendParticipantJoined("+participantId+", "+proxy.getUserDetails().getUsername()+")");
-//		
-//		byte[] data = null;
-//		try {
-//			data = serializer.createSessionMessage(ProtocolConstants.PARTICIPANT_JOINED, proxy, Integer.toString(participantId));
-//		} catch (SerializeException se) {
-//			LOG.error("could not serialize message ["+se.getMessage()+"]");
-//		}
-//		sendToPeer(data);
+		LOG.info("--> sendParticipantJoined("+participantId+", "+proxy+")");
+		
+		byte[] data = null;
+		try {
+			data = serializer.createSessionMessage(ProtocolConstants.PARTICIPANT_JOINED, proxy, Integer.toString(participantId));
+		} catch (SerializeException se) {
+			LOG.error("could not serialize message ["+se.getMessage()+"]");
+		}
+		sendToPeer(data);
 		
 		LOG.info("--> sendParticipantJoined()");
 	}
@@ -219,14 +219,14 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 	public void sendParticipantLeft(int participantId, int reason) {
 		LOG.info("--> sendParticipantLeft("+participantId+", "+reason+")");
 		
-//		byte[] data = null;
-//		try {
-//			data = serializer.createSessionMessage(ProtocolConstants.PARTICIPANT_LEFT, Integer.toString(reason), 
-//					Integer.toString(participantId));
-//		} catch (SerializeException se) {
-//			LOG.error("could not serialize message ["+se.getMessage()+"]");
-//		}
-//		sendToPeer(data);
+		byte[] data = null;
+		try {
+			data = serializer.createSessionMessage(ProtocolConstants.PARTICIPANT_LEFT, Integer.toString(reason), 
+					Integer.toString(participantId));
+		} catch (SerializeException se) {
+			LOG.error("could not serialize message ["+se.getMessage()+"]");
+		}
+		sendToPeer(data);
 		
 		LOG.info("--> sendParticipantLeft()");
 	}

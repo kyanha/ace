@@ -286,10 +286,35 @@ public class CollaborationSerializer implements Serializer, ProtocolConstants {
 				handler.endElement("", "", TAG_CARETUPDATE);
 			} else if (type == ACKNOWLEDGE) { 
 				
-			} else if (type == PARTICIPANT_JOINED) { 
-				
+			} else if (type == PARTICIPANT_JOINED) {  
+				String participantId = (String) data2;
+				attrs.addAttribute("", "", ID, "", participantId);
+				handler.startElement("", "", TAG_PARTICIPANT_JOINED, attrs);
+				RemoteUserProxyExt proxy = (RemoteUserProxyExt) data;
+				attrs = new AttributesImpl();
+				attrs.addAttribute("", "", ID, "", proxy.getId());
+				MutableUserDetails details = proxy.getMutableUserDetails();
+				attrs.addAttribute("", "", NAME, "", details.getUsername());
+				attrs.addAttribute("", "", ADDRESS, "", details.getAddress().getHostAddress());
+				attrs.addAttribute("", "", PORT, "", Integer.toString(details.getPort()));
+				attrs.addAttribute("", "", EXPLICIT_DISCOVERY, "", Boolean.toString(proxy.isExplicitlyDiscovered()));
+				handler.startElement("", "", USER, attrs);
+				if (proxy.isExplicitlyDiscovered()) {
+					//TODO: add published documents of this user
+				}
+				handler.endElement("", "", USER);
+				handler.endElement("", "", TAG_PARTICIPANT_JOINED);
+					
 			} else if (type == PARTICIPANT_LEFT) { 
-				
+				String reason = (String) data;
+				String participantId = (String) data2;
+				attrs.addAttribute("", "", ID, "", participantId);
+				handler.startElement("", "", TAG_PARTICIPANT_LEFT, attrs);
+				attrs = new AttributesImpl();
+				attrs.addAttribute("", "", CODE, "", reason);
+				handler.startElement("", "", TAG_REASON, attrs);
+				handler.endElement("", "", TAG_REASON);
+				handler.endElement("", "", TAG_PARTICIPANT_LEFT);
 			} else {
 				LOG.error("unknown notification type ["+type+"]");
 			}
@@ -300,6 +325,7 @@ public class CollaborationSerializer implements Serializer, ProtocolConstants {
 			output.flush();
 			return output.toByteArray();
 		} catch (Exception e) {
+			e.printStackTrace();
 			LOG.error("could not serialize ["+e.getMessage()+"]");
 			throw new SerializeException(e.getMessage());
 		}

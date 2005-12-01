@@ -26,7 +26,7 @@ import org.beepcore.beep.core.InputDataStream;
 import org.beepcore.beep.core.MessageMSG;
 
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
-import ch.iserver.ace.algorithm.TimestampFactory;
+import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.net.SessionConnectionCallback;
 import ch.iserver.ace.net.impl.PortableDocumentExt;
 import ch.iserver.ace.net.impl.RemoteDocumentProxyExt;
@@ -114,13 +114,15 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 					throw new UnsupportedOperationException();
 					
 				} else if (type == ProtocolConstants.PARTICIPANT_JOINED) {
-					
-					throw new UnsupportedOperationException();
-					
+					RemoteUserProxy proxy = (RemoteUserProxy) response.getPayload();
+					String participantId = response.getUserId();
+					LOG.debug("participant joined ["+participantId+", "+proxy.getUserDetails().getUsername()+"]");
+					sessionCallback.participantJoined(Integer.parseInt(participantId), proxy);
 				} else if (type == ProtocolConstants.PARTICIPANT_LEFT) {
-					
-					throw new UnsupportedOperationException();
-					
+					String reason = (String) response.getPayload();
+					String participantId = response.getUserId();
+					LOG.debug("participant joined ["+participantId+", "+reason+"]");
+					sessionCallback.participantLeft(Integer.parseInt(participantId), Integer.parseInt(reason));
 				}
 				try {
 					if (type != ProtocolConstants.KICKED) { //on KICKED message, channel is already closed here
