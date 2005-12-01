@@ -559,6 +559,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 		if (participantId == PUBLISHER_ID) {
 			LOG.error("failure related to publisher: " + reason);
 			getPublisherConnection().sessionFailed(reason, null);
+			getCompositeForwarder().close();
 			shutdown();
 		} else {
 			participants.participantLeft(participantId);
