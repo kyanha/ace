@@ -257,7 +257,7 @@ public class CollaborationParserHandler extends ParserHandler {
 		document.setDocumentId(docid);
 		String userid = attributes.getValue(USER_ID);
 		document.setPublisherId(userid);
-		String participantId = attributes.getValue(PARTICIPANT_ID);
+		participantId = attributes.getValue(PARTICIPANT_ID);
 		int myParticipantId = Integer.parseInt(participantId);
 		document.setParticpantId(myParticipantId);
 		participants = false;

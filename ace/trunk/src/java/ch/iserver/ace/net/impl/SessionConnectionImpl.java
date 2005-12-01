@@ -73,6 +73,7 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 	}
 	
 	public void setParticipantId(int id) {
+		LOG.debug("setParticipantId("+id+")");
 		this.participantId = id;
 	}
 	

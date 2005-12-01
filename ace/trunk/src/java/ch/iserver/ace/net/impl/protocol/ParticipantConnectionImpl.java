@@ -49,7 +49,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 	private RemoteUserSession session;
 	private boolean joinAccepted;
 	private Serializer serializer;
-	private int participantId;
+	private int participantId = -1;
 	private String docId;
 	private PublishedDocument publishedDoc;
 	
@@ -99,6 +99,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 	/** methods from interface ParticipantConnection  **/
 	/***************************************************/
 	public void setParticipantId(int participantId) {
+		LOG.debug("setParticipantId("+participantId+")");
 		this.participantId = participantId;
 	}
 	
@@ -147,6 +148,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 			LOG.info("--> sendDocument()");
 			byte[] data = null;
 			try {
+				assert (getParticipantId() > 0) : "participantId for "+getUser().getUserDetails().getUsername()+" is "+getParticipantId();
 				DocumentInfo info = new DocumentInfo(getPublishedDocument().getId(), getParticipantId());
 				data = serializer.createResponse(ProtocolConstants.JOIN_DOCUMENT, info, document);
 			} catch (SerializeException se) {
