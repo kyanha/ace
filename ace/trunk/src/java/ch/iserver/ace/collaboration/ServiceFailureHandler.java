@@ -22,14 +22,21 @@
 package ch.iserver.ace.collaboration;
 
 /**
- *
+ * A ServiceFailureHandler can be registered with the collaboration layer
+ * in order to receive service failure events. Beside of potential
+ * service failure events from the collaboration layer, events from
+ * the network layer are also passed to the ServiceFailureHandler.
  */
 public interface ServiceFailureHandler {
 	
 	/**
-	 * @param code
-	 * @param msg
-	 * @param e
+	 * Notifies the failure handler that a service failure occured. The 
+	 * error codes are defined in the {@link ch.iserver.ace.FailureCodes}
+	 * interface.
+	 * 
+	 * @param code the error code
+	 * @param msg an optional message
+	 * @param e an exception
 	 */
 	void serviceFailed(int code, String msg, Exception e);
 	

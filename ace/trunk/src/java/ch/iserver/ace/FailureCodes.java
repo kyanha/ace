@@ -22,7 +22,8 @@
 package ch.iserver.ace;
 
 /**
- *
+ * Interface that contains constants that define failure codes passed to
+ * the {@link ch.iserver.ace.collaboration.ServiceFailureHandler}.
  */
 public interface FailureCodes {
 

@@ -48,7 +48,7 @@ public class DocumentDetails {
 	}
 	
 	/**
-	 * @inheritDoc
+	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	public boolean equals(Object obj) {
 		if (obj == null ) {
@@ -61,7 +61,7 @@ public class DocumentDetails {
 	}
 	
 	/**
-	 * @inheritDoc
+	 * @see java.lang.Object#hashCode()
 	 */
 	public int hashCode() {
 		int hash = 13;
@@ -69,6 +69,9 @@ public class DocumentDetails {
 		return hash;
 	}
 	
+	/**
+	 * @see java.lang.Object#toString()
+	 */
 	public String toString() {
 		return "DocumentDetails('"+title+"')";
 	}

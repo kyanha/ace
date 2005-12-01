@@ -28,9 +28,15 @@ package ch.iserver.ace;
  */
 public class CaretUpdate  {
 	
-	public static final int DOT = 0;
+	/**
+	 * Constant indicating the index of the dot in the interal array.
+	 */
+	private static final int DOT = 0;
 	
-	public static final int MARK = 1;
+	/**
+	 * Constant indicating the index of the mark in the interal array.
+	 */
+	private static final int MARK = 1;
 	
 	/**
 	 * Int array keeping dot and mark values.
@@ -44,8 +50,8 @@ public class CaretUpdate  {
 	 * @param mark the mark value
 	 */
 	public CaretUpdate(int dot, int mark) {
-		this.indices[0] = dot;
-		this.indices[1] = mark;
+		this.indices[DOT] = dot;
+		this.indices[MARK] = mark;
 	}
 	
 	/**
@@ -55,7 +61,7 @@ public class CaretUpdate  {
 	 * @return the dot value
 	 */
 	public int getDot() {
-		return indices[0];
+		return indices[DOT];
 	}
 	
 	/**
@@ -65,7 +71,7 @@ public class CaretUpdate  {
 	 * @return the mark value
 	 */
 	public int getMark() {
-		return indices[1];
+		return indices[MARK];
 	}
 	
 	/**

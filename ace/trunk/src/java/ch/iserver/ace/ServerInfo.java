@@ -24,14 +24,26 @@ package ch.iserver.ace;
 import java.net.InetAddress;
 
 /**
- *
+ * Object containing information about a server.
  */
 public class ServerInfo {
 	
+	/**
+	 * The InetAddress of the server.
+	 */
 	private InetAddress address;
 	
+	/**
+	 * The port used by that particular server.
+	 */
 	private int port;
 	
+	/**
+	 * Creates a new ServerInfo instance.
+	 * 
+	 * @param addr
+	 * @param port
+	 */
 	public ServerInfo(InetAddress addr, int port) {
 		this.address = addr;
 		this.port = port;

@@ -22,34 +22,42 @@
 package ch.iserver.ace;
 
 /**
- *
+ * Error to be thrown in cases where it does not make sense to let the
+ * application running. Typical reasons to throw this application are
+ * missing configuration files that must be present in each application.
  */
 public class ApplicationError extends Error {
 
 	/**
-	 * 
+	 * Creates a new ApplicationError instance.
 	 */
 	public ApplicationError() {
 		super();
 	}
 
 	/**
-	 * @param message
+	 * Creates a new ApplicationError instance.
+	 * 
+	 * @param message the detail message
 	 */
 	public ApplicationError(String message) {
 		super(message);
 	}
 
 	/**
-	 * @param cause
+	 * Creates a new ApplicationError instance.
+	 * 
+	 * @param cause the cause of the ApplicationError
 	 */
 	public ApplicationError(Throwable cause) {
 		super(cause);
 	}
 
 	/**
-	 * @param message
-	 * @param cause
+	 * Creates a new ApplicationError instance.
+	 * 
+	 * @param message the detail message
+	 * @param cause the cause of the ApplicationError
 	 */
 	public ApplicationError(String message, Throwable cause) {
 		super(message, cause);
