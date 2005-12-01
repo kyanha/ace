@@ -186,13 +186,10 @@ public class SerializerImpl implements Serializer, ProtocolConstants {
 				}
 				handler.endElement("", "", TAG_PUBLISHED_DOCS);
 			} else if (type == INVITE_REJECTED) {
+				String docId = (String) data1;
+				attrs.addAttribute("", "", DOC_ID, "", docId);
 				attrs.addAttribute("", "", USER_ID, "", userid);
 				handler.startElement("", "", TAG_INVITE_REJECTED, attrs);
-				attrs = new AttributesImpl();
-				String docId = (String) data1;
-				attrs.addAttribute("", "", ID, "", docId);
-				handler.startElement("", "", TAG_DOC, attrs);
-				handler.endElement("", "", TAG_DOC);
 				handler.endElement("", "", TAG_INVITE_REJECTED);
 			}
 			handler.endElement("", "", "response");

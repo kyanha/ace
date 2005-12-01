@@ -34,6 +34,7 @@ public class RequestFilterFactory {
 		Deserializer deserializer = DeserializerImpl.getInstance();
 		listener.init(deserializer, createClientChainForResponses());
 		Serializer serializer = SerializerImpl.getInstance();
+		filter = new InvitationRejectedSenderFilter(filter, serializer, listener);
 		filter = new InviteRequestSenderFilter(filter, serializer, listener);
 		filter = new JoinRequestSenderFilter(filter, serializer, listener);
 		filter = new ConcealDocumentPrepareFilter(filter, serializer, listener);
@@ -51,6 +52,7 @@ public class RequestFilterFactory {
 	
 	public static RequestFilter createServerChain() {
 		RequestFilter filter = new FailureFilter(null);
+		filter = new InvitationRejectedRecipientFilter(filter);
 		filter = new InviteRequestRecipientFilter(filter);
 		filter = new JoinRejectedReceiveFilter(filter);
 		filter = new JoinRequestRecipientFilter(filter);

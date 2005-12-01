@@ -101,7 +101,6 @@ public class PublishedDocument implements DocumentServer {
 	/********************************************/
 	
 	public void invite(InvitationPort invitation) {
-		// TODO: implement handling of invitations
 		LOG.debug("--> invite("+invitation.getUser()+")");
 		String userId = invitation.getUser().getId();
 		Request request = new RequestImpl(ProtocolConstants.INVITE, userId, docId);
@@ -125,7 +124,6 @@ public class PublishedDocument implements DocumentServer {
 		LOG.debug("--> rejectedInvitedUser()");
 		InvitationPort port = (InvitationPort) invitations.remove(userId);
 		port.reject();
-		//TODO: resource cleanup?
 		LOG.debug("<-- rejectedInvitedUser()");
 	}
 	

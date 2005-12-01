@@ -155,6 +155,11 @@ public class RequestParserHandler extends ParserHandler {
 			String docId = attributes.getValue(DOC_ID);
 			userId = attributes.getValue(USER_ID);
 			info = new DocumentInfo(docId, null, userId);
+		} else if (qName.equals(TAG_INVITE_REJECTED)) {
+			requestType = INVITE_REJECTED;
+			String docId = attributes.getValue(DOC_ID);
+			userId = attributes.getValue(USER_ID);
+			info = new DocumentInfo(docId, null, userId);
 		}
 
 	}

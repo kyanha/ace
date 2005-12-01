@@ -73,10 +73,10 @@ public class InvitationProxyImpl implements InvitationProxy {
 		proxy = null;
 		session = null;
 		filter = null;
-//		LOG.debug("--> reject(doc='" + getDocument().getDocumentDetails().getTitle() + "')");
-//		Request request = new RequestImpl(ProtocolConstants.INVITE_REJECTED, getDocument().getId(), session);
-//		filter.process(request);
-//		LOG.debug("<-- reject()");
+		LOG.debug("--> reject(doc='" + getDocument().getDocumentDetails().getTitle() + "')");
+		Request request = new RequestImpl(ProtocolConstants.INVITE_REJECTED, getDocument().getId(), session);
+		filter.process(request);
+		LOG.debug("<-- reject()");
 	}
 
 }
