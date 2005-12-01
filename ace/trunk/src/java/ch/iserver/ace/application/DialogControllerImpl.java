@@ -371,9 +371,19 @@ public class DialogControllerImpl implements DialogController {
 						JOptionPane.WARNING_MESSAGE);
 	}
 
-	
-	
-	
+	/**
+	 * @see ch.iserver.ace.application.DialogController#showInvitationRejected(java.lang.String, java.lang.String, int)
+	 */
+	public void showServiceFailure(int code, String msg) {
+		String title = getMessages().getMessage("dServiceFailureTitle");
+		String message = getMessages().getMessage("dServiceFailure." + code, new Object[] { "" + code, msg });
+		JOptionPane.showMessageDialog(
+						getMainFrame(),
+						message,
+						title,
+						JOptionPane.WARNING_MESSAGE);
+	}
+
 	
 	
 	
