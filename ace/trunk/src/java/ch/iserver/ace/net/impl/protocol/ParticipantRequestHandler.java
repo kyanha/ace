@@ -25,6 +25,7 @@ import org.apache.log4j.Logger;
 import org.beepcore.beep.core.InputDataStream;
 import org.beepcore.beep.core.MessageMSG;
 
+import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
 
@@ -73,12 +74,22 @@ public class ParticipantRequestHandler extends AbstractRequestHandler {
 			} else {
 				deserializer.deserialize(rawData, handler);
 				Request result = handler.getResult();
-				
-				if (result.getType() == ProtocolConstants.LEAVE) {
+				int type = result.getType();
+				if (type == ProtocolConstants.LEAVE) {
 					port.leave();
 					LOG.debug("participant ["+((DocumentInfo)result.getPayload()).getParticipantId()+"] left.");
 					//cleanup of participant resources is done in ParticipantConnectionImpl.close()
-				}
+				} else if (type == ProtocolConstants.REQUEST) {
+					ch.iserver.ace.algorithm.Request algoRequest = (ch.iserver.ace.algorithm.Request) result.getPayload();
+					port.receiveRequest(algoRequest);
+				} else if (type == ProtocolConstants.CARET_UPDATE) {
+					CaretUpdateMessage updateMsg = (CaretUpdateMessage) result.getPayload();
+					port.receiveCaretUpdate(updateMsg);
+				} else if (type == ProtocolConstants.ACKNOWLEDGE) {
+					
+					throw new UnsupportedOperationException();
+					
+				} 
 				
 				try {				
 					message.sendNUL(); //confirm reception of msg

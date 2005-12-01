@@ -30,6 +30,7 @@ import org.apache.log4j.Logger;
 import org.beepcore.beep.core.Channel;
 import org.beepcore.beep.transport.tcp.TCPSession;
 
+import ch.iserver.ace.algorithm.TimestampFactory;
 import ch.iserver.ace.net.impl.MutableUserDetails;
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;
 import ch.iserver.ace.net.impl.discovery.DiscoveryManagerFactory;
@@ -48,6 +49,8 @@ public class SessionManager {
 	
 	private static SessionManager theInstance;
 	
+	private TimestampFactory factory;
+	
 	private SessionManager() {
 		sessions = Collections.synchronizedMap(new LinkedHashMap());
 	}
@@ -59,10 +62,15 @@ public class SessionManager {
 		return theInstance;
 	}
 	
+	public void setTimestampFactory(TimestampFactory factory) {
+		this.factory = factory;
+	}
+	
 	public RemoteUserSession createSession(RemoteUserProxyExt user) {
 		String id = user.getId();
 		MutableUserDetails details = user.getMutableUserDetails();
 		RemoteUserSession newSession = new RemoteUserSession(details.getAddress(), details.getPort(), user);
+		newSession.setTimestampFactory(factory);
 		sessions.put(id, newSession);
 		return newSession;
 	}
@@ -70,6 +78,7 @@ public class SessionManager {
 	public RemoteUserSession createSession(RemoteUserProxyExt user, TCPSession session, Channel mainChannel) {
 		//TODO: must not be synchronized right?
 		RemoteUserSession newSession = new RemoteUserSession(session, new MainConnection(mainChannel), user);
+		newSession.setTimestampFactory(factory);
 		sessions.put(user.getId(), newSession);
 		//TODO: test discoveryManager
 		DiscoveryManagerFactory.getDiscoveryManager(null).setSessionEstablished(user.getId());

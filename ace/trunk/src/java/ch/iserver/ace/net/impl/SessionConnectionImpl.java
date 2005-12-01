@@ -34,6 +34,7 @@ import ch.iserver.ace.net.impl.protocol.AbstractConnection;
 import ch.iserver.ace.net.impl.protocol.ProtocolConstants;
 import ch.iserver.ace.net.impl.protocol.ProtocolException;
 import ch.iserver.ace.net.impl.protocol.RemoteUserSession;
+import ch.iserver.ace.net.impl.protocol.SerializeException;
 import ch.iserver.ace.net.impl.protocol.Serializer;
 import ch.iserver.ace.net.impl.protocol.SessionRequestHandler;
 
@@ -79,6 +80,7 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 		return docId;
 	}
 	
+	//TODO: hasLeft() and close() synchronized?
 	public boolean hasLeft() {
 		return hasLeft;
 	}
@@ -143,10 +145,20 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 	 * @see ch.iserver.ace.net.SessionConnection#sendRequest(ch.iserver.ace.algorithm.Request)
 	 */
 	public void sendRequest(Request request) {
+		LOG.info("--> sendRequest("+request+")");
 		if (hasLeft()) {
 			throw new IllegalStateException("session left.");
 		}
-		// TODO Auto-generated method stub
+		
+		byte[] data = null;
+		try {
+			data = serializer.createSessionMessage(ProtocolConstants.REQUEST, request, Integer.toString(participantId));
+		} catch (SerializeException se) {
+			LOG.error("could not serialize message ["+se.getMessage()+"]");
+		}
+		sendToPeer(data);
+		
+		LOG.info("<-- sendRequest()");
 
 	}
 
@@ -154,9 +166,20 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 	 * @see ch.iserver.ace.net.SessionConnection#sendCaretUpdateMessage(ch.iserver.ace.algorithm.CaretUpdateMessage)
 	 */
 	public void sendCaretUpdateMessage(CaretUpdateMessage message) {
+		LOG.info("--> sendCaretUpdateMessage("+message+")");
 		if (hasLeft()) {
 			throw new IllegalStateException("session left.");
 		}
+		
+		byte[] data = null;
+		try {
+			data = serializer.createSessionMessage(ProtocolConstants.CARET_UPDATE, message, Integer.toString(participantId));
+		} catch (SerializeException se) {
+			LOG.error("could not serialize message ["+se.getMessage()+"]");
+		}
+		sendToPeer(data);
+		
+		LOG.info("<-- sendCaretUpdateMessage()");
 
 	}
 
@@ -164,10 +187,20 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 	 * @see ch.iserver.ace.net.SessionConnection#sendAcknowledge(int, ch.iserver.ace.algorithm.Timestamp)
 	 */
 	public void sendAcknowledge(int siteId, Timestamp timestamp) {
+		LOG.info("--> sendAcknowledge("+siteId+", "+timestamp+")");
 		if (hasLeft()) {
 			throw new IllegalStateException("session left.");
 		}
-
+//		
+//		byte[] data = null;
+//		try {
+//			data = serializer.createSessionMessage(ProtocolConstants.ACKNOWLEDGE, timestamp, Integer.toString(siteId));
+//		} catch (SerializeException se) {
+//			LOG.error("could not serialize message ["+se.getMessage()+"]");
+//		}
+//		sendToPeer(data);
+			
+		LOG.info("<-- sendAcknowledge()");
 	}
 	
 	private void sendToPeer(byte[] data) {

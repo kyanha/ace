@@ -22,6 +22,7 @@
 package ch.iserver.ace.net.impl;
 
 import ch.iserver.ace.ServerInfo;
+import ch.iserver.ace.algorithm.TimestampFactory;
 import ch.iserver.ace.net.NetworkService;
 
 /**
@@ -38,4 +39,6 @@ public interface NetworkServiceExt extends NetworkService {
 	public void conceal(String docId);
 	
 	public boolean hasPublishedDocuments();
+	
+	public TimestampFactory getTimestampFactory();
 }

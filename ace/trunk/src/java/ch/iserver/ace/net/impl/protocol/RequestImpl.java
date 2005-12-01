@@ -61,7 +61,7 @@ public class RequestImpl implements Request {
 	}
 	
 	public String toString() {
-		return "RequestImpl(" + type + ", " + userid + ", " + payload + ")";
+		return "RequestImpl(" + type + ", " + userid +")";
 	}
 	
 	/**

@@ -21,17 +21,17 @@
 
 package ch.iserver.ace.net.impl.protocol;
 
+import java.net.BindException;
+
 import org.apache.log4j.Logger;
 import org.beepcore.beep.core.BEEPException;
 import org.beepcore.beep.core.ProfileRegistry;
-import org.beepcore.beep.core.Session;
-import org.beepcore.beep.core.event.SessionEvent;
-import org.beepcore.beep.core.event.SessionListener;
-import org.beepcore.beep.core.event.SessionResetEvent;
 import org.beepcore.beep.transport.tcp.TCPSession;
 import org.beepcore.beep.transport.tcp.TCPSessionCreator;
 
+import ch.iserver.ace.FailureCodes;
 import ch.iserver.ace.net.impl.NetworkProperties;
+import ch.iserver.ace.net.impl.NetworkServiceImpl;
 
 /**
  *
@@ -61,7 +61,15 @@ public class BEEPSessionListener extends Thread {
 					TCPSession session = TCPSessionCreator.listen(port, registry);
 					LOG.debug("accepted session with ["+session.getSocket()+"]");
 				} catch (BEEPException be) {
-					LOG.warn("server stopped, restart ["+be.getMessage()+"]");
+					LOG.warn("server stopped ["+be.getMessage()+"]");
+					Throwable thrown = be.getCause();
+					if (thrown instanceof BindException) {
+						LOG.error("BindException, stop server.");
+						terminate = true;
+						exitStatus = be.getMessage();
+						NetworkServiceImpl.getInstance().getCallback().serviceFailure(
+								FailureCodes.ADDRESS_ALREADY_USED, Integer.toString(port), be);
+					}
 				} catch (Exception e) {
 					LOG.error("server stopped, shutdown ["+e.getMessage()+"]");
 					exitStatus = e.getMessage();

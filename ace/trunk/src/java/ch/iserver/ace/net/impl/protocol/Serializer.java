@@ -34,4 +34,6 @@ public interface Serializer {
 	
 	public byte[] createNotification(int type, Object data) throws SerializeException;
 	
+	public byte[] createSessionMessage(int type, Object data1, Object data2) throws SerializeException;
+	
 }

@@ -23,6 +23,7 @@ package ch.iserver.ace.net.impl.protocol;
 
 import org.apache.log4j.Logger;
 
+import ch.iserver.ace.algorithm.TimestampFactory;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**

@@ -74,7 +74,6 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 		RemoteDocumentProxyFactory.init(requestChain);
 		RemoteUserProxyFactory.init(requestChain);
 		InvitationProxyFactory.init(requestChain);
-		sessionListener = BEEPSessionListenerFactory.create();
 	}
 	
 	public static NetworkServiceImpl getInstance() {
@@ -117,7 +116,9 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	 * @inheritDoc
 	 */
 	public void start() { 
+		SessionManager.getInstance().setTimestampFactory(getTimestampFactory());
 		//start protocol server
+		sessionListener = BEEPSessionListenerFactory.create();
 		sessionListener.start();
 		//start discovery process
 		DiscoveryLauncher launcher = new DiscoveryLauncher(this);

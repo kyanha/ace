@@ -129,7 +129,7 @@ public class SerializerImpl implements Serializer, ProtocolConstants {
 				String docId = (String) data;
 				createRequest(handler, TAG_INVITE, userid, docId);
 			} else {
-				LOG.error("unknown notification type ["+type+"]");
+				LOG.error("createRequest(): unknown notification type ["+type+"]");
 			}
 			handler.endElement("", "", "ace");
 			handler.endDocument();
@@ -230,7 +230,7 @@ public class SerializerImpl implements Serializer, ProtocolConstants {
 				PublishedDocument doc = (PublishedDocument)data;
 				generateDocumentDetailsChangedXML(handler, doc);
 			} else {
-				LOG.error("unknown notification type ["+type+"]");
+				LOG.error("createNotification(): unknown notification type ["+type+"]");
 			}
 			handler.endElement("", "", "ace");
 			handler.endDocument();
@@ -306,5 +306,9 @@ public class SerializerImpl implements Serializer, ProtocolConstants {
 		handler.endElement("", "", "doc");
 		handler.endElement("", "", TAG_CONCEAL);
 		handler.endElement("", "", "notification");
+	}
+
+	public byte[] createSessionMessage(int type, Object data1, Object data2) throws SerializeException {
+		throw new UnsupportedOperationException();
 	}
 }

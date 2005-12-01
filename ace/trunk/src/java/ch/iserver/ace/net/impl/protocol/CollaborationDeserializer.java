@@ -26,11 +26,15 @@ import java.io.ByteArrayInputStream;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.apache.log4j.Logger;
+
 /**
  *
  */
 public class CollaborationDeserializer implements Deserializer {
 
+	private Logger LOG = Logger.getLogger(CollaborationDeserializer.class);
+	
 	private static SAXParserFactory factory;
 	
 	public CollaborationDeserializer() {
@@ -47,8 +51,11 @@ public class CollaborationDeserializer implements Deserializer {
 			//TODO: add xml validating, write xml schema
 			//factory.setValidating(true)
 			SAXParser saxParser = factory.newSAXParser();
+			LOG.debug("--> parse()");
 			saxParser.parse( input, handler );
+			LOG.debug("<-- parse()");
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new DeserializeException(e.getMessage());
 		}
 	}

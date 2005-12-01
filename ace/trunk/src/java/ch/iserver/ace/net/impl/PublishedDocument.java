@@ -28,7 +28,6 @@ import ch.iserver.ace.net.DocumentServer;
 import ch.iserver.ace.net.DocumentServerLogic;
 import ch.iserver.ace.net.InvitationPort;
 import ch.iserver.ace.net.ParticipantConnection;
-import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.net.impl.protocol.NullRequestFilter;
 import ch.iserver.ace.net.impl.protocol.ProtocolConstants;
 import ch.iserver.ace.net.impl.protocol.Request;
@@ -52,7 +51,6 @@ public class PublishedDocument implements DocumentServer {
 	
 	public PublishedDocument(String id, DocumentServerLogic docServer, DocumentDetails details, RequestFilter filter, NetworkServiceExt service) {
 		ParameterValidator.notNull("id", id);
-		LOG.debug("new PublishedDocument("+id+", "+details+")");
 		this.docId = id;
 		this.docServer = docServer;
 		this.details = details;

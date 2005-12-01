@@ -25,11 +25,14 @@ import org.apache.log4j.Logger;
 import org.beepcore.beep.core.InputDataStream;
 import org.beepcore.beep.core.MessageMSG;
 
+import ch.iserver.ace.algorithm.CaretUpdateMessage;
+import ch.iserver.ace.algorithm.TimestampFactory;
 import ch.iserver.ace.net.SessionConnectionCallback;
 import ch.iserver.ace.net.impl.PortableDocumentExt;
 import ch.iserver.ace.net.impl.RemoteDocumentProxyExt;
 import ch.iserver.ace.net.impl.SessionConnectionImpl;
 import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
+import ch.iserver.ace.util.ParameterValidator;
 
 /**
  * Client side request handler for a collaborative session.
@@ -44,6 +47,8 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 	private SessionConnectionCallback sessionCallback;
 	
 	public SessionRequestHandler(Deserializer deserializer, ParserHandler handler) {
+		ParameterValidator.notNull("deserializer", deserializer);
+		ParameterValidator.notNull("parserHandler", handler);
 		this.deserializer = deserializer;
 		this.handler = handler;
 	}
@@ -88,17 +93,34 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 						connection.setState(AbstractConnection.STATE_ACTIVE);
 						sessionCallback = connection.getSessionConnectionCallback();
 					}
-					LOG.debug("sessionCallback="+sessionCallback+"  doc="+doc);
 					sessionCallback.setDocument(doc);
 				} else if (type == ProtocolConstants.KICKED) {
 					String docId = ((DocumentInfo) response.getPayload()).getDocId();
 					LOG.debug("user kicked for doc [" + docId + "]");
 					sessionCallback.kicked();
-				}	else if (type == ProtocolConstants.REQUEST) {
-					//TODO:
-//					sessionCallback.receiveRequest(participantId, request);
+				} else if (type == ProtocolConstants.REQUEST) {
+					ch.iserver.ace.algorithm.Request algoRequest = (ch.iserver.ace.algorithm.Request) response.getPayload();
+					LOG.debug("received request: "+algoRequest);
+					String participantId = response.getUserId();
+					sessionCallback.receiveRequest(Integer.parseInt(participantId), algoRequest);
+				} else if (type == ProtocolConstants.CARET_UPDATE) {
+					CaretUpdateMessage update = (CaretUpdateMessage) response.getPayload();
+					LOG.debug("received caret update: "+update);
+					String participantId = response.getUserId();
+					sessionCallback.receiveCaretUpdate(Integer.parseInt(participantId), update);
+				} else if (type == ProtocolConstants.ACKNOWLEDGE) {
+					
+					throw new UnsupportedOperationException();
+					
+				} else if (type == ProtocolConstants.PARTICIPANT_JOINED) {
+					
+					throw new UnsupportedOperationException();
+					
+				} else if (type == ProtocolConstants.PARTICIPANT_LEFT) {
+					
+					throw new UnsupportedOperationException();
+					
 				}
-				
 				try {
 					if (type != ProtocolConstants.KICKED) { //on KICKED message, channel is already closed here
 						message.sendNUL(); //confirm reception of msg

@@ -37,7 +37,7 @@ public class LogFilter extends AbstractRequestFilter {
 	}
 	
 	public void process(Request request) {
-		LOG.debug("process("+request+")");
+		LOG.debug("process( "+request+" )");
 		if (forward) {
 			super.process(request);
 		}

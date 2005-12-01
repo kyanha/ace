@@ -113,7 +113,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 			setState(STATE_ACTIVE);
 		} catch (ConnectionException ce) {
 			NetworkServiceImpl.getInstance().getCallback().serviceFailure(
-					FailureCodes.CHANNEL_FAILURE, "cannot start channel for collaboration", ce);
+					FailureCodes.CHANNEL_FAILURE, getUser().getUserDetails().getUsername(), ce);
 		}
 		LOG.info("<-- joinAccepted()");
 	}
@@ -145,7 +145,6 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 	public void sendDocument(PortableDocument document) {
 		if (joinAccepted) {
 			LOG.info("--> sendDocument()");
-			LOG.debug("PortableDocument: "+document);
 			byte[] data = null;
 			try {
 				DocumentInfo info = new DocumentInfo(getPublishedDocument().getId(), getParticipantId());
@@ -163,26 +162,72 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 	public void sendRequest(int participantId, Request request) {
 		LOG.info("--> sendRequest("+participantId+", "+request+")");
 		
+		byte[] data = null;
+		try {
+			data = serializer.createSessionMessage(ProtocolConstants.REQUEST, request, Integer.toString(participantId));
+		} catch (SerializeException se) {
+			LOG.error("could not serialize message ["+se.getMessage()+"]");
+		}
+		sendToPeer(data);
+		
+		LOG.info("<-- sendRequest()");
 	}
 
 	public void sendCaretUpdateMessage(int participantId, CaretUpdateMessage message) {
 		LOG.info("--> sendCaretUpdateMessage("+participantId+", "+message+")");
 		
+		byte[] data = null;
+		try {
+			data = serializer.createSessionMessage(ProtocolConstants.CARET_UPDATE, message, Integer.toString(participantId));
+		} catch (SerializeException se) {
+			LOG.error("could not serialize message ["+se.getMessage()+"]");
+		}
+		sendToPeer(data);
+		
+		LOG.info("<-- sendCaretUpdateMessage()");
 	}
 	
 	public void sendAcknowledge(int siteId, Timestamp timestamp) {
 		LOG.info("--> sendAcknowledge("+siteId+", "+timestamp+")");
-		
+//		
+//		byte[] data = null;
+//		try {
+//			data = serializer.createSessionMessage(ProtocolConstants.ACKNOWLEDGE, timestamp, Integer.toString(siteId));
+//		} catch (SerializeException se) {
+//			LOG.error("could not serialize message ["+se.getMessage()+"]");
+//		}
+//		sendToPeer(data);
+			
+		LOG.info("<-- sendAcknowledge()");
 	}
 
 	public void sendParticipantJoined(int participantId, RemoteUserProxy proxy) {
 		LOG.info("--> sendParticipantJoined("+participantId+", "+proxy.getUserDetails().getUsername()+")");
+//		
+//		byte[] data = null;
+//		try {
+//			data = serializer.createSessionMessage(ProtocolConstants.PARTICIPANT_JOINED, proxy, Integer.toString(participantId));
+//		} catch (SerializeException se) {
+//			LOG.error("could not serialize message ["+se.getMessage()+"]");
+//		}
+//		sendToPeer(data);
 		
+		LOG.info("--> sendParticipantJoined()");
 	}
 
 	public void sendParticipantLeft(int participantId, int reason) {
 		LOG.info("--> sendParticipantLeft("+participantId+", "+reason+")");
 		
+//		byte[] data = null;
+//		try {
+//			data = serializer.createSessionMessage(ProtocolConstants.PARTICIPANT_LEFT, Integer.toString(reason), 
+//					Integer.toString(participantId));
+//		} catch (SerializeException se) {
+//			LOG.error("could not serialize message ["+se.getMessage()+"]");
+//		}
+//		sendToPeer(data);
+		
+		LOG.info("--> sendParticipantLeft()");
 	}
 
 	public void sendKicked() {
@@ -191,7 +236,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 		try {
 			data = serializer.createNotification(ProtocolConstants.KICKED, docId);
 		} catch (SerializeException se) {
-			LOG.error("could not serialize document ["+se.getMessage()+"]");
+			LOG.error("could not serialize message ["+se.getMessage()+"]");
 		}
 		sendToPeer(data);
 		LOG.info("<-- sendKicked()");
@@ -217,6 +262,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 		} catch (ProtocolException pe) {
 			//TODO: error handling?
 			LOG.error("protocol exception ["+pe.getMessage()+"]");
+			throw new NetworkException("could not send message to peer ["+pe.getMessage()+"]");
 		}
 	}
 	

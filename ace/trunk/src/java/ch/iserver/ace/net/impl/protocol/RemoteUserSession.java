@@ -33,12 +33,12 @@ import org.beepcore.beep.core.Channel;
 import org.beepcore.beep.core.OutputDataStream;
 import org.beepcore.beep.core.ProfileRegistry;
 import org.beepcore.beep.core.RequestHandler;
-import org.beepcore.beep.core.StartChannelProfile;
 import org.beepcore.beep.transport.tcp.TCPSession;
 import org.beepcore.beep.transport.tcp.TCPSessionCreator;
 import org.beepcore.beep.util.BufferSegment;
 
 import ch.iserver.ace.FailureCodes;
+import ch.iserver.ace.algorithm.TimestampFactory;
 import ch.iserver.ace.net.impl.NetworkProperties;
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;
@@ -66,7 +66,15 @@ public class RemoteUserSession {
 	private RemoteUserProxyExt user;
 	private boolean isInitiated;
 	private boolean isAlive;
+	private TimestampFactory factory;
 	
+	/**
+	 * 
+	 * @param address
+	 * @param port
+	 * @param user
+	 * @param factory used for the CollaborationParserHandler
+	 */
 	public RemoteUserSession(InetAddress address, int port, RemoteUserProxyExt user) {
 		ParameterValidator.notNull("address", address);
 		ParameterValidator.notNegative("port", port);
@@ -80,6 +88,13 @@ public class RemoteUserSession {
 		sessionConnections = Collections.synchronizedMap(new LinkedHashMap());
 	}
 	
+	/**
+	 * 
+	 * @param session
+	 * @param connection
+	 * @param user
+	 * @param factory used for the CollaborationParserHandler
+	 */
 	public RemoteUserSession(TCPSession session, MainConnection connection, RemoteUserProxyExt user) {
 		ParameterValidator.notNull("session", session);
 		ParameterValidator.notNull("connection", connection);
@@ -91,6 +106,14 @@ public class RemoteUserSession {
 		isAlive = true;
 		participantConnections = Collections.synchronizedMap(new LinkedHashMap());
 		sessionConnections = Collections.synchronizedMap(new LinkedHashMap());
+	}
+	
+	public void setTimestampFactory(TimestampFactory factory) {
+		this.factory = factory;
+	}
+	
+	public TimestampFactory getTimestampFactory() {
+		return factory;
 	}
 	
 	/**
@@ -239,6 +262,7 @@ public class RemoteUserSession {
 			} else if (type == CHANNEL_SESSION) {
 				CollaborationDeserializer deserializer = new CollaborationDeserializer();
 				CollaborationParserHandler parserHandler = new CollaborationParserHandler();
+				parserHandler.setTimestampFactory(getTimestampFactory());
 				handler = new ParticipantRequestHandler(deserializer, parserHandler);
 				channelType = getChannelTypeXML(CHANNEL_SESSION);
 			} else {
@@ -289,7 +313,7 @@ public class RemoteUserSession {
 			//TODO: retry strategy?
 			LOG.error("could not initiate session ["+be+"]");
 			if (be.getCause() instanceof ConnectException) {
-				String msg = "connection refused to host [" + host + ":" + port + "]";
+				String msg = getUser().getUserDetails().getUsername() + "[" + host + ":" + port + "]";
 				NetworkServiceImpl.getInstance().getCallback().serviceFailure(FailureCodes.CONNECTION_REFUSED, msg, be);
 			}
 			throw new ConnectionException("session init failed ["+be.getMessage()+"]");

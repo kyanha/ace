@@ -25,7 +25,9 @@ import org.beepcore.beep.core.BEEPException;
 import org.beepcore.beep.core.ProfileRegistry;
 import org.beepcore.beep.core.StartChannelListener;
 
+import ch.iserver.ace.algorithm.TimestampFactory;
 import ch.iserver.ace.net.impl.NetworkProperties;
+import ch.iserver.ace.net.impl.NetworkServiceImpl;
 
 /**
  *
@@ -43,7 +45,12 @@ public class ProfileRegistryFactory {
 			mainHandler = new MainRequestHandler(deserializer, filter, requestHandler);
 			DefaultRequestHandlerFactory.init(mainHandler, deserializer, requestHandler);
 			CollaborationParserHandler handler = new CollaborationParserHandler();
-			SessionRequestHandlerFactory.init(deserializer, handler);
+			TimestampFactory factory = NetworkServiceImpl.getInstance().getTimestampFactory();
+			handler.setTimestampFactory(factory);
+			CollaborationDeserializer collabDeserializer = new CollaborationDeserializer();
+			//TODO: now, all sessionrequesthandlers share deserializer and handler, but you could do it
+			//the same as with participantrequesthandler: each one has its own deserializer and handler
+			SessionRequestHandlerFactory.init(collabDeserializer, handler);
 			StartChannelListener listener = new StartChannelListenerImpl(DefaultRequestHandlerFactory.getInstance());
 			DefaultProfile profile = new DefaultProfile(listener);
 			StartChannelListener channelListener = null;

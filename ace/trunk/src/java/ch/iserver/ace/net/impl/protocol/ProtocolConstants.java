@@ -36,17 +36,27 @@ public interface ProtocolConstants {
 	public static final int DOCUMENT_DETAILS_CHANGED = 4;
 	public static final int JOIN = 5;
 	public static final int JOIN_DOCUMENT = 6;
-	public static final int JOIN_REJECTED = 12;
+	public static final int JOIN_REJECTED = 11;
 	public static final int LEAVE = 7;
-	public static final int REQUEST = 8;
-	public static final int KICKED = 9;
-	public static final int INVITE = 10;
-	public static final int INVITE_REJECTED = 11;
+	public static final int KICKED = 8;
+	public static final int INVITE = 9;
+	public static final int INVITE_REJECTED = 10;
 	
-	public static final int CHANNEL_MAIN = 100;
-	public static final int CHANNEL_SESSION = 101;
+	public static final int REQUEST = 100;
+	public static final int CARET_UPDATE = 101;
+	public static final int ACKNOWLEDGE = 102;
+	public static final int PARTICIPANT_JOINED = 103;
+	public static final int PARTICIPANT_LEFT = 104;
+	public static final int INSERT = 105;
+	public static final int DELETE = 106;
+	public static final int SPLIT = 107;
+	public static final int NOOP = 108;
+	
+	
+	public static final int CHANNEL_MAIN = 200;
+	public static final int CHANNEL_SESSION = 201;
 	//for future use
-	public static final int CHANNEL_PROXY = 102;
+	public static final int CHANNEL_PROXY = 202;
 	
 	/********************/
 	/** Top level tags **/
@@ -66,6 +76,15 @@ public interface ProtocolConstants {
 	public static final String TAG_INVITE_REJECTED = "inviteRejected";
 	public static final String TAG_CHANNEL = "channel";
 	public static final String TAG_REASON = "reason";
+	public static final String TAG_REQUEST = "request";
+	public static final String TAG_OPERATION = "operation";
+	public static final String TAG_INSERT = "insert";
+	public static final String TAG_DELETE = "delete";
+	public static final String TAG_SPLIT = "split";
+	public static final String TAG_NOOP = "noop";
+	public static final String TAG_ORIGINAL = "original";
+	public static final String TAG_TIMESTAMP = "timestamp";
+	public static final String TAG_CARETUPDATE = "caretUpdate";
 	
 	/***********************************/
 	/** Sub-level tags 				**/
@@ -92,6 +111,13 @@ public interface ProtocolConstants {
 	public static final String DOT = "dot";
 	public static final String TYPE = "type";
 	public static final String CODE = "code";
+	public static final String POSITION = "position";
+	public static final String ORIGIN = "origin";
+	public static final String TEXT = "text";
+	public static final String ENCODED = "encoded";
+	public static final String SITE_ID = "siteId";
+	public static final String CARET = "caret";
 
+	
 	
 }
