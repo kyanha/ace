@@ -225,6 +225,9 @@ public class PublishedSessionImpl extends AbstractSession
 	 * @see ch.iserver.ace.net.ParticipantConnection#sendCaretUpdateMessage(int, ch.iserver.ace.algorithm.CaretUpdateMessage)
 	 */
 	public void sendCaretUpdateMessage(int participantId, CaretUpdateMessage message) {
+		if (!isParticipant(participantId)) {
+			throw new IllegalArgumentException("no participant with id " + participantId + " in session");
+		}
 		lock();
 		try {
 			Participant participant = getParticipant(participantId);
@@ -242,6 +245,9 @@ public class PublishedSessionImpl extends AbstractSession
 	 * @see ch.iserver.ace.net.ParticipantConnection#sendRequest(int, ch.iserver.ace.algorithm.Request)
 	 */
 	public void sendRequest(int participantId, Request request) {
+		if (!isParticipant(participantId)) {
+			throw new IllegalArgumentException("no participant with id " + participantId + " in session");
+		}
 		lock();
 		try {
 			Participant participant = getParticipant(participantId);

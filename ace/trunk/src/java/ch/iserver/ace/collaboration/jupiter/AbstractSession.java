@@ -188,6 +188,17 @@ abstract class AbstractSession implements Session {
 		checkSessionState();
 		return Collections.unmodifiableSet(participants);
 	}
+	
+	/**
+	 * Determines whether the given participant id corresponds to an active
+	 * participant.
+	 * 
+	 * @param participantId the id of the participant
+	 * @return true iff that particular participant is in the session
+	 */
+	protected boolean isParticipant(int participantId) {
+		return participantMap.containsKey(new Integer(participantId));
+	}
 
 	/**
 	 * @see ch.iserver.ace.collaboration.Session#getParticipant(int)

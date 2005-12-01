@@ -234,10 +234,14 @@ public class SessionImpl extends AbstractSession
 	 * @see ch.iserver.ace.net.SessionConnectionCallback#receiveCaretUpdate(int, ch.iserver.ace.algorithm.CaretUpdateMessage)
 	 */
 	public synchronized void receiveCaretUpdate(int participantId, CaretUpdateMessage message) {
+		if (!isParticipant(participantId)) {
+			throw new IllegalArgumentException("no participant with id " + participantId + " in session");
+		}
 		lock();
 		try {
 			CaretUpdate update = getAlgorithm().receiveCaretUpdateMessage(message);
-			getCallback().receiveCaretUpdate(getParticipant(participantId), update);
+			Participant participant = getParticipant(participantId);
+			getCallback().receiveCaretUpdate(participant, update);
 		} catch (TransformationException e) {
 			getCallback().sessionFailed(Session.TRANSFORMATION_FAILED, e);
 		} finally {
@@ -249,6 +253,9 @@ public class SessionImpl extends AbstractSession
 	 * @see ch.iserver.ace.net.SessionConnectionCallback#receiveRequest(int, ch.iserver.ace.algorithm.Request)
 	 */
 	public synchronized void receiveRequest(int participantId, Request request) {
+		if (!isParticipant(participantId)) {
+			throw new IllegalArgumentException("no participant with id " + participantId + " in session");
+		}
 		lock();
 		try {
 			Operation operation = getAlgorithm().receiveRequest(request);
