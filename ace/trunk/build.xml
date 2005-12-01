@@ -200,7 +200,8 @@
 		       source="1.4" 
 		       classpathref="classpath.compile" 
 		       debug="${debug}" 
-		       optimize="${optimize}"/>
+		       optimize="${optimize}"
+		       deprecation="yes"/>
 		<javac srcdir="${src.stub}" 
                destdir="${build.stubs}" 
                target="1.4"
