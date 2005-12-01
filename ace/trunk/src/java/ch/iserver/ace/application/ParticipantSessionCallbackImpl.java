@@ -35,6 +35,8 @@ import javax.swing.text.StyleConstants;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
+import ch.iserver.ace.util.CaretHandler;
+
 
 
 
@@ -51,25 +53,37 @@ public class ParticipantSessionCallbackImpl extends SessionCallbackImpl implemen
 	public synchronized void setDocument(PortableDocument doc) {
 		// IMPORTANT: this method is called first from the collaboration layer. set participants here.
 		// add all participants
-		int myParticipantId = documentItem.getSession().getParticipantId();
-		System.out.println("my participant id: " + myParticipantId);
+		String mpId = "" + documentItem.getSession().getParticipantId();
+		System.out.println("my participant id: " + mpId);
 		Iterator pIter = doc.getParticipants().iterator();
 		while(pIter.hasNext()) {
 			Participant participant = (Participant)pIter.next();
 			String pId = "" + participant.getParticipantId();
 			System.out.println("found participant: " + participant);
-			if(myParticipantId != participant.getParticipantId()) {
+			if(!pId.equals(mpId)) {
 				
 				Color pColor = participantColorJoined(pId);
 				ParticipantItem mapParticipantItem = new ParticipantItem(participant, pColor);
 				participantItemMap.put(pId, mapParticipantItem);
 				participantSourceList.add(mapParticipantItem);
-
+				
 				Style pStyle = cDocument.addStyle(pId, null);
 				StyleConstants.setBackground(pStyle, pColor);
-				System.out.println("added participant: " + participant);
+
+				// caret handler
+				CaretHandler pCaretHandler = new CaretHandler(0, 0);
+				cDocument.addDocumentListener(pCaretHandler);
+				participantCaretMap.put(pId, pCaretHandler);
 			}
 		}
+		
+		// own caret
+		CaretHandler pCaretHandler = new CaretHandler(0, 0);
+		cDocument.addDocumentListener(pCaretHandler);
+		participantCaretMap.put(mpId, pCaretHandler);
+
+		
+		
 		
 		// get document fragments
 		Iterator fIter = doc.getFragments();

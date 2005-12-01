@@ -26,6 +26,7 @@ import ch.iserver.ace.collaboration.PublishedSessionCallback;
 import ch.iserver.ace.application.editor.CollaborativeDocument;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import ch.iserver.ace.util.CaretHandler;
 
 
 
@@ -33,6 +34,11 @@ public class PublishedSessionCallbackImpl extends SessionCallbackImpl implements
 
 	public PublishedSessionCallbackImpl(DocumentItem documentItem, DialogController dialogController) {
 		super(documentItem, dialogController);
+
+		// own caret
+		CaretHandler pCaretHandler = new CaretHandler(0, 0);
+		cDocument.addDocumentListener(pCaretHandler);
+		participantCaretMap.put("0", pCaretHandler);
 	}
 	
 	public void joinRequest(final JoinRequest request) {
