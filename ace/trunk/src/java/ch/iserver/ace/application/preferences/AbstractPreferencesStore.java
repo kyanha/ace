@@ -23,18 +23,37 @@ package ch.iserver.ace.application.preferences;
 
 import javax.swing.event.EventListenerList;
 
+/**
+ * Abstract base class for PreferencesStore implementations. This class implements
+ * the handling of the event listeners and the firing of events.
+ */
 public abstract class AbstractPreferencesStore implements PreferencesStore {
 	
+	/**
+	 * The listener list used to hold all listeners.
+	 */
 	private final EventListenerList listeners = new EventListenerList();
 	
+	/**
+	 * @see ch.iserver.ace.application.preferences.PreferencesStore#addPreferenceChangeListener(ch.iserver.ace.application.preferences.PreferenceChangeListener)
+	 */
 	public void addPreferenceChangeListener(PreferenceChangeListener listener) {
 		listeners.add(PreferenceChangeListener.class, listener);
 	}
 
+	/**
+	 * @see ch.iserver.ace.application.preferences.PreferencesStore#removePreferenceChangeListener(ch.iserver.ace.application.preferences.PreferenceChangeListener)
+	 */
 	public void removePreferenceChangeListener(PreferenceChangeListener listener) {
 		listeners.remove(PreferenceChangeListener.class, listener);
 	}
 	
+	/**
+	 * Fires a PreferenceChangeEvent to all registered listeners.
+	 * 
+	 * @param key the preferences key that changed
+	 * @param value the new value for that key
+	 */
 	protected void firePreferenceChanged(String key, String value) {
 		PreferenceChangeListener[] listeners = (PreferenceChangeListener[]) 
 				this.listeners.getListeners(PreferenceChangeListener.class);

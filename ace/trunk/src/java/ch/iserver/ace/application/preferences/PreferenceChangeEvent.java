@@ -23,26 +23,56 @@ package ch.iserver.ace.application.preferences;
 
 import java.util.EventObject;
 
+/**
+ * Event object used to notify PreferenceChangeListeners about a preference
+ * change.
+ */
 public class PreferenceChangeEvent extends EventObject {
 	
-	private String key;
+	/**
+	 * The key that changed.
+	 */
+	private final String key;
 	
-	private String value;
+	/**
+	 * The new value.
+	 */
+	private final String value;
 	
+	/**
+	 * Creates a new PreferenceChangeEvent with the given key and value.
+	 * 
+	 * @param source the source of the event
+	 * @param key the key that changed
+	 * @param value the new value
+	 */
 	public PreferenceChangeEvent(Object source, String key, String value) {
 		super(source);
 		this.key = key;
 		this.value = value;
 	}
 	
+	/**
+	 * Gets the key that changed.
+	 * 
+	 * @return the key that changed
+	 */
 	public String getKey() {
 		return key;
 	}
 	
+	/**
+	 * Gets the value that changed.
+	 * 
+	 * @return the value that changed
+	 */
 	public String getValue() {
 		return value;
 	}
 	
+	/**
+	 * @see java.lang.Object#toString()
+	 */
 	public String toString() {
 		return getClass().getName() + "[source=" + getSource()
 				+ ",key=" + getKey() + ",value=" + getValue() + "]";

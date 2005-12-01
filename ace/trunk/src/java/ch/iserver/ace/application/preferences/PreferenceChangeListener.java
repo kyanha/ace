@@ -23,8 +23,19 @@ package ch.iserver.ace.application.preferences;
 
 import java.util.EventListener;
 
+/**
+ * Listener interface for preference changes. A PreferenceChangeListener
+ * can be registered with a 
+ * {@link ch.iserver.ace.application.preferences.PreferencesStore}. The
+ * registered listener is then notified whenever a preference changes.
+ */
 public interface PreferenceChangeListener extends EventListener {
 	
+	/**
+	 * Notifies the listener about a changed preference.
+	 * 
+	 * @param event the event
+	 */
 	void preferenceChanged(PreferenceChangeEvent event);
 	
 }
