@@ -99,7 +99,6 @@ public class ParticipantForwarder implements Forwarder {
 	 * @param participantId the participant id of this proxy
 	 * @param algorithm the algorithm wrapper used by this proxy
 	 * @param connection the connection to the participant
-	 * @param acknowledgeStrategy
 	 */
 	ParticipantForwarder(int participantId,
 					AlgorithmWrapper algorithm,
