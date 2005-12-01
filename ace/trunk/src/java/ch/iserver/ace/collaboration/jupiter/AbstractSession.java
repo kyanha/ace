@@ -139,7 +139,7 @@ abstract class AbstractSession implements Session {
 	 * Resets the acknowledge strategy.
 	 */
 	protected void resetAcknowledgeTimer() {
-		acknowledgeStrategy.resetTimer();
+		acknowledgeStrategy.reset();
 	}
 	
 	/**

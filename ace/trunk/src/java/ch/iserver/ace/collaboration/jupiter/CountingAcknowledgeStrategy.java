@@ -21,38 +21,56 @@
 
 package ch.iserver.ace.collaboration.jupiter;
 
+import ch.iserver.ace.util.ParameterValidator;
 
 /**
- * AcknowledgeStrategy that does not schedule any acknowledge messages.
+ *
  */
-public class NullAcknowledgeStrategy implements AcknowledgeStrategy {
+public class CountingAcknowledgeStrategy implements AcknowledgeStrategy {
+
+	private AcknowledgeAction action;
+	
+	private int messages;
+	
+	private int threshold;
+	
+	/**
+	 * @param threshold
+	 */
+	public CountingAcknowledgeStrategy(int threshold) {
+		this.threshold = 10;
+	}
 	
 	/**
 	 * @see ch.iserver.ace.collaboration.jupiter.AcknowledgeStrategy#init(ch.iserver.ace.collaboration.jupiter.AcknowledgeAction)
 	 */
 	public void init(AcknowledgeAction action) {
-		// ignored
+		ParameterValidator.notNull("action", action);
+		this.action = action;
 	}
-	
+
 	/**
 	 * @see ch.iserver.ace.collaboration.jupiter.AcknowledgeStrategy#messageReceived()
 	 */
-	public void messageReceived() {
-		// ignored
+	public synchronized void messageReceived() {
+		messages++;
+		if (messages == threshold) {
+			action.execute();
+		}
 	}
 
 	/**
 	 * @see ch.iserver.ace.collaboration.jupiter.AcknowledgeStrategy#reset()
 	 */
-	public void reset() {
-		// ignored
+	public synchronized void reset() {
+		messages = 0;
 	}
-	
+
 	/**
 	 * @see ch.iserver.ace.collaboration.jupiter.AcknowledgeStrategy#destroy()
 	 */
 	public void destroy() {
-		// ignored
+		// nothing to do
 	}
 
 }

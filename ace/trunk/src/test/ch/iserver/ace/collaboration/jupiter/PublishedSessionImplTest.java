@@ -140,7 +140,7 @@ public class PublishedSessionImplTest extends TestCase {
 		port.receiveRequest(request);
 		acknowledge.init(null);
 		acknowledgeCtrl.setMatcher(MockControl.ALWAYS_MATCHER);
-		acknowledge.resetTimer();
+		acknowledge.reset();
 		
 		// replay
 		algorithmCtrl.replay();
@@ -211,7 +211,7 @@ public class PublishedSessionImplTest extends TestCase {
 		port.receiveCaretUpdate(message);
 		acknowledge.init(null);
 		acknowledgeCtrl.setMatcher(MockControl.ALWAYS_MATCHER);
-		acknowledge.resetTimer();
+		acknowledge.reset();
 		
 		// replay
 		algorithmCtrl.replay();

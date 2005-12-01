@@ -52,6 +52,10 @@ class AcknowledgeStrategyImpl implements AcknowledgeStrategy {
 	 */
 	private final int delay;
 	
+	private int messages = 0;
+	
+	private AcknowledgeAction action;
+	
 	/**
 	 * The runnable that is scheduled.
 	 */
@@ -76,9 +80,21 @@ class AcknowledgeStrategyImpl implements AcknowledgeStrategy {
 	}
 	
 	/**
-	 * @see ch.iserver.ace.collaboration.jupiter.AcknowledgeStrategy#resetTimer()
+	 * @see ch.iserver.ace.collaboration.jupiter.AcknowledgeStrategy#messageReceived()
 	 */
-	public void resetTimer() {
+	public synchronized void messageReceived() {
+		messages++;
+		if (messages == 10) {
+			action.execute();
+			reset();
+			messages = 0;
+		}
+	}
+	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.AcknowledgeStrategy#reset()
+	 */
+	public void reset() {
 		if (future == null) {
 			throw new IllegalStateException("cannot reset unscheduled AcknowledgeManager");
 		}
@@ -97,6 +113,7 @@ class AcknowledgeStrategyImpl implements AcknowledgeStrategy {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("initialize AcknowledgeStrategy " + this);
 		}
+		this.action = action;
 		this.runnable= new Runnable() {
 			public void run() {
 				LOG.debug("executing acknowledge action ...");

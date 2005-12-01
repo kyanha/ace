@@ -172,7 +172,11 @@ public class ParticipantForwarder implements Forwarder {
 	 * Resets the acknowledge strategies timer.
 	 */
 	protected void resetAcknowledgeTimer() {
-		acknowledgeStrategy.resetTimer();
+		acknowledgeStrategy.reset();
+	}
+	
+	protected void increaseUnacknowledgedMessages() {
+		acknowledgeStrategy.messageReceived();
 	}
 	
 	/**
@@ -188,6 +192,8 @@ public class ParticipantForwarder implements Forwarder {
 			} finally {
 				unlock();
 			}
+		} else {
+			increaseUnacknowledgedMessages();
 		}
 	}
 	
@@ -204,6 +210,8 @@ public class ParticipantForwarder implements Forwarder {
 			} finally {
 				unlock();
 			}
+		} else {
+			increaseUnacknowledgedMessages();
 		}
 	}
 		

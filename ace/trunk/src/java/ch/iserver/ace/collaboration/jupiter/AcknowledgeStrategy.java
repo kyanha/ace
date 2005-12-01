@@ -41,12 +41,18 @@ public interface AcknowledgeStrategy {
 	void init(AcknowledgeAction action);
 
 	/**
-	 * Resets the timer. Calling this method typically resets a scheduled
-	 * execution of the action, starting to count from zero. This method
-	 * is called whenever an outgoing message is sent that makes further
-	 * acknowledge messages unnecessary.
+	 * Called whenever the other side sent a message. A strategy can use
+	 * a threshold of unacknowledged messages to decide to send back an
+	 * acknowledge.
 	 */
-	void resetTimer();
+	void messageReceived();
+	
+	/**
+	 * Resets the AcknowledgeStrategy. This method should be called whenever
+	 * a message has been sent that makes sending acknowledge messages
+	 * pointless.
+	 */
+	void reset();
 	
 	/**
 	 * Destroys the acknowledge strategy.

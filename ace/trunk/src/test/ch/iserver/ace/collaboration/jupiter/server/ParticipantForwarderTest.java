@@ -75,7 +75,7 @@ public class ParticipantForwarderTest extends TestCase {
 		connection.sendCaretUpdateMessage(2, message);
 		acknowledger.init(null);
 		acknowledgerCtrl.setMatcher(MockControl.ALWAYS_MATCHER);
-		acknowledger.resetTimer();
+		acknowledger.reset();
 		
 		// replay
 		acknowledgerCtrl.replay();
@@ -105,7 +105,7 @@ public class ParticipantForwarderTest extends TestCase {
 		connection.sendRequest(2, request);
 		acknowledger.init(null);
 		acknowledgerCtrl.setMatcher(MockControl.ALWAYS_MATCHER);
-		acknowledger.resetTimer();
+		acknowledger.reset();
 		
 		// replay
 		acknowledgerCtrl.replay();
