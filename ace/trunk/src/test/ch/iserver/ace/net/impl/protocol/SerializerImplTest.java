@@ -4,6 +4,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import junit.framework.TestCase;
+
+import org.apache.log4j.Logger;
+
 import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.net.impl.NetworkConstants;
 import ch.iserver.ace.net.impl.NetworkProperties;
@@ -11,6 +14,8 @@ import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.PublishedDocument;
 
 public class SerializerImplTest extends TestCase {
+	
+	private Logger LOG = Logger.getLogger(SerializerImplTest.class);
 	
 	public void testCreateQueryForPublishedDocuments() throws Exception {
 		Serializer serializer = SerializerImpl.getInstance();
@@ -93,6 +98,7 @@ public class SerializerImplTest extends TestCase {
 		
 		String docId = "doc-id-234b";
 		
+//		LOG.debug("--> testCreateRequestForJoin()");
 		byte[] data = serializer.createRequest(ProtocolConstants.JOIN, docId);
 		String actual = new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 
@@ -106,6 +112,7 @@ public class SerializerImplTest extends TestCase {
 		
 		String docId = "doc-id-234b";
 		
+//		LOG.debug("--> testCreateRequestInvite()");
 		byte[] data = serializer.createRequest(ProtocolConstants.INVITE, docId);
 		String actual = new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 

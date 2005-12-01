@@ -3,6 +3,7 @@ package ch.iserver.ace.net.impl.protocol;
 import junit.framework.TestCase;
 import ch.iserver.ace.net.impl.NetworkProperties;
 import ch.iserver.ace.net.impl.RemoteUserProxyFactory;
+import ch.iserver.ace.util.Base64;
 
 public class DeserializerImplTest extends TestCase {
 	
@@ -12,7 +13,11 @@ public class DeserializerImplTest extends TestCase {
 		Deserializer deserializer = DeserializerImpl.getInstance();
 		
 		RemoteUserProxyFactory.init(new LogFilter(null, false));
-		byte[] data = CollaborationParserHandlerTest.XML_JOIN_DOCUMENT.getBytes(NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
+		String joinDocument = CollaborationParserHandlerTest.XML_JOIN_DOCUMENT_1;
+		String payload = "0 11 Los gehts:  1 15 ich habe durst. 2 18  das sagst du mir? 1 20  dir sage ich alles!";
+		joinDocument += Base64.encodeBytes(payload.getBytes(NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING)), Base64.GZIP);
+		joinDocument += CollaborationParserHandlerTest.XML_JOIN_DOCUMENT_2;
+		byte[] data = joinDocument.getBytes(NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 		deserializer.deserialize(data, handler);
 		Request result = handler.getResult();
 		
