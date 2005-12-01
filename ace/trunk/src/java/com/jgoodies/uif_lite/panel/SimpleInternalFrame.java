@@ -148,6 +148,7 @@ public class SimpleInternalFrame extends JPanel {
 		super(new BorderLayout());
 		this.selected = false;
 		this.titleLabel = new JLabel(title, icon, SwingConstants.LEADING);
+		bar.setBackground(Color.WHITE);
 		JPanel top = buildHeader(titleLabel, bar);
 		add(top, BorderLayout.NORTH);
 
@@ -474,14 +475,15 @@ public class SimpleInternalFrame extends JPanel {
 			if (!isOpaque()) {
 				return;
 			}
-			Color control = UIManager.getColor("control");
+			// Color control = UIManager.getColor("control");
 			int width = getWidth();
 			int height = getHeight();
 
 			Graphics2D g2 = (Graphics2D) g;
 			Paint storedPaint = g2.getPaint();
-			g2.setPaint(new GradientPaint(0, 0, getBackground(), width, 0,
-							control));
+			/* g2.setPaint(new GradientPaint(0, 0, getBackground(), width, 0,
+							control)); */
+			g2.setPaint(new GradientPaint(0, 0, new Color(56, 117, 215), width, 0, Color.WHITE));
 			g2.fillRect(0, 0, width, height);
 			g2.setPaint(storedPaint);
 		}
