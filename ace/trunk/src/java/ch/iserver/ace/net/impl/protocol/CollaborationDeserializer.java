@@ -52,7 +52,9 @@ public class CollaborationDeserializer implements Deserializer {
 			//factory.setValidating(true)
 			SAXParser saxParser = factory.newSAXParser();
 //			LOG.debug("--> parse()");
-			saxParser.parse( input, handler );
+			synchronize(this) {
+				saxParser.parse( input, handler );
+			}
 //			LOG.debug("<-- parse()");
 		} catch (Exception e) {
 			e.printStackTrace();
