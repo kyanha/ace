@@ -22,6 +22,7 @@
 package ch.iserver.ace.application;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.util.List;
 
 import javax.swing.AbstractAction;
@@ -127,6 +128,7 @@ public class DocumentView extends ViewImpl {
 		for(int i = 0; i < toolBarActions.size(); i++) {
 			JButton toolBarButton = documentToolBar.add(((AbstractAction)toolBarActions.get(i)));
 			toolBarButton.setBorder(BorderFactory.createEmptyBorder());
+			toolBarButton.setBackground(Color.WHITE);
 			documentToolBar.addSeparator();
 		}
 	}
