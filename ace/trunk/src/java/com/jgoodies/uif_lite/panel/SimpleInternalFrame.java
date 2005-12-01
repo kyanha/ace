@@ -322,7 +322,8 @@ public class SimpleInternalFrame extends JPanel {
 	private void updateHeader() {
 		gradientPanel.setBackground(getHeaderBackground());
 		gradientPanel.setOpaque(isSelected());
-		titleLabel.setForeground(getTextForeground(isSelected()));
+		// titleLabel.setForeground(getTextForeground(isSelected()));
+		titleLabel.setForeground(Color.WHITE);
 		headerPanel.repaint();
 	}
 
