@@ -187,6 +187,7 @@ public class SessionCallbackImpl implements SessionCallback {
 	}
 	
 	public void sessionFailed(final int reason, Exception e) {
+		e.printStackTrace();
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				String user = "\"" + documentItem.getPublisher() + "\"";
