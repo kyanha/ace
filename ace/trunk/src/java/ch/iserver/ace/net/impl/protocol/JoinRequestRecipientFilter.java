@@ -49,10 +49,14 @@ public class JoinRequestRecipientFilter extends AbstractRequestFilter {
 				Map publishedDocs = NetworkServiceImpl.getInstance().getPublishedDocuments();
 				PublishedDocument documentToJoin = (PublishedDocument) publishedDocs.get(info.getDocId());
 				RemoteUserSession session = SessionManager.getInstance().getSession(request.getUserId());
-				
 				ParticipantConnectionImpl connection = session.createParticipantConnection(info.getDocId());
 				connection.setPublishedDocument(documentToJoin);
-				documentToJoin.join(connection);
+				String userId = request.getUserId();
+				if (documentToJoin.isUserInvited(userId)) {
+					documentToJoin.joinInvitedUser(userId, connection);
+				} else {
+					documentToJoin.join(connection);
+				}
 				
 				try {
 					//confirm reception of msg				

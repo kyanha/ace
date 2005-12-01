@@ -21,6 +21,9 @@
 
 package ch.iserver.ace.net.impl;
 
+import java.util.Collections;
+import java.util.Map;
+
 import org.apache.log4j.Logger;
 
 import ch.iserver.ace.DocumentDetails;
@@ -28,12 +31,15 @@ import ch.iserver.ace.net.DocumentServer;
 import ch.iserver.ace.net.DocumentServerLogic;
 import ch.iserver.ace.net.InvitationPort;
 import ch.iserver.ace.net.ParticipantConnection;
+import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.impl.protocol.NullRequestFilter;
 import ch.iserver.ace.net.impl.protocol.ProtocolConstants;
 import ch.iserver.ace.net.impl.protocol.Request;
 import ch.iserver.ace.net.impl.protocol.RequestFilter;
 import ch.iserver.ace.net.impl.protocol.RequestImpl;
 import ch.iserver.ace.util.ParameterValidator;
+
+import com.sun.tools.jdi.LinkedHashMap;
 
 /**
  *
@@ -48,6 +54,7 @@ public class PublishedDocument implements DocumentServer {
 	private RequestFilter filter;
 	private NetworkServiceExt service;
 	private boolean isConcealed, isShutdown;
+	private Map invitations;
 	
 	public PublishedDocument(String id, DocumentServerLogic docServer, DocumentDetails details, RequestFilter filter, NetworkServiceExt service) {
 		ParameterValidator.notNull("id", id);
@@ -58,6 +65,7 @@ public class PublishedDocument implements DocumentServer {
 		this.filter = (filter != null) ? filter : NullRequestFilter.getInstance();
 		this.isConcealed = false;
 		this.isShutdown = false;
+		this.invitations  = Collections.synchronizedMap(new LinkedHashMap());
 	}
 
 	public DocumentDetails getDocumentDetails() {
@@ -95,9 +103,30 @@ public class PublishedDocument implements DocumentServer {
 	public void invite(InvitationPort invitation) {
 		// TODO: implement handling of invitations
 		LOG.debug("--> invite("+invitation.getUser()+")");
-		Request request = new RequestImpl(ProtocolConstants.INVITE, invitation.getUser().getId(), docId);
+		String userId = invitation.getUser().getId();
+		Request request = new RequestImpl(ProtocolConstants.INVITE, userId, docId);
 		filter.process(request);
+		invitations.put(userId, invitation);
 		LOG.debug("<-- invite()");
+	}
+	
+	public boolean isUserInvited(String userId) {
+		return invitations.containsKey(userId);
+	}
+	
+	public void joinInvitedUser(String userId, ParticipantConnection connection) {
+		LOG.debug("--> joinInvitedUser()");
+		InvitationPort port = (InvitationPort) invitations.remove(userId);
+		port.accept(connection);
+		LOG.debug("<-- joinInvitedUser()");
+	}
+	
+	public void rejectInvitedUser(String userId) {
+		LOG.debug("--> rejectedInvitedUser()");
+		InvitationPort port = (InvitationPort) invitations.remove(userId);
+		port.reject();
+		//TODO: resource cleanup?
+		LOG.debug("<-- rejectedInvitedUser()");
 	}
 	
 	

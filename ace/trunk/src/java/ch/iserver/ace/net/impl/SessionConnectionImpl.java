@@ -116,6 +116,7 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 	 * @see ch.iserver.ace.net.SessionConnection#getParticipantId()
 	 */
 	public int getParticipantId() {
+		LOG.debug("getParticipantId() == "+participantId);
 		return participantId;
 	}
 
