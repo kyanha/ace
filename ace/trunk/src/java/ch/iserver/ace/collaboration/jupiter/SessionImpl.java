@@ -278,8 +278,7 @@ public class SessionImpl extends AbstractSession
 	 * @see ch.iserver.ace.net.SessionConnectionCallback#setParticipantId(int)
 	 */
 	public void setParticipantId(int participantId) {
-		// TODO Auto-generated method stub
-		
+		getCallback().setParticipantId(participantId);
 	}
 	
 	/**

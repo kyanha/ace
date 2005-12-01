@@ -65,6 +65,13 @@ final class NullSessionCallback implements ParticipantSessionCallback {
 	}
 	
 	/**
+	 * @see ch.iserver.ace.collaboration.SessionCallback#setParticipantId(int)
+	 */
+	public void setParticipantId(int participantId) {
+		// ignore
+	}
+	
+	/**
 	 * @see ch.iserver.ace.collaboration.SessionCallback#participantJoined(ch.iserver.ace.collaboration.Participant)
 	 */
 	public void participantJoined(Participant participant) {

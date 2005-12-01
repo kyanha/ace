@@ -81,6 +81,11 @@ public class SessionCallbackImpl implements SessionCallback {
 		cDocument = documentItem.getEditorDocument();
 	}
 	
+	public void setParticipantId(int participantId) {
+		// TODO: implement this
+		System.out.println("setting the local participant id: " + participantId);		
+	}
+	
 	public void participantJoined(Participant participant) {
 		String pId = "" + participant.getParticipantId();
 

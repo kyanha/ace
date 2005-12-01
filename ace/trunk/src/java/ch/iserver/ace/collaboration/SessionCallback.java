@@ -11,6 +11,14 @@ import ch.iserver.ace.Operation;
 public interface SessionCallback {
 
 	/**
+	 * Sets the participant id of the local participant. This method should
+	 * be the first called method.
+	 * 
+	 * @param participantId the participant id
+	 */
+	void setParticipantId(int participantId);
+	
+	/**
 	 * Notifies the session callback that a new user joined the Session.
 	 * 
 	 * @param participant the participant that joined
