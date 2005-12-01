@@ -40,23 +40,34 @@ public class CompositeForwarderTest extends TestCase {
 	
 	private static final int PROXY_COUNT = 4;
 		
-	private CompositeForwarder forwarder;
+	private CompositeForwarderImpl forwarder;
+	
+	private MockControl defaultForwarderCtrl;
+	
+	private Forwarder defaultForwarder;
+	
+	private MockControl handlerCtrl;
+	
+	private FailureHandler handler;
 	
 	private List controls;
 	
 	private List proxies;
 	
 	public void setUp() {
-		MockControl defaultForwarderCtrl = MockControl.createNiceControl(Forwarder.class);
-		Forwarder defaultForwarder = (Forwarder) defaultForwarderCtrl.getMock();
+		defaultForwarderCtrl = MockControl.createStrictControl(Forwarder.class);
+		defaultForwarder = (Forwarder) defaultForwarderCtrl.getMock();
 		
-		forwarder = new CompositeForwarderImpl(defaultForwarder, null);
+		handlerCtrl = MockControl.createStrictControl(FailureHandler.class);
+		handler = (FailureHandler) handlerCtrl.getMock();
+		
+		forwarder = new CompositeForwarderImpl(defaultForwarder, handler);
 		
 		controls = new ArrayList();
 		proxies = new ArrayList();
 		
 		for (int i = 0; i < PROXY_COUNT; i++) {
-			MockControl control = MockControl.createControl(Forwarder.class);
+			MockControl control = MockControl.createStrictControl(Forwarder.class);
 			controls.add(control);
 			Forwarder proxy = (Forwarder) control.getMock();
 			forwarder.addForwarder(proxy);
@@ -84,18 +95,53 @@ public class CompositeForwarderTest extends TestCase {
 		// test fixture
 		CaretUpdate update = new CaretUpdate(1, 3);
 
-		// define mock behavior		
+		// define mock behavior
+		defaultForwarder.sendCaretUpdate(1, update);
+		
 		for (int i = 0; i < PROXY_COUNT; i++) {
 			((Forwarder) proxies.get(i)).sendCaretUpdate(1, update);
 		}
 		
 		// replay
+		defaultForwarderCtrl.replay();
+		handlerCtrl.replay();
 		replayProxyControls();
 		
 		// test forwarding of CaretUpdate
+		forwarder.addParticipant(1);
 		forwarder.sendCaretUpdate(1, update);
 		
 		// verify
+		defaultForwarderCtrl.verify();
+		handlerCtrl.verify();
+		verifyProxyControls();
+	}
+	
+	public void testSendCaretUpdateDefaultFails() {
+		// test fixture
+		CaretUpdate update = new CaretUpdate(1, 3);
+
+		// define mock behavior		
+		defaultForwarder.sendCaretUpdate(1, update);
+		defaultForwarderCtrl.setThrowable(new RuntimeException("failing default forwarder"));
+		handler.handleFailure(1, Participant.DOCUMENT_MODIFICATION_FAILED);
+		
+		// replay
+		defaultForwarderCtrl.replay();
+		handlerCtrl.replay();
+		replayProxyControls();
+		
+		// test forwarding of CaretUpdate
+		forwarder.addParticipant(1);
+		forwarder.sendCaretUpdate(1, update);
+
+		// test that further messages from that participant are ignored
+		forwarder.removeParticipant(1);
+		forwarder.sendCaretUpdate(1, update);
+
+		// verify
+		defaultForwarderCtrl.verify();
+		handlerCtrl.verify();
 		verifyProxyControls();
 	}
 
@@ -104,19 +150,55 @@ public class CompositeForwarderTest extends TestCase {
 		Operation operation = new InsertOperation(0, "foo");
 
 		// define mock behavior
+		defaultForwarder.sendOperation(1, operation);
+		
 		for (int i = 0; i < PROXY_COUNT; i++) {
 			((Forwarder) proxies.get(i)).sendOperation(1, operation);
 		}
 		
 		// replay
+		defaultForwarderCtrl.replay();
+		handlerCtrl.replay();
 		replayProxyControls();
 		
 		// test forwarding of CaretUpdate
+		forwarder.addParticipant(1);
 		forwarder.sendOperation(1, operation);
 		
 		// verify
+		defaultForwarderCtrl.verify();
+		handlerCtrl.verify();
 		verifyProxyControls();
 	}
+	
+	public void testSendOperationFails() {
+		// test fixture
+		Operation operation = new InsertOperation(0, "foo");
+
+		// define mock behavior
+		defaultForwarder.sendOperation(1, operation);
+		defaultForwarderCtrl.setThrowable(new RuntimeException("failing default forwarder"));
+		handler.handleFailure(1, Participant.DOCUMENT_MODIFICATION_FAILED);
+		
+		// replay
+		defaultForwarderCtrl.replay();
+		handlerCtrl.replay();
+		replayProxyControls();
+		
+		// test
+		forwarder.addParticipant(1);
+		forwarder.sendOperation(1, operation);
+		
+		// test that further messages from that participant are ignored
+		forwarder.removeParticipant(1);		
+		forwarder.sendOperation(1, operation);
+		
+		// verify
+		defaultForwarderCtrl.verify();
+		handlerCtrl.verify();
+		verifyProxyControls();
+	}
+
 	
 	public void testSendParticipantJoined() throws Exception {
 		RemoteUserProxy user = new RemoteUserProxyStub("X");
@@ -127,12 +209,16 @@ public class CompositeForwarderTest extends TestCase {
 		}
 		
 		// replay
+		defaultForwarderCtrl.replay();
+		handlerCtrl.replay();
 		replayProxyControls();
 		
 		// test
 		forwarder.sendParticipantJoined(1, user);
 
 		// verify
+		defaultForwarderCtrl.verify();
+		handlerCtrl.verify();
 		verifyProxyControls();
 	}
 	
@@ -143,12 +229,68 @@ public class CompositeForwarderTest extends TestCase {
 		}
 		
 		// replay
+		defaultForwarderCtrl.replay();
+		handlerCtrl.replay();
 		replayProxyControls();
 		
 		// test
 		forwarder.sendParticipantLeft(1, Participant.LEFT);
 
 		// verify
+		defaultForwarderCtrl.verify();
+		handlerCtrl.verify();
+		verifyProxyControls();
+	}
+	
+	public void testJoinLeave() throws Exception {
+		// define mock behavior
+		for (int i = 0; i < PROXY_COUNT; i++) {
+			Forwarder fwd = (Forwarder) proxies.get(i);
+			fwd.sendParticipantJoined(1, new RemoteUserProxyStub("X"));
+			fwd.sendParticipantLeft(1, Participant.LEFT);
+			fwd.sendParticipantJoined(1, new RemoteUserProxyStub("X"));
+			fwd.sendParticipantLeft(1, Participant.LEFT);
+		}
+		
+		// replay
+		defaultForwarderCtrl.replay();
+		handlerCtrl.replay();
+		replayProxyControls();
+		
+		// test
+		forwarder.sendParticipantJoined(1, new RemoteUserProxyStub("X"));
+		assertTrue(forwarder.acceptParticipant(1));
+		forwarder.sendParticipantLeft(1, Participant.LEFT);
+		assertFalse(forwarder.acceptParticipant(1));
+		forwarder.sendParticipantJoined(1, new RemoteUserProxyStub("X"));
+		assertTrue(forwarder.acceptParticipant(1));
+		forwarder.sendParticipantLeft(1, Participant.LEFT);
+		assertFalse(forwarder.acceptParticipant(1));
+
+		// verify
+		defaultForwarderCtrl.verify();
+		handlerCtrl.verify();
+		verifyProxyControls();
+	}
+
+	public void testSendClose() throws Exception {
+		// define mock behavior
+		defaultForwarder.close();
+		for (int i = 0; i < PROXY_COUNT; i++) {
+			((Forwarder) proxies.get(i)).close();
+		}
+		
+		// replay
+		defaultForwarderCtrl.replay();
+		handlerCtrl.replay();
+		replayProxyControls();
+		
+		// test
+		forwarder.close();
+
+		// verify
+		defaultForwarderCtrl.verify();
+		handlerCtrl.verify();
 		verifyProxyControls();
 	}
 

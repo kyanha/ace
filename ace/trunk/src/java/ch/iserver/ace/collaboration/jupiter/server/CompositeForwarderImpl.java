@@ -21,9 +21,11 @@
 
 package ch.iserver.ace.collaboration.jupiter.server;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -58,6 +60,11 @@ class CompositeForwarderImpl implements CompositeForwarder {
 	private final List forwarders;
 	
 	/**
+	 * The set of participants that are currently in the session.
+	 */
+	private final Set participants;
+	
+	/**
 	 * The default forwarder of this object.
 	 */
 	private final Forwarder forwarder;
@@ -75,6 +82,7 @@ class CompositeForwarderImpl implements CompositeForwarder {
 	public CompositeForwarderImpl(Forwarder forwarder, FailureHandler failureHandler) {
 		ParameterValidator.notNull("forwarder", forwarder);
 		this.forwarders = new LinkedList();
+		this.participants = new HashSet();
 		this.forwarder = forwarder;
 		this.failureHandler = failureHandler;
 	}
@@ -115,6 +123,11 @@ class CompositeForwarderImpl implements CompositeForwarder {
 	 * @see ch.iserver.ace.collaboration.jupiter.server.Forwarder#sendCaretUpdate(int, ch.iserver.ace.CaretUpdate)
 	 */
 	public void sendCaretUpdate(int participantId, CaretUpdate update) {
+		if (!acceptParticipant(participantId)) {
+			LOG.info("filtering caret update from participant " + participantId);
+			return;
+		}
+		
 		try {
 			forwarder.sendCaretUpdate(participantId, update);
 		} catch (Exception e) {
@@ -134,6 +147,11 @@ class CompositeForwarderImpl implements CompositeForwarder {
 	 * @see ch.iserver.ace.collaboration.jupiter.server.Forwarder#sendOperation(int, ch.iserver.ace.Operation)
 	 */
 	public void sendOperation(int participantId, Operation op) {
+		if (!acceptParticipant(participantId)) {
+			LOG.info("filtering operation from participant " + participantId);
+			return;
+		}
+		
 		try {
 			forwarder.sendOperation(participantId, op);
 		} catch (Exception e) {
@@ -153,6 +171,7 @@ class CompositeForwarderImpl implements CompositeForwarder {
 	 * @see ch.iserver.ace.collaboration.jupiter.server.Forwarder#sendParticipantLeft(int, int)
 	 */
 	public void sendParticipantLeft(int participantId, int reason) {
+		removeParticipant(participantId);
 		Iterator it = getForwarders();
 		while (it.hasNext()) {
 			Forwarder forwarder = (Forwarder) it.next();
@@ -164,6 +183,7 @@ class CompositeForwarderImpl implements CompositeForwarder {
 	 * @see ch.iserver.ace.collaboration.jupiter.server.Forwarder#sendParticipantJoined(int, ch.iserver.ace.net.RemoteUserProxy)
 	 */
 	public void sendParticipantJoined(int participantId, RemoteUserProxy user) {
+		addParticipant(participantId);
 		Iterator it = getForwarders();
 		while (it.hasNext()) {
 			Forwarder forwarder = (Forwarder) it.next();
@@ -175,12 +195,45 @@ class CompositeForwarderImpl implements CompositeForwarder {
 	 * @see ch.iserver.ace.collaboration.jupiter.server.Forwarder#close()
 	 */
 	public void close() {
+		// close the default forwarder
+		forwarder.close();
+		
 		Iterator it = getForwarders();
 		while (it.hasNext()) {
 			Forwarder forwarder = (Forwarder) it.next();
 			forwarder.close();
 			it.remove();
 		}
+	}
+	
+	/**
+	 * Adds a participant to the set of current participants.
+	 * 
+	 * @param participantId the id of the participant
+	 */
+	protected void addParticipant(int participantId) {
+		participants.add(new Integer(participantId));
+	}
+	
+	/**
+	 * Removes a participant from the set of current participants.
+	 * 
+	 * @param participantId the id of the participant
+	 */
+	protected void removeParticipant(int participantId) {
+		participants.remove(new Integer(participantId));
+	}
+	
+	/**
+	 * Checks whether messages from the given participant should be accepted.
+	 * Accepted messages are then forwarder to all the child forwarders
+	 * and the default forwarder.
+	 * 
+	 * @param participantId the id of the participant
+	 * @return true iff messages from that participant are allowed
+	 */
+	protected boolean acceptParticipant(int participantId) {
+		return participants.contains(new Integer(participantId));
 	}
 	
 }
