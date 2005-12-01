@@ -27,6 +27,7 @@ import ch.iserver.ace.test.AlgorithmTestFactory;
 import ch.iserver.ace.text.GOTOInclusionTransformation;
 
 /**
+ * Abstract TestCase for Jupiter tests.
  *
  */
 public abstract class JupiterTestCase extends AlgorithmTestCase implements
