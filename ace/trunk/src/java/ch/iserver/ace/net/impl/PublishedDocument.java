@@ -22,6 +22,7 @@
 package ch.iserver.ace.net.impl;
 
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -31,15 +32,12 @@ import ch.iserver.ace.net.DocumentServer;
 import ch.iserver.ace.net.DocumentServerLogic;
 import ch.iserver.ace.net.InvitationPort;
 import ch.iserver.ace.net.ParticipantConnection;
-import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.impl.protocol.NullRequestFilter;
 import ch.iserver.ace.net.impl.protocol.ProtocolConstants;
 import ch.iserver.ace.net.impl.protocol.Request;
 import ch.iserver.ace.net.impl.protocol.RequestFilter;
 import ch.iserver.ace.net.impl.protocol.RequestImpl;
 import ch.iserver.ace.util.ParameterValidator;
-
-import com.sun.tools.jdi.LinkedHashMap;
 
 /**
  *

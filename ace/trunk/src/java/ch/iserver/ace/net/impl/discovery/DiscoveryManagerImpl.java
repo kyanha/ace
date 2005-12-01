@@ -95,7 +95,11 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 	 * Called when the TCPSession for a user has been established.
 	 */
 	public void setSessionEstablished(String userId) {
-		peersWithEstablishedSession.put(userId, remoteUserProxies.get(userId));
+		Object proxy = remoteUserProxies.get(userId);
+		if (proxy == null) {
+			LOG.warn("proxy for userid="+userId+" not found.");
+		}
+		peersWithEstablishedSession.put(userId, proxy);
 		
 	}
 
@@ -109,7 +113,11 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 	}
 	
 	public RemoteUserProxyExt getUser(String userid) {
-		return (RemoteUserProxyExt) remoteUserProxies.get(userid);
+		RemoteUserProxyExt user =  (RemoteUserProxyExt) remoteUserProxies.get(userid);
+		if (user == null) {
+			LOG.warn("no user found for ["+userid+"]");
+		}
+		return user;
 	}
 	
 	public int getSize() {
