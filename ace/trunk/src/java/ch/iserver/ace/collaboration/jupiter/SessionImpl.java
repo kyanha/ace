@@ -51,12 +51,7 @@ import ch.iserver.ace.util.ThreadDomain;
  */
 public class SessionImpl extends AbstractSession 
 		implements ConfigurableSession, FailureHandler {
-	
-	/**
-	 * The participant id of the participant.
-	 */
-	private int participantId = -1;
-	
+		
 	/**
 	 * The SessionCallback from the application layer.
 	 */
@@ -131,7 +126,6 @@ public class SessionImpl extends AbstractSession
 	 */
 	public void setConnection(SessionConnection connection) {
 		ParameterValidator.notNull("connection", connection);
-		this.participantId = connection.getParticipantId();
 		this.connection = (SessionConnection) getThreadDomain().wrap(
 				new SessionConnectionWrapper(connection, this), SessionConnection.class, true);
 	}
@@ -182,7 +176,7 @@ public class SessionImpl extends AbstractSession
 	 * @see ch.iserver.ace.collaboration.Session#getParticipantId()
 	 */
 	public int getParticipantId() {
-		return participantId;
+		return connection.getParticipantId();
 	}
 
 	/**
@@ -278,6 +272,14 @@ public class SessionImpl extends AbstractSession
 		} finally {
 			unlock();
 		}
+	}
+	
+	/**
+	 * @see ch.iserver.ace.net.SessionConnectionCallback#setParticipantId(int)
+	 */
+	public void setParticipantId(int participantId) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	/**

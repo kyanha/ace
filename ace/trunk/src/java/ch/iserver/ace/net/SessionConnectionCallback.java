@@ -41,6 +41,13 @@ import ch.iserver.ace.algorithm.Timestamp;
 public interface SessionConnectionCallback {
 	
 	/**
+	 * Notifies the callback of the assigned participant id.
+	 * 
+	 * @param participantId the assigned local participant id
+	 */
+	void setParticipantId(int participantId);
+	
+	/**
 	 * Sets the document content of the application document.
 	 * 
 	 * @param document the new document content
