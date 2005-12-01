@@ -31,12 +31,12 @@ public class CaretUpdate  {
 	/**
 	 * Constant indicating the index of the dot in the interal array.
 	 */
-	private static final int DOT = 0;
+	public static final int DOT = 0;
 	
 	/**
 	 * Constant indicating the index of the mark in the interal array.
 	 */
-	private static final int MARK = 1;
+	public static final int MARK = 1;
 	
 	/**
 	 * Int array keeping dot and mark values.
