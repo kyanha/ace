@@ -33,6 +33,7 @@ import ch.iserver.ace.application.action.ToggleFullScreenEditingAction;
 import ch.iserver.ace.application.preferences.PreferencesStore;
 import ch.iserver.ace.collaboration.CollaborationService;
 import ch.iserver.ace.collaboration.InvitationCallback;
+import ch.iserver.ace.collaboration.ServiceFailureHandler;
 import ch.iserver.ace.util.UUID;
 
 
@@ -95,6 +96,7 @@ public class Main {
 		UserDetails details = getUserDetails(preferencesStore);
 		collaborationService.setUserDetails(details);
 		collaborationService.setInvitationCallback((InvitationCallback)context.getBean("invitationCallback"));
+		collaborationService.setFailureHandler((ServiceFailureHandler)context.getBean("serviceFailureHandler"));
 
 		// 3. preference listeners
 		preferencesStore.addPreferenceChangeListener(
