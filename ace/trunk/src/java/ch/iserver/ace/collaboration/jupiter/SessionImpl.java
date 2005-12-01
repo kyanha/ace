@@ -39,7 +39,6 @@ import ch.iserver.ace.collaboration.jupiter.SessionConnectionWrapper.FailureHand
 import ch.iserver.ace.net.PortableDocument;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.net.SessionConnection;
-import ch.iserver.ace.net.SessionConnectionCallback;
 import ch.iserver.ace.util.Lock;
 import ch.iserver.ace.util.ParameterValidator;
 import ch.iserver.ace.util.ReentrantLock;
@@ -51,7 +50,7 @@ import ch.iserver.ace.util.ThreadDomain;
  * on SessionConnections.
  */
 public class SessionImpl extends AbstractSession 
-		implements ConfigurableSession, SessionConnectionCallback, FailureHandler {
+		implements ConfigurableSession, FailureHandler {
 	
 	/**
 	 * The participant id of the participant.
