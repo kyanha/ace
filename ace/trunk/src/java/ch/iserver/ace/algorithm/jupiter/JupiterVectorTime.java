@@ -117,15 +117,20 @@ public class JupiterVectorTime implements VectorTime, Cloneable {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
-		return "JupiterVectorTime(" + localOperationCnt + ","
-				+ remoteOperationCnt + ")";
+		StringBuffer buffer = new StringBuffer();
+		buffer.append("[");
+		buffer.append(localOperationCnt);
+		buffer.append(",");
+		buffer.append(remoteOperationCnt);
+		buffer.append("]");
+		return buffer.toString();
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -142,7 +147,7 @@ public class JupiterVectorTime implements VectorTime, Cloneable {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @see java.lang.Object#hashCode()
 	 */
 	public int hashCode() {
 		int hashcode = 17;
@@ -152,7 +157,7 @@ public class JupiterVectorTime implements VectorTime, Cloneable {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @see java.lang.Object#clone()
 	 */
 	public Object clone() {
 		try {

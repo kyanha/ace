@@ -22,6 +22,7 @@
 package ch.iserver.ace.algorithm;
 
 import ch.iserver.ace.CaretUpdate;
+import ch.iserver.ace.util.CompareUtil;
 
 /**
  * A CaretUpdateMessage is a message that carries a CaretUpdate as payload.
@@ -80,34 +81,45 @@ public class CaretUpdateMessage {
 	
 	// --> java.lang.Object methods <--
 	
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
 		} else if (obj instanceof CaretUpdateMessage) {
 			CaretUpdateMessage msg = (CaretUpdateMessage) obj;
 			return siteId == msg.siteId 
-					&& nullSafeEquals(timestamp, msg.timestamp)
-					&& nullSafeEquals(update, msg.update);
+					&& CompareUtil.nullSafeEquals(timestamp, msg.timestamp)
+					&& CompareUtil.nullSafeEquals(update, msg.update);
 		} else {
 			return false;
 		}
 	}
-	
-	private boolean nullSafeEquals(Object o1, Object o2) {
-		if (o1 == o2) {
-			return true;
-		} else if (o1 == null || o2 == null) {
-			return false;
-		} else {
-			return o1.equals(o2);
-		}
-	}
-	
+		
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
 	public int hashCode() {
 		int hashCode = 7 * siteId;
 		hashCode += timestamp == null ? 0 : 13 * timestamp.hashCode();
 		hashCode += update == null ? 0 : 17 * update.hashCode();
 		return hashCode;
+	}
+	
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString() {
+		StringBuffer buffer = new StringBuffer();
+		buffer.append("caret(");
+		buffer.append(siteId);
+		buffer.append(",");
+		buffer.append(timestamp);
+		buffer.append(",");
+		buffer.append(update);
+		buffer.append(")");
+		return buffer.toString();
 	}
 	
 }

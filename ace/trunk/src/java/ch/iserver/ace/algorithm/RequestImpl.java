@@ -87,5 +87,20 @@ public class RequestImpl implements Request {
 		hashCode += (operation != null) ? 29 * operation.hashCode() : 0;
 		return hashCode;
 	}
+	
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString() {
+		StringBuffer buffer = new StringBuffer();
+		buffer.append("request(");
+		buffer.append(siteId);
+		buffer.append(",");
+		buffer.append(timestamp);
+		buffer.append(",");
+		buffer.append(operation);
+		buffer.append(")");
+		return buffer.toString();
+	}
 
 }
