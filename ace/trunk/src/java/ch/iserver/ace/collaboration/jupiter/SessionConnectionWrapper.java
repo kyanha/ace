@@ -21,6 +21,8 @@
 
 package ch.iserver.ace.collaboration.jupiter;
 
+import org.apache.log4j.Logger;
+
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.Timestamp;
@@ -32,6 +34,11 @@ import ch.iserver.ace.util.ParameterValidator;
  * Fail safe wrapper class for SessionConnection objects.
  */
 public class SessionConnectionWrapper implements SessionConnection {
+	
+	/**
+	 * The logger instance used by this class.
+	 */
+	private static final Logger LOG = Logger.getLogger(SessionConnectionWrapper.class);
 	
 	/**
 	 * The target SessionConnection.
@@ -94,6 +101,7 @@ public class SessionConnectionWrapper implements SessionConnection {
 	 */
 	public void sendRequest(Request request) {
 		try {
+			LOG.debug("sending request: " + request);
 			target.sendRequest(request);			
 		} catch (Exception e) {
 			getFailureHandler().handleFailure(Session.SEND_FAILED, e);
@@ -105,6 +113,7 @@ public class SessionConnectionWrapper implements SessionConnection {
 	 */
 	public void sendCaretUpdateMessage(CaretUpdateMessage message) {
 		try {
+			LOG.debug("sending caret update: " + message);
 			target.sendCaretUpdateMessage(message);
 		} catch (Exception e) {
 			getFailureHandler().handleFailure(Session.SEND_FAILED, e);
@@ -116,6 +125,7 @@ public class SessionConnectionWrapper implements SessionConnection {
 	 */
 	public void sendAcknowledge(int siteId, Timestamp timestamp) {
 		try {
+			LOG.debug("sending acknowledge: ack(" + siteId + "," + timestamp + ")");
 			target.sendAcknowledge(siteId, timestamp);
 		} catch (Exception e) {
 			getFailureHandler().handleFailure(Session.SEND_FAILED, e);

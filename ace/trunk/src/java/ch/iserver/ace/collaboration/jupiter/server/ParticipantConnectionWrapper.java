@@ -21,6 +21,8 @@
 
 package ch.iserver.ace.collaboration.jupiter.server;
 
+import org.apache.log4j.Logger;
+
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.Timestamp;
@@ -46,6 +48,11 @@ import ch.iserver.ace.util.ParameterValidator;
  * handling of this situation.</p>
  */
 public class ParticipantConnectionWrapper implements ParticipantConnection {
+	
+	/**
+	 * The logger instance used by this class.
+	 */
+	protected static final Logger LOG = Logger.getLogger(ParticipantConnectionWrapper.class);
 	
 	/**
 	 * The target ParticipantConnection. Initially this is the real target
@@ -164,6 +171,7 @@ public class ParticipantConnectionWrapper implements ParticipantConnection {
 	 */
 	public void sendRequest(int participantId, Request request) {
 		try {
+			LOG.debug("sendRequest: " + participantId + " " + request);
 			getTarget().sendRequest(participantId, request);
 		} catch (Exception e) {
 			failed(e);
@@ -175,6 +183,7 @@ public class ParticipantConnectionWrapper implements ParticipantConnection {
 	 */
 	public void sendCaretUpdateMessage(int participantId, CaretUpdateMessage message) {
 		try {
+			LOG.debug("sendCaretUpdate: " + participantId + " " + message);
 			getTarget().sendCaretUpdateMessage(participantId, message);
 		} catch (Exception e) {
 			failed(e);
@@ -186,6 +195,7 @@ public class ParticipantConnectionWrapper implements ParticipantConnection {
 	 */
 	public void sendAcknowledge(int siteId, Timestamp timestamp) {
 		try {
+			LOG.debug("sendRequest: ack(" + siteId + "," + timestamp + ")");
 			getTarget().sendAcknowledge(siteId, timestamp);
 		} catch (Exception e) {
 			failed(e);
@@ -208,6 +218,7 @@ public class ParticipantConnectionWrapper implements ParticipantConnection {
 	 */
 	public void sendParticipantLeft(int participantId, int reason) {
 		try {
+			LOG.debug("sendParticipantLeft: " + participantId);
 			getTarget().sendParticipantLeft(participantId, reason);
 		} catch (Exception e) {
 			failed(e);
