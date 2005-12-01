@@ -128,7 +128,7 @@ public class CollaborativeEditor extends EditorImpl {
 			JButton toolBarButton = editorToolBar.add(((AbstractAction)toolBarActions.get(i)));
 			toolBarButton.setBorder(BorderFactory.createEmptyBorder());
 			toolBarButton.setBackground(Color.WHITE);
-			editorToolBar.addSeparator();
+			editorToolBar.addSeparator(new Dimension(3, 0));
 		}
 	}
 
