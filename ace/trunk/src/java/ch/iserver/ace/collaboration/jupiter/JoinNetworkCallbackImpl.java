@@ -89,7 +89,7 @@ class JoinNetworkCallbackImpl implements JoinNetworkCallback {
 	}
 	
 	/**
-	 * @see ch.iserver.ace.net.JoinNetworkCallback#rejected()
+	 * @see ch.iserver.ace.net.JoinNetworkCallback#rejected(int)
 	 */
 	public void rejected(int code) {
 		getCallback().rejected(code);			

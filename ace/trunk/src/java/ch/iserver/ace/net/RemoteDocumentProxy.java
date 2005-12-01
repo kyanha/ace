@@ -25,7 +25,7 @@ import ch.iserver.ace.DocumentDetails;
 
 /**
  * A RemoteDocumentProxy is a network layer object that represents a document
- * shared by another user. The {@link #join(JoinNetworkCallback, SessionConnectionCallback)} 
+ * shared by another user. The {@link #join(JoinNetworkCallback)} 
  * method tries to join the
  * shared document editing session. The returned SessionConnection is used
  * by the logic layer for communication with the session.

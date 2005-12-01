@@ -36,6 +36,9 @@ import ch.iserver.ace.UserDetails;
 public interface CollaborationService {
 	
 	/**
+	 * Retrieves the ServerInfo of the local server. This information is mainly
+	 * useful as feedback to the local user. If may not be available right
+	 * after starting. If starting fails
 	 * @return
 	 */
 	ServerInfo getServerInfo();

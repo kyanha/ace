@@ -6,10 +6,8 @@ import ch.iserver.ace.net.RemoteUserProxy;
 
 /**
  * A Forwarder is used on the server to forward incoming events to
- * participants. It is passed to the 
- * {@link ch.iserver.ace.collaboration.jupiter.server.serializer.SerializerCommand#execute(Forwarder)}
- * method. The commands use the forwarder to forward the result of
- * the execution.
+ * participants. It is responsible to generate requests to be
+ * sent to participants.
  */
 public interface Forwarder {
 

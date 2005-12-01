@@ -25,16 +25,32 @@ import ch.iserver.ace.Operation;
 import ch.iserver.ace.util.CompareUtil;
 
 /**
- *
+ * Default implementation of the Request interface.
  */
 public class RequestImpl implements Request {
 	
+	/**
+	 * The site id of the request.
+	 */
 	private final int siteId;
 	
+	/**
+	 * The timestamp of the request.
+	 */
 	private final Timestamp timestamp;
 	
+	/**
+	 * The operation of the request.
+	 */
 	private final Operation operation;
 	
+	/**
+	 * Creates a new instance of the RequestImpl class.
+	 * 
+	 * @param siteId the site id
+	 * @param timestamp the timestamp
+	 * @param operation the operation
+	 */
 	public RequestImpl(int siteId, Timestamp timestamp, Operation operation) {
 		this.siteId = siteId;
 		this.timestamp = timestamp;

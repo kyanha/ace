@@ -26,8 +26,7 @@ import ch.iserver.ace.DocumentDetails;
 
 /**
  * A PublishedSession extends a Session with methods that are only
- * available to the owner (publisher) of the session itself. These
- * methods are {@link #kick(Participant)} and {@link #shutdown()}.
+ * available to the owner (publisher) of the session itself.
  *
  * <p>PublishedSessions are obtained by calling publish on the
  * {@link CollaborationService} instance.</p>

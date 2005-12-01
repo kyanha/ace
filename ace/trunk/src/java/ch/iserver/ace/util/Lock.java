@@ -24,7 +24,7 @@ package ch.iserver.ace.util;
 /**
  * Simple interface for locks. The interface hides the actual implementation
  * of the lock from the application. A possible implementation could use
- * the {@link java.util.concurrent.locks.ReentrantLock} or another
+ * the ReentrantLocks from the JDK or another
  * lock implementation. Further, the actual implementation can be switched
  * easily without affecting the client code.
  */

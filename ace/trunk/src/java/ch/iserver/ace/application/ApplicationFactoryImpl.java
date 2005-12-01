@@ -21,7 +21,10 @@
 
 package ch.iserver.ace.application;
 
+import ch.iserver.ace.ServerInfo;
 import ch.iserver.ace.application.editor.*;
+import ch.iserver.ace.collaboration.CollaborationService;
+
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -29,6 +32,9 @@ import javax.swing.JPanel;
 import javax.swing.JToolBar;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.*;
 
 import org.springframework.context.ApplicationContext;
@@ -167,10 +173,12 @@ public class ApplicationFactoryImpl implements ApplicationFactory, ApplicationCo
 	}
 	
 	public JPanel createStatusBar() {
-		JPanel statusBar = new JPanel();
+		JPanel statusBar = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		statusBar.setPreferredSize(new Dimension(0, 16));
 		statusBar.setBorder(BorderFactory.createEmptyBorder());
 		// add components
+		CollaborationService service = (CollaborationService) context.getBean("collaborationService");
+		statusBar.add(new ServerInfoLabel(service));
 		
 		return statusBar;
 	}
@@ -189,6 +197,39 @@ public class ApplicationFactoryImpl implements ApplicationFactory, ApplicationCo
 		splitPane.setOneTouchExpandable(true);
 		splitPane.setResizeWeight(value);
 		return splitPane;
+	}
+	
+	
+	/**
+	 * Label used to display the local IP and port in the status bar.
+	 */
+	private static class ServerInfoLabel extends JLabel implements ActionListener {
+		
+		private final CollaborationService service;
+		
+		private final Timer timer;
+		
+		private ServerInfoLabel(CollaborationService service) {
+			this.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 5));
+			this.service = service;
+			this.timer = new Timer(1000, this);
+			this.timer.start();
+		}
+		
+		/**
+		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+		 */
+		public void actionPerformed(ActionEvent e) {
+			ServerInfo info = service.getServerInfo();
+			if (info != null) {
+				String ip = info.getAddress().getHostAddress();
+				if (ip != null && ip.trim().length() > 0) {
+					setText(ip + ":" + info.getPort());
+					timer.stop();
+				}
+			}
+		}
+		
 	}
 	
 }

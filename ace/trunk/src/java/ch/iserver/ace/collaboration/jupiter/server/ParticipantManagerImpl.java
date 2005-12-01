@@ -42,7 +42,7 @@ import ch.iserver.ace.util.ParameterValidator;
  * Whenever a user sends a join requests, he is added to the join set of
  * this class. Users are removed from this set when either 
  * {@link #joinRequestRejected(String)} or
- * {@link #joinRequestAccepted(int, Forwarder, ParticipantConnection)} is
+ * {@link #joinRequestAccepted(String)} is
  * called.
  * 
  * <h3>Blacklist</h3>
@@ -54,7 +54,7 @@ import ch.iserver.ace.util.ParameterValidator;
  * <h3>Current Participants</h3>
  * There is a map that contains a mapping from participant id to user
  * id. Users are added to that map as soon as they join with
- * {@link #joinRequestAccepted(int, Forwarder, ParticipantConnection)}
+ * {@link #addParticipant(int, Forwarder, ParticipantConnection)}
  * and are removed from that map if they are either kicked or
  * leave the session otherwise
  * ({@link #participantLeft(int)}). 

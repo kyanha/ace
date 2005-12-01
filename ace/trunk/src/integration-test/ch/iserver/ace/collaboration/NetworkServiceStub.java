@@ -71,7 +71,7 @@ public class NetworkServiceStub implements NetworkService {
 	}
 	
 	/**
-	 * @return
+	 * @return the list of document servers
 	 */
 	public List getDocumentServers() {
 		return documentServers;
@@ -85,7 +85,7 @@ public class NetworkServiceStub implements NetworkService {
 	}
 	
 	/**
-	 * @return
+	 * @return the user details
 	 */
 	public UserDetails getUserDetails() {
 		return details;
@@ -110,7 +110,7 @@ public class NetworkServiceStub implements NetworkService {
 	}
 	
 	/**
-	 * @return
+	 * @return the network service callback
 	 */
 	public NetworkServiceCallback getCallback() {
 		return callback;

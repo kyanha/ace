@@ -29,20 +29,24 @@ public interface InclusionTransformation {
 
 	/**
 	 * Include operation <var>op2</var> into the context of operation 
-	 * <var>op1</var>.
-	 * The transformed operation <var>op1'</var> is returned.
+	 * <var>op1</var>. The transformed operation <var>op1'</var> is returned.
 	 * 
-	 * @param op1
-	 *            the operation into which another is to be contextually
+	 * @param op1 the operation into which another is to be contextually
 	 *            included.
-	 * @param op2
-	 *            the operation to be included.
-	 * @param param
-	 * 			 an additional parameter depending on the implementation.            
+	 * @param op2 the operation to be included.
+	 * @param param an additional parameter depending on the implementation.            
 	 * @return the transformed operation <var>op1'</var>
 	 */
 	public Operation transform(Operation op1, Operation op2, Object param);
 
+	/**
+	 * Transforms an index against the given operation.
+	 * 
+	 * @param index the index to be transformed
+	 * @param op the Operation to be transformed
+	 * @param param an additional implementation dependent parameter
+	 * @return the transformed index
+	 */
 	public int transformIndex(int index, Operation op, Object param);
 	
 }

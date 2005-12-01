@@ -83,7 +83,7 @@ class DocumentRegistryImpl implements DocumentRegistry {
 	}
 	
 	/**
-	 * @return
+	 * @return the session factory used to create sessions
 	 */
 	public SessionFactory getSessionFactory() {
 		return sessionFactory;

@@ -86,7 +86,6 @@ public class ParticipantForwarder implements Forwarder {
 	 * @param participantId the participant id of this proxy
 	 * @param algorithm the algorithm used to transform requests
 	 * @param connection the connection to the participant
-	 * @param acknowledgeStrategy
 	 */
 	public ParticipantForwarder(int participantId, 
 					Algorithm algorithm, 

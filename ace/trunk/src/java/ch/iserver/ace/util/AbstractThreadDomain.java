@@ -70,25 +70,10 @@ abstract class AbstractThreadDomain implements ThreadDomain {
 		return wrap(target, clazz, queue, null, new Advice[0]);
 	}
 	
-	/**
-	 * @param target
-	 * @param clazz
-	 * @param queue
-	 * @param advice
-	 * @return
-	 */
 	protected Object wrap(Object target, Class clazz, BlockingQueue queue, Advice advice) {
 		return wrap(target, clazz, queue, null, new Advice[] { advice });
 	}
 	
-	/**
-	 * @param target
-	 * @param clazz
-	 * @param queue
-	 * @param pointcut
-	 * @param advices
-	 * @return
-	 */
 	protected Object wrap(Object target, Class clazz, BlockingQueue queue, Pointcut pointcut, Advice[] advices) {
 		ProxyFactory factory = initFactory(target, clazz, queue, pointcut);
 		for (int i = 0; i < advices.length; i++) {
@@ -101,25 +86,10 @@ abstract class AbstractThreadDomain implements ThreadDomain {
 		return factory.getProxy();
 	}
 	
-	/**
-	 * @param target
-	 * @param clazz
-	 * @param queue
-	 * @param pointcut
-	 * @return
-	 */
 	protected Object wrap(Object target, Class clazz, BlockingQueue queue, Pointcut pointcut) {
 		return wrap(target, clazz, queue, pointcut, new Advisor[0]);
 	}
 	
-	/**
-	 * @param target
-	 * @param clazz
-	 * @param queue
-	 * @param pointcut
-	 * @param advisors
-	 * @return
-	 */
 	protected Object wrap(Object target, Class clazz, BlockingQueue queue, Pointcut pointcut, Advisor[] advisors) {
 		ProxyFactory factory = initFactory(target, clazz, queue, pointcut);
 		for (int i = 0; i < advisors.length; i++) {
@@ -128,13 +98,6 @@ abstract class AbstractThreadDomain implements ThreadDomain {
 		return factory.getProxy();
 	}
 	
-	/**
-	 * @param target
-	 * @param clazz
-	 * @param queue
-	 * @param pointcut
-	 * @return
-	 */
 	protected ProxyFactory initFactory(Object target, Class clazz, BlockingQueue queue, Pointcut pointcut) {
 		ProxyFactory factory = new ProxyFactory();
 		factory.addInterface(clazz);
@@ -149,8 +112,11 @@ abstract class AbstractThreadDomain implements ThreadDomain {
 	}
 	
 	/**
-	 * @param queue
-	 * @return
+	 * Creates a method interceptor using the given blocking queue.
+	 * 
+	 * @param queue the blocking queue into which to write method invocations
+	 * @return the interceptor that adds method invocations to the passed in
+	 *         queue
 	 */
 	protected MethodInterceptor createAsyncInterceptor(BlockingQueue queue) {
 		return new AsyncInterceptor(queue);

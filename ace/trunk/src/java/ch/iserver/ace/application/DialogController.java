@@ -164,7 +164,7 @@ public interface DialogController {
 	 * Shows a message dialog that tells the user that a document with the same
 	 * name is already open. Saving the document as that file fails!
 	 * 
-	 * @param String title the current title of the document to be saved
+	 * @param title the current title of the document to be saved
 	 * @param file the file for which there is already a document
 	 */
 	void showDocumentWithSameNameExists(String title, File file);

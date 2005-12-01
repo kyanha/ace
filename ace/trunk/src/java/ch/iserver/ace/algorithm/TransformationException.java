@@ -22,34 +22,41 @@
 package ch.iserver.ace.algorithm;
 
 /**
- *
+ * Exception thrown by algorithm instances whenever transforming operations
+ * fails.
  */
 public class TransformationException extends Exception {
 
 	/**
-	 * 
+	 * Creates a new TransformationException.
 	 */
 	public TransformationException() {
 		super();
 	}
 
 	/**
-	 * @param message
+	 * Creates a new TransformationException.
+	 * 
+	 * @param message the detail message
 	 */
 	public TransformationException(String message) {
 		super(message);
 	}
 
 	/**
-	 * @param cause
+	 * Creates a new TransformationException.
+	 * 
+	 * @param cause the cause of this exception
 	 */
 	public TransformationException(Throwable cause) {
 		super(cause);
 	}
 
 	/**
-	 * @param message
-	 * @param cause
+	 * Creates a new TransformationException.
+	 * 
+	 * @param message the detail message
+	 * @param cause the cause of this exception
 	 */
 	public TransformationException(String message, Throwable cause) {
 		super(message, cause);

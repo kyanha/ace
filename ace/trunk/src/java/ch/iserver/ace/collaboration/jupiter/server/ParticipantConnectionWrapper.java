@@ -120,7 +120,9 @@ public class ParticipantConnectionWrapper implements ParticipantConnection {
 	}
 	
 	/**
-	 * @return
+	 * Creates a null object connection.
+	 * 
+	 * @return the newly created null connection
 	 */
 	protected ParticipantConnection createNullConnection() {
 		return new NullParticipantConnection();

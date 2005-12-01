@@ -74,14 +74,7 @@ public class RemoteUserStub implements MutableRemoteUser {
 	public String getName() {
 		return name;
 	}
-	
-	/**
-	 * @see ch.iserver.ace.collaboration.RemoteUser#invite(ch.iserver.ace.collaboration.PublishedSession)
-	 */
-	public void invite(PublishedSession session) {
-		// ignore
-	}
-	
+		
 	/**
 	 * @see ch.iserver.ace.collaboration.RemoteUser#addPropertyChangeListener(java.beans.PropertyChangeListener)
 	 */

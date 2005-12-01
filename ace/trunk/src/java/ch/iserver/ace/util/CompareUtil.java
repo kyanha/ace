@@ -105,9 +105,12 @@ public final class CompareUtil {
 	}
 	
 	/**
-	 * @param o1
-	 * @param o2
-	 * @return
+	 * Determines whether two objects are the same or are advices advising
+	 * the same target object.
+	 * 
+	 * @param o1 the first object
+	 * @param o2 the second object
+	 * @return true if the two possible advised objects have the same target
 	 */
 	public static boolean isSameTarget(Object o1, Object o2) {
 		if (o1 == o2) {

@@ -35,7 +35,7 @@ public interface DocumentListener extends EventListener {
 	/**
 	 * Notifies the listener that new RemoteDocuments were discovered.
 	 * 
-	 * @param document the discovered documents
+	 * @param documents the discovered documents
 	 */
 	void documentsDiscovered(RemoteDocument[] documents);
 		
@@ -46,7 +46,7 @@ public interface DocumentListener extends EventListener {
 	 * documentation of RemoteDocument for information, which methods make network
 	 * calls).
 	 * 
-	 * @param document the discarded documents
+	 * @param documents the discarded documents
 	 */
 	void documentsDiscarded(RemoteDocument[] documents);
 	

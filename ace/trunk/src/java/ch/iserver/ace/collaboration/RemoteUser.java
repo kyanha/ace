@@ -43,17 +43,23 @@ public interface RemoteUser {
 	String getId();
 		
 	/**
-	 * @return
+	 * Gets the name of the user.
+	 * 
+	 * @return the name of the user
 	 */
 	String getName();
 	
 	/**
-	 * @param listener
+	 * Registers a property change listener on this object.
+	 * 
+	 * @param listener the property change listener
 	 */
 	void addPropertyChangeListener(PropertyChangeListener listener);
 	
 	/**
-	 * @param listener
+	 * Removes a property change listener from this object.
+	 * 
+	 * @param listener the listener
 	 */
 	void removePropertyChangeListener(PropertyChangeListener listener);
 	

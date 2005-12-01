@@ -278,21 +278,21 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	}
 	
 	/**
-	 * @return
+	 * @return the participant manager of the server logic
 	 */
 	protected ParticipantManager getParticipantManager() {
 		return participants;
 	}
 	
 	/**
-	 * @return gets the forwarder used to forward events
+	 * @return the forwarder used to forward events
 	 */
 	protected Forwarder getCompositeForwarder() {
 		return compositeForwarder;
 	}
 	
 	/**
-	 * @return gets the failure handler of this server logic
+	 * @return the failure handler of this server logic
 	 */
 	protected FailureHandler getFailureHandler() {
 		return failureHandler;

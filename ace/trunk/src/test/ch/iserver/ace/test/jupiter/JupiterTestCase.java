@@ -21,9 +21,7 @@
 package ch.iserver.ace.test.jupiter;
 
 import ch.iserver.ace.algorithm.Algorithm;
-import ch.iserver.ace.algorithm.Timestamp;
 import ch.iserver.ace.algorithm.jupiter.Jupiter;
-import ch.iserver.ace.algorithm.jupiter.JupiterVectorTime;
 import ch.iserver.ace.test.AlgorithmTestCase;
 import ch.iserver.ace.test.AlgorithmTestFactory;
 import ch.iserver.ace.text.GOTOInclusionTransformation;
@@ -43,12 +41,5 @@ public abstract class JupiterTestCase extends AlgorithmTestCase implements
 		jupiter.setInclusionTransformation(new GOTOInclusionTransformation());
 		return jupiter;
 	}
-	
-	/**
-	 * @see ch.iserver.ace.test.AlgorithmTestFactory#createTimestamp()
-	 */
-	public Timestamp createTimestamp() {
-		return new JupiterVectorTime(0, 0);
-	}
-	
+		
 }

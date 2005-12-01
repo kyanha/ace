@@ -44,12 +44,27 @@ import ch.iserver.ace.text.SplitOperation;
  */
 public class Jupiter implements Algorithm {
 
+	/**
+	 * Logger used by instances of this class.
+	 */
 	private static final Logger LOG = Logger.getLogger(Jupiter.class);
 
+	/**
+	 * The inclusion transformation function used to transform operations.
+	 */
 	private InclusionTransformation inclusion;
 
+	/**
+	 * The vector time, representing the number of processed requests, of
+	 * this algorithm.
+	 */
 	private JupiterVectorTime vectorTime;
 
+	/**
+	 * Flag indicating whether this algorithm is used on the client-side.
+	 * In some situations, the requests from the server-side have a higher
+	 * priority in transformations.
+	 */
 	private boolean isClientSide;
 
 	/**
@@ -151,6 +166,13 @@ public class Jupiter implements Algorithm {
 		return result;
 	}
 	
+	/**
+	 * Transforms the given index against the operation.
+	 * 
+	 * @param index the index to be transformed
+	 * @param op the operation to be transformed
+	 * @return the transformed index
+	 */
 	private int transformIndex(int index, Operation op) {
 		if (isClientSide()) {
 			return inclusion.transformIndex(index, op, Boolean.TRUE);
@@ -162,8 +184,7 @@ public class Jupiter implements Algorithm {
 	/**
 	 * Discard from the other site (client/server) acknowledged operations.
 	 * 
-	 * @param jupReq
-	 *            the request to the remote operation count from
+	 * @param time the request to the remote operation count from
 	 */
 	private void discardOperations(JupiterVectorTime time) {
 		Iterator iter = ackRequestList.iterator();
@@ -242,8 +263,7 @@ public class Jupiter implements Algorithm {
 	 * Test 3 preconditions that must be fulfilled before transforming. They are
 	 * taken from the Jupiter paper.
 	 * 
-	 * @param jupReq
-	 *            the request to be tested.
+	 * @param time the request to be tested.
 	 */
 	private void checkPreconditions(JupiterVectorTime time) throws TransformationException {
 		if (!ackRequestList.isEmpty()
@@ -296,14 +316,20 @@ public class Jupiter implements Algorithm {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Throws a CannotUndoException because undo is not supported by this
+	 * implementation.
+	 * 
+	 * @see ch.iserver.ace.algorithm.Algorithm#undo()
 	 */
 	public Request undo() {
 		throw new CannotUndoException();
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Throws a CannotRedoException because undo is not supported by this
+	 * implementation.
+	 * 
+	 * @see ch.iserver.ace.algorithm.Algorithm#redo()
 	 */
 	public Request redo() {
 		throw new CannotRedoException();
@@ -312,15 +338,13 @@ public class Jupiter implements Algorithm {
 	/**
 	 * Set an inclusion transformation function.
 	 * 
-	 * @param it
-	 *            the inclusion transformation function to set.
+	 * @param it the inclusion transformation function to set.
 	 */
 	public void setInclusionTransformation(InclusionTransformation it) {
 		this.inclusion = it;
 	}
 
 	/**
-	 * 
 	 * @return the algorithms inclusion transformation
 	 */
 	public InclusionTransformation getInclusionTransformation() {
@@ -328,12 +352,15 @@ public class Jupiter implements Algorithm {
 	}
 
 	/**
-	 * @return Returns the siteId.
+	 * @see ch.iserver.ace.algorithm.Algorithm#getSiteId()
 	 */
 	public int getSiteId() {
 		return isClientSide() ? 1 : 0;
 	}
 	
+	/**
+	 * @see ch.iserver.ace.algorithm.Algorithm#getTimestamp()
+	 */
 	public synchronized Timestamp getTimestamp() {
 		return (Timestamp) vectorTime.clone();
 	}
@@ -348,18 +375,14 @@ public class Jupiter implements Algorithm {
 	}
 
 	/**
-	 * Returns true if this algorithm can undo operations.
-	 * 
-	 * @return true if this algorithm can undo operations
+	 * @see ch.iserver.ace.algorithm.Algorithm#canUndo()
 	 */
 	public boolean canUndo() {
 		return false;
 	}
 
 	/**
-	 * Returns true if this algorithm can redo operations.
-	 * 
-	 * @return true if this algorithm can redo operations
+	 * @see ch.iserver.ace.algorithm.Algorithm#canRedo()
 	 */
 	public boolean canRedo() {
 		return false;

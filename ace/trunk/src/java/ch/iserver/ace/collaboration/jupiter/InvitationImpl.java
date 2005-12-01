@@ -62,8 +62,8 @@ class InvitationImpl implements Invitation {
 	 * to the passed in InvitationProxy.
 	 * 
 	 * @param proxy the InvitationProxy wrapped by this instance
-	 * @param decorator the SessionConnectionDecorator
 	 * @param document the RemoteDocument to which the user is invited
+	 * @param factory the session factory used to create sessions
 	 */
 	InvitationImpl(InvitationProxy proxy, 
 					RemoteDocument document,
@@ -99,7 +99,7 @@ class InvitationImpl implements Invitation {
 	}
 
 	/**
-	 * @return
+	 * @return the session factory used by this invitation to create sessions
 	 */
 	private SessionFactory getSessionFactory() {
 		return sessionFactory;

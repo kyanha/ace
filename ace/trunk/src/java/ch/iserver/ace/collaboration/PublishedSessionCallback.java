@@ -32,7 +32,6 @@ public interface PublishedSessionCallback extends SessionCallback {
 	 * Passes the given join request to the publisher of the document.
 	 * 
 	 * @param request the join request
-	 * @return true iff the user is allowed to join, false otherwise
 	 */
 	void joinRequest(JoinRequest request);
 

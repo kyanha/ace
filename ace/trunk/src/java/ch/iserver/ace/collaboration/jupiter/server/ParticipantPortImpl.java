@@ -33,10 +33,7 @@ import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
- * Default implementation of the ParticipantPort interface. Adds all
- * incoming requests as 
- * {@link ch.iserver.ace.collaboration.jupiter.server.serializer.SerializerCommand}
- * to the server logic queue.
+ * Default implementation of the ParticipantPort interface. 
  */
 public class ParticipantPortImpl implements ParticipantPort {
 		
@@ -105,14 +102,20 @@ public class ParticipantPortImpl implements ParticipantPort {
 	}
 	
 	/**
-	 * @return
+	 * Retrieves the forwarder which is responsible to forward transformed
+	 * operations and caret updates to the other participants.
+	 * 
+	 * @return the forwarder instance
 	 */
 	protected Forwarder getForwarder() {
 		return forwarder;
 	}
 	
 	/**
-	 * @return
+	 * Retrieves the FailureHandler which is responsible to handle any
+	 * failures in this port.
+	 * 
+	 * @return the FailureHandler instance
 	 */
 	protected FailureHandler getFailureHandler() {
 		return failureHandler;

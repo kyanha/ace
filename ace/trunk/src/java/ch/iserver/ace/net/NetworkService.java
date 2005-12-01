@@ -40,7 +40,12 @@ import ch.iserver.ace.algorithm.TimestampFactory;
 public interface NetworkService {
 	
 	/**
-	 * @return
+	 * Gets the local server info object. It may take some time to initialize
+	 * this property. So it is the responsibility of the clients of this
+	 * service to query the network service periodically until the property
+	 * is set.
+	 * 
+	 * @return the local server info
 	 */
 	ServerInfo getServerInfo();
 
