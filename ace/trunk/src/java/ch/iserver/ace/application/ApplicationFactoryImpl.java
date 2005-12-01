@@ -174,7 +174,7 @@ public class ApplicationFactoryImpl implements ApplicationFactory, ApplicationCo
 	
 	public JPanel createStatusBar() {
 		JPanel statusBar = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-		statusBar.setPreferredSize(new Dimension(0, 16));
+		statusBar.setPreferredSize(new Dimension(0, 20));
 		statusBar.setBorder(BorderFactory.createEmptyBorder());
 		// add components
 		CollaborationService service = (CollaborationService) context.getBean("collaborationService");
@@ -210,7 +210,9 @@ public class ApplicationFactoryImpl implements ApplicationFactory, ApplicationCo
 		private final Timer timer;
 		
 		private ServerInfoLabel(CollaborationService service) {
-			this.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 5));
+			this.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
+			Font old = getFont();
+			this.setFont(old.deriveFont(old.getSize2D() * 0.8f));
 			this.service = service;
 			this.timer = new Timer(1000, this);
 			this.timer.start();
