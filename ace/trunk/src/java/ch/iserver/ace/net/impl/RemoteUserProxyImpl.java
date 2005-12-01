@@ -85,6 +85,7 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 	
 	public RemoteDocumentProxyExt removeSharedDocument(String id) {
 		RemoteDocumentProxyExt doc = (RemoteDocumentProxyExt) documents.remove(id);
+		LOG.debug("remove shared document ["+doc+"]");
 		return doc;
 	}
 	
