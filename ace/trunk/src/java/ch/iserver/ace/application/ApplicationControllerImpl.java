@@ -335,7 +335,6 @@ public class ApplicationControllerImpl implements ApplicationController, Applica
 		DialogResult result = getDialogController().showDiscoverUser();
 		
 		if (result.getOption() == JOptionPane.OK_OPTION) {
-			// TODO: implement discovery
 			ServerInfo info = (ServerInfo) result.getResult();
 			collaborationService.discoverUser(new DiscoveryCallbackImpl(getDialogController()),
 				info.getAddress(), info.getPort());
