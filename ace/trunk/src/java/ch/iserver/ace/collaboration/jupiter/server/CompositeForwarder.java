@@ -22,12 +22,27 @@
 package ch.iserver.ace.collaboration.jupiter.server;
 
 /**
- *
+ * Forwarder built on the Composite design pattern. Child forwarders can
+ * be added and removed from this forwarder. A composite forwarder
+ * typically just forwards all method invocations to its children, but
+ * is free to implement some more complex behavior. For instance a
+ * composite forwarder could filter out certain events based on the
+ * passed in parameters.
  */
 public interface CompositeForwarder extends Forwarder {
 	
+	/**
+	 * Adds a child forwarder to this CompositeForwarder.
+	 * 
+	 * @param forwarder the child forwarder to be added
+	 */
 	void addForwarder(Forwarder forwarder);
 	
+	/**
+	 * Removes a child forwarder from this CompositeForwarder.
+	 * 
+	 * @param forwarder the child forwarder to be removed
+	 */
 	void removeForwarder(Forwarder forwarder);
 	
 }
