@@ -57,7 +57,7 @@ public class CollaborationParserHandler extends ParserHandler {
 	private int resultType, currentType;
 	private PortableDocumentExt document;
 	private boolean participants, isTextEncoded;
-	private int currParticipantId;
+	private int currParticipantId, totalOriginalCount;
 	private StringBuffer buffer;
 	private String participantId, siteId;
 	private Timestamp timestamp;
@@ -142,6 +142,7 @@ public class CollaborationParserHandler extends ParserHandler {
 			participantId = attributes.getValue(PARTICIPANT_ID);
 			resultType = REQUEST;
 			currentType = resultType;
+			totalOriginalCount = 0;
 			operationStack = new Stack();
 		} else if (qName.equals(TAG_INSERT)) {//ignore tag 'operation'
 			String position = attributes.getValue(POSITION);
@@ -163,7 +164,7 @@ public class CollaborationParserHandler extends ParserHandler {
 				delete.setPosition(Integer.parseInt(position));
 				currOperation = delete;
 			} catch (NumberFormatException nfe) {
-				LOG.error("could not parse int's ["+position+"]");
+				LOG.error("could not parse position ["+position+"]");
 			}
 		} else if (qName.equals(TAG_SPLIT)) {
 			
@@ -185,6 +186,7 @@ public class CollaborationParserHandler extends ParserHandler {
 			buffer = new StringBuffer();
 		} else if (qName.equals(TAG_ORIGINAL)) {
 			operationStack.push(currOperation);
+			totalOriginalCount++;
 		} else if (qName.equals(TAG_TIMESTAMP)) {
 			buffer = new StringBuffer();
 		} else if (qName.equals(CARET)) {
@@ -229,7 +231,8 @@ public class CollaborationParserHandler extends ParserHandler {
 			}
 			isTextEncoded = false;
 		} else if (qName.equals(TAG_ORIGINAL)) {
-			if (!operationStack.isEmpty()) {
+			//totalOriginalCount > 1 means that original operations are available for the currOperation
+			if (!operationStack.isEmpty() && totalOriginalCount > 1) {
 				Operation operation = (Operation) operationStack.pop();
 				operation.setOriginalOperation(currOperation);
 				currOperation = operation;

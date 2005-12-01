@@ -1,8 +1,9 @@
 package ch.iserver.ace.net.impl.protocol;
 
+import junit.framework.TestCase;
+
 import org.apache.log4j.Logger;
 
-import junit.framework.TestCase;
 import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
@@ -13,6 +14,7 @@ import ch.iserver.ace.net.impl.NetworkProperties;
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.PortableDocumentExt;
 import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
+import ch.iserver.ace.text.DeleteOperation;
 import ch.iserver.ace.text.InsertOperation;
 import ch.iserver.ace.util.Base64;
 
@@ -93,18 +95,59 @@ public class CollaborationParserHandlerTest extends TestCase {
 		CollaborationDeserializer deserializer = new CollaborationDeserializer();
 		CollaborationParserHandler handler = new CollaborationParserHandler();
 		handler.setTimestampFactory(new JupiterTimestampFactory());
-		deserializer.deserialize(data, handler);
-		Request result = handler.getResult();
-		assertEquals(ProtocolConstants.REQUEST, result.getType());
-		ch.iserver.ace.algorithm.Request algoRequest = (ch.iserver.ace.algorithm.Request) result.getPayload();
-		assertEquals(1, algoRequest.getSiteId());
-		Operation operation = algoRequest.getOperation();
-		assertTrue(operation instanceof InsertOperation);
-		assertTrue(operation.getOriginalOperation() instanceof InsertOperation);
-		int[] com = algoRequest.getTimestamp().getComponents();
-		assertEquals(2, com[0]);
-		assertEquals(3, com[1]);
+		
+		final int TIMES = 10;
+		for (int i = 0; i < TIMES; i++) {
+			deserializer.deserialize(data, handler);
+			Request result = handler.getResult();
+			assertEquals(ProtocolConstants.REQUEST, result.getType());
+			ch.iserver.ace.algorithm.Request algoRequest = (ch.iserver.ace.algorithm.Request) result.getPayload();
+			assertEquals(1, algoRequest.getSiteId());
+			Operation operation = algoRequest.getOperation();
+			assertTrue(operation instanceof InsertOperation);
+			assertTrue(operation.getOriginalOperation() instanceof InsertOperation);
+			int[] com = algoRequest.getTimestamp().getComponents();
+			assertEquals(2, com[0]);
+			assertEquals(3, com[1]);
+		}
+		
 		LOG.debug("<-- testReceiveInsertRequest()");
+	}
+	
+	public void testReceiveDeleteRequest() throws Exception {
+		LOG.debug("--> testReceiveDeleteRequest()");
+		String userId = "vnmv-qqw2345";
+		NetworkServiceImpl.getInstance().setUserId(userId);
+		Serializer serializer = new CollaborationSerializer();
+		
+		Timestamp timestamp = (new JupiterTimestampFactory()).createTimestamp(new int[] {2,3});
+		DeleteOperation delete = new DeleteOperation(23, "test-text.");
+
+		ch.iserver.ace.algorithm.Request request = new ch.iserver.ace.algorithm.RequestImpl(1, timestamp, delete);
+		String participantId = "7";
+		byte[] data = serializer.createSessionMessage(ProtocolConstants.REQUEST, request, participantId);
+		String actual = new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
+		assertEquals(XML_REQUEST_DELETE, actual);
+		
+		CollaborationDeserializer deserializer = new CollaborationDeserializer();
+		CollaborationParserHandler handler = new CollaborationParserHandler();
+		handler.setTimestampFactory(new JupiterTimestampFactory());
+		
+		final int TIMES = 10;
+		for (int i = 0; i < TIMES; i++) {
+			deserializer.deserialize(data, handler);
+			Request result = handler.getResult();
+			assertEquals(ProtocolConstants.REQUEST, result.getType());
+			ch.iserver.ace.algorithm.Request algoRequest = (ch.iserver.ace.algorithm.Request) result.getPayload();
+			assertEquals(1, algoRequest.getSiteId());
+			Operation operation = algoRequest.getOperation();
+			assertTrue(operation instanceof DeleteOperation);
+			assertNull(operation.getOriginalOperation());
+			int[] com = algoRequest.getTimestamp().getComponents();
+			assertEquals(2, com[0]);
+			assertEquals(3, com[1]);
+		}
+		LOG.debug("<-- testReceiveDeleteRequest()");
 	}
 	
 	public void testReceiveCaretUpdateMessage() throws Exception {
@@ -137,6 +180,19 @@ public class CollaborationParserHandlerTest extends TestCase {
 		assertEquals(34, message.getUpdate().getDot());
 		assertEquals(311, message.getUpdate().getMark());
 	}
+	
+	private static final String XML_REQUEST_DELETE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+	"<ace><session>" +
+	"<request siteId=\"1\" participantId=\"7\">" +
+	"<operation>" +
+	"<delete position=\"23\">" +
+		"<text>test-text.</text>" +
+		"<original/>" +
+	"</delete>" +
+	"</operation>" +
+	"<timestamp>2 3 </timestamp>" +
+	"</request>" +
+	"</session></ace>";
 
 	private static final String XML_CARETUPDATE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
 	"<ace><session>" +

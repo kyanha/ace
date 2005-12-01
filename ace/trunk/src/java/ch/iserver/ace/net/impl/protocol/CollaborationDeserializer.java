@@ -51,9 +51,9 @@ public class CollaborationDeserializer implements Deserializer {
 			//TODO: add xml validating, write xml schema
 			//factory.setValidating(true)
 			SAXParser saxParser = factory.newSAXParser();
-			LOG.debug("--> parse()");
+//			LOG.debug("--> parse()");
 			saxParser.parse( input, handler );
-			LOG.debug("<-- parse()");
+//			LOG.debug("<-- parse()");
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new DeserializeException(e.getMessage());
