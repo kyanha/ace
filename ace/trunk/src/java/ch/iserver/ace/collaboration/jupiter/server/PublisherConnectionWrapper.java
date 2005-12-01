@@ -26,21 +26,23 @@ import ch.iserver.ace.collaboration.jupiter.PublisherConnection;
 import ch.iserver.ace.net.ParticipantConnection;
 
 /**
- *
+ * Failsafe wrapper for a PublisherConnection.
  */
 public class PublisherConnectionWrapper extends ParticipantConnectionWrapper
 				implements PublisherConnection {
 
 	/**
-	 * @param target
-	 * @param handler
+	 * Creates a new PublisherConnectionWrapper instance.
+	 * 
+	 * @param target the target connection
+	 * @param handler the failure handler
 	 */
 	public PublisherConnectionWrapper(PublisherConnection target, FailureHandler handler) {
 		super(target, handler);
 	}
 	
 	/**
-	 * @return
+	 * @return gets the target PublisherConnection
 	 */
 	public PublisherConnection getPublisherTarget() {
 		return (PublisherConnection) getTarget();
