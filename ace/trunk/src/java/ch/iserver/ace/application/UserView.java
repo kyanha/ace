@@ -121,7 +121,7 @@ public class UserView extends ViewImpl {
 			JButton toolBarButton = userToolBar.add(((AbstractAction)toolBarActions.get(i)));
 			toolBarButton.setBorder(BorderFactory.createEmptyBorder());
 			toolBarButton.setBackground(Color.WHITE);
-			userToolBar.addSeparator(new Dimension(2, 0));
+			userToolBar.addSeparator(new Dimension(3, 0));
 		}
 	}
 

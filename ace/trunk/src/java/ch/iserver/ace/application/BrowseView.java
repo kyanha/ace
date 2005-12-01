@@ -132,7 +132,7 @@ public class BrowseView extends ViewImpl {
 			JButton toolBarButton = browseToolBar.add(((AbstractAction)toolBarActions.get(i)));
 			toolBarButton.setBorder(BorderFactory.createEmptyBorder());
 			toolBarButton.setBackground(Color.WHITE);
-			browseToolBar.addSeparator(new Dimension(2, 0));
+			browseToolBar.addSeparator(new Dimension(3, 0));
 		}
 	}
 	

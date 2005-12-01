@@ -130,7 +130,7 @@ public class DocumentView extends ViewImpl {
 			JButton toolBarButton = documentToolBar.add(((AbstractAction)toolBarActions.get(i)));
 			toolBarButton.setBorder(BorderFactory.createEmptyBorder());
 			toolBarButton.setBackground(Color.WHITE);
-			documentToolBar.addSeparator(new Dimension(2, 0));
+			documentToolBar.addSeparator(new Dimension(3, 0));
 		}
 	}
 }

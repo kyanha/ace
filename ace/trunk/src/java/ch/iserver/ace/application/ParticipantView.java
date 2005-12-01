@@ -104,7 +104,7 @@ public class ParticipantView extends ViewImpl {
 			JButton toolBarButton = participantToolBar.add(((AbstractAction)toolBarActions.get(i)));
 			toolBarButton.setBorder(BorderFactory.createEmptyBorder());
 			toolBarButton.setBackground(Color.WHITE);
-			participantToolBar.addSeparator(new Dimension(2, 0));
+			participantToolBar.addSeparator(new Dimension(3, 0));
 		}
 	}
 
