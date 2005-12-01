@@ -23,6 +23,7 @@ package ch.iserver.ace.application;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
@@ -103,7 +104,7 @@ public class ParticipantView extends ViewImpl {
 			JButton toolBarButton = participantToolBar.add(((AbstractAction)toolBarActions.get(i)));
 			toolBarButton.setBorder(BorderFactory.createEmptyBorder());
 			toolBarButton.setBackground(Color.WHITE);
-			participantToolBar.addSeparator();
+			participantToolBar.addSeparator(new Dimension(2, 0));
 		}
 	}
 
