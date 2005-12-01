@@ -204,6 +204,7 @@ public class CompositeForwarderTest extends TestCase {
 		RemoteUserProxy user = new RemoteUserProxyStub("X");
 
 		// define mock behavior
+		defaultForwarder.sendParticipantJoined(1, user);
 		for (int i = 0; i < PROXY_COUNT; i++) {
 			((Forwarder) proxies.get(i)).sendParticipantJoined(1, user);
 		}
@@ -224,6 +225,7 @@ public class CompositeForwarderTest extends TestCase {
 	
 	public void testSendParticipantLeft() throws Exception {
 		// define mock behavior
+		defaultForwarder.sendParticipantLeft(1, Participant.LEFT);
 		for (int i = 0; i < PROXY_COUNT; i++) {
 			((Forwarder) proxies.get(i)).sendParticipantLeft(1, Participant.LEFT);
 		}
@@ -243,12 +245,18 @@ public class CompositeForwarderTest extends TestCase {
 	}
 	
 	public void testJoinLeave() throws Exception {
+		RemoteUserProxy user = new RemoteUserProxyStub("X");
+		
 		// define mock behavior
+		defaultForwarder.sendParticipantJoined(1, user);
+		defaultForwarder.sendParticipantLeft(1, Participant.LEFT);
+		defaultForwarder.sendParticipantJoined(1, user);
+		defaultForwarder.sendParticipantLeft(1, Participant.LEFT);
 		for (int i = 0; i < PROXY_COUNT; i++) {
 			Forwarder fwd = (Forwarder) proxies.get(i);
-			fwd.sendParticipantJoined(1, new RemoteUserProxyStub("X"));
+			fwd.sendParticipantJoined(1, user);
 			fwd.sendParticipantLeft(1, Participant.LEFT);
-			fwd.sendParticipantJoined(1, new RemoteUserProxyStub("X"));
+			fwd.sendParticipantJoined(1, user);
 			fwd.sendParticipantLeft(1, Participant.LEFT);
 		}
 		

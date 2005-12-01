@@ -173,6 +173,7 @@ class CompositeForwarderImpl implements CompositeForwarder {
 	 */
 	public void sendParticipantLeft(int participantId, int reason) {
 		removeParticipant(participantId);
+		forwarder.sendParticipantLeft(participantId, reason);
 		Iterator it = getForwarders();
 		while (it.hasNext()) {
 			Forwarder forwarder = (Forwarder) it.next();
@@ -185,6 +186,7 @@ class CompositeForwarderImpl implements CompositeForwarder {
 	 */
 	public void sendParticipantJoined(int participantId, RemoteUserProxy user) {
 		addParticipant(participantId);
+		forwarder.sendParticipantJoined(participantId, user);
 		Iterator it = getForwarders();
 		while (it.hasNext()) {
 			Forwarder forwarder = (Forwarder) it.next();
@@ -196,9 +198,7 @@ class CompositeForwarderImpl implements CompositeForwarder {
 	 * @see ch.iserver.ace.collaboration.jupiter.server.Forwarder#close()
 	 */
 	public void close() {
-		// close the default forwarder
 		forwarder.close();
-		
 		Iterator it = getForwarders();
 		while (it.hasNext()) {
 			Forwarder forwarder = (Forwarder) it.next();
@@ -213,6 +213,7 @@ class CompositeForwarderImpl implements CompositeForwarder {
 	 * @param participantId the id of the participant
 	 */
 	protected void addParticipant(int participantId) {
+		LOG.debug("adding participant " + participantId);
 		participants.add(new Integer(participantId));
 	}
 	
@@ -222,6 +223,7 @@ class CompositeForwarderImpl implements CompositeForwarder {
 	 * @param participantId the id of the participant
 	 */
 	protected void removeParticipant(int participantId) {
+		LOG.debug("remove participant " + participantId);
 		participants.remove(new Integer(participantId));
 	}
 	
