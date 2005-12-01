@@ -83,6 +83,7 @@ class CompositeForwarderImpl implements CompositeForwarder {
 		ParameterValidator.notNull("forwarder", forwarder);
 		this.forwarders = new LinkedList();
 		this.participants = new HashSet();
+		this.participants.add(new Integer(0));
 		this.forwarder = forwarder;
 		this.failureHandler = failureHandler;
 	}
