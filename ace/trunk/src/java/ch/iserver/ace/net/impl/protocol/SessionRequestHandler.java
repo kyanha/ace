@@ -93,6 +93,7 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 						connection.setState(AbstractConnection.STATE_ACTIVE);
 						sessionCallback = connection.getSessionConnectionCallback();
 					}
+					sessionCallback.setParticipantId(participantId);
 					sessionCallback.setDocument(doc);
 				} else if (type == ProtocolConstants.KICKED) {
 					String docId = ((DocumentInfo) response.getPayload()).getDocId();
