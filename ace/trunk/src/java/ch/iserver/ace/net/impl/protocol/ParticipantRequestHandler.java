@@ -26,6 +26,7 @@ import org.beepcore.beep.core.InputDataStream;
 import org.beepcore.beep.core.MessageMSG;
 
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
+import ch.iserver.ace.algorithm.TimestampFactory;
 import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
 
@@ -38,13 +39,15 @@ public class ParticipantRequestHandler extends AbstractRequestHandler {
 	private static Logger LOG = Logger.getLogger(ParticipantRequestHandler.class);
 	
 	private Deserializer deserializer;
-	private ParserHandler handler;
+//	private ParserHandler handler;
 	private ParticipantPort port;
+	private TimestampFactory factory;
 	
-	public ParticipantRequestHandler(Deserializer deserializer, ParserHandler handler) {
+	public ParticipantRequestHandler(Deserializer deserializer, TimestampFactory factory) {
 		LOG.debug("new ParticiantRequestHandler()");
 		this.deserializer = deserializer;
-		this.handler = handler;
+//		this.handler = handler;
+		this.factory = factory;
 	}
 	
 	public void setParticipantPort(ParticipantPort port) {
@@ -57,7 +60,7 @@ public class ParticipantRequestHandler extends AbstractRequestHandler {
 	
 	public void cleanup() {
 		deserializer = null;
-		handler = null;
+//		handler = null;
 		port = null;
 	}
 	
@@ -72,8 +75,10 @@ public class ParticipantRequestHandler extends AbstractRequestHandler {
 			if (rawData.length == PIGGYBACKED_MESSAGE_LENGTH) {
 				handlePiggybackedMessage(message);
 			} else {
-				deserializer.deserialize(rawData, handler);
-				Request result = handler.getResult();
+				CollaborationParserHandler newHandler = new CollaborationParserHandler();
+				newHandler.setTimestampFactory(factory);
+				deserializer.deserialize(rawData, newHandler);
+				Request result = newHandler.getResult();
 				int type = result.getType();
 				if (type == ProtocolConstants.LEAVE) {
 					port.leave();

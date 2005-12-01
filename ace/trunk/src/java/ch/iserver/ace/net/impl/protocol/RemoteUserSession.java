@@ -263,7 +263,7 @@ public class RemoteUserSession {
 				CollaborationDeserializer deserializer = new CollaborationDeserializer();
 				CollaborationParserHandler parserHandler = new CollaborationParserHandler();
 				parserHandler.setTimestampFactory(getTimestampFactory());
-				handler = new ParticipantRequestHandler(deserializer, parserHandler);
+				handler = new ParticipantRequestHandler(deserializer, getTimestampFactory());
 				channelType = getChannelTypeXML(CHANNEL_SESSION);
 			} else {
 				//TODO: proxy channel?
