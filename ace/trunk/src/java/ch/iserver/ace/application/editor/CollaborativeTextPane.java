@@ -95,7 +95,7 @@ public class CollaborativeTextPane extends JTextPane implements CaretListener, P
 		} else {
 
 			// check if caret moved from text manipulation
-			System.out.println("caretHandlerMap: " + caretHandlerMap + "   size: " + caretHandlerMap.size());
+//			System.out.println("caretHandlerMap: " + caretHandlerMap + "   size: " + caretHandlerMap.size());
 			//System.out.println(((CaretHandler)caretHandlerMap.get("" + session.getParticipantId())).getDot());
 			
 			CaretHandler pCaretHandler = (CaretHandler)caretHandlerMap.get("" + session.getParticipantId());
