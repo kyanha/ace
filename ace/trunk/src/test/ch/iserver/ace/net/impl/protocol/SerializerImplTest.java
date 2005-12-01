@@ -190,9 +190,7 @@ public class SerializerImplTest extends TestCase {
 	
 	private static final String XML_INVITE_REJECTED = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
 	"<ace><response>" +
-	"<inviteRejected userid=\"vnmv-qqw2345\">" +
-	"<doc id=\"doc-id-234b\"/>" +
-	"</inviteRejected>" +
+	"<inviteRejected docId=\"doc-id-234b\" userid=\"vnmv-qqw2345\"/>" +
 	"</response></ace>";
 	
 

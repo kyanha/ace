@@ -1,5 +1,7 @@
 package ch.iserver.ace.net.impl.protocol;
 
+import java.net.InetAddress;
+
 import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
@@ -9,10 +11,13 @@ import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Timestamp;
 import ch.iserver.ace.algorithm.jupiter.JupiterTimestampFactory;
+import ch.iserver.ace.net.impl.MutableUserDetails;
 import ch.iserver.ace.net.impl.NetworkConstants;
 import ch.iserver.ace.net.impl.NetworkProperties;
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.PortableDocumentExt;
+import ch.iserver.ace.net.impl.RemoteUserProxyExt;
+import ch.iserver.ace.net.impl.RemoteUserProxyImpl;
 import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
 import ch.iserver.ace.text.DeleteOperation;
 import ch.iserver.ace.text.InsertOperation;
@@ -180,6 +185,74 @@ public class CollaborationParserHandlerTest extends TestCase {
 		assertEquals(34, message.getUpdate().getDot());
 		assertEquals(311, message.getUpdate().getMark());
 	}
+	
+	public void testReceiveParticipantJoinedMessage() throws Exception {
+		String userId = "vnmv-qqw2345";
+		NetworkServiceImpl.getInstance().setUserId(userId);
+		Serializer serializer = new CollaborationSerializer();
+
+		String participantId = "1234";
+		
+		RemoteUserProxyExt origProxy = new RemoteUserProxyImpl("sadfasd-24", new MutableUserDetails("Jimmy Ritter", InetAddress.getByName("123.43.45.21"), 4123));
+		origProxy.setExplicityDiscovered(false);
+		byte[] data = serializer.createSessionMessage(ProtocolConstants.PARTICIPANT_JOINED, origProxy, participantId);
+		
+		assertEquals(XML_PARTICIPANT_JOINED, (new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING))));
+		
+		CollaborationDeserializer deserializer = new CollaborationDeserializer();
+		CollaborationParserHandler handler = new CollaborationParserHandler();
+		handler.setTimestampFactory(new JupiterTimestampFactory());
+		deserializer.deserialize(data, handler);
+		Request result = handler.getResult();
+		
+		assertEquals(ProtocolConstants.PARTICIPANT_JOINED, result.getType());
+		assertEquals(participantId, result.getUserId());
+		RemoteUserProxyExt proxy = (RemoteUserProxyExt) result.getPayload();
+		
+		assertEquals("sadfasd-24", proxy.getId());
+		MutableUserDetails details = proxy.getMutableUserDetails();
+		assertEquals("Jimmy Ritter", details.getUsername());
+		assertEquals("123.43.45.21", details.getAddress().getHostAddress());
+		assertEquals(4123, details.getPort());
+		assertFalse(proxy.isExplicitlyDiscovered());
+	}
+	
+	public void testReceiveParticipantLeftMessage() throws Exception {
+		String userId = "vnmv-qqw2345";
+		NetworkServiceImpl.getInstance().setUserId(userId);
+		Serializer serializer = new CollaborationSerializer();
+
+		String participantId = "1234";
+		String reason = "2323";
+		byte[] data = serializer.createSessionMessage(ProtocolConstants.PARTICIPANT_LEFT, reason, participantId);
+		
+		assertEquals(XML_PARTICIPANT_LEFT, (new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING))));
+		
+		CollaborationDeserializer deserializer = new CollaborationDeserializer();
+		CollaborationParserHandler handler = new CollaborationParserHandler();
+		handler.setTimestampFactory(new JupiterTimestampFactory());
+		deserializer.deserialize(data, handler);
+		Request result = handler.getResult();
+		
+		assertEquals(ProtocolConstants.PARTICIPANT_LEFT, result.getType());
+		assertEquals(participantId, result.getUserId());
+		String finalReason = (String) result.getPayload();
+		assertEquals("2323", finalReason);
+	}
+	
+	private static final String XML_PARTICIPANT_LEFT = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+	"<ace><session>" +
+	"<pLeft id=\"1234\">" +
+	"<reason code=\"2323\"/>" +
+	"</pLeft>" +
+	"</session></ace>";	
+	
+	private static final String XML_PARTICIPANT_JOINED = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+	"<ace><session>" +
+	"<pJoined id=\"1234\">" +
+	"<user id=\"sadfasd-24\" name=\"Jimmy Ritter\" address=\"123.43.45.21\" port=\"4123\" explicitDiscovery=\"false\"/>" +
+	"</pJoined>" +
+	"</session></ace>";	
 	
 	private static final String XML_REQUEST_DELETE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
 	"<ace><session>" +

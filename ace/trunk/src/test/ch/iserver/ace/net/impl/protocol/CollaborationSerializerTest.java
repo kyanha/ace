@@ -19,7 +19,9 @@ import ch.iserver.ace.net.impl.NetworkProperties;
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.PortableDocumentExt;
 import ch.iserver.ace.net.impl.PortableDocumentImpl;
+import ch.iserver.ace.net.impl.RemoteUserProxyExt;
 import ch.iserver.ace.net.impl.RemoteUserProxyFactory;
+import ch.iserver.ace.net.impl.RemoteUserProxyImpl;
 import ch.iserver.ace.net.impl.SessionConnectionImpl;
 import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
 import ch.iserver.ace.text.DeleteOperation;
@@ -218,6 +220,48 @@ public class CollaborationSerializerTest extends TestCase {
 
 		assertEquals(XML_CARETUPDATE, actual);
 	}
+	
+	public void testCreateSessionMessageOfTypeParticipantJoined() throws Exception {
+		String userId = "vnmv-qqw2345";
+		NetworkServiceImpl.getInstance().setUserId(userId);
+		Serializer serializer = new CollaborationSerializer();
+
+		String participantId = "1234";
+		
+		RemoteUserProxyExt proxy = new RemoteUserProxyImpl("sadfasd-24", new MutableUserDetails("Jimmy Ritter", InetAddress.getByName("123.43.45.21"), 4123));
+		proxy.setExplicityDiscovered(false);
+		byte[] data = serializer.createSessionMessage(ProtocolConstants.PARTICIPANT_JOINED, proxy, participantId);
+		String actual = new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
+
+		assertEquals(XML_PARTICIPANT_JOINED, actual);
+	}
+	
+	public void testCreateSessionMessageOfTypeParticipantLeft() throws Exception {
+		String userId = "vnmv-qqw2345";
+		NetworkServiceImpl.getInstance().setUserId(userId);
+		Serializer serializer = new CollaborationSerializer();
+
+		String participantId = "1234";
+		String reason = "2323";
+		byte[] data = serializer.createSessionMessage(ProtocolConstants.PARTICIPANT_LEFT, reason, participantId);
+		String actual = new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
+
+		assertEquals(XML_PARTICIPANT_LEFT, actual);
+	}
+	
+	private static final String XML_PARTICIPANT_LEFT = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+	"<ace><session>" +
+	"<pLeft id=\"1234\">" +
+	"<reason code=\"2323\"/>" +
+	"</pLeft>" +
+	"</session></ace>";	
+	
+	private static final String XML_PARTICIPANT_JOINED = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+	"<ace><session>" +
+	"<pJoined id=\"1234\">" +
+	"<user id=\"sadfasd-24\" name=\"Jimmy Ritter\" address=\"123.43.45.21\" port=\"4123\" explicitDiscovery=\"false\"/>" +
+	"</pJoined>" +
+	"</session></ace>";	
 	
 	private static final String XML_CARETUPDATE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
 			"<ace><session>" +
