@@ -148,7 +148,6 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 			LOG.info("--> sendDocument()");
 			byte[] data = null;
 			try {
-				assert (getParticipantId() > 0) : "participantId for "+getUser().getUserDetails().getUsername()+" is "+getParticipantId();
 				DocumentInfo info = new DocumentInfo(getPublishedDocument().getId(), getParticipantId());
 				data = serializer.createResponse(ProtocolConstants.JOIN_DOCUMENT, info, document);
 			} catch (SerializeException se) {
