@@ -43,6 +43,11 @@ public interface RemoteDocument {
 	 */
 	String getId();
 	
+	/**
+	 * Gets the title of the document.
+	 * 
+	 * @return the document's title
+	 */
 	String getTitle();
 	
 	/**
@@ -60,12 +65,18 @@ public interface RemoteDocument {
 	void join(JoinCallback callback);
 
 	/**
-	 * @param listener
+	 * Registers a PropertyChangeListener to receive property change events
+	 * from this document.
+	 * 
+	 * @param listener the PropertyChangeListener to be registered
 	 */
 	void addPropertyChangeListener(PropertyChangeListener listener);
 	
 	/**
-	 * @param listener
+	 * Removes a registered PropertyChangeListener from the list of 
+	 * registered listeners.
+	 * 
+	 * @param listener the PropertyChangeListener to be removed
 	 */
 	void removePropertyChangeListener(PropertyChangeListener listener);
 

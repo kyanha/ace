@@ -38,10 +38,22 @@ import ch.iserver.ace.util.InterruptedRuntimeException;
  */
 public interface Session {
 	
+	/**
+	 * Constant used to specify that the session failed because
+	 * of a transformation error.
+	 */
 	int TRANSFORMATION_FAILED = 1;
 	
+	/**
+	 * Constant used to specify that the session failed because
+	 * of a failure while leaving the session.
+	 */
 	int LEAVE_FAILED = 2;
 	
+	/**
+	 * Constant used to specify that the session failed because
+	 * an operation could not be sent.
+	 */
 	int SEND_FAILED = 3;
 	
 	/**

@@ -50,8 +50,11 @@ public interface SessionCallback {
 	void receiveCaretUpdate(Participant participant, CaretUpdate update);
 
 	/**
-	 * @param reason
-	 * @param e
+	 * Notifies the callback that the session failed. The reason code
+	 * gives some more detailed information why the session failed.
+	 * 
+	 * @param reason the reason code (defined in {@link Session} interface)
+	 * @param e the cause of the failure
 	 */
 	void sessionFailed(int reason, Exception e);
 
