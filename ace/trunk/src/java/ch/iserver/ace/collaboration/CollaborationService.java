@@ -38,8 +38,10 @@ public interface CollaborationService {
 	/**
 	 * Retrieves the ServerInfo of the local server. This information is mainly
 	 * useful as feedback to the local user. If may not be available right
-	 * after starting. If starting fails
-	 * @return
+	 * after starting. If getting the information fails, the client should
+	 * periodically poll the CollaborationService for the ServerInfo object.
+	 * 
+	 * @return the server info object
 	 */
 	ServerInfo getServerInfo();
 	
