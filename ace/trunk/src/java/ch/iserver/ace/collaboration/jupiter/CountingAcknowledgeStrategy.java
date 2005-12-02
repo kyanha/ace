@@ -24,21 +24,37 @@ package ch.iserver.ace.collaboration.jupiter;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
- *
+ * A simple acknowledge strategy that counts incoming messages. If a certain
+ * threshold of unacknowledged messages is received, the acknowledge action
+ * is executed. This strategy does not use any timers to acknowledge messages
+ * after a certain delay if they stay unacknowledged.
  */
 public class CountingAcknowledgeStrategy implements AcknowledgeStrategy {
 
+	/**
+	 * The AcknowledgeAction to be executed.
+	 */
 	private AcknowledgeAction action;
 	
+	/**
+	 * The unacknowledged message counter.
+	 */
 	private int messages;
 	
+	/**
+	 * The number of unacknowledged messages that must be reached before this
+	 * strategy executes the action.
+	 */
 	private int threshold;
 	
 	/**
-	 * @param threshold
+	 * Creates a new CountingAcknowledgeStrategy object using the given threshold.
+	 * 
+	 * @param threshold the threshold
 	 */
 	public CountingAcknowledgeStrategy(int threshold) {
-		this.threshold = 10;
+		ParameterValidator.inRange("threshold", threshold, 1, Integer.MAX_VALUE);
+		this.threshold = threshold;
 	}
 	
 	/**
@@ -56,6 +72,7 @@ public class CountingAcknowledgeStrategy implements AcknowledgeStrategy {
 		messages++;
 		if (messages == threshold) {
 			action.execute();
+			reset();
 		}
 	}
 

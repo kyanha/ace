@@ -48,7 +48,11 @@
      <property name="sessionFactory"><ref local="sessionFactory"/></property>
   </bean>
   
-  <bean id="acknowledgeStrategyFactory" class="ch.iserver.ace.collaboration.jupiter.NullAcknowledgeStrategyFactory"/>
+  <!--<bean id="acknowledgeStrategyFactory" class="ch.iserver.ace.collaboration.jupiter.NullAcknowledgeStrategyFactory"/>-->
+  
+  <bean id="acknowledgeStrategyFactory" class="ch.iserver.ace.collaboration.jupiter.CountingAcknowledgeStrategyFactory">
+    <constructor-arg><value>5</value></constructor-arg>
+  </bean>
   
   <!--<bean id="acknowledgeStrategyFactory" class="ch.iserver.ace.collaboration.jupiter.AcknowledgeStrategyFactoryImpl">
     <constructor-arg><ref local="acknowledgeStrategyExecutorService"/></constructor-arg>

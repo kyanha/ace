@@ -175,7 +175,7 @@ public class ParticipantForwarder implements Forwarder {
 		acknowledgeStrategy.reset();
 	}
 	
-	protected void increaseUnacknowledgedMessages() {
+	protected void messageReceived() {
 		acknowledgeStrategy.messageReceived();
 	}
 	
@@ -193,7 +193,7 @@ public class ParticipantForwarder implements Forwarder {
 				unlock();
 			}
 		} else {
-			increaseUnacknowledgedMessages();
+			messageReceived();
 		}
 	}
 	
@@ -211,7 +211,7 @@ public class ParticipantForwarder implements Forwarder {
 				unlock();
 			}
 		} else {
-			increaseUnacknowledgedMessages();
+			messageReceived();
 		}
 	}
 		

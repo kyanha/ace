@@ -49,6 +49,12 @@ public class AcknowledgeStrategyFactoryImpl implements AcknowledgeStrategyFactor
 	private int delay = 60;
 	
 	/**
+	 * The number of unacknowledged messages before an acknowledge action
+	 * is executed.
+	 */
+	private int threshold = 5;
+	
+	/**
 	 * Creates a new AcknowledgeStrategyFactoryImpl instance.
 	 * 
 	 * @param executorService the executor service used by the strategies to
@@ -79,13 +85,33 @@ public class AcknowledgeStrategyFactoryImpl implements AcknowledgeStrategyFactor
 	}
 	
 	/**
+	 * Sets the threshold of unacknowledged messages before the action is
+	 * executed.
+	 * 
+	 * @param threshold the threshold
+	 */
+	public void setThreshold(int threshold) {
+		this.threshold = threshold;
+	}
+	
+	/**
+	 * Gets the threshold of unacknowledged messages before the action is
+	 * executed.
+	 * 
+	 * @return the threshold
+	 */
+	public int getThreshold() {
+		return threshold;
+	}
+	
+	/**
 	 * @see ch.iserver.ace.collaboration.jupiter.AcknowledgeStrategyFactory#createStrategy()
 	 */
 	public AcknowledgeStrategy createStrategy() {
 		if (LOG.isDebugEnabled()) {
-			LOG.debug("creating AcknowledgeStrategy using delay " + delay);
+			LOG.debug("creating AcknowledgeStrategy using delay " + delay + " and threshold " + threshold);
 		}
-		return new AcknowledgeStrategyImpl(executorService, delay);
+		return new AcknowledgeStrategyImpl(executorService, getDelay(), getThreshold());
 	}
 
 }

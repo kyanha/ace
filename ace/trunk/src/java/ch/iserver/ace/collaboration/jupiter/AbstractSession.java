@@ -138,8 +138,16 @@ abstract class AbstractSession implements Session {
 	/**
 	 * Resets the acknowledge strategy.
 	 */
-	protected void resetAcknowledgeTimer() {
+	protected void resetAcknowledgeStrategy() {
 		acknowledgeStrategy.reset();
+	}
+	
+	/**
+	 * Notifies the acknowledge strategy that an (unacknowledged) message
+	 * has been received.
+	 */
+	protected void messageReceived() {
+		acknowledgeStrategy.messageReceived();
 	}
 	
 	/**

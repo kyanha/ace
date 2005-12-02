@@ -26,6 +26,7 @@ import org.apache.log4j.Logger;
 import ch.iserver.ace.util.ParameterValidator;
 import edu.emory.mathcs.backport.java.util.concurrent.Future;
 import edu.emory.mathcs.backport.java.util.concurrent.ScheduledExecutorService;
+import edu.emory.mathcs.backport.java.util.concurrent.ScheduledThreadPoolExecutor;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 
 /**
@@ -35,7 +36,7 @@ import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
  * in a cancelling of the currently scheduled runnable and reschedules
  * it again.
  */
-class AcknowledgeStrategyImpl implements AcknowledgeStrategy {
+public class AcknowledgeStrategyImpl implements AcknowledgeStrategy, Runnable {
 
 	/**
 	 * Logger used by this class.
@@ -52,15 +53,21 @@ class AcknowledgeStrategyImpl implements AcknowledgeStrategy {
 	 */
 	private final int delay;
 	
-	private int messages = 0;
-	
-	private AcknowledgeAction action;
+	/**
+	 * The number of unacknowledged messages before an acknowledge is sent.
+	 */
+	private final int threshold;
 	
 	/**
-	 * The runnable that is scheduled.
+	 * The number of received messages since the last reset.
 	 */
-	private Runnable runnable;
+	private int messages = 0;
 	
+	/**
+	 * The action to be executed whenever an acknowledge should take place.
+	 */
+	private AcknowledgeAction action;
+		
 	/**
 	 * Future object of the currently scheduled execution. This is uesd to
 	 * cancel an execution.
@@ -73,10 +80,21 @@ class AcknowledgeStrategyImpl implements AcknowledgeStrategy {
 	 * @param executorService the executor service used to schedule objects
 	 * @param delay the delay in seconds from the last reset to the firing of the action
 	 */
-	AcknowledgeStrategyImpl(ScheduledExecutorService executorService, int delay) {
+	public AcknowledgeStrategyImpl(ScheduledExecutorService executorService, int delay, int threshold) {
 		ParameterValidator.notNull("executorService", executorService);
 		this.executorService = executorService;
 		this.delay = delay;
+		this.threshold = threshold;
+	}
+	
+	/**
+	 * Gets the threshold of unacknowledged messages before this strategy fires
+	 * the action.
+	 * 
+	 * @return the threshold
+	 */
+	public int getThreshold() {
+		return threshold;
 	}
 	
 	/**
@@ -84,10 +102,12 @@ class AcknowledgeStrategyImpl implements AcknowledgeStrategy {
 	 */
 	public synchronized void messageReceived() {
 		messages++;
-		if (messages == 10) {
+		if (messages == 1) {
+			schedule();
+		}
+		if (messages == getThreshold()) {
 			action.execute();
 			reset();
-			messages = 0;
 		}
 	}
 	
@@ -101,8 +121,8 @@ class AcknowledgeStrategyImpl implements AcknowledgeStrategy {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("reset timer of AcknowledgeStrategy " + this);
 		}
+		messages = 0;
 		future.cancel(false);
-		schedule();
 	}
 
 	/**
@@ -114,13 +134,6 @@ class AcknowledgeStrategyImpl implements AcknowledgeStrategy {
 			LOG.debug("initialize AcknowledgeStrategy " + this);
 		}
 		this.action = action;
-		this.runnable= new Runnable() {
-			public void run() {
-				LOG.debug("executing acknowledge action ...");
-				action.execute();
-			}
-		};
-		schedule();
 	}
 	
 	/**
@@ -140,7 +153,43 @@ class AcknowledgeStrategyImpl implements AcknowledgeStrategy {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("reschedule execution of AcknowledgeStrategy " + this);
 		}
-		this.future = executorService.scheduleWithFixedDelay(runnable, delay, delay, TimeUnit.SECONDS);
+		this.future = executorService.scheduleWithFixedDelay(this, delay, delay, TimeUnit.SECONDS);
+	}
+	
+	/**
+	 * @see java.lang.Runnable#run()
+	 */
+	public void run() {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("executing acknowledge action: " + this);
+		}
+		action.execute();
+		reset();
+	}
+	
+	public static void main(String[] args) throws Exception {
+		ScheduledExecutorService ses = new ScheduledThreadPoolExecutor(1);
+		AcknowledgeStrategy strategy = new AcknowledgeStrategyImpl(ses, 1, 2);
+		strategy.init(new AcknowledgeAction() {
+			public void execute() {
+				System.out.println("ack");
+			}
+		});
+		System.out.println("initialized strategy");
+		Thread.sleep(2000);
+		System.out.println("2s passed ...");
+		strategy.messageReceived();
+		strategy.messageReceived();
+		System.out.println("two messages received ...");
+		Thread.sleep(2000);
+		System.out.println("another two seconds ...");
+		strategy.messageReceived();
+		System.out.println("a message was received ...");
+		Thread.sleep(2000);
+		System.out.println("and yet another two seconds ...");
+		Thread.sleep(3000);
+		strategy.destroy();
+		ses.shutdown();
 	}
 	
 }

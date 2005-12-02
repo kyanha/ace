@@ -198,7 +198,7 @@ public class SessionImpl extends AbstractSession
 	public void sendOperation(Operation operation) {
 		checkLockUsage();
 		checkSessionState();
-		resetAcknowledgeTimer();
+		resetAcknowledgeStrategy();
 		Request request = getAlgorithm().generateRequest(operation);
 		getConnection().sendRequest(request);
 	}
@@ -209,7 +209,7 @@ public class SessionImpl extends AbstractSession
 	public void sendCaretUpdate(CaretUpdate update) {
 		checkLockUsage();
 		checkSessionState();
-		resetAcknowledgeTimer();
+		resetAcknowledgeStrategy();
 		CaretUpdateMessage message = getAlgorithm().generateCaretUpdateMessage(update);
 		getConnection().sendCaretUpdateMessage(message);
 	}
@@ -263,6 +263,7 @@ public class SessionImpl extends AbstractSession
 		} catch (TransformationException e) {
 			getCallback().sessionFailed(Session.TRANSFORMATION_FAILED, e);
 		} finally {
+			messageReceived();
 			unlock();
 		}
 	}

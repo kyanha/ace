@@ -21,28 +21,36 @@
 
 package ch.iserver.ace.collaboration.jupiter;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
-public class AllTests {
-
-	public static Test suite() {
-		TestSuite suite = new TestSuite(
-						"Test for ch.iserver.ace.collaboration.jupiter");
-		//$JUnit-BEGIN$
-		suite.addTestSuite(DiscoveryNetworkCallbackImplTest.class);
-		suite.addTestSuite(PublishedSessionImplTest.class);
-		suite.addTestSuite(SessionImplTest.class);
-		suite.addTestSuite(JoinNetworkCallbackImplTest.class);
-		suite.addTestSuite(JoinRequestImplTest.class);
-		suite.addTestSuite(InvitationImplTest.class);
-		suite.addTestSuite(SessionConnectionWrapperTest.class);
-		suite.addTestSuite(RemoteUserImplTest.class);
-		suite.addTestSuite(RemoteDocumentImplTest.class);
-		suite.addTestSuite(CountingAcknowledgeStrategyTest.class);
-		suite.addTestSuite(AlgorithmWrapperImplTest.class);
-		//$JUnit-END$
-		return suite;
+/**
+ *
+ */
+public class CountingAcknowledgeStrategyFactory implements
+				AcknowledgeStrategyFactory {
+	
+	/**
+	 * 
+	 */
+	private int threshold;
+	
+	/**
+	 * @param threshold
+	 */
+	public CountingAcknowledgeStrategyFactory(int threshold) {
+		this.threshold = threshold;
+	}
+	
+	/**
+	 * @return the threshold of messages
+	 */
+	public int getThreshold() {
+		return threshold;
+	}
+	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.AcknowledgeStrategyFactory#createStrategy()
+	 */
+	public AcknowledgeStrategy createStrategy() {
+		return new CountingAcknowledgeStrategy(getThreshold());
 	}
 
 }

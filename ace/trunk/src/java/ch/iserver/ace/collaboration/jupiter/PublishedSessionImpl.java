@@ -169,7 +169,7 @@ public class PublishedSessionImpl extends AbstractSession
 	 */
 	public void sendOperation(Operation operation) {
 		checkLockUsage();
-		resetAcknowledgeTimer();
+		resetAcknowledgeStrategy();
 		Request request = getAlgorithm().generateRequest(operation);
 		getPublisherPort().receiveRequest(request);
 	}
@@ -179,7 +179,7 @@ public class PublishedSessionImpl extends AbstractSession
 	 */
 	public void sendCaretUpdate(CaretUpdate update) {
 		checkLockUsage();
-		resetAcknowledgeTimer();
+		resetAcknowledgeStrategy();
 		CaretUpdateMessage message = getAlgorithm().generateCaretUpdateMessage(update);
 		getPublisherPort().receiveCaretUpdate(message);
 	}
@@ -257,6 +257,7 @@ public class PublishedSessionImpl extends AbstractSession
 			getCallback().sessionFailed(TRANSFORMATION_FAILED, e);
 			leave();
 		} finally {
+			messageReceived();
 			unlock();
 		}
 	}
