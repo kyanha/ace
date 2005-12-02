@@ -43,6 +43,8 @@ import ch.iserver.ace.net.impl.RemoteUserProxyFactory;
 import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
 import ch.iserver.ace.text.DeleteOperation;
 import ch.iserver.ace.text.InsertOperation;
+import ch.iserver.ace.text.NoOperation;
+import ch.iserver.ace.text.SplitOperation;
 import ch.iserver.ace.util.Base64;
 
 /**
@@ -62,6 +64,7 @@ public class CollaborationParserHandler extends ParserHandler {
 	private String participantId, siteId, reason;
 	private Timestamp timestamp;
 	private Operation currOperation;
+	private SplitOperation splitOperation;
 	private CaretUpdateMessage caretMsg;
 	private RemoteUserProxyExt proxy;
 	
@@ -98,6 +101,9 @@ public class CollaborationParserHandler extends ParserHandler {
 				new ch.iserver.ace.algorithm.RequestImpl(Integer.parseInt(siteId), timestamp, currOperation);
 			result = new RequestImpl(REQUEST, participantId, request);
 			operationStack = null;
+			currOperation = null;
+			splitOperation = null;
+			timestamp = null;
 			request = null;
 		} else if (type == CARET_UPDATE) {
 			result = new RequestImpl(CARET_UPDATE, participantId, caretMsg);
@@ -106,6 +112,8 @@ public class CollaborationParserHandler extends ParserHandler {
 			result = new RequestImpl(PARTICIPANT_JOINED, participantId, proxy);
 		} else if (type == PARTICIPANT_LEFT) {
 			result = new RequestImpl(PARTICIPANT_LEFT, participantId, reason);
+		} else if (type == ACKNOWLEDGE) {
+			result = new RequestImpl(ACKNOWLEDGE, siteId, timestamp);
 		}
 		buffer = null;
 	}
@@ -175,12 +183,14 @@ public class CollaborationParserHandler extends ParserHandler {
 				LOG.error("could not parse position ["+position+"]");
 			}
 		} else if (qName.equals(TAG_SPLIT)) {
-			
 			currentType = SPLIT;
+			splitOperation = new SplitOperation();
+			currOperation = splitOperation;
 			
-			LOG.warn("SPLIT not ready to be parsed!!!!");
-			
-			
+//			currOperation = null; ???
+		} else if (qName.equals(TAG_NOOP)) {
+			currentType = NOOP;
+			currOperation = new NoOperation();
 		} else if (qName.equals(TAG_CARETUPDATE)) {
 			siteId = attributes.getValue(SITE_ID);
 			participantId = attributes.getValue(PARTICIPANT_ID);
@@ -194,7 +204,6 @@ public class CollaborationParserHandler extends ParserHandler {
 			buffer = new StringBuffer();
 		} else if (qName.equals(TAG_ORIGINAL)) {
 			operationStack.push(currOperation);
-			totalOriginalCount++;
 		} else if (qName.equals(TAG_TIMESTAMP)) {
 			buffer = new StringBuffer();
 		} else if (qName.equals(CARET)) {
@@ -214,6 +223,10 @@ public class CollaborationParserHandler extends ParserHandler {
 			participantId = attributes.getValue(ID);
 		} else if (qName.equals(TAG_REASON)) {
 			reason = attributes.getValue(CODE);
+		} else if (qName.equals(TAG_ACKNOWLEDGE)) {
+			resultType = ACKNOWLEDGE;
+			currentType = resultType;
+			siteId = attributes.getValue(SITE_ID);
 		}
 	}
 	
@@ -249,11 +262,14 @@ public class CollaborationParserHandler extends ParserHandler {
 			}
 			isTextEncoded = false;
 		} else if (qName.equals(TAG_ORIGINAL)) {
-			//totalOriginalCount > 1 means that original operations are available for the currOperation
-			if (!operationStack.isEmpty() && totalOriginalCount > 1) {
+			if (!operationStack.isEmpty()) { //obsolete: && totalOriginalCount > 1
 				Operation operation = (Operation) operationStack.pop();
-				operation.setOriginalOperation(currOperation);
-				currOperation = operation;
+				//totalOriginalCount > 0 means that original operations are available for the currOperation
+				if (totalOriginalCount > 0) {
+					operation.setOriginalOperation(currOperation);
+					currOperation = operation;
+				}
+				totalOriginalCount++;
 			}
 		} else if (qName.equals(TAG_TIMESTAMP)) {
 			StringTokenizer tokens = new StringTokenizer(buffer.toString());
@@ -264,6 +280,15 @@ public class CollaborationParserHandler extends ParserHandler {
 				components[cnt++] = Integer.parseInt(token); 
 			}
 			timestamp = factory.createTimestamp(components);
+		} else if (qName.equals(TAG_FIRST)) {
+			splitOperation.setFirst(currOperation);
+			currOperation = splitOperation;			
+			totalOriginalCount = 0;
+		} else if (qName.equals(TAG_SECOND)) {
+			splitOperation.setSecond(currOperation);
+			currOperation = splitOperation;
+			splitOperation = null;
+			totalOriginalCount = 0;
 		}
  	}
 

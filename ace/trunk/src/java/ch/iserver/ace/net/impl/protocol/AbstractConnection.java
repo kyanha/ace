@@ -30,7 +30,6 @@ public abstract class AbstractConnection {
 	}
 	
 	public synchronized void send(byte[] message, Object data, ReplyListener listener) throws ProtocolException {
-		ParameterValidator.notNull("channel", channel);
 		try {
 			if (getState() == STATE_ACTIVE) {
 				OutputDataStream output = prepare(message);
@@ -42,7 +41,7 @@ public abstract class AbstractConnection {
 				channel.sendMSG(output, listener);
 				LOG.debug("<-- sendMSG()");
 			} else {
-				LOG.error("cannot send data, channel not in STATE_ACTIVE but in ["+getStateString()+"]");
+				LOG.warn("cannot send data, channel not in STATE_ACTIVE but in ["+getStateString()+"]");
 			}
 		} catch (Exception e) {
 			String trace = getStackTrace(e);

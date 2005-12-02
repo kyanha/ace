@@ -190,14 +190,14 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 	
 	public void sendAcknowledge(int siteId, Timestamp timestamp) {
 		LOG.info("--> sendAcknowledge("+siteId+", "+timestamp+")");
-//		
-//		byte[] data = null;
-//		try {
-//			data = serializer.createSessionMessage(ProtocolConstants.ACKNOWLEDGE, timestamp, Integer.toString(siteId));
-//		} catch (SerializeException se) {
-//			LOG.error("could not serialize message ["+se.getMessage()+"]");
-//		}
-//		sendToPeer(data);
+		
+		byte[] data = null;
+		try {
+			data = serializer.createSessionMessage(ProtocolConstants.ACKNOWLEDGE, timestamp, Integer.toString(siteId));
+		} catch (SerializeException se) {
+			LOG.error("could not serialize message ["+se.getMessage()+"]");
+		}
+		sendToPeer(data);
 			
 		LOG.info("<-- sendAcknowledge()");
 	}

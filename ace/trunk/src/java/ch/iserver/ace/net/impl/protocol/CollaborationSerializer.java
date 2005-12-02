@@ -38,6 +38,7 @@ import ch.iserver.ace.Operation;
 import ch.iserver.ace.ServerInfo;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
+import ch.iserver.ace.algorithm.Timestamp;
 import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.net.PortableDocument;
 import ch.iserver.ace.net.impl.MutableUserDetails;
@@ -285,7 +286,17 @@ public class CollaborationSerializer implements Serializer, ProtocolConstants {
 				handler.endElement("", "", CARET);
 				handler.endElement("", "", TAG_CARETUPDATE);
 			} else if (type == ACKNOWLEDGE) { 
-				
+				String siteId = (String) data2;
+				Timestamp timestamp = (Timestamp) data;
+				attrs.addAttribute("", "", SITE_ID, "", siteId);
+				handler.startElement("", "", TAG_ACKNOWLEDGE, attrs);
+				attrs = new AttributesImpl();
+				handler.startElement("", "", TAG_TIMESTAMP, attrs);
+				int[] components = timestamp.getComponents();
+				char[] chars = getComponentsAsString(components).toCharArray();
+				handler.characters(chars, 0, chars.length);
+				handler.endElement("", "", TAG_TIMESTAMP);
+				handler.endElement("", "", TAG_ACKNOWLEDGE);
 			} else if (type == PARTICIPANT_JOINED) {  
 				String participantId = (String) data2;
 				attrs.addAttribute("", "", ID, "", participantId);

@@ -87,6 +87,9 @@ public interface ProtocolConstants {
 	public static final String TAG_CARETUPDATE = "caretUpdate";
 	public static final String TAG_PARTICIPANT_JOINED = "pJoined";
 	public static final String TAG_PARTICIPANT_LEFT = "pLeft";
+	public static final String TAG_ACKNOWLEDGE = "ack";
+	public static final String TAG_FIRST = "first";
+	public static final String TAG_SECOND = "second";
 	
 	/***********************************/
 	/** Sub-level tags 				**/

@@ -26,6 +26,7 @@ import org.beepcore.beep.core.InputDataStream;
 import org.beepcore.beep.core.MessageMSG;
 
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
+import ch.iserver.ace.algorithm.Timestamp;
 import ch.iserver.ace.algorithm.TimestampFactory;
 import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
@@ -86,14 +87,17 @@ public class ParticipantRequestHandler extends AbstractRequestHandler {
 					//cleanup of participant resources is done in ParticipantConnectionImpl.close()
 				} else if (type == ProtocolConstants.REQUEST) {
 					ch.iserver.ace.algorithm.Request algoRequest = (ch.iserver.ace.algorithm.Request) result.getPayload();
+					LOG.debug("receiveRequest("+algoRequest+")");
 					port.receiveRequest(algoRequest);
 				} else if (type == ProtocolConstants.CARET_UPDATE) {
 					CaretUpdateMessage updateMsg = (CaretUpdateMessage) result.getPayload();
+					LOG.debug("receivedCaretUpdate("+updateMsg+")");
 					port.receiveCaretUpdate(updateMsg);
 				} else if (type == ProtocolConstants.ACKNOWLEDGE) {
-					
-					throw new UnsupportedOperationException();
-					
+					Timestamp timestamp = (Timestamp) result.getPayload();
+					String siteId = result.getUserId();
+					LOG.debug("receiveAcknowledge("+siteId+", "+timestamp);
+					port.receiveAcknowledge(Integer.parseInt(siteId), timestamp);
 				} 
 				
 				try {				
