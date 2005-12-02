@@ -172,6 +172,24 @@ public class ServerDocumentImplTest extends TestCase {
 		assertFalse(it.hasNext());
 	}
 	
+	public void testInsertRemoveAtEnd() {
+		ServerDocumentImpl doc = new ServerDocumentImpl();
+		doc.insertString(0, 0, "a");
+		doc.insertString(0, 1, "b");
+		doc.insertString(0, 2, "c");
+		doc.insertString(0, 3, "d");
+		doc.insertString(0, 4, "e");
+		doc.insertString(0, 5, "f");
+		doc.insertString(0, 6, "g");
+		assertEquals("abcdefg", doc.getText());
+		doc.removeString(6, 1);
+		assertEquals("abcdef", doc.getText());
+		
+		Iterator it = doc.getFragments();
+		assertTrue(it.hasNext());
+		assertEquals(0, "abcdef", (Fragment) it.next());
+	}
+	
 	public void testUpdateCaret() throws Exception {
 		ServerDocumentImpl doc = new ServerDocumentImpl();
 		doc.insertString(1, 0, "hello world");

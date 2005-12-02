@@ -224,6 +224,8 @@ public class ServerDocumentImpl extends AbstractDocument implements ServerDocume
 		BranchElement map = (BranchElement) getDefaultRootElement();
 		int offset = chng.getOffset();
 		int length = chng.getLength();
+		int doclen = chng.getDocument().getLength();
+		length -= (doclen == length + offset) ? 1 : 0;
 		int index0 = map.getElementIndex(offset);
 		int index1 = map.getElementIndex(offset + length);
 		if (index0 != index1) {
@@ -640,6 +642,39 @@ public class ServerDocumentImpl extends AbstractDocument implements ServerDocume
 			return (RemoteUserProxy) users.get(new Integer(participantId));
 		}
 		
+		/**
+		 * @see java.lang.Object#toString()
+		 */
+		public String toString() {
+			StringBuffer buffer = new StringBuffer();
+			buffer.append(getClass().getName());
+			buffer.append("\n");
+			int[] ids = getParticipantIds();
+			for (int i = 0; i < ids.length; i++) {
+				int id = ids[i];
+				RemoteUserProxy user = getUserProxy(id);
+				CaretUpdate update = getSelection(id);
+				buffer.append(id);
+				buffer.append(":");
+				if (user != null) {
+					buffer.append(user.getId());
+				}
+				buffer.append(":[");
+				buffer.append(update.getDot());
+				buffer.append(",");
+				buffer.append(update.getMark());
+				buffer.append("]\n");
+			}
+			buffer.append("-->\n");
+			Iterator it = getFragments();
+			while (it.hasNext()) {
+				Fragment fragment = (Fragment) it.next();
+				buffer.append(fragment);
+				buffer.append("\n");
+			}
+			buffer.append("<--");
+			return buffer.toString();
+		}
 	}
 				
 	// --> Fragment Element <--
