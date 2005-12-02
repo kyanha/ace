@@ -26,7 +26,6 @@ import org.apache.log4j.Logger;
 import ch.iserver.ace.util.ParameterValidator;
 import edu.emory.mathcs.backport.java.util.concurrent.Future;
 import edu.emory.mathcs.backport.java.util.concurrent.ScheduledExecutorService;
-import edu.emory.mathcs.backport.java.util.concurrent.ScheduledThreadPoolExecutor;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 
 /**
@@ -157,6 +156,8 @@ public class AcknowledgeStrategyImpl implements AcknowledgeStrategy, Runnable {
 	}
 	
 	/**
+	 * Executes the AcknowledgeAction and resets the timer.
+	 * 
 	 * @see java.lang.Runnable#run()
 	 */
 	public void run() {
@@ -165,31 +166,6 @@ public class AcknowledgeStrategyImpl implements AcknowledgeStrategy, Runnable {
 		}
 		action.execute();
 		reset();
-	}
-	
-	public static void main(String[] args) throws Exception {
-		ScheduledExecutorService ses = new ScheduledThreadPoolExecutor(1);
-		AcknowledgeStrategy strategy = new AcknowledgeStrategyImpl(ses, 1, 2);
-		strategy.init(new AcknowledgeAction() {
-			public void execute() {
-				System.out.println("ack");
-			}
-		});
-		System.out.println("initialized strategy");
-		Thread.sleep(2000);
-		System.out.println("2s passed ...");
-		strategy.messageReceived();
-		strategy.messageReceived();
-		System.out.println("two messages received ...");
-		Thread.sleep(2000);
-		System.out.println("another two seconds ...");
-		strategy.messageReceived();
-		System.out.println("a message was received ...");
-		Thread.sleep(2000);
-		System.out.println("and yet another two seconds ...");
-		Thread.sleep(3000);
-		strategy.destroy();
-		ses.shutdown();
 	}
 	
 }
