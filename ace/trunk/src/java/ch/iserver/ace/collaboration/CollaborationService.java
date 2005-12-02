@@ -32,6 +32,34 @@ import ch.iserver.ace.UserDetails;
  * There are methods related to registering listeners for incoming events
  * such as discoveries and invitations, and there are methods for publishing
  * local documents.
+ * 
+ * <p>The CollaborationService has to be started before any events are
+ * published by it. If the CollaborationService is no longer used, it should
+ * be stopped.</p>
+ * 
+ * <h3>Discovery Listeners</h3>
+ * First, you have to register the listener and start the service.
+ * <pre>
+ *  CollaborationService service = ...;
+ *  service.addDocumentListener(myDocumentListener);
+ *  service.addUserListener(myUserListener);
+ *  service.start();
+ * </pre>
+ * Then, you will get discovery events on those two listeners you have 
+ * registered.
+ * 
+ * <h3>Callbacks</h3>
+ * The CollaborationService supports two different callback objects. An
+ * InvitationCallback can be set with the
+ * {@link #setInvitationCallback(InvitationCallback)} method. Incoming
+ * invitations are passed to that callback. The other callback is
+ * notified about service failures. It can be set with the
+ * {@link #setFailureHandler(ServiceFailureHandler)} method.
+ * 
+ * <h3>Publishing Documents</h3>
+ * A local document can be published with the
+ * {@link #publish(PublishedSessionCallback, DocumentModel)} method.
+ * Published documents can then be joined by other users.
  */
 public interface CollaborationService {
 	
