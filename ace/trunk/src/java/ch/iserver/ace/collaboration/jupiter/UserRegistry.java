@@ -29,7 +29,8 @@ import ch.iserver.ace.net.RemoteUserProxy;
 public interface UserRegistry {
 		
 	/**
-	 * Adds a new user to the registry. The passed in RemoteUserProxy is
+	 * Creates a new RemoteUser, if there is not already a RemoteUser for the
+	 * passed in proxy. The passed in RemoteUserProxy is
 	 * used to create the RemoteUser.
 	 * 
 	 * @param proxy the proxy object from the network layer
