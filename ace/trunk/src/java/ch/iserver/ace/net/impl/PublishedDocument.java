@@ -143,12 +143,8 @@ public class PublishedDocument implements DocumentServer {
 		Request request = new RequestImpl(ProtocolConstants.CONCEAL, null, this);
 		filter.process(request);
 		service.conceal(getId());
-		isShutdown = true;
-	}
-
-	public synchronized void prepareShutdown() {
-		if (isShutdown()) throw new IllegalStateException("document has been shutdown already");
 		//stop accepting joins
 		isConcealed = true;
+		isShutdown = true;
 	}
 }
