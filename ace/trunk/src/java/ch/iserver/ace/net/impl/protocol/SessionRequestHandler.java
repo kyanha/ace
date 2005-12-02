@@ -26,6 +26,7 @@ import org.beepcore.beep.core.InputDataStream;
 import org.beepcore.beep.core.MessageMSG;
 
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
+import ch.iserver.ace.algorithm.Timestamp;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.net.SessionConnectionCallback;
 import ch.iserver.ace.net.impl.PortableDocumentExt;
@@ -101,27 +102,28 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 					sessionCallback.kicked();
 				} else if (type == ProtocolConstants.REQUEST) {
 					ch.iserver.ace.algorithm.Request algoRequest = (ch.iserver.ace.algorithm.Request) response.getPayload();
-					LOG.debug("received request: "+algoRequest);
+					LOG.debug("receiveRequest("+algoRequest+")");
 					String participantId = response.getUserId();
 					sessionCallback.receiveRequest(Integer.parseInt(participantId), algoRequest);
 				} else if (type == ProtocolConstants.CARET_UPDATE) {
 					CaretUpdateMessage update = (CaretUpdateMessage) response.getPayload();
-					LOG.debug("received caret update: "+update);
+					LOG.debug("receivedCaretUpdate("+update+")");
 					String participantId = response.getUserId();
 					sessionCallback.receiveCaretUpdate(Integer.parseInt(participantId), update);
 				} else if (type == ProtocolConstants.ACKNOWLEDGE) {
-					
-					throw new UnsupportedOperationException();
-					
+					Timestamp timestamp = (Timestamp) response.getPayload();
+					String siteId = response.getUserId();
+					LOG.debug("receiveAcknowledge("+siteId+", "+timestamp);
+					sessionCallback.receiveAcknowledge(Integer.parseInt(siteId), timestamp);
 				} else if (type == ProtocolConstants.PARTICIPANT_JOINED) {
 					RemoteUserProxy proxy = (RemoteUserProxy) response.getPayload();
 					String participantId = response.getUserId();
-					LOG.debug("participant joined ["+participantId+", "+proxy.getUserDetails().getUsername()+"]");
+					LOG.debug("participantJoined("+participantId+", "+proxy.getUserDetails().getUsername()+")");
 					sessionCallback.participantJoined(Integer.parseInt(participantId), proxy);
 				} else if (type == ProtocolConstants.PARTICIPANT_LEFT) {
 					String reason = (String) response.getPayload();
 					String participantId = response.getUserId();
-					LOG.debug("participant joined ["+participantId+", "+reason+"]");
+					LOG.debug("participantLeft("+participantId+", "+reason+")");
 					sessionCallback.participantLeft(Integer.parseInt(participantId), Integer.parseInt(reason));
 				}
 				try {

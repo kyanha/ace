@@ -55,6 +55,11 @@ public class SplitOperation implements Operation {
 
 	/**
 	 * Class constructor.
+	 */
+	public SplitOperation() {}
+	
+	/**
+	 * Class constructor.
 	 * 
 	 * @param op1 	the first operation
 	 * @param op2	the second operation

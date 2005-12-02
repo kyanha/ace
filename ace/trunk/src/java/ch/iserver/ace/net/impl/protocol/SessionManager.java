@@ -104,6 +104,7 @@ public class SessionManager {
 				RemoteUserSession session = (RemoteUserSession) iter.next();
 				session.close();
 			}
+			sessions.clear();
 		}
 		LOG.debug("<-- closeSessions()");
 	}
