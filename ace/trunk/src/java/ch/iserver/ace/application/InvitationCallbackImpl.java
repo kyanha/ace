@@ -29,6 +29,7 @@ import javax.swing.JOptionPane;
 import ch.iserver.ace.application.editor.CollaborativeDocument;
 import ch.iserver.ace.collaboration.Invitation;
 import ch.iserver.ace.collaboration.InvitationCallback;
+import ch.iserver.ace.collaboration.JoinCallback;
 import ch.iserver.ace.collaboration.ParticipantSessionCallback;
 
 
@@ -58,27 +59,16 @@ public class InvitationCallbackImpl implements InvitationCallback {
 				DocumentItem inviteItem = browseViewController.findItem(invitation.getDocument());
 
 				if (result == JOptionPane.OK_OPTION) {
-					// accepted
-					// create new document item
-					//DocumentItem newItem = new DocumentItem(invitation.getDocument());
-					//newItem.setEditorDocument(new CollaborativeDocument());
-					
 					// get document item from browse view
-					if(inviteItem ==  null) {
+					if (inviteItem ==  null) {
 						return;
 					}
 					inviteItem.setEditorDocument(new CollaborativeDocument());
-					
-					// create and set session callback
-					ParticipantSessionCallback callback = new ParticipantSessionCallbackImpl(inviteItem, viewController, dialogController);
-					inviteItem.setSessionCallback(callback);
-			
-					// set session
-					inviteItem.setSession(invitation.accept(callback));
-			
-					// set type
-					inviteItem.setType(DocumentItem.JOINED);
-		
+								
+					// join
+					JoinCallback joinCallback = new JoinCallbackImpl(inviteItem, viewController, dialogController);
+					invitation.accept(joinCallback);
+							
 				} else {
 					// rejected
 					if(inviteItem ==  null) {

@@ -24,6 +24,7 @@ package ch.iserver.ace.net.impl;
 import org.apache.log4j.Logger;
 
 import ch.iserver.ace.net.InvitationProxy;
+import ch.iserver.ace.net.JoinNetworkCallback;
 import ch.iserver.ace.net.RemoteDocumentProxy;
 import ch.iserver.ace.net.SessionConnection;
 import ch.iserver.ace.net.SessionConnectionCallback;
@@ -58,19 +59,27 @@ public class InvitationProxyImpl implements InvitationProxy {
 		return proxy;
 	}
 
-	public SessionConnection accept(SessionConnectionCallback callback) {
-		LOG.debug("--> accept("+callback+")");
+	/**
+	 * @see ch.iserver.ace.net.InvitationProxy#accept(ch.iserver.ace.net.JoinNetworkCallback)
+	 */
+	public void accept(JoinNetworkCallback callback) {
+		// TODO Auto-generated method stub
 		
-		String docId = proxy.getId();
-
-		SessionConnectionImpl connection = session.addSessionConnection(docId);
-		connection.setSessionConnectionCallback(callback);
-		Request request = new RequestImpl(ProtocolConstants.JOIN, proxy.getPublisher().getId(), docId);
-		filter.process(request);
-		
-		LOG.debug("<-- accept()");
-		return connection;
 	}
+	
+//	public SessionConnection accept(SessionConnectionCallback callback) {
+//		LOG.debug("--> accept("+callback+")");
+//		
+//		String docId = proxy.getId();
+//
+//		SessionConnectionImpl connection = session.addSessionConnection(docId);
+//		connection.setSessionConnectionCallback(callback);
+//		Request request = new RequestImpl(ProtocolConstants.JOIN, proxy.getPublisher().getId(), docId);
+//		filter.process(request);
+//		
+//		LOG.debug("<-- accept()");
+//		return connection;
+//	}
 
 	public void reject() {
 		LOG.debug("invitation for '"+getDocument().getDocumentDetails().getTitle()+"' rejected.");

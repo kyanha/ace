@@ -48,10 +48,9 @@ public interface Invitation {
 	/**
 	 * Accepts the invitation and gets the corresponding session info object.
 	 *
-	 * @param controller the SessionCallback for the session
-	 * @return the Session object
+	 * @param callback the callback for the join event
 	 */
-	Session accept(ParticipantSessionCallback controller);
+	void accept(JoinCallback callback);
 	
 	/**
 	 * Rejects the invitation.

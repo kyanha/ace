@@ -22,12 +22,10 @@
 package ch.iserver.ace.collaboration.jupiter;
 
 import ch.iserver.ace.collaboration.Invitation;
+import ch.iserver.ace.collaboration.JoinCallback;
 import ch.iserver.ace.collaboration.RemoteDocument;
 import ch.iserver.ace.collaboration.RemoteUser;
-import ch.iserver.ace.collaboration.Session;
-import ch.iserver.ace.collaboration.ParticipantSessionCallback;
 import ch.iserver.ace.net.InvitationProxy;
-import ch.iserver.ace.net.SessionConnection;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
@@ -106,15 +104,10 @@ class InvitationImpl implements Invitation {
 	}
 	
 	/**
-	 * @see ch.iserver.ace.collaboration.Invitation#accept(ch.iserver.ace.collaboration.ParticipantSessionCallback)
+	 * @see ch.iserver.ace.collaboration.Invitation#accept(ch.iserver.ace.collaboration.JoinCallback)
 	 */
-	public Session accept(ParticipantSessionCallback callback) {
-		ParameterValidator.notNull("callback", callback);
-		ConfigurableSession session = getSessionFactory().createSession();
-		session.setSessionCallback(callback);
-		SessionConnection connection = getProxy().accept(session);
-		session.setConnection(connection);
-		return session;
+	public void accept(JoinCallback callback) {
+		getProxy().accept(new JoinNetworkCallbackImpl(callback, getSessionFactory()));
 	}
 
 	/**

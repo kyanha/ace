@@ -37,13 +37,11 @@ public interface InvitationProxy {
 	RemoteDocumentProxy getDocument();
 
 	/**
-	 * Accepts the invitation. The returned SessionConnectionInfo is ready to
-	 * be used for any communication with the joined session.
+	 * Accepts the invitation. 
 	 * 
-	 * @param callback the callback interface for callbacks to the logic layer
-	 * @return the SessionConnection to the shared document
+	 * @param callback the join callback
 	 */
-	SessionConnection accept(SessionConnectionCallback callback);
+	void accept(JoinNetworkCallback callback);
 	
 	/**
 	 * Rejects the invitation. Sends a notification to the inviter that the
