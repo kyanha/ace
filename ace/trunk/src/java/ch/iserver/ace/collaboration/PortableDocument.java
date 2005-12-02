@@ -27,16 +27,41 @@ import java.util.Iterator;
 import ch.iserver.ace.CaretUpdate;
 
 /**
- *
+ * Document passed to the 
+ * {@link ch.iserver.ace.collaboration.ParticipantSessionCallback#setDocument(PortableDocument)}
+ * method. This is the initial document of the session when a user joins.
  */
 public interface PortableDocument {
 
+	/**
+	 * Gets the participants of the session. The element type of this
+	 * collection is {@link Participant}.
+	 * 
+	 * @return the participants
+	 */
 	Collection getParticipants();
 	
+	/**
+	 * Gets the participant with the given id.
+	 * 
+	 * @param participantId the participant
+	 * @return the Participant object
+	 */
 	Participant getParticipant(int participantId);
 	
+	/**
+	 * Gets the selection of the given participant.
+	 * 
+	 * @param participantId the participant's id
+	 * @return the selection of that participant
+	 */
 	CaretUpdate getSelection(int participantId);
 	
+	/**
+	 * Gets the fragments of the document.
+	 * 
+	 * @return the fragments of the document
+	 */
 	Iterator getFragments();
 	
 }
