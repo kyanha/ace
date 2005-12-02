@@ -56,6 +56,11 @@ public class AlgorithmWrapperImpl implements AlgorithmWrapper {
 		this.algorithm = algorithm;
 	}
 	
+	/**
+	 * Gets the algorithm wrapped by this wrapper.
+	 * 
+	 * @return the wrapped algorithm
+	 */
 	protected Algorithm getAlgorithm() {
 		return algorithm;
 	}
