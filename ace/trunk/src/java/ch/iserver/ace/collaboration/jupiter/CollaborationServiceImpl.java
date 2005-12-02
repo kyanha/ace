@@ -389,6 +389,9 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	// --> network service callback methods <--
 	
 	/**
+	 * Forwards the service failure to the failure handler of the collaboration 
+	 * layer.
+	 * 
 	 * @see ch.iserver.ace.net.NetworkServiceCallback#serviceFailure(int, java.lang.String, java.lang.Exception)
 	 */
 	public void serviceFailure(int code, String msg, Exception e) {

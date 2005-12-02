@@ -58,17 +58,25 @@ public interface ServerLogic extends DocumentServerLogic {
 	void kick(int participant);
 	
 	/**
-	 * @param connection
+	 * Notifies the server that the specified user's join request
+	 * was rejected.
+	 * 
+	 * @param connection the participant connection
 	 */
 	void joinRejected(ParticipantConnection connection);
 	
 	/**
-	 * @param connection
+	 * Notifies the server that the specified user's join request
+	 * was accepted.
+	 * 
+	 * @param connection the participant connection
 	 */
 	void joinAccepted(ParticipantConnection connection);
 	
 	/**
-	 * @param user
+	 * Invites the given user to the session.
+	 * 
+	 * @param user the user to be invited
 	 */
 	void invite(RemoteUser user);
 	

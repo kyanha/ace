@@ -27,16 +27,25 @@ import ch.iserver.ace.collaboration.JoinRequest;
 import ch.iserver.ace.collaboration.jupiter.PublisherConnection;
 
 /**
- *
+ * Null object implementation of the PublisherConnection interface.
  */
-public class NullPublisherConnection extends NullParticipantConnection implements PublisherConnection {
+class NullPublisherConnection extends NullParticipantConnection implements PublisherConnection {
 	
+	/**
+	 * The logger used by instances.
+	 */
 	private static final Logger LOG = Logger.getLogger(NullPublisherConnection.class);
 	
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.PublisherConnection#sendJoinRequest(ch.iserver.ace.collaboration.JoinRequest)
+	 */
 	public void sendJoinRequest(JoinRequest request) {
 		LOG.debug("sendJoinRequest ignored");
 	}
 
+	/**
+	 * @see ch.iserver.ace.collaboration.jupiter.PublisherConnection#sessionFailed(int, java.lang.Exception)
+	 */
 	public void sessionFailed(int reason, Exception e) {
 		LOG.debug("sessionFailed ignored");
 	}

@@ -35,7 +35,7 @@ import ch.iserver.ace.net.RemoteUserProxy;
  * Null-object implementation of a ParticipantConnection. Logs all method
  * calls with log level info.
  */
-public class NullParticipantConnection implements ParticipantConnection {
+class NullParticipantConnection implements ParticipantConnection {
 	
 	/**
 	 * The Logger used to log method calls.

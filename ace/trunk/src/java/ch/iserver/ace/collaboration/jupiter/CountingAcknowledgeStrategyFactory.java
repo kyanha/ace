@@ -22,18 +22,21 @@
 package ch.iserver.ace.collaboration.jupiter;
 
 /**
- *
+ * Factory that creates CountingAcknowledgeStrategy objects.
  */
 public class CountingAcknowledgeStrategyFactory implements
 				AcknowledgeStrategyFactory {
 	
 	/**
-	 * 
+	 * The threshold to be set on the created strategies.
 	 */
 	private int threshold;
 	
 	/**
-	 * @param threshold
+	 * Creates a CountingAcknowledgeStrategyFactory with the given
+	 * threshold.
+	 * 
+	 * @param threshold the threshold
 	 */
 	public CountingAcknowledgeStrategyFactory(int threshold) {
 		this.threshold = threshold;
