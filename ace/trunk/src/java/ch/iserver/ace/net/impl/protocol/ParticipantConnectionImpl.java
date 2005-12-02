@@ -52,6 +52,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 	private int participantId = -1;
 	private String docId;
 	private PublishedDocument publishedDoc;
+	private boolean isKicked;
 	
 	public ParticipantConnectionImpl(String docId, RemoteUserSession session, ReplyListener listener, Serializer serializer) {
 		super(null);
@@ -62,6 +63,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 		this.serializer = serializer;
 		setReplyListener(listener);
 		super.LOG = Logger.getLogger(ParticipantConnectionImpl.class);
+		isKicked = false;
 	}
 		
 	public int getParticipantId() {
@@ -233,6 +235,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 
 	public void sendKicked() {
 		LOG.info("--> sendKicked()");
+		isKicked = true;
 		byte [] data = null;
 		try {
 			data = serializer.createNotification(ProtocolConstants.KICKED, docId);
@@ -249,6 +252,18 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 		//notify the participant on close() invocation or on DocumentServer.shutdown()
 		//invocation
 		try {
+			
+			//TODO: send session terminated msg
+			if (!isKicked) {
+				byte[] data = null;
+				try {
+					data = serializer.createSessionMessage(ProtocolConstants.SESSION_TERMINATED, null, null);
+				} catch (SerializeException se) {
+					LOG.error("could not serialize message ["+se.getMessage()+"]");
+				}
+				sendToPeer(data);
+			}
+
 			getChannel().close();
 		} catch (BEEPException be) {
 			LOG.warn("could not close channel ["+be.getMessage()+"]");

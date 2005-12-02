@@ -114,6 +114,8 @@ public class CollaborationParserHandler extends ParserHandler {
 			result = new RequestImpl(PARTICIPANT_LEFT, participantId, reason);
 		} else if (type == ACKNOWLEDGE) {
 			result = new RequestImpl(ACKNOWLEDGE, siteId, timestamp);
+		} else if (type == SESSION_TERMINATED) {
+			result = new RequestImpl(SESSION_TERMINATED, null, null);
 		}
 		buffer = null;
 	}
@@ -227,6 +229,9 @@ public class CollaborationParserHandler extends ParserHandler {
 			resultType = ACKNOWLEDGE;
 			currentType = resultType;
 			siteId = attributes.getValue(SITE_ID);
+		} else if (qName.equals(TAG_SESSION_TERMINATED)) {
+			resultType = SESSION_TERMINATED;
+			currentType = resultType;
 		}
 	}
 	

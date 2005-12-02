@@ -51,6 +51,7 @@ public interface ProtocolConstants {
 	public static final int DELETE = 106;
 	public static final int SPLIT = 107;
 	public static final int NOOP = 108;
+	public static final int SESSION_TERMINATED = 109;
 	
 	
 	public static final int CHANNEL_MAIN = 200;
@@ -90,6 +91,7 @@ public interface ProtocolConstants {
 	public static final String TAG_ACKNOWLEDGE = "ack";
 	public static final String TAG_FIRST = "first";
 	public static final String TAG_SECOND = "second";
+	public static final String TAG_SESSION_TERMINATED = "sessionTerminated";
 	
 	/***********************************/
 	/** Sub-level tags 				**/

@@ -326,6 +326,9 @@ public class CollaborationSerializer implements Serializer, ProtocolConstants {
 				handler.startElement("", "", TAG_REASON, attrs);
 				handler.endElement("", "", TAG_REASON);
 				handler.endElement("", "", TAG_PARTICIPANT_LEFT);
+			} else if (type == SESSION_TERMINATED) {
+				handler.startElement("", "", TAG_SESSION_TERMINATED, attrs);
+				handler.endElement("", "", TAG_SESSION_TERMINATED);
 			} else {
 				LOG.error("unknown notification type ["+type+"]");
 			}

@@ -125,9 +125,12 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 					String participantId = response.getUserId();
 					LOG.debug("participantLeft("+participantId+", "+reason+")");
 					sessionCallback.participantLeft(Integer.parseInt(participantId), Integer.parseInt(reason));
+				} else if (type == ProtocolConstants.SESSION_TERMINATED) {
+					LOG.debug("sessionTerminated()");
+					sessionCallback.sessionTerminated();
 				}
 				try {
-					if (type != ProtocolConstants.KICKED) { //on KICKED message, channel is already closed here
+					if (type != ProtocolConstants.KICKED && type != ProtocolConstants.SESSION_TERMINATED) { //on KICKED message, channel is already closed here
 						message.sendNUL(); //confirm reception of msg
 					}
 				} catch (Exception e) {
