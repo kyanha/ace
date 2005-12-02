@@ -392,6 +392,23 @@ public class CollaborationParserHandlerTest extends TestCase {
 		}
 	}
 	
+	public void testReceiveSessionTermiantedMessage() throws Exception {
+		CollaborationDeserializer deserializer = new CollaborationDeserializer();
+		CollaborationParserHandler handler = new CollaborationParserHandler();
+		handler.setTimestampFactory(new JupiterTimestampFactory());
+		
+		byte[] data = XML_SESSION_TERMINATED.getBytes(NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
+		
+		deserializer.deserialize(data, handler);
+		Request result = handler.getResult();
+		assertEquals(ProtocolConstants.SESSION_TERMINATED, result.getType());
+	}
+	
+	private static final String XML_SESSION_TERMINATED = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+	"<ace><session>" +
+	"<sessionTerminated/>" +
+	"</session></ace>"; 
+	
 	private static final String XML_NOOP_COMPLEX = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
 	"<ace><session>" +
 	"<request siteId=\"1\" participantId=\"4\">" +

@@ -262,6 +262,22 @@ public class CollaborationSerializerTest extends TestCase {
 		assertEquals(XML_ACKNOWLEDGE, actual);
 	}
 	
+	public void testCreateSessionMessageOfTypeSessionTerminated() throws Exception {
+		String userId = "vnmv-qqw2345";
+		NetworkServiceImpl.getInstance().setUserId(userId);
+		Serializer serializer = new CollaborationSerializer();
+
+		byte[] data = serializer.createSessionMessage(ProtocolConstants.SESSION_TERMINATED, null, null);
+		String actual = new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
+
+		assertEquals(XML_SESSION_TERMINATED, actual);
+	}
+	
+	private static final String XML_SESSION_TERMINATED = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+	"<ace><session>" +
+	"<sessionTerminated/>" +
+	"</session></ace>"; 
+	
 	private static final String XML_ACKNOWLEDGE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
 	"<ace><session>" +
 	"<ack siteId=\"23421234123223\">" +
