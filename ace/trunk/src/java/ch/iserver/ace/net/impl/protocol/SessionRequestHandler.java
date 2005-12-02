@@ -24,6 +24,7 @@ package ch.iserver.ace.net.impl.protocol;
 import org.apache.log4j.Logger;
 import org.beepcore.beep.core.InputDataStream;
 import org.beepcore.beep.core.MessageMSG;
+import org.beepcore.beep.core.RequestHandler;
 
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Timestamp;
@@ -100,6 +101,7 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 					String docId = ((DocumentInfo) response.getPayload()).getDocId();
 					LOG.debug("user kicked for doc [" + docId + "]");
 					sessionCallback.kicked();
+					executeCleanup();
 				} else if (type == ProtocolConstants.REQUEST) {
 					ch.iserver.ace.algorithm.Request algoRequest = (ch.iserver.ace.algorithm.Request) response.getPayload();
 					LOG.debug("receiveRequest("+algoRequest+")");
@@ -128,6 +130,7 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 				} else if (type == ProtocolConstants.SESSION_TERMINATED) {
 					LOG.debug("sessionTerminated()");
 					sessionCallback.sessionTerminated();
+					executeCleanup();
 				}
 				try {
 					if (type != ProtocolConstants.KICKED && type != ProtocolConstants.SESSION_TERMINATED) { //on KICKED message, channel is already closed here
@@ -143,6 +146,12 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 		}
 		LOG.debug("<-- receiveMSG");
 		
+	}
+	
+	public void executeCleanup() {
+		SessionCleanup sessionCleanup = new SessionCleanup(getDocumentId(), getPublisherId());
+		sessionCleanup.execute();
+		cleanup();
 	}
 	
 	public void cleanup() {

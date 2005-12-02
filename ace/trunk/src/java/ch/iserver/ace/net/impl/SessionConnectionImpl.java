@@ -101,8 +101,6 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 		session = null;
 		serializer = null;
 		callback = null;
-		Channel channel = getChannel();
-		((SessionRequestHandler)channel.getRequestHandler()).cleanup();
 		setReplyListener(null);
 		setChannel(null);
 		setState(STATE_CLOSED);
