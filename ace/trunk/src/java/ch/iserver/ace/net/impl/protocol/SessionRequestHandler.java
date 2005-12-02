@@ -81,20 +81,9 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 					int participantId = doc.getParticipantId();
 					RemoteUserSession session = SessionManager.getInstance().getSession(publisherId);
 					SessionConnectionImpl connection = null;
-					if (!session.hasSessionConnection(docId)) { //upon join request
-						LOG.debug("addSessionConnection()");
-						connection = session.addSessionConnection(docId, message.getChannel());
-						connection.setParticipantId(participantId);
-						RemoteDocumentProxyExt proxy = session.getUser().getSharedDocument(docId);
-						sessionCallback = proxy.joinAccepted(connection);
-					} else { //upon invitation
-						LOG.debug("turn SessionConnection ACTIVE");
-						connection = session.getSessionConnection(docId);
-						connection.setParticipantId(participantId);
-						connection.setChannel(message.getChannel());
-						connection.setState(AbstractConnection.STATE_ACTIVE);
-						sessionCallback = connection.getSessionConnectionCallback();
-					}
+					connection = session.addSessionConnection(docId, message.getChannel());
+					RemoteDocumentProxyExt proxy = session.getUser().getSharedDocument(docId);
+					sessionCallback = proxy.joinAccepted(connection); 
 					sessionCallback.setParticipantId(participantId);
 					sessionCallback.setDocument(doc);
 				} else if (type == ProtocolConstants.KICKED) {

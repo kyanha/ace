@@ -42,11 +42,11 @@ public class InvitationProxyImpl implements InvitationProxy {
 
 	private static Logger LOG = Logger.getLogger(InvitationProxyImpl.class);
 	
-	private RemoteDocumentProxy proxy;
+	private RemoteDocumentProxyExt proxy;
 	private RemoteUserSession session;
 	private RequestFilter filter;
 	
-	public InvitationProxyImpl(RemoteDocumentProxy proxy, RemoteUserSession session, RequestFilter filter) {
+	public InvitationProxyImpl(RemoteDocumentProxyExt proxy, RemoteUserSession session, RequestFilter filter) {
 		ParameterValidator.notNull("proxy", proxy);
 		ParameterValidator.notNull("session", session);
 		ParameterValidator.notNull("filter", filter);
@@ -63,7 +63,12 @@ public class InvitationProxyImpl implements InvitationProxy {
 	 * @see ch.iserver.ace.net.InvitationProxy#accept(ch.iserver.ace.net.JoinNetworkCallback)
 	 */
 	public void accept(JoinNetworkCallback callback) {
-		// TODO Auto-generated method stub
+		LOG.debug("--> accept("+callback+")");
+		proxy.invitationAccepted(callback);
+		String docId = proxy.getId();
+		Request request = new RequestImpl(ProtocolConstants.JOIN, proxy.getPublisher().getId(), docId);
+		filter.process(request);
+		LOG.debug("<-- accept()");
 		
 	}
 	

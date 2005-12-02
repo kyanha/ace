@@ -168,6 +168,7 @@ public class RemoteUserSession {
 		return conn;
 	}
 	
+	//TODO: obsolete
 	public SessionConnectionImpl addSessionConnection(String docId) {
 		//TODO: must not be snychronized right?
 		LOG.debug("--> addSessionConnection() for doc ["+docId+"]");

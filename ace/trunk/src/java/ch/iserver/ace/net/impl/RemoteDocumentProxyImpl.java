@@ -47,7 +47,7 @@ public class RemoteDocumentProxyImpl implements RemoteDocumentProxyExt {
 	private JoinNetworkCallback callback;
 	private RequestFilter filterChain;
 	private SessionConnection sessionConnection;
-	private boolean isJoined;
+	private boolean isJoined, hasInvitationAccepted;
 	
 	public RemoteDocumentProxyImpl(String id, DocumentDetails details, RemoteUserProxy publisher, RequestFilter filter) {
 		ParameterValidator.notNull("id", id);
@@ -59,6 +59,7 @@ public class RemoteDocumentProxyImpl implements RemoteDocumentProxyExt {
 		this.publisher = publisher;
 		this.filterChain = filter;
 		isJoined = false;
+		hasInvitationAccepted = false;
 	}
 	
 	
@@ -95,8 +96,14 @@ public class RemoteDocumentProxyImpl implements RemoteDocumentProxyExt {
 	
 	public void cleanupAfterLeave() {
 		isJoined = false;
+		hasInvitationAccepted = false;
 		callback = null;
 		sessionConnection = null;
+	}
+	
+	public void invitationAccepted(JoinNetworkCallback callback) {
+		this.callback = callback;
+		hasInvitationAccepted = true;
 	}
 	
 	/************************************************/
@@ -131,10 +138,14 @@ public class RemoteDocumentProxyImpl implements RemoteDocumentProxyExt {
 	 */
 	public void join(JoinNetworkCallback callback) {
 		LOG.debug("--> join("+callback+")");
-		ParameterValidator.notNull("callback", callback);
-		this.callback = callback;
-		Request request = new RequestImpl(ProtocolConstants.JOIN, publisher.getId(), id);
-		filterChain.process(request);
+		if (hasInvitationAccepted) {
+			LOG.warn("do not accept join request, user was already invited to join document");
+		} else {
+			ParameterValidator.notNull("callback", callback);
+			this.callback = callback;
+			Request request = new RequestImpl(ProtocolConstants.JOIN, publisher.getId(), id);
+			filterChain.process(request);
+		}
 		LOG.debug("<-- join()");
 	}
 	
