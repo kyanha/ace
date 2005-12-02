@@ -21,6 +21,8 @@ import ch.iserver.ace.net.impl.RemoteUserProxyImpl;
 import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
 import ch.iserver.ace.text.DeleteOperation;
 import ch.iserver.ace.text.InsertOperation;
+import ch.iserver.ace.text.NoOperation;
+import ch.iserver.ace.text.SplitOperation;
 import ch.iserver.ace.util.Base64;
 
 public class CollaborationParserHandlerTest extends TestCase {
@@ -239,6 +241,229 @@ public class CollaborationParserHandlerTest extends TestCase {
 		String finalReason = (String) result.getPayload();
 		assertEquals("2323", finalReason);
 	}
+	
+	public void testReceiveAcknowledgeMessage() throws Exception {
+		String userId = "vnmv-qqw2345";
+		NetworkServiceImpl.getInstance().setUserId(userId);
+		Serializer serializer = new CollaborationSerializer();
+
+		Timestamp timestamp = (new JupiterTimestampFactory()).createTimestamp(new int[] {354,678});
+		String siteId = "23421234123223";
+		byte[] data = serializer.createSessionMessage(ProtocolConstants.ACKNOWLEDGE, timestamp, siteId);
+		
+		assertEquals(XML_ACKNOWLEDGE, (new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING))));
+		
+		CollaborationDeserializer deserializer = new CollaborationDeserializer();
+		CollaborationParserHandler handler = new CollaborationParserHandler();
+		handler.setTimestampFactory(new JupiterTimestampFactory());
+		deserializer.deserialize(data, handler);
+		
+		Request result = handler.getResult();
+		assertEquals(ProtocolConstants.ACKNOWLEDGE, result.getType());
+		assertEquals(siteId, result.getUserId());
+		Timestamp finalTimestamp = (Timestamp) result.getPayload();
+		assertEquals(timestamp, finalTimestamp);
+	}
+	
+	public void testReceiveSplitOperationRequest() throws Exception {
+		String userId = "vnmv-qqw2345";
+		NetworkServiceImpl.getInstance().setUserId(userId);
+		Serializer serializer = new CollaborationSerializer();
+
+		Timestamp timestamp = (new JupiterTimestampFactory()).createTimestamp(new int[] {4,5});
+		
+		InsertOperation first = new InsertOperation(172, "first text", 56);
+		DeleteOperation second = new DeleteOperation(123, "test-text.");
+		InsertOperation original = new InsertOperation(17, "original text", 10);
+		original.setOriginalOperation(new InsertOperation(56, "ancient operation.", 18));
+		second.setOriginalOperation(original);
+		SplitOperation split = new SplitOperation(first, second);
+		split.setOriginalOperation(new InsertOperation(345, "actual blabla", 90));
+		ch.iserver.ace.algorithm.Request request = new ch.iserver.ace.algorithm.RequestImpl(0, timestamp, split);
+		String participantId = "4";
+		byte[] data = serializer.createSessionMessage(ProtocolConstants.REQUEST, request, participantId);
+		String actual = new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
+		assertEquals(XML_SESSION_MESSAGE_REQUEST_SPLIT, actual);
+		
+		CollaborationDeserializer deserializer = new CollaborationDeserializer();
+		CollaborationParserHandler handler = new CollaborationParserHandler();
+		handler.setTimestampFactory(new JupiterTimestampFactory());
+		
+		final int TIMES = 1;
+		for (int i = 0; i < TIMES; i++) {
+			deserializer.deserialize(data, handler);
+			Request result = handler.getResult();
+			assertEquals(ProtocolConstants.REQUEST, result.getType());
+			ch.iserver.ace.algorithm.Request algoRequest = (ch.iserver.ace.algorithm.Request) result.getPayload();
+			assertEquals(0, algoRequest.getSiteId());
+			Operation operation = algoRequest.getOperation();
+			assertTrue(operation instanceof SplitOperation);
+			SplitOperation finalSplit = (SplitOperation) operation;
+			assertTrue(finalSplit.getFirst() instanceof InsertOperation);
+			assertTrue(finalSplit.getSecond() instanceof DeleteOperation);
+			assertTrue(finalSplit.getOriginalOperation() instanceof InsertOperation);
+			assertNotNull(operation.getOriginalOperation());
+			int[] com = algoRequest.getTimestamp().getComponents();
+			assertEquals(4, com[0]);
+			assertEquals(5, com[1]);
+		}
+		
+	}
+	
+	public void testReceiveNOOPMessage() throws Exception {
+		String userId = "vnmv-qqw2345";
+		NetworkServiceImpl.getInstance().setUserId(userId);
+		Serializer serializer = new CollaborationSerializer();
+
+		Timestamp timestamp = (new JupiterTimestampFactory()).createTimestamp(new int[] {2,3});
+		NoOperation noop = new NoOperation();
+		ch.iserver.ace.algorithm.Request request = new ch.iserver.ace.algorithm.RequestImpl(1, timestamp, noop);
+		String participantId = "4";
+		byte[] data = serializer.createSessionMessage(ProtocolConstants.REQUEST, request, participantId);
+		String actual = new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
+
+		assertEquals(XML_NOOP_EMPTY, actual);
+		
+		CollaborationDeserializer deserializer = new CollaborationDeserializer();
+		CollaborationParserHandler handler = new CollaborationParserHandler();
+		handler.setTimestampFactory(new JupiterTimestampFactory());
+		
+		final int TIMES = 1;
+		for (int i = 0; i < TIMES; i++) {
+			deserializer.deserialize(data, handler);
+			Request result = handler.getResult();
+			assertEquals(ProtocolConstants.REQUEST, result.getType());
+			ch.iserver.ace.algorithm.Request algoRequest = (ch.iserver.ace.algorithm.Request) result.getPayload();
+			assertEquals(1, algoRequest.getSiteId());
+			int[] com = algoRequest.getTimestamp().getComponents();
+			assertEquals(2, com[0]);
+			assertEquals(3, com[1]);
+			assertTrue(algoRequest.getOperation() instanceof NoOperation);
+			NoOperation finalNoop = (NoOperation) algoRequest.getOperation();
+			assertNull(finalNoop.getOriginalOperation());
+		}
+	}
+	
+	public void testReceiveNOOPComplexMessage() throws Exception {
+		String userId = "vnmv-qqw2345";
+		NetworkServiceImpl.getInstance().setUserId(userId);
+		Serializer serializer = new CollaborationSerializer();
+
+		Timestamp timestamp = (new JupiterTimestampFactory()).createTimestamp(new int[] {2,3});
+		
+		InsertOperation first = new InsertOperation(172, "first text", 56);
+		DeleteOperation second = new DeleteOperation(123, "test-text.");
+		InsertOperation original = new InsertOperation(17, "original text", 10);
+		original.setOriginalOperation(new InsertOperation(56, "ancient operation.", 18));
+		second.setOriginalOperation(original);
+		SplitOperation split = new SplitOperation(first, second);
+		split.setOriginalOperation(new InsertOperation(345, "actual blabla", 90));
+		
+		NoOperation noop = new NoOperation();
+		noop.setOriginalOperation(split);
+		ch.iserver.ace.algorithm.Request request = new ch.iserver.ace.algorithm.RequestImpl(1, timestamp, noop);
+		String participantId = "4";
+		byte[] data = serializer.createSessionMessage(ProtocolConstants.REQUEST, request, participantId);
+		String actual = new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
+
+		assertEquals(XML_NOOP_COMPLEX, actual);
+		
+		CollaborationDeserializer deserializer = new CollaborationDeserializer();
+		CollaborationParserHandler handler = new CollaborationParserHandler();
+		handler.setTimestampFactory(new JupiterTimestampFactory());
+		
+		final int TIMES = 1;
+		for (int i = 0; i < TIMES; i++) {
+			deserializer.deserialize(data, handler);
+			Request result = handler.getResult();
+			assertEquals(ProtocolConstants.REQUEST, result.getType());
+			ch.iserver.ace.algorithm.Request algoRequest = (ch.iserver.ace.algorithm.Request) result.getPayload();
+			assertEquals(1, algoRequest.getSiteId());
+			int[] com = algoRequest.getTimestamp().getComponents();
+			assertEquals(2, com[0]);
+			assertEquals(3, com[1]);
+			assertTrue(algoRequest.getOperation() instanceof NoOperation);
+			NoOperation finalNoop = (NoOperation) algoRequest.getOperation();
+			assertTrue(finalNoop.getOriginalOperation() instanceof SplitOperation);
+			SplitOperation finalSplit = (SplitOperation) finalNoop.getOriginalOperation();
+			assertTrue(finalSplit.getFirst() instanceof InsertOperation);
+			assertTrue(finalSplit.getSecond() instanceof DeleteOperation);
+			assertTrue(finalSplit.getOriginalOperation() instanceof InsertOperation);
+		}
+	}
+	
+	private static final String XML_NOOP_COMPLEX = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+	"<ace><session>" +
+	"<request siteId=\"1\" participantId=\"4\">" +
+	"<operation>" +
+	"<noop>" +
+	"<original>" +
+		"<split>" +
+		"<first>" +
+			"<insert position=\"172\" origin=\"56\"><text>first text</text><original/></insert>" +
+		"</first>" +
+		"<second>" +
+		  "<delete position=\"123\">" +
+			"<text>test-text.</text>" +
+			"<original>" +
+				"<insert position=\"17\" origin=\"10\"><text>original text</text>" +
+					"<original>" +
+						"<insert position=\"56\" origin=\"18\"><text>ancient operation.</text><original/></insert>" +
+					"</original>" +
+		         "</insert>" +
+            "</original>" +
+	      "</delete>" +
+	     "</second>" +
+	     "<original>" +
+	     	"<insert position=\"345\" origin=\"90\"><text>actual blabla</text><original/></insert>" +
+	     "</original>" +
+	     "</split>" +
+	"</original>" +
+	"</noop>" +
+	"</operation>" +
+	"<timestamp>2 3 </timestamp>" +
+	"</request>" +
+	"</session></ace>";
+	
+	private static final String XML_NOOP_EMPTY = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+	"<ace><session>" +
+	"<request siteId=\"1\" participantId=\"4\">" +
+	"<operation>" +
+	"<noop><original/>" +
+	"</noop>" +
+	"</operation>" +
+	"<timestamp>2 3 </timestamp>" +
+	"</request>" +
+	"</session></ace>";
+	
+	private static final String XML_SESSION_MESSAGE_REQUEST_SPLIT = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+	"<ace><session>" +
+	"<request siteId=\"0\" participantId=\"4\">" +
+	"<operation>" +
+	"<split><first><insert position=\"172\" origin=\"56\"><text>first text</text><original/></insert></first>" +
+	"<second><delete position=\"123\">" +
+		"<text>test-text.</text>" +
+		"<original>" +
+		"<insert position=\"17\" origin=\"10\"><text>original text</text>" +
+			"<original>" +
+				"<insert position=\"56\" origin=\"18\"><text>ancient operation.</text><original/></insert>" +
+			"</original>" +
+		"</insert>" +
+		"</original>" +
+	"</delete></second>" +
+	"<original><insert position=\"345\" origin=\"90\"><text>actual blabla</text><original/></insert></original>" +
+	"</split>" +
+	"</operation>" +
+	"<timestamp>4 5 </timestamp>" +
+	"</request>" +
+	"</session></ace>";
+	
+	private static final String XML_ACKNOWLEDGE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+	"<ace><session>" +
+	"<ack siteId=\"23421234123223\">" +
+	"<timestamp>354 678 </timestamp>" +
+	"</ack>" +
+	"</session></ace>";
 	
 	private static final String XML_PARTICIPANT_LEFT = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
 	"<ace><session>" +

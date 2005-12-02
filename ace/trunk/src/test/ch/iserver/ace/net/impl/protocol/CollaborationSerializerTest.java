@@ -248,6 +248,26 @@ public class CollaborationSerializerTest extends TestCase {
 
 		assertEquals(XML_PARTICIPANT_LEFT, actual);
 	}
+
+	public void testCreateSessionMessageOfTypeAcknowledge() throws Exception {
+		String userId = "vnmv-qqw2345";
+		NetworkServiceImpl.getInstance().setUserId(userId);
+		Serializer serializer = new CollaborationSerializer();
+
+		Timestamp timestamp = (new JupiterTimestampFactory()).createTimestamp(new int[] {56,23});
+		String siteId = "23421234123223";
+		byte[] data = serializer.createSessionMessage(ProtocolConstants.ACKNOWLEDGE, timestamp, siteId);
+		String actual = new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
+
+		assertEquals(XML_ACKNOWLEDGE, actual);
+	}
+	
+	private static final String XML_ACKNOWLEDGE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+	"<ace><session>" +
+	"<ack siteId=\"23421234123223\">" +
+	"<timestamp>56 23 </timestamp>" +
+	"</ack>" +
+	"</session></ace>";
 	
 	private static final String XML_PARTICIPANT_LEFT = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
 	"<ace><session>" +

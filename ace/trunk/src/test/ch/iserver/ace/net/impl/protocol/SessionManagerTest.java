@@ -26,6 +26,7 @@ public class SessionManagerTest extends TestCase {
 		RemoteUserProxyExt proxy = RemoteUserProxyFactory.getInstance().createProxy(id, details);
 		
 		SessionManager manager = SessionManager.getInstance();
+		manager.closeSessions(); //just to make shure the manager is empty before testing
 		manager.createSession(proxy);
 		
 		assertEquals(1, manager.size());
