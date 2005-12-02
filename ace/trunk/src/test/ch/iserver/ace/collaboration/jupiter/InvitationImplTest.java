@@ -100,7 +100,7 @@ public class InvitationImplTest extends TestCase {
 		RemoteDocument document = new RemoteDocumentStub("XDOC", "collab.txt", inviter);
 		Invitation invitation = new InvitationImpl(proxy, document, factory) {
 			protected JoinNetworkCallback createJoinNetworkCallback(JoinCallback jc, SessionFactory factory) {
-				assertTrue(cbk == jc);
+				assertSame(cbk, jc);
 				return callback;
 			}
 		};

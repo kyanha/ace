@@ -26,6 +26,7 @@ import ch.iserver.ace.collaboration.JoinCallback;
 import ch.iserver.ace.collaboration.RemoteDocument;
 import ch.iserver.ace.collaboration.RemoteUser;
 import ch.iserver.ace.net.InvitationProxy;
+import ch.iserver.ace.net.JoinNetworkCallback;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
@@ -104,10 +105,24 @@ class InvitationImpl implements Invitation {
 	}
 	
 	/**
+	 * Create a new JoinNetworkCallback object.
+	 * 
+	 * @param callback the callback to the application layer
+	 * @param factory the session factory
+	 * @return the callback for the network layer
+	 */
+	protected JoinNetworkCallback createJoinNetworkCallback(JoinCallback callback, SessionFactory factory) {
+		ParameterValidator.notNull("callback", callback);
+		ParameterValidator.notNull("factory", factory);
+		return new JoinNetworkCallbackImpl(callback, sessionFactory);
+	}
+	
+	/**
 	 * @see ch.iserver.ace.collaboration.Invitation#accept(ch.iserver.ace.collaboration.JoinCallback)
 	 */
 	public void accept(JoinCallback callback) {
-		getProxy().accept(new JoinNetworkCallbackImpl(callback, getSessionFactory()));
+		ParameterValidator.notNull("callback", callback);
+		getProxy().accept(createJoinNetworkCallback(callback, getSessionFactory()));
 	}
 
 	/**
