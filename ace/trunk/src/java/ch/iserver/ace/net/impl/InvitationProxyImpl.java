@@ -32,6 +32,7 @@ import ch.iserver.ace.net.impl.protocol.RemoteUserSession;
 import ch.iserver.ace.net.impl.protocol.Request;
 import ch.iserver.ace.net.impl.protocol.RequestFilter;
 import ch.iserver.ace.net.impl.protocol.RequestImpl;
+import ch.iserver.ace.util.ParameterValidator;
 
 /**
  *
@@ -45,6 +46,9 @@ public class InvitationProxyImpl implements InvitationProxy {
 	private RequestFilter filter;
 	
 	public InvitationProxyImpl(RemoteDocumentProxy proxy, RemoteUserSession session, RequestFilter filter) {
+		ParameterValidator.notNull("proxy", proxy);
+		ParameterValidator.notNull("session", session);
+		ParameterValidator.notNull("filter", filter);
 		this.proxy = proxy;
 		this.session = session;
 		this.filter = filter;
