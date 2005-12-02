@@ -21,17 +21,18 @@
 
 package ch.iserver.ace.collaboration.jupiter;
 
+import junit.framework.TestCase;
+
 import org.easymock.MockControl;
 
 import ch.iserver.ace.collaboration.Invitation;
+import ch.iserver.ace.collaboration.JoinCallback;
 import ch.iserver.ace.collaboration.RemoteDocument;
 import ch.iserver.ace.collaboration.RemoteDocumentStub;
 import ch.iserver.ace.collaboration.RemoteUser;
 import ch.iserver.ace.collaboration.RemoteUserStub;
-import ch.iserver.ace.collaboration.ParticipantSessionCallback;
 import ch.iserver.ace.net.InvitationProxy;
-import ch.iserver.ace.net.SessionConnection;
-import junit.framework.TestCase;
+import ch.iserver.ace.net.JoinNetworkCallback;
 
 /**
  *
@@ -86,45 +87,37 @@ public class InvitationImplTest extends TestCase {
 	}
 	
 	public void testAccept() throws Exception {
-//		MockControl proxyCtrl = MockControl.createControl(InvitationProxy.class);
-//		InvitationProxy proxy = (InvitationProxy) proxyCtrl.getMock();
-//		MockControl factoryCtrl = MockControl.createControl(SessionFactory.class);
-//		SessionFactory factory = (SessionFactory) factoryCtrl.getMock();
-//		MockControl callbackCtrl = MockControl.createControl(ParticipantSessionCallback.class);
-//		ParticipantSessionCallback callback = (ParticipantSessionCallback) callbackCtrl.getMock();
-//		MockControl sessionCtrl = MockControl.createControl(ConfigurableSession.class);
-//		ConfigurableSession session = (ConfigurableSession) sessionCtrl.getMock();
-//		MockControl connectionCtrl = MockControl.createControl(SessionConnection.class);
-//		SessionConnection connection = (SessionConnection) connectionCtrl.getMock();
-//		
-//		RemoteUser inviter = new RemoteUserStub("X");
-//		RemoteDocument document = new RemoteDocumentStub("XDOC", "collab.txt", inviter);
-//		Invitation invitation = new InvitationImpl(proxy, document, factory);
-//		
-//		// define mock behavior
-//		factory.createSession();
-//		factoryCtrl.setReturnValue(session);
-//		session.setSessionCallback(callback);
-//		proxy.accept(session);
-//		proxyCtrl.setReturnValue(connection);
-//		session.setConnection(connection);
-//		
-//		// replay
-//		proxyCtrl.replay();
-//		factoryCtrl.replay();
-//		callbackCtrl.replay();
-//		sessionCtrl.replay();
-//		connectionCtrl.replay();
-//		
-//		// test
-//		invitation.accept(callback);
-//		
-//		// verify
-//		proxyCtrl.verify();
-//		factoryCtrl.verify();
-//		callbackCtrl.verify();
-//		sessionCtrl.verify();
-//		connectionCtrl.verify();
+		MockControl proxyCtrl = MockControl.createControl(InvitationProxy.class);
+		InvitationProxy proxy = (InvitationProxy) proxyCtrl.getMock();
+		MockControl factoryCtrl = MockControl.createControl(SessionFactory.class);
+		SessionFactory factory = (SessionFactory) factoryCtrl.getMock();
+		MockControl callbackCtrl = MockControl.createControl(JoinNetworkCallback.class);
+		final JoinNetworkCallback callback = (JoinNetworkCallback) callbackCtrl.getMock();
+		MockControl cbkCtrl = MockControl.createControl(JoinCallback.class);
+		final JoinCallback cbk = (JoinCallback) cbkCtrl.getMock();
+		
+		RemoteUser inviter = new RemoteUserStub("X");
+		RemoteDocument document = new RemoteDocumentStub("XDOC", "collab.txt", inviter);
+		Invitation invitation = new InvitationImpl(proxy, document, factory) {
+			protected JoinNetworkCallback createJoinNetworkCallback(JoinCallback jc, SessionFactory factory) {
+				assertTrue(cbk == jc);
+				return callback;
+			}
+		};
+		
+		// define mock behavior
+		proxy.accept(callback);
+		
+		// replay
+		proxyCtrl.replay();
+		factoryCtrl.replay();
+		
+		// test
+		invitation.accept(cbk);
+		
+		// verify
+		proxyCtrl.verify();
+		factoryCtrl.verify();
 	}
 
 }
