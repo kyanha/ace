@@ -114,7 +114,7 @@ public class AcknowledgeStrategyImpl implements AcknowledgeStrategy, Runnable {
 	/**
 	 * @see ch.iserver.ace.collaboration.jupiter.AcknowledgeStrategy#reset()
 	 */
-	public void reset() {
+	public synchronized void reset() {
 		if (future == null) {
 			throw new IllegalStateException("cannot reset unscheduled AcknowledgeManager");
 		}
@@ -139,7 +139,7 @@ public class AcknowledgeStrategyImpl implements AcknowledgeStrategy, Runnable {
 	/**
 	 * @see ch.iserver.ace.collaboration.jupiter.AcknowledgeStrategy#destroy()
 	 */
-	public void destroy() {
+	public synchronized void destroy() {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("destroy AcknowledgeStrategy " + this);
 		}
