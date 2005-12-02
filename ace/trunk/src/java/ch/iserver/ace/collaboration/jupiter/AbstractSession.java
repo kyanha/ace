@@ -32,12 +32,18 @@ import ch.iserver.ace.collaboration.Session;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.util.Lock;
 import ch.iserver.ace.util.ParameterValidator;
+import ch.iserver.ace.util.UUID;
 
 /**
  * Abstract base class for Session implementations. Implements the common methods
  * of both PublishedSessionImpl and SessionImpl.
  */
 abstract class AbstractSession implements Session {
+	
+	/**
+	 * Unique session id useful for debugging.
+	 */
+	private final String id;
 	
 	/**
 	 * The Lock used to guard the access to the Algorithm.
@@ -85,6 +91,16 @@ abstract class AbstractSession implements Session {
 		ParameterValidator.notNull("lock", lock);
 		this.lock = lock;
 		this.algorithm = algorithm;
+		this.id = UUID.nextUUID();
+	}
+	
+	/**
+	 * Gets the unique id of this session.
+	 * 
+	 * @return the unique session id
+	 */
+	public String getId() {
+		return id;
 	}
 	
 	/**
@@ -123,33 +139,7 @@ abstract class AbstractSession implements Session {
 	protected Lock getLock() {
 		return lock;
 	}
-	
-	/**
-	 * Sets the AcknowledgeStrategy to be used. Do not call this method more
-	 * than once.
-	 * 
-	 * @param acknowledgeStrategy the new AcknowledgeStrategy
-	 */
-	public void setAcknowledgeStrategy(AcknowledgeStrategy acknowledgeStrategy) {
-		this.acknowledgeStrategy = acknowledgeStrategy;
-		this.acknowledgeStrategy.init(createAcknowledgeAction());
-	}
-
-	/**
-	 * Resets the acknowledge strategy.
-	 */
-	protected void resetAcknowledgeStrategy() {
-		acknowledgeStrategy.reset();
-	}
-	
-	/**
-	 * Notifies the acknowledge strategy that an (unacknowledged) message
-	 * has been received.
-	 */
-	protected void messageReceived() {
-		acknowledgeStrategy.messageReceived();
-	}
-	
+		
 	/**
 	 * Checks whether calls to the send methods are properly wrapped in 
 	 * lock/unlock calls.
@@ -249,13 +239,15 @@ abstract class AbstractSession implements Session {
 	}
 
 	/**
-	 * Creates a new AcknowledgeAction to be executed each time the 
-	 * AcknowledgeStrategy decides it's time for an acknowledge. The action
-	 * defines what happens at that moment.
+	 * Sets the AcknowledgeStrategy to be used. Do not call this method more
+	 * than once.
 	 * 
-	 * @return the action to be executed
+	 * @param acknowledgeStrategy the new AcknowledgeStrategy
 	 */
-	protected abstract AcknowledgeAction createAcknowledgeAction();
+	public void setAcknowledgeStrategy(AcknowledgeStrategy acknowledgeStrategy) {
+		this.acknowledgeStrategy = acknowledgeStrategy;
+		this.acknowledgeStrategy.init(createAcknowledgeAction());
+	}
 	
 	/**
 	 * @return the AcknowledgeStrategy used by the session
@@ -263,13 +255,46 @@ abstract class AbstractSession implements Session {
 	public AcknowledgeStrategy getAcknowledgeStrategy() {
 		return acknowledgeStrategy;
 	}
+
+	/**
+	 * Resets the acknowledge strategy.
+	 */
+	protected void resetAcknowledgeStrategy() {
+		acknowledgeStrategy.reset();
+	}
 	
+	/**
+	 * Notifies the acknowledge strategy that an (unacknowledged) message
+	 * has been received.
+	 */
+	protected void messageReceived() {
+		acknowledgeStrategy.messageReceived();
+	}
+
+	/**
+	 * Creates a new AcknowledgeAction to be executed each time the 
+	 * AcknowledgeStrategy decides it's time for an acknowledge. The action
+	 * defines what happens at that moment.
+	 * 
+	 * @return the action to be executed
+	 */
+	protected abstract AcknowledgeAction createAcknowledgeAction();
+		
 	/**
 	 * Destroys the session.
 	 */
 	protected void destroy() {
 		destroyed = true;
 		acknowledgeStrategy.destroy();
+	}
+	
+	// --> java.lang.Object methods <--
+	
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString() {
+		return getClass().getName() + "[id=" + getId() + "]";
 	}
 	
 }
