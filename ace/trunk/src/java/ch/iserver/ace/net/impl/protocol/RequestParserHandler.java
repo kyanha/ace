@@ -59,7 +59,8 @@ public class RequestParserHandler extends ParserHandler {
 				|| type == DOCUMENT_DETAILS_CHANGED 
 				|| type == JOIN
 				|| type == INVITE
-				|| type == JOIN_REJECTED) {
+				|| type == JOIN_REJECTED
+				|| type == INVITE_REJECTED) {
 			result = new RequestImpl(type, userId, info);
 		} else if (type == SEND_DOCUMENTS) {
 			result = new RequestImpl(SEND_DOCUMENTS, userId, requestPayload);
