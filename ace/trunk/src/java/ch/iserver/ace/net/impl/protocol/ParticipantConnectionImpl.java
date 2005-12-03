@@ -47,6 +47,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 		ParticipantConnection {
 
 	private RemoteUserSession session;
+	private RequestFilter filter;
 	private boolean joinAccepted;
 	private Serializer serializer;
 	private int participantId = -1;
@@ -54,13 +55,14 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 	private PublishedDocument publishedDoc;
 	private boolean isKicked;
 	
-	public ParticipantConnectionImpl(String docId, RemoteUserSession session, ReplyListener listener, Serializer serializer) {
+	public ParticipantConnectionImpl(String docId, RemoteUserSession session, ReplyListener listener, Serializer serializer, RequestFilter filter) {
 		super(null);
 		setState(STATE_INITIALIZED);
 		this.docId = docId;
 		this.session = session;
 		joinAccepted = false;
 		this.serializer = serializer;
+		this.filter = filter;
 		setReplyListener(listener);
 		super.LOG = Logger.getLogger(ParticipantConnectionImpl.class);
 		isKicked = false;
@@ -122,21 +124,12 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 	}
 	
 	public void joinRejected(int code) {
-		//TODO: do not initiate collaboration channel, instead return via JoinRejectedFilter
 		LOG.info("--> joinRejected(" + code + ")");
-		
-		//TODO: could put the following code in a separate RequestFilter for consistency reasons
-		try {
-			byte[] data = serializer.createResponse(ProtocolConstants.JOIN_REJECTED, 
-										getPublishedDocument().getId() , Integer.toString(code));
-			MainConnection connection = session.getMainConnection();
-			connection.send(data, session.getUser().getUserDetails().getUsername(), getReplyListener());
-		} catch (SerializeException se) {
-			LOG.error("could not serialize document ["+se.getMessage()+"]");
-		} catch (Exception e) {
-			e.printStackTrace();
-			LOG.error("exception processing request ["+e+", "+e.getMessage()+"]");
-		}
+		DocumentInfo info = new DocumentInfo(docId, null, null);
+		info.setData(Integer.toString(code));
+		ch.iserver.ace.net.impl.protocol.Request request = 
+			new RequestImpl(ProtocolConstants.JOIN_REJECTED, session.getUser().getId(), info);
+		filter.process(request);
 		executeCleanup();
 		LOG.info("<-- joinRejected()");
 	}
@@ -252,24 +245,25 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 		//notify the participant on close() invocation or on DocumentServer.shutdown()
 		//invocation
 		try {
-			
-			//TODO: send session terminated msg
 			if (!isKicked) {
-				byte[] data = null;
-				try {
-					data = serializer.createSessionMessage(ProtocolConstants.SESSION_TERMINATED, null, null);
-				} catch (SerializeException se) {
-					LOG.error("could not serialize message ["+se.getMessage()+"]");
-				}
-				sendToPeer(data);
+				sendSessionTerminated();
 			}
-
 			getChannel().close();
 		} catch (BEEPException be) {
 			LOG.warn("could not close channel ["+be.getMessage()+"]");
 		}
 		executeCleanup();
 		LOG.info("<-- close()");
+	}
+	
+	private void sendSessionTerminated() {
+		byte[] data = null;
+		try {
+			data = serializer.createSessionMessage(ProtocolConstants.SESSION_TERMINATED, null, null);
+		} catch (SerializeException se) {
+			LOG.error("could not serialize message ["+se.getMessage()+"]");
+		}
+		sendToPeer(data);
 	}
 	
 	private void sendToPeer(byte[] data) {
