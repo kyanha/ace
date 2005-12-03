@@ -45,7 +45,10 @@ public class JoinRejectedRecipientFilter extends AbstractRequestFilter {
 				DocumentInfo info = (DocumentInfo) request.getPayload();
 				RemoteUserSession session = SessionManager.getInstance().getSession(request.getUserId());
 				RemoteDocumentProxyExt doc = session.getUser().getSharedDocument(info.getDocId());
-				doc.joinRejected(info.getParticipantId());
+				if (doc!= null) {
+					String reason = info.getData();
+					doc.joinRejected(Integer.parseInt(reason));
+				}
 				
 				try {
 					//confirm reception of msg				
@@ -60,7 +63,9 @@ public class JoinRejectedRecipientFilter extends AbstractRequestFilter {
 		} catch (Exception e) {
 			e.printStackTrace();
 			LOG.error("exception processing request ["+e+", "+e.getMessage()+"]");
-		}	
+		} finally {
+			
+		}
 	}
 
 }
