@@ -84,7 +84,7 @@ public class RequestParserHandlerTest extends TestCase {
 		DocumentInfo info = (DocumentInfo) request.getPayload();
 		assertEquals("doc-id-234b", info.getDocId());
 		assertEquals("vnmv-qqw2345", request.getUserId());
-		assertEquals(501, info.getParticipantId());
+		assertEquals("501", info.getData());
 	}
 	
 	private static final String PUBLISH = "<ace><notification>" +

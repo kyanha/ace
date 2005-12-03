@@ -39,7 +39,7 @@ public class RequestParserHandler extends ParserHandler {
 	
 	private Request result;
 	private int requestType;
-	private String userId, reason;
+	private String userId;
 	private DocumentInfo info;
 	private List requestPayload;
 	
@@ -60,15 +60,13 @@ public class RequestParserHandler extends ParserHandler {
 				|| type == DOCUMENT_DETAILS_CHANGED 
 				|| type == JOIN
 				|| type == INVITE
-				|| type == INVITE_REJECTED) {
+				|| type == INVITE_REJECTED
+				|| type == JOIN_REJECTED) {
 			result = new RequestImpl(type, userId, info);
 		} else if (type == SEND_DOCUMENTS) {
 			result = new RequestImpl(SEND_DOCUMENTS, userId, requestPayload);
 		} else if (type == CHANNEL_MAIN || type == CHANNEL_SESSION) {
 			result = new RequestImpl(type, null, null);
-		} else if (type == JOIN_REJECTED) {
-			info.setData(reason);
-			result = new RequestImpl(JOIN_REJECTED, userId, info);
 		}
 	}
 	
@@ -114,11 +112,7 @@ public class RequestParserHandler extends ParserHandler {
 			info = new DocumentInfo(id, null, userId);
 		} else if (requestType == JOIN_REJECTED) {
 			String code = attributes.getValue(CODE);
-			try {
-				info.setParticipantId(Integer.parseInt(code));
-			} catch (NumberFormatException nfe) {
-				LOG.error("could not parse code ["+code+"]");
-			}
+			info.setData(code);
 		} else if (qName.equals(TAG_QUERY)) { //TODO: remove tag query, is discarded
 			if (attributes.getValue(QUERY_TYPE).equals(QUERY_TYPE_PUBLISHED_DOCUMENTS)) {
 				requestType = PUBLISHED_DOCUMENTS;
@@ -164,10 +158,7 @@ public class RequestParserHandler extends ParserHandler {
 			String docId = attributes.getValue(DOC_ID);
 			userId = attributes.getValue(USER_ID);
 			info = new DocumentInfo(docId, null, userId);
-		} else if (qName.equals(TAG_REASON)) {
-			reason = attributes.getValue(CODE);
 		}
-
 	}
 	
 	/* (non-Javadoc)
