@@ -25,10 +25,12 @@ import org.apache.log4j.Logger;
 import org.beepcore.beep.core.InputDataStream;
 import org.beepcore.beep.core.MessageMSG;
 
+import ch.iserver.ace.FailureCodes;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Timestamp;
 import ch.iserver.ace.algorithm.TimestampFactory;
 import ch.iserver.ace.net.ParticipantPort;
+import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
 
 /**
@@ -69,13 +71,15 @@ public class ParticipantRequestHandler extends AbstractRequestHandler {
 		LOG.info("--> recieveMSG()");
 		
 		InputDataStream input = message.getDataStream();
-		
+		String readInData = null;
 		try {
 			byte[] rawData = readData(input);
-			LOG.debug("received "+rawData.length+" bytes. ["+(new String(rawData))+"]");
+			readInData = new String(rawData);
+			LOG.debug("received "+rawData.length+" bytes. ["+readInData+"]");
 			CollaborationParserHandler newHandler = new CollaborationParserHandler();
 			newHandler.setTimestampFactory(factory);
 			deserializer.deserialize(rawData, newHandler);
+			readInData = null;
 			Request result = newHandler.getResult();
 			int type = result.getType();
 			if (type == ProtocolConstants.LEAVE) {
@@ -105,6 +109,7 @@ public class ParticipantRequestHandler extends AbstractRequestHandler {
 		} catch (Exception e) {
 			e.printStackTrace();
 			LOG.error("could not process request ["+e+"]");
+			NetworkServiceImpl.getInstance().getCallback().serviceFailure(FailureCodes.SESSION_FAILURE, "'" + readInData + "'", e);
 		}
 		LOG.debug("<-- receiveMSG");
 		

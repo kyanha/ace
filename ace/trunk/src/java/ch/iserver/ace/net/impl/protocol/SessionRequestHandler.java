@@ -133,7 +133,8 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 		} catch (Exception e) {
 			e.printStackTrace();
 			LOG.error("could not process request ["+e+"]");
-			NetworkServiceImpl.getInstance().getCallback().serviceFailure(FailureCodes.SESSION_FAILURE, readInData, e);
+			NetworkServiceImpl.getInstance().getCallback().serviceFailure(FailureCodes.SESSION_FAILURE, "'" + readInData + "'", e);
+			//TODO: go with same behavior as when user gets kicked (local copy) -> then he must rejoin the session
 		}
 		LOG.debug("<-- receiveMSG");
 		
