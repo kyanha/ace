@@ -23,6 +23,7 @@ package ch.iserver.ace.net.impl;
 
 import org.apache.log4j.Logger;
 
+import ch.iserver.ace.FailureCodes;
 import ch.iserver.ace.net.InvitationProxy;
 import ch.iserver.ace.net.JoinNetworkCallback;
 import ch.iserver.ace.net.RemoteDocumentProxy;
@@ -64,36 +65,36 @@ public class InvitationProxyImpl implements InvitationProxy {
 	 */
 	public void accept(JoinNetworkCallback callback) {
 		LOG.debug("--> accept("+callback+")");
-		proxy.invitationAccepted(callback);
-		String docId = proxy.getId();
-		Request request = new RequestImpl(ProtocolConstants.JOIN, proxy.getPublisher().getId(), docId);
-		filter.process(request);
-		LOG.debug("<-- accept()");
-		
+		ParameterValidator.notNull("callback", callback);
+		RemoteUserProxyExt user = session.getUser();
+		if (user != null && user.hasDocumentShared(proxy.getId())) {
+			proxy.invitationAccepted(callback);
+			String docId = proxy.getId();
+			Request request = new RequestImpl(ProtocolConstants.JOIN, proxy.getPublisher().getId(), docId);
+			filter.process(request);
+		} else { //user or documents has been discarded in the meanwhile
+			LOG.warn("document to be joined no longer available [" +
+					((user != null) ? user.getUserDetails().getUsername() : null) + ", "+proxy.getId() + "]");
+			callback.rejected(FailureCodes.DOCUMENT_SHUTDOWN);
+			proxy = null;
+			session = null;
+			filter = null;
+		} 
+		LOG.debug("<-- accept()");		
 	}
-	
-//	public SessionConnection accept(SessionConnectionCallback callback) {
-//		LOG.debug("--> accept("+callback+")");
-//		
-//		String docId = proxy.getId();
-//
-//		SessionConnectionImpl connection = session.addSessionConnection(docId);
-//		connection.setSessionConnectionCallback(callback);
-//		Request request = new RequestImpl(ProtocolConstants.JOIN, proxy.getPublisher().getId(), docId);
-//		filter.process(request);
-//		
-//		LOG.debug("<-- accept()");
-//		return connection;
-//	}
 
 	public void reject() {
 		LOG.debug("invitation for '"+getDocument().getDocumentDetails().getTitle()+"' rejected.");
+		RemoteUserProxyExt user = session.getUser();
+		if (user != null && user.hasDocumentShared(proxy.getId())) {
+			Request request = new RequestImpl(ProtocolConstants.INVITE_REJECTED, getDocument().getId(), session);
+			filter.process(request);
+		} else {
+			LOG.debug("document/user dissapeared in the meanwhile, don't send rejected message");
+		}
 		proxy = null;
 		session = null;
 		filter = null;
-		LOG.debug("--> reject(doc='" + getDocument().getDocumentDetails().getTitle() + "')");
-		Request request = new RequestImpl(ProtocolConstants.INVITE_REJECTED, getDocument().getId(), session);
-		filter.process(request);
 		LOG.debug("<-- reject()");
 	}
 

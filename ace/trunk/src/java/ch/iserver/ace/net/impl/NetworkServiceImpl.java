@@ -38,6 +38,7 @@ import ch.iserver.ace.net.NetworkServiceCallback;
 import ch.iserver.ace.net.impl.protocol.BEEPSessionListener;
 import ch.iserver.ace.net.impl.protocol.BEEPSessionListenerFactory;
 import ch.iserver.ace.net.impl.protocol.DiscoveryLauncher;
+import ch.iserver.ace.net.impl.protocol.ParticipantConnectionImplFactory;
 import ch.iserver.ace.net.impl.protocol.ProtocolConstants;
 import ch.iserver.ace.net.impl.protocol.Request;
 import ch.iserver.ace.net.impl.protocol.RequestFilter;
@@ -74,6 +75,7 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 		RemoteDocumentProxyFactory.init(requestChain);
 		RemoteUserProxyFactory.init(requestChain);
 		InvitationProxyFactory.init(requestChain);
+		ParticipantConnectionImplFactory.init(requestChain);
 	}
 	
 	public static NetworkServiceImpl getInstance() {
@@ -185,7 +187,7 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 		return timestampFactory;
 	}
 	
-	public synchronized void conceal(String docId) {
+	public void conceal(String docId) {
 		publishedDocs.remove(docId);
 	}
 	
