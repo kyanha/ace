@@ -36,7 +36,7 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 	
 	private String id;
 	private MutableUserDetails details;
-	private Map documents;
+	private Map documents; //docId to RemoteDocumentProxy
 	private boolean isSessionEstablished;
 	private boolean isExplicitlyDiscovered;
 	
@@ -69,6 +69,14 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 	/***********************************************/
 	/** methods from interface RemoteUserProxyExt **/
 	/***********************************************/
+	
+	public boolean hasDocumentShared(String id) {
+		return documents.containsKey(id);
+	}
+	
+	public Map getDocuments() { 
+		return documents;
+	}
 	
 	public MutableUserDetails getMutableUserDetails() {
 		return details;
@@ -126,7 +134,7 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 			RemoteUserProxyImpl proxy = (RemoteUserProxyImpl) obj;
 			return this.getId().equals(proxy.getId()) && 
 				this.getUserDetails().equals(proxy.getUserDetails()) && 
-				this.getSharedDocuments().equals(proxy.getSharedDocuments());
+				this.getDocuments().equals(proxy.getDocuments());
 		}
 		return false;
 	}

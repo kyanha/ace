@@ -20,6 +20,8 @@
  */
 package ch.iserver.ace.net.impl;
 
+import java.util.Map;
+
 import ch.iserver.ace.net.RemoteUserProxy;
 
 /**
@@ -34,11 +36,18 @@ public interface RemoteUserProxyExt extends RemoteUserProxy {
 	
 	MutableUserDetails getMutableUserDetails();
 	
+	/**
+	 * Returns a synchronized map upon which to synchronize properly.
+	 */
+	Map getDocuments();
+	
 	void addSharedDocument(RemoteDocumentProxyExt doc);
 	
 	RemoteDocumentProxyExt removeSharedDocument(String id);
 	
 	RemoteDocumentProxyExt getSharedDocument(String id);
+	
+	boolean hasDocumentShared(String id);
 	
 	void setSessionEstablished(boolean value);
 	
