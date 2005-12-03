@@ -62,7 +62,7 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 		
 		try {
 			byte[] rawData = null;
-			synchronized(this) {
+			synchronized(this) { //only one thread shall read data at a time
 				rawData = readData(input);
 			}
 			LOG.debug("received "+rawData.length+" bytes. ["+(new String(rawData))+"]");
@@ -82,6 +82,7 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 				RemoteUserSession session = SessionManager.getInstance().getSession(publisherId);
 				SessionConnectionImpl connection = null;
 				connection = session.addSessionConnection(docId, message.getChannel());
+				connection.setParticipantId(participantId);
 				RemoteDocumentProxyExt proxy = session.getUser().getSharedDocument(docId);
 				sessionCallback = proxy.joinAccepted(connection); 
 				sessionCallback.setParticipantId(participantId);
