@@ -117,16 +117,7 @@ public class CollaborationSerializer implements Serializer, ProtocolConstants {
 				handler.endElement("", "", DATA);
 				handler.endElement("", "", TAG_JOIN_DOCUMENT);
 			} else if (type == JOIN_REJECTED) {
-				String docid = (String) data1;
-				attrs.addAttribute("", "", DOC_ID, "", docid);
-				attrs.addAttribute("", "", USER_ID, "", userid);
-				handler.startElement("", "", TAG_JOIN_REJECTED, attrs);
-				attrs = new AttributesImpl();
-				String code = (String) data2;
-				attrs.addAttribute("", "", CODE, "", code);
-				handler.startElement("", "", TAG_REASON, attrs);
-				handler.endElement("", "", TAG_REASON);
-				handler.endElement("", "", TAG_JOIN_REJECTED);
+				throw new IllegalStateException("JOIN_REJECTED must be serialized with instance of SerializerImpl");
 			}
 			handler.endElement("", "", "response");
 			handler.endElement("", "", "ace");
