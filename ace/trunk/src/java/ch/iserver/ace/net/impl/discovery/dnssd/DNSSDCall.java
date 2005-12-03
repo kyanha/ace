@@ -43,7 +43,6 @@ abstract class DNSSDCall {
 		
 		while (strategy.shouldRetry()) {
 			try {
-				getLogger().debug("--> makeCall()");
 				return makeCall();
 			} catch (DNSSDCallException dex) {
 				try {
