@@ -94,18 +94,7 @@ public class CollaborationSerializerTest extends TestCase {
 		assertEquals((actual.length()-XML_JOIN_DOCUMENT_2.length()), actual.indexOf(XML_JOIN_DOCUMENT_2));
 	}
 	
-	public void testCreateResponseJoinRejected() throws Exception {
-		String userId = "vnmv-qqw2345";
-		NetworkServiceImpl.getInstance().setUserId(userId);
-		Serializer serializer = new CollaborationSerializer();
-		
-		String docId = "doc-id-234b";
-		
-		byte[] data = serializer.createResponse(ProtocolConstants.JOIN_REJECTED, docId, "501");
-		String actual = new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 
-		assertEquals(XML_JOIN_REJECTED, actual);
-	}
 	
 	public void testCreateSessionMessageOfTypeInsertRequest() throws Exception {
 		String userId = "vnmv-qqw2345";
@@ -414,13 +403,6 @@ public class CollaborationSerializerTest extends TestCase {
 	private static final String XML_JOIN_DOCUMENT_2 = "</data>" +
 	"</document>" +
 	"</response></ace>";	
-	
-	private static final String XML_JOIN_REJECTED = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-	"<ace><response>" +
-	"<joinRejected docId=\"doc-id-234b\" userid=\"vnmv-qqw2345\">" +
-	"<reason code=\"501\"/>" +
-	"</joinRejected>" +
-	"</response></ace>";
 	
 	private static final String XML_SESSION_MESSAGE_REQUEST_1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
 	"<ace><session>" +

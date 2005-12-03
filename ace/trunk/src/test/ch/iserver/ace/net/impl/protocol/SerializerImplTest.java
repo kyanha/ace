@@ -132,8 +132,26 @@ public class SerializerImplTest extends TestCase {
 		assertEquals(XML_INVITE_REJECTED, actual);
 	}
 	
+	public void testCreateResponseJoinRejected() throws Exception {
+		String userId = "vnmv-qqw2345";
+		NetworkServiceImpl.getInstance().setUserId(userId);
+		Serializer serializer = SerializerImpl.getInstance();
+		
+		String docId = "doc-id-234b";
+		
+		byte[] data = serializer.createResponse(ProtocolConstants.JOIN_REJECTED, docId, "501");
+		String actual = new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 
-
+		assertEquals(XML_JOIN_REJECTED, actual);
+	}
+	
+	
+	private static final String XML_JOIN_REJECTED = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+	"<ace><response>" +
+	"<joinRejected docId=\"doc-id-234b\" userid=\"vnmv-qqw2345\">" +
+	"<reason code=\"501\"/>" +
+	"</joinRejected>" +
+	"</response></ace>";
 	
 	private static final String EXPECTED_QUERY = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
 			"<ace><request>" +
