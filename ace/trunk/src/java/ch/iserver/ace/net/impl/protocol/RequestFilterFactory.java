@@ -27,22 +27,27 @@ package ch.iserver.ace.net.impl.protocol;
  */
 public class RequestFilterFactory {
 
+	private static RequestFilter clientChain;
 	
 	public static RequestFilter createClientChain() {
-		RequestFilter filter = new FailureFilter(null);
-		ResponseListener listener = ResponseListener.getInstance();
-		Deserializer deserializer = DeserializerImpl.getInstance();
-		listener.init(deserializer, createClientChainForResponses());
-		Serializer serializer = SerializerImpl.getInstance();
-		filter = new InvitationRejectedSenderFilter(filter, serializer, listener);
-		filter = new InviteRequestSenderFilter(filter, serializer, listener);
-		filter = new JoinRequestSenderFilter(filter, serializer, listener);
-		filter = new ConcealDocumentPrepareFilter(filter, serializer, listener);
-		filter = new DocumentDetailsChangedPrepareFilter(filter, serializer, listener);
-		filter = new PublishDocumentPrepareFilter(filter, serializer, listener); 
-		filter = new SendDocumentsPrepareFilter(filter, serializer, listener);
-		filter = new LogFilter(filter, true);
-		return filter;
+		if (clientChain == null) {
+			RequestFilter filter = new FailureFilter(null);
+			ResponseListener listener = ResponseListener.getInstance();
+			Deserializer deserializer = DeserializerImpl.getInstance();
+			listener.init(deserializer, createClientChainForResponses());
+			Serializer serializer = SerializerImpl.getInstance();
+			filter = new InvitationRejectedSenderFilter(filter, serializer, listener);
+			filter = new InviteRequestSenderFilter(filter, serializer, listener);
+			filter = new JoinRejectedSenderFilter(filter, serializer, listener);
+			filter = new JoinRequestSenderFilter(filter, serializer, listener);
+			filter = new ConcealDocumentPrepareFilter(filter, serializer, listener);
+			filter = new DocumentDetailsChangedPrepareFilter(filter, serializer, listener);
+			filter = new PublishDocumentPrepareFilter(filter, serializer, listener); 
+			filter = new SendDocumentsPrepareFilter(filter, serializer, listener);
+			filter = new LogFilter(filter, true);
+			clientChain = filter;
+		}
+		return clientChain;
 	}
 	
 	private static RequestFilter createClientChainForResponses() {
@@ -54,8 +59,8 @@ public class RequestFilterFactory {
 		RequestFilter filter = new FailureFilter(null);
 		filter = new InvitationRejectedRecipientFilter(filter);
 		filter = new InviteRequestRecipientFilter(filter);
-		filter = new JoinRejectedReceiveFilter(filter);
-		filter = new JoinRequestRecipientFilter(filter);
+		filter = new JoinRejectedRecipientFilter(filter);
+		filter = new JoinRequestRecipientFilter(filter, createClientChain());
 		filter = new ConcealDocumentReceiveFilter(filter);
 		filter = new DocumentDetailsChangedReceiveFilter(filter);
 		filter = new PublishDocumentReceiveFilter(filter);

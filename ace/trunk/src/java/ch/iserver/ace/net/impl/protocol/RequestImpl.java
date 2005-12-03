@@ -74,6 +74,7 @@ public class RequestImpl implements Request {
 		//TODO: user id can be removed, since we have it in the Request
 		private String docId, name, userId;
 		private int participantId;
+		private String data;
 		
 		public DocumentInfo(String docId, String name, String userId) {
 			this.docId = docId;
@@ -94,7 +95,15 @@ public class RequestImpl implements Request {
 		public void setParticipantId(int id) {
 			this.participantId = id;
 		}
-
+		
+		public void setData(String data) {
+			this.data = data;
+		}
+		
+		public String getData() {
+			return data;
+		}
+		
 		public String getDocId() {
 			return docId;
 		}
