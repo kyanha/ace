@@ -52,8 +52,8 @@ public class InvitationProxyFactory {
 		return instance;
 	}
 	
-	public InvitationProxy createProxy(RemoteDocumentProxy proxy, RemoteUserSession session) {
-		return new InvitationProxyImpl((RemoteDocumentProxyExt) proxy, session, filter);
+	public InvitationProxy createProxy(RemoteDocumentProxyExt proxy, RemoteUserSession session) {
+		return new InvitationProxyImpl(proxy, session, filter);
 	}
 	
 	

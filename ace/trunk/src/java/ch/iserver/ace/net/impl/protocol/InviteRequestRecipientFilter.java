@@ -25,9 +25,9 @@ import org.apache.log4j.Logger;
 
 import ch.iserver.ace.net.InvitationProxy;
 import ch.iserver.ace.net.NetworkServiceCallback;
-import ch.iserver.ace.net.RemoteDocumentProxy;
 import ch.iserver.ace.net.impl.InvitationProxyFactory;
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
+import ch.iserver.ace.net.impl.RemoteDocumentProxyExt;
 import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
 
 /**
@@ -48,7 +48,7 @@ public class InviteRequestRecipientFilter extends AbstractRequestFilter {
 				NetworkServiceCallback callback = NetworkServiceImpl.getInstance().getCallback();
 				DocumentInfo info = (DocumentInfo) request.getPayload();
 				RemoteUserSession session = SessionManager.getInstance().getSession(info.getUserId());
-				RemoteDocumentProxy proxy = session.getUser().getSharedDocument(info.getDocId());
+				RemoteDocumentProxyExt proxy = session.getUser().getSharedDocument(info.getDocId());
 				InvitationProxy invitation = InvitationProxyFactory.getInstance().createProxy(proxy, session);
 				callback.invitationReceived(invitation);
 				try {
