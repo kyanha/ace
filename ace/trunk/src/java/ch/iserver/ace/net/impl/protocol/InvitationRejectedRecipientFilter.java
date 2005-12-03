@@ -45,8 +45,13 @@ public class InvitationRejectedRecipientFilter extends AbstractRequestFilter {
 			DocumentInfo info = (DocumentInfo) request.getPayload();
 			String docId = info.getDocId();
 			PublishedDocument doc = (PublishedDocument) NetworkServiceImpl.getInstance().getPublishedDocuments().get(docId);
-			String userId = info.getUserId();
-			doc.rejectInvitedUser(userId);
+			if (doc != null) {
+				String userId = info.getUserId();
+				doc.rejectInvitedUser(userId);
+			} else {
+				LOG.debug("received 'invitation rejected' from [" + info.getUserId() + "] " +
+						"for already concealed document [" + docId + "]");
+			}
 			
 			try {
 				//confirm reception of msg				
