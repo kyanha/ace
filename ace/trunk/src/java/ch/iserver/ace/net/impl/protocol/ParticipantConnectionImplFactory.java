@@ -21,8 +21,6 @@
 
 package ch.iserver.ace.net.impl.protocol;
 
-import org.beepcore.beep.core.RequestHandler;
-
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
@@ -52,7 +50,7 @@ public class ParticipantConnectionImplFactory {
 	
 	public ParticipantConnectionImpl createConnection(String docId, 
 			RemoteUserSession session, ResponseListener listener, Serializer serializer) {
-		return new ParticipantConnectionImpl(docId, session, listener, serializer, filter)
+		return new ParticipantConnectionImpl(docId, session, listener, serializer, filter);
 	}
 	
 	
