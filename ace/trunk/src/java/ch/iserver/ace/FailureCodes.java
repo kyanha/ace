@@ -39,6 +39,7 @@ public interface FailureCodes {
 	public static final int CHANNEL_FAILURE = 101;
 	//if a BindException occurs (address already in use)
 	public static final int ADDRESS_ALREADY_USED = 102;
+	public static final int SESSION_FAILURE = 103;
 	
 	
 }
