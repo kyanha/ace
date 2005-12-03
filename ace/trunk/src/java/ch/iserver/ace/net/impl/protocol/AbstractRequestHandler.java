@@ -25,8 +25,6 @@ import java.io.ByteArrayOutputStream;
 
 import org.apache.log4j.Logger;
 import org.beepcore.beep.core.InputDataStream;
-import org.beepcore.beep.core.MessageMSG;
-import org.beepcore.beep.core.OutputDataStream;
 import org.beepcore.beep.core.RequestHandler;
 import org.beepcore.beep.util.BufferSegment;
 
@@ -34,23 +32,6 @@ import org.beepcore.beep.util.BufferSegment;
  *
  */
 public abstract class AbstractRequestHandler implements RequestHandler {
-
-	protected static final int PIGGYBACKED_MESSAGE_LENGTH = 2;
-	private static final String REPLY = "ack";
-	
-	protected void handlePiggybackedMessage(MessageMSG message) {
-		getLogger().info("piggybacked message received.");
-		try {
-			OutputDataStream out = new OutputDataStream();
-			byte[] data = REPLY.getBytes();
-			BufferSegment segment = new BufferSegment(data);
-			out.add(segment);
-			out.setComplete();
-			message.sendRPY(out);
-		} catch (Exception e) {
-			getLogger().error("could not send piggybacked message reply ["+e.getMessage()+"]");
-		}
-	}
 	
 	protected byte[] readData(InputDataStream stream) throws Exception {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();

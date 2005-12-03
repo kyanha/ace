@@ -61,73 +61,72 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 		InputDataStream input = message.getDataStream();
 		
 		try {
-			byte[] rawData = readData(input);
+			byte[] rawData = null;
+			synchronized(this) {
+				rawData = readData(input);
+			}
 			LOG.debug("received "+rawData.length+" bytes. ["+(new String(rawData))+"]");
-			if (rawData.length == PIGGYBACKED_MESSAGE_LENGTH) {
-				handlePiggybackedMessage(message);
-			} else {
-				Request response = null;
-				synchronized(this) {
-					//deserializer and handler are shared by all SessionRequestHandler instances, thus synchronize
-					deserializer.deserialize(rawData, handler);
-					response = handler.getResult();
+			Request response = null;
+			synchronized(this) {
+				//deserializer and handler are shared by all SessionRequestHandler instances, thus synchronize
+				deserializer.deserialize(rawData, handler);
+				response = handler.getResult();
+			}
+			int type = response.getType();
+			if (type == ProtocolConstants.JOIN_DOCUMENT) {
+				//reception and processing of a joined document
+				PortableDocumentExt doc = (PortableDocumentExt) response.getPayload();
+				publisherId = doc.getPublisherId();
+				docId = doc.getDocumentId();
+				int participantId = doc.getParticipantId();
+				RemoteUserSession session = SessionManager.getInstance().getSession(publisherId);
+				SessionConnectionImpl connection = null;
+				connection = session.addSessionConnection(docId, message.getChannel());
+				RemoteDocumentProxyExt proxy = session.getUser().getSharedDocument(docId);
+				sessionCallback = proxy.joinAccepted(connection); 
+				sessionCallback.setParticipantId(participantId);
+				sessionCallback.setDocument(doc);
+			} else if (type == ProtocolConstants.KICKED) {
+				String docId = ((DocumentInfo) response.getPayload()).getDocId();
+				LOG.debug("user kicked for doc [" + docId + "]");
+				sessionCallback.kicked();
+				executeCleanup();
+			} else if (type == ProtocolConstants.REQUEST) {
+				ch.iserver.ace.algorithm.Request algoRequest = (ch.iserver.ace.algorithm.Request) response.getPayload();
+				LOG.debug("receiveRequest("+algoRequest+")");
+				String participantId = response.getUserId();
+				sessionCallback.receiveRequest(Integer.parseInt(participantId), algoRequest);
+			} else if (type == ProtocolConstants.CARET_UPDATE) {
+				CaretUpdateMessage update = (CaretUpdateMessage) response.getPayload();
+				LOG.debug("receivedCaretUpdate("+update+")");
+				String participantId = response.getUserId();
+				sessionCallback.receiveCaretUpdate(Integer.parseInt(participantId), update);
+			} else if (type == ProtocolConstants.ACKNOWLEDGE) {
+				Timestamp timestamp = (Timestamp) response.getPayload();
+				String siteId = response.getUserId();
+				LOG.debug("receiveAcknowledge("+siteId+", "+timestamp);
+				sessionCallback.receiveAcknowledge(Integer.parseInt(siteId), timestamp);
+			} else if (type == ProtocolConstants.PARTICIPANT_JOINED) {
+				RemoteUserProxy proxy = (RemoteUserProxy) response.getPayload();
+				String participantId = response.getUserId();
+				LOG.debug("participantJoined("+participantId+", "+proxy.getUserDetails().getUsername()+")");
+				sessionCallback.participantJoined(Integer.parseInt(participantId), proxy);
+			} else if (type == ProtocolConstants.PARTICIPANT_LEFT) {
+				String reason = (String) response.getPayload();
+				String participantId = response.getUserId();
+				LOG.debug("participantLeft("+participantId+", "+reason+")");
+				sessionCallback.participantLeft(Integer.parseInt(participantId), Integer.parseInt(reason));
+			} else if (type == ProtocolConstants.SESSION_TERMINATED) {
+				LOG.debug("sessionTerminated()");
+				sessionCallback.sessionTerminated();
+				executeCleanup();
+			}
+			try {
+				if (type != ProtocolConstants.KICKED && type != ProtocolConstants.SESSION_TERMINATED) { //on KICKED message, channel is already closed here
+					message.sendNUL(); //confirm reception of msg
 				}
-				int type = response.getType();
-				if (type == ProtocolConstants.JOIN_DOCUMENT) {
-					//reception and processing of a joined document
-					PortableDocumentExt doc = (PortableDocumentExt) response.getPayload();
-					publisherId = doc.getPublisherId();
-					docId = doc.getDocumentId();
-					int participantId = doc.getParticipantId();
-					RemoteUserSession session = SessionManager.getInstance().getSession(publisherId);
-					SessionConnectionImpl connection = null;
-					connection = session.addSessionConnection(docId, message.getChannel());
-					RemoteDocumentProxyExt proxy = session.getUser().getSharedDocument(docId);
-					sessionCallback = proxy.joinAccepted(connection); 
-					sessionCallback.setParticipantId(participantId);
-					sessionCallback.setDocument(doc);
-				} else if (type == ProtocolConstants.KICKED) {
-					String docId = ((DocumentInfo) response.getPayload()).getDocId();
-					LOG.debug("user kicked for doc [" + docId + "]");
-					sessionCallback.kicked();
-					executeCleanup();
-				} else if (type == ProtocolConstants.REQUEST) {
-					ch.iserver.ace.algorithm.Request algoRequest = (ch.iserver.ace.algorithm.Request) response.getPayload();
-					LOG.debug("receiveRequest("+algoRequest+")");
-					String participantId = response.getUserId();
-					sessionCallback.receiveRequest(Integer.parseInt(participantId), algoRequest);
-				} else if (type == ProtocolConstants.CARET_UPDATE) {
-					CaretUpdateMessage update = (CaretUpdateMessage) response.getPayload();
-					LOG.debug("receivedCaretUpdate("+update+")");
-					String participantId = response.getUserId();
-					sessionCallback.receiveCaretUpdate(Integer.parseInt(participantId), update);
-				} else if (type == ProtocolConstants.ACKNOWLEDGE) {
-					Timestamp timestamp = (Timestamp) response.getPayload();
-					String siteId = response.getUserId();
-					LOG.debug("receiveAcknowledge("+siteId+", "+timestamp);
-					sessionCallback.receiveAcknowledge(Integer.parseInt(siteId), timestamp);
-				} else if (type == ProtocolConstants.PARTICIPANT_JOINED) {
-					RemoteUserProxy proxy = (RemoteUserProxy) response.getPayload();
-					String participantId = response.getUserId();
-					LOG.debug("participantJoined("+participantId+", "+proxy.getUserDetails().getUsername()+")");
-					sessionCallback.participantJoined(Integer.parseInt(participantId), proxy);
-				} else if (type == ProtocolConstants.PARTICIPANT_LEFT) {
-					String reason = (String) response.getPayload();
-					String participantId = response.getUserId();
-					LOG.debug("participantLeft("+participantId+", "+reason+")");
-					sessionCallback.participantLeft(Integer.parseInt(participantId), Integer.parseInt(reason));
-				} else if (type == ProtocolConstants.SESSION_TERMINATED) {
-					LOG.debug("sessionTerminated()");
-					sessionCallback.sessionTerminated();
-					executeCleanup();
-				}
-				try {
-					if (type != ProtocolConstants.KICKED && type != ProtocolConstants.SESSION_TERMINATED) { //on KICKED message, channel is already closed here
-						message.sendNUL(); //confirm reception of msg
-					}
-				} catch (Exception e) {
-					LOG.error("could not send confirmation ["+e.getMessage()+"]");
-				}
+			} catch (Exception e) {
+				LOG.error("could not send confirmation ["+e.getMessage()+"]");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

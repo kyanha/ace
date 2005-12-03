@@ -73,38 +73,34 @@ public class ParticipantRequestHandler extends AbstractRequestHandler {
 		try {
 			byte[] rawData = readData(input);
 			LOG.debug("received "+rawData.length+" bytes. ["+(new String(rawData))+"]");
-			if (rawData.length == PIGGYBACKED_MESSAGE_LENGTH) {
-				handlePiggybackedMessage(message);
-			} else {
-				CollaborationParserHandler newHandler = new CollaborationParserHandler();
-				newHandler.setTimestampFactory(factory);
-				deserializer.deserialize(rawData, newHandler);
-				Request result = newHandler.getResult();
-				int type = result.getType();
-				if (type == ProtocolConstants.LEAVE) {
-					port.leave();
-					LOG.debug("participant ["+((DocumentInfo)result.getPayload()).getParticipantId()+"] left.");
-					//cleanup of participant resources is done in ParticipantConnectionImpl.close()
-				} else if (type == ProtocolConstants.REQUEST) {
-					ch.iserver.ace.algorithm.Request algoRequest = (ch.iserver.ace.algorithm.Request) result.getPayload();
-					LOG.debug("receiveRequest("+algoRequest+")");
-					port.receiveRequest(algoRequest);
-				} else if (type == ProtocolConstants.CARET_UPDATE) {
-					CaretUpdateMessage updateMsg = (CaretUpdateMessage) result.getPayload();
-					LOG.debug("receivedCaretUpdate("+updateMsg+")");
-					port.receiveCaretUpdate(updateMsg);
-				} else if (type == ProtocolConstants.ACKNOWLEDGE) {
-					Timestamp timestamp = (Timestamp) result.getPayload();
-					String siteId = result.getUserId();
-					LOG.debug("receiveAcknowledge("+siteId+", "+timestamp);
-					port.receiveAcknowledge(Integer.parseInt(siteId), timestamp);
-				} 
-				
-				try {				
-					message.sendNUL(); //confirm reception of msg
-				} catch (Exception e) {
-					LOG.error("could not send confirmation ["+e.getMessage()+"]");
-				}
+			CollaborationParserHandler newHandler = new CollaborationParserHandler();
+			newHandler.setTimestampFactory(factory);
+			deserializer.deserialize(rawData, newHandler);
+			Request result = newHandler.getResult();
+			int type = result.getType();
+			if (type == ProtocolConstants.LEAVE) {
+				port.leave();
+				LOG.debug("participant ["+((DocumentInfo)result.getPayload()).getParticipantId()+"] left.");
+				//cleanup of participant resources is done in ParticipantConnectionImpl.close()
+			} else if (type == ProtocolConstants.REQUEST) {
+				ch.iserver.ace.algorithm.Request algoRequest = (ch.iserver.ace.algorithm.Request) result.getPayload();
+				LOG.debug("receiveRequest("+algoRequest+")");
+				port.receiveRequest(algoRequest);
+			} else if (type == ProtocolConstants.CARET_UPDATE) {
+				CaretUpdateMessage updateMsg = (CaretUpdateMessage) result.getPayload();
+				LOG.debug("receivedCaretUpdate("+updateMsg+")");
+				port.receiveCaretUpdate(updateMsg);
+			} else if (type == ProtocolConstants.ACKNOWLEDGE) {
+				Timestamp timestamp = (Timestamp) result.getPayload();
+				String siteId = result.getUserId();
+				LOG.debug("receiveAcknowledge("+siteId+", "+timestamp);
+				port.receiveAcknowledge(Integer.parseInt(siteId), timestamp);
+			} 
+			
+			try {				
+				message.sendNUL(); //confirm reception of msg
+			} catch (Exception e) {
+				LOG.error("could not send confirmation ["+e.getMessage()+"]");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
