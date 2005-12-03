@@ -25,6 +25,7 @@ import org.apache.log4j.Logger;
 import org.beepcore.beep.core.Channel;
 import org.beepcore.beep.core.ReplyListener;
 
+import ch.iserver.ace.FailureCodes;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.Timestamp;
@@ -44,7 +45,7 @@ import ch.iserver.ace.net.impl.protocol.SessionRequestHandler;
 public class SessionConnectionImpl extends AbstractConnection implements SessionConnection {
 
 	private int participantId;
-	private String docId;
+	private String docId, username;
 	private RemoteUserSession session;
 	private SessionConnectionCallback callback;
 	private Serializer serializer;
@@ -59,6 +60,7 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 		setReplyListener(listener);
 		super.LOG = Logger.getLogger(SessionConnectionImpl.class);
 		hasLeft = false;
+		username = session.getUser().getUserDetails().getUsername();
 	}
 	
 	public SessionConnectionImpl(String docId, RemoteUserSession session, ReplyListener listener, Serializer serializer) {
@@ -70,6 +72,7 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 		setReplyListener(listener);
 		super.LOG = Logger.getLogger(SessionConnectionImpl.class);
 		hasLeft = false;
+		username = session.getUser().getUserDetails().getUsername();
 	}
 	
 	public void setParticipantId(int id) {
@@ -205,10 +208,11 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 	
 	private void sendToPeer(byte[] data) {
 		try {
-			send(data, session.getUser().getUserDetails().getUsername(), getReplyListener());
+			send(data, username, getReplyListener());
 		} catch (ProtocolException pe) {
-			//TODO: error handling?
 			LOG.error("protocol exception ["+pe.getMessage()+"]");
+			NetworkServiceImpl.getInstance().getCallback().serviceFailure(FailureCodes.CHANNEL_FAILURE, username, pe);
+			//TODO: what handling is appropriate here?
 		}
 	}
 
