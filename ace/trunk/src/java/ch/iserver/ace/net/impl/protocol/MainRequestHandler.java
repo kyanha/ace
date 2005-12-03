@@ -61,29 +61,25 @@ public class MainRequestHandler extends AbstractRequestHandler {
 		try {
 			byte[] rawData = readData(input);
 			LOG.debug("received "+rawData.length+" bytes. ["+(new String(rawData))+"]");
-			if (rawData.length == PIGGYBACKED_MESSAGE_LENGTH) {
-				handlePiggybackedMessage(message);
-			} else {
-				Request request = null;
-				//TODO: use SingleThreadedDomain instead of synchronized
-				synchronized (this) {
-					deserializer.deserialize(rawData, handler);
-					request = handler.getResult();
-				}
-				//TODO: the following code must not be synchronized right?
-				String userid = request.getUserId();
-				DiscoveryManager discoveryManager = DiscoveryManagerFactory.getDiscoveryManager(null);
-				if (!discoveryManager.hasSessionEstablished(userid)) {
-					RemoteUserProxyExt user = discoveryManager.getUser(userid);
-					LOG.debug("create RemoteUserSession for ["+user.getMutableUserDetails().getUsername()+"]");
-					SessionManager manager = SessionManager.getInstance();
-					Channel mainChannel = message.getChannel();
-					manager.createSession(user, (TCPSession) mainChannel.getSession(), mainChannel);
-				}
-				
-				request.setMessage(message);
-				filter.process(request);
+			Request request = null;
+			//TODO: use SingleThreadedDomain instead of synchronized
+			synchronized (this) {
+				deserializer.deserialize(rawData, handler);
+				request = handler.getResult();
 			}
+			//TODO: the following code must not be synchronized right?
+			String userid = request.getUserId();
+			DiscoveryManager discoveryManager = DiscoveryManagerFactory.getDiscoveryManager(null);
+			if (!discoveryManager.hasSessionEstablished(userid)) {
+				RemoteUserProxyExt user = discoveryManager.getUser(userid);
+				LOG.debug("create RemoteUserSession for ["+user.getMutableUserDetails().getUsername()+"]");
+				SessionManager manager = SessionManager.getInstance();
+				Channel mainChannel = message.getChannel();
+				manager.createSession(user, (TCPSession) mainChannel.getSession(), mainChannel);
+			}
+			
+			request.setMessage(message);
+			filter.process(request);
 		} catch (Exception e) {
 			e.printStackTrace();
 			LOG.error("could not process request ["+e+"]");
