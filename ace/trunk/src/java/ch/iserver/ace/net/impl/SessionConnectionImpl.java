@@ -191,14 +191,14 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 		if (hasLeft()) {
 			throw new IllegalStateException("session left.");
 		}
-//		
-//		byte[] data = null;
-//		try {
-//			data = serializer.createSessionMessage(ProtocolConstants.ACKNOWLEDGE, timestamp, Integer.toString(siteId));
-//		} catch (SerializeException se) {
-//			LOG.error("could not serialize message ["+se.getMessage()+"]");
-//		}
-//		sendToPeer(data);
+		
+		byte[] data = null;
+		try {
+			data = serializer.createSessionMessage(ProtocolConstants.ACKNOWLEDGE, timestamp, Integer.toString(siteId));
+		} catch (SerializeException se) {
+			LOG.error("could not serialize message ["+se.getMessage()+"]");
+		}
+		sendToPeer(data);
 			
 		LOG.info("<-- sendAcknowledge()");
 	}
