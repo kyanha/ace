@@ -25,6 +25,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import ch.iserver.ace.FailureCodes;
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.PublishedDocument;
 import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
@@ -36,8 +37,11 @@ public class JoinRequestRecipientFilter extends AbstractRequestFilter {
 
 	private static Logger LOG = Logger.getLogger(JoinRequestRecipientFilter.class);
 	
-	public JoinRequestRecipientFilter(RequestFilter successor) {
+	private RequestFilter clientChain;
+	
+	public JoinRequestRecipientFilter(RequestFilter successor, RequestFilter clientChain) {
 		super(successor);
+		this.clientChain = clientChain;
 	}
 	
 	public void process(Request request) {
@@ -48,14 +52,25 @@ public class JoinRequestRecipientFilter extends AbstractRequestFilter {
 				DocumentInfo info = (DocumentInfo) request.getPayload();
 				Map publishedDocs = NetworkServiceImpl.getInstance().getPublishedDocuments();
 				PublishedDocument documentToJoin = (PublishedDocument) publishedDocs.get(info.getDocId());
-				RemoteUserSession session = SessionManager.getInstance().getSession(request.getUserId());
-				ParticipantConnectionImpl connection = session.createParticipantConnection(info.getDocId());
-				connection.setPublishedDocument(documentToJoin);
-				String userId = request.getUserId();
-				if (documentToJoin.isUserInvited(userId)) {
-					documentToJoin.joinInvitedUser(userId, connection);
+				if (documentToJoin != null && !documentToJoin.isShutdown()) {
+					RemoteUserSession session = SessionManager.getInstance().getSession(request.getUserId());
+					ParticipantConnectionImpl connection = session.createParticipantConnection(info.getDocId());
+					connection.setPublishedDocument(documentToJoin);
+					String userId = request.getUserId();
+					if (documentToJoin.isUserInvited(userId)) {
+						documentToJoin.joinInvitedUser(userId, connection);
+					} else {
+						documentToJoin.join(connection);
+					}
 				} else {
-					documentToJoin.join(connection);
+					if (documentToJoin == null) {
+						LOG.warn("join request for not available document [" + info.getDocId() + "] received");
+					} else {
+						LOG.warn("join request for shutdown document [" + info.getDocId() + "] received");
+					}
+					info.setData(Integer.toString(FailureCodes.DOCUMENT_SHUTDOWN));
+					Request response = new RequestImpl(ProtocolConstants.JOIN_REJECTED, request.getUserId(), info);
+					clientChain.process(response);
 				}
 				
 				try {
