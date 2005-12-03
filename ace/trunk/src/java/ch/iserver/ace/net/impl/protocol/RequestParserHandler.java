@@ -48,6 +48,7 @@ public class RequestParserHandler extends ParserHandler {
 
 	public void startDocument() throws SAXException {
 		requestType = -1;
+		result = null;
 	}
 	
 	public void endDocument() throws SAXException {
@@ -170,6 +171,9 @@ public class RequestParserHandler extends ParserHandler {
 	 */
 	public Request getResult() {
 		LOG.debug("getResult("+result+")");
+		if (result == null) {
+			throw new IllegalStateException("result may not be null after parsing.");
+		}
 		return result;
 	}
 
