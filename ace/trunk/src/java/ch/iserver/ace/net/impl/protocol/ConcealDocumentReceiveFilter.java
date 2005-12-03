@@ -46,9 +46,13 @@ public class ConcealDocumentReceiveFilter extends AbstractRequestFilter {
 			String userId = info.getUserId();
 			RemoteUserSession session = SessionManager.getInstance().getSession(userId);
 			RemoteDocumentProxy doc = session.getUser().removeSharedDocument(info.getDocId());
-			NetworkServiceCallback callback = NetworkServiceImpl.getInstance().getCallback();
-			RemoteDocumentProxy[] docs = new RemoteDocumentProxy[] { doc };
-			callback.documentDiscarded(docs);
+			if (doc != null) {
+				NetworkServiceCallback callback = NetworkServiceImpl.getInstance().getCallback();
+				RemoteDocumentProxy[] docs = new RemoteDocumentProxy[] { doc };
+				callback.documentDiscarded(docs);
+			} else {
+				LOG.warn("document to be concealed not found [" + info.getDocId() + "]");
+			}
 			
 			try {
 				//confirm reception of msg				
