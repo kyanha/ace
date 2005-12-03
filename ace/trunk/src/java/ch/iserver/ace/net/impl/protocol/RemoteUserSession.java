@@ -220,8 +220,8 @@ public class RemoteUserSession {
 		LOG.debug("--> createParticipantConnection() for doc ["+docId+"]");
 		assert !participantConnections.containsKey(docId);
 		CollaborationSerializer serializer = new CollaborationSerializer();
-		ParticipantConnectionImpl connection = new ParticipantConnectionImpl(docId, this,
-				ResponseListener.getInstance(), serializer);
+		ParticipantConnectionImpl connection = ParticipantConnectionImplFactory.getInstance().
+						createConnection(docId, this,	ResponseListener.getInstance(), serializer);
 		participantConnections.put(docId, connection);
 		LOG.debug(participantConnections.size() + " ParticipantConnection(s) for " + getUser().getUserDetails().getUsername());
 		LOG.debug("<-- createParticipantConnection()");
