@@ -51,27 +51,23 @@ public class PublishedDocument implements DocumentServer {
 	private DocumentDetails details;
 	private RequestFilter filter;
 	private NetworkServiceExt service;
-	private boolean isConcealed, isShutdown;
+	private boolean isShutdown;
 	private Map invitations;
 	
 	public PublishedDocument(String id, DocumentServerLogic docServer, DocumentDetails details, RequestFilter filter, NetworkServiceExt service) {
 		ParameterValidator.notNull("id", id);
+		ParameterValidator.notNull("documentServerLogic", docServer);
 		this.docId = id;
 		this.docServer = docServer;
 		this.details = details;
 		this.service = service;
 		this.filter = (filter != null) ? filter : NullRequestFilter.getInstance();
-		this.isConcealed = false;
 		this.isShutdown = false;
 		this.invitations  = Collections.synchronizedMap(new LinkedHashMap());
 	}
 
 	public DocumentDetails getDocumentDetails() {
 		return details;
-	}
-	
-	public DocumentServerLogic getDocumentServerLogic() {
-		return docServer;
 	}
 	
 	public void join(ParticipantConnection connection) {
@@ -82,29 +78,12 @@ public class PublishedDocument implements DocumentServer {
 		return docId;
 	}
 	
-	public synchronized boolean isConcealed() {
-		return isConcealed;
-	}
-	
-	public boolean isShutdown() {
+	public synchronized boolean isShutdown() {
 		return isShutdown;
 	}
 	
 	public String toString() {
 		return "PublishedDocument("+docId+", '"+details.getTitle()+"')";
-	}
-
-	/********************************************/
-	/** methods from interface DocumentServer  **/
-	/********************************************/
-	
-	public void invite(InvitationPort invitation) {
-		LOG.debug("--> invite("+invitation.getUser()+")");
-		String userId = invitation.getUser().getId();
-		Request request = new RequestImpl(ProtocolConstants.INVITE, userId, docId);
-		filter.process(request);
-		invitations.put(userId, invitation);
-		LOG.debug("<-- invite()");
 	}
 	
 	public boolean isUserInvited(String userId) {
@@ -124,27 +103,35 @@ public class PublishedDocument implements DocumentServer {
 		port.reject();
 		LOG.debug("<-- rejectedInvitedUser()");
 	}
+
+	/********************************************/
+	/** methods from interface DocumentServer  **/
+	/********************************************/
 	
+	public void invite(InvitationPort invitation) {
+		LOG.debug("--> invite("+invitation.getUser()+")");
+		String userId = invitation.getUser().getId();
+		Request request = new RequestImpl(ProtocolConstants.INVITE, userId, docId);
+		filter.process(request);
+		invitations.put(userId, invitation);
+		LOG.debug("<-- invite()");
+	}
 	
 	public void setDocumentDetails(DocumentDetails details) {
 		if (isShutdown()) { 
 			throw new IllegalStateException("document has been shutdown");
-		} else if (!isConcealed()) {
-			this.details = details;
-			Request request = new RequestImpl(ProtocolConstants.DOCUMENT_DETAILS_CHANGED, null, this);
-			filter.process(request);
 		}
+		this.details = details;
+		Request request = new RequestImpl(ProtocolConstants.DOCUMENT_DETAILS_CHANGED, null, this);
+		filter.process(request);
 	}
 
-	public void shutdown() {
+	public synchronized void shutdown() {
 		if (isShutdown()) throw new IllegalStateException("document has been shutdown already");
-		//TODO: consider doing this task in ParticipantConnection.close()
-		
 		Request request = new RequestImpl(ProtocolConstants.CONCEAL, null, this);
 		filter.process(request);
 		service.conceal(getId());
 		//stop accepting joins
-		isConcealed = true;
 		isShutdown = true;
 	}
 }
