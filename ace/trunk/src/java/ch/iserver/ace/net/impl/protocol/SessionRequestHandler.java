@@ -26,10 +26,12 @@ import org.beepcore.beep.core.InputDataStream;
 import org.beepcore.beep.core.MessageMSG;
 import org.beepcore.beep.core.RequestHandler;
 
+import ch.iserver.ace.FailureCodes;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Timestamp;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.net.SessionConnectionCallback;
+import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.PortableDocumentExt;
 import ch.iserver.ace.net.impl.RemoteDocumentProxyExt;
 import ch.iserver.ace.net.impl.SessionConnectionImpl;
@@ -58,19 +60,18 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 	public void receiveMSG(MessageMSG message) {
 		LOG.info("--> recieveMSG()");
 		
-		InputDataStream input = message.getDataStream();
-		
+		String readInData = null;
 		try {
-			byte[] rawData = null;
-			synchronized(this) { //only one thread shall read data at a time
-				rawData = readData(input);
-			}
-			LOG.debug("received "+rawData.length+" bytes. ["+(new String(rawData))+"]");
 			Request response = null;
 			synchronized(this) {
+				InputDataStream input = message.getDataStream();
+				byte[] rawData = readData(input); //only one thread shall read data at a time
+				readInData = (new String(rawData));
+				LOG.debug("received "+rawData.length+" bytes. ["+readInData+"]");
 				//deserializer and handler are shared by all SessionRequestHandler instances, thus synchronize
 				deserializer.deserialize(rawData, handler);
 				response = handler.getResult();
+				readInData = null;
 			}
 			int type = response.getType();
 			if (type == ProtocolConstants.JOIN_DOCUMENT) {
@@ -132,6 +133,7 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 		} catch (Exception e) {
 			e.printStackTrace();
 			LOG.error("could not process request ["+e+"]");
+			NetworkServiceImpl.getInstance().getCallback().serviceFailure(FailureCodes.SESSION_FAILURE, readInData, e);
 		}
 		LOG.debug("<-- receiveMSG");
 		
