@@ -20,6 +20,8 @@
  */
 package ch.iserver.ace.net.impl;
 
+import java.util.Map;
+
 import org.apache.log4j.Logger;
 
 import ch.iserver.ace.net.NetworkServiceCallback;
@@ -69,7 +71,7 @@ public class DiscoveryCallbackImpl implements DiscoveryCallback {
 		if (service.hasPublishedDocuments()) {
 			service.sendDocuments(proxy);
 		} else {
-			LOG.debug("no published documents, do not 	establish session with ["+proxy.getUserDetails().getUsername()+"]");
+			LOG.debug("no published documents, do not establish session with ["+proxy.getUserDetails().getUsername()+"]");
 		}
 		LOG.debug("<-- userDiscoveryCompleted()");
 	}
@@ -89,10 +91,13 @@ public class DiscoveryCallbackImpl implements DiscoveryCallback {
 	public void userDiscarded(RemoteUserProxyExt proxy) {
 		LOG.debug("--> userDiscarded("+proxy+")");
 		
-		RemoteDocumentProxy[] docs = (RemoteDocumentProxy[]) 
-					proxy.getSharedDocuments().toArray(new RemoteDocumentProxy[0]);
+		Map documents = proxy.getDocuments();
+		RemoteDocumentProxy[] docs = null;
+		synchronized(documents) {
+			docs = (RemoteDocumentProxy[]) documents.values().toArray(new RemoteDocumentProxy[0]);
+		}
 		
-		if (docs.length > 0) {
+		if (docs != null && docs.length > 0) {
 			callback.documentDiscarded(docs);
 		}
 		callback.userDiscarded(proxy);
