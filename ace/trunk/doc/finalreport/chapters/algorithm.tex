@@ -386,4 +386,152 @@ For an example how this setup works check the
 of the n-way setup.
 
 
-\section{Undo/Redo}
+\subsection{Undo/Redo}
+\label{sect:algorithm.undoredo}
+% TODO: Undo/Redo
+% 
+% responsible: lukas zbinden
+% describe why we could not implement undo/redo with Jupiter
+%
+
+
+
+\section{Implementation}
+
+
+\subsection{Operation}
+Operations are used to decribe changes made in a document. For this purpose they 
+must contain the information what has been changed.
+
+In case of simple text editing only two operations are required. An insert 
+operation (e.g. \texttt{Ins(1,'hello')}) inserts the string 'hello' at position 
+1 and an delete operation (e.g. \texttt{Del(10, 'world')}) deletes the string 
+'world' at position 10.
+
+\begin{figure}[H]
+\centering
+\includegraphics[height=5.74cm,width=11.59cm]{../images/finalreport/algorithm_operation.eps}
+\caption{Operation Hierarchy}
+\label{Operation Hierarchy}
+\end{figure}
+
+\label{Split_Operation}
+As depicted in figure \ref{Operation Hierarchy} there exists a third operation besides the \texttt{InsertOperation} and \texttt{DeleteOperation}. The so-called \texttt{SplitOperation} is a helper object used to encapsulate two operations (usually two delete operations). This special operation is required when transforming an insert operation which occurs in the range of a delete operation. 
+
+For instance if the document state is 'abcdefg' and the two operations
+\texttt{Ins(3,'X')} and \texttt{Del(1,'bcdef')} are to be transformed. If
+the delete operation is applied first, this is easy. The index of the insert
+operation is then shifted to the beginning of the delete operation. Otherwise,
+the delete operation must be split into two operations. Once the insert
+operation is applied, we have the document state 'abcXdefg'. The transformed
+delete operation must thus be: \texttt{Del(1,'bc')} and \texttt{Del(4,'def')}.
+Note that the second delete operation must be applied first.
+
+
+\subsection{Request}
+A request is used to distribute changes of a document over the network. It 
+contains all important information such as an operation, a timestamp (document 
+state on which the operation is based) and the site id of the generating site. 
+(see figure \ref{Request Class Diagram})
+
+\begin{figure}[H]
+\centering
+\includegraphics[height=6.87cm,width=12.09cm]{../images/finalreport/algorithm_request.eps}
+\caption{Request Class Diagram}
+\label{Request Class Diagram}
+\end{figure}
+
+How a request will be sent to a server or another client is not part of this chapter and depends on the network technology (see \emph{Report Evaluation Network}) used.
+
+
+\subsection{Algorithm}
+
+\begin{figure}[H]
+\centering
+\includegraphics[height=6.87cm,width=12.09cm]{../images/finalreport/algorithm.eps}
+\caption{Algorithm Class Diagram}
+\label{fig:algorithm.uml}
+\end{figure}
+
+The algorithm package centers around the \texttt{Algorithm} interface.
+It gives the flexibility to switch the implementation without affecting the 
+rest of the system. The currently only implementation of the \texttt{Algorithm} 
+interface is the \texttt{Jupiter} class. \texttt{Jupiter} processes 
+all requests with the collaboration of an \texttt{InclusionTransformation}
+implementation. The only implementation is \texttt{GOTOInclusionTransformation}.
+
+Each algorithm has a local timestamp, which can be retrieved with the
+\texttt{getTimestamp():Timestamp} method. In the 
+case of \emph{Jupiter}, the timestamp is a vector time. The vector 
+time represents the current location in the 2-dimensional state space of 
+\emph{Jupiter}. 
+
+The site id assigned to the algorithm can be retrieved with the
+\texttt{getSiteId():int} method. The site id can be important in certain
+transformation cases to decide which operation has higher priority, i.e.
+is not shifted.
+
+\subsubsection{Outgoing Queue}
+\emph{Jupiter} stores all outgoing requests in a queue. Whenever a request
+is received by the algorithm, the timestamp of the request is checked to
+see how many requests the other site has already processed. All the requests
+in the outgoing queue that have been processed by the other site are discarded.
+The incoming request is then transformed against the the remaining requests
+in the queue. The transformed operation is then ready to be applied to the
+local document.
+
+The figure \ref{fig:algorithm.outqueue} shows on the left side an outgoing
+queue with four operations. Now, suppose a request with timestamp $[0,2]$
+is received, indicating that the other site has processed two requests
+from the local site. The first two requests in the queue can then be
+discarded, leaving us with just two requests. The incoming request is then
+transformed against these two (concurrent) requests.
+
+\begin{figure}[H]
+\centering
+\includegraphics[height=3.03cm,width=9.67cm]{../images/finalreport/algorithm_outqueue.eps}
+\caption{Outgoing queue before and after receiving a request}
+\label{fig:algorithm.outqueue}
+\end{figure}
+
+\subsubsection{Generating Requests}
+Whenever a local operation is generated it has to be sent to the other sites.
+These operations must be encapsulated in a request. The
+\texttt{generateRequest(op:Operation):Request} is used to create a request
+for the operation. That request can be sent to the other sites.
+
+\subsubsection{Receiving Requests}
+When a request is received, it must be passed to the
+\texttt{receiveRequest(r:Request):Operation} method. This method returns
+the potentially transformed operation, which is to be applied to the
+local document.
+
+\subsubsection{Undo/Redo}
+The \texttt{Algorithm} interface also has methods to support undo and redo.
+The corresponding methods are \texttt{undo():Request}, \texttt{redo():Request},
+\texttt{canUndo():boolean}, and \texttt{canRedo():boolean}. Unfortunately
+\emph{Jupiter} does not support these operations. For more information why
+\emph{Jupiter} does not support undo/redo read \ref{sect:algorithm.undoredo}.
+
+\subsubsection{Index Transformations}
+Beside the transformation of operations against other operations, the
+\texttt{Algorithm} also supports transformation of an index against an
+operation. 
+
+The \texttt{transformIndices(t:Timestamp,indices:int[]):int[]} method transforms
+an array of integers against all concurrent operations. The indices itself
+do not modify the operations in the transformation.
+
+\subsubsection{Acknowledge}
+A potential problem arises if one site is idle while the other is generating
+requests. In that case, the outgoing queue of the site that generates requests
+grows indefinitely, because no acknowledge messages are ever received and thus
+no requests in the outgoing queue are discarded.
+
+Thus we extended the standard \emph{Jupiter} algorithm to support acknowledge
+messages. An acknowledge message is simply the local timestamp and the site
+id. An acknowledge message is passed to the algorithm with the
+\texttt{acknowledge(siteId:int,t:Timestamp)} method.
+
+
+
