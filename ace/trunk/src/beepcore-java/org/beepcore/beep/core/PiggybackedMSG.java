@@ -49,19 +49,30 @@ class PiggybackedMSG extends MessageMSGImpl implements MessageMSG {
 	}
 
 	public MessageStatus sendERR(BEEPError error) throws BEEPException {
-        throw new BEEPException("ERR reply not valid for piggybacked requests");
+        //throw new BEEPException("ERR reply not valid for piggybacked requests");
+        OutputDataStream stream =
+            new StringOutputDataStream(error.createErrorMessage());
+	return sendRPY(stream);
 	}
 
 	public MessageStatus sendERR(int code, String diagnostic)
 		throws BEEPException
     {
-        throw new BEEPException("ERR reply not valid for piggybacked requests");
+        //throw new BEEPException("ERR reply not valid for piggybacked requests");
+        String error = BEEPError.createErrorMessage(code, diagnostic);
+	OutputDataStream stream =
+            new StringOutputDataStream(error);
+	return sendRPY(stream);
 	}
 
 	public MessageStatus sendERR(int code, String diagnostic, String xmlLang)
 		throws BEEPException
     {
-        throw new BEEPException("ERR reply not valid for piggybacked requests");
+        //throw new BEEPException("ERR reply not valid for piggybacked requests");
+        String error = BEEPError.createErrorMessage(code, diagnostic,xmlLang);
+	OutputDataStream stream =
+            new StringOutputDataStream(error);
+	return sendRPY(stream);
 	}
 
 	public MessageStatus sendNUL() throws BEEPException {
@@ -94,6 +105,8 @@ class PiggybackedMSG extends MessageMSGImpl implements MessageMSG {
 
         try {
             s.sendProfile(this.channel.getProfile(), data, this.channel);
+            //remove the piggyback request from the recvQue
+	    this.channel.removeMSG();
         } catch (BEEPException e) {
             s.terminate("Error sending profile. " + e.getMessage());
             throw e;

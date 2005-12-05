@@ -382,8 +382,9 @@ class ChannelImpl implements Channel, Runnable {
             throws BEEPException
     {
         MessageStatus status;
-
-        if (state != STATE_ACTIVE && state != STATE_TUNING) {
+	
+        //if (state != STATE_ACTIVE && state != STATE_TUNING) {
+        if (state != STATE_ACTIVE && state != STATE_TUNING && state!= STATE_TUNING_PENDING) {
             switch (state) {
             case STATE_INITIALIZED :
                 throw new BEEPException("Channel is uninitialised.");
@@ -705,7 +706,8 @@ class ChannelImpl implements Channel, Runnable {
     {
         log.trace("Channel::postFrame");
 
-        if (state != STATE_ACTIVE && state != STATE_TUNING) {
+        //if (state != STATE_ACTIVE && state != STATE_TUNING) {
+        if (state != STATE_ACTIVE && state != STATE_TUNING && state!= STATE_TUNING_PENDING) {
             throw new BEEPException("State is " + state);
         }
 
@@ -732,7 +734,8 @@ class ChannelImpl implements Channel, Runnable {
 
     void sendMessage(MessageStatus m) throws BEEPException
     {
-        if (state != STATE_ACTIVE && state != STATE_TUNING) {
+        //if (state != STATE_ACTIVE && state != STATE_TUNING) {
+        if (state != STATE_ACTIVE && state != STATE_TUNING && state!= STATE_TUNING_PENDING) {
             switch (state) {
             case STATE_INITIALIZED :
                 throw new BEEPException("Channel is uninitialised.");
@@ -1116,6 +1119,15 @@ class ChannelImpl implements Channel, Runnable {
     public String getStartData()
     {
         return startData;
+    }
+    
+    /**
+     * Used to remove the piggyback request from the recvQue
+     *
+     * called by piggyBackMSG 
+     */
+    public void removeMSG(){
+        recvMSGQueue.removeFirst();
     }
     
     static class MessageListenerAdapter implements RequestHandler {

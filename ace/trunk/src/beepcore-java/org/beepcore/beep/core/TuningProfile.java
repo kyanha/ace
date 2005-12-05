@@ -258,4 +258,28 @@ public abstract class TuningProfile {
 
         return ((SessionImpl)session).startChannelRequest(l, listener, true);
     }
+
+    /**
+     * Method startChannel
+     * called by SASLSRPProfile with tuningpending as true
+     *
+     * @throws BEEPException
+     *
+     */
+    public Channel startChannel(Session session, String profile,
+                                boolean base64Encoding, String data,
+                                RequestHandler listener, boolean tuningpending)
+            throws BEEPException, BEEPError
+    {
+        StartChannelProfile p = new StartChannelProfile(profile,
+                                                        base64Encoding, data);
+        LinkedList l = new LinkedList();
+
+        l.add(p);
+
+        Channel ch = ((SessionImpl)session).startChannelRequest(l, listener, false);
+	((ChannelImpl)ch).setState(Channel.STATE_TUNING_PENDING);
+	return ch;
+    }
+    
 }

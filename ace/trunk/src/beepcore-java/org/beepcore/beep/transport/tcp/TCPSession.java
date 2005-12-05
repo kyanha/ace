@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import java.net.Socket;
+import java.net.SocketException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -80,6 +81,7 @@ public class TCPSession extends SessionImpl {
     private static int THREAD_COUNT = 0;
     private static final String THREAD_NAME = "TCPSession Thread #";
     private Thread thread;
+    private volatile boolean terminate;
 
     /**
      * @param sock the Socket for this TCPConnection
@@ -230,6 +232,48 @@ public class TCPSession extends SessionImpl {
         return super.toString() + " (" +
             socket.getLocalAddress() + ":" + socket.getLocalPort() + "-" +
             socket.getInetAddress() + ":" + socket.getPort() + ")";
+    }
+
+    /**
+     * Set a SoTimeout for socket, the read wait will be interruptted
+     * very 0.1 seconds, a terminate state variable (while can be set by
+     * terminateIO()) will be checked whether the read wait should continue,
+     * it is only used in SRPServer currently, the SRPClient can use the  
+     * terminateIO directly without setting SoTimeout.
+     *
+     * @throws SocketException 
+     */
+    public void initTermination() throws SocketException{
+	socket.setSoTimeout(100);
+    }	
+
+
+    /**
+     * Set a state variable "terminate" to be true
+     *
+     */
+    public void terminateIO(boolean force){	
+	if (!thread.isAlive()){
+		return;
+	}
+	try{
+	   synchronized(this){	
+           	terminate=true;
+	   	while(terminate&&force)
+			Thread.sleep(200);
+	  	thread=null;
+	   }	
+	}catch(InterruptedException e){log.debug("Waiting for Socket Sotimeoutinterrupted");}
+    }
+
+
+    /**
+     * Disable the SoTimeOut of socket
+     *
+     * @throws SocketException 
+     */
+    public void recoverTermination() throws SocketException{
+	socket.setSoTimeout(0);
     }
 
     // Implementation of method declared in Session
@@ -430,8 +474,22 @@ public class TCPSession extends SessionImpl {
 
                 try {
                     do {
-                        amountRead =
-                            is.read(headerBuffer, 0, MIN_SEQ_HEADER_SIZE);
+                        //amountRead =
+                        //    is.read(headerBuffer, 0, MIN_SEQ_HEADER_SIZE);
+
+			amountRead=-1;
+                        while(!terminate){
+		   	     amountRead=-1;
+			     try{	
+				amountRead =
+                            		is.read(headerBuffer, 0, MIN_SEQ_HEADER_SIZE);
+				}catch(java.net.SocketTimeoutException e){}
+			     if (amountRead != -1) break;	
+			}			
+			if (terminate && amountRead == -1){
+			     terminate=false;
+			     return;
+			}
 
                         if (amountRead == -1) {
                             throw new SessionAbortedException();

@@ -90,9 +90,9 @@ public class InputDataStream {
 
         synchronized (this.buffers) {
             this.buffers.addLast(segment);
+            this.availableBytes += segment.getLength();
             this.buffers.notify();
         }
-        this.availableBytes += segment.getLength();
     }
 
     public int available()
