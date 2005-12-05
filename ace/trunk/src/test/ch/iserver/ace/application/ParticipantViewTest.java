@@ -23,6 +23,7 @@ package ch.iserver.ace.application;
 
 import java.awt.Color;
 
+import javax.swing.SwingUtilities;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
@@ -83,25 +84,22 @@ public class ParticipantViewTest extends TestCase {
 	public void testItemPropertiesChanged() throws Exception {
 		MockControl listenerCtrl = MockControl.createControl(ListDataListener.class);
 		listenerCtrl.setDefaultMatcher(new ListDataEventMatcher());
-		ListDataListener listener = (ListDataListener) listenerCtrl.getMock();
+		final ListDataListener listener = (ListDataListener) listenerCtrl.getMock();
 		
 		// test fixture
 		ParticipantViewController controller = new ParticipantViewController();
 		EventList participantList = controller.getCompositeSourceList().createMemberList();
-		ParticipantView view = new ParticipantView(new LocaleMessageSourceStub(), controller);
+		final ParticipantView view = new ParticipantView(new LocaleMessageSourceStub(), controller);
 		controller.setParticipantList(participantList);
 
-		MutableRemoteUser user = new RemoteUserStub("X", "X");
+		final MutableRemoteUser user = new RemoteUserStub("X", "X");
 		Item item = new ParticipantItem(new ParticipantStub(user, 1), Color.BLACK);
 
 		controller.getCompositeSourceList().getReadWriteLock().writeLock().lock();
 		participantList.add(item);
 		participantList.add(new ParticipantItem(new ParticipantStub(new RemoteUserStub("Y", "Y"), 2), Color.BLACK));
 		controller.getCompositeSourceList().getReadWriteLock().writeLock().unlock();
-		
-		Thread.sleep(5);
-		view.getList().getModel().addListDataListener(listener);
-		
+				
 		// define mock behavior
 		listener.contentsChanged(new ListDataEvent(view.getList().getModel(), ListDataEvent.CONTENTS_CHANGED, 0, 0));
 		
@@ -109,10 +107,14 @@ public class ParticipantViewTest extends TestCase {
 		listenerCtrl.replay();
 		
 		// test
-		user.setName("JIM");
+		SwingUtilities.invokeAndWait(new Runnable() {
+			public void run() {
+				view.getList().getModel().addListDataListener(listener);
+				user.setName("JIM");
+			}		
+		});
 				
 		// verify
-		Thread.sleep(5);
 		listenerCtrl.verify();
 	}
 	
