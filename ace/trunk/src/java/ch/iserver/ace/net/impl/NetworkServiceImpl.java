@@ -169,8 +169,8 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	public void discoverUser(DiscoveryNetworkCallback callback, InetAddress addr, int port) {
 		LOG.debug("--> discoverUser(" + addr + ":" + port + ")");
 		
-		ExplicitUserDiscovery userDiscovery = new ExplicitUserDiscovery(callback, addr, port);
-		userDiscovery.start();
+//		ExplicitUserDiscovery userDiscovery = new ExplicitUserDiscovery(callback, addr, port);
+//		userDiscovery.start();
 		
 		LOG.debug("<-- discoverUser()");
 	}
