@@ -54,8 +54,7 @@ public class JoinRequestRecipientFilter extends AbstractRequestFilter {
 				PublishedDocument documentToJoin = (PublishedDocument) publishedDocs.get(info.getDocId());
 				if (documentToJoin != null && !documentToJoin.isShutdown()) {
 					RemoteUserSession session = SessionManager.getInstance().getSession(request.getUserId());
-					ParticipantConnectionImpl connection = session.createParticipantConnection(info.getDocId());
-					connection.setPublishedDocument(documentToJoin);
+					ParticipantConnectionImpl connection = session.addParticipantConnection(info.getDocId());
 					String userId = request.getUserId();
 					if (documentToJoin.isUserInvited(userId)) {
 						documentToJoin.joinInvitedUser(userId, connection);

@@ -52,7 +52,6 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 	private Serializer serializer;
 	private int participantId = -1;
 	private String docId;
-	private PublishedDocument publishedDoc;
 	private boolean isKicked;
 	
 	public ParticipantConnectionImpl(String docId, RemoteUserSession session, ReplyListener listener, Serializer serializer, RequestFilter filter) {
@@ -71,14 +70,6 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 	public int getParticipantId() {
 		return participantId;
 	}
-	
-	public void setPublishedDocument(PublishedDocument doc) {
-		this.publishedDoc = doc;
-	}
-	
-	public PublishedDocument getPublishedDocument() {
-		return publishedDoc;
-	}
 
 	/*****************************************************/
 	/** methods from abstract class AbstractConnection  **/
@@ -86,7 +77,6 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 	public void cleanup() {
 		LOG.debug("--> cleanup()");
 		session = null;
-		publishedDoc = null;
 		serializer = null;
 		setReplyListener(null);
 		Channel channel = getChannel();
@@ -143,7 +133,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 			LOG.info("--> sendDocument()");
 			byte[] data = null;
 			try {
-				DocumentInfo info = new DocumentInfo(getPublishedDocument().getId(), getParticipantId());
+				DocumentInfo info = new DocumentInfo(docId, getParticipantId());
 				data = serializer.createResponse(ProtocolConstants.JOIN_DOCUMENT, info, document);
 			} catch (SerializeException se) {
 				LOG.error("could not serialize document ["+se.getMessage()+"]");
@@ -278,7 +268,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 	
 	private void executeCleanup() {
 		//clean up participant resources
-		ParticipantCleanup cleanup = new ParticipantCleanup(getPublishedDocument().getId(), session.getUser().getId());
+		ParticipantCleanup cleanup = new ParticipantCleanup(docId, session.getUser().getId());
 		cleanup.execute();
 	}
 	
