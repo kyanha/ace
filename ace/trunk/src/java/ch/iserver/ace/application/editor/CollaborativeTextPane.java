@@ -191,14 +191,14 @@ public class CollaborativeTextPane extends JTextPane implements CaretListener, P
 			// set own caret
 			String mpId = "" + session.getParticipantId();
 			PropertyChangeCaretHandlerImpl pCaretHandler = (PropertyChangeCaretHandlerImpl)caretHandlerMap.get(mpId);
-			System.out.println("propertyChange(): name=" + evt.getPropertyName() + "   getDot=" + pCaretHandler.getDot() + "   getMark=" + pCaretHandler.getMark());
+			/*System.out.println("propertyChange(): name=" + evt.getPropertyName() + "   getDot=" + pCaretHandler.getDot() + "   getMark=" + pCaretHandler.getMark());
 			CaretUpdate oldCUT = (CaretUpdate)evt.getOldValue();
 			System.out.println("propertyChange()::oldCUT: dot=" + oldCUT.getDot() + "   mark=" + oldCUT.getMark());
 			CaretUpdate newCUT = (CaretUpdate)evt.getNewValue();
-			System.out.println("propertyChange()::newCUT: dot=" + newCUT.getDot() + "   mark=" + newCUT.getMark());
+			System.out.println("propertyChange()::newCUT: dot=" + newCUT.getDot() + "   mark=" + newCUT.getMark());*/
 
 			//TODO: find bug ;)
-			setCaretPosition(pCaretHandler.getDot());
+			//setCaretPosition(pCaretHandler.getDot());
 
 			// delete old caret (only if position is in document)
 			if(evt.getOldValue() != null) {
