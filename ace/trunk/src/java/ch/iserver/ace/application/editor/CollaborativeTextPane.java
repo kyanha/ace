@@ -209,8 +209,8 @@ public class CollaborativeTextPane extends JTextPane implements CaretListener, P
 			//moveCaretPosition(pCaretHandler.getDot());
 
 			// delete old caret (only if position is in document)
-			CaretUpdate oldCU = (CaretUpdate)evt.getOldValue();
-			if(oldCU != null) {
+			if(evt.getOldValue() != null) {
+				CaretUpdate oldCU = (CaretUpdate)evt.getOldValue();
 				try {
 					Rectangle oldRect = modelToView(oldCU.getDot());
 					//System.out.println("repaint(" + oldRect + ")");
@@ -221,8 +221,8 @@ public class CollaborativeTextPane extends JTextPane implements CaretListener, P
 			}
 			
 			// draw new caret
-			CaretUpdate newCU = (CaretUpdate)evt.getNewValue();
-			if(newCU != null) {
+			if(evt.getNewValue() != null) {
+				CaretUpdate newCU = (CaretUpdate)evt.getNewValue();
 				try {
 					Rectangle newRect = modelToView(newCU.getDot());
 					//System.out.println("repaint(" + newRect + ")");
