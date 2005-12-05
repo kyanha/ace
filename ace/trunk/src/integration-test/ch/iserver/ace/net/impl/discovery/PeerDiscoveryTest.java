@@ -34,6 +34,7 @@ import ch.iserver.ace.net.impl.Discovery;
 import ch.iserver.ace.net.impl.DiscoveryCallback;
 import ch.iserver.ace.net.impl.MutableUserDetails;
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;
+import ch.iserver.ace.net.impl.RemoteUserProxyFactory;
 import ch.iserver.ace.net.impl.RemoteUserProxyImpl;
 
 import com.apple.dnssd.BrowseListener;
@@ -73,17 +74,17 @@ public class PeerDiscoveryTest extends TestCase {
 		discovery.setUserId("user-id");
 		
 		//problem: ordering of userDiscovered calls not predictable
-		RemoteUserProxyExt rem1 = new RemoteUserProxyImpl("peer1"+ports[0], new MutableUserDetails("peer1", null, ports[0]));
+		RemoteUserProxyExt rem1 = RemoteUserProxyFactory.getInstance().createProxy("peer1"+ports[0], new MutableUserDetails("peer1", null, ports[0]));
 		callback.userDiscovered(rem1);
 		//note: InetAddress will not be compared in comparison, c.f. RemoteUserProxyMatcher
 		callback.userDiscoveryCompleted(rem1);
-		RemoteUserProxyExt rem2 = new RemoteUserProxyImpl("peer2"+ports[1], new MutableUserDetails("peer2", null, ports[1]));
+		RemoteUserProxyExt rem2 = RemoteUserProxyFactory.getInstance().createProxy("peer2"+ports[1], new MutableUserDetails("peer2", null, ports[1]));
 		callback.userDiscovered(rem2);
 		callback.userDiscoveryCompleted(rem2);
-		RemoteUserProxyExt rem3 = new RemoteUserProxyImpl("peer3"+ports[2], new MutableUserDetails("peer3", null, ports[2]));
+		RemoteUserProxyExt rem3 = RemoteUserProxyFactory.getInstance().createProxy("peer3"+ports[2], new MutableUserDetails("peer3", null, ports[2]));
 		callback.userDiscovered(rem3);
 		callback.userDiscoveryCompleted(rem3);
-		RemoteUserProxyExt rem4 = new RemoteUserProxyImpl("peer4"+ports[3], new MutableUserDetails("peer4", null, ports[3]));
+		RemoteUserProxyExt rem4 = RemoteUserProxyFactory.getInstance().createProxy("peer4"+ports[3], new MutableUserDetails("peer4", null, ports[3]));
 		callback.userDiscovered(rem4);
 		callback.userDiscoveryCompleted(rem4);
 		

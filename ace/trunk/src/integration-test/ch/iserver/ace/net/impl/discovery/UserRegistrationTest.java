@@ -31,6 +31,8 @@ import ch.iserver.ace.net.impl.Discovery;
 import ch.iserver.ace.net.impl.DiscoveryCallback;
 import ch.iserver.ace.net.impl.DiscoveryCallbackImpl;
 import ch.iserver.ace.net.impl.NetworkProperties;
+import ch.iserver.ace.net.impl.protocol.LogFilter;
+import ch.iserver.ace.net.impl.protocol.RequestFilter;
 
 import com.apple.dnssd.TXTRecord;
 
@@ -51,7 +53,8 @@ public class UserRegistrationTest extends TestCase {
 		MockControl networkServiceCallbackCtrl = MockControl.createControl(NetworkServiceCallback.class);
 		NetworkServiceCallback nsc = (NetworkServiceCallback)networkServiceCallbackCtrl.getMock();
 		
-		DiscoveryCallback callback = new DiscoveryCallbackImpl(nsc, null); //DocumentDiscovery not of concern -> null
+		RequestFilter filter = new LogFilter(null ,false);
+		DiscoveryCallback callback = new DiscoveryCallbackImpl(nsc, null, filter); //DocumentDiscovery not of concern -> null
 		Discovery discovery = createDiscovery(callback);
 		discovery.setUserDetails(new UserDetails(USER));
 		discovery.setUserId(USER_ID);
