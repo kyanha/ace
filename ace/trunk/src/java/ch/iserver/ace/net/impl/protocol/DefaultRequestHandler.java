@@ -75,6 +75,7 @@ public class DefaultRequestHandler extends AbstractRequestHandler {
 				handler = mainHandler;
 			}
 			channel.setRequestHandler(handler);
+			cleanup();
 			
 			try {
 				//confirm reception of msg				
@@ -91,8 +92,9 @@ public class DefaultRequestHandler extends AbstractRequestHandler {
 
 
 	public void cleanup() {
-		// TODO Auto-generated method stub
-		
+		mainHandler = null;
+		deserializer = null;
+		handler = null;
 	}
 
 
