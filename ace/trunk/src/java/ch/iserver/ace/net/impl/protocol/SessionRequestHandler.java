@@ -21,6 +21,10 @@
 
 package ch.iserver.ace.net.impl.protocol;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.beepcore.beep.core.InputDataStream;
 import org.beepcore.beep.core.MessageMSG;
@@ -33,6 +37,9 @@ import ch.iserver.ace.net.SessionConnectionCallback;
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.PortableDocumentExt;
 import ch.iserver.ace.net.impl.RemoteDocumentProxyExt;
+import ch.iserver.ace.net.impl.RemoteUserProxyExt;
+import ch.iserver.ace.net.impl.discovery.DiscoveryManager;
+import ch.iserver.ace.net.impl.discovery.DiscoveryManagerFactory;
 import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
 import ch.iserver.ace.util.ParameterValidator;
 
@@ -86,9 +93,10 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 //			}
 			
 //			int type = response.getType();
-			if (type == ProtocolConstants.JOIN_DOCUMENT) {
+			if (type == ProtocolConstants.JOIN_DOCUMENT) {	
 				//reception and processing of a joined document
 				PortableDocumentExt doc = (PortableDocumentExt) response.getPayload();
+				addNewUsers(doc.getUsers());
 				publisherId = doc.getPublisherId();
 				docId = doc.getDocumentId();
 				int participantId = doc.getParticipantId();
@@ -125,7 +133,8 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 				LOG.debug("receiveAcknowledge("+siteId+", "+timestamp);
 				sessionCallback.receiveAcknowledge(Integer.parseInt(siteId), timestamp);
 			} else if (type == ProtocolConstants.PARTICIPANT_JOINED) {
-				RemoteUserProxy proxy = (RemoteUserProxy) response.getPayload();
+				RemoteUserProxyExt proxy = (RemoteUserProxyExt) response.getPayload();
+				addNewUser(proxy);
 				String participantId = response.getUserId();
 				LOG.debug("participantJoined("+participantId+", "+proxy.getUserDetails().getUsername()+")");
 				sessionCallback.participantJoined(Integer.parseInt(participantId), proxy);
@@ -158,6 +167,23 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 		
 	}
 	
+	private void addNewUsers(List users) {
+		LOG.debug("--> addNewUsers()");
+		Iterator iter = users.iterator();
+		while (iter.hasNext()) {
+			RemoteUserProxyExt user = (RemoteUserProxyExt) iter.next();
+			addNewUser(user);
+		}
+		LOG.debug("<-- addNewUsers()");
+	}
+	
+	private void addNewUser(RemoteUserProxyExt user) {
+		DiscoveryManager discoveryManager = DiscoveryManagerFactory.getDiscoveryManager(null);
+		if (discoveryManager.getUser(user.getId()) == null); {
+			discoveryManager.addUser(user);
+		}
+	}
+
 	public void executeCleanup() {
 		SessionCleanup sessionCleanup = new SessionCleanup(getDocumentId(), getPublisherId());
 		sessionCleanup.execute();
