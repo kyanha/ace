@@ -48,7 +48,7 @@ abstract class AbstractSession implements Session {
 	/**
 	 * The Lock used to guard the access to the Algorithm.
 	 */
-	private final Lock lock;
+	private Lock lock;
 	
 	/**
 	 * The AlgorithmWrapper wrapping the Algorithm.
@@ -84,12 +84,9 @@ abstract class AbstractSession implements Session {
 	 * Creates a new AbstractSession that uses the given Algorithm.
 	 * 
 	 * @param algorithm the Algorithm used by the Session
-	 * @param lock the Lock used to protect sensitive sections
 	 */
-	protected AbstractSession(AlgorithmWrapper algorithm, Lock lock) {
+	protected AbstractSession(AlgorithmWrapper algorithm) {
 		ParameterValidator.notNull("algorithm", algorithm);
-		ParameterValidator.notNull("lock", lock);
-		this.lock = lock;
 		this.algorithm = algorithm;
 		this.id = UUID.nextUUID();
 	}
@@ -134,25 +131,23 @@ abstract class AbstractSession implements Session {
 	}
 	
 	/**
-	 * @return the Lock guarding the access to the Algorithm
+	 * Gets the Lock used to guard the access to the transformation engine.
+	 * 
+	 * @return the Lock
 	 */
 	protected Lock getLock() {
 		return lock;
 	}
-		
-	/**
-	 * Checks whether calls to the send methods are properly wrapped in 
-	 * lock/unlock calls.
-	 * 
-	 * @throws IllegalMonitorStateException if the Session is not properly locked
-	 *                       before sending operations and caret updates
-	 */
-	protected void checkLockUsage() {
-		if (!lock.isOwner(Thread.currentThread())) {
-			throw new IllegalMonitorStateException("Lock the Session before sending.");
-		}
-	}
 	
+	/**
+	 * Sets the Lock used to guard the access to the transformation engine.
+	 * 
+	 * @param lock the Lock
+	 */
+	protected void setLock(Lock lock) {
+		this.lock = lock;
+	}
+		
 	/**
 	 * Checks the session's state. If the session is destroyed, an 
 	 * IllegalStateException is thrown.

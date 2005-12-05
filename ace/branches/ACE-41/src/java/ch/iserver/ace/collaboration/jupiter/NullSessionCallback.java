@@ -28,6 +28,7 @@ import ch.iserver.ace.Operation;
 import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.collaboration.ParticipantSessionCallback;
 import ch.iserver.ace.collaboration.PortableDocument;
+import ch.iserver.ace.util.Lock;
 
 /**
  * Null object of a SessionCallback. Logs a warning if methods are called on
@@ -62,6 +63,10 @@ final class NullSessionCallback implements ParticipantSessionCallback {
 			instance = new NullSessionCallback();
 		}
 		return instance;
+	}
+	
+	public Lock getLock() {
+		return null;
 	}
 	
 	/**

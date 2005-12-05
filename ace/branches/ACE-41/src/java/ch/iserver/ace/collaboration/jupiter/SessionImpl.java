@@ -39,9 +39,7 @@ import ch.iserver.ace.collaboration.jupiter.SessionConnectionWrapper.FailureHand
 import ch.iserver.ace.net.PortableDocument;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.net.SessionConnection;
-import ch.iserver.ace.util.Lock;
 import ch.iserver.ace.util.ParameterValidator;
-import ch.iserver.ace.util.ReentrantLock;
 import ch.iserver.ace.util.ThreadDomain;
 
 /**
@@ -80,31 +78,9 @@ public class SessionImpl extends AbstractSession
 	 * @param algorithm the algorithm for the session
 	 */
 	public SessionImpl(AlgorithmWrapper algorithm) {
-		this(algorithm, (ParticipantSessionCallback) null);
+		super(algorithm);
 	}
-	
-	/**
-	 * Creates a new SessionImpl using the given algorithm and lock.
-	 * 
-	 * @param wrapper the algorithm for the Session
-	 * @param lock the Lock to be used by the Session
-	 */
-	public SessionImpl(AlgorithmWrapper wrapper, Lock lock) {
-		super(wrapper, lock);
-	}
-	
-	/**
-	 * Creates a new SessionImpl using the given algorithm and 
-	 * ParticipantSessionCallback.
-	 * 
-	 * @param algorithm the algorithm to be used
-	 * @param callback the callback for the session
-	 */
-	protected SessionImpl(AlgorithmWrapper algorithm, ParticipantSessionCallback callback) {
-		super(algorithm, new ReentrantLock());
-		setSessionCallback(callback);
-	}
-	
+		
 	/**
 	 * Sets the callback to be notified from the application layer.
 	 * 
@@ -112,6 +88,9 @@ public class SessionImpl extends AbstractSession
 	 */
 	public void setSessionCallback(ParticipantSessionCallback callback) {
 		this.callback = callback == null ? NullSessionCallback.getInstance() : callback;
+		if (callback != null) {
+			setLock(callback.getLock());
+		}
 	}
 	
 	/**
@@ -196,7 +175,6 @@ public class SessionImpl extends AbstractSession
 	 * @see ch.iserver.ace.collaboration.Session#sendOperation(ch.iserver.ace.Operation)
 	 */
 	public void sendOperation(Operation operation) {
-		checkLockUsage();
 		checkSessionState();
 		resetAcknowledgeStrategy();
 		Request request = getAlgorithm().generateRequest(operation);
@@ -207,7 +185,6 @@ public class SessionImpl extends AbstractSession
 	 * @see ch.iserver.ace.collaboration.Session#sendCaretUpdate(ch.iserver.ace.CaretUpdate)
 	 */
 	public void sendCaretUpdate(CaretUpdate update) {
-		checkLockUsage();
 		checkSessionState();
 		resetAcknowledgeStrategy();
 		CaretUpdateMessage message = getAlgorithm().generateCaretUpdateMessage(update);

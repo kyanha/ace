@@ -39,7 +39,6 @@ import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.PortableDocument;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.util.ParameterValidator;
-import ch.iserver.ace.util.ReentrantLock;
 
 /**
  * Default implementation of the PublishedSession interface.
@@ -74,9 +73,10 @@ public class PublishedSessionImpl extends AbstractSession
 	 * @param wrapper the client-side algorithm used by this class
 	 */
 	public PublishedSessionImpl(PublishedSessionCallback callback, AlgorithmWrapper wrapper) {
-		super(wrapper, new ReentrantLock());
+		super(wrapper/*, new ReentrantLock()*/);
 		ParameterValidator.notNull("callback", callback);
 		this.callback = callback;
+		setLock(callback.getLock());
 	}
 	
 	/**
@@ -168,7 +168,6 @@ public class PublishedSessionImpl extends AbstractSession
 	 * @see ch.iserver.ace.collaboration.Session#sendOperation(ch.iserver.ace.Operation)
 	 */
 	public void sendOperation(Operation operation) {
-		checkLockUsage();
 		resetAcknowledgeStrategy();
 		Request request = getAlgorithm().generateRequest(operation);
 		getPublisherPort().receiveRequest(request);
@@ -178,7 +177,6 @@ public class PublishedSessionImpl extends AbstractSession
 	 * @see ch.iserver.ace.collaboration.Session#sendCaretUpdate(ch.iserver.ace.CaretUpdate)
 	 */
 	public void sendCaretUpdate(CaretUpdate update) {
-		checkLockUsage();
 		resetAcknowledgeStrategy();
 		CaretUpdateMessage message = getAlgorithm().generateCaretUpdateMessage(update);
 		getPublisherPort().receiveCaretUpdate(message);
