@@ -35,7 +35,7 @@ public class CollaborationSerializerTest extends TestCase {
 		
 		CollaborationSerializer serializer = new CollaborationSerializer();
 		
-		SessionConnectionImpl conn = new SessionConnectionImpl("dic-1231", null, null, null, "testuser");
+		SessionConnectionImpl conn = new SessionConnectionImpl("dic-1231", null, null, null, "testuser", "testid");
 		conn.setParticipantId(13);
 		
 		byte[] data = serializer.createNotification(ProtocolConstants.LEAVE, conn);
