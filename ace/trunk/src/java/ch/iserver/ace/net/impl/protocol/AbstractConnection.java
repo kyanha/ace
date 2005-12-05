@@ -80,6 +80,7 @@ public abstract class AbstractConnection {
 				LOG.warn("cannot send data, channel not in STATE_ACTIVE but in ["+getStateString()+"]");
 			}
 		} catch (Exception e) {
+			state = STATE_ABORTED;
 			String trace = getStackTrace(e);
 			LOG.debug("caught exception [" + e + ", " + trace + "]");
 			throw new ProtocolException(e.getMessage());
