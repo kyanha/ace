@@ -36,7 +36,7 @@ public class PublishedSessionCallbackImpl extends SessionCallbackImpl implements
 		super(documentItem, dialogController);
 
 		// own caret
-		CaretHandler pCaretHandler = new CaretHandler(0, 0);
+		PropertyChangeCaretHandlerImpl pCaretHandler = new PropertyChangeCaretHandlerImpl(0, 0);
 		cDocument.addDocumentListener(pCaretHandler);
 		participantCaretMap.put("0", pCaretHandler);
 	}

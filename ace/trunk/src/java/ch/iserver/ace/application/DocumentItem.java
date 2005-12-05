@@ -208,9 +208,9 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 		return new PropertyChangeHashMapImpl();
 	}
 
-	public HashMap getParticipationColorMap() {
+	public HashMap getParticipationCursorColorMap() {
 		if(sessionCallback != null) {
-			return ((SessionCallbackImpl)sessionCallback).getParticipationColorMap();
+			return ((SessionCallbackImpl)sessionCallback).getParticipationCursorColorMap();
 		}
 		return new HashMap();
 	}
@@ -305,9 +305,7 @@ BASCHTLE
 
 
 		// enable coloring
-//		Style pStyle = editorDocument.addStyle("myStyle", null);
-//		StyleConstants.setBackground(pStyle, new Color(0x80, 0x80, 0xDD));
-
+		setTextColoring(true);
 
 		setType(PUBLISHED);
 	}
@@ -318,11 +316,8 @@ BASCHTLE
 		//spin.off(session.leave());
 		session.leave();
 
-
-		// disable coloring
-//		Style pStyle = editorDocument.addStyle("myStyle", null);
-//		StyleConstants.setBackground(pStyle, Color.WHITE);
-
+		// disable text coloring
+		setTextColoring(false);
 		setType(LOCAL);
 	}
 	
@@ -356,6 +351,31 @@ BASCHTLE
 
 
 
+
+	public void setTextColoring(boolean textColoring) {
+		// get style
+		/*Style pStyle = editorDocument.getStyle("myStyle");
+		if(pStyle == null) {
+			pStyle = editorDocument.addStyle("myStyle", null);
+		}*/
+		
+		if(textColoring) {
+			// enable coloring
+			Style pStyle = editorDocument.getStyle("myStyle");
+			if(pStyle == null) {
+				pStyle = editorDocument.addStyle("myStyle", null);
+			}
+			StyleConstants.setBackground(pStyle, new Color(0x80, 0x80, 0xDD));
+		} else {
+			// disable coloring
+			Style pStyle = editorDocument.getStyle("myStyle");
+			if(pStyle != null) {
+				StyleConstants.setBackground(pStyle, Color.WHITE);
+			}
+
+			editorDocument.removeStyle("myStyle");
+		}		
+	}
 
 
 /*

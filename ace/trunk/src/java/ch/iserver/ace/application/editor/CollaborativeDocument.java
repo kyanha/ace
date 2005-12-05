@@ -44,6 +44,19 @@ public class CollaborativeDocument extends DefaultStyledDocument {
 
 
 
+	public void replace(int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+		/*Style pStyle = styledDoc.getStyle("myStyle");
+		try {
+			styledDoc.insertString(p0, content, pStyle);
+		} catch(BadLocationException e) {}*/
+		Style pStyle = getStyle("myStyle");
+		//StyleConstants.setBackground(pStyle, Color.GREEN);
+		//System.out.println("CollaborativeDocument::replace()");
+		super.replace(offset, length, text, pStyle);
+	}
+
+
+
 	public void reapplyStyles(Style style) {
         // Get section element
         Element sectionElem = getDefaultRootElement();

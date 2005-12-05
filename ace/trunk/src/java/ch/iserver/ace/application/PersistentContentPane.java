@@ -70,6 +70,7 @@ public class PersistentContentPane extends JPanel {
 
 		// add
 		add(dvbvcepvuv);
+		setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 1));
 	}
 	
 	public void switchFullScreenEditing() {

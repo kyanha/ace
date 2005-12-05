@@ -43,10 +43,14 @@ public class CollaborativeTextPane extends JTextPane implements CaretListener, P
 	private boolean localEditing = true;
 	Session session;
 	PropertyChangeHashMap caretHandlerMap;
-	HashMap participationColorMap;
+	HashMap participationCursorColorMap;
 
 	public CollaborativeTextPane() {
 		caretHandlerMap = new PropertyChangeHashMapImpl();
+		// ONLY for JAVA 1.5
+		// DefaultCaret c = new DefaultCaret();
+		// c.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
+		// setCaret(c);
 	}
 	
 	public void setCaretHandlerMap(PropertyChangeHashMap caretHandlerMap) {
@@ -61,12 +65,12 @@ public class CollaborativeTextPane extends JTextPane implements CaretListener, P
 		return caretHandlerMap;
 	}
 	
-	public void setParticipationColorMap(HashMap participationColorMap) {
-		this.participationColorMap = participationColorMap;
+	public void setParticipationCursorColorMap(HashMap participationCursorColorMap) {
+		this.participationCursorColorMap = participationCursorColorMap;
 	}
 	
-	public HashMap getParticipationColorMap() {
-		return participationColorMap;
+	public HashMap getParticipationCursorColorMap() {
+		return participationCursorColorMap;
 	}	
 	
 	public void setSession(Session session) {
@@ -93,17 +97,15 @@ public class CollaborativeTextPane extends JTextPane implements CaretListener, P
 	public void caretUpdate(CaretEvent e) {
 		if (localEditing) {
 		} else {
-
 			// check if caret moved from text manipulation
-//			System.out.println("caretHandlerMap: " + caretHandlerMap + "   size: " + caretHandlerMap.size());
-			//System.out.println(((CaretHandler)caretHandlerMap.get("" + session.getParticipantId())).getDot());
-			
-			CaretHandler pCaretHandler = (CaretHandler)caretHandlerMap.get("" + session.getParticipantId());
-			
+			PropertyChangeCaretHandlerImpl pCaretHandler = (PropertyChangeCaretHandlerImpl)caretHandlerMap.get("" + session.getParticipantId());
+
 			if(pCaretHandler.getDot() != e.getDot() || pCaretHandler.getMark() != e.getMark()) {
 				// set new dot & mark for caret handler
-				pCaretHandler.setDot(e.getDot());
-				pCaretHandler.setMark(e.getMark());
+				System.out.println("caretUpdate(CaretEvent e): -> oldDot: " + pCaretHandler.getDot() + "     oldMarkDot: " +
+										pCaretHandler.getMark() + "     newDot: " + e.getDot() + "     newMark: " + e.getMark());
+
+				pCaretHandler.setCaret(e.getDot(), e.getMark());
 
 				// send updates
 				final int dot = e.getDot();
@@ -112,7 +114,7 @@ public class CollaborativeTextPane extends JTextPane implements CaretListener, P
 				template.execute(new SessionTemplateCallback() {
 					public void execute(Session session) {
 						CaretUpdate cu = new CaretUpdate(dot, mark);
-						System.out.println(cu);
+						//System.out.println(cu);
 						session.sendCaretUpdate(cu);
 					}
 				});
@@ -144,8 +146,8 @@ public class CollaborativeTextPane extends JTextPane implements CaretListener, P
 								session.sendOperation(op);
 /*								try {
 									doc.remove(p0, p1 - p0);
-								} catch(BadLocationException e) {}
-*/
+								} catch(BadLocationException e) {}*/
+
 							}
 							if (content != null && content.length() > 0) {
 								Operation op = new InsertOperation(p0, content);
@@ -156,9 +158,10 @@ public class CollaborativeTextPane extends JTextPane implements CaretListener, P
 								Style pStyle = styledDoc.getStyle("myStyle");
 								try {
 									styledDoc.insertString(p0, content, pStyle);
-								} catch(BadLocationException e) {}
-*/
+								} catch(BadLocationException e) {}*/
+
 							}
+
 						} catch (BadLocationException e) {
 						}
 					}
@@ -184,69 +187,50 @@ public class CollaborativeTextPane extends JTextPane implements CaretListener, P
 	
 	public void propertyChange(PropertyChangeEvent evt) {
 		if(!localEditing) {
+
+			// set own caret
+			String mpId = "" + session.getParticipantId();
+			CaretHandler pCaretHandler = (CaretHandler)caretHandlerMap.get(mpId);
+			System.out.println("propertyChange(): name= " + evt.getPropertyName() + "   dot= " + pCaretHandler.getDot() + "   mark= " + pCaretHandler.getMark());
+
+			//TODO:
+			int dot = pCaretHandler.getDot();
+//			System.out.println("propertyChange(): dot = " + dot);
+			//setCaretPosition(dot);
+			//moveCaretPosition(pCaretHandler.getDot());
+
+			// delete old caret (only if position is in document)
+			CaretUpdate oldCU = (CaretUpdate)evt.getOldValue();
+			try {
+				Rectangle oldRect = modelToView(oldCU.getDot());
+				//System.out.println("repaint(" + oldRect + ")");
+				oldRect.x -= 2;
+				oldRect.width = 5;
+				repaint(oldRect);
+			} catch(BadLocationException e) { }
 			
-			// set my cursor position
-			int dot = ((CaretHandler)caretHandlerMap.get("" + session.getParticipantId())).getDot();
-			setCaretPosition(dot);
-			//System.out.println("setting new dot: " + dot);
-			
-			// get all cursor positions
-			//modelToView();
-			// repaint all cursors
-//			System.out.println("textpane::property changed -> repaint: " + evt);
-	//		System.out.println(((CaretUpdate)evt.getOldValue()));
-	//		System.out.println(((CaretUpdate)evt.getNewValue()));
-
-
-
-				String mpId = "" + session.getParticipantId();
-				Iterator iter = caretHandlerMap.keySet().iterator();
-				while(iter.hasNext()) {
-					String pId = (String)iter.next(); 
-					if(!pId.equals(mpId)) {
-						// for all carets except the own one
-						
-						try {
-							CaretHandler pCaretHandler = (CaretHandler)caretHandlerMap.get(pId);
-							Rectangle rect = modelToView(pCaretHandler.getDot());
-							//System.out.println("mpId: " + mpId + "   pId: " + pId + "    view: " + rect);
-//							System.out.println("caret update received. repainting rect: " + rect);
-							repaint(rect);
-						} catch(BadLocationException e) {
-						}
-						
-					}
-				}
-
-
-
+			// draw new caret
+			CaretUpdate newCU = (CaretUpdate)evt.getNewValue();
+			try {
+				Rectangle newRect = modelToView(newCU.getDot());
+				//System.out.println("repaint(" + newRect + ")");
+				newRect.x -= 2;
+				newRect.width = 5;
+				repaint(newRect);
+			} catch(BadLocationException e) { }
 
 		}
 	}
-	
+
+
+
+
+	public void paint(Graphics g) {
+		super.paint(g);
+
+		if(!localEditing) {
 		
-/*	public void paint(Graphics g, Shape s) {
-		System.out.println(g.getShape());
-	}*/
-
-/*	public void paint(Graphics g, Rectangle s) {
-		System.out.println(s);
-	}*/
-	
-	
-	
-	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
-
-
-
-		
-		if(!localEditing && caretHandlerMap.size() > 0) {// && participationColorMap.size() > 0) {
-
-//			System.out.println("paint: " + g.getClipBounds() + "\n");
-
 			try {
-
 
 				String mpId = "" + session.getParticipantId();
 				Iterator iter = caretHandlerMap.keySet().iterator();
@@ -254,37 +238,22 @@ public class CollaborativeTextPane extends JTextPane implements CaretListener, P
 					String pId = (String)iter.next(); 
 					if(!pId.equals(mpId)) {
 						// for all carets except the own one
-						
-						//System.out.println("mpId: " + mpId + "   pId: " + pId);
-						//System.out.println("paint1: " + g.getClipBounds() + "\n");
 						CaretHandler pCaretHandler = (CaretHandler)caretHandlerMap.get(pId);
-						
-						// 1. get old positions to clear
-						//if(paintCaretHandlerMap.containsKey(participantId + "oldDot")) {
-						//	int oldDot = ((Integer)paintCaretHandlerMap.get(participantId + "oldDot")).intValue();
-						//}
-	
-						// 2. draw new
-						g.setColor(((Color)participationColorMap.get(pId)).darker().darker().darker());
+
+						g.setColor(((Color)participationCursorColorMap.get(pId)).darker().darker());
 						Rectangle rect = modelToView(pCaretHandler.getDot());
 						g.drawLine(rect.x-1, rect.y+rect.height-1, rect.x, rect.y+rect.height-2);
 						g.drawLine(rect.x+1, rect.y+rect.height-1, rect.x, rect.y+rect.height-2);
 						g.drawLine(rect.x-2, rect.y+rect.height-1, rect.x, rect.y+rect.height-3);
 						g.drawLine(rect.x+2, rect.y+rect.height-1, rect.x, rect.y+rect.height-3);
-	
-						// 3. save new positions
-	
+
 					}
 				}
-
-
-
-			} catch(BadLocationException ble) {
-				ble.printStackTrace();
+		
+			} catch(BadLocationException e) {
+				e.printStackTrace();
 			}
-
-
-
 		}
+
 	}
 }

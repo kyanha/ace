@@ -84,8 +84,8 @@ public class CollaborativeEditor extends EditorImpl {
 		cTextPane.setCaretHandlerMap(caretHandlerMap);
 	}
 	
-	public void setParticipationColorMap(HashMap participationColorMap) {
-		cTextPane.setParticipationColorMap(participationColorMap);
+	public void setParticipationCursorColorMap(HashMap participationCursorColorMap) {
+		cTextPane.setParticipationCursorColorMap(participationCursorColorMap);
 	}
 	public void setSession(Session session) {
 		cTextPane.setSession(session);

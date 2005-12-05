@@ -50,6 +50,9 @@ public class JoinCallbackImpl implements JoinCallback {
 		ParticipantSessionCallback callback = new ParticipantSessionCallbackImpl(documentItem, documentViewController, dialogController);
 		documentItem.setSessionCallback(callback);
 		
+		// enabled coloring
+		documentItem.setTextColoring(true);
+		
 		documentItem.setType(DocumentItem.JOINED);
 		return callback;
 	}

@@ -66,7 +66,7 @@ public class EditorController implements ItemSelectionChangeListener, Preference
 				// there are no participants for local editing
 				participantViewController.setParticipantList(new BasicEventList());
 				editor.setCaretHandlerMap(new PropertyChangeHashMapImpl());
-				editor.setParticipationColorMap(new HashMap());
+				editor.setParticipationCursorColorMap(new HashMap());
 
 				// set to local editing
 				editor.setLocalEditing(true);
@@ -78,7 +78,7 @@ public class EditorController implements ItemSelectionChangeListener, Preference
 				// set participantlist
 				participantViewController.setParticipantList(item.getParticipantSourceList());
 				editor.setCaretHandlerMap(item.getCaretHandlerMap());
-				editor.setParticipationColorMap(item.getParticipationColorMap());
+				editor.setParticipationCursorColorMap(item.getParticipationCursorColorMap());
 
 				// set local editing
 				editor.setLocalEditing(false);

@@ -170,6 +170,7 @@ return new CollaborativeEditorView(elem);
 
 						}
 					});				
+
    				}
 			} else {
 				// other component
@@ -235,7 +236,8 @@ return new CollaborativeEditorView(elem);
 							// END COPY & PASTE
 
 						}
-					});				
+					});
+					
    				}
 			} else {
 				// other component
@@ -283,9 +285,9 @@ return new CollaborativeEditorView(elem);
 								target.cut();
 							}
 							// END COPY & PASTE
-
 						}
 					});				
+
    				}
 			} else {
 				// other component

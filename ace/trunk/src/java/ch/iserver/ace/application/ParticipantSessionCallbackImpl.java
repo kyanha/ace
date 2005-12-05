@@ -26,6 +26,7 @@ import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.collaboration.PortableDocument;
 import ch.iserver.ace.collaboration.ParticipantSessionCallback;
 import ch.iserver.ace.application.editor.*;
+import ch.iserver.ace.CaretUpdate;
 
 import java.awt.Color;
 import java.util.Iterator;
@@ -53,7 +54,7 @@ public class ParticipantSessionCallbackImpl extends SessionCallbackImpl implemen
 	public synchronized void setDocument(PortableDocument doc) {
 		// IMPORTANT: this method is called first from the collaboration layer. set participants here.
 		// add all participants
-		String mpId = "" + documentItem.getSession().getParticipantId();
+
 		System.out.println("my participant id: " + mpId);
 		Iterator pIter = doc.getParticipants().iterator();
 		while(pIter.hasNext()) {
@@ -71,14 +72,16 @@ public class ParticipantSessionCallbackImpl extends SessionCallbackImpl implemen
 				StyleConstants.setBackground(pStyle, pColor);
 
 				// caret handler
-				CaretHandler pCaretHandler = new CaretHandler(0, 0);
+				CaretUpdate pCaretUpdate = doc.getSelection(participant.getParticipantId());
+				PropertyChangeCaretHandlerImpl pCaretHandler =
+					new PropertyChangeCaretHandlerImpl(pCaretUpdate.getDot(), pCaretUpdate.getMark());
 				cDocument.addDocumentListener(pCaretHandler);
 				participantCaretMap.put(pId, pCaretHandler);
 			}
 		}
 		
 		// own caret
-		CaretHandler pCaretHandler = new CaretHandler(0, 0);
+		PropertyChangeCaretHandlerImpl pCaretHandler = new PropertyChangeCaretHandlerImpl(0, 0);
 		cDocument.addDocumentListener(pCaretHandler);
 		participantCaretMap.put(mpId, pCaretHandler);
 

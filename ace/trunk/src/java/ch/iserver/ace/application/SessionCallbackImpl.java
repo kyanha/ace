@@ -48,22 +48,38 @@ public class SessionCallbackImpl implements SessionCallback {
 	public final static String REMOVED_PROPERTY	= "caretRemoved";
 	public final static String UPDATED_PROPERTY	= "caretUpdates";
 
-
+	protected int participantId;
+	protected String mpId;
 	protected EventList participantSourceList;
 	protected CollaborativeDocument cDocument;
 	protected HashMap participantItemMap;
 	protected PropertyChangeHashMapImpl participantCaretMap;
-	protected HashMap participantColorMap;
+	protected HashMap participantTextColorMap;
+	protected HashMap participantCursorColorMap;
 	protected DocumentItem documentItem;
 	protected DialogController dialogController;
 
 	private int participantCount = 0;
-	private Color[] defaultParticipantColors = {
+//	private Color[] defaultParticipantColors = {
 //		new Color(0xFF, 0x60, 0x60), new Color(0xFF, 0xDD, 0x60),
 //		new Color(0xFF, 0xFF, 0x60), new Color(0x60, 0xDD, 0x60),
 //		new Color(0x60, 0xFF, 0xFF), new Color(0x60, 0x60, 0xFF),
 //		new Color(0xDD, 0x60, 0xFF), new Color(0xFF, 0x60, 0xDD),
+//		new Color(0xFF, 0x80, 0x80), new Color(0xFF, 0xDD, 0x80),
+//		new Color(0xFF, 0xFF, 0x80), new Color(0x80, 0xDD, 0x80),
+//		new Color(0x80, 0xFF, 0xFF), new Color(0x80, 0x80, 0xFF),
+//		new Color(0xDD, 0x80, 0xFF), new Color(0xFF, 0x80, 0xDD),
+//	};
+
+	private Color[] defaultParticipantTextColors = {
 		new Color(0xFF, 0x80, 0x80), new Color(0xFF, 0xDD, 0x80),
+		new Color(0xFF, 0xFF, 0x80), new Color(0x80, 0xDD, 0x80),
+		new Color(0x80, 0xFF, 0xFF), new Color(0x80, 0x80, 0xFF),
+		new Color(0xDD, 0x80, 0xFF), new Color(0xFF, 0x80, 0xDD),
+	};
+
+	private Color[] defaultParticipantCursorColors = {
+		new Color(0xFF, 0x00, 0x00), new Color(0xFF, 0xDD, 0x80),
 		new Color(0xFF, 0xFF, 0x80), new Color(0x80, 0xDD, 0x80),
 		new Color(0x80, 0xFF, 0xFF), new Color(0x80, 0x80, 0xFF),
 		new Color(0xDD, 0x80, 0xFF), new Color(0xFF, 0x80, 0xDD),
@@ -76,7 +92,8 @@ public class SessionCallbackImpl implements SessionCallback {
 		participantSourceList = new BasicEventList();
 		participantItemMap = new HashMap();		
 		participantCaretMap = new PropertyChangeHashMapImpl();
-		participantColorMap = new HashMap();
+		participantTextColorMap = new HashMap();
+		participantCursorColorMap = new HashMap();
 		this.documentItem = documentItem;
 		cDocument = documentItem.getEditorDocument();
 	}
@@ -84,6 +101,8 @@ public class SessionCallbackImpl implements SessionCallback {
 	public void setParticipantId(int participantId) {
 		// TODO: implement this
 		System.out.println("setting the local participant id: " + participantId);		
+		this.participantId = participantId;
+		mpId = "" + participantId;
 	}
 	
 	public void participantJoined(Participant participant) {
@@ -97,7 +116,7 @@ public class SessionCallbackImpl implements SessionCallback {
 		System.out.println("participantJoined: " + participant);
 		
 		// add caret handler
-		CaretHandler pCaretHandler = new CaretHandler(0, 0);
+		PropertyChangeCaretHandlerImpl pCaretHandler = new PropertyChangeCaretHandlerImpl(0, 0);
 		cDocument.addDocumentListener(pCaretHandler);
 		participantCaretMap.put(pId, pCaretHandler);
 		participantCaretMap.firePropertyChange(ADDED_PROPERTY, null, pCaretHandler);
@@ -124,7 +143,7 @@ public class SessionCallbackImpl implements SessionCallback {
 		System.out.println("participantLeft: " + participant + "   code: " + code);
 		
 		// remove caret handler
-		CaretHandler pCaretHandler = (CaretHandler)participantCaretMap.remove(pId);
+		PropertyChangeCaretHandlerImpl pCaretHandler = (PropertyChangeCaretHandlerImpl)participantCaretMap.remove(pId);
 		cDocument.removeDocumentListener(pCaretHandler);
 		participantCaretMap.firePropertyChange(REMOVED_PROPERTY, pCaretHandler, null);
 
@@ -138,60 +157,30 @@ public class SessionCallbackImpl implements SessionCallback {
 	
 	public void receiveCaretUpdate(Participant participant, CaretUpdate update) {
 		String pId = "" + participant.getParticipantId();
-		System.out.println("receiveCaretUpdate: " + update);
-		// update caret handler
-		CaretHandler pCaretHandler = (CaretHandler)participantCaretMap.get(pId);
-		final CaretUpdate oldCaretUpdate = new CaretUpdate(pCaretHandler.getDot(), pCaretHandler.getMark());
-		pCaretHandler.setDot(update.getDot());
-		pCaretHandler.setMark(update.getMark());
-		final CaretUpdate newCaretUpdate = update;
-
-		try {
-			SwingUtilities.invokeAndWait(new Runnable() {
-				public void run() {
-//					System.out.println("caretupdate receivend. sending caret update...");
-					participantCaretMap.firePropertyChange(UPDATED_PROPERTY, oldCaretUpdate, newCaretUpdate);
-				}
-			});
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-//		participantCaretMap.firePropertyChange(UPDATED_PROPERTY, oldCaretUpdate, update);
+		PropertyChangeCaretHandlerImpl pCaretHandler = (PropertyChangeCaretHandlerImpl)participantCaretMap.get(pId);
+		pCaretHandler.setCaret(update.getDot(), update.getMark());
 	}
 
 	public void receiveOperation(Participant participant, Operation operation) {
 		String pId = "" + participant.getParticipantId();
-		//System.out.println("receiveOperation: " + operation);
 		
-		// old caret
-		CaretHandler pCaretHandler = (CaretHandler)participantCaretMap.get(pId);
-		final CaretUpdate oldCaretUpdate = new CaretUpdate(pCaretHandler.getDot(), pCaretHandler.getMark());
+		PropertyChangeCaretHandlerImpl pCaretHandler = (PropertyChangeCaretHandlerImpl)participantCaretMap.get(pId);
 
 		// apply operation
 		Style pStyle = cDocument.getStyle(pId);
 		applyOperation(operation, pStyle);
-		
-		// update caret
-		final CaretUpdate newCaretUpdate = new CaretUpdate(pCaretHandler.getDot(), pCaretHandler.getMark());
-		try {
-			SwingUtilities.invokeAndWait(new Runnable() {
-				public void run() {
-//					System.out.println("operation receivend. sending caret update...");
-					participantCaretMap.firePropertyChange(UPDATED_PROPERTY, oldCaretUpdate, newCaretUpdate);
-				}
-			});
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
 	}
 
 	public PropertyChangeHashMap getCaretHandlerMap() {
 		return participantCaretMap;
 	}
 	
-	public HashMap getParticipationColorMap() {
-		return participantColorMap;
+	public HashMap getParticipationTextColorMap() {
+		return participantTextColorMap;
+	}
+	
+	public HashMap getParticipationCursorColorMap() {
+		return participantCursorColorMap;
 	}
 	
 	private void applyOperation(Operation operation, Style style) {
@@ -239,16 +228,20 @@ public class SessionCallbackImpl implements SessionCallback {
 	}
 	
 	protected Color participantColorJoined(String pId) {
-		Color pColor;
-		if(participantColorMap.containsKey(pId)) {
+		Color pTextColor;
+		if(participantTextColorMap.containsKey(pId)) {
 			// return old participant color
-			pColor = (Color)participantColorMap.get(pId);
+			pTextColor = (Color)participantTextColorMap.get(pId);
 		} else {
 			// next participant color
-			pColor = defaultParticipantColors[participantCount++%8];
-			participantColorMap.put(pId, pColor);
+			pTextColor = defaultParticipantTextColors[participantCount];
+			participantTextColorMap.put(pId, pTextColor);
+			
+			// save cursor color too
+			Color pCursorColor = defaultParticipantCursorColors[participantCount++%8];
+			participantCursorColorMap.put(pId, pCursorColor);
 		}
-		return pColor;
+		return pTextColor;
 	}
 	
 	protected void participantColorLeft(String pId) {

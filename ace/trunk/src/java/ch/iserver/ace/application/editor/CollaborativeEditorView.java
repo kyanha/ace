@@ -41,7 +41,7 @@ public class CollaborativeEditorView extends LabelView {
 		g.drawString(".", 10, 10);
 		CollaborativeTextPane cTextPane = (CollaborativeTextPane)getContainer();
 		PropertyChangeHashMap caretHandlerMap = cTextPane.getCaretHandlerMap();
-		HashMap participationColorMap = cTextPane.getParticipationColorMap();
+		HashMap participationColorMap = cTextPane.getParticipationCursorColorMap();
 		
 		if(!cTextPane.isLocalEditing()) {
 

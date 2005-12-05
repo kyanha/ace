@@ -23,11 +23,12 @@ package ch.iserver.ace.application;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.beans.PropertyChangeEvent;
 import java.util.HashMap;
 
 
 
-public class PropertyChangeHashMapImpl extends HashMap implements PropertyChangeHashMap {
+public class PropertyChangeHashMapImpl extends HashMap implements PropertyChangeHashMap, PropertyChangeListener {
 
 	private PropertyChangeSupport propertyChangeSupport;
 	
@@ -45,6 +46,24 @@ public class PropertyChangeHashMapImpl extends HashMap implements PropertyChange
 	
 	protected void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
 		propertyChangeSupport.firePropertyChange(propertyName, oldValue, newValue);
+	}
+	
+	public void propertyChange(PropertyChangeEvent evt) {
+		firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.getNewValue());
+	}
+	
+	public Object put(Object key, Object value) {
+		if(value instanceof PropertyChangeCaretHandler) {
+			((PropertyChangeCaretHandler)value).addPropertyChangeListener(this);
+		}
+		return super.put(key, value);
+	}
+	
+	public Object remove(Object key) {
+		if(super.get(key) instanceof PropertyChangeCaretHandler) {
+			((PropertyChangeCaretHandler)super.get(key)).removePropertyChangeListener(this);
+		}
+		return super.remove(key);
 	}
 	
 }

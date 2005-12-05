@@ -38,7 +38,7 @@ public interface Editor {
 
 	public void setCaretHandlerMap(PropertyChangeHashMap caretHandlerMap);
 
-	public void setParticipationColorMap(HashMap participationColorMap);
+	public void setParticipationCursorColorMap(HashMap participationColorMap);
 
 	public void setSession(Session session);
 	
