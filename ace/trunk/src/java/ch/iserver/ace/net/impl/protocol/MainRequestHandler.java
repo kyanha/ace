@@ -82,6 +82,11 @@ public class MainRequestHandler extends AbstractRequestHandler {
 		} catch (Exception e) {
 			e.printStackTrace();
 			LOG.error("could not process request ["+e+"]");
+			try {				
+				message.sendNUL(); //confirm reception of msg
+			} catch (Exception ex) {
+				LOG.error("could not send confirmation ["+ex.getMessage()+"]");
+			}
 		}
 		LOG.debug("<-- receiveMSG");
 	}
@@ -89,7 +94,7 @@ public class MainRequestHandler extends AbstractRequestHandler {
 
 	public void cleanup() {
 		//TODO: consider a thorough and meaningful cleanup
-		throw new UnsupportedOperationException();
+		LOG.debug("not used yet");
 	}
 	
 	protected Logger getLogger() {
