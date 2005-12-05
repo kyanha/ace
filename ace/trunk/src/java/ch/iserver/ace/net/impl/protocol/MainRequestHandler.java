@@ -27,7 +27,9 @@ import org.beepcore.beep.core.InputDataStream;
 import org.beepcore.beep.core.MessageMSG;
 import org.beepcore.beep.transport.tcp.TCPSession;
 
+import ch.iserver.ace.net.impl.MutableUserDetails;
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;
+import ch.iserver.ace.net.impl.RemoteUserProxyFactory;
 import ch.iserver.ace.net.impl.discovery.DiscoveryManager;
 import ch.iserver.ace.net.impl.discovery.DiscoveryManagerFactory;
 
@@ -62,16 +64,21 @@ public class MainRequestHandler extends AbstractRequestHandler {
 			byte[] rawData = readData(input);
 			LOG.debug("received "+rawData.length+" bytes. ["+(new String(rawData))+"]");
 			Request request = null;
-			//TODO: use SingleThreadedDomain instead of synchronized
-			synchronized (this) {
+//			synchronized (this) { //-> singlethreaddomain
 				deserializer.deserialize(rawData, handler);
 				request = handler.getResult();
-			}
-			//TODO: the following code must not be synchronized right?
+//			}
 			String userid = request.getUserId();
 			DiscoveryManager discoveryManager = DiscoveryManagerFactory.getDiscoveryManager(null);
-			if (!discoveryManager.hasSessionEstablished(userid)) {
-				RemoteUserProxyExt user = discoveryManager.getUser(userid);
+			RemoteUserProxyExt user = discoveryManager.getUser(userid);
+			if (user == null) {
+				//user is not known yet
+				LOG.debug("add new RemoteUserProxy for [" + userid + "]");
+				MutableUserDetails details = new MutableUserDetails("unknown (resolving...)");
+				user = RemoteUserProxyFactory.getInstance().createProxy(userid, details);
+				discoveryManager.addUser(user);
+			}
+			if (!discoveryManager.hasSessionEstablished(userid)) {	
 				LOG.debug("create RemoteUserSession for ["+user.getMutableUserDetails().getUsername()+"]");
 				SessionManager manager = SessionManager.getInstance();
 				Channel mainChannel = message.getChannel();
