@@ -57,10 +57,6 @@ public class ParticipantRequestHandler extends AbstractRequestHandler {
 		this.port = port;
 	}
 	
-	public ParticipantPort getParticipantPort() {
-		return port;
-	}
-	
 	public void cleanup() {
 		deserializer = null;
 		port = null;
@@ -81,6 +77,13 @@ public class ParticipantRequestHandler extends AbstractRequestHandler {
 			readInData = null;
 			Request result = newHandler.getResult();
 			int type = result.getType();
+			
+			try {				
+				message.sendNUL(); //confirm reception of msg
+			} catch (Exception e) {
+				LOG.error("could not send confirmation ["+e.getMessage()+"]");
+			}
+			
 			if (type == ProtocolConstants.LEAVE) {
 				port.leave();
 				LOG.debug("participant ["+((DocumentInfo)result.getPayload()).getParticipantId()+"] left.");
@@ -100,11 +103,11 @@ public class ParticipantRequestHandler extends AbstractRequestHandler {
 				port.receiveAcknowledge(Integer.parseInt(siteId), timestamp);
 			} 
 			
-			try {				
-				message.sendNUL(); //confirm reception of msg
-			} catch (Exception e) {
-				LOG.error("could not send confirmation ["+e.getMessage()+"]");
-			}
+//			try {				
+//				message.sendNUL(); //confirm reception of msg
+//			} catch (Exception e) {
+//				LOG.error("could not send confirmation ["+e.getMessage()+"]");
+//			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			LOG.error("could not process request ["+e+"]");
