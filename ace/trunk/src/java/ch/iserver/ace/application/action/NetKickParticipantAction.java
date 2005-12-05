@@ -57,7 +57,7 @@ public class NetKickParticipantAction extends DocumentItemSelectionChangeAction 
 	public void actionPerformed(ActionEvent e) {
 		// need session here
 		if(canKick()) {
-			System.out.println("NetKickParticipantAction: " + currentParticipantItem.getName());
+			//System.out.println("NetKickParticipantAction: " + currentParticipantItem.getName());
 			((PublishedSession)currentDocumentItem.getSession()).kick(currentParticipantItem.getParticipant());
 		}
 	}
