@@ -23,11 +23,13 @@ package ch.iserver.ace.net.impl.protocol;
 
 import org.beepcore.beep.core.BEEPException;
 import org.beepcore.beep.core.ProfileRegistry;
+import org.beepcore.beep.core.RequestHandler;
 import org.beepcore.beep.core.StartChannelListener;
 
 import ch.iserver.ace.algorithm.TimestampFactory;
 import ch.iserver.ace.net.impl.NetworkProperties;
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
+import ch.iserver.ace.util.SingleThreadDomain;
 
 /**
  *
@@ -35,14 +37,16 @@ import ch.iserver.ace.net.impl.NetworkServiceImpl;
 public class ProfileRegistryFactory {
 
 	private static ProfileRegistry instance;
-	private static MainRequestHandler mainHandler;
+	private static RequestHandler mainHandler;
 	
 	public static ProfileRegistry getProfileRegistry() {
 		if (instance == null) {
 			Deserializer deserializer = DeserializerImpl.getInstance();
 			RequestFilter filter = RequestFilterFactory.createServerChain();
 			RequestParserHandler requestHandler = new RequestParserHandler();
-			mainHandler = new MainRequestHandler(deserializer, filter, requestHandler);
+			SingleThreadDomain domain = new SingleThreadDomain();
+			mainHandler = (RequestHandler) domain.wrap(new MainRequestHandler(deserializer, filter, requestHandler), 
+											RequestHandler.class);
 			DefaultRequestHandlerFactory.init(mainHandler, deserializer, requestHandler);
 			CollaborationParserHandler handler = new CollaborationParserHandler();
 			TimestampFactory factory = NetworkServiceImpl.getInstance().getTimestampFactory();
@@ -63,7 +67,7 @@ public class ProfileRegistryFactory {
 		return instance;
 	}
 	
-	public static MainRequestHandler getMainRequestHandler() {
+	public static RequestHandler getMainRequestHandler() {
 		return mainHandler;
 	}
 	
