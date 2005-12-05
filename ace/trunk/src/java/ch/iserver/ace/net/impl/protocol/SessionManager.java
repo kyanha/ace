@@ -85,10 +85,8 @@ public class SessionManager {
 		return newSession;
 	}
 	
-	public synchronized RemoteUserSession removeSession(String userid) {
-		RemoteUserSession session = (RemoteUserSession) sessions.remove(userid);
-		DiscoveryManagerFactory.getDiscoveryManager(null).setSessionTerminated(userid);
-		return session;
+	public RemoteUserSession removeSession(String userid) {
+		return (RemoteUserSession) sessions.remove(userid);
 	}
 	
 	/**
@@ -102,7 +100,9 @@ public class SessionManager {
 			Iterator iter = sessions.values().iterator();
 			while (iter.hasNext()) {
 				RemoteUserSession session = (RemoteUserSession) iter.next();
+				String user = session.getUser().getUserDetails().getUsername();
 				session.close();
+				LOG.debug("closed session for [" + user + "]");
 			}
 			sessions.clear();
 		}
