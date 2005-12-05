@@ -21,10 +21,12 @@
 
 package ch.iserver.ace.application.editor;
 
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
+import javax.swing.text.Element;
 import javax.swing.text.Style;
-import javax.swing.text.*;
-import java.awt.*;
+import javax.swing.text.StyleConstants;
 
 
 
