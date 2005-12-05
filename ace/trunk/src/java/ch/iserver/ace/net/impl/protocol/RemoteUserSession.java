@@ -24,6 +24,7 @@ package ch.iserver.ace.net.impl.protocol;
 import java.net.ConnectException;
 import java.net.InetAddress;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -39,9 +40,12 @@ import org.beepcore.beep.util.BufferSegment;
 
 import ch.iserver.ace.FailureCodes;
 import ch.iserver.ace.algorithm.TimestampFactory;
+import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.net.ParticipantPort;
+import ch.iserver.ace.net.SessionConnectionCallback;
 import ch.iserver.ace.net.impl.NetworkProperties;
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
+import ch.iserver.ace.net.impl.RemoteDocumentProxyExt;
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;
 import ch.iserver.ace.net.impl.discovery.DiscoveryManagerFactory;
 import ch.iserver.ace.util.ParameterValidator;
@@ -169,7 +173,7 @@ public class RemoteUserSession {
 		LOG.debug("--> addSessionConnection() for doc ["+docId+"]");
 		String username = getUser().getUserDetails().getUsername();
 		SessionConnectionImpl conn = new SessionConnectionImpl(docId, collaborationChannel, 
-				ResponseListener.getInstance(), new CollaborationSerializer(), username);
+				ResponseListener.getInstance(), new CollaborationSerializer(), username, getUser().getId());
 		sessionConnections.put(docId, conn);
 		LOG.debug(sessionConnections.size() + " SessionConnection(s) with " + username);
 		LOG.debug("<-- addSessionConnection()");
@@ -251,10 +255,33 @@ public class RemoteUserSession {
 	 */
 	public synchronized void cleanup() {
 		LOG.debug("--> cleanup()");
-		//TODO: cleanup session/participant connections?
+		
+		Iterator iter = participantConnections.values().iterator();
+		while (iter.hasNext()) {
+			ParticipantConnectionImpl conn = (ParticipantConnectionImpl) iter.next();
+			ParticipantPort port = conn.getParticipantPort();
+			removeParticipantConnection(conn.getDocumentId());
+			port.leave();
+		}
+		iter = sessionConnections.values().iterator();
+		while (iter.hasNext()) {
+			SessionConnectionImpl conn = (SessionConnectionImpl) iter.next();
+			RemoteDocumentProxyExt doc = getUser().getSharedDocument(conn.getDocumentId());
+			SessionConnectionCallback callback = doc.getSessionConnectionCallback();
+			removeSessionConnection(conn.getDocumentId());
+			if (getUser().getId().equals(doc.getPublisher().getId())) { //terminated user was publisher
+				callback.sessionTerminated();
+			} else { //terminated user was participant
+				callback.participantLeft(conn.getParticipantId(), Participant.DISCONNECTED);
+			}
+		}
+		
+		participantConnections = null;
+		sessionConnections = null;
 		mainConnection = null;
 		session = null;
 		user = null;
+		factory = null;
 		isAlive = false;
 		LOG.debug("<-- cleanup()");
 	}
