@@ -33,12 +33,19 @@ import org.beepcore.beep.util.BufferSegment;
  */
 public abstract class AbstractRequestHandler implements RequestHandler {
 	
+	private static Logger LOG = Logger.getLogger(AbstractRequestHandler.class);
+	
 	protected byte[] readData(InputDataStream stream) throws Exception {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		do {
             	BufferSegment b = stream.waitForNextSegment();
              if (b == null) {
-                 break;
+            	 	if (stream.isComplete()) {
+            	 		LOG.warn("BufferSegment null but stream is NOT complete, thus continue...");
+            	 		break;
+            	 	} else {
+            	 		continue;
+            	 	}
              }
              out.write(b.getData());
         } while (!stream.isComplete());
