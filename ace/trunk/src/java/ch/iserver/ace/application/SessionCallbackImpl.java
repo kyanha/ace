@@ -21,22 +21,26 @@
 
 package ch.iserver.ace.application;
 
-import ch.iserver.ace.text.*;
-import ch.iserver.ace.CaretUpdate;
-import ch.iserver.ace.Operation;
-import ch.iserver.ace.collaboration.Participant;
-import ch.iserver.ace.collaboration.SessionCallback;
-import ch.iserver.ace.application.editor.CollaborativeDocument;
+import java.awt.Color;
+import java.util.HashMap;
+
+import javax.swing.SwingUtilities;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
 
 import ca.odell.glazedlists.BasicEventList;
 import ca.odell.glazedlists.EventList;
-
-import javax.swing.text.*;
-import java.awt.*;
-import java.util.HashMap;
-import ch.iserver.ace.util.CaretHandler;
-import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
+import ch.iserver.ace.CaretUpdate;
+import ch.iserver.ace.Operation;
+import ch.iserver.ace.application.editor.CollaborativeDocument;
+import ch.iserver.ace.application.editor.DocumentLock;
+import ch.iserver.ace.collaboration.Participant;
+import ch.iserver.ace.collaboration.SessionCallback;
+import ch.iserver.ace.text.DeleteOperation;
+import ch.iserver.ace.text.InsertOperation;
+import ch.iserver.ace.text.NoOperation;
+import ch.iserver.ace.text.SplitOperation;
+import ch.iserver.ace.util.Lock;
 
 
 
@@ -61,6 +65,10 @@ public class SessionCallbackImpl implements SessionCallback {
 	protected DocumentItem documentItem;
 	protected DialogController dialogController;
 
+	
+	private final Lock lock;
+
+	
 	private int participantCount = 0;
 //	private Color[] defaultParticipantColors = {
 //		new Color(0xFF, 0x60, 0x60), new Color(0xFF, 0xDD, 0x60),
@@ -98,6 +106,11 @@ public class SessionCallbackImpl implements SessionCallback {
 		participantCursorColorMap = new HashMap();
 		this.documentItem = documentItem;
 		cDocument = documentItem.getEditorDocument();
+		this.lock = new DocumentLock(cDocument);
+	}
+	
+	public Lock getLock() {
+		return lock;
 	}
 	
 	public void setParticipantId(int participantId) {

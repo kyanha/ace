@@ -63,7 +63,7 @@ public interface Session {
 	 * 
 	 * @throws InterruptedRuntimeException
 	 */
-	void lock() throws InterruptedRuntimeException;
+	void lock();
 	
 	/**
 	 * Unlocks the session's logic so that other threads may gain access

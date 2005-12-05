@@ -87,40 +87,9 @@ public class SessionImplTest extends TestCase {
 		algorithmCtrl.replay();
 		connectionCtrl.replay();
 		
+		// test
 		impl.setConnection(connection);
-		impl.lock();
 		impl.sendOperation(null);
-		impl.unlock();
-		
-		// verify
-		algorithmCtrl.verify();
-		connectionCtrl.verify();
-	}
-
-	public void testSendOperationNoLocking() throws Exception {
-		MockControl algorithmCtrl = MockControl.createControl(AlgorithmWrapper.class);
-		AlgorithmWrapper algorithm = (AlgorithmWrapper) algorithmCtrl.getMock();
-		MockControl connectionCtrl = MockControl.createControl(SessionConnection.class);
-		SessionConnection connection = (SessionConnection) connectionCtrl.getMock();
-		
-		SessionImpl impl = new SessionImpl(algorithm);
-		impl.setThreadDomain(new CallerThreadDomain());
-
-		// define mock behavior
-		connection.getParticipantId();
-		connectionCtrl.setDefaultReturnValue(1);
-
-		// replay
-		algorithmCtrl.replay();
-		connectionCtrl.replay();
-		
-		try {
-			impl.setConnection(connection);
-			impl.sendOperation(null);
-			fail("sending operations without locking must fail");
-		} catch (IllegalMonitorStateException e) {
-			// expected
-		}
 		
 		// verify
 		algorithmCtrl.verify();
@@ -148,39 +117,7 @@ public class SessionImplTest extends TestCase {
 		connectionCtrl.replay();
 		
 		impl.setConnection(connection);
-		impl.lock();
 		impl.sendCaretUpdate(null);
-		impl.unlock();
-		
-		// verify
-		algorithmCtrl.verify();
-		connectionCtrl.verify();
-	}
-
-	public void testSendCaretUpdateNoLocking() throws Exception {
-		MockControl algorithmCtrl = MockControl.createControl(AlgorithmWrapper.class);
-		AlgorithmWrapper algorithm = (AlgorithmWrapper) algorithmCtrl.getMock();
-		MockControl connectionCtrl = MockControl.createControl(SessionConnection.class);
-		SessionConnection connection = (SessionConnection) connectionCtrl.getMock();
-		
-		SessionImpl impl = new SessionImpl(algorithm);
-		impl.setThreadDomain(new CallerThreadDomain());
-
-		// define mock behavior
-		connection.getParticipantId();
-		connectionCtrl.setDefaultReturnValue(1);
-
-		// replay
-		algorithmCtrl.replay();
-		connectionCtrl.replay();
-		
-		try {
-			impl.setConnection(connection);
-			impl.sendCaretUpdate(null);
-			fail("sending caret updates without locking must fail");
-		} catch (IllegalMonitorStateException e) {
-			// expected
-		}
 		
 		// verify
 		algorithmCtrl.verify();
@@ -190,17 +127,18 @@ public class SessionImplTest extends TestCase {
 	public void testKicked() throws Exception {
 		MockControl callbackCtrl = MockControl.createControl(ParticipantSessionCallback.class);
 		ParticipantSessionCallback callback = (ParticipantSessionCallback) callbackCtrl.getMock();
-		
-		SessionImpl impl = new SessionImpl();
-		impl.setSessionCallback(callback);
-		
+				
 		// define mock behavior
+		callback.getLock();
+		callbackCtrl.setDefaultReturnValue(null);
 		callback.kicked();
 		
 		// replay
 		callbackCtrl.replay();
 		
 		// test
+		SessionImpl impl = new SessionImpl();
+		impl.setSessionCallback(callback);
 		impl.kicked();
 		
 		// verify
@@ -210,17 +148,18 @@ public class SessionImplTest extends TestCase {
 	public void testSessionTerminated() throws Exception {
 		MockControl callbackCtrl = MockControl.createControl(ParticipantSessionCallback.class);
 		ParticipantSessionCallback callback = (ParticipantSessionCallback) callbackCtrl.getMock();
-		
-		SessionImpl impl = new SessionImpl();
-		impl.setSessionCallback(callback);
-		
+				
 		// define mock behavior
+		callback.getLock();
+		callbackCtrl.setDefaultReturnValue(null);
 		callback.sessionTerminated();
 		
 		// replay
 		callbackCtrl.replay();
 		
 		// test
+		SessionImpl impl = new SessionImpl();
+		impl.setSessionCallback(callback);
 		impl.sessionTerminated();
 		
 		// verify
@@ -238,11 +177,10 @@ public class SessionImplTest extends TestCase {
 		Operation operation = new InsertOperation(0, "x");
 		Request request = new RequestImpl(0, null, operation);
 		Participant participant = new ParticipantImpl(1, new RemoteUserStub("1"));
-		SessionImpl impl = new SessionImpl(algorithm, lock);
-		impl.setSessionCallback(callback);
-		impl.addParticipant(participant);
 		
 		// define mock behavior
+		callback.getLock();
+		callbackCtrl.setDefaultReturnValue(lock);
 		lock.lock();
 		algorithm.receiveRequest(request);
 		algorithmCtrl.setReturnValue(operation);
@@ -255,6 +193,9 @@ public class SessionImplTest extends TestCase {
 		callbackCtrl.replay();
 		
 		// test
+		SessionImpl impl = new SessionImpl(algorithm);
+		impl.setSessionCallback(callback);
+		impl.addParticipant(participant);
 		impl.receiveRequest(1, request);
 		
 		// verify
@@ -274,11 +215,10 @@ public class SessionImplTest extends TestCase {
 		CaretUpdate update = new CaretUpdate(0, 1);
 		CaretUpdateMessage message = new CaretUpdateMessage(0, null, update);
 		Participant participant = new ParticipantImpl(1, new RemoteUserStub("1"));
-		SessionImpl impl = new SessionImpl(algorithm, lock);
-		impl.setSessionCallback(callback);
-		impl.addParticipant(participant);
 		
 		// define mock behavior
+		callback.getLock();
+		callbackCtrl.setDefaultReturnValue(lock);
 		lock.lock();
 		algorithm.receiveCaretUpdateMessage(message);
 		algorithmCtrl.setReturnValue(update);
@@ -291,6 +231,9 @@ public class SessionImplTest extends TestCase {
 		callbackCtrl.replay();
 		
 		// test
+		SessionImpl impl = new SessionImpl(algorithm);
+		impl.setSessionCallback(callback);
+		impl.addParticipant(participant);
 		impl.receiveCaretUpdate(1, message);
 		
 		// verify
@@ -305,12 +248,10 @@ public class SessionImplTest extends TestCase {
 		
 		MockControl registryCtrl = MockControl.createControl(UserRegistry.class);
 		UserRegistry registry = (UserRegistry) registryCtrl.getMock();
-		
-		SessionImpl impl = new SessionImpl();
-		impl.setSessionCallback(callback);
-		impl.setUserRegistry(registry);
-		
+				
 		// define mock behavior
+		callback.getLock();
+		callbackCtrl.setDefaultReturnValue(null);
 		callback.participantJoined(new ParticipantImpl(1, new RemoteUserStub("1")));
 		callback.participantLeft(new ParticipantImpl(1, new RemoteUserStub("1")), Participant.LEFT);
 		
@@ -322,6 +263,9 @@ public class SessionImplTest extends TestCase {
 		registryCtrl.replay();
 		
 		// test
+		SessionImpl impl = new SessionImpl();
+		impl.setSessionCallback(callback);
+		impl.setUserRegistry(registry);
 		impl.participantJoined(1, new RemoteUserProxyStub("1"));
 		assertEquals(1, impl.getParticipants().size());
 		assertEquals(new ParticipantImpl(1, new RemoteUserStub("1")), impl.getParticipant(1));

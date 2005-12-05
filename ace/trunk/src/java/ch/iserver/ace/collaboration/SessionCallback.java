@@ -2,6 +2,7 @@ package ch.iserver.ace.collaboration;
 
 import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.Operation;
+import ch.iserver.ace.util.Lock;
 
 /**
  * Callback interface used by sessions to notify the application about events
@@ -9,7 +10,15 @@ import ch.iserver.ace.Operation;
  * sessions and participant sessions.
  */
 public interface SessionCallback {
-
+	
+	/**
+	 * Gets the lock that should be used by the Session before transforming
+	 * requests from the network.
+	 * 
+	 * @return the Lock to guard access to the transformation engine
+	 */
+	Lock getLock();
+	
 	/**
 	 * Sets the participant id of the local participant. This method should
 	 * be the first called method.

@@ -21,14 +21,24 @@
 
 package ch.iserver.ace.application.editor;
 
-import ch.iserver.ace.collaboration.*;
-import ch.iserver.ace.collaboration.util.*;
-import ch.iserver.ace.*;
-import ch.iserver.ace.text.*;
-import javax.swing.*;
-import javax.swing.text.*;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+
+import javax.swing.Action;
+import javax.swing.ActionMap;
+import javax.swing.UIManager;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Caret;
+import javax.swing.text.DefaultEditorKit;
+import javax.swing.text.Document;
+import javax.swing.text.JTextComponent;
+import javax.swing.text.StyledEditorKit;
+import javax.swing.text.TextAction;
+
+import ch.iserver.ace.Operation;
+import ch.iserver.ace.collaboration.Session;
+import ch.iserver.ace.collaboration.util.SessionTemplate;
+import ch.iserver.ace.collaboration.util.SessionTemplateCallback;
+import ch.iserver.ace.text.DeleteOperation;
 
 
 
@@ -197,8 +207,6 @@ return new CollaborativeEditorView(elem);
 						public void execute(Session session) {
 
 							// COPY & PASTE FROM ORIGINAL
-							//JTextComponent target = getTextComponent(e);
-							boolean beep = true;
 							if ((target != null) && (target.isEditable())) {
 								try {
 									Document doc = target.getDocument();
@@ -208,9 +216,7 @@ return new CollaborativeEditorView(elem);
 									if (dot != mark) {
 										Operation op = new DeleteOperation(Math.min(dot, mark), doc.getText(Math.min(dot, mark), Math.abs(dot - mark)));
 										doc.remove(Math.min(dot, mark), Math.abs(dot - mark));
-//										System.out.println(op);
 										session.sendOperation(op);
-										beep = false;
 									} else if (dot < doc.getLength()) {
 										int delChars = 1;
 									   
@@ -226,9 +232,7 @@ return new CollaborativeEditorView(elem);
 										}
 										Operation op = new DeleteOperation(dot, doc.getText(dot, delChars));
 										doc.remove(dot, delChars);
-//										System.out.println(op);
 										session.sendOperation(op);
-										beep = false;
 									}
 								} catch (BadLocationException bl) {
 								}

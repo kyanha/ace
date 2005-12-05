@@ -36,6 +36,14 @@ public class CollaborativeDocument extends DefaultStyledDocument {
 
 	}
 	
+	public void lock() {
+		writeLock();
+	}
+	
+	public void unlock() {
+		writeUnlock();
+	}
+	
 	protected void styleChanged(Style style) {
 		//
 		if(!style.getName().equals("default")) {
