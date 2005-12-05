@@ -38,6 +38,8 @@ public interface RemoteDocumentProxyExt extends RemoteDocumentProxy {
 	
 	public SessionConnectionCallback joinAccepted(SessionConnection connection);
 	
+	public SessionConnectionCallback getSessionConnectionCallback();
+	
 	/**
 	 * Called when the local user accepted an invitation to join this document.
 	 * 
@@ -49,4 +51,5 @@ public interface RemoteDocumentProxyExt extends RemoteDocumentProxy {
 	public void cleanupAfterLeave();
 	
 	public boolean isJoined();
+	
 }
