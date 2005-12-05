@@ -100,7 +100,11 @@ public class PublishedDocument implements DocumentServer {
 	public void rejectInvitedUser(String userId) {
 		LOG.debug("--> rejectedInvitedUser()");
 		InvitationPort port = (InvitationPort) invitations.remove(userId);
-		port.reject();
+		if (port != null) {
+			port.reject();
+		} else {
+			LOG.warn("InvitationPort for [" + userId + "] not found.");
+		}
 		LOG.debug("<-- rejectedInvitedUser()");
 	}
 
