@@ -38,6 +38,12 @@ public interface RemoteDocumentProxyExt extends RemoteDocumentProxy {
 	
 	public SessionConnectionCallback joinAccepted(SessionConnection connection);
 	
+	/**
+	 * Called when the local user accepted an invitation to join this document.
+	 * 
+	 * @param callback the JoinNetworkCallback instance
+	 * @see JoinNetworkCallback
+	 */
 	public void invitationAccepted(JoinNetworkCallback callback);
 	
 	public void cleanupAfterLeave();
