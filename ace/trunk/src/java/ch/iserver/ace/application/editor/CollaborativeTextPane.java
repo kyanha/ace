@@ -100,10 +100,14 @@ public class CollaborativeTextPane extends JTextPane implements CaretListener, P
 			// check if caret moved from text manipulation
 			PropertyChangeCaretHandlerImpl pCaretHandler = (PropertyChangeCaretHandlerImpl)caretHandlerMap.get("" + session.getParticipantId());
 
+
+			System.out.println("caretUpdate(CaretEvent e): pCH.getDot(): " + pCaretHandler.getDot() + "     pCH.getMark(): " +
+									pCaretHandler.getMark() + "      e.getDot(): " + e.getDot() + "      e.getMark(): " + e.getMark());
+
 			if(pCaretHandler.getDot() != e.getDot() || pCaretHandler.getMark() != e.getMark()) {
 				// set new dot & mark for caret handler
-				System.out.println("caretUpdate(CaretEvent e): -> oldDot: " + pCaretHandler.getDot() + "     oldMarkDot: " +
-										pCaretHandler.getMark() + "     newDot: " + e.getDot() + "     newMark: " + e.getMark());
+//				System.out.println("caretUpdate(CaretEvent e): -> oldDot: " + pCaretHandler.getDot() + "     oldMarkDot: " +
+//										pCaretHandler.getMark() + "     newDot: " + e.getDot() + "     newMark: " + e.getMark());
 
 				pCaretHandler.setCaret(e.getDot(), e.getMark());
 
@@ -191,12 +195,17 @@ public class CollaborativeTextPane extends JTextPane implements CaretListener, P
 			// set own caret
 			String mpId = "" + session.getParticipantId();
 			CaretHandler pCaretHandler = (CaretHandler)caretHandlerMap.get(mpId);
-			System.out.println("propertyChange(): name= " + evt.getPropertyName() + "   dot= " + pCaretHandler.getDot() + "   mark= " + pCaretHandler.getMark());
+			System.out.println("propertyChange(): name=" + evt.getPropertyName() + "   getDot=" + pCaretHandler.getDot() + "   getMark=" + pCaretHandler.getMark());
+			CaretUpdate oldCUT = (CaretUpdate)evt.getOldValue();
+			System.out.println("propertyChange()::oldCUT: dot=" + oldCUT.getDot() + "   mark=" + oldCUT.getMark());
+			CaretUpdate newCUT = (CaretUpdate)evt.getNewValue();
+			System.out.println("propertyChange()::newCUT: dot=" + newCUT.getDot() + "   mark=" + newCUT.getMark());
 
 			//TODO:
 			int dot = pCaretHandler.getDot();
 //			System.out.println("propertyChange(): dot = " + dot);
-			//setCaretPosition(dot);
+			System.out.println("getCaretPosition=" + getCaretPosition());
+			setCaretPosition(1);
 			//moveCaretPosition(pCaretHandler.getDot());
 
 			// delete old caret (only if position is in document)
