@@ -95,9 +95,9 @@ public class ParticipantSessionCallbackImpl extends SessionCallbackImpl implemen
 			String pId = "" + participant.getParticipantId();
 			//System.out.println("found participant: " + participant);
 			if(!pId.equals(mpId)) {
-			
 				// caret handler
 				CaretUpdate pCaretUpdate = doc.getSelection(participant.getParticipantId());
+				//System.out.println("participant=" + participant + "   caret=" + pCaretUpdate);
 				PropertyChangeCaretHandlerImpl pCaretHandler =
 					new PropertyChangeCaretHandlerImpl(pCaretUpdate.getDot(), pCaretUpdate.getMark());
 				cDocument.addDocumentListener(pCaretHandler);
