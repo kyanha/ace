@@ -30,12 +30,10 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.net.impl.DiscoveryCallback;
 import ch.iserver.ace.net.impl.MutableUserDetails;
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;
 import ch.iserver.ace.net.impl.RemoteUserProxyFactory;
-import ch.iserver.ace.net.impl.RemoteUserProxyImpl;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
@@ -72,6 +70,10 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 	/*********************************************/
 	/** Methods from interface DiscoveryManager **/
 	/*********************************************/
+	
+	/**
+	 * @inheritDoc
+	 */
 	public RemoteUserProxyExt[] getPeersWithNoSession() {
 		Set ids = remoteUserProxies.keySet();
 		Set allUsers = new LinkedHashSet();
@@ -92,7 +94,7 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 	}
 
 	/**
-	 * Called when the TCPSession for a user has been established.
+	 * @inheritDoc
 	 */
 	public void setSessionEstablished(String userId) {
 		Object proxy = remoteUserProxies.get(userId);
@@ -103,15 +105,24 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 		
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public void setSessionTerminated(String userId) {
 		peersWithEstablishedSession.remove(userId);
 		
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public boolean hasSessionEstablished(String userid) {
 		return peersWithEstablishedSession.containsKey(userid);
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public RemoteUserProxyExt getUser(String userid) {
 		RemoteUserProxyExt user =  (RemoteUserProxyExt) remoteUserProxies.get(userid);
 		if (user == null) {
@@ -120,6 +131,9 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 		return user;
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public int getSize() {
 		return remoteUserProxies.size();
 	}
