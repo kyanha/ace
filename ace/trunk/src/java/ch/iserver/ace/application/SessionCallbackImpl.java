@@ -82,19 +82,18 @@ public class SessionCallbackImpl implements SessionCallback {
 //	};
 
 	private Color[] defaultParticipantTextColors = {
-		new Color(0xFF, 0x80, 0x80), new Color(0xFF, 0xDD, 0x80),
-		new Color(0xFF, 0xFF, 0x80), new Color(0x80, 0xDD, 0x80),
-		new Color(0x80, 0xFF, 0xFF), new Color(0x80, 0x80, 0xFF),
-		new Color(0xDD, 0x80, 0xFF), new Color(0xFF, 0x80, 0xDD),
+		new Color(0xFF, 0xFF, 0xA0), new Color(0xA0, 0xFF, 0xA0),
+		new Color(0xA0, 0xFF, 0xFF), new Color(0xFF, 0xA0, 0xA0)
 	};
 
 	private Color[] defaultParticipantCursorColors = {
-		new Color(0xFF, 0x00, 0x00), new Color(0xFF, 0xDD, 0x80),
-		new Color(0xFF, 0xFF, 0x80), new Color(0x80, 0xDD, 0x80),
-		new Color(0x80, 0xFF, 0xFF), new Color(0x80, 0x80, 0xFF),
-		new Color(0xDD, 0x80, 0xFF), new Color(0xFF, 0x80, 0xDD),
+		new Color(0xA0, 0xA0, 0x00), new Color(0x00, 0xAF, 0x00),
+		new Color(0x40, 0xA0, 0xA0), new Color(0xAF, 0x00, 0x00)
 	};
 
+	private int defaultColorAmount = 4;
+	
+	
 
 
 	public SessionCallbackImpl(DocumentItem documentItem, DialogController dialogController) {
@@ -265,7 +264,7 @@ public class SessionCallbackImpl implements SessionCallback {
 			participantTextColorMap.put(pId, pTextColor);
 			
 			// save cursor color too
-			Color pCursorColor = defaultParticipantCursorColors[participantCount++%8];
+			Color pCursorColor = defaultParticipantCursorColors[participantCount++%defaultColorAmount];
 			participantCursorColorMap.put(pId, pCursorColor);
 		}
 		return pTextColor;

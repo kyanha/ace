@@ -365,7 +365,7 @@ BASCHTLE
 			if(pStyle == null) {
 				pStyle = editorDocument.addStyle("myStyle", null);
 			}
-			StyleConstants.setBackground(pStyle, new Color(0x80, 0x80, 0xDD));
+			StyleConstants.setBackground(pStyle, new Color(0xA0, 0xA0, 0xFF));
 		} else {
 			// disable coloring
 			Style pStyle = editorDocument.getStyle("myStyle");
