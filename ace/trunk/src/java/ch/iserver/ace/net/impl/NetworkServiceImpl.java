@@ -36,7 +36,6 @@ import ch.iserver.ace.net.DocumentServer;
 import ch.iserver.ace.net.DocumentServerLogic;
 import ch.iserver.ace.net.NetworkServiceCallback;
 import ch.iserver.ace.net.impl.discovery.DiscoveryLauncher;
-import ch.iserver.ace.net.impl.discovery.ExplicitUserDiscovery;
 import ch.iserver.ace.net.impl.protocol.BEEPSessionListener;
 import ch.iserver.ace.net.impl.protocol.BEEPSessionListenerFactory;
 import ch.iserver.ace.net.impl.protocol.ParticipantConnectionImplFactory;
