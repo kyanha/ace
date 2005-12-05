@@ -44,6 +44,7 @@ public class JoinCallbackImpl implements JoinCallback {
 	
 	public ParticipantSessionCallback accepted(Session session) {
 		// set session
+		System.out.println("accepted");
 		documentItem.setSession(session);
 
 		// create and set session callback
