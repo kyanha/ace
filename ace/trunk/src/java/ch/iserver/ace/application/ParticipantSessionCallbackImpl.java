@@ -55,7 +55,7 @@ public class ParticipantSessionCallbackImpl extends SessionCallbackImpl implemen
 		// IMPORTANT: this method is called first from the collaboration layer. set participants here.
 		// add all participants
 
-		//System.out.println("my participant id: " + mpId);
+		//add participants
 		Iterator pIter = doc.getParticipants().iterator();
 		while(pIter.hasNext()) {
 			Participant participant = (Participant)pIter.next();
@@ -70,24 +70,9 @@ public class ParticipantSessionCallbackImpl extends SessionCallbackImpl implemen
 				
 				Style pStyle = cDocument.addStyle(pId, null);
 				StyleConstants.setBackground(pStyle, pColor);
-
-				// caret handler
-				CaretUpdate pCaretUpdate = doc.getSelection(participant.getParticipantId());
-				PropertyChangeCaretHandlerImpl pCaretHandler =
-					new PropertyChangeCaretHandlerImpl(pCaretUpdate.getDot(), pCaretUpdate.getMark());
-				cDocument.addDocumentListener(pCaretHandler);
-				participantCaretMap.put(pId, pCaretHandler);
 			}
 		}
-		
-		// own caret
-		PropertyChangeCaretHandlerImpl pCaretHandler = new PropertyChangeCaretHandlerImpl(0, 0);
-		cDocument.addDocumentListener(pCaretHandler);
-		participantCaretMap.put(mpId, pCaretHandler);
 
-		
-		
-		
 		// get document fragments
 		Iterator fIter = doc.getFragments();
 		int insertPos = 0;
@@ -102,7 +87,28 @@ public class ParticipantSessionCallbackImpl extends SessionCallbackImpl implemen
 			}
 			insertPos += fragment.getText().length();
 		}
+
+		// add carets
+		pIter = doc.getParticipants().iterator();
+		while(pIter.hasNext()) {
+			Participant participant = (Participant)pIter.next();
+			String pId = "" + participant.getParticipantId();
+			//System.out.println("found participant: " + participant);
+			if(!pId.equals(mpId)) {
+			
+				// caret handler
+				CaretUpdate pCaretUpdate = doc.getSelection(participant.getParticipantId());
+				PropertyChangeCaretHandlerImpl pCaretHandler =
+					new PropertyChangeCaretHandlerImpl(pCaretUpdate.getDot(), pCaretUpdate.getMark());
+				cDocument.addDocumentListener(pCaretHandler);
+				participantCaretMap.put(pId, pCaretHandler);
+			}
+		}
 		
+		// own caret
+		PropertyChangeCaretHandlerImpl pCaretHandler = new PropertyChangeCaretHandlerImpl(0, 0);
+		cDocument.addDocumentListener(pCaretHandler);
+		participantCaretMap.put(mpId, pCaretHandler);
 	}
 	
 	public void sessionTerminated() {
