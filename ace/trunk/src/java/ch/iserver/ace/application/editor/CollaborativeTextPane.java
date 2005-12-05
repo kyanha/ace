@@ -228,6 +228,8 @@ public class CollaborativeTextPane extends JTextPane implements CaretListener, P
 					repaint(newRect);
 				} catch(BadLocationException e) { }
 			}
+			
+			repaint(new Rectangle(0,0,1000,1000));
 
 		}
 	}
@@ -259,11 +261,56 @@ public class CollaborativeTextPane extends JTextPane implements CaretListener, P
 							g.drawLine(rect.x+2, rect.y+rect.height-1, rect.x, rect.y+rect.height-3);
 						} else {
 							// draw selection
-/*							g.setColor(((Color)participationCursorColorMap.get(pId)));
-							Rectangle rectDot = modelToView(pCaretHandler.getDot());
-							Rectangle rectMark = modelToView(pCaretHandler.getMark());
-							System.out.println(rectDot + " - " + rectMark);
-							g.drawRect(rectMark.x, rectMark.y, rectDot.x, rectDot.height);*/
+							
+							int startPos = Math.min(pCaretHandler.getDot(), pCaretHandler.getMark());
+							int endPos = Math.max(pCaretHandler.getDot(), pCaretHandler.getMark());
+
+							Rectangle rectStart = modelToView(startPos);
+							Rectangle rectEnd = modelToView(endPos);
+
+							g.setColor(((Color)participationCursorColorMap.get(pId)));
+
+							if(1==1) {//if(rectDot.y == rectMark.y) {
+								// 1. single line
+								System.out.println("single line");
+
+
+								// paint beginning border part
+								Rectangle iRect = modelToView(startPos);
+								Rectangle iNext = modelToView(startPos+1);
+								if(iRect.y == iNext.y) {
+									// on the same line
+									g.drawLine(iRect.x, iRect.y, iRect.x, iRect.y + iRect.height);
+									g.drawLine(iRect.x, iRect.y, iNext.x, iRect.y);
+									g.drawLine(iRect.x, iRect.y + iRect.height, iNext.x, iRect.y + iRect.height);
+								}
+
+								// paint middle element
+								for(int i = startPos+1; i < endPos-1 ; i++) {
+									iRect = modelToView(i);
+									iNext = modelToView(i+1);
+									if(iRect.y == iNext.y) {
+										// on the same line
+										g.drawLine(iRect.x, iRect.y, iNext.x, iRect.y);
+										g.drawLine(iRect.x, iRect.y + iRect.height, iNext.x, iRect.y + iRect.height);
+									}
+								}
+
+								// paint end element
+								iRect = modelToView(endPos);
+								iNext = modelToView(endPos-1);
+								if(iRect.y == iNext.y) {
+									// on the same line
+									//System.out.println(iRect + " - " + iNext);
+									//System.out.println("" + iRect.x + "," + iRect.y + "," +iRect.x+"," +iRect.height);
+									g.drawLine(iRect.x + iRect.width, iRect.y, iRect.x + iRect.width, iRect.y + iRect.height);
+									g.drawLine(iRect.x, iRect.y, iNext.x, iRect.y);
+									g.drawLine(iRect.x, iRect.y + iRect.height, iNext.x, iRect.y + iRect.height);
+								}
+
+
+							
+							}
 
 
 						}
