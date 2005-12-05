@@ -29,7 +29,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.EventListener;
 
-import javax.swing.Action;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.TransferHandler;
@@ -42,8 +41,6 @@ import javax.swing.plaf.TextUI;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Caret;
-import javax.swing.text.DefaultCaret;
-import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Document;
 import javax.swing.text.Element;
@@ -124,7 +121,7 @@ public class AsyncCaret extends Rectangle implements Caret, FocusListener,
 	 * Constructs a default caret.
 	 */
 	public AsyncCaret() {
-		async = false;
+		async = true;
 	}
 
 	/**
@@ -134,7 +131,7 @@ public class AsyncCaret extends Rectangle implements Caret, FocusListener,
 	 * might be used to load a file, or show changes from another user. This
 	 * flag determines whether those changes will move the caret.
 	 */
-	boolean getAsynchronousMovement() {
+	public boolean getAsynchronousMovement() {
 		return async;
 	}
 
@@ -148,7 +145,7 @@ public class AsyncCaret extends Rectangle implements Caret, FocusListener,
 	 * @param m
 	 *            move the caret on asynchronous updates if true.
 	 */
-	void setAsynchronousMovement(boolean m) {
+	public void setAsynchronousMovement(boolean m) {
 		async = m;
 	}
 
