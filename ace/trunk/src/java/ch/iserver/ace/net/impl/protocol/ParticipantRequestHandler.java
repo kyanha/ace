@@ -32,28 +32,28 @@ import ch.iserver.ace.algorithm.TimestampFactory;
 import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
+import ch.iserver.ace.util.ParameterValidator;
 
 /**
  * Server side request handler for a collaborative session.
  */
 public class ParticipantRequestHandler extends AbstractRequestHandler {
 
-	
 	private static Logger LOG = Logger.getLogger(ParticipantRequestHandler.class);
 	
 	private Deserializer deserializer;
-//	private ParserHandler handler;
 	private ParticipantPort port;
 	private TimestampFactory factory;
 	
 	public ParticipantRequestHandler(Deserializer deserializer, TimestampFactory factory) {
-		LOG.debug("new ParticiantRequestHandler()");
+		ParameterValidator.notNull("deserializer", deserializer);
+		ParameterValidator.notNull("factory", factory);
 		this.deserializer = deserializer;
-//		this.handler = handler;
 		this.factory = factory;
 	}
 	
 	public void setParticipantPort(ParticipantPort port) {
+		ParameterValidator.notNull("ParticipantPort", port);
 		this.port = port;
 	}
 	
@@ -63,7 +63,6 @@ public class ParticipantRequestHandler extends AbstractRequestHandler {
 	
 	public void cleanup() {
 		deserializer = null;
-//		handler = null;
 		port = null;
 	}
 	

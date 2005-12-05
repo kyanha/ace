@@ -42,7 +42,6 @@ import ch.iserver.ace.algorithm.TimestampFactory;
 import ch.iserver.ace.net.impl.NetworkProperties;
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;
-import ch.iserver.ace.net.impl.SessionConnectionImpl;
 import ch.iserver.ace.net.impl.discovery.DiscoveryManagerFactory;
 import ch.iserver.ace.util.ParameterValidator;
 
@@ -149,6 +148,9 @@ public class RemoteUserSession {
 		return startChannelImpl(type);
 	}
 	
+	/********************************************/
+	/** methods relating to SessionConnection  **/
+	/********************************************/
 
 	/**
 	 * 
@@ -159,23 +161,11 @@ public class RemoteUserSession {
 	public SessionConnectionImpl addSessionConnection(String docId, Channel collaborationChannel) {
 		//TODO: must not be snychronized right?
 		LOG.debug("--> addSessionConnection() for doc ["+docId+"]");
-		CollaborationSerializer serializer = new CollaborationSerializer();
-		SessionConnectionImpl conn = new SessionConnectionImpl(docId, this, 
-				collaborationChannel, ResponseListener.getInstance(), serializer);
+		String username = getUser().getUserDetails().getUsername();
+		SessionConnectionImpl conn = new SessionConnectionImpl(docId, collaborationChannel, 
+				ResponseListener.getInstance(), new CollaborationSerializer(), username);
 		sessionConnections.put(docId, conn);
-		LOG.debug(sessionConnections.size() + " SessionConnection(s) with " + getUser().getUserDetails().getUsername());
-		LOG.debug("<-- addSessionConnection()");
-		return conn;
-	}
-	
-	//TODO: obsolete
-	public SessionConnectionImpl addSessionConnection(String docId) {
-		//TODO: must not be snychronized right?
-		LOG.debug("--> addSessionConnection() for doc ["+docId+"]");
-		CollaborationSerializer serializer = new CollaborationSerializer();
-		SessionConnectionImpl conn = new SessionConnectionImpl(docId, this, ResponseListener.getInstance(), serializer);
-		sessionConnections.put(docId, conn);
-		LOG.debug(sessionConnections.size() + " SessionConnection(s) with " + getUser().getUserDetails().getUsername());
+		LOG.debug(sessionConnections.size() + " SessionConnection(s) with " + username);
 		LOG.debug("<-- addSessionConnection()");
 		return conn;
 	}
@@ -210,18 +200,22 @@ public class RemoteUserSession {
 		return (SessionConnectionImpl) sessionConnections.get(docId);
 	}
 	
+	
+	/***********************************************/
+	/** methods relating to ParticipantConnection **/
+	/***********************************************/
+	
 	/**
 	 * 
 	 * @param docId
 	 * @return
 	 */
-	public ParticipantConnectionImpl createParticipantConnection(String docId) {
+	public ParticipantConnectionImpl addParticipantConnection(String docId) {
 		//TODO: do i have to check for isAlive as well?
 		LOG.debug("--> createParticipantConnection() for doc ["+docId+"]");
 		assert !participantConnections.containsKey(docId);
-		CollaborationSerializer serializer = new CollaborationSerializer();
 		ParticipantConnectionImpl connection = ParticipantConnectionImplFactory.getInstance().
-						createConnection(docId, this,	ResponseListener.getInstance(), serializer);
+						createConnection(docId, this,	ResponseListener.getInstance(), new CollaborationSerializer());
 		participantConnections.put(docId, connection);
 		LOG.debug(participantConnections.size() + " ParticipantConnection(s) for " + getUser().getUserDetails().getUsername());
 		LOG.debug("<-- createParticipantConnection()");
@@ -242,6 +236,84 @@ public class RemoteUserSession {
 
 	public boolean hasParticipantConnection(String docId) {
 		return participantConnections.containsKey(docId);
+	}
+	
+	/**
+	 * Cleans up the session. No methods may be called
+	 * after a call to <code>cleanup()</code>. This method
+	 * is called when the BEEP session has terminated already.
+	 */
+	public synchronized void cleanup() {
+		LOG.debug("--> cleanup()");
+		//TODO: cleanup session/participant connections?
+		mainConnection = null;
+		session = null;
+		user = null;
+		isAlive = false;
+		LOG.debug("<-- cleanup()");
+	}
+	
+	/**
+	 * Closes the active session. This method must
+	 * be called when the TCPSession is still active.
+	 */
+	public synchronized void close() {
+		if (session != null) {
+			try {
+				mainConnection.close();
+				session.close();
+			} catch (BEEPException be) {
+				LOG.warn("could not close active session ["+be.getMessage()+"]");
+			}
+		}
+		user = null;
+		isAlive = false;
+	}
+	
+	public synchronized boolean isAlive() {
+		return isAlive;
+	}
+	
+	public boolean isInitiated() {
+		return isInitiated;
+	}
+	
+	public RemoteUserProxyExt getUser() {
+		return user;
+	}
+	
+	public InetAddress getHost() {
+		return host;
+	}
+	
+	public int getPort() {
+		return port;
+	}
+	
+	/**
+	 * Helper method to initiate the TCPSession for this 
+	 * RemoteUserSession.
+	 *
+	 * @see TCPSession
+	 */
+	private void initiateTCPSession() throws ConnectionException {
+		LOG.debug("--> initiateTCPSession()");
+		try {
+			ProfileRegistry registry = ProfileRegistryFactory.getProfileRegistry();
+			session =  TCPSessionCreator.initiate(host, port, registry);
+			LOG.info("initiated session to "+host+":"+port);
+			isInitiated = true;
+			DiscoveryManagerFactory.getDiscoveryManager(null).setSessionEstablished(user.getId());
+		} catch (BEEPException be) {
+			//TODO: retry strategy?
+			LOG.error("could not initiate session ["+be+"]");
+			if (be.getCause() instanceof ConnectException) {
+				String msg = getUser().getUserDetails().getUsername() + "[" + host + ":" + port + "]";
+				NetworkServiceImpl.getInstance().getCallback().serviceFailure(FailureCodes.CONNECTION_REFUSED, msg, be);
+			}
+			throw new ConnectionException("session init failed ["+be.getMessage()+"]");
+		}
+		LOG.debug("<-- initiateTCPSession()");
 	}
 	
 	/**
@@ -294,80 +366,5 @@ public class RemoteUserSession {
 		output.add(buffer);
 		output.setComplete();
 		return output;
-	}
-	
-	/**
-	 * Helper method to initiate the TCPSession for this 
-	 * RemoteUserSession.
-	 *
-	 * @see TCPSession
-	 */
-	private void initiateTCPSession() throws ConnectionException {
-		LOG.debug("--> initiateTCPSession()");
-		try {
-			ProfileRegistry registry = ProfileRegistryFactory.getProfileRegistry();
-			session =  TCPSessionCreator.initiate(host, port, registry);
-			LOG.info("initiated session to "+host+":"+port);
-			isInitiated = true;
-			DiscoveryManagerFactory.getDiscoveryManager(null).setSessionEstablished(user.getId());
-		} catch (BEEPException be) {
-			//TODO: retry strategy?
-			LOG.error("could not initiate session ["+be+"]");
-			if (be.getCause() instanceof ConnectException) {
-				String msg = getUser().getUserDetails().getUsername() + "[" + host + ":" + port + "]";
-				NetworkServiceImpl.getInstance().getCallback().serviceFailure(FailureCodes.CONNECTION_REFUSED, msg, be);
-			}
-			throw new ConnectionException("session init failed ["+be.getMessage()+"]");
-		}
-		LOG.debug("<-- initiateTCPSession()");
-	}
-	
-	/**
-	 * Cleans up the session. No methods may be called
-	 * after a call to <code>cleanup()</code>. This method
-	 * is called when the BEEP session has terminated already.
-	 */
-	public synchronized void cleanup() {
-		mainConnection = null;
-		session = null;
-		user = null;
-		isAlive = false;
-	}
-	
-	/**
-	 * Closes the active session. This method must
-	 * be called when the TCPSession is still active.
-	 */
-	public synchronized void close() {
-		if (session != null) {
-			try {
-				mainConnection.close();
-				session.close();
-			} catch (BEEPException be) {
-				LOG.warn("could not close active session ["+be.getMessage()+"]");
-			}
-		}
-		user = null;
-		isAlive = false;
-	}
-	
-	public synchronized boolean isAlive() {
-		return isAlive;
-	}
-	
-	public boolean isInitiated() {
-		return isInitiated;
-	}
-	
-	public RemoteUserProxyExt getUser() {
-		return user;
-	}
-	
-	public InetAddress getHost() {
-		return host;
-	}
-	
-	public int getPort() {
-		return port;
 	}
 }
