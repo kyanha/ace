@@ -24,6 +24,10 @@ import java.net.InetAddress;
 
 import ch.iserver.ace.net.impl.DiscoveryCallback;
 
+/**
+ * Interface between Bonjour related class and the network layer.
+ *
+ */
 interface DiscoveryCallbackAdapter {
 
 	/**
