@@ -21,6 +21,8 @@
 
 package ch.iserver.ace.net.impl;
 
+import java.util.List;
+
 import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.Fragment;
 import ch.iserver.ace.net.PortableDocument;
@@ -47,5 +49,7 @@ public interface PortableDocumentExt extends PortableDocument {
 	public void setPublisherId(String publisherId);
 	
 	public String getPublisherId();
+	
+	public List getUsers();
 	
 }

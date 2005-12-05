@@ -95,6 +95,10 @@ public class PortableDocumentImpl implements PortableDocumentExt {
 		this.participantId = id;
 	}
 	
+	public List getUsers() {
+		return new ArrayList(proxies.values());
+	}
+	
 	/*********************************************/
 	/** methods from interface PortableDocument **/
 	/*********************************************/

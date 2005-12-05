@@ -59,12 +59,13 @@ public class CollaborativeTextPane extends JTextPane implements CaretListener, P
 	PropertyChangeHashMap caretHandlerMap;
 	HashMap participationCursorColorMap;
 
+
+
 	public CollaborativeTextPane() {
 		caretHandlerMap = new PropertyChangeHashMapImpl();
-		// ONLY for JAVA 1.5
-		// DefaultCaret c = new DefaultCaret();
-		// c.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
-		// setCaret(c);
+		// ONLY for JAVA 1.5 (AsyncCaret is a JAVA 1.4.2 hack that allows that a caret is updated allways)
+		AsyncCaret c = new AsyncCaret();
+		setCaret(c);
 	}
 	
 	public void setCaretHandlerMap(PropertyChangeHashMap caretHandlerMap) {
@@ -113,9 +114,6 @@ public class CollaborativeTextPane extends JTextPane implements CaretListener, P
 			// check if caret moved from text manipulation
 			PropertyChangeCaretHandlerImpl pCaretHandler = (PropertyChangeCaretHandlerImpl)caretHandlerMap.get("" + session.getParticipantId());
 
-//			System.out.println("caretUpdate(CaretEvent e): pCH.getDot(): " + pCaretHandler.getDot() + "     pCH.getMark(): " +
-//									pCaretHandler.getMark() + "      e.getDot(): " + e.getDot() + "      e.getMark(): " + e.getMark());
-
 			if(pCaretHandler.getDot() != e.getDot() || pCaretHandler.getMark() != e.getMark()) {
 				// set new dot & mark for caret handler
 				pCaretHandler.setCaret(e.getDot(), e.getMark());
@@ -144,7 +142,6 @@ public class CollaborativeTextPane extends JTextPane implements CaretListener, P
 			super.replaceSelection(content);
 		} else {
 			final JTextComponent target = this;
-
 			SessionTemplate template = new SessionTemplate(session);
 			template.execute(new SessionTemplateCallback() {
 				public void execute(Session session) {
@@ -158,24 +155,11 @@ public class CollaborativeTextPane extends JTextPane implements CaretListener, P
 							int p1 = Math.max(caret.getDot(), caret.getMark());
 							if (p0 != p1) {
 								Operation op = new DeleteOperation(p0, doc.getText(p0, p1 - p0));
-//								System.out.println(op);
 								session.sendOperation(op);
-/*								try {
-									doc.remove(p0, p1 - p0);
-								} catch(BadLocationException e) {}*/
-
 							}
 							if (content != null && content.length() > 0) {
 								Operation op = new InsertOperation(p0, content);
-//								System.out.println(op);
 								session.sendOperation(op);
-
-/*								StyledDocument styledDoc = (StyledDocument)doc;
-								Style pStyle = styledDoc.getStyle("myStyle");
-								try {
-									styledDoc.insertString(p0, content, pStyle);
-								} catch(BadLocationException e) {}*/
-
 							}
 
 						} catch (BadLocationException e) {
@@ -186,7 +170,7 @@ public class CollaborativeTextPane extends JTextPane implements CaretListener, P
 
 				}
 			});
-
+			
 		}
 	}
 	
@@ -203,18 +187,6 @@ public class CollaborativeTextPane extends JTextPane implements CaretListener, P
 	
 	public void propertyChange(PropertyChangeEvent evt) {
 		if(!localEditing) {
-
-			// set own caret
-			String mpId = "" + session.getParticipantId();
-			PropertyChangeCaretHandlerImpl pCaretHandler = (PropertyChangeCaretHandlerImpl)caretHandlerMap.get(mpId);
-			System.out.println("propertyChange(): name=" + evt.getPropertyName() + "   getDot=" + pCaretHandler.getDot() + "   getMark=" + pCaretHandler.getMark());
-			CaretUpdate oldCUT = (CaretUpdate)evt.getOldValue();
-			System.out.println("propertyChange()::oldCUT: dot=" + oldCUT.getDot() + "   mark=" + oldCUT.getMark());
-			CaretUpdate newCUT = (CaretUpdate)evt.getNewValue();
-			System.out.println("propertyChange()::newCUT: dot=" + newCUT.getDot() + "   mark=" + newCUT.getMark());
-
-			//TODO: find bug ;)
-			setCaretPosition(pCaretHandler.getDot());
 
 			// delete old caret (only if position is in document)
 			if(evt.getOldValue() != null) {
@@ -261,17 +233,17 @@ public class CollaborativeTextPane extends JTextPane implements CaretListener, P
 						// for all carets except the own one
 						CaretHandler pCaretHandler = (CaretHandler)caretHandlerMap.get(pId);
 
-						if(pCaretHandler.getDot() == pCaretHandler.getMark()) {
+						//if(pCaretHandler.getDot() == pCaretHandler.getMark()) {
 							g.setColor(((Color)participationCursorColorMap.get(pId)));
 							Rectangle rect = modelToView(pCaretHandler.getDot());
 							g.drawLine(rect.x-1, rect.y+rect.height-1, rect.x, rect.y+rect.height-2);
 							g.drawLine(rect.x+1, rect.y+rect.height-1, rect.x, rect.y+rect.height-2);
 							g.drawLine(rect.x-2, rect.y+rect.height-1, rect.x, rect.y+rect.height-3);
 							g.drawLine(rect.x+2, rect.y+rect.height-1, rect.x, rect.y+rect.height-3);
-						} else {
+						//} else {
 							// draw selection
 							
-							int startPos = Math.min(pCaretHandler.getDot(), pCaretHandler.getMark());
+/*							int startPos = Math.min(pCaretHandler.getDot(), pCaretHandler.getMark());
 							int endPos = Math.max(pCaretHandler.getDot(), pCaretHandler.getMark());
 
 							Rectangle rectStart = modelToView(startPos);
@@ -279,7 +251,7 @@ public class CollaborativeTextPane extends JTextPane implements CaretListener, P
 
 							
 
-/*							g.setColor(((Color)participationCursorColorMap.get(pId)));
+							g.setColor(((Color)participationCursorColorMap.get(pId)));
 
 							if(1==1) {//if(rectDot.y == rectMark.y) {
 								// 1. single line
@@ -323,7 +295,7 @@ public class CollaborativeTextPane extends JTextPane implements CaretListener, P
 							}
 
 */
-						}
+						//}
 
 					}
 				}

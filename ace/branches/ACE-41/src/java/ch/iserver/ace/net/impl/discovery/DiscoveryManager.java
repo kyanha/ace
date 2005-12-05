@@ -73,6 +73,13 @@ public interface DiscoveryManager {
 	public RemoteUserProxyExt getUser(String userId);
 	
 	/**
+	 * Adds a new user to the <code>DiscoveryManager</code>.
+	 * 
+	 * @param user the user to be added
+	 */
+	public void addUser(RemoteUserProxyExt user);
+	
+	/**
 	 * Gets the number of discovered users.
 	 * 
 	 * @return the number of discovered users
