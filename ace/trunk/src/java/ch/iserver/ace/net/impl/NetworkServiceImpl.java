@@ -35,9 +35,10 @@ import ch.iserver.ace.net.DiscoveryNetworkCallback;
 import ch.iserver.ace.net.DocumentServer;
 import ch.iserver.ace.net.DocumentServerLogic;
 import ch.iserver.ace.net.NetworkServiceCallback;
+import ch.iserver.ace.net.impl.discovery.DiscoveryLauncher;
+import ch.iserver.ace.net.impl.discovery.ExplicitUserDiscovery;
 import ch.iserver.ace.net.impl.protocol.BEEPSessionListener;
 import ch.iserver.ace.net.impl.protocol.BEEPSessionListenerFactory;
-import ch.iserver.ace.net.impl.protocol.DiscoveryLauncher;
 import ch.iserver.ace.net.impl.protocol.ParticipantConnectionImplFactory;
 import ch.iserver.ace.net.impl.protocol.ProtocolConstants;
 import ch.iserver.ace.net.impl.protocol.Request;
@@ -123,7 +124,7 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 		sessionListener = BEEPSessionListenerFactory.create();
 		sessionListener.start();
 		//start discovery process
-		DiscoveryLauncher launcher = new DiscoveryLauncher(this);
+		DiscoveryLauncher launcher = new DiscoveryLauncher(this, requestChain);
 		launcher.start();
 		//TODO: warn message if dnssd is not installed locally
 	}
@@ -166,8 +167,12 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	}
 
 	public void discoverUser(DiscoveryNetworkCallback callback, InetAddress addr, int port) {
-		//TODO: explicit discovery
-		throw new UnsupportedOperationException();
+		LOG.debug("--> discoverUser(" + addr + ":" + port + ")");
+		
+		ExplicitUserDiscovery userDiscovery = new ExplicitUserDiscovery(callback, addr, port);
+		userDiscovery.start();
+		
+		LOG.debug("<-- discoverUser()");
 	}
 
 	public synchronized DocumentServer publish(DocumentServerLogic logic, DocumentDetails details) {
@@ -198,15 +203,6 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	
 	public void setServerInfo(ServerInfo info) {
 		this.info = info;
-	}
-	
-	public void sendDocuments(RemoteUserProxyExt proxy) {
-		LOG.info("--> sendDocuments() to ["+proxy.getUserDetails().getUsername()+"]");
-		
-		Request request = new RequestImpl(ProtocolConstants.SEND_DOCUMENTS, null, proxy);
-		requestChain.process(request);
-		
-		LOG.info("<-- sendDocuments()");
 	}
 	
 	public boolean hasPublishedDocuments() {

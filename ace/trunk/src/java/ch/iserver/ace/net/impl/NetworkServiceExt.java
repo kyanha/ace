@@ -34,8 +34,6 @@ public interface NetworkServiceExt extends NetworkService {
 	
 	public void setServerInfo(ServerInfo info);
 	
-	public void sendDocuments(RemoteUserProxyExt proxy);
-	
 	public void conceal(String docId);
 	
 	public boolean hasPublishedDocuments();
