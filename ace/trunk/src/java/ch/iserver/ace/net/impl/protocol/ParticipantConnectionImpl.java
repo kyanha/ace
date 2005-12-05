@@ -54,6 +54,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 	private String docId;
 	private boolean isKicked;
 	private String username;
+	private ParticipantPort port;
 	
 	public ParticipantConnectionImpl(String docId, RemoteUserSession session, ReplyListener listener, Serializer serializer, RequestFilter filter) {
 		super(null);
@@ -68,9 +69,17 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 		isKicked = false;
 		username = session.getUser().getUserDetails().getUsername();
 	}
+	
+	public String getDocumentId() {
+		return docId;
+	}
 		
 	public int getParticipantId() {
 		return participantId;
+	}
+	
+	public ParticipantPort getParticipantPort() {
+		return port;
 	}
 
 	/*****************************************************/
@@ -80,6 +89,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 		LOG.debug("--> cleanup()");
 		session = null;
 		serializer = null;
+		port = null;
 		setReplyListener(null);
 		Channel channel = getChannel();
 		LOG.debug("channel: "+channel);
@@ -103,6 +113,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 	public void joinAccepted(ParticipantPort port) {
 		LOG.info("--> joinAccepted()");
 		joinAccepted = true;
+		this.port = port;
 		//initiate collaboration channel
 		try {
 			Channel channel = session.startChannel(RemoteUserSession.CHANNEL_SESSION, port);
@@ -133,118 +144,137 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 	public void sendDocument(PortableDocument document) {
 		if (joinAccepted) {
 			LOG.info("--> sendDocument()");
-			byte[] data = null;
-			try {
-				DocumentInfo info = new DocumentInfo(docId, getParticipantId());
-				data = serializer.createResponse(ProtocolConstants.JOIN_DOCUMENT, info, document);
-			} catch (SerializeException se) {
-				LOG.error("could not serialize document ["+se.getMessage()+"]");
+			if (getState() == STATE_ACTIVE) {
+				byte[] data = null;
+				try {
+					DocumentInfo info = new DocumentInfo(docId, getParticipantId());
+					data = serializer.createResponse(ProtocolConstants.JOIN_DOCUMENT, info, document);
+				} catch (SerializeException se) {
+					LOG.error("could not serialize document ["+se.getMessage()+"]");
+				}
+				sendToPeer(data);
+			} else {
+				LOG.warn("do not send Document, connection is in state " + getStateString());
 			}
-			sendToPeer(data);
 			LOG.info("<-- sendDocument()");
 		} else {
-			throw new IllegalStateException("cannot send document before join has been accepted.");
+			throw new IllegalStateException("cannot send document before join is accepted.");
 		}
 	}
 
 	public void sendRequest(int participantId, Request request) {
 		LOG.info("--> sendRequest("+participantId+", "+request+")");
-		
-		byte[] data = null;
-		try {
-			data = serializer.createSessionMessage(ProtocolConstants.REQUEST, request, Integer.toString(participantId));
-		} catch (SerializeException se) {
-			LOG.error("could not serialize message ["+se.getMessage()+"]");
+		if (getState() == STATE_ACTIVE) {
+			byte[] data = null;
+			try {
+				data = serializer.createSessionMessage(ProtocolConstants.REQUEST, request, Integer.toString(participantId));
+			} catch (SerializeException se) {
+				LOG.error("could not serialize message ["+se.getMessage()+"]");
+			}
+			sendToPeer(data);
+		} else {
+			LOG.warn("do not send Acknowledge, connection is in state " + getStateString());
 		}
-		sendToPeer(data);
-		
 		LOG.info("<-- sendRequest()");
 	}
 
 	public void sendCaretUpdateMessage(int participantId, CaretUpdateMessage message) {
 		LOG.info("--> sendCaretUpdateMessage("+participantId+", "+message+")");
-		
-		byte[] data = null;
-		try {
-			data = serializer.createSessionMessage(ProtocolConstants.CARET_UPDATE, message, Integer.toString(participantId));
-		} catch (SerializeException se) {
-			LOG.error("could not serialize message ["+se.getMessage()+"]");
+		if (getState() == STATE_ACTIVE) {
+			byte[] data = null;
+			try {
+				data = serializer.createSessionMessage(ProtocolConstants.CARET_UPDATE, message, Integer.toString(participantId));
+			} catch (SerializeException se) {
+				LOG.error("could not serialize message ["+se.getMessage()+"]");
+			}
+			sendToPeer(data);
+		} else {
+			LOG.warn("do not send CaretUpdateMessage, connection is in state " + getStateString());
 		}
-		sendToPeer(data);
-		
 		LOG.info("<-- sendCaretUpdateMessage()");
 	}
 	
 	public void sendAcknowledge(int siteId, Timestamp timestamp) {
 		LOG.info("--> sendAcknowledge("+siteId+", "+timestamp+")");
-		
-		byte[] data = null;
-		try {
-			data = serializer.createSessionMessage(ProtocolConstants.ACKNOWLEDGE, timestamp, Integer.toString(siteId));
-		} catch (SerializeException se) {
-			LOG.error("could not serialize message ["+se.getMessage()+"]");
+		if (getState() == STATE_ACTIVE) {
+			byte[] data = null;
+			try {
+				data = serializer.createSessionMessage(ProtocolConstants.ACKNOWLEDGE, timestamp, Integer.toString(siteId));
+			} catch (SerializeException se) {
+				LOG.error("could not serialize message ["+se.getMessage()+"]");
+			}
+			sendToPeer(data);
+		} else {
+			LOG.warn("do not send Acknowledge, connection is in state " + getStateString());
 		}
-		sendToPeer(data);
-			
 		LOG.info("<-- sendAcknowledge()");
 	}
 
 	public void sendParticipantJoined(int participantId, RemoteUserProxy proxy) {
 		LOG.info("--> sendParticipantJoined("+participantId+", "+proxy+")");
-		
-		byte[] data = null;
-		try {
-			data = serializer.createSessionMessage(ProtocolConstants.PARTICIPANT_JOINED, proxy, Integer.toString(participantId));
-		} catch (SerializeException se) {
-			LOG.error("could not serialize message ["+se.getMessage()+"]");
+		if (getState() == STATE_ACTIVE) {
+			byte[] data = null;
+			try {
+				data = serializer.createSessionMessage(ProtocolConstants.PARTICIPANT_JOINED, proxy, Integer.toString(participantId));
+			} catch (SerializeException se) {
+				LOG.error("could not serialize message ["+se.getMessage()+"]");
+			}
+			sendToPeer(data);
+		} else {
+			LOG.warn("do not send participantJoined, connection is in state " + getStateString());
 		}
-		sendToPeer(data);
-		
 		LOG.info("--> sendParticipantJoined()");
 	}
 
 	public void sendParticipantLeft(int participantId, int reason) {
 		LOG.info("--> sendParticipantLeft("+participantId+", "+reason+")");
-		
-		byte[] data = null;
-		try {
-			data = serializer.createSessionMessage(ProtocolConstants.PARTICIPANT_LEFT, Integer.toString(reason), 
-					Integer.toString(participantId));
-		} catch (SerializeException se) {
-			LOG.error("could not serialize message ["+se.getMessage()+"]");
+		if (getState() == STATE_ACTIVE) {
+			byte[] data = null;
+			try {
+				data = serializer.createSessionMessage(ProtocolConstants.PARTICIPANT_LEFT, Integer.toString(reason), 
+						Integer.toString(participantId));
+			} catch (SerializeException se) {
+				LOG.error("could not serialize message ["+se.getMessage()+"]");
+			}
+			sendToPeer(data);
+		} else {
+			LOG.warn("do not send participantLeft, connection is in state " + getStateString());
 		}
-		sendToPeer(data);
-		
 		LOG.info("--> sendParticipantLeft()");
 	}
 
 	public void sendKicked() {
 		LOG.info("--> sendKicked()");
 		isKicked = true;
-		byte [] data = null;
-		try {
-			data = serializer.createNotification(ProtocolConstants.KICKED, docId);
-		} catch (SerializeException se) {
-			LOG.error("could not serialize message ["+se.getMessage()+"]");
+		if (getState() == STATE_ACTIVE) {
+			byte [] data = null;
+			try {
+				data = serializer.createNotification(ProtocolConstants.KICKED, docId);
+			} catch (SerializeException se) {
+				LOG.error("could not serialize message ["+se.getMessage()+"]");
+			}
+			sendToPeer(data);
+		} else {
+			LOG.warn("do not send kicked, connection is in state " + getStateString());
 		}
-		sendToPeer(data);
 		LOG.info("<-- sendKicked()");
 	}
 	
 	public void close() {
 		LOG.info("--> close("+getParticipantId()+", "+username+")");
-		//TODO: consider if on session shutdown it is more appropriate to 
-		//notify the participant on close() invocation or on DocumentServer.shutdown()
-		//invocation
-		try {
-			if (!isKicked) { //TODO: should not send SessionTerminated either upon user leave()
-				sendSessionTerminated();
+		if (getState() == STATE_ACTIVE) {
+			try {
+				if (!isKicked) { //TODO: should not send SessionTerminated either upon user leave()
+					sendSessionTerminated();
+				}
+				getChannel().close();
+			} catch (BEEPException be) {
+				LOG.warn("could not close channel ["+be.getMessage()+"]");
 			}
-			getChannel().close();
-		} catch (BEEPException be) {
-			LOG.warn("could not close channel ["+be.getMessage()+"]");
+			executeCleanup();
+		} else {
+			LOG.warn("do not close, connection is in state " + getStateString());
 		}
-		executeCleanup();
 		LOG.info("<-- close()");
 	}
 	
@@ -262,15 +292,16 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 		try {
 			send(data, username, getReplyListener());
 		} catch (ProtocolException pe) {
-			//TODO: error handling?
 			LOG.error("protocol exception ["+pe.getMessage()+"]");
-//			throw new NetworkException("could not send message to peer ["+pe.getMessage()+"]");
-			NetworkServiceImpl.getInstance().getCallback().serviceFailure(FailureCodes.CHANNEL_FAILURE, username, pe);
+			executeCleanup();
+			throw new NetworkException("could not send message to '" + username + "' ["+pe.getMessage()+"]");
 		}
 	}
 	
+	/**
+	 * Clean up participant resources.
+	 */
 	private void executeCleanup() {
-		//clean up participant resources
 		ParticipantCleanup cleanup = new ParticipantCleanup(docId, session.getUser().getId());
 		cleanup.execute();
 	}

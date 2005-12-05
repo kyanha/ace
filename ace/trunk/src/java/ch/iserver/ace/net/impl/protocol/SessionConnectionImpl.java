@@ -25,12 +25,11 @@ import org.apache.log4j.Logger;
 import org.beepcore.beep.core.Channel;
 import org.beepcore.beep.core.ReplyListener;
 
-import ch.iserver.ace.FailureCodes;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.Timestamp;
 import ch.iserver.ace.net.SessionConnection;
-import ch.iserver.ace.net.impl.NetworkServiceImpl;
+import ch.iserver.ace.net.SessionConnectionCallback;
 
 /**
  *
@@ -38,19 +37,19 @@ import ch.iserver.ace.net.impl.NetworkServiceImpl;
 public class SessionConnectionImpl extends AbstractConnection implements SessionConnection {
 
 	private int participantId;
-	private String docId, username;
+	private String docId, username, userid;
 	private Serializer serializer;
-	private boolean hasLeft;
+//	private boolean hasLeft;
 	
-	public SessionConnectionImpl(String docId, Channel channel, ReplyListener listener, Serializer serializer, String username) {
+	public SessionConnectionImpl(String docId, Channel channel, ReplyListener listener, Serializer serializer, String username, String userId) {
 		super(channel);
 		setState((channel == null) ? STATE_INITIALIZED : STATE_ACTIVE);
 		this.docId = docId;
 		this.serializer = serializer;
 		this.username = username;
+		this.userid = userId;
 		setReplyListener(listener);
 		super.LOG = Logger.getLogger(SessionConnectionImpl.class);
-		hasLeft = false;
 	}
 	
 	public void setParticipantId(int id) {
@@ -60,11 +59,6 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 	
 	public String getDocumentId() {
 		return docId;
-	}
-	
-	//TODO: hasLeft() and close() synchronized?
-	public boolean hasLeft() {
-		return hasLeft;
 	}
 	
 	/*****************************************************/
@@ -92,7 +86,7 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 	 * @see ch.iserver.ace.net.SessionConnection#isAlive()
 	 */
 	public boolean isAlive() {
-		return !hasLeft() && (getState() == STATE_ACTIVE || getState() == STATE_INITIALIZED);
+		return getState() != STATE_CLOSED && (getState() == STATE_ACTIVE || getState() == STATE_INITIALIZED);
 	}
 
 	/* (non-Javadoc)
@@ -100,14 +94,18 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 	 */
 	public void leave() {
 		LOG.debug("--> leave()");
-		try {
-			byte[] data = serializer.createNotification(ProtocolConstants.LEAVE, this);
-			sendToPeer(data);
-		} catch (Exception e) {
-			e.printStackTrace();
-			LOG.error("exception processing leave ["+e+", "+e.getMessage()+"]");
+		if (getState() == STATE_ACTIVE) {
+			try {
+				byte[] data = serializer.createNotification(ProtocolConstants.LEAVE, this);
+				sendToPeer(data);
+			} catch (Exception e) {
+				e.printStackTrace();
+				LOG.error("exception processing leave ["+e+", "+e.getMessage()+"]");
+			}
+			setState(STATE_CLOSED);
+		} else {
+			LOG.warn("not sending leave, state is " + getStateString());
 		}
-		hasLeft = true;
 		LOG.debug("<-- leave()");
 	}
 
@@ -116,18 +114,17 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 	 */
 	public void sendRequest(Request request) {
 		LOG.info("--> sendRequest("+request+")");
-		if (hasLeft()) {
-			throw new IllegalStateException("session left.");
+		if (getState() == STATE_ACTIVE) {
+			byte[] data = null;
+			try {
+				data = serializer.createSessionMessage(ProtocolConstants.REQUEST, request, Integer.toString(participantId));
+			} catch (SerializeException se) {
+				LOG.error("could not serialize message ["+se.getMessage()+"]");
+			}
+			sendToPeer(data);
+		} else {
+			LOG.warn("not sending request, state is " + getStateString());
 		}
-		
-		byte[] data = null;
-		try {
-			data = serializer.createSessionMessage(ProtocolConstants.REQUEST, request, Integer.toString(participantId));
-		} catch (SerializeException se) {
-			LOG.error("could not serialize message ["+se.getMessage()+"]");
-		}
-		sendToPeer(data);
-		
 		LOG.info("<-- sendRequest()");
 
 	}
@@ -137,20 +134,18 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 	 */
 	public void sendCaretUpdateMessage(CaretUpdateMessage message) {
 		LOG.info("--> sendCaretUpdateMessage("+message+")");
-		if (hasLeft()) {
-			throw new IllegalStateException("session left.");
+		if (getState() == STATE_ACTIVE) {
+			byte[] data = null;
+			try {
+				data = serializer.createSessionMessage(ProtocolConstants.CARET_UPDATE, message, Integer.toString(participantId));
+			} catch (SerializeException se) {
+				LOG.error("could not serialize message ["+se.getMessage()+"]");
+			}
+			sendToPeer(data);
+		} else {
+			LOG.warn("not sending caret update message, state is " + getStateString());
 		}
-		
-		byte[] data = null;
-		try {
-			data = serializer.createSessionMessage(ProtocolConstants.CARET_UPDATE, message, Integer.toString(participantId));
-		} catch (SerializeException se) {
-			LOG.error("could not serialize message ["+se.getMessage()+"]");
-		}
-		sendToPeer(data);
-		
 		LOG.info("<-- sendCaretUpdateMessage()");
-
 	}
 
 	/* (non-Javadoc)
@@ -158,18 +153,17 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 	 */
 	public void sendAcknowledge(int siteId, Timestamp timestamp) {
 		LOG.info("--> sendAcknowledge("+siteId+", "+timestamp+")");
-		if (hasLeft()) {
-			throw new IllegalStateException("session left.");
-		}
-		
-		byte[] data = null;
-		try {
-			data = serializer.createSessionMessage(ProtocolConstants.ACKNOWLEDGE, timestamp, Integer.toString(siteId));
-		} catch (SerializeException se) {
-			LOG.error("could not serialize message ["+se.getMessage()+"]");
-		}
-		sendToPeer(data);
-			
+		if (getState() == STATE_ACTIVE) {
+			byte[] data = null;
+			try {
+				data = serializer.createSessionMessage(ProtocolConstants.ACKNOWLEDGE, timestamp, Integer.toString(siteId));
+			} catch (SerializeException se) {
+				LOG.error("could not serialize message ["+se.getMessage()+"]");
+			}
+			sendToPeer(data);
+		} else {
+			LOG.warn("not sending acknowledge, state is " + getStateString());
+		}	
 		LOG.info("<-- sendAcknowledge()");
 	}
 	
@@ -178,9 +172,15 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 			send(data, username, getReplyListener());
 		} catch (ProtocolException pe) {
 			LOG.error("protocol exception ["+pe.getMessage()+"]");
-			NetworkServiceImpl.getInstance().getCallback().serviceFailure(FailureCodes.CHANNEL_FAILURE, username, pe);
-			//TODO: what handling is appropriate here?
+			executeCleanup();
+			throw new NetworkException("could not send message to '" + username + "' ["+pe.getMessage()+"]");
 		}
+	}
+	
+	public void executeCleanup() {
+		SessionCleanup sessionCleanup = new SessionCleanup(docId, userid);
+		sessionCleanup.execute();
+		cleanup();
 	}
 
 }
