@@ -24,7 +24,6 @@ package ch.iserver.ace.net.impl.protocol;
 import org.apache.log4j.Logger;
 import org.beepcore.beep.core.InputDataStream;
 import org.beepcore.beep.core.MessageMSG;
-import org.beepcore.beep.core.RequestHandler;
 
 import ch.iserver.ace.FailureCodes;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
@@ -34,7 +33,6 @@ import ch.iserver.ace.net.SessionConnectionCallback;
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.PortableDocumentExt;
 import ch.iserver.ace.net.impl.RemoteDocumentProxyExt;
-import ch.iserver.ace.net.impl.SessionConnectionImpl;
 import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
 import ch.iserver.ace.util.ParameterValidator;
 
@@ -57,13 +55,16 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 		this.handler = handler;
 	}
 	
+	//TODO: ThreadDomain!!
 	public void receiveMSG(MessageMSG message) {
 		LOG.info("--> recieveMSG()");
 		
 		String readInData = null;
 		try {
 			Request response = null;
-			synchronized(this) {
+			int type;
+//			synchronized(this) {
+				LOG.debug("--> synchronize()");
 				InputDataStream input = message.getDataStream();
 				byte[] rawData = readData(input); //only one thread shall read data at a time
 				readInData = (new String(rawData));
@@ -71,9 +72,21 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 				//deserializer and handler are shared by all SessionRequestHandler instances, thus synchronize
 				deserializer.deserialize(rawData, handler);
 				response = handler.getResult();
+				type = response.getType();
 				readInData = null;
-			}
-			int type = response.getType();
+				
+				//testhalber
+				try {
+					if (type != ProtocolConstants.KICKED && type != ProtocolConstants.SESSION_TERMINATED) {
+						message.sendNUL(); //confirm reception of msg
+					}
+				} catch (Exception e) {
+					LOG.error("could not send confirmation ["+e.getMessage()+"]");
+				}
+				LOG.debug("<-- synchronize()");
+//			}
+			
+//			int type = response.getType();
 			if (type == ProtocolConstants.JOIN_DOCUMENT) {
 				//reception and processing of a joined document
 				PortableDocumentExt doc = (PortableDocumentExt) response.getPayload();
@@ -81,13 +94,17 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 				docId = doc.getDocumentId();
 				int participantId = doc.getParticipantId();
 				RemoteUserSession session = SessionManager.getInstance().getSession(publisherId);
-				SessionConnectionImpl connection = null;
-				connection = session.addSessionConnection(docId, message.getChannel());
-				connection.setParticipantId(participantId);
-				RemoteDocumentProxyExt proxy = session.getUser().getSharedDocument(docId);
-				sessionCallback = proxy.joinAccepted(connection); 
-				sessionCallback.setParticipantId(participantId);
-				sessionCallback.setDocument(doc);
+				if (session != null) {
+					SessionConnectionImpl connection = null;
+					connection = session.addSessionConnection(docId, message.getChannel());
+					connection.setParticipantId(participantId);
+					RemoteDocumentProxyExt proxy = session.getUser().getSharedDocument(docId);
+					sessionCallback = proxy.joinAccepted(connection); 
+					sessionCallback.setParticipantId(participantId);
+					sessionCallback.setDocument(doc);
+				} else {
+					LOG.warn("could not find RemoteUserSession for [" + publisherId + "]");
+				}
 			} else if (type == ProtocolConstants.KICKED) {
 				String docId = ((DocumentInfo) response.getPayload()).getDocId();
 				LOG.debug("user kicked for doc [" + docId + "]");
@@ -123,13 +140,15 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 				sessionCallback.sessionTerminated();
 				executeCleanup();
 			}
-			try {
-				if (type != ProtocolConstants.KICKED && type != ProtocolConstants.SESSION_TERMINATED) { //on KICKED message, channel is already closed here
-					message.sendNUL(); //confirm reception of msg
-				}
-			} catch (Exception e) {
-				LOG.error("could not send confirmation ["+e.getMessage()+"]");
-			}
+
+//			try {
+//				if (type != ProtocolConstants.KICKED && type != ProtocolConstants.SESSION_TERMINATED) { //on KICKED message, channel is already closed here
+//					message.sendNUL(); //confirm reception of msg
+//				}
+//			} catch (Exception e) {
+//				LOG.error("could not send confirmation ["+e.getMessage()+"]");
+//			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			LOG.error("could not process request ["+e+"]");
@@ -152,11 +171,11 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 		sessionCallback = null;
 	}
 	
-	public String getDocumentId() {
+	private String getDocumentId() {
 		return docId;
 	}
 	
-	public String getPublisherId() {
+	private String getPublisherId() {
 		return publisherId;
 	}
 	

@@ -22,9 +22,11 @@
 package ch.iserver.ace.net.impl.protocol;
 
 import org.apache.log4j.Logger;
+import org.beepcore.beep.core.RequestHandler;
 
-import ch.iserver.ace.algorithm.TimestampFactory;
 import ch.iserver.ace.util.ParameterValidator;
+import ch.iserver.ace.util.SingleThreadDomain;
+import ch.iserver.ace.util.ThreadDomain;
 
 /**
  *
@@ -35,6 +37,8 @@ public class SessionRequestHandlerFactory {
 	
 	private Deserializer deserializer;
 	private ParserHandler handler;
+	
+	private ThreadDomain domain = new SingleThreadDomain();
 	
 	private static SessionRequestHandlerFactory instance;
 	
@@ -58,9 +62,8 @@ public class SessionRequestHandlerFactory {
 		return instance;
 	}
 	
-	public SessionRequestHandler createHandler() {
-		LOG.debug("create SessionRequestHandler()");
-		return new SessionRequestHandler(deserializer, handler);
+	public RequestHandler createHandler() {
+		return (RequestHandler) domain.wrap(new SessionRequestHandler(deserializer, handler), RequestHandler.class);
 	}
 	
 }
