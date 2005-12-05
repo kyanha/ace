@@ -9,6 +9,7 @@ import org.easymock.MockControl;
 import ch.iserver.ace.net.NetworkServiceCallback;
 import ch.iserver.ace.net.impl.discovery.DiscoveryManagerFactory;
 import ch.iserver.ace.net.impl.protocol.LogFilter;
+import ch.iserver.ace.net.impl.protocol.RequestFilter;
 import ch.iserver.ace.net.impl.protocol.SessionManager;
 
 public class DiscoveryCallbackImplTest extends TestCase {
@@ -19,7 +20,8 @@ public class DiscoveryCallbackImplTest extends TestCase {
 		MockControl serviceCtrl = MockControl.createControl(NetworkServiceExt.class);
 		NetworkServiceExt service = (NetworkServiceExt)serviceCtrl.getMock();
 		
-		DiscoveryCallbackImpl discoveryCallback = new DiscoveryCallbackImpl(callback, service);
+		RequestFilter filter = new LogFilter(null ,false);
+		DiscoveryCallbackImpl discoveryCallback = new DiscoveryCallbackImpl(callback, service, filter);
 		DiscoveryManagerFactory.getDiscoveryManager(discoveryCallback);
 		RemoteUserProxyFactory.init(new LogFilter(null, false));
 		RemoteUserProxyExt proxy = RemoteUserProxyFactory.getInstance().
