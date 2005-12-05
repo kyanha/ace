@@ -101,8 +101,7 @@ public class SessionCallbackImpl implements SessionCallback {
 	}
 	
 	public void setParticipantId(int participantId) {
-		// TODO: implement this
-		System.out.println("setting the local participant id: " + participantId);		
+		//System.out.println("setting the local participant id: " + participantId);		
 		this.participantId = participantId;
 		mpId = "" + participantId;
 	}
@@ -115,7 +114,7 @@ public class SessionCallbackImpl implements SessionCallback {
 		ParticipantItem mapParticipantItem = new ParticipantItem(participant, pColor);
 		participantItemMap.put(pId, mapParticipantItem);
 		participantSourceList.add(mapParticipantItem);		
-		System.out.println("participantJoined: " + participant);
+		//System.out.println("participantJoined: " + participant);
 		
 		// add caret handler
 		PropertyChangeCaretHandlerImpl pCaretHandler = new PropertyChangeCaretHandlerImpl(0, 0);
@@ -143,7 +142,7 @@ public class SessionCallbackImpl implements SessionCallback {
 		participantColorLeft(pId);
 		ParticipantItem mapParticipantItem = (ParticipantItem)participantItemMap.remove(pId);
 		participantSourceList.remove(mapParticipantItem);
-		System.out.println("participantLeft: " + participant + "   code: " + code);
+		//System.out.println("participantLeft: " + participant + "   code: " + code);
 		
 		// remove caret handler
 		PropertyChangeCaretHandlerImpl pCaretHandler = (PropertyChangeCaretHandlerImpl)participantCaretMap.remove(pId);
@@ -191,7 +190,7 @@ public class SessionCallbackImpl implements SessionCallback {
 		if(operation instanceof SplitOperation) {
 			// split operation
 			SplitOperation op = (SplitOperation)operation;
-			System.out.println("split... " + op);
+			//System.out.println("split... " + op);
 			applyOperation(op.getSecond(), style);
 			applyOperation(op.getFirst(), style);
 		} else if(operation instanceof InsertOperation) {
@@ -212,7 +211,7 @@ public class SessionCallbackImpl implements SessionCallback {
 			}
 		} else if (operation instanceof NoOperation) {
 			NoOperation op = (NoOperation)operation;
-			System.out.println("no operation..." + op);
+			//System.out.println("no operation..." + op);
 		}
 	}
 	

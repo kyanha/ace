@@ -55,12 +55,12 @@ public class ParticipantSessionCallbackImpl extends SessionCallbackImpl implemen
 		// IMPORTANT: this method is called first from the collaboration layer. set participants here.
 		// add all participants
 
-		System.out.println("my participant id: " + mpId);
+		//System.out.println("my participant id: " + mpId);
 		Iterator pIter = doc.getParticipants().iterator();
 		while(pIter.hasNext()) {
 			Participant participant = (Participant)pIter.next();
 			String pId = "" + participant.getParticipantId();
-			System.out.println("found participant: " + participant);
+			//System.out.println("found participant: " + participant);
 			if(!pId.equals(mpId)) {
 				
 				Color pColor = participantColorJoined(pId);

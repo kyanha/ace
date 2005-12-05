@@ -101,14 +101,11 @@ public class CollaborativeTextPane extends JTextPane implements CaretListener, P
 			PropertyChangeCaretHandlerImpl pCaretHandler = (PropertyChangeCaretHandlerImpl)caretHandlerMap.get("" + session.getParticipantId());
 
 
-			System.out.println("caretUpdate(CaretEvent e): pCH.getDot(): " + pCaretHandler.getDot() + "     pCH.getMark(): " +
-									pCaretHandler.getMark() + "      e.getDot(): " + e.getDot() + "      e.getMark(): " + e.getMark());
+//			System.out.println("caretUpdate(CaretEvent e): pCH.getDot(): " + pCaretHandler.getDot() + "     pCH.getMark(): " +
+//									pCaretHandler.getMark() + "      e.getDot(): " + e.getDot() + "      e.getMark(): " + e.getMark());
 
 			if(pCaretHandler.getDot() != e.getDot() || pCaretHandler.getMark() != e.getMark()) {
 				// set new dot & mark for caret handler
-//				System.out.println("caretUpdate(CaretEvent e): -> oldDot: " + pCaretHandler.getDot() + "     oldMarkDot: " +
-//										pCaretHandler.getMark() + "     newDot: " + e.getDot() + "     newMark: " + e.getMark());
-
 				pCaretHandler.setCaret(e.getDot(), e.getMark());
 
 				// send updates
@@ -195,7 +192,7 @@ public class CollaborativeTextPane extends JTextPane implements CaretListener, P
 			// set own caret
 			String mpId = "" + session.getParticipantId();
 			CaretHandler pCaretHandler = (CaretHandler)caretHandlerMap.get(mpId);
-			System.out.println("propertyChange(): name=" + evt.getPropertyName() + "   getDot=" + pCaretHandler.getDot() + "   getMark=" + pCaretHandler.getMark());
+//			System.out.println("propertyChange(): name=" + evt.getPropertyName() + "   getDot=" + pCaretHandler.getDot() + "   getMark=" + pCaretHandler.getMark());
 			/*CaretUpdate oldCUT = (CaretUpdate)evt.getOldValue();
 			System.out.println("propertyChange()::oldCUT: dot=" + oldCUT.getDot() + "   mark=" + oldCUT.getMark());
 			CaretUpdate newCUT = (CaretUpdate)evt.getNewValue();
@@ -253,12 +250,23 @@ public class CollaborativeTextPane extends JTextPane implements CaretListener, P
 						// for all carets except the own one
 						CaretHandler pCaretHandler = (CaretHandler)caretHandlerMap.get(pId);
 
-						g.setColor(((Color)participationCursorColorMap.get(pId)).darker().darker());
-						Rectangle rect = modelToView(pCaretHandler.getDot());
-						g.drawLine(rect.x-1, rect.y+rect.height-1, rect.x, rect.y+rect.height-2);
-						g.drawLine(rect.x+1, rect.y+rect.height-1, rect.x, rect.y+rect.height-2);
-						g.drawLine(rect.x-2, rect.y+rect.height-1, rect.x, rect.y+rect.height-3);
-						g.drawLine(rect.x+2, rect.y+rect.height-1, rect.x, rect.y+rect.height-3);
+						if(pCaretHandler.getDot() == pCaretHandler.getMark()) {
+							g.setColor(((Color)participationCursorColorMap.get(pId)));
+							Rectangle rect = modelToView(pCaretHandler.getDot());
+							g.drawLine(rect.x-1, rect.y+rect.height-1, rect.x, rect.y+rect.height-2);
+							g.drawLine(rect.x+1, rect.y+rect.height-1, rect.x, rect.y+rect.height-2);
+							g.drawLine(rect.x-2, rect.y+rect.height-1, rect.x, rect.y+rect.height-3);
+							g.drawLine(rect.x+2, rect.y+rect.height-1, rect.x, rect.y+rect.height-3);
+						} else {
+							// draw selection
+/*							g.setColor(((Color)participationCursorColorMap.get(pId)));
+							Rectangle rectDot = modelToView(pCaretHandler.getDot());
+							Rectangle rectMark = modelToView(pCaretHandler.getMark());
+							System.out.println(rectDot + " - " + rectMark);
+							g.drawRect(rectMark.x, rectMark.y, rectDot.x, rectDot.height);*/
+
+
+						}
 
 					}
 				}

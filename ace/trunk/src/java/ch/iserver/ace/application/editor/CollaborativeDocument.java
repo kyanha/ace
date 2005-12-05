@@ -37,7 +37,7 @@ public class CollaborativeDocument extends DefaultStyledDocument {
 	protected void styleChanged(Style style) {
 		//
 		if(!style.getName().equals("default")) {
-			System.out.println("Style Changed: reapplying styles to document");
+			//System.out.println("Style Changed: reapplying styles to document");
 			reapplyStyles(style);
 		}
 	}
