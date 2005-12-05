@@ -41,27 +41,39 @@ public class DocumentDetailsChangedReceiveFilter extends AbstractRequestFilter {
 	}
 	
 	public void process(Request request) {
-		if (request.getType() == ProtocolConstants.DOCUMENT_DETAILS_CHANGED) {
-			LOG.info("--> process()");
-			DocumentInfo info = (DocumentInfo) request.getPayload();
-			String userId = info.getUserId();
-			RemoteUserSession session = SessionManager.getInstance().getSession(userId);
-			RemoteDocumentProxyExt proxy = session.getUser().getSharedDocument(info.getDocId());			
-			DocumentDetails details = new DocumentDetails(info.getName());
-			proxy.setDocumentDetails(details);
-			NetworkServiceCallback callback = NetworkServiceImpl.getInstance().getCallback();
-			callback.documentDetailsChanged(proxy);
-			
-			try {
-				//confirm reception of msg				
-				request.getMessage().sendNUL();
-			} catch (Exception e) {
-				LOG.error("could not send Nul confirmation ["+e.getMessage()+"]");
-			}
-			LOG.info("<-- process()");
-		} else { //Forward
-			super.process(request);
+		try {
+			if (request.getType() == ProtocolConstants.DOCUMENT_DETAILS_CHANGED) {
+				LOG.info("--> process()");
+				DocumentInfo info = (DocumentInfo) request.getPayload();
+				String userId = info.getUserId();
+				RemoteUserSession session = SessionManager.getInstance().getSession(userId);
+				if (session != null) {
+					RemoteDocumentProxyExt proxy = session.getUser().getSharedDocument(info.getDocId());
+					if (proxy != null) {
+						DocumentDetails details = new DocumentDetails(info.getName());
+						proxy.setDocumentDetails(details);
+						NetworkServiceCallback callback = NetworkServiceImpl.getInstance().getCallback();
+						callback.documentDetailsChanged(proxy);
+					} else {
+						LOG.warn("RemoteUserProxy for [" + userId + "] not found");
+					}
+				} else {
+					LOG.warn("RemoteUserSession for [" + userId + "] not found");
+				}
+				
+				try {
+					//confirm reception of msg				
+					request.getMessage().sendNUL();
+				} catch (Exception e) {
+					LOG.error("could not send Nul confirmation ["+e.getMessage()+"]");
+				}
+				LOG.info("<-- process()");
+			} else { //Forward
+				super.process(request);
+			} 
+		} catch (Exception e) {
+			e.printStackTrace();
+			LOG.error("exception processing request ["+e+", "+e.getMessage()+"]");
 		}
 	}
-
 }
