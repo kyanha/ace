@@ -132,6 +132,20 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 	}
 	
 	/**
+	 * Adds a new user to the <code>DiscoveryManager</code> and notifies
+	 * the <code>DiscoveryCallback</code> with a call to <code>userDiscovered(RemoteUserProxyExt)</code>.
+	 * 
+	 * @param user the user to be added
+	 */
+	public void addUser(RemoteUserProxyExt user) {
+		ParameterValidator.notNull("user", user);
+		LOG.debug("--> addUser(" + user.getUserDetails().getUsername() + ")");
+		remoteUserProxies.put(user.getId(), user);
+		forward.userDiscovered(user);
+		LOG.debug("<-- addUser()");
+	}
+	
+	/**
 	 * @inheritDoc
 	 */
 	public int getSize() {
@@ -162,11 +176,17 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 		MutableUserDetails details = new MutableUserDetails(username);
 		details.setPort(port);
 		
-		RemoteUserProxyExt proxy = RemoteUserProxyFactory.getInstance().createProxy(userId, details);
-		remoteUserProxies.put(userId, proxy);
 		services.put(serviceName, userId);
-		
-		forward.userDiscovered(proxy);
+		RemoteUserProxyExt user = getUser(userId);
+		if (user == null) { //add user
+			user = RemoteUserProxyFactory.getInstance().createProxy(userId, details);
+			addUser(user);
+		} else { //update user info
+			//user proxy has been created before but with no user details
+			LOG.debug("user [" + username + "] has been created before, thus update only");
+			user.getMutableUserDetails().setUsername(username);
+			forward.userDetailsChanged(user);
+		}
 	}
 
 	/**
@@ -195,7 +215,7 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 		
 		String userId = (String)services.get(serviceName);
 		if (userId != null) {
-			RemoteUserProxyExt proxy = (RemoteUserProxyExt)remoteUserProxies.get(userId);
+			RemoteUserProxyExt proxy = getUser(userId);
 			String oldName = proxy.getUserDetails().getUsername();
 			if (!oldName.equals(userName)) {
 				proxy.getUserDetails().setUsername(userName);
@@ -215,7 +235,7 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 		
 		String userId = (String)services.get(serviceName);
 		if (userId != null) {
-			RemoteUserProxyExt proxy = (RemoteUserProxyExt)remoteUserProxies.get(userId);
+			RemoteUserProxyExt proxy = getUser(userId);
 			MutableUserDetails details = (MutableUserDetails)proxy.getUserDetails();
 			details.setAddress(address);
 			forward.userDiscoveryCompleted(proxy);
