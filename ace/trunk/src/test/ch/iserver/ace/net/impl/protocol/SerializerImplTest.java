@@ -6,8 +6,10 @@ import java.util.Map;
 import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
+import org.easymock.MockControl;
 
 import ch.iserver.ace.DocumentDetails;
+import ch.iserver.ace.net.DocumentServerLogic;
 import ch.iserver.ace.net.impl.NetworkConstants;
 import ch.iserver.ace.net.impl.NetworkProperties;
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
@@ -16,6 +18,13 @@ import ch.iserver.ace.net.impl.PublishedDocument;
 public class SerializerImplTest extends TestCase {
 	
 	private Logger LOG = Logger.getLogger(SerializerImplTest.class);
+	private DocumentServerLogic logic;
+	
+	protected void setUp() throws Exception {
+		MockControl docServerLogicCtrl = MockControl.createControl(DocumentServerLogic.class);
+		logic = (DocumentServerLogic) docServerLogicCtrl.getMock();
+		docServerLogicCtrl.replay();
+	}
 	
 	public void testCreateQueryForPublishedDocuments() throws Exception {
 		Serializer serializer = SerializerImpl.getInstance();
@@ -30,11 +39,11 @@ public class SerializerImplTest extends TestCase {
 		Serializer serializer = SerializerImpl.getInstance();
 		
 		Map docs = new LinkedHashMap();
-		PublishedDocument doc = new PublishedDocument("WERS24-RE2", null, new DocumentDetails("testfile.txt"), null, null);
+		PublishedDocument doc = new PublishedDocument("WERS24-RE2", logic, new DocumentDetails("testfile.txt"), null, null);
 		docs.put("WERS24-RE2", doc);
-		doc = new PublishedDocument("ADSFBW-45S", null, new DocumentDetails("meeting2.txt"), null, null);
+		doc = new PublishedDocument("ADSFBW-45S", logic, new DocumentDetails("meeting2.txt"), null, null);
 		docs.put("ADSFBW-45S",doc);
-		doc = new PublishedDocument("23SSWD-3ED", null, new DocumentDetails("notes232.txt"), null, null);
+		doc = new PublishedDocument("23SSWD-3ED", logic, new DocumentDetails("notes232.txt"), null, null);
 		docs.put("23SSWD-3ED", doc);
 		
 		byte[] data = serializer.createResponse(ProtocolConstants.PUBLISHED_DOCUMENTS, docs, null);
@@ -47,7 +56,7 @@ public class SerializerImplTest extends TestCase {
 		Serializer serializer = SerializerImpl.getInstance();
 		String userId = "asdfadsf-23";
 		NetworkServiceImpl.getInstance().setUserId(userId);
-		PublishedDocument doc = new PublishedDocument("WERS24-RE2", null, new DocumentDetails("testfile.txt"), null, null);
+		PublishedDocument doc = new PublishedDocument("WERS24-RE2", logic, new DocumentDetails("testfile.txt"), null, null);
 		
 		byte[] data = serializer.createNotification(ProtocolConstants.PUBLISH, doc);
 		String actual = new String(data, NetworkConstants.DEFAULT_ENCODING);
@@ -62,7 +71,7 @@ public class SerializerImplTest extends TestCase {
 		Serializer serializer = SerializerImpl.getInstance();
 		String userId = "asdfadsf-23";
 		NetworkServiceImpl.getInstance().setUserId(userId);
-		PublishedDocument doc = new PublishedDocument("WERS24-RE2", null, new DocumentDetails("testfile.txt"), null, null);
+		PublishedDocument doc = new PublishedDocument("WERS24-RE2", logic, new DocumentDetails("testfile.txt"), null, null);
 		
 		byte[] data = serializer.createNotification(ProtocolConstants.CONCEAL, doc);
 		String actual = new String(data, NetworkConstants.DEFAULT_ENCODING);
@@ -78,11 +87,11 @@ public class SerializerImplTest extends TestCase {
 		NetworkServiceImpl.getInstance().setUserId(userId);
 		
 		Map docs = new LinkedHashMap();
-		PublishedDocument doc = new PublishedDocument("WERS24-RE2", null, new DocumentDetails("testfile.txt"), null, null);
+		PublishedDocument doc = new PublishedDocument("WERS24-RE2", logic, new DocumentDetails("testfile.txt"), null, null);
 		docs.put("WERS24-RE2", doc);
-		doc = new PublishedDocument("ADSFBW-45S", null, new DocumentDetails("meeting2.txt"), null, null);
+		doc = new PublishedDocument("ADSFBW-45S", logic, new DocumentDetails("meeting2.txt"), null, null);
 		docs.put("ADSFBW-45S",doc);
-		doc = new PublishedDocument("23SSWD-3ED", null, new DocumentDetails("notes232.txt"), null, null);
+		doc = new PublishedDocument("23SSWD-3ED", logic, new DocumentDetails("notes232.txt"), null, null);
 		docs.put("23SSWD-3ED", doc);
 		
 		byte[] data = serializer.createNotification(ProtocolConstants.SEND_DOCUMENTS, docs);

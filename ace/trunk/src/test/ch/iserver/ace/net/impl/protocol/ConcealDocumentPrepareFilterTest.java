@@ -4,6 +4,7 @@ import junit.framework.TestCase;
 
 import org.easymock.MockControl;
 
+import ch.iserver.ace.net.DocumentServerLogic;
 import ch.iserver.ace.net.impl.PublishedDocument;
 
 public class ConcealDocumentPrepareFilterTest extends TestCase {
@@ -21,7 +22,10 @@ public class ConcealDocumentPrepareFilterTest extends TestCase {
 		
 		//create published document
 		String docId = "afsd-23";
-		PublishedDocument doc = new PublishedDocument(docId, null, null, null, null);
+		MockControl docServerLogicCtrl = MockControl.createControl(DocumentServerLogic.class);
+		DocumentServerLogic logic = (DocumentServerLogic) docServerLogicCtrl.getMock();
+		docServerLogicCtrl.replay();
+		PublishedDocument doc = new PublishedDocument(docId, logic, null, null, null);
 		Request request = new RequestImpl(ProtocolConstants.CONCEAL, userId, doc);
 	}
 

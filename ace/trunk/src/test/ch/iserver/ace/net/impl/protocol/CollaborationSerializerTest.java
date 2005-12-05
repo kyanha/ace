@@ -22,7 +22,6 @@ import ch.iserver.ace.net.impl.PortableDocumentImpl;
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;
 import ch.iserver.ace.net.impl.RemoteUserProxyFactory;
 import ch.iserver.ace.net.impl.RemoteUserProxyImpl;
-import ch.iserver.ace.net.impl.SessionConnectionImpl;
 import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
 import ch.iserver.ace.text.DeleteOperation;
 import ch.iserver.ace.text.InsertOperation;
@@ -36,7 +35,7 @@ public class CollaborationSerializerTest extends TestCase {
 		
 		CollaborationSerializer serializer = new CollaborationSerializer();
 		
-		SessionConnectionImpl conn = new SessionConnectionImpl("dic-1231", null, null, null, null);
+		SessionConnectionImpl conn = new SessionConnectionImpl("dic-1231", null, null, null, "testuser");
 		conn.setParticipantId(13);
 		
 		byte[] data = serializer.createNotification(ProtocolConstants.LEAVE, conn);
