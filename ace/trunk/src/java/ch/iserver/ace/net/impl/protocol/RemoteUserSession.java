@@ -39,6 +39,7 @@ import org.beepcore.beep.util.BufferSegment;
 
 import ch.iserver.ace.FailureCodes;
 import ch.iserver.ace.algorithm.TimestampFactory;
+import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.impl.NetworkProperties;
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;
@@ -133,7 +134,7 @@ public class RemoteUserSession {
 		if (!isInitiated())
 			initiateTCPSession();
 		if (mainConnection == null) {
-			Channel channel = startChannel(CHANNEL_MAIN);
+			Channel channel = startChannel(CHANNEL_MAIN, null);
 			LOG.debug("main channel to ["+user.getUserDetails().getUsername()+"] started");
 			mainConnection = new MainConnection(channel);
 		} else {
@@ -144,12 +145,13 @@ public class RemoteUserSession {
 	
 	/**
 	 * 
-	 * @param type
+	 * @param type the type of the channel
+	 * @param port the ParticipantPort for the ParticipantRequestHandler (optional)
 	 * @return
 	 * @throws ConnectionException
 	 */
-	public Channel startChannel(String type) throws ConnectionException {
-		return startChannelImpl(type);
+	public Channel startChannel(String type, ParticipantPort port) throws ConnectionException {
+		return startChannelImpl(type, port);
 	}
 	
 	/********************************************/
@@ -326,7 +328,7 @@ public class RemoteUserSession {
 	 * @return
 	 * @throws ConnectionException
 	 */
-	private Channel startChannelImpl(String type) throws ConnectionException {
+	private Channel startChannelImpl(String type, ParticipantPort port) throws ConnectionException {
 		try {
 			String uri = NetworkProperties.get(NetworkProperties.KEY_PROFILE_URI);
 			LOG.debug("startChannel(type="+type+")");
@@ -340,7 +342,9 @@ public class RemoteUserSession {
 				CollaborationDeserializer deserializer = new CollaborationDeserializer();
 				CollaborationParserHandler parserHandler = new CollaborationParserHandler();
 				parserHandler.setTimestampFactory(getTimestampFactory());
-				handler = (RequestHandler) domain.wrap(new ParticipantRequestHandler(deserializer, getTimestampFactory()), RequestHandler.class);
+				ParticipantRequestHandler pHandler = new ParticipantRequestHandler(deserializer, getTimestampFactory());
+				pHandler.setParticipantPort(port);
+				handler = (RequestHandler) domain.wrap(pHandler, RequestHandler.class);
 				channelType = getChannelTypeXML(CHANNEL_SESSION);
 			} else {
 				//TODO: proxy channel?
