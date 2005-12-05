@@ -119,7 +119,7 @@ public class SessionCallbackImpl implements SessionCallback {
 		PropertyChangeCaretHandlerImpl pCaretHandler = new PropertyChangeCaretHandlerImpl(0, 0);
 		cDocument.addDocumentListener(pCaretHandler);
 		participantCaretMap.put(pId, pCaretHandler);
-		participantCaretMap.firePropertyChange(ADDED_PROPERTY, null, pCaretHandler);
+//		participantCaretMap.firePropertyChange(ADDED_PROPERTY, null, pCaretHandler);
 
 		// create style for new participant or get his old style
 		Style pStyle = cDocument.getStyle(pId);
@@ -145,7 +145,7 @@ public class SessionCallbackImpl implements SessionCallback {
 		// remove caret handler
 		PropertyChangeCaretHandlerImpl pCaretHandler = (PropertyChangeCaretHandlerImpl)participantCaretMap.remove(pId);
 		cDocument.removeDocumentListener(pCaretHandler);
-		participantCaretMap.firePropertyChange(REMOVED_PROPERTY, pCaretHandler, null);
+//		participantCaretMap.firePropertyChange(REMOVED_PROPERTY, pCaretHandler, null);
 
 		// clean up listeners
 		mapParticipantItem.cleanUp();
