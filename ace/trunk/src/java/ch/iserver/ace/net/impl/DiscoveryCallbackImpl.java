@@ -28,7 +28,11 @@ import ch.iserver.ace.net.NetworkServiceCallback;
 import ch.iserver.ace.net.RemoteDocumentProxy;
 import ch.iserver.ace.net.impl.discovery.DiscoveryManager;
 import ch.iserver.ace.net.impl.discovery.DiscoveryManagerFactory;
+import ch.iserver.ace.net.impl.protocol.ProtocolConstants;
 import ch.iserver.ace.net.impl.protocol.RemoteUserSession;
+import ch.iserver.ace.net.impl.protocol.Request;
+import ch.iserver.ace.net.impl.protocol.RequestFilter;
+import ch.iserver.ace.net.impl.protocol.RequestImpl;
 import ch.iserver.ace.net.impl.protocol.SessionManager;
 import ch.iserver.ace.util.ParameterValidator;
 
@@ -42,15 +46,18 @@ public class DiscoveryCallbackImpl implements DiscoveryCallback {
 	
 	private NetworkServiceCallback callback;
 	private NetworkServiceExt service;
+	private RequestFilter filter;
 	
 	/**
 	 * 
 	 * @param callback
 	 */
-	public DiscoveryCallbackImpl(NetworkServiceCallback callback, NetworkServiceExt service) {
+	public DiscoveryCallbackImpl(NetworkServiceCallback callback, NetworkServiceExt service, RequestFilter filter) {
 		ParameterValidator.notNull("callback", callback);
+		ParameterValidator.notNull("filter", filter);
 		this.callback = callback;
 		this.service = service;
+		this.filter = filter;
 	}
 	
 	/**
@@ -65,15 +72,22 @@ public class DiscoveryCallbackImpl implements DiscoveryCallback {
 	/**
 	 * 
 	 */
-	public void userDiscoveryCompleted(RemoteUserProxyExt proxy) {
-		LOG.debug("--> userDiscoveryCompleted("+proxy+")");
+	public void userDiscoveryCompleted(RemoteUserProxyExt user) {
+		LOG.debug("--> userDiscoveryCompleted("+user+")");
 
 		if (service.hasPublishedDocuments()) {
-			service.sendDocuments(proxy);
+			sendDocuments(user);
 		} else {
-			LOG.debug("no published documents, do not establish session with ["+proxy.getUserDetails().getUsername()+"]");
+			LOG.debug("no published documents, do not establish session with ["+user.getUserDetails().getUsername()+"]");
 		}
 		LOG.debug("<-- userDiscoveryCompleted()");
+	}
+	
+	private void sendDocuments(RemoteUserProxyExt user) {
+		LOG.info("--> sendDocuments() to ["+user.getUserDetails().getUsername()+"]");
+		Request request = new RequestImpl(ProtocolConstants.SEND_DOCUMENTS, null, user);
+		filter.process(request);
+		LOG.info("<-- sendDocuments()");
 	}
 
 	/**
@@ -103,14 +117,13 @@ public class DiscoveryCallbackImpl implements DiscoveryCallback {
 		callback.userDiscarded(proxy);
 		
 		DiscoveryManager manager = DiscoveryManagerFactory.getDiscoveryManager(null);
-		if (manager.hasSessionEstablished(proxy.getId())) {
+		String userId = proxy.getId();
+		if (manager.hasSessionEstablished(userId)) {
 			RemoteUserSession session = 
-				SessionManager.getInstance().removeSession(proxy.getId());
+				SessionManager.getInstance().removeSession(userId);
 			session.cleanup();
+			DiscoveryManagerFactory.getDiscoveryManager(null).setSessionTerminated(userId);
 		}
-		//TODO: also cleanup session connections and alike
-		//--> session and user proxy ready to be garbage collected
-		
 		LOG.debug("<-- userDiscarded()");
 	}
 }
