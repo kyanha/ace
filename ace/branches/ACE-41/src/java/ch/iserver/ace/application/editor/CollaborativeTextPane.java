@@ -21,20 +21,34 @@
 
 package ch.iserver.ace.application.editor;
 
-import ch.iserver.ace.application.*;
-import ch.iserver.ace.collaboration.*;
-import ch.iserver.ace.collaboration.util.*;
-import ch.iserver.ace.*;
-import ch.iserver.ace.text.*;
-import javax.swing.*;
-import javax.swing.text.*;
-import javax.swing.event.*;
-import java.awt.*;
-import java.util.HashMap;
-import ch.iserver.ace.util.*;
-import java.util.*;
-import java.beans.PropertyChangeListener;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.HashMap;
+import java.util.Iterator;
+
+import javax.swing.JTextPane;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Caret;
+import javax.swing.text.Document;
+import javax.swing.text.JTextComponent;
+
+import ch.iserver.ace.CaretUpdate;
+import ch.iserver.ace.Operation;
+import ch.iserver.ace.application.PropertyChangeCaretHandlerImpl;
+import ch.iserver.ace.application.PropertyChangeHashMap;
+import ch.iserver.ace.application.PropertyChangeHashMapImpl;
+import ch.iserver.ace.collaboration.Session;
+import ch.iserver.ace.collaboration.util.SessionTemplate;
+import ch.iserver.ace.collaboration.util.SessionTemplateCallback;
+import ch.iserver.ace.text.DeleteOperation;
+import ch.iserver.ace.text.InsertOperation;
+import ch.iserver.ace.util.CaretHandler;
 
 
 
@@ -95,31 +109,19 @@ public class CollaborativeTextPane extends JTextPane implements CaretListener, P
 	}
 	
 	public void caretUpdate(CaretEvent e) {
-		if (localEditing) {
-		} else {
+		if (!localEditing) {
 			// check if caret moved from text manipulation
 			PropertyChangeCaretHandlerImpl pCaretHandler = (PropertyChangeCaretHandlerImpl)caretHandlerMap.get("" + session.getParticipantId());
 
-
-//			System.out.println("caretUpdate(CaretEvent e): pCH.getDot(): " + pCaretHandler.getDot() + "     pCH.getMark(): " +
-//									pCaretHandler.getMark() + "      e.getDot(): " + e.getDot() + "      e.getMark(): " + e.getMark());
-
-			if(pCaretHandler.getDot() != e.getDot() || pCaretHandler.getMark() != e.getMark()) {
+			if (pCaretHandler.getDot() != e.getDot() || pCaretHandler.getMark() != e.getMark()) {
 				// set new dot & mark for caret handler
 				pCaretHandler.setCaret(e.getDot(), e.getMark());
 
 				// send updates
 				final int dot = e.getDot();
 				final int mark = e.getMark();
-				SessionTemplate template = new SessionTemplate(session);
-				template.execute(new SessionTemplateCallback() {
-					public void execute(Session session) {
-						CaretUpdate cu = new CaretUpdate(dot, mark);
-						//System.out.println(cu);
-						session.sendCaretUpdate(cu);
-					}
-				});
-
+				CaretUpdate cu = new CaretUpdate(dot, mark);
+				session.sendCaretUpdate(cu);
 			}
 		}
 	}
