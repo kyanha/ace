@@ -196,37 +196,41 @@ public class CollaborativeTextPane extends JTextPane implements CaretListener, P
 			String mpId = "" + session.getParticipantId();
 			CaretHandler pCaretHandler = (CaretHandler)caretHandlerMap.get(mpId);
 			System.out.println("propertyChange(): name=" + evt.getPropertyName() + "   getDot=" + pCaretHandler.getDot() + "   getMark=" + pCaretHandler.getMark());
-			CaretUpdate oldCUT = (CaretUpdate)evt.getOldValue();
+			/*CaretUpdate oldCUT = (CaretUpdate)evt.getOldValue();
 			System.out.println("propertyChange()::oldCUT: dot=" + oldCUT.getDot() + "   mark=" + oldCUT.getMark());
 			CaretUpdate newCUT = (CaretUpdate)evt.getNewValue();
-			System.out.println("propertyChange()::newCUT: dot=" + newCUT.getDot() + "   mark=" + newCUT.getMark());
+			System.out.println("propertyChange()::newCUT: dot=" + newCUT.getDot() + "   mark=" + newCUT.getMark());*/
 
 			//TODO:
-			int dot = pCaretHandler.getDot();
+//			int dot = pCaretHandler.getDot();
 //			System.out.println("propertyChange(): dot = " + dot);
-			System.out.println("getCaretPosition=" + getCaretPosition());
-			setCaretPosition(1);
+//			System.out.println("getCaretPosition=" + getCaretPosition());
+//			setCaretPosition(1);
 			//moveCaretPosition(pCaretHandler.getDot());
 
 			// delete old caret (only if position is in document)
 			CaretUpdate oldCU = (CaretUpdate)evt.getOldValue();
-			try {
-				Rectangle oldRect = modelToView(oldCU.getDot());
-				//System.out.println("repaint(" + oldRect + ")");
-				oldRect.x -= 2;
-				oldRect.width = 5;
-				repaint(oldRect);
-			} catch(BadLocationException e) { }
+			if(oldCU != null) {
+				try {
+					Rectangle oldRect = modelToView(oldCU.getDot());
+					//System.out.println("repaint(" + oldRect + ")");
+					oldRect.x -= 2;
+					oldRect.width = 5;
+					repaint(oldRect);
+				} catch(BadLocationException e) { }
+			}
 			
 			// draw new caret
 			CaretUpdate newCU = (CaretUpdate)evt.getNewValue();
-			try {
-				Rectangle newRect = modelToView(newCU.getDot());
-				//System.out.println("repaint(" + newRect + ")");
-				newRect.x -= 2;
-				newRect.width = 5;
-				repaint(newRect);
-			} catch(BadLocationException e) { }
+			if(newCU != null) {
+				try {
+					Rectangle newRect = modelToView(newCU.getDot());
+					//System.out.println("repaint(" + newRect + ")");
+					newRect.x -= 2;
+					newRect.width = 5;
+					repaint(newRect);
+				} catch(BadLocationException e) { }
+			}
 
 		}
 	}
