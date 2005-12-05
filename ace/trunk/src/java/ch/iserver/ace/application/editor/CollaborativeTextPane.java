@@ -268,11 +268,10 @@ public class CollaborativeTextPane extends JTextPane implements CaretListener, P
 							Rectangle rectStart = modelToView(startPos);
 							Rectangle rectEnd = modelToView(endPos);
 
-							g.setColor(((Color)participationCursorColorMap.get(pId)));
+/*							g.setColor(((Color)participationCursorColorMap.get(pId)));
 
 							if(1==1) {//if(rectDot.y == rectMark.y) {
 								// 1. single line
-								System.out.println("single line");
 
 
 								// paint beginning border part
@@ -312,7 +311,7 @@ public class CollaborativeTextPane extends JTextPane implements CaretListener, P
 							
 							}
 
-
+*/
 						}
 
 					}
