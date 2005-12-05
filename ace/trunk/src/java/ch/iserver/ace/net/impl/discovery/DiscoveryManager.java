@@ -24,18 +24,52 @@ package ch.iserver.ace.net.impl.discovery;
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;
 
 /**
- *
+ * Handles the managment of RemoteUserProxy and RemoteUserSession.
  */
 public interface DiscoveryManager {
 
+	/**
+	 * Returns an array of users which do not have
+	 * a RemoteUserSession established yet.
+	 * 
+	 * @return an array of RemoteUserProxy instances without a RemoteUserSession established
+	 */
 	public RemoteUserProxyExt[] getPeersWithNoSession();
 	
+	/**
+	 * Notifies the DiscoverManager that for the given user
+	 * the RemoteUserSession (i.e. its TCPSession) has been 
+	 * established. 
+	 * After that call, channels to the that peer can be
+	 * created.
+	 * 
+	 * @param userId
+	 */
 	public void setSessionEstablished(String userId);
 	
+	/**
+	 * Called when the RemoteUserSession for the given
+	 * user is removed.
+	 * 
+	 * @param userId
+	 */
 	public void setSessionTerminated(String userId);
 	
+	/**
+	 * Determines whether the RemoteUserSession for the
+	 * given user is established.
+	 * 
+	 * @param userId the user id
+	 * @return true iff the RemoteUserSession is established
+	 */
 	public boolean hasSessionEstablished(String userId);
 	
+	/**
+	 * Gets the RemoteUserProxy for the given user.
+	 * 
+	 * @param userId the user id
+	 * @return the RemoteUserProxy instance or null if the instance is not available
+	 */
 	public RemoteUserProxyExt getUser(String userId);
 	
 	/**
