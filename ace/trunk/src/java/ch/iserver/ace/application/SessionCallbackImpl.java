@@ -48,6 +48,8 @@ public class SessionCallbackImpl implements SessionCallback {
 	public final static String REMOVED_PROPERTY	= "caretRemoved";
 	public final static String UPDATED_PROPERTY	= "caretUpdates";
 
+	protected DocumentViewController viewController;
+
 	protected int participantId;
 	protected String mpId;
 	protected EventList participantSourceList;
@@ -119,7 +121,8 @@ public class SessionCallbackImpl implements SessionCallback {
 		PropertyChangeCaretHandlerImpl pCaretHandler = new PropertyChangeCaretHandlerImpl(0, 0);
 		cDocument.addDocumentListener(pCaretHandler);
 		participantCaretMap.put(pId, pCaretHandler);
-//		participantCaretMap.firePropertyChange(ADDED_PROPERTY, null, pCaretHandler);
+		CaretUpdate newCaretUpdate = new CaretUpdate(pCaretHandler.getDot(), pCaretHandler.getMark());
+		participantCaretMap.firePropertyChange(ADDED_PROPERTY, null, newCaretUpdate);
 
 		// create style for new participant or get his old style
 		Style pStyle = cDocument.getStyle(pId);
@@ -145,7 +148,8 @@ public class SessionCallbackImpl implements SessionCallback {
 		// remove caret handler
 		PropertyChangeCaretHandlerImpl pCaretHandler = (PropertyChangeCaretHandlerImpl)participantCaretMap.remove(pId);
 		cDocument.removeDocumentListener(pCaretHandler);
-//		participantCaretMap.firePropertyChange(REMOVED_PROPERTY, pCaretHandler, null);
+		CaretUpdate oldCaretUpdate = new CaretUpdate(pCaretHandler.getDot(), pCaretHandler.getMark());
+		participantCaretMap.firePropertyChange(REMOVED_PROPERTY, oldCaretUpdate, null);
 
 		// clean up listeners
 		mapParticipantItem.cleanUp();
@@ -216,6 +220,17 @@ public class SessionCallbackImpl implements SessionCallback {
 		e.printStackTrace();
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
+				// create local copy of the document
+				DocumentItem newItem = new DocumentItem(documentItem.getTitle() + "(failed)", dialogController);
+		
+				newItem.setEditorDocument(documentItem.createEditorDocumentCopy());
+		
+				// add item to document view
+				viewController.addDocument(newItem);
+		
+				// set type
+				documentItem.setType(DocumentItem.REMOTE);
+
 				String user = "\"" + documentItem.getPublisher() + "\"";
 				String title = "\"" + documentItem.getTitle() + "\"";
 				dialogController.showSessionFailed(user, title, reason);

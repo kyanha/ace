@@ -43,7 +43,7 @@ import ch.iserver.ace.util.CaretHandler;
 
 public class ParticipantSessionCallbackImpl extends SessionCallbackImpl implements ParticipantSessionCallback {
 
-	private DocumentViewController viewController;
+	//private DocumentViewController viewController;
 
 	public ParticipantSessionCallbackImpl(DocumentItem documentItem, DocumentViewController viewController,
 			DialogController dialogController) {
@@ -109,7 +109,7 @@ public class ParticipantSessionCallbackImpl extends SessionCallbackImpl implemen
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				// create local copy of the document
-				DocumentItem newItem = new DocumentItem(documentItem.getTitle() + "(copy)", dialogController);
+				DocumentItem newItem = new DocumentItem(documentItem.getTitle() + "(terminated)", dialogController);
 		
 				newItem.setEditorDocument(documentItem.createEditorDocumentCopy());
 		
@@ -131,7 +131,7 @@ public class ParticipantSessionCallbackImpl extends SessionCallbackImpl implemen
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				// create local copy of the document
-				DocumentItem newItem = new DocumentItem(documentItem.getTitle() + "(copy)", dialogController);
+				DocumentItem newItem = new DocumentItem(documentItem.getTitle() + "(kicked)", dialogController);
 
 				newItem.setEditorDocument(documentItem.createEditorDocumentCopy());
 
