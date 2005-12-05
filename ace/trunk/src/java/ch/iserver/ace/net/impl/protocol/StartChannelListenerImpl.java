@@ -70,13 +70,6 @@ public class StartChannelListenerImpl implements StartChannelListener {
 	public void closeChannel(Channel channel) throws CloseChannelException {
 		LOG.debug("--> closeChannel("+channel+")");
 //		--> cleanup is now initiated in SessionRequestHandler
-//		RequestHandler handler = channel.getRequestHandler();
-//		if (handler instanceof SessionRequestHandler) {
-//			SessionRequestHandler theHandler = (SessionRequestHandler) handler;
-//			SessionCleanup cleanup = new SessionCleanup(theHandler.getDocumentId(), theHandler.getPublisherId());
-//			//TODO: make session cleanup a thread ?
-//			cleanup.execute();
-//		}
 		channel.setRequestHandler(null);
 		LOG.debug("<-- closeChannel()");
 	}
