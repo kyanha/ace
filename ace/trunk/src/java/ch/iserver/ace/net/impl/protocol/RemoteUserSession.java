@@ -44,6 +44,7 @@ import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;
 import ch.iserver.ace.net.impl.discovery.DiscoveryManagerFactory;
 import ch.iserver.ace.util.ParameterValidator;
+import ch.iserver.ace.util.SingleThreadDomain;
 
 /**
  *
@@ -57,6 +58,8 @@ public class RemoteUserSession {
 
 	private static Logger LOG = Logger.getLogger(RemoteUserSession.class);
 	
+	private static SingleThreadDomain domain = new SingleThreadDomain();
+	
 	private InetAddress host;
 	private int port;
 	private TCPSession session;
@@ -66,6 +69,7 @@ public class RemoteUserSession {
 	private boolean isInitiated;
 	private boolean isAlive;
 	private TimestampFactory factory;
+	
 	
 	/**
 	 * 
@@ -336,7 +340,7 @@ public class RemoteUserSession {
 				CollaborationDeserializer deserializer = new CollaborationDeserializer();
 				CollaborationParserHandler parserHandler = new CollaborationParserHandler();
 				parserHandler.setTimestampFactory(getTimestampFactory());
-				handler = new ParticipantRequestHandler(deserializer, getTimestampFactory());
+				handler = (RequestHandler) domain.wrap(new ParticipantRequestHandler(deserializer, getTimestampFactory()), RequestHandler.class);
 				channelType = getChannelTypeXML(CHANNEL_SESSION);
 			} else {
 				//TODO: proxy channel?

@@ -55,7 +55,6 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 		this.handler = handler;
 	}
 	
-	//TODO: ThreadDomain!!
 	public void receiveMSG(MessageMSG message) {
 		LOG.info("--> recieveMSG()");
 		

@@ -30,7 +30,6 @@ import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.Timestamp;
 import ch.iserver.ace.net.SessionConnection;
-import ch.iserver.ace.net.SessionConnectionCallback;
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
 
 /**
@@ -86,7 +85,6 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 	 * @see ch.iserver.ace.net.SessionConnection#getParticipantId()
 	 */
 	public int getParticipantId() {
-		LOG.debug("getParticipantId() == "+participantId);
 		return participantId;
 	}
 
