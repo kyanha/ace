@@ -53,6 +53,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 	private int participantId = -1;
 	private String docId;
 	private boolean isKicked;
+	private String username;
 	
 	public ParticipantConnectionImpl(String docId, RemoteUserSession session, ReplyListener listener, Serializer serializer, RequestFilter filter) {
 		super(null);
@@ -65,6 +66,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 		setReplyListener(listener);
 		super.LOG = Logger.getLogger(ParticipantConnectionImpl.class);
 		isKicked = false;
+		username = session.getUser().getUserDetails().getUsername();
 	}
 		
 	public int getParticipantId() {
@@ -82,7 +84,8 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 		Channel channel = getChannel();
 		LOG.debug("channel: "+channel);
 		if (channel != null) {
-			((ParticipantRequestHandler)channel.getRequestHandler()).cleanup();
+			//TODO: cannot cast anymore because of SingleThreadDomain
+//			((ParticipantRequestHandler)channel.getRequestHandler()).cleanup();
 			setChannel(null);
 		}
 		setState(STATE_CLOSED);
@@ -229,12 +232,12 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 	}
 	
 	public void close() {
-		LOG.info("--> close("+getParticipantId()+", "+getUser().getUserDetails().getUsername()+")");
+		LOG.info("--> close("+getParticipantId()+", "+username+")");
 		//TODO: consider if on session shutdown it is more appropriate to 
 		//notify the participant on close() invocation or on DocumentServer.shutdown()
 		//invocation
 		try {
-			if (!isKicked) {
+			if (!isKicked) { //TODO: should not send SessionTerminated either upon user leave()
 				sendSessionTerminated();
 			}
 			getChannel().close();
@@ -257,11 +260,12 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 	
 	private void sendToPeer(byte[] data) {
 		try {
-			send(data, session.getUser().getUserDetails().getUsername(), getReplyListener());
+			send(data, username, getReplyListener());
 		} catch (ProtocolException pe) {
 			//TODO: error handling?
 			LOG.error("protocol exception ["+pe.getMessage()+"]");
-			throw new NetworkException("could not send message to peer ["+pe.getMessage()+"]");
+//			throw new NetworkException("could not send message to peer ["+pe.getMessage()+"]");
+			NetworkServiceImpl.getInstance().getCallback().serviceFailure(FailureCodes.CHANNEL_FAILURE, username, pe);
 		}
 	}
 	
