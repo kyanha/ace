@@ -121,10 +121,20 @@ public class CollaborativeTextPane extends JTextPane implements CaretListener, P
 				pCaretHandler.setCaret(e.getDot(), e.getMark());
 
 				// send updates
-				final int dot = e.getDot();
-				final int mark = e.getMark();
-				CaretUpdate cu = new CaretUpdate(dot, mark);
-				session.sendCaretUpdate(cu);
+				Document doc = getDocument();
+				if (doc instanceof CollaborativeDocument) {
+					((CollaborativeDocument) doc).readLock();
+				}
+				try {
+					final int dot = e.getDot();
+					final int mark = e.getMark();
+					CaretUpdate cu = new CaretUpdate(dot, mark);
+					session.sendCaretUpdate(cu);
+				} finally {
+					if (doc instanceof CollaborativeDocument) {
+						((CollaborativeDocument) doc).readUnlock();
+					}
+				}
 			}
 		}
 	}
