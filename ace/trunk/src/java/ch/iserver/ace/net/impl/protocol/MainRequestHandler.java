@@ -76,8 +76,7 @@ public class MainRequestHandler extends AbstractRequestHandler {
 				SessionManager manager = SessionManager.getInstance();
 				Channel mainChannel = message.getChannel();
 				manager.createSession(user, (TCPSession) mainChannel.getSession(), mainChannel);
-			}
-			
+			}			
 			request.setMessage(message);
 			filter.process(request);
 		} catch (Exception e) {

@@ -35,6 +35,12 @@ import org.beepcore.beep.transport.tcp.TCPSession;
  */
 public class MainConnection extends AbstractConnection {
 	
+	/**
+	 * Constructor.
+	 * 
+	 * @param channel the channel belonging to this MainConnection
+	 * @see Channel
+	 */
 	public MainConnection(Channel channel) {
 		super(channel);
 		setState((channel == null) ? STATE_INITIALIZED : STATE_ACTIVE);
@@ -54,13 +60,13 @@ public class MainConnection extends AbstractConnection {
 		} catch (BEEPException be) {
 			LOG.warn("could not close channel ["+be.getMessage()+"]");
 		}
-		//TODO: consider a thorough cleanup
 		setChannel(null);
+		setReplyListener(null);
 		setState(STATE_CLOSED);
 	}
 	
 	public void cleanup() {
-		throw new UnsupportedOperationException();
+		LOG.debug("not used yet.");
 	}
 	
 	public String toString() {
