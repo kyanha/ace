@@ -48,7 +48,7 @@ public class UserItem extends ItemImpl implements Comparable, PropertyChangeList
 	}
 	
 	public void cleanUp() {
-		System.out.println("UserItem::cleanUp()");
+		//System.out.println("UserItem::cleanUp()");
 		user.removePropertyChangeListener(this);
 	}
 	

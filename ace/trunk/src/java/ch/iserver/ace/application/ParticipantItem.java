@@ -62,7 +62,7 @@ public class ParticipantItem extends ItemImpl implements Comparable, PropertyCha
 	}
 	
 	public void cleanUp() {
-		System.out.println("ParticipantItem::cleanUp()");
+		//System.out.println("ParticipantItem::cleanUp()");
 		user.removePropertyChangeListener(this);
 	}
 	

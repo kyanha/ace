@@ -384,7 +384,7 @@ BASCHTLE
 	
 	
 	public void cleanUp() {
-		System.out.println("DocumentItem::cleanUp()");
+		//System.out.println("DocumentItem::cleanUp()");
 		if(remoteDocument != null) {
 			remoteDocument.removePropertyChangeListener(this);
 			remoteDocument.getPublisher().removePropertyChangeListener(this);
