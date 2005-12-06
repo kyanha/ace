@@ -70,6 +70,8 @@ public final class DiscoveryResult {
 	}
 	
 	/**
+	 * Determines whether the discovery succeeded.
+	 * 
 	 * @return true iff the discovery was successful
 	 */
 	public boolean isSuccess() {
@@ -77,6 +79,9 @@ public final class DiscoveryResult {
 	}
 		
 	/**
+	 * The status code of the discovery. Unless it is equal to
+	 * <code>DiscoveryResult.SUCCESS</code> the discovery failed.
+	 * 
 	 * @return the status code
 	 */
 	public int getStatus() {
@@ -84,6 +89,8 @@ public final class DiscoveryResult {
 	}
 	
 	/**
+	 * An optional status message describing the cause of the failure.
+	 * 
 	 * @return the status message
 	 */
 	public String getStatusMessage() {
@@ -114,6 +121,13 @@ public final class DiscoveryResult {
 		int hashCode = status;
 		hashCode += statusMessage == null ? 0 : 13 * statusMessage.hashCode();
 		return hashCode;
+	}
+	
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString() {
+		return getClass().getName() + "[status=" + status + ",message='" + statusMessage + "']";
 	}
 	
 }
