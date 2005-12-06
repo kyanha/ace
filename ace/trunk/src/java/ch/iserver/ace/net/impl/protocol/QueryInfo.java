@@ -24,13 +24,22 @@ package ch.iserver.ace.net.impl.protocol;
 public class QueryInfo {
 	
 	String id;
+	Object payload;
 	int queryType;
 	
 	public QueryInfo(String id, int queryType) {
 		this.id = id;
 		this.queryType = queryType;
 	}
-	
+		
+	public Object getPayload() {
+		return payload;
+	}
+
+	public void setPayload(Object payload) {
+		this.payload = payload;
+	}
+
 	public String getId() {
 		return id;
 	}

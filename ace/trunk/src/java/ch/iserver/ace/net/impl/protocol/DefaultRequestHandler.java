@@ -25,9 +25,14 @@ import org.apache.log4j.Logger;
 import org.beepcore.beep.core.Channel;
 import org.beepcore.beep.core.InputDataStream;
 import org.beepcore.beep.core.MessageMSG;
+import org.beepcore.beep.core.OutputDataStream;
 import org.beepcore.beep.core.RequestHandler;
+import org.beepcore.beep.transport.tcp.TCPSession;
 
 import ch.iserver.ace.net.impl.NetworkProperties;
+import ch.iserver.ace.net.impl.NetworkServiceImpl;
+import ch.iserver.ace.net.impl.RemoteUserProxyExt;
+import ch.iserver.ace.net.impl.discovery.DiscoveryManagerFactory;
 
 /**
  * Determines the correct RequestHandler a Channel, i.e. it sets
@@ -57,7 +62,7 @@ public class DefaultRequestHandler extends AbstractRequestHandler {
 		LOG.debug("--> receiveMSG()");
 		try {
 			InputDataStream input = message.getDataStream();
-			byte[] rawData = readData(input);
+			byte[] rawData = DataStreamHelper.read(input);
 			Request response = null;
 			synchronized(MUTEX) {
 				deserializer.deserialize(rawData, handler);
@@ -66,28 +71,57 @@ public class DefaultRequestHandler extends AbstractRequestHandler {
 			RequestHandler handler;
 			Channel channel = message.getChannel();
 			int type = response.getType();
+			boolean isDiscovery = false;
+			RemoteUserProxyExt proxy = null;
 			if (type == ProtocolConstants.CHANNEL_MAIN) {
 				handler = mainHandler;
+				proxy = (RemoteUserProxyExt) response.getPayload();
+				isDiscovery = (proxy != null);
 			} else if (type == ProtocolConstants.CHANNEL_SESSION) {
 				handler = SessionRequestHandlerFactory.getInstance().createHandler();
-			} else {
+			} else { //TODO: if channel is for outoging messages, set to SessionConnectionImpl
 				LOG.warn("unkown channel type, use main as default");
 				handler = mainHandler;
 			}
 			channel.setRequestHandler(handler);
-			cleanup();
 			
 			try {
-				//confirm reception of msg				
-				message.sendNUL();
+				if (isDiscovery) {
+					LOG.debug("discovered new user: "+proxy);
+					processDiscoveredUser(message, channel, proxy);
+				} else { //send NUL confirmation
+					message.sendNUL();
+				}
 			} catch (Exception e) {
 				LOG.error("could not send confirmation ["+e+", "+e.getMessage()+"]");
 			}
+			
+			cleanup();
 		} catch (Exception e) {
 			e.printStackTrace();
 			LOG.error("could not process request ["+e+"]");
 		}
 		LOG.debug("<-- receiveMSG()");
+	}
+
+	/**
+	 * Sends a reply with this user's coordinates and adds the user to this ACE editor instance.
+	 * 
+	 * @param message
+	 * @param channel
+	 * @param proxy
+	 * @throws Exception
+	 */
+	private void processDiscoveredUser(MessageMSG message, Channel channel, RemoteUserProxyExt proxy) throws Exception {
+		String id = NetworkServiceImpl.getInstance().getUserId();
+		String name = NetworkServiceImpl.getInstance().getUserDetails().getUsername();
+		String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><ace><response><user id=\"" + id + "\" name=\"" + name + "\"/></response></ace>";
+		byte[] data = xml.getBytes(NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
+		OutputDataStream output = DataStreamHelper.prepare(data);
+		message.sendRPY(output);
+		proxy.setExplicityDiscovered(true);
+		SessionManager.getInstance().createSession(proxy, (TCPSession) channel.getSession(), channel);
+		DiscoveryManagerFactory.getDiscoveryManager(null).addUser(proxy);
 	}
 
 

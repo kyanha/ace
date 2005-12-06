@@ -21,6 +21,7 @@
 
 package ch.iserver.ace.net.impl.protocol;
 
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +29,9 @@ import org.apache.log4j.Logger;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import ch.iserver.ace.net.impl.MutableUserDetails;
+import ch.iserver.ace.net.impl.RemoteUserProxyExt;
+import ch.iserver.ace.net.impl.RemoteUserProxyFactory;
 import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
 
 /**
@@ -42,12 +46,14 @@ public class RequestParserHandler extends ParserHandler {
 	private String userId;
 	private DocumentInfo info;
 	private List requestPayload;
+	private RemoteUserProxyExt user;
 	
 	public RequestParserHandler() {
 	}
 
 	public void startDocument() throws SAXException {
 		requestType = -1;
+		userId = null;
 		result = null;
 	}
 	
@@ -65,8 +71,10 @@ public class RequestParserHandler extends ParserHandler {
 			result = new RequestImpl(type, userId, info);
 		} else if (type == SEND_DOCUMENTS) {
 			result = new RequestImpl(SEND_DOCUMENTS, userId, requestPayload);
+			requestPayload = null;
 		} else if (type == CHANNEL_MAIN || type == CHANNEL_SESSION) {
-			result = new RequestImpl(type, null, null);
+			result = new RequestImpl(type, userId, user);
+			user = null;
 		}
 	}
 	
@@ -140,6 +148,8 @@ public class RequestParserHandler extends ParserHandler {
 			requestType = INVITE;
 		} else if (qName.equals(TAG_CHANNEL)) {
 			String type = attributes.getValue(TYPE);
+//			String discovery = attributes.getValue(DISCOVERY);
+//			isDiscovery =  (discovery != null) ? Boolean.valueOf(discovery) : Boolean.FALSE; 
 			if (type.equals(RemoteUserSession.CHANNEL_MAIN)) {
 				requestType = CHANNEL_MAIN;
 			} else if (type.equals(RemoteUserSession.CHANNEL_SESSION)) {
@@ -158,6 +168,17 @@ public class RequestParserHandler extends ParserHandler {
 			String docId = attributes.getValue(DOC_ID);
 			userId = attributes.getValue(USER_ID);
 			info = new DocumentInfo(docId, null, userId);
+		} else if (qName.equals(USER)) { //explicit user discovery
+			userId = attributes.getValue(ID);
+			String username = attributes.getValue(NAME);
+			String address = attributes.getValue(ADDRESS);
+			String port = attributes.getValue(PORT);
+			try {
+				MutableUserDetails details = new MutableUserDetails(username, InetAddress.getByName(address), Integer.parseInt(port));
+				user = RemoteUserProxyFactory.getInstance().createProxy(userId, details);
+			} catch (Exception e) {
+				LOG.error("could not create RemoteUserProxy [" + e + "]");
+			}
 		}
 	}
 	
