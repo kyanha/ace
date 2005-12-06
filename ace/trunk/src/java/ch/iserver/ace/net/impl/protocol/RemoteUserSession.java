@@ -88,8 +88,8 @@ public class RemoteUserSession {
 		ParameterValidator.notNegative("port", port);
 		this.host = address;
 		this.port = port;
-		this.session = null;
 		this.user = user;
+		setTCPSession(null);
 		isInitiated = false;
 		isAlive = true;
 		participantConnections = Collections.synchronizedMap(new LinkedHashMap());
@@ -107,9 +107,9 @@ public class RemoteUserSession {
 		ParameterValidator.notNull("session", session);
 		ParameterValidator.notNull("connection", connection);
 		ParameterValidator.notNull("user", user);
-		this.session = session;
 		this.mainConnection = connection;
 		this.user = user;
+		setTCPSession(session);
 		isInitiated = true;
 		isAlive = true;
 		participantConnections = Collections.synchronizedMap(new LinkedHashMap());
@@ -279,7 +279,7 @@ public class RemoteUserSession {
 		participantConnections = null;
 		sessionConnections = null;
 		mainConnection = null;
-		session = null;
+		setTCPSession(null);
 		user = null;
 		factory = null;
 		isAlive = false;
@@ -323,6 +323,12 @@ public class RemoteUserSession {
 		return port;
 	}
 	
+	private void setTCPSession(TCPSession session) {
+		this.session = session;
+		if (getUser() != null)
+			getUser().setSessionEstablished( (session != null) );
+	}
+	
 	/**
 	 * Helper method to initiate the TCPSession for this 
 	 * RemoteUserSession.
@@ -333,7 +339,8 @@ public class RemoteUserSession {
 		LOG.debug("--> initiateTCPSession()");
 		try {
 			ProfileRegistry registry = ProfileRegistryFactory.getProfileRegistry();
-			session =  TCPSessionCreator.initiate(host, port, registry);
+			TCPSession newSession = TCPSessionCreator.initiate(host, port, registry); 
+			setTCPSession( newSession );
 			LOG.info("initiated session to "+host+":"+port);
 			isInitiated = true;
 			DiscoveryManagerFactory.getDiscoveryManager(null).setSessionEstablished(user.getId());
@@ -379,7 +386,7 @@ public class RemoteUserSession {
 			}
 			Channel channel = session.startChannel(uri, handler);
 			byte[] data = channelType.getBytes(NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
-			OutputDataStream output = prepare(data);
+			OutputDataStream output = DataStreamHelper.prepare(data);
 			LOG.debug("--> sendMSG() for channel type");
 			channel.sendMSG(output, ResponseListener.getInstance());
 			LOG.debug("<-- sendMSG()");
@@ -393,13 +400,5 @@ public class RemoteUserSession {
 	
 	private String getChannelTypeXML(String type) {
 		 return "<ace><channel type=\"" + type + "\"/></ace>";
-	}
-	
-	private OutputDataStream prepare(byte[] data) {
-		BufferSegment buffer = new BufferSegment(data);
-		OutputDataStream output = new OutputDataStream();
-		output.add(buffer);
-		output.setComplete();
-		return output;
 	}
 }
