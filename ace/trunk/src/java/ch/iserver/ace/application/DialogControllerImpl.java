@@ -385,6 +385,15 @@ public class DialogControllerImpl implements DialogController {
 	}
 
 	
+	public void showDiscoveryFailed(int status, String msg) {
+		String title = getMessages().getMessage("dDiscoveryFailureTitle");
+		String message = getMessages().getMessage("dDiscoveryFailure." + status, new Object[] { "" + status, msg });
+		JOptionPane.showMessageDialog(
+						getMainFrame(),
+						message,
+						title,
+						JOptionPane.WARNING_MESSAGE);
+	}
 	
 	
 	

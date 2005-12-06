@@ -21,6 +21,7 @@
 
 package ch.iserver.ace.application;
 
+import javax.swing.SwingUtilities;
 import ch.iserver.ace.collaboration.DiscoveryCallback;
 import ch.iserver.ace.collaboration.DiscoveryResult;
 import ch.iserver.ace.application.DialogController;
@@ -35,7 +36,13 @@ public class DiscoveryCallbackImpl implements DiscoveryCallback {
 		this.dialogController = dialogController;
 	}
 	
-	public void discovered(DiscoveryResult result) {
-		System.out.println("discovered: " + result);
+	public void discovered(final DiscoveryResult result) {
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				int status = result.getStatus();
+				String msg = result.getStatusMessage();
+				dialogController.showDiscoveryFailed(status, msg);
+			}
+		});
 	}
 }

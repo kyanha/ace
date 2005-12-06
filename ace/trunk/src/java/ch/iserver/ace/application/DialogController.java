@@ -199,5 +199,7 @@ public interface DialogController {
 	void showInvitationRejected(String user, String docTitle, int code);
 
 	void showServiceFailure(int code, String msg);
+
+	void showDiscoveryFailed(int code, String msg);
 	
 }
