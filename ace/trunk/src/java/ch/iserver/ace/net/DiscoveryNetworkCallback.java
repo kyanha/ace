@@ -22,12 +22,27 @@
 package ch.iserver.ace.net;
 
 /**
- *
+ * Callback interface for explicit user discovery. The result
+ * of the discovery is communicated to that interface.
  */
 public interface DiscoveryNetworkCallback {
 
+	/**
+	 * Notifies the callback that the discovery failed.
+	 * The reason code specifies why the discovery failed, the message
+	 * provides additional details.
+	 * 
+	 * @param reason the reason of the failure
+	 * @param message the detail message
+	 */
 	void userDiscoveryFailed(int reason, String message);
 	
+	/**
+	 * Notifies the callback that the discovery succeeded. The result is
+	 * passed through the standard
+	 * {@link NetworkServiceCallback#userDiscovered(RemoteUserProxy)}
+	 * method.
+	 */
 	void userDiscoverySucceeded();
 	
 }

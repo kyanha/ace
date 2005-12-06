@@ -38,6 +38,9 @@ public interface ParticipantConnection {
 	int PUBLISHER_ID = 0;
 
 	/**
+	 * Sets the participant id of the participant represented by the 
+	 * connection.
+	 * 
 	 * @param participantId the participant id of the participant
 	 */
 	void setParticipantId(int participantId);
@@ -59,6 +62,9 @@ public interface ParticipantConnection {
 	void joinRejected(int code);
 	
 	/**
+	 * Gets the remote user proxy of the participant represented by the
+	 * connection.
+	 * 
 	 * @return the remote user proxy of the participant represented by the
 	 *         connection
 	 */

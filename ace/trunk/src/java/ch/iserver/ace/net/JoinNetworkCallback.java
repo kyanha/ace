@@ -28,7 +28,8 @@ public interface JoinNetworkCallback {
 	
 	/**
 	 * Notifies the callback that the join request was rejected by the owner
-	 * of the document.
+	 * of the document. The corresponding codes are defined in the
+	 * interface {@link ch.iserver.ace.collaboration.JoinRequest}.
 	 * 
 	 * @param code the reason of rejection
 	 */
