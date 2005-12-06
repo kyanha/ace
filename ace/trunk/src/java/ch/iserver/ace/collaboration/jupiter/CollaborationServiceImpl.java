@@ -381,7 +381,7 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	public void discoverUser(DiscoveryCallback callback, InetAddress addr,
 					int port) {
 		getNetworkService().discoverUser(
-						new DiscoveryNetworkCallbackImpl(callback, getUserRegistry()), 
+						new DiscoveryNetworkCallbackImpl(callback), 
 						addr, 
 						port);
 	}

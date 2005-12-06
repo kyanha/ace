@@ -28,6 +28,6 @@ public interface DiscoveryNetworkCallback {
 
 	void userDiscoveryFailed(int reason, String message);
 	
-	void userDiscoverySucceeded(RemoteUserProxy proxy);
+	void userDiscoverySucceeded();
 	
 }

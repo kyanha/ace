@@ -24,7 +24,6 @@ package ch.iserver.ace.collaboration;
 import java.net.InetAddress;
 
 import ch.iserver.ace.util.CompareUtil;
-import ch.iserver.ace.util.ParameterValidator;
 
 /**
  * A DiscoveryResult object contains the result of an explicit
@@ -38,17 +37,7 @@ public final class DiscoveryResult {
 	 * The status code that signifies a successful discovery. 
 	 */
 	public static final int SUCCESS = 0;
-	
-	/**
-	 * The status code that signifies a failed disocvery.
-	 */
-	public static final int FAILED = 1;
-	
-	/**
-	 * The discovered RemoteUser. Is null if the discovery failed.
-	 */
-	private RemoteUser user;
-	
+		
 	/**
 	 * The status code of the discovery.
 	 */
@@ -63,11 +52,10 @@ public final class DiscoveryResult {
 	/**
 	 * Creates a new DiscoveryResult for a successful discovery.
 	 * 
-	 * @param user the discovered RemoteUser
+	 * @param status the discovery status
 	 */
-	public DiscoveryResult(RemoteUser user) {
-		ParameterValidator.notNull("user", user);
-		this.user = user;
+	public DiscoveryResult(int status) {
+		this.status = status;
 	}
 	
 	/**
@@ -87,14 +75,7 @@ public final class DiscoveryResult {
 	public boolean isSuccess() {
 		return status == SUCCESS;
 	}
-	
-	/**
-	 * @return the discovered RemoteUser (is null, if the discovery failed)
-	 */
-	public RemoteUser getRemoteUser() {
-		return user;
-	}
-	
+		
 	/**
 	 * @return the status code
 	 */
@@ -120,8 +101,7 @@ public final class DiscoveryResult {
 		} else if (getClass().equals(obj.getClass())) {
 			DiscoveryResult result = (DiscoveryResult) obj;
 			return status == result.status 
-					&& CompareUtil.nullSafeEquals(statusMessage, result.statusMessage)
-					&& CompareUtil.nullSafeEquals(user, result.user);
+					&& CompareUtil.nullSafeEquals(statusMessage, result.statusMessage);
 		} else {
 			return false;
 		}
@@ -133,7 +113,6 @@ public final class DiscoveryResult {
 	public int hashCode() {
 		int hashCode = status;
 		hashCode += statusMessage == null ? 0 : 13 * statusMessage.hashCode();
-		hashCode += user == null ? 0 : 17 * user.hashCode();
 		return hashCode;
 	}
 	

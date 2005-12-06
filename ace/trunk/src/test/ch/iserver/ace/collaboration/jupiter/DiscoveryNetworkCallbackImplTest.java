@@ -40,51 +40,37 @@ public class DiscoveryNetworkCallbackImplTest extends TestCase {
 	public void testUserDiscoveryFailed() throws Exception {
 		MockControl callbackCtrl = MockControl.createControl(DiscoveryCallback.class);
 		DiscoveryCallback callback = (DiscoveryCallback) callbackCtrl.getMock();
-		MockControl registryCtrl = MockControl.createControl(UserRegistry.class);
-		UserRegistry registry = (UserRegistry) registryCtrl.getMock();
 		
 		// define mock behavior
 		callback.discovered(new DiscoveryResult(1, "failed"));
 		
 		// replay
 		callbackCtrl.replay();
-		registryCtrl.replay();
 		
 		// test
-		DiscoveryNetworkCallback impl = new DiscoveryNetworkCallbackImpl(callback, registry);
+		DiscoveryNetworkCallback impl = new DiscoveryNetworkCallbackImpl(callback);
 		impl.userDiscoveryFailed(1, "failed");
 		
 		// verify
 		callbackCtrl.verify();
-		registryCtrl.verify();
 	}
 	
 	public void testUserDiscovered() throws Exception {
 		MockControl callbackCtrl = MockControl.createControl(DiscoveryCallback.class);
 		DiscoveryCallback callback = (DiscoveryCallback) callbackCtrl.getMock();
-		MockControl registryCtrl = MockControl.createControl(UserRegistry.class);
-		UserRegistry registry = (UserRegistry) registryCtrl.getMock();
-		
-		// test fixture
-		RemoteUser user = new RemoteUserStub("X");
-		RemoteUserProxy proxy = new RemoteUserProxyStub("X");
-		
+				
 		// define mock behavior
-		callback.discovered(new DiscoveryResult(user));
-		registry.getUser(proxy);
-		registryCtrl.setReturnValue(user);
+		callback.discovered(new DiscoveryResult(DiscoveryResult.SUCCESS));
 		
 		// replay
 		callbackCtrl.replay();
-		registryCtrl.replay();
 		
 		// test
-		DiscoveryNetworkCallback impl = new DiscoveryNetworkCallbackImpl(callback, registry);
-		impl.userDiscoverySucceeded(proxy);
+		DiscoveryNetworkCallback impl = new DiscoveryNetworkCallbackImpl(callback);
+		impl.userDiscoverySucceeded();
 		
 		// verify
 		callbackCtrl.verify();
-		registryCtrl.verify();
 	}
 	
 }

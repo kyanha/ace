@@ -27,6 +27,9 @@ import java.beans.PropertyChangeListener;
 /**
  * A RemoteUser is a local representation of a remote user. It is a proxy
  * providing all the user related operations in one convenient place.
+ * The Collaboration Layer makes sure that there is only one RemoteUser
+ * object per unique user id. A PropertyChangeListener can be added
+ * that gets notified whenever a property of this object changes.
  */
 public interface RemoteUser {
 	

@@ -23,9 +23,7 @@ package ch.iserver.ace.collaboration.jupiter;
 
 import ch.iserver.ace.collaboration.DiscoveryCallback;
 import ch.iserver.ace.collaboration.DiscoveryResult;
-import ch.iserver.ace.collaboration.RemoteUser;
 import ch.iserver.ace.net.DiscoveryNetworkCallback;
-import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
@@ -33,11 +31,6 @@ import ch.iserver.ace.util.ParameterValidator;
  * is used in the case of explicit discovery requests.
  */
 class DiscoveryNetworkCallbackImpl implements DiscoveryNetworkCallback {
-	
-	/**
-	 * The user registry used to get a RemoteUser for a RemoteUserProxy.
-	 */
-	private final UserRegistry registry;
 	
 	/**
 	 * The callback to be notified.
@@ -49,13 +42,10 @@ class DiscoveryNetworkCallbackImpl implements DiscoveryNetworkCallback {
 	 * callback is notified when this callback is notified.
 	 * 
 	 * @param callback the callback to be notified
-	 * @param registry the user registry to be used to get the remote user
 	 */
-	DiscoveryNetworkCallbackImpl(DiscoveryCallback callback, UserRegistry registry) {
+	DiscoveryNetworkCallbackImpl(DiscoveryCallback callback) {
 		ParameterValidator.notNull("callback", callback);
-		ParameterValidator.notNull("registry", registry);
 		this.callback = callback;
-		this.registry = registry;
 	}
 	
 	/**
@@ -64,14 +54,7 @@ class DiscoveryNetworkCallbackImpl implements DiscoveryNetworkCallback {
 	private DiscoveryCallback getCallback() {
 		return callback;
 	}
-	
-	/**
-	 * @return the user registry used to get a remote user for a proxy
-	 */
-	private UserRegistry getUserRegistry() {
-		return registry;
-	}
-	
+		
 	/**
 	 * @see ch.iserver.ace.net.DiscoveryNetworkCallback#userDiscoveryFailed(int, java.lang.String)
 	 */
@@ -80,12 +63,10 @@ class DiscoveryNetworkCallbackImpl implements DiscoveryNetworkCallback {
 	}
 
 	/**
-	 * @see ch.iserver.ace.net.DiscoveryNetworkCallback#userDiscoverySucceeded(ch.iserver.ace.net.RemoteUserProxy)
+	 * @see ch.iserver.ace.net.DiscoveryNetworkCallback#userDiscoverySucceeded()
 	 */
-	public void userDiscoverySucceeded(RemoteUserProxy proxy) {
-		ParameterValidator.notNull("proxy", proxy);
-		RemoteUser user = getUserRegistry().getUser(proxy);
-		getCallback().discovered(new DiscoveryResult(user));
+	public void userDiscoverySucceeded() {
+		getCallback().discovered(new DiscoveryResult(DiscoveryResult.SUCCESS));
 	}
 
 }
