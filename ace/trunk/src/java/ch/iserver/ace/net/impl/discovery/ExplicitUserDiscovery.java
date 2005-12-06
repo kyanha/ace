@@ -50,7 +50,8 @@ public class ExplicitUserDiscovery extends Thread {
 		ParameterValidator.notNull("address", address);
 		this.callback = callback;
 		this.address = address;
-		this.port = port;
+//		this.port = port;
+		this.port = 80; //onyl for test
 	}
 	
 	public void run() {
