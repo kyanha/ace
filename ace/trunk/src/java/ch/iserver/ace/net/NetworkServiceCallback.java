@@ -29,9 +29,11 @@ package ch.iserver.ace.net;
 public interface NetworkServiceCallback {
 	
 	/**
-	 * @param code
-	 * @param msg
-	 * @param e
+	 * Notifies the callback about a service failure in the network layer.
+	 * 
+	 * @param code the error code (defined in {@link ch.iserver.ace.FailureCodes})
+	 * @param msg the optional message payload
+	 * @param e the cause
 	 */
 	void serviceFailure(int code, String msg, Exception e);
 	
