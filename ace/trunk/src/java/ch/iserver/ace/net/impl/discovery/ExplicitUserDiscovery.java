@@ -65,6 +65,7 @@ public class ExplicitUserDiscovery extends Thread {
 		} catch (DiscoveryException ce) {
 			LOG.debug("could not connect to [" + address + ":" + port + "], explicit user discovery failed");
 			callback.userDiscoveryFailed(FailureCodes.DISCOVERY_FAILED,  address + ":" + port);
+			LOG.debug("<-- run()");
 			return;
 		}
 		DiscoveryManagerFactory.getDiscoveryManager(null).addUser(proxy);

@@ -23,8 +23,10 @@ package ch.iserver.ace.net.impl.discovery;
 import org.apache.log4j.Logger;
 
 import ch.iserver.ace.ApplicationError;
+import ch.iserver.ace.FailureCodes;
 import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.net.impl.Discovery;
+import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
@@ -116,8 +118,7 @@ public class Bonjour implements Discovery {
 	
 	public static void writeErrorLog(Exception e) {
 		APP_LOG.fatal("fatal discovery error ["+e.getMessage()+"]");
-		//TODO: invoke serviceFailure on NetworkServiceCallback
-		throw new ApplicationError(e);
+		NetworkServiceImpl.getInstance().getCallback().serviceFailure(FailureCodes.DNSSD_FAILURE, e.getMessage(), e);
 	}
 	
 
