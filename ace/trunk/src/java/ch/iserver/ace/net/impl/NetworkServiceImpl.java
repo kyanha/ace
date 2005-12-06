@@ -167,8 +167,9 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	}
 
 	public void discoverUser(DiscoveryNetworkCallback callback, InetAddress addr, int port) {
-		LOG.debug("--> discoverUser(" + addr + ":" + port + ")");
-		ExplicitUserDiscovery userDiscovery = new ExplicitUserDiscovery(callback, addr, port);
+		LOG.debug("--> discoverUser(" + addr + ")");
+		String defaultPort = NetworkProperties.get(NetworkProperties.KEY_PROTOCOL_PORT);
+		ExplicitUserDiscovery userDiscovery = new ExplicitUserDiscovery(callback, addr, Integer.parseInt(defaultPort));
 		userDiscovery.start();
 		LOG.debug("<-- discoverUser()");
 	}
