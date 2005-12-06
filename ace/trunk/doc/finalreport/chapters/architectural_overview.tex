@@ -458,7 +458,7 @@ corresponding methods \texttt{accept} or \texttt{reject}.
 In the last section we had a look at the interface between the application and
 the collaboration layer. The collaboration layer itself cannot implement a
 collaborative editor by itself. It needs a layer that provides the networking
-functionality. The networking layer provides exactly that. It is not used 
+functionality, the network layer. The network layer should not be used
 directly by the application layer.
 
 \subsection{Network Service}
@@ -473,9 +473,9 @@ Its functionality is in some aspects similar to the
  \label{fig:archoverview.networkservice}
 \end{figure}
 
-The \texttt{setUserId} and \texttt{setUserDetails} method are likely to
-be passed directly from the \texttt{CollaborationService} down to the
-network service. In a similar way, the \texttt{getServerInfo} method is
+The \texttt{set\-User\-Id} and \texttt{set\-User\-Details} method are likely to
+be passed directly from the \texttt{Collaboration\-Service} down to the
+network service. In a similar way, the \texttt{get\-Server\-Info} method is
 passed down directly through the collaboration layer.
 
 The \texttt{start} must be called after all the callbacks have been set.
@@ -483,15 +483,19 @@ The \texttt{stop} method should be called to properly shutdown the service.
 
 
 \subsection{TimestampFactory}
-The collaboration layer has to set a \texttt{TimestampFactory} on the
-\texttt{NetworkService} with the \texttt{setTimestampFactory} method. This
+The collaboration layer has to set a \texttt{Timestamp\-Factory} on the
+\texttt{NetworkService} with the \texttt{set\-Timestamp\-Factory} method. This
 factory is used to convert a timestamp from a generic format (an array of
 integers) into a \texttt{Timestamp} object which can be understood by the
 collaboration layer. The \texttt{Timestamp} interface has a method which 
-achieves the inverse operation, it is called \texttt{getComponents} and
+achieves the inverse operation, it is called \texttt{get\-Components} and
 returns an integer array.
 
-% TODO: image TimestampFactory and Timestamp
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=10.30cm,height=1.55cm]{../images/finalreport/architecture_timestampfactory_uml.eps}
+ \caption{TimestampFactory and Timestamp Interface}
+\end{figure}
 
 
 \subsection{Network Service Callback}
@@ -528,13 +532,14 @@ the corresponding objects.
  \centering
  \includegraphics[width=7.62cm,height=6.63cm]{../images/finalreport/architecture_userdocumentproxy_uml.eps}
  \caption{RemoteDocumentProxy and RemoteUserProxy Interfaces}
+ \label{fig:archoverview.userdocumentproxy}
 \end{figure}
 
 
 \subsubsection{Receiving Invitations}
 The network layer passes received invitations to the 
-\texttt{NetworkServiceCallback}'s \texttt{invitationReceived} method.
-This method has a parameter of type \texttt{InvitationProxy}, which 
+\texttt{Network\-Service\-Callback}'s \texttt{invitation\-Received} method.
+This method has a parameter of type \texttt{Invitation\-Proxy}, which 
 corresponds to the \texttt{Invitation} object in the collaboration layer.
 
 \begin{figure}[H]
@@ -542,6 +547,11 @@ corresponds to the \texttt{Invitation} object in the collaboration layer.
  \includegraphics[width=7.62cm,height=2.40cm]{../images/finalreport/architecture_invitationproxy_uml.eps}
  \caption{InvitationProxy Interface}
 \end{figure}
+
+The invitation can be either be accepted or rejected with the methods
+\texttt{accept} or \texttt{reject} respectively. The document for which
+the invitation is meant is accessible throught the \texttt{get\-Document}
+method.
 
 
 \subsubsection{Service Failures}
@@ -575,10 +585,12 @@ significantly.
 \subsubsection{Joining Documents}
 Documents are discovered through the \texttt{NetworkServiceCallback} methods
 described above. A discovered document is represented by a 
-\texttt{RemoteDocumentProxy} instance. This object provides similar methods
+\texttt{RemoteDocumentProxy} instance
+(see figure \ref{fig:archoverview.userdocumentproxy}). 
+This object provides similar methods
 to the ones in the \texttt{RemoteDocument} interface. The \texttt{join}
 method allows to join the given document. The only parameter to that method
-is an implementation of \texttt{JoinNetworkCallback} interface.
+is an implementation of the \texttt{JoinNetworkCallback} interface.
 
 \begin{figure}[H]
  \centering
@@ -604,7 +616,9 @@ to the \texttt{SessionCallback} in the collaboration layer).
 
 \subsubsection{SessionConnection}
 The \texttt{SessionConnection} allows the collaboration layer to
-communicate with the session.
+communicate with the session. For each editing session there is
+exactly one \texttt{SessionConnection} with its corresponding
+\texttt{SessionConnectionCallback} instance.
 
 \begin{figure}[H]
  \centering
@@ -612,9 +626,11 @@ communicate with the session.
  \caption{SessionConnection Interface}
 \end{figure}
 
-The \texttt{sendAcknowledge} method allows to send an acknowledge message,
-the \texttt{sendCaretUpdateMessage} to send a caret update, and the 
-\texttt{sendRequest} method to send a request to the session. The
+The send methods allow the participant to send requests, caret updates,
+and acknowledge messages to the session. In contrast to the session
+layer the send methods deal with \texttt{Request}s (instead of
+\texttt{Operation}s) and \texttt{CaretUpdateMessage}s (instead of
+\texttt{CaretUpdate}s). The
 \texttt{leave} method notifies the session that the local user does
 no longer want to be part of the session. The \texttt{getParticipantId}
 method gives access to the assigend participant id.
@@ -641,11 +657,12 @@ layer.
 
 \begin{figure}[H]
  \centering
- \includegraphics[width=10.09cm,height=4.30cm]{../images/finalreport/architecture_portabledocumentnet_uml.eps}
+ \includegraphics[width=7.55cm,height=3.40cm]{../images/finalreport/architecture_portabledocumentnet_uml.eps}
  \caption{PortableDocument Interface}
 \end{figure}
 
-The \texttt{sessionTerminated} message notifies the session has been closed
+The \texttt{sessionTerminated} message notifies the callback that the 
+session has been closed
 by the publisher of the document. The \texttt{kicked} method notifies the
 participant that he has been kicked from the session.
 
