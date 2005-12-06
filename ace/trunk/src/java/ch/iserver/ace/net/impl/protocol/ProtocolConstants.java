@@ -41,6 +41,7 @@ public interface ProtocolConstants {
 	public static final int KICKED = 8;
 	public static final int INVITE = 9;
 	public static final int INVITE_REJECTED = 10;
+	public static final int USER_DISCOVERY = 11;
 	
 	public static final int REQUEST = 100;
 	public static final int CARET_UPDATE = 101;
@@ -78,6 +79,7 @@ public interface ProtocolConstants {
 	public static final String TAG_CHANNEL = "channel";
 	public static final String TAG_REASON = "reason";
 	public static final String TAG_REQUEST = "request";
+	public static final String TAG_RESPONSE = "response";
 	public static final String TAG_OPERATION = "operation";
 	public static final String TAG_INSERT = "insert";
 	public static final String TAG_DELETE = "delete";
@@ -112,6 +114,7 @@ public interface ProtocolConstants {
 	public static final String ADDRESS = "address";
 	public static final String PORT = "port";
 	public static final String EXPLICIT_DISCOVERY = "explicitDiscovery";
+	public static final String DISCOVERY = "discovery";
 	public static final String DATA = "data";
 	public static final String SELECTION = "selection";
 	public static final String MARK = "mark";

@@ -68,7 +68,7 @@ public class ParticipantRequestHandler extends AbstractRequestHandler {
 		InputDataStream input = message.getDataStream();
 		String readInData = null;
 		try {
-			byte[] rawData = readData(input);
+			byte[] rawData = DataStreamHelper.read(input);
 			readInData = new String(rawData);
 			LOG.debug("received "+rawData.length+" bytes. ["+readInData+"]");
 			CollaborationParserHandler newHandler = new CollaborationParserHandler();
