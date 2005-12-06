@@ -454,22 +454,326 @@ corresponding methods \texttt{accept} or \texttt{reject}.
 
 
 
-\section{Interface between Collaboration and Network Layer}
+\section{Interface Collaboration/Network Layer}
 In the last section we had a look at the interface between the application and
 the collaboration layer. The collaboration layer itself cannot implement a
-collaborative editor on itself. It needs a layer that provides the networking
-functionality. The networking layer provides exactly that functionality to
-the collaboration layer. It is not used directly by the application layer.
+collaborative editor by itself. It needs a layer that provides the networking
+functionality. The networking layer provides exactly that. It is not used 
+directly by the application layer.
 
 \subsection{Network Service}
 The \texttt{NetworkService} interface is the entry point into the network layer.
+Its functionality is in some aspects similar to the 
+\texttt{CollaborationService}. 
 
-%\begin{figure}[H]
-% \centering
-% \includegraphics[width=11.11cm,height=7.62cm]{../images/design/network-uml-%service.eps}
-% \caption{UML of NetworkService}
-% \label{fig:networkservice interface}
-%\end{figure}
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=13.83cm,height=5.57cm]{../images/finalreport/architecture_networkservice_uml.eps}
+ \caption{NetworkService Interface}
+ \label{fig:archoverview.networkservice}
+\end{figure}
 
-\subsection{Network Service Callbacks}
+The \texttt{setUserId} and \texttt{setUserDetails} method are likely to
+be passed directly from the \texttt{CollaborationService} down to the
+network service. In a similar way, the \texttt{getServerInfo} method is
+passed down directly through the collaboration layer.
+
+The \texttt{start} must be called after all the callbacks have been set.
+The \texttt{stop} method should be called to properly shutdown the service.
+
+
+\subsection{TimestampFactory}
+The collaboration layer has to set a \texttt{TimestampFactory} on the
+\texttt{NetworkService} with the \texttt{setTimestampFactory} method. This
+factory is used to convert a timestamp from a generic format (an array of
+integers) into a \texttt{Timestamp} object which can be understood by the
+collaboration layer. The \texttt{Timestamp} interface has a method which 
+achieves the inverse operation, it is called \texttt{getComponents} and
+returns an integer array.
+
+% TODO: image TimestampFactory and Timestamp
+
+
+\subsection{Network Service Callback}
+The \texttt{NetworkService} interface has a method 
+\texttt{setNetworkServiceCallback}. The network layer provides a tighter
+one-to-one binding between itself and the upper layer through this
+callback interface. Instead of exposing an additional set of listeners
+(such as those provided by the collaboration layer: \texttt{UserListener}
+and \texttt{DocumentListener}), it provides one unified callback interface.
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=10.44cm,height=5.15cm]{../images/finalreport/architecture_networkservicecallback_uml.eps}
+ \caption{NetworkServiceCallback Interface}
+\end{figure}
+
+
+\subsubsection{Discovery}
+The discovery results for documents are communicated through the 
+\texttt{documentDiscovered},
+\texttt{documentDiscarded}, and the
+\texttt{documentDetailsChanged} methods. Similar methods exist for user
+discovery (\texttt{userDiscovered}, \texttt{userDetailsChanged}, 
+\texttt{userDiscarded}). These methods are similar to the 
+\texttt{UserListener} and \texttt{DocumentListener} methods except that they
+pass \texttt{RemoteUserProxy} as well as \texttt{RemoteDocumentProxy} 
+objects. Additionally, there are the two methods \texttt{documentDetailsChanged}
+and \texttt{userDetailsChanged}. These are called whenever the details of
+a document or user changed. This is in contrast to the collaboration layer,
+where these change events are passed as \texttt{PropertyChangeEvents} on 
+the corresponding objects.
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=7.62cm,height=6.63cm]{../images/finalreport/architecture_userdocumentproxy_uml.eps}
+ \caption{RemoteDocumentProxy and RemoteUserProxy Interfaces}
+\end{figure}
+
+
+\subsubsection{Receiving Invitations}
+The network layer passes received invitations to the 
+\texttt{NetworkServiceCallback}'s \texttt{invitationReceived} method.
+This method has a parameter of type \texttt{InvitationProxy}, which 
+corresponds to the \texttt{Invitation} object in the collaboration layer.
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=7.62cm,height=2.40cm]{../images/finalreport/architecture_invitationproxy_uml.eps}
+ \caption{InvitationProxy Interface}
+\end{figure}
+
+
+\subsubsection{Service Failures}
+Service failures are passed to the \texttt{NetworkServiceCallback} through
+the \texttt{serviceFailure} method.
+
+
+\subsection{Explicit User Discovery}
+The method \texttt{discoverUser} is used to start an explicit discovery
+of another user, for instance over the Internet. It corresponds to the
+\texttt{discoverUser} method in the \texttt{CollaborationService}. The
+only difference is, that it accepts a \texttt{DiscoveryNetworkCallback}
+instance (instead of a \texttt{DiscoveryCallback} instance). The result
+of the discovery is communicated through the methods 
+\texttt{userDiscoveryFailed} and \texttt{userDiscoverySucceeded} method.
+The actual discovered user (if the discovery is successful) is passed 
+through the \texttt{NetworkServiceCallback}'s \texttt{userDiscovered} 
+method.
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=8.26cm,height=2.86cm]{../images/finalreport/architecture_discoverynetworkcallback_uml.eps}
+ \caption{DiscoveryNetworkCallback Interface}
+\end{figure}
+
+
+\subsection{Network Layer on the Participant's Side}
+The participant side and the publisher side of the network layer differ
+significantly.
+
+\subsubsection{Joining Documents}
+Documents are discovered through the \texttt{NetworkServiceCallback} methods
+described above. A discovered document is represented by a 
+\texttt{RemoteDocumentProxy} instance. This object provides similar methods
+to the ones in the \texttt{RemoteDocument} interface. The \texttt{join}
+method allows to join the given document. The only parameter to that method
+is an implementation of \texttt{JoinNetworkCallback} interface.
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=11.04cm,height=2.61cm]{../images/finalreport/architecture_joinnetworkcallback_uml.eps}
+ \caption{JoinNetworkCallback Interface}
+\end{figure}
+
+This interface has two methods, \texttt{accepted} and \texttt{rejected}.
+The \texttt{rejected} method notifies the callback that the join
+was rejected. The passed in \texttt{code} argument specifies the reason, why
+the join was rejected. The corresponding constants are defined in the
+\texttt{JoinRequest} interface. A join can be rejected for several reasons.
+To name a few: publisher rejects join, joining user is on a black list,
+the joining user is already in the session, and some more.
+
+On the other hand, the \texttt{accepted} method is invoked when the join
+was accepted. The parameter of type \texttt{SessionConnection} represents
+the connection to the session. Its purpose corresponds to the \texttt{Session}
+interface in the collaboration layer. The callback has to return a
+\texttt{SessionConnectionCallback} implementation (whose purpose corresponds
+to the \texttt{SessionCallback} in the collaboration layer).
+
+
+\subsubsection{SessionConnection}
+The \texttt{SessionConnection} allows the collaboration layer to
+communicate with the session.
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=10.09cm,height=4.30cm]{../images/finalreport/architecture_sessionconnection_uml.eps}
+ \caption{SessionConnection Interface}
+\end{figure}
+
+The \texttt{sendAcknowledge} method allows to send an acknowledge message,
+the \texttt{sendCaretUpdateMessage} to send a caret update, and the 
+\texttt{sendRequest} method to send a request to the session. The
+\texttt{leave} method notifies the session that the local user does
+no longer want to be part of the session. The \texttt{getParticipantId}
+method gives access to the assigend participant id.
+
+
+\subsubsection{SessionConnectionCallback}
+The \texttt{SessionConnectionCallback} is used by the network layer
+to pass session related events to the collaboration layer.
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=11.50cm,height=5.57cm]{../images/finalreport/architecture_sessionconnectioncallback_uml.eps}
+ \caption{SessionConnectionCallback Interface}
+\end{figure}
+
+The \texttt{receive} methods pass a received message to the collaboration
+layer. The \texttt{participantJoined} and \texttt{participantLeft} methods
+notify the collaboration layer about changes in the set of participants.
+At the beginning of the lifecycle of the session, both the participant
+id and the document are passed to the callback. The document is of
+type \texttt{ch.\-iserver.\-ace.\-net.\-PortableDocument}, which should not
+be confused with the interface with the same name in the collaboration
+layer.
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=10.09cm,height=4.30cm]{../images/finalreport/architecture_portabledocumentnet_uml.eps}
+ \caption{PortableDocument Interface}
+\end{figure}
+
+The \texttt{sessionTerminated} message notifies the session has been closed
+by the publisher of the document. The \texttt{kicked} method notifies the
+participant that he has been kicked from the session.
+
+
+\subsection{Network Layer on the Publisher's Side}
+On the side of the publisher, the network service looks a bit different.
+Let us start with explaining how a document can be published.
+
+\subsubsection{Publishing Documents}
+A document can be published through the \texttt{publish} method of the
+\texttt{NetworkService}. This method takes two arguments, one is the
+\texttt{DocumentServerLogic} and the other is a \texttt{DocumentDetails},
+describing the document. The method returns a \texttt{DocumentServer}
+object. These two objects are both defined as part of the interface between the
+collaboration and the network layer.
+
+\subsubsection{DocumentServer}
+The \texttt{DocumentServer} interface 
+represents a published document to the collaboration layer. The
+\texttt{invite} method will be discussed later 
+(see \ref{archoverview.net.invite}). The \texttt{setDocumentDetails}
+method allows the change the document details (currently only the title).
+This method corresponds to the \texttt{setDocumentDetails} method in
+the \texttt{PublishedSession} interface of the collaboration layer.
+Calling this method sends the changed document title to the other peers.
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=8.71cm,height=3.18cm]{../images/finalreport/architecture_documentserver_uml.eps}
+ \caption{DocumentServer Interface}
+\end{figure}
+
+Finally, the \texttt{shutdown} method is called shutdown the document
+server for the document. This should be called when a published document
+is concealed.
+
+\subsubsection{DocumentServerLogic}
+The \texttt{DocumentServerLogic} represents the view of the network layer
+on the collaboration layer for a published document. The only method
+exposed by this interface is the \texttt{join} method, which has a single
+parameter of type \texttt{ParticipantConnection}.
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=7.62cm,height=2.40cm]{../images/finalreport/architecture_documentserverlogic_uml.eps}
+ \caption{DocumentServerLogic Interface}
+\end{figure}
+
+\subsubsection{ParticipantConnection}
+The \texttt{ParticipantConnection} interface provides the collaboration layer
+a way to send events to a particular participant. When the \texttt{join}
+method on the \texttt{DocumentServerLogic} returns, the network layer does
+not have any way to send events to the server from the participant. That
+is because the join request is not yet accepted. The result of the join
+request is directly communicated to the \texttt{ParticipantConnection}.
+The \texttt{getUser} method allows the collaboration layer to extract the
+user that wants to join the session.
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=12.59cm,height=6.84cm]{../images/finalreport/architecture_participantconnection_uml.eps}
+ \caption{ParticipantConnection Interface}
+\end{figure}
+
+If the join is rejected, the \texttt{joinRejected} method is called passing
+in a code (see the constants defined in the \texttt{JoinRequest} interface).
+The connection is then no longer used by the collaboration layer and can thus
+be destroyed.
+
+If the join request is accepted, the following methods are called in order:
+\begin{itemize}
+ \item \texttt{setParticipantId} - sets the assigend participant id for that participant
+ \item \texttt{joinAccepted} - passing in an instance of the \texttt{ParticipantPort} interface
+ \item \texttt{sendDocument} - sends the initial document
+\end{itemize} 
+
+As long as the participant is part of the session, the following methods
+are called:
+\begin{itemize}
+ \item \texttt{sendAcknowledge}
+ \item \texttt{sendCaretUpdateMessage}
+ \item \texttt{sendRequest}
+ \item \texttt{sendParticipantJoined}
+ \item \texttt{sendParticipantLeft}
+\end{itemize}
+
+These are the basic messages sent as part of a session from the server.
+
+The connection is terminated by a call to \texttt{close}. If the participant
+is kicked from the session, first \texttt{sendKicked} is called just before
+the call to \texttt{close}.
+
+
+\subsubsection{ParticipantPort}
+The network layer gets a \texttt{ParticipantPort} implementation through
+the \texttt{joinAccepted} method. Most important, it has methods to receive
+requests, caret update messages, as well as acknowledges from the participant.
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=9.13cm,height=3.88cm]{../images/finalreport/architecture_participantport_uml.eps}
+ \caption{ParticipantPort Interface}
+\end{figure}
+
+The \texttt{leave} method allows a participant to leave the session and
+the \texttt{getParticipantId} provides a way to query the assigned
+participant id.
+
+
+\subsubsection{Invitations}
+\label{archoverview.net.invite}
+The \texttt{DocumentServer} has a method named \texttt{invite}. This method
+is used by the publisher's collaboration layer to send an invitation for the
+document represented by the \texttt{DocumentServer} instance. The single
+argument of that method is of type \texttt{InvitationPort}.
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=8.00cm,height=3.18cm]{../images/finalreport/architecture_invitationport_uml.eps}
+ \caption{InvitationPort Interface}
+\end{figure}
+
+The \texttt{InvitationPort} provides the network layer a way to accept or
+reject an invitation. The invitation is sent to the invited user. The response
+of that particular user is then reported back through the 
+\texttt{InvitationPort} to the collaboration layer of the publisher. The
+method \texttt{accept} behaves similarly to the \texttt{join} method of
+the \texttt{DocumentServerLogic} interface. The port for the accepted 
+connection is passed to the \texttt{joinAccepted} method of the passed
+in connection.
 
