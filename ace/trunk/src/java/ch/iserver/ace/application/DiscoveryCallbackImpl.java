@@ -37,12 +37,15 @@ public class DiscoveryCallbackImpl implements DiscoveryCallback {
 	}
 	
 	public void discovered(final DiscoveryResult result) {
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				int status = result.getStatus();
-				String msg = result.getStatusMessage();
-				dialogController.showDiscoveryFailed(status, msg);
-			}
-		});
+		if(result.getStatus() == DiscoveryResult.SUCCESS) {
+		} else {
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					int status = result.getStatus();
+					String msg = result.getStatusMessage();
+					dialogController.showDiscoveryFailed(status, msg);
+				}
+			});
+		}
 	}
 }
