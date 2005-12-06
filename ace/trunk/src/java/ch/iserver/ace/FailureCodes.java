@@ -41,5 +41,7 @@ public interface FailureCodes {
 	public static final int ADDRESS_ALREADY_USED = 102;
 	public static final int SESSION_FAILURE = 103;
 	
+	public static final int DISCOVERY_FAILED = 104;
+	
 	
 }
