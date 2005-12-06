@@ -61,7 +61,7 @@ public class MainRequestHandler extends AbstractRequestHandler {
 		InputDataStream input = message.getDataStream();
 		
 		try {
-			byte[] rawData = readData(input);
+			byte[] rawData = DataStreamHelper.read(input);
 			LOG.debug("received "+rawData.length+" bytes. ["+(new String(rawData))+"]");
 			Request request = null;
 //			synchronized (this) { //-> singlethreaddomain
