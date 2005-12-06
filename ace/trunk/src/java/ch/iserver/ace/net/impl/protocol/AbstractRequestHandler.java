@@ -21,37 +21,15 @@
 
 package ch.iserver.ace.net.impl.protocol;
 
-import java.io.ByteArrayOutputStream;
-
 import org.apache.log4j.Logger;
-import org.beepcore.beep.core.InputDataStream;
 import org.beepcore.beep.core.RequestHandler;
-import org.beepcore.beep.util.BufferSegment;
 
 /**
- *
+ * TODO: consider deleting this class
  */
 public abstract class AbstractRequestHandler implements RequestHandler {
 	
 	private static Logger LOG = Logger.getLogger(AbstractRequestHandler.class);
-	
-	protected byte[] readData(InputDataStream stream) throws Exception {
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		do {
-            	BufferSegment b = stream.waitForNextSegment();
-             if (b == null) {
-            	 	if (stream.isComplete()) {
-            	 		LOG.warn("BufferSegment null but stream is NOT complete, thus continue...");
-            	 		break;
-            	 	} else {
-            	 		continue;
-            	 	}
-             }
-             out.write(b.getData());
-        } while (!stream.isComplete());
-		out.flush();
-		return out.toByteArray();
-	}
 	
 	public abstract void cleanup();
 	
