@@ -23,6 +23,9 @@ package ch.iserver.ace.net.impl.discovery.dnssd;
 
 import org.apache.log4j.Logger;
 
+import ch.iserver.ace.FailureCodes;
+import ch.iserver.ace.net.impl.NetworkServiceImpl;
+
 
 
 /**
@@ -50,7 +53,11 @@ abstract class DNSSDCall {
 				} catch (RetryException re) {
 					throw new DNSSDUnavailable("repeated attempts to communicate with DNSSD failed.");
 				}
-			}	
+			} catch (Error error) {
+				getLogger().fatal("caught error, DNSSD not installed [" + error + "]");
+				NetworkServiceImpl.getInstance().getCallback().
+							serviceFailure(FailureCodes.DNSSD_NOT_AVAILABLE, "DNSSD not installed", null);
+			}
 		}
 		return null;
 	}
