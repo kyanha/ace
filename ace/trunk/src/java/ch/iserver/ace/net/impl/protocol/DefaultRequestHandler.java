@@ -120,8 +120,8 @@ public class DefaultRequestHandler extends AbstractRequestHandler {
 		OutputDataStream output = DataStreamHelper.prepare(data);
 		message.sendRPY(output);
 		proxy.setExplicityDiscovered(true);
-		SessionManager.getInstance().createSession(proxy, (TCPSession) channel.getSession(), channel);
 		DiscoveryManagerFactory.getDiscoveryManager(null).addUser(proxy);
+		SessionManager.getInstance().createSession(proxy, (TCPSession) channel.getSession(), channel);
 	}
 
 
