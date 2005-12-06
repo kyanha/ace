@@ -134,14 +134,20 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 	/**
 	 * Adds a new user to the <code>DiscoveryManager</code> and notifies
 	 * the <code>DiscoveryCallback</code> with a call to <code>userDiscovered(RemoteUserProxyExt)</code>.
+	 * If the user was explicitly discovered, <code>userDiscoveryCompleted(RemoteUserProxyExt)</code> is 
+	 * called as well.
 	 * 
 	 * @param user the user to be added
+	 * @see DiscoveryCallback
 	 */
 	public void addUser(RemoteUserProxyExt user) {
 		ParameterValidator.notNull("user", user);
 		LOG.debug("--> addUser(" + user.getUserDetails().getUsername() + ")");
 		remoteUserProxies.put(user.getId(), user);
 		forward.userDiscovered(user);
+		if (user.isExplicitlyDiscovered()) {
+			forward.userDiscoveryCompleted(user);
+		}
 		LOG.debug("<-- addUser()");
 	}
 	
