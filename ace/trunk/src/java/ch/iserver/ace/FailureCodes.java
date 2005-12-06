@@ -44,6 +44,7 @@ public interface FailureCodes {
 	public static final int DISCOVERY_FAILED = 104;
 	
 	public static final int DNSSD_NOT_AVAILABLE = 105;
+	public static final int DNSSD_FAILURE = 106;
 	
 	
 }
