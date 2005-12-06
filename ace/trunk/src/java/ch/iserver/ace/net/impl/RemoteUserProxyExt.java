@@ -23,6 +23,7 @@ package ch.iserver.ace.net.impl;
 import java.util.Map;
 
 import ch.iserver.ace.net.RemoteUserProxy;
+import ch.iserver.ace.net.impl.protocol.DiscoveryException;
 
 /**
  * Interface extension of <code>RemoteUserProxy</code>
@@ -56,4 +57,15 @@ public interface RemoteUserProxyExt extends RemoteUserProxy {
 	boolean isExplicitlyDiscovered();
 	
 	void setExplicityDiscovered(boolean value);
+	
+	/**
+	 * Explicit discovery of this user. As precondition, 
+	 * the address and the port need to be set. Tries
+	 * to establish a <code>RemoteUserSession</code> with
+	 * the given information and requests the users coordinates,
+	 *  e.g. the user id and the user name.
+	 *
+	 * @throws DiscoveryException if the discovery fails
+	 */
+	void discover() throws DiscoveryException;
 }

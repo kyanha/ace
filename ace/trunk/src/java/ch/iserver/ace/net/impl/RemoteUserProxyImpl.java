@@ -26,8 +26,27 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.beepcore.beep.core.Channel;
+import org.beepcore.beep.core.InputDataStream;
+import org.beepcore.beep.core.MessageMSG;
+import org.beepcore.beep.core.OutputDataStream;
+import org.beepcore.beep.core.ProfileRegistry;
+import org.beepcore.beep.core.RequestHandler;
+import org.beepcore.beep.lib.Reply;
+import org.beepcore.beep.transport.tcp.TCPSession;
+import org.beepcore.beep.transport.tcp.TCPSessionCreator;
 
+import ch.iserver.ace.ServerInfo;
 import ch.iserver.ace.UserDetails;
+import ch.iserver.ace.net.impl.protocol.DataStreamHelper;
+import ch.iserver.ace.net.impl.protocol.DeserializerImpl;
+import ch.iserver.ace.net.impl.protocol.DiscoveryException;
+import ch.iserver.ace.net.impl.protocol.ProfileRegistryFactory;
+import ch.iserver.ace.net.impl.protocol.ProtocolConstants;
+import ch.iserver.ace.net.impl.protocol.RemoteUserSession;
+import ch.iserver.ace.net.impl.protocol.Request;
+import ch.iserver.ace.net.impl.protocol.ResponseParserHandler;
+import ch.iserver.ace.net.impl.protocol.SessionManager;
 import ch.iserver.ace.util.ParameterValidator;
 
 public class RemoteUserProxyImpl implements RemoteUserProxyExt {
@@ -117,6 +136,59 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 		return isExplicitlyDiscovered;
 	}
 	
+	public void discover() throws DiscoveryException {
+		LOG.debug("--> discover()");
+		if (isExplicitlyDiscovered() && !isSessionEstablished()) {
+			try {
+				/** pack into remoteusersession **/
+				ProfileRegistry registry = ProfileRegistryFactory.getProfileRegistry();
+				TCPSession session =  TCPSessionCreator.initiate(
+					getMutableUserDetails().getAddress(), getMutableUserDetails().getPort(), registry);
+				String uri = NetworkProperties.get(NetworkProperties.KEY_PROFILE_URI);
+				RequestHandler requestHandler = ProfileRegistryFactory.getMainRequestHandler();
+				Channel channel = session.startChannel(uri, requestHandler);
+				/** pack **/
+				
+				NetworkServiceImpl service = NetworkServiceImpl.getInstance();
+				String userid = service.getUserId();
+				String username = service.getUserDetails().getUsername();
+				ServerInfo info = service.getServerInfo();
+				String address = info.getAddress().getHostAddress();
+				String port = Integer.toString(info.getPort());
+				String user = "<user id=\"" + userid + "\" name=\"" + username + "\" address=\"" + address + "\" port=\"" + port + "\"/>";
+				String channelType = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+						"<ace><channel type=\"" + RemoteUserSession.CHANNEL_MAIN + "\" discovery=\"true\">" + user + "</channel></ace>";
+				byte[] data = channelType.getBytes(NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
+				OutputDataStream output = DataStreamHelper.prepare(data);
+				Reply reply = new Reply();
+				channel.sendMSG(output, reply);
+				
+				//process response
+				LOG.debug("--> getNextReply()");
+				InputDataStream response = reply.getNextReply().getDataStream();
+				LOG.debug("<-- getNextReply()");
+				byte[] rawData = DataStreamHelper.read(response);
+				ResponseParserHandler handler = new ResponseParserHandler();
+				DeserializerImpl.getInstance().deserialize(rawData, handler);
+				Request result = handler.getResult();
+				if (result.getType() == ProtocolConstants.USER_DISCOVERY) {
+					id = result.getUserId();
+					String name = (String) result.getPayload();
+					getMutableUserDetails().setUsername(name);
+				} else { //only for debugging
+					LOG.error("unknown response type parsed.");
+				}
+				SessionManager.getInstance().createSession(this, session, channel);
+				LOG.debug("user discovery succeded.");
+			} catch (Exception e) {
+				throw new DiscoveryException(e);
+			}
+		} else {
+			LOG.debug("not going to discover user, is not explicitly discovered or session already established");
+		}
+		LOG.debug("<-- discover()");
+	}
+	
 	/**
 	 * @inheritDoc
 	 */
@@ -148,5 +220,14 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 		hash += details.hashCode();
 		hash += documents.hashCode();
 		return hash;
+	}
+	
+	private class DiscoveryHandler implements RequestHandler {
+		
+		public void receiveMSG(MessageMSG message) {
+			
+			
+			
+		}
 	}
 }
