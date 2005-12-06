@@ -140,7 +140,7 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 		LOG.debug("--> discover()");
 		if (isExplicitlyDiscovered() && !isSessionEstablished()) {
 			try {
-				/** pack into remoteusersession **/
+				/** pack into remoteusersession -> MainChannel**/
 				ProfileRegistry registry = ProfileRegistryFactory.getProfileRegistry();
 				TCPSession session =  TCPSessionCreator.initiate(
 					getMutableUserDetails().getAddress(), getMutableUserDetails().getPort(), registry);
