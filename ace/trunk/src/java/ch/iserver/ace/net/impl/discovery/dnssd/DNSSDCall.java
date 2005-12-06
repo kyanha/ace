@@ -33,6 +33,8 @@ import ch.iserver.ace.net.impl.NetworkServiceImpl;
  */
 abstract class DNSSDCall {
 	
+	private boolean dnsNotAvailable = false;
+	
 	/**
 	 * Executes the DNSSD call. In case of failure, a {@link RetryStrategy}
 	 * determines how many times the call should be retried.
@@ -54,9 +56,12 @@ abstract class DNSSDCall {
 					throw new DNSSDUnavailable("repeated attempts to communicate with DNSSD failed.");
 				}
 			} catch (Error error) {
-				getLogger().fatal("caught error, DNSSD not installed [" + error + "]");
-				NetworkServiceImpl.getInstance().getCallback().
+				if (!dnsNotAvailable) {
+					dnsNotAvailable = true;
+					getLogger().fatal("caught error, DNSSD not installed [" + error + "]");
+					NetworkServiceImpl.getInstance().getCallback().
 							serviceFailure(FailureCodes.DNSSD_NOT_AVAILABLE, "DNSSD not installed", null);
+				}
 			}
 		}
 		return null;
