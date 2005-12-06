@@ -15,23 +15,190 @@ pdfcreator={pdftex},
 
 \begin{document}
 
+\setlength{\parindent}{0pt}
+
 \include{titlepage}
 
 \tableofcontents
 
 
 
-\section{Blubb}
-The figure \ref{fig:documentation overview} shows all the documentation of
-the ACE diploma project. The starting point is this document, the 
-\emph{Project Manual}.
 
-\begin{figure}[H]
- \centering
- \includegraphics[width=15cm,height=3.73cm]{../images/usermanual/win_installer_00.bmp}
- \caption{Documentation Overview}
- \label{fig:documentation overview}
-\end{figure}
+
+
+\newpage
+% 1. INTRO
+\section{Introduction}
+
+The \emph{User Manual} contains information on how use the application ACE. Further, information about the installation is given.
+
+
+
+
+
+
+% 2. INSTALLATION
+\section{Installation}
+To run ACE, you need the following components installed on your local machine:
+\begin{itemize}
+ \item Java Runtime Environment (JRE) - 1.4.2 or higher \\
+ Download: \href{http://java.sun.com/j2se/1.5.0/download.jsp}{http://java.sun.com/j2se/1.5.0/download.jsp}
+ \item Bonjour (Only for Windows) \\
+ Download: \href{http://www.apple.com/downloads/macosx/apple/bonjourforwindows.html}{http://www.apple.com/downloads/macosx/apple/bonjourforwindows.html}
+\end{itemize}
+
+Downloads for Linux and other Operating Systems:
+
+\begin{itemize}
+ \item Bonjour \\
+ Download: \href{http://developer.apple.com/networking/bonjour/download}{http://developer.apple.com/networking/bonjour/download}
+ \item Apache Ant \\
+ Download: \href{http://ant.apache.org/}{http://ant.apache.org/}
+ \item Maven Ant Task \\
+ Download: \href{http://maven.apache.org/}{http://maven.apache.org/}
+\end{itemize}
+
+% 2.1 MAC
+\subsection{Macintosh}
+Mac OS X users do not have to install any other software beside ACE itself. The current version of ACE can be downloaded at \href{http://ace.iserver.ch}{http://ace.iserver.ch}.
+
+% 2.2 LINUX
+\subsection{Linux and other Operation Systems}
+Chances are high that if there is a Java Runtime Environment for your operating system, ACE will work. Unfortunately, there is no installer for Bonjour on Linux, Solaris, ... That means, you have to build Bonjour from source. In the following instructions, replace os=linux with your operating system. Check the Makefile in \texttt{mDNSPosix/Makefile} for supported operating systems.
+
+
+\begin{enumerate}
+\item download the source code
+\item unpack the downloaded tar.gz to a location of your choice
+\item go to the subdirectory mDNSPosix
+\item in the Makefile, adjust the variable \textit{JDK} to point to the correct JDK location
+\item type make \texttt{os=linux} to build the mDNSResponder
+\item as root user, type \texttt{make os=linux install} to install the mDNSResponder daemon
+\item now, the daemon needs to be started by running the startup script \texttt{/etc/init.d/mdns start} as root
+\end{enumerate}
+
+Further, you have to build a shared library in order that Bonjour for Java works:
+
+\begin{itemize}
+\item in the directory mDNSPosix type \texttt{make os=linux Java}
+\item as root, copy the file \texttt{libjdns\_sd.so} from \texttt{build/prod} to somewhere into the Java library path (system property java.library.path)
+\end{itemize}
+
+Next you can download the current version of ACE for other platforms from \href{http://ace.iserver.ch}{http://ace.iserver.ch}. To run ACE, type \texttt{ant run} in the top-level directory. Note: you need Apache Ant and Maven Ant Task installed in that case.
+
+% 2.3 WINDOWS
+\subsection{Windows}
+Windows users have to install a Java Runtime Environment (JRE) - 1.4.2 or higher. Further, Bonjour for Windows has to be downloaded and installed. If you have iTunes on your computer, Bonjour is already installed. The ACE installer guides your through the installation and warns you, if Bonjour is not installed. \\
+ \\
+The current version of ACE can be downloaded at \href{http://ace.iserver.ch}{http://ace.iserver.ch}.
+
+
+
+
+
+\newpage
+% 3. OVERVIEW
+\section{Overview}
+(Bild: editor overview)
+
+% 3.1 MENUS
+\subsection{Menus}
+\begin{itemize}
+\item File Menu
+\item Edit Menu
+\item Collaboration Menu
+\item Help Menu
+\end{itemize}
+
+% 3.2 EDITOR
+\subsection{Editor}
+- Switch to FullScreen
+- (Bild: %editor_overview)
+- (Bild: %editor_collab_01)
+- (Bild: %editor_collab_02)
+
+% 3.3 DOCUMENT VIEW
+\subsection{DocumentView}
+The Document View shows all current open Documents. There are three different Document types:
+\begin{itemize}
+\item Local Documents
+\item Published Documents
+\item Remote Documents
+\end{itemize}
+
+(Bild: %dview_overview.eps)
+
+% 3.4 USER VIEW
+\subsection{UserView}
+(Bild: %uview_overview)
+(Bild: %uview_filtering)
+
+% 3.5 BROWSE VIEW
+\subsection{BrowseView}
+- (Bild: %bview_overview.bmp.eps)
+- (Bild: %bview_filtering.eps)
+
+% 3.6 PARTICIPANT VIEW
+\subsection{ParticipantView}
+- (Bild: %pview_overview)
+
+% 3.7 PREFERENCES
+\subsection{Preferences}
+
+
+
+
+
+
+\newpage
+% 4. FIRST STEPS
+\section{First Steps}
+
+% 4.1 CREATE
+\subsection{Create a new Document}
+
+% 4.2 OPEN
+\subsection{Open an existing Document}
+
+% 4.3 SAVE
+\subsection{Save open Documents}
+
+% 4.4 QUIT
+\subsection{Quit}
+- save dialogs
+
+
+
+
+\newpage
+% 5. NETWORKING
+\section{Networking}
+
+% 5.1 PUBLISH / CONCEAL
+\subsection{Publish / Conceal Documents}
+- (Bild: %editor_view_publish)
+- (Bild: %editor_view_conceal)
+- (Bild: %nmenu_collaboration_publish)
+- (Bild: %nmenu_collaboration_conceal)
+
+% 5.2 INVITE / KICK
+\subsection{Invite / Kick Users}
+- (Bild: %pview_invite)
+- (Bild: %nmenu_collaboration_invite)
+- (Bild: %pview_kick)
+- (Bild: %nmenu_collaboration_kick)
+
+% 5.3 JOIN / LEAVE
+\subsection{Join / Leave Network Documents}
+- (Bild: %bview_join.eps)
+- (Bild: %dview_joined.eps)
+
+% 5.4 DISCOVER
+\subsection{Discover Users}
+- (Bild: %nmenu_collaboration_discover)
+
+
+
 
 
 
