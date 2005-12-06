@@ -35,6 +35,7 @@ public class ResponseParserHandler extends ParserHandler {
 	private Request response;
 	private int responseType;
 	private QueryInfo info;
+	private String userId;
 	
 	public ResponseParserHandler() {
 	}
@@ -46,10 +47,19 @@ public class ResponseParserHandler extends ParserHandler {
 	}
 	
 	public void endDocument() throws SAXException {
+		if (responseType == USER_DISCOVERY) {
+			response = new RequestImpl(USER_DISCOVERY, userId, info.getPayload());
+			info = null;
+		}
 	}
 	
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {	
-
+		if (qName.equals(USER)) {
+			responseType = USER_DISCOVERY;
+			userId = attributes.getValue(ID);
+			String name = attributes.getValue(NAME);
+			info.setPayload(name);
+		}
 	}
 	
 	public void endElement(String uri, String localName, String qName) throws SAXException {
