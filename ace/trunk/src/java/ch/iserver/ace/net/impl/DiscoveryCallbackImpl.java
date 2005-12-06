@@ -78,7 +78,7 @@ public class DiscoveryCallbackImpl implements DiscoveryCallback {
 		if (service.hasPublishedDocuments()) {
 			sendDocuments(user);
 		} else {
-			LOG.debug("no published documents, do not establish session with ["+user.getUserDetails().getUsername()+"]");
+			LOG.debug("no published documents, not sending anything to ["+user.getUserDetails().getUsername()+"]");
 		}
 		LOG.debug("<-- userDiscoveryCompleted()");
 	}
