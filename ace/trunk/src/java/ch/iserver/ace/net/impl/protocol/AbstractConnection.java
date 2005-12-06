@@ -68,7 +68,7 @@ public abstract class AbstractConnection {
 	public synchronized void send(byte[] message, Object data, ReplyListener listener) throws ProtocolException {
 		try {
 			if (getState() == STATE_ACTIVE) {
-				OutputDataStream output = prepare(message);
+				OutputDataStream output = DataStreamHelper.prepare(message);
 				//AppData is kept in-process only
 				if (data != null)
 					channel.setAppData(data);
@@ -181,20 +181,5 @@ public abstract class AbstractConnection {
 		e.printStackTrace(pw);
 		pw.close();
 		return new String(trace.toByteArray());
-	}
-	
-	/**
-	 * Creates an <code>OutputDataStream</code> from the given data.
-	 * 
-	 * @param data 	the data to fill in the OutputDataStream 
-	 * @return the OutputDataStream containing the <code>data</code>
-	 */
-	private OutputDataStream prepare(byte[] data) {
-		BufferSegment buffer = new BufferSegment(data);
-		OutputDataStream output = new OutputDataStream();
-		output.add(buffer);
-//		OutputDataStream output = new ByteOutputDataStream(data);
-		output.setComplete();
-		return output;
-	}
+	}	
 }
