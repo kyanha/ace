@@ -41,22 +41,35 @@ public class ServerInfo {
 	/**
 	 * Creates a new ServerInfo instance.
 	 * 
-	 * @param addr
-	 * @param port
+	 * @param addr the InetAddress of the server
+	 * @param port the port of the server
 	 */
 	public ServerInfo(InetAddress addr, int port) {
 		this.address = addr;
 		this.port = port;
 	}
 
+	/**
+	 * Gets the InetAddress of the represented server.
+	 * 
+	 * @return the InetAddress
+	 */
 	public InetAddress getAddress() {
 		return address;
 	}
 
+	/**
+	 * Gets the port on which the represented server is listening.
+	 * 
+	 * @return the local port
+	 */
 	public int getPort() {
 		return port;
 	}
 	
+	/**
+	 * @see java.lang.Object#toString()
+	 */
 	public String toString() {
 		return "[" + address + ":" + port + "]";
 	}
