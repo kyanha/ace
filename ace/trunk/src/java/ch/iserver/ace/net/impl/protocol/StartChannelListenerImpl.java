@@ -69,7 +69,7 @@ public class StartChannelListenerImpl implements StartChannelListener {
 	 */
 	public void closeChannel(Channel channel) throws CloseChannelException {
 		LOG.debug("--> closeChannel("+channel+")");
-//		--> cleanup is now initiated in SessionRequestHandler
+		//--> cleanup is now initiated in SessionRequestHandler
 		channel.setRequestHandler(null);
 		LOG.debug("<-- closeChannel()");
 	}

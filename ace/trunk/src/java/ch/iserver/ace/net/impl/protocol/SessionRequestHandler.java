@@ -21,7 +21,6 @@
 
 package ch.iserver.ace.net.impl.protocol;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -32,7 +31,6 @@ import org.beepcore.beep.core.MessageMSG;
 import ch.iserver.ace.FailureCodes;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Timestamp;
-import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.net.SessionConnectionCallback;
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.PortableDocumentExt;
@@ -72,7 +70,7 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 //			synchronized(this) {
 				LOG.debug("--> synchronize()");
 				InputDataStream input = message.getDataStream();
-				byte[] rawData = readData(input); //only one thread shall read data at a time
+				byte[] rawData = DataStreamHelper.read(input); //only one thread shall read data at a time
 				readInData = (new String(rawData));
 				LOG.debug("received "+rawData.length+" bytes. ["+readInData+"]");
 				//deserializer and handler are shared by all SessionRequestHandler instances, thus synchronize
