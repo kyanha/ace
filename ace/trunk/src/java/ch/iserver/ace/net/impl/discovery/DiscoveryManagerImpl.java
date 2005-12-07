@@ -108,7 +108,11 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 	 * @inheritDoc
 	 */
 	public void setSessionTerminated(String userId) {
-		peersWithEstablishedSession.remove(userId);
+		if (userId != null) {
+			peersWithEstablishedSession.remove(userId);
+		} else {
+			LOG.warn("userId null");
+		}
 	}
 	
 	/**
@@ -129,6 +133,10 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 		return user;
 	}
 	
+	public Map getUsers() {
+		return remoteUserProxies;
+	}
+	
 	/**
 	 * Adds a new user to the <code>DiscoveryManager</code> and notifies
 	 * the <code>DiscoveryCallback</code> with a call to <code>userDiscovered(RemoteUserProxyExt)</code>.
@@ -147,6 +155,16 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 			forward.userDiscoveryCompleted(user);
 		}
 		LOG.debug("<-- addUser()");
+	}
+	
+	public void discardUser(String userid) {
+		ParameterValidator.notNull("userid", userid);
+		RemoteUserProxyExt user = (RemoteUserProxyExt)remoteUserProxies.remove(userid);
+		if (user != null) {
+			forward.userDiscarded(user);
+		} else {
+			LOG.warn("user to be discarded not found [" + userid + "]");
+		}
 	}
 	
 	/**
@@ -201,8 +219,7 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 		if (serviceName != null) {
 			String userId = (String)services.remove(serviceName);
 			if (userId != null) {
-				RemoteUserProxyExt user = (RemoteUserProxyExt)remoteUserProxies.remove(userId);
-				forward.userDiscarded(user);	
+				discardUser(userId);
 			} else { 
 				LOG.warn("userid for service ["+serviceName+"] not found");
 			}

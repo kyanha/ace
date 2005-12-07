@@ -21,6 +21,8 @@
 
 package ch.iserver.ace.net.impl.discovery;
 
+import java.util.Map;
+
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;
 
 /**
@@ -80,10 +82,25 @@ public interface DiscoveryManager {
 	public void addUser(RemoteUserProxyExt user);
 	
 	/**
+	 * Gets all users as a userid to 
+	 * RemoteUserProxy map.
+	 * 
+	 * @return the Map with all the users
+	 */
+	public Map getUsers();
+	
+	/**
 	 * Gets the number of discovered users.
 	 * 
 	 * @return the number of discovered users
 	 */
 	public int getSize();
+	
+	/**
+	 * Discards the given user.
+	 * 
+	 * @param user the user to be discarded
+	 */
+	public void discardUser(String userid);
 	
 }
