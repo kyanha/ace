@@ -66,6 +66,11 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	private UserDetails details;
 	private String userId;
 	
+	/**
+	 * Flag to indicate that the network layer has been stopped.
+	 */
+	private boolean isStopped = false;
+	
 	private Map publishedDocs;
 	
 	private static NetworkServiceImpl instance;
@@ -131,8 +136,26 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	
 	public void stop() {
 		LOG.debug("--> stop()");
-		
+		isStopped = true;
 		//TODO: workout shutdown
+		
+		//end discovery
+		
+		/** server site **/
+		//close() on all participantconnections of all documents
+		
+		/** client site **/
+		//leave to all joined document publishers
+		
+		
+		/** common **/
+		//sign off at explicit discovered users
+		
+		//close all channels and sessions
+		
+		
+
+		
 		
 //		try {
 //			//TODO: what if at the same time a new message is received and processed?
@@ -187,6 +210,10 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	/**********************************************/
 	/** Methods from interface NetworkServiceExt **/
 	/**********************************************/
+	public boolean isStopped() {
+		return isStopped;
+	}
+	
 	public TimestampFactory getTimestampFactory() {
 		return timestampFactory;
 	}

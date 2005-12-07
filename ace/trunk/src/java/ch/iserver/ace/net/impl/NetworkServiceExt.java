@@ -39,4 +39,12 @@ public interface NetworkServiceExt extends NetworkService {
 	public boolean hasPublishedDocuments();
 	
 	public TimestampFactory getTimestampFactory();
+	
+	/**
+	 * Returns whether the network layer has been stopped.
+	 * If true, no messages shall be received and processed anymore.
+	 * 
+	 * @return
+	 */
+	public boolean isStopped();
 }
