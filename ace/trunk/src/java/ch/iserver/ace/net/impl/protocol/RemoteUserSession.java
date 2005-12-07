@@ -248,6 +248,10 @@ public class RemoteUserSession {
 		return participantConnections.containsKey(docId);
 	}
 	
+	public ParticipantConnectionImpl getParticipantConnection(String docId) {
+		return (ParticipantConnectionImpl) participantConnections.get(docId);
+	}
+	
 	/**
 	 * Cleans up the session. No methods may be called
 	 * after a call to <code>cleanup()</code>. This method
@@ -287,7 +291,7 @@ public class RemoteUserSession {
 	}
 	
 	/**
-	 * Closes the active session. This method must
+	 * Closes the active <code>TCPSession</code> and the <code>MainConnection</code>. This method must
 	 * be called when the TCPSession is still active.
 	 */
 	public synchronized void close() {
@@ -295,8 +299,8 @@ public class RemoteUserSession {
 			try {
 				mainConnection.close();
 				session.close();
-			} catch (BEEPException be) {
-				LOG.warn("could not close active session ["+be.getMessage()+"]");
+			} catch (Exception be) {
+				LOG.warn("could not close active session [" + be + ", " + be.getMessage() + "]");
 			}
 		}
 		user = null;
@@ -378,7 +382,8 @@ public class RemoteUserSession {
 				CollaborationDeserializer deserializer = new CollaborationDeserializer();
 				CollaborationParserHandler parserHandler = new CollaborationParserHandler();
 				parserHandler.setTimestampFactory(getTimestampFactory());
-				ParticipantRequestHandler pHandler = new ParticipantRequestHandler(deserializer, getTimestampFactory());
+				NetworkServiceExt service = NetworkServiceImpl.getInstance();
+				ParticipantRequestHandler pHandler = new ParticipantRequestHandler(deserializer, getTimestampFactory(), service);
 				pHandler.setParticipantPort(port);
 				handler = (RequestHandler) domain.wrap(pHandler, RequestHandler.class);
 				channelType = getChannelTypeXML(CHANNEL_SESSION);
