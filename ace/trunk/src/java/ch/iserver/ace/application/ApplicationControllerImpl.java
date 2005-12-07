@@ -128,7 +128,7 @@ public class ApplicationControllerImpl implements ApplicationController, Applica
 						DocumentItem item = (DocumentItem) it.next();
 						try {
 							if (saveItem(item)) {
-								getDocumentManager().closeDocument(item);
+								getDocumentManager().closeDocument(item, true);
 								it.remove();
 							}
 						} catch (IOException e) {
@@ -162,13 +162,13 @@ public class ApplicationControllerImpl implements ApplicationController, Applica
 				
 				if (option == JOptionPane.YES_OPTION) {
 					if (saveItem(item)) {
-						getDocumentManager().closeDocument(item);
+						getDocumentManager().closeDocument(item, false);
 					}
 				} else if (option == JOptionPane.NO_OPTION) {
-					getDocumentManager().closeDocument(item);
+					getDocumentManager().closeDocument(item, false);
 				}
 			} else {
-				getDocumentManager().closeDocument(item);
+				getDocumentManager().closeDocument(item, false);
 			}
 		} catch (IOException e) {
 			getDialogController().showSaveFailed(item, e);
@@ -212,7 +212,7 @@ public class ApplicationControllerImpl implements ApplicationController, Applica
 		Iterator it = closeList.iterator();
 		while (it.hasNext()) {
 			DocumentItem item = (DocumentItem) it.next();
-			getDocumentManager().closeDocument(item);
+			getDocumentManager().closeDocument(item, false);
 		}
 	}
 

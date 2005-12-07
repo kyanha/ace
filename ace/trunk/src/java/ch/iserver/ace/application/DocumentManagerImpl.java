@@ -238,12 +238,12 @@ public class DocumentManagerImpl implements ItemSelectionChangeListener, Prefere
 	/**
 	 * @see ch.iserver.ace.application.DocumentManager#closeDocument(ch.iserver.ace.application.DocumentItem)
 	 */
-	public void closeDocument(DocumentItem item) {
-		if(item.getType() == DocumentItem.JOINED) {
+	public void closeDocument(DocumentItem item, boolean shutdown) {
+		if(item.getType() == DocumentItem.JOINED && !shutdown) {
 			// just leave joined items
 			item.leave();
 		} else {
-			if (item.getType() == DocumentItem.PUBLISHED) {
+			if (item.getType() == DocumentItem.PUBLISHED && !shutdown) {
 				item.conceal();
 			}
 			int index = documentController.indexOf(item);
