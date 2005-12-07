@@ -27,6 +27,8 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.beepcore.beep.core.ReplyListener;
 
+import ch.iserver.ace.FailureCodes;
+import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.PublishedDocument;
 import ch.iserver.ace.util.ParameterValidator;
 
@@ -68,6 +70,9 @@ public class ConcealDocumentPrepareFilter extends AbstractRequestFilter {
 							connection.send(data, session.getUser().getUserDetails().getUsername(), listener);
 						} catch (ConnectionException ce) {
 							LOG.warn("connection failure for session ["+session.getUser().getUserDetails()+"] "+ce.getMessage());
+							NetworkServiceImpl.getInstance().getCallback().serviceFailure(
+									FailureCodes.REMOTE_USER_FAILURE, session.getUser().getUserDetails().getUsername(), ce);
+							//TODO: remove userProxy and userSession?
 						}
 					}
 				}

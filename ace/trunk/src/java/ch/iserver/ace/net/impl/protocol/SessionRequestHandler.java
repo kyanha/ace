@@ -177,8 +177,8 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 	
 	private void addNewUser(RemoteUserProxyExt user) {
 		DiscoveryManager discoveryManager = DiscoveryManagerFactory.getDiscoveryManager(null);
-		if (discoveryManager.getUser(user.getId()) == null); {
-			discoveryManager.addUser(user);
+		if (discoveryManager.getUser(user.getId()) == null) {
+			discoveryManager.addUser(user); //TODO: make shure the new user receives published documents
 		}
 	}
 
