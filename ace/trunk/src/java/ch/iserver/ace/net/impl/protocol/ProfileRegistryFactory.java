@@ -28,6 +28,7 @@ import org.beepcore.beep.core.StartChannelListener;
 
 import ch.iserver.ace.algorithm.TimestampFactory;
 import ch.iserver.ace.net.impl.NetworkProperties;
+import ch.iserver.ace.net.impl.NetworkServiceExt;
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.util.SingleThreadDomain;
 
@@ -54,7 +55,8 @@ public class ProfileRegistryFactory {
 			CollaborationDeserializer collabDeserializer = new CollaborationDeserializer();
 			//TODO: now, all sessionrequesthandlers share deserializer and handler, but you could do it
 			//the same as with participantrequesthandler: each one has its own deserializer and handler
-			SessionRequestHandlerFactory.init(collabDeserializer, handler);
+			NetworkServiceExt service = NetworkServiceImpl.getInstance();
+			SessionRequestHandlerFactory.init(collabDeserializer, handler, service);
 			StartChannelListener listener = new StartChannelListenerImpl(DefaultRequestHandlerFactory.getInstance());
 			DefaultProfile profile = new DefaultProfile(listener);
 			StartChannelListener channelListener = null;

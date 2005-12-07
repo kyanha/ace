@@ -24,6 +24,7 @@ package ch.iserver.ace.net.impl.protocol;
 import org.apache.log4j.Logger;
 import org.beepcore.beep.core.RequestHandler;
 
+import ch.iserver.ace.net.impl.NetworkServiceExt;
 import ch.iserver.ace.util.ParameterValidator;
 import ch.iserver.ace.util.SingleThreadDomain;
 import ch.iserver.ace.util.ThreadDomain;
@@ -37,22 +38,24 @@ public class SessionRequestHandlerFactory {
 	
 	private Deserializer deserializer;
 	private ParserHandler handler;
+	private NetworkServiceExt service;
 	
 	private ThreadDomain domain = new SingleThreadDomain();
 	
 	private static SessionRequestHandlerFactory instance;
 	
-	public static void init(Deserializer deserializer, ParserHandler handler) {
+	public static void init(Deserializer deserializer, ParserHandler handler, NetworkServiceExt service) {
 		ParameterValidator.notNull("deserializer", deserializer);
 		ParameterValidator.notNull("handler", handler);
 		if (instance == null) {
-			instance = new SessionRequestHandlerFactory(deserializer, handler);
+			instance = new SessionRequestHandlerFactory(deserializer, handler, service);
 		}
 	}
 	
-	private SessionRequestHandlerFactory(Deserializer deserializer, ParserHandler handler) {
+	private SessionRequestHandlerFactory(Deserializer deserializer, ParserHandler handler, NetworkServiceExt service) {
 		this.deserializer = deserializer;
 		this.handler = handler;
+		this.service = service;
 	}
 	
 	public static SessionRequestHandlerFactory getInstance() {
@@ -63,7 +66,7 @@ public class SessionRequestHandlerFactory {
 	}
 	
 	public RequestHandler createHandler() {
-		return (RequestHandler) domain.wrap(new SessionRequestHandler(deserializer, handler), RequestHandler.class);
+		return (RequestHandler) domain.wrap(new SessionRequestHandler(deserializer, handler, service), RequestHandler.class);
 	}
 	
 }
