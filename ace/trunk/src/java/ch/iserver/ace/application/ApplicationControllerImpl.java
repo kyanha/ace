@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -39,12 +40,11 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import ca.odell.glazedlists.EventList;
+import ch.iserver.ace.ServerInfo;
 import ch.iserver.ace.application.dialog.DialogResult;
 import ch.iserver.ace.application.dialog.SaveFilesDialog;
 import ch.iserver.ace.collaboration.CollaborationService;
 import ch.iserver.ace.util.CompareUtil;
-import ch.iserver.ace.ServerInfo;
-import java.net.InetAddress;
 
 /**
  * 
@@ -113,9 +113,10 @@ public class ApplicationControllerImpl implements ApplicationController, Applica
 			if (dirty.size() == 0) {
 				shutdown();
 			
-			} else {			
+			} else {
 				DialogResult result = getDialogController().showSaveFilesDialog(dirty);
-			
+				List closed = new LinkedList();
+				
 				if (result.getOption() == SaveFilesDialog.OK_OPTION) {
 					Set saveSet = (Set) result.getResult();
 			
@@ -130,24 +131,35 @@ public class ApplicationControllerImpl implements ApplicationController, Applica
 							if (saveItem(item)) {
 								getDocumentManager().closeDocument(item, true);
 								it.remove();
+								closed.add(item);
 							}
 						} catch (IOException e) {
 							failed.put(item, e);
 						}
 					}
-			
-					// display files that cannot be saved
-					if (failed.size() > 0) {
-						getDialogController().showSaveFilesFailed(failed);
-				
-					// only if there are no more open documents... 
-					} else if (saveSet.size() == 0){
+					
+					if (saveSet.size() == 0) {
 						shutdown();
+					} else {
+						closeCompletely(closed);
+						if (failed.size() > 0) {
+							getDialogController().showSaveFilesFailed(failed);
+						}
 					}
 				}
 			}
 		} finally {
 			dirty.getReadWriteLock().writeLock().unlock();
+		}
+	}
+	
+	private void closeCompletely(List closed) {
+		Iterator it = closed.iterator();
+		while (it.hasNext()) {
+			DocumentItem item = (DocumentItem) it.next();
+			if (item.getType() == DocumentItem.PUBLISHED) {
+				item.conceal();
+			}
 		}
 	}
 
@@ -348,7 +360,6 @@ public class ApplicationControllerImpl implements ApplicationController, Applica
 	 * System.exit. There is no way to stop that!
 	 */
 	protected void shutdown() {
-		//getDocumentManager().closeAllDocuments();
 		context.close();
 		System.exit(0);
 	}
