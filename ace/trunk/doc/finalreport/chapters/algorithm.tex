@@ -1,4 +1,5 @@
 \chapter{Algorithm}
+\label{chapter:algorithm}
 
 In this chapter we describe the algorithm used by ACE. We give a general
 overview over the concepts. However, the interested reader is referred to
@@ -472,6 +473,7 @@ transformation cases to decide which operation has higher priority, i.e.
 is not shifted.
 
 \subsubsection{Outgoing Queue}
+\label{sect:algorithm.outgoingqueue}
 \emph{Jupiter} stores all outgoing requests in a queue. Whenever a request
 is received by the algorithm, the timestamp of the request is checked to
 see how many requests the other site has already processed. All the requests

@@ -1,4 +1,5 @@
 \chapter{Collaboration Layer}
+\label{chapter:collaborationlayer}
 
 The collaboration layer is in between the two other layers: the network 
 layer below and the application layer above. It is responsible for all the 
@@ -27,7 +28,7 @@ The core entry point into the collaboration layer is the
 \texttt{Collaboration\-Service\-Impl} class, which also implements the
 \texttt{Network\-Service\-Callback} interface. These interfaces and their
 functionality have been thorougly explained before (see chapter 
-\ref{chap:archoverview}. The implementation passes the calls on 
+\ref{chapter:archoverview}. The implementation passes the calls on 
 the \texttt{Network\-Service\-Callback} methods to the corresponding
 methods of the API between the collaboration and the application
 layer.
@@ -107,7 +108,7 @@ creates a request that can then be sent to the \texttt{SessionConnection}.
 The \texttt{Configurable\-Session} has a method called \texttt{setConnection},
 which passes the \texttt{Session\-Connection} to the \texttt{Session}. The
 \texttt{Session\-Impl} makes use of a \texttt{Thread\-Domain} (see
-chapter \ref{chap:threaddomain}) to execute calls on the 
+chapter \ref{chapter:threaddomains}) to execute calls on the 
 \texttt{SessionConnection} asynchronously. This has one significant
 disadvantage. Exceptions thrown by the method invocation cannot be
 thrown back at the caller (i.e. the application layer). That is where
@@ -177,6 +178,7 @@ The \texttt{ServerLogic} interface is depicted in figure
  \centering
  % TODO: ServerLogic
  \caption{ServerLogic Interface}
+ \label{fig:archoverview.serverlogic}
 \end{figure}
 
 The \texttt{invite} method allows to invite a \texttt{RemoteUser} to
@@ -365,7 +367,7 @@ from the session. More about the wrapper can be read in .
 
 \subsection{Usage of ThreadDomains}
 The server logic uses \texttt{ThreadDomain}s extensively. To learn about
-\texttt{ThreadDomain}s read the chapter \ref{chap:threaddomains}.
+\texttt{ThreadDomain}s read the chapter \ref{chapter:threaddomains}.
 
 \subsubsection{Outgoing ThreadDomain}
 The algorithm requires that the transformation of requests at the server
@@ -490,7 +492,8 @@ used to send acknowledge strategies (see section
 
 \subsection{Acknowledge Strategies}
 \label{sect:archoverview.acknowledgestrategies}
-In the discussion of the algorithm (see section \ref{}) we have noted that
+In the discussion of the algorithm (see section {sect:algorithm.outgoingqueue})
+we have noted that
 in some cases the outgoing queues of the \emph{Jupiter} algorithm can 
 grow indefinitely. To avoid this situation, a site that does not generate
 requests on its own but receives requests from the other site should acknowledge

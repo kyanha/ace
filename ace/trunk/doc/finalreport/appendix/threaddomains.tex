@@ -1,4 +1,5 @@
 \chapter{Thread Domains}
+\label{chapter:threaddomains}
 
 ACE is split into three distinct layers. Events are passed from layer to
 layer over interfaces. The responses to these events are often passed over
@@ -150,7 +151,7 @@ is removed from the queue and executed on the worker thread.
 
 \subsection{ThreadDomain Interface}
 The core interface is \texttt{ch.iserver.ace.util.ThreadDomain} 
-(see figure \ref{fig:threaddomain.interface}). Thread domains can be given
+(see figure \ref{fig:threaddomain_interface}). Thread domains can be given
 a name, which is useful for debugging purposes. The worker threads created
 from a thread domain are given a name derived from the name of the thread
 domain.

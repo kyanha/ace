@@ -1,5 +1,5 @@
 \chapter{Architectural Overview}
-
+\label{chapter:archoverview}
 
 ACE is split into three independent layers. Each layer has a well-defined 
 interface between the adjoining layers and well-defined responsibilities. 
@@ -324,7 +324,8 @@ is called, it must be placed inside a finally block.
  \caption{Proper locking of a Session}
 \end{figure}
 
-The documentation of the application layer (see \ref{chap:applicationlayer}) 
+The documentation of the application layer (see chapter 
+\ref{chapter:applicationlayer}) 
 shows how the lock is implemented in our application layer implementation.
 
 
@@ -826,7 +827,8 @@ object.
 
 
 \subsection{Publishing a Document}
-The figure \ref{archoverview.flow.publish} shows how a document is published.
+The figure \ref{fig:archoverview.flow.publish} shows how a document 
+is published.
 First, the \texttt{publish} method of the \texttt{CollaborationService} is 
 called. The collabation layer in turn calls \texttt{publish} on the
 \texttt{NetworkService}. However, the call is not simply passed through the
@@ -851,7 +853,7 @@ network layer. For a description of that interface see
 \label{sect:archoverview.flow.discovery}
 A document published by one user is discovered by the other users. These
 clients get notified about discovered documents through the method calls
-depicted in the figure \ref{archoverview.flow.discovery}.
+depicted in the figure \ref{fig:archoverview.flow.discovery}.
 
 \begin{figure}[H]
  \centering
