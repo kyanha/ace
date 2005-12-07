@@ -338,6 +338,8 @@ public class RemoteUserSession {
 	private void initiateTCPSession() throws ConnectionException {
 		LOG.debug("--> initiateTCPSession()");
 		try {
+			//TODO: how to handle when a connection to a user is to be established who resides
+			//behind a router? timeout?
 			ProfileRegistry registry = ProfileRegistryFactory.getProfileRegistry();
 			TCPSession newSession = TCPSessionCreator.initiate(host, port, registry); 
 			setTCPSession( newSession );

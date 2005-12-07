@@ -113,7 +113,7 @@ public interface ProtocolConstants {
 	public static final String USER = "user";
 	public static final String ADDRESS = "address";
 	public static final String PORT = "port";
-	public static final String EXPLICIT_DISCOVERY = "explicitDiscovery";
+	public static final String DNSSD_DISCOVERY = "dnssdDiscovered";
 	public static final String DISCOVERY = "discovery";
 	public static final String DATA = "data";
 	public static final String SELECTION = "selection";
