@@ -147,6 +147,7 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 			discovery.abort();
 			/** server site **/
 			//close() on all participantconnections of all documents
+			LOG.debug("close() on all participantconnections of all documents");
 			Map docs = getPublishedDocuments();
 			synchronized(docs) {
 				Iterator iter = docs.values().iterator();
@@ -158,23 +159,26 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 			
 			/** client site **/
 			//send leave to all joined document publishers
+			LOG.debug("send leave to all joined document publishers");
 			Map users = DiscoveryManagerFactory.getDiscoveryManager(null).getUsers();
 			synchronized (users) {
 				Iterator iter = users.values().iterator();
 				while (iter.hasNext()) { //for each user
 					RemoteUserProxyExt user = (RemoteUserProxyExt) iter.next();
+					LOG.debug("process stop() for "+user.getUserDetails().getUsername());
 					RemoteUserSession session = SessionManager.getInstance().removeSession(user.getId()); //session may be null
 					docs = user.getDocuments();
 					synchronized(docs) {
 						Iterator iter2 = docs.values().iterator();
 						while (iter2.hasNext()) { //for each doc of the current user
-							RemoteDocumentProxyExt doc = (RemoteDocumentProxyExt) iter.next();
+							RemoteDocumentProxyExt doc = (RemoteDocumentProxyExt) iter2.next();
 							if (doc.isJoined() && session != null) {
 								session.getSessionConnection(doc.getId()).leave();
 							}
 						}
 					}
 					if (!user.isDNSSDdiscovered()) { //send sign-off message to explicitly discovered user
+						LOG.debug("send sign-off message to explicitly discovered user");
 						String message = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
 								"<ace><notification><userDiscarded id=\"" + getUserId() + "\"/></notification></ace>";
 						byte[] data = message.getBytes(NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
@@ -182,11 +186,13 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 						session.getMainConnection().send(data, null, null);
 					}
 					//close main channel and TCPSession
+					LOG.debug("close main channel and TCPSession");
 					session.close();
 				}
 			}
 		
 		} catch (Exception e) {
+			e.printStackTrace();
 			LOG.warn("could not stop network layer smoothly ["+e+", "+e.getMessage()+"]");
 		}
 		LOG.debug("<-- stop()");

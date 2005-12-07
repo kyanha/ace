@@ -302,8 +302,12 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 	 * Clean up participant resources.
 	 */
 	private void executeCleanup() {
-		ParticipantCleanup cleanup = new ParticipantCleanup(docId, session.getUser().getId());
-		cleanup.execute();
+		if (docId != null && session != null) {
+			ParticipantCleanup cleanup = new ParticipantCleanup(docId, session.getUser().getId());
+			cleanup.execute();
+		} else {
+			LOG.warn("cannot cleanup, docId and/or session null [" + docId + "] [" + session + "]");
+		}
 	}
 	
 //	public boolean equals(Object obj) {

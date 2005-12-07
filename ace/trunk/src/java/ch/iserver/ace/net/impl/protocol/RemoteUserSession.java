@@ -249,7 +249,11 @@ public class RemoteUserSession {
 	}
 	
 	public ParticipantConnectionImpl getParticipantConnection(String docId) {
-		return (ParticipantConnectionImpl) participantConnections.get(docId);
+		ParticipantConnectionImpl conn = (ParticipantConnectionImpl) participantConnections.get(docId);
+		if (conn == null) {
+			LOG.debug("ParticipantConnection for docId [" + docId + "] not found.");
+		}
+		return conn;
 	}
 	
 	/**

@@ -65,8 +65,12 @@ public class ConcealDocumentPrepareFilter extends AbstractRequestFilter {
 					Iterator iter = sessions.values().iterator();
 					while (iter.hasNext()) {
 						RemoteUserSession session = (RemoteUserSession)iter.next();
-						//send sessionTerminated message first to the user, then conceal document
-						session.getParticipantConnection(doc.getId()).close();
+						LOG.debug("conceal to " + session.getUser().getUserDetails().getUsername());
+						//send sessionTerminated message first to the user (if a participant), then conceal document
+						ParticipantConnectionImpl conn = session.getParticipantConnection(doc.getId());
+						if (conn != null) {
+							conn.close();
+						}
 						try {
 							MainConnection connection = session.getMainConnection();
 							connection.send(data, session.getUser().getUserDetails().getUsername(), listener);
