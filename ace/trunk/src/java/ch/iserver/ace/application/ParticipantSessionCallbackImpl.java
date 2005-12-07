@@ -71,7 +71,7 @@ public class ParticipantSessionCallbackImpl extends SessionCallbackImpl implemen
 				Style pStyle = cDocument.addStyle(pId, null);
 				StyleConstants.setBackground(pStyle, pColor);
 				
-				System.out.println("participant=" + participant + "   style=" + pStyle);
+				//System.out.println("participant=" + participant + "   style=" + pStyle);
 			}
 		}
 
@@ -98,7 +98,7 @@ public class ParticipantSessionCallbackImpl extends SessionCallbackImpl implemen
 			if(!pId.equals(mpId)) {
 				// caret handler
 				CaretUpdate pCaretUpdate = doc.getSelection(participant.getParticipantId());
-				System.out.println("participant=" + participant + "   caret=" + pCaretUpdate);
+				//System.out.println("participant=" + participant + "   caret=" + pCaretUpdate);
 				PropertyChangeCaretHandlerImpl pCaretHandler =
 					new PropertyChangeCaretHandlerImpl(pCaretUpdate.getDot(), pCaretUpdate.getMark());
 				cDocument.addDocumentListener(pCaretHandler);
