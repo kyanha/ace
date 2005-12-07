@@ -24,7 +24,7 @@ package ch.iserver.ace.collaboration.jupiter;
 /**
  * Null object for SessionFactory interface.
  */
-public final class NullSessionFactory implements SessionFactory {
+final class NullSessionFactory implements SessionFactory {
 	
 	/**
 	 * The singleton instance. 
