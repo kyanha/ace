@@ -28,6 +28,7 @@ import org.beepcore.beep.core.MessageMSG;
 import org.beepcore.beep.transport.tcp.TCPSession;
 
 import ch.iserver.ace.net.impl.MutableUserDetails;
+import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;
 import ch.iserver.ace.net.impl.RemoteUserProxyFactory;
 import ch.iserver.ace.net.impl.discovery.DiscoveryManager;
@@ -58,32 +59,34 @@ public class MainRequestHandler extends AbstractRequestHandler {
 	public void receiveMSG(MessageMSG message) {
 		LOG.debug("--> receiveMSG");
 
-		InputDataStream input = message.getDataStream();
-		
 		try {
-			byte[] rawData = DataStreamHelper.read(input);
-			LOG.debug("received "+rawData.length+" bytes. ["+(new String(rawData))+"]");
 			Request request = null;
-//			synchronized (this) { //-> singlethreaddomain
+			//TODO: NetworkService instance could be passed as a constructor argument
+			if (!NetworkServiceImpl.getInstance().isStopped()) { 
+				InputDataStream input = message.getDataStream();
+				byte[] rawData = DataStreamHelper.read(input);
+				LOG.debug("received "+rawData.length+" bytes. ["+(new String(rawData))+"]");
 				deserializer.deserialize(rawData, handler);
 				request = handler.getResult();
-//			}
-			String userid = request.getUserId();
-			DiscoveryManager discoveryManager = DiscoveryManagerFactory.getDiscoveryManager(null);
-			RemoteUserProxyExt user = discoveryManager.getUser(userid);
-			if (user == null) {
-				//user is not known yet
-				LOG.debug("add new RemoteUserProxy for [" + userid + "]");
-				MutableUserDetails details = new MutableUserDetails("unknown (resolving...)");
-				user = RemoteUserProxyFactory.getInstance().createProxy(userid, details);
-				discoveryManager.addUser(user);
+				String userid = request.getUserId();
+				DiscoveryManager discoveryManager = DiscoveryManagerFactory.getDiscoveryManager(null);
+				RemoteUserProxyExt user = discoveryManager.getUser(userid);
+				if (user == null) {
+					//user is not known yet
+					LOG.debug("add new RemoteUserProxy for [" + userid + "]");
+					MutableUserDetails details = new MutableUserDetails("unknown (resolving...)");
+					user = RemoteUserProxyFactory.getInstance().createProxy(userid, details);
+					discoveryManager.addUser(user);
+				}
+				if (!discoveryManager.hasSessionEstablished(userid)) {	
+					LOG.debug("create RemoteUserSession for ["+user.getMutableUserDetails().getUsername()+"]");
+					SessionManager manager = SessionManager.getInstance();
+					Channel mainChannel = message.getChannel();
+					manager.createSession(user, (TCPSession) mainChannel.getSession(), mainChannel);
+				}			
+			} else {
+				request = new RequestImpl(ProtocolConstants.SHUTDOWN, null, null);
 			}
-			if (!discoveryManager.hasSessionEstablished(userid)) {	
-				LOG.debug("create RemoteUserSession for ["+user.getMutableUserDetails().getUsername()+"]");
-				SessionManager manager = SessionManager.getInstance();
-				Channel mainChannel = message.getChannel();
-				manager.createSession(user, (TCPSession) mainChannel.getSession(), mainChannel);
-			}			
 			request.setMessage(message);
 			filter.process(request);
 		} catch (Exception e) {

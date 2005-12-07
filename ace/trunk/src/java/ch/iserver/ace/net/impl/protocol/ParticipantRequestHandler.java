@@ -30,6 +30,7 @@ import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Timestamp;
 import ch.iserver.ace.algorithm.TimestampFactory;
 import ch.iserver.ace.net.ParticipantPort;
+import ch.iserver.ace.net.impl.NetworkServiceExt;
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
 import ch.iserver.ace.util.ParameterValidator;
@@ -44,12 +45,15 @@ public class ParticipantRequestHandler extends AbstractRequestHandler {
 	private Deserializer deserializer;
 	private ParticipantPort port;
 	private TimestampFactory factory;
+	private NetworkServiceExt service;
 	
-	public ParticipantRequestHandler(Deserializer deserializer, TimestampFactory factory) {
+	public ParticipantRequestHandler(Deserializer deserializer, TimestampFactory factory, NetworkServiceExt service) {
 		ParameterValidator.notNull("deserializer", deserializer);
 		ParameterValidator.notNull("factory", factory);
+		ParameterValidator.notNull("service", service);
 		this.deserializer = deserializer;
 		this.factory = factory;
+		this.service = service;
 	}
 	
 	public void setParticipantPort(ParticipantPort port) {
@@ -64,19 +68,25 @@ public class ParticipantRequestHandler extends AbstractRequestHandler {
 	
 	public void receiveMSG(MessageMSG message) {
 		LOG.info("--> recieveMSG()");
-		
-		InputDataStream input = message.getDataStream();
+
 		String readInData = null;
 		try {
-			byte[] rawData = DataStreamHelper.read(input);
-			readInData = new String(rawData);
-			LOG.debug("received "+rawData.length+" bytes. ["+readInData+"]");
-			CollaborationParserHandler newHandler = new CollaborationParserHandler();
-			newHandler.setTimestampFactory(factory);
-			deserializer.deserialize(rawData, newHandler);
-			readInData = null;
-			Request result = newHandler.getResult();
-			int type = result.getType();
+			Request result = null;
+			int type = ProtocolConstants.NO_TYPE;
+			if (!service.isStopped()) {
+				InputDataStream input = message.getDataStream();
+				byte[] rawData = DataStreamHelper.read(input);
+				readInData = new String(rawData);
+				LOG.debug("received " + rawData.length + " bytes. ["+readInData+"]");
+				CollaborationParserHandler newHandler = new CollaborationParserHandler();
+				newHandler.setTimestampFactory(factory);
+				deserializer.deserialize(rawData, newHandler);
+				readInData = null;
+				result = newHandler.getResult();
+				type = result.getType();
+			} else {
+				LOG.debug("network service stopped, stop request processing.");
+			}
 			
 			try {				
 				message.sendNUL(); //confirm reception of msg

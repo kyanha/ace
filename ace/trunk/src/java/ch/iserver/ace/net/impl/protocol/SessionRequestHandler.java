@@ -32,6 +32,7 @@ import ch.iserver.ace.FailureCodes;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Timestamp;
 import ch.iserver.ace.net.SessionConnectionCallback;
+import ch.iserver.ace.net.impl.NetworkServiceExt;
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.PortableDocumentExt;
 import ch.iserver.ace.net.impl.RemoteDocumentProxyExt;
@@ -52,12 +53,14 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 	private ParserHandler handler;
 	private String docId, publisherId;
 	private SessionConnectionCallback sessionCallback;
+	private NetworkServiceExt service;
 	
-	public SessionRequestHandler(Deserializer deserializer, ParserHandler handler) {
+	public SessionRequestHandler(Deserializer deserializer, ParserHandler handler, NetworkServiceExt service) {
 		ParameterValidator.notNull("deserializer", deserializer);
 		ParameterValidator.notNull("parserHandler", handler);
 		this.deserializer = deserializer;
 		this.handler = handler;
+		this.service = service;
 	}
 	
 	public void receiveMSG(MessageMSG message) {
@@ -66,9 +69,10 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 		String readInData = null;
 		try {
 			Request response = null;
-			int type;
+			int type = ProtocolConstants.NO_TYPE;
 //			synchronized(this) {
-				LOG.debug("--> synchronize()");
+//				LOG.debug("--> synchronize()");
+			if (!service.isStopped()) {
 				InputDataStream input = message.getDataStream();
 				byte[] rawData = DataStreamHelper.read(input); //only one thread shall read data at a time
 				readInData = (new String(rawData));
@@ -78,7 +82,7 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 				response = handler.getResult();
 				type = response.getType();
 				readInData = null;
-				
+			}
 				//testhalber
 				try {
 					if (type != ProtocolConstants.KICKED && type != ProtocolConstants.SESSION_TERMINATED) {
@@ -87,7 +91,7 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 				} catch (Exception e) {
 					LOG.error("could not send confirmation ["+e.getMessage()+"]");
 				}
-				LOG.debug("<-- synchronize()");
+//				LOG.debug("<-- synchronize()");
 //			}
 			
 //			int type = response.getType();

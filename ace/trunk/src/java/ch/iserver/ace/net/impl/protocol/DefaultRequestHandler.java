@@ -61,29 +61,33 @@ public class DefaultRequestHandler extends AbstractRequestHandler {
 	public void receiveMSG(MessageMSG message) {
 		LOG.debug("--> receiveMSG()");
 		try {
-			InputDataStream input = message.getDataStream();
-			byte[] rawData = DataStreamHelper.read(input);
-			Request response = null;
-			synchronized(MUTEX) {
-				deserializer.deserialize(rawData, handler);
-				response = handler.getResult();
-			}
-			RequestHandler handler;
-			Channel channel = message.getChannel();
-			int type = response.getType();
 			boolean isDiscovery = false;
+			RequestHandler requestHandler = null;
 			RemoteUserProxyExt proxy = null;
-			if (type == ProtocolConstants.CHANNEL_MAIN) {
-				handler = mainHandler;
-				proxy = (RemoteUserProxyExt) response.getPayload();
-				isDiscovery = (proxy != null);
-			} else if (type == ProtocolConstants.CHANNEL_SESSION) {
-				handler = SessionRequestHandlerFactory.getInstance().createHandler();
-			} else { //TODO: if channel is for outoging messages, set to SessionConnectionImpl
-				LOG.warn("unkown channel type, use main as default");
-				handler = mainHandler;
+			Channel channel = null;
+			//TODO: NetworkService instance could be passed as a constructor argument
+			if (!NetworkServiceImpl.getInstance().isStopped()) { 
+				InputDataStream input = message.getDataStream();
+				byte[] rawData = DataStreamHelper.read(input);
+				Request response = null;
+				synchronized(MUTEX) {
+					deserializer.deserialize(rawData, handler);
+					response = handler.getResult();
+				}
+				channel = message.getChannel();
+				int type = response.getType();
+				if (type == ProtocolConstants.CHANNEL_MAIN) {
+					requestHandler = mainHandler;
+					proxy = (RemoteUserProxyExt) response.getPayload();
+					isDiscovery = (proxy != null);
+				} else if (type == ProtocolConstants.CHANNEL_SESSION) {
+					requestHandler = SessionRequestHandlerFactory.getInstance().createHandler();
+				} else { //TODO: if channel is for outoging messages, set to SessionConnectionImpl
+					LOG.warn("unkown channel type, use main as default");
+					requestHandler = mainHandler;
+				}
+				channel.setRequestHandler(requestHandler);
 			}
-			channel.setRequestHandler(handler);
 			
 			try {
 				if (isDiscovery) {
