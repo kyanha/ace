@@ -46,5 +46,7 @@ public interface FailureCodes {
 	public static final int DNSSD_NOT_AVAILABLE = 105;
 	public static final int DNSSD_FAILURE = 106;
 	
+	public static final int REMOTE_USER_FAILURE = 107;
+	
 	
 }
