@@ -45,7 +45,7 @@ import ch.iserver.ace.util.ReentrantLock;
  * to one particular participant. The participant is represented
  * by a ParticipantConnection.
  */
-public class ParticipantForwarder implements Forwarder {
+class ParticipantForwarder implements Forwarder {
 	
 	/**
 	 * Logger used by this class.
@@ -87,7 +87,7 @@ public class ParticipantForwarder implements Forwarder {
 	 * @param algorithm the algorithm used to transform requests
 	 * @param connection the connection to the participant
 	 */
-	public ParticipantForwarder(int participantId, 
+	ParticipantForwarder(int participantId, 
 					Algorithm algorithm, 
 					ParticipantConnection connection) {
 		this(participantId, new AlgorithmWrapperImpl(algorithm), connection);
