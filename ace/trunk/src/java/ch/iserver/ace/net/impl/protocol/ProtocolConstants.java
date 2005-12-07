@@ -29,6 +29,8 @@ public interface ProtocolConstants {
 	/*********************************/
 	/** constants for serialization **/
 	/*********************************/
+	public static final int NO_TYPE = -2;
+	public static final int SHUTDOWN = -1;
 	public static final int PUBLISHED_DOCUMENTS = 0;
 	public static final int PUBLISH = 1;
 	public static final int CONCEAL = 2;
@@ -42,6 +44,7 @@ public interface ProtocolConstants {
 	public static final int INVITE = 9;
 	public static final int INVITE_REJECTED = 10;
 	public static final int USER_DISCOVERY = 11;
+	public static final int USER_DISCARDED = 12;
 	
 	public static final int REQUEST = 100;
 	public static final int CARET_UPDATE = 101;
@@ -94,6 +97,7 @@ public interface ProtocolConstants {
 	public static final String TAG_FIRST = "first";
 	public static final String TAG_SECOND = "second";
 	public static final String TAG_SESSION_TERMINATED = "sessionTerminated";
+	public static final String TAG_USER_DISCARDED = "userDiscarded";
 	
 	/***********************************/
 	/** Sub-level tags 				**/
