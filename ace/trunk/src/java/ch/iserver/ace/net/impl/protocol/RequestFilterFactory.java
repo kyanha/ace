@@ -45,6 +45,7 @@ public class RequestFilterFactory {
 			filter = new PublishDocumentPrepareFilter(filter, serializer, listener); 
 			filter = new SendDocumentsPrepareFilter(filter, serializer, listener);
 			filter = new LogFilter(filter, true);
+			filter = new ShutdownFilter(filter);
 			clientChain = filter;
 		}
 		return clientChain;
@@ -66,6 +67,7 @@ public class RequestFilterFactory {
 		filter = new PublishDocumentReceiveFilter(filter);
 		filter = new SendDocumentsReceiveFilter(filter);
 		filter = new LogFilter(filter, true);
+		filter = new ShutdownFilter(filter);
 		return filter;
 	}
 	
