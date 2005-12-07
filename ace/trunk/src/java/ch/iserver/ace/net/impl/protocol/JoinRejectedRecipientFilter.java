@@ -22,6 +22,7 @@
 package ch.iserver.ace.net.impl.protocol;
 
 import org.apache.log4j.Logger;
+import org.beepcore.beep.core.OutputDataStream;
 
 import ch.iserver.ace.net.impl.RemoteDocumentProxyExt;
 import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
@@ -53,8 +54,11 @@ public class JoinRejectedRecipientFilter extends AbstractRequestFilter {
 				}
 				
 				try {
-					//confirm reception of msg				
-					request.getMessage().sendNUL();
+					//confirm reception of msg
+					OutputDataStream os = new OutputDataStream();
+					os.setComplete();
+					request.getMessage().sendRPY(os);
+//					request.getMessage().sendNUL();
 				} catch (Exception e) {
 					LOG.error("could not send confirmation ["+e.getMessage()+"]");
 				}

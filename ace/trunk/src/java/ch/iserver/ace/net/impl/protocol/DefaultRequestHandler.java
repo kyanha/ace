@@ -94,7 +94,10 @@ public class DefaultRequestHandler extends AbstractRequestHandler {
 					LOG.debug("discovered new user: "+proxy);
 					processDiscoveredUser(message, channel, proxy);
 				} else { //send NUL confirmation
-					message.sendNUL();
+					OutputDataStream os = new OutputDataStream();
+					os.setComplete();
+					message.sendRPY(os);
+//					message.sendNUL();
 				}
 			} catch (Exception e) {
 				LOG.error("could not send confirmation ["+e+", "+e.getMessage()+"]");

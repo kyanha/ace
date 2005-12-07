@@ -24,6 +24,7 @@ package ch.iserver.ace.net.impl.protocol;
 import org.apache.log4j.Logger;
 import org.beepcore.beep.core.InputDataStream;
 import org.beepcore.beep.core.MessageMSG;
+import org.beepcore.beep.core.OutputDataStream;
 
 import ch.iserver.ace.FailureCodes;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
@@ -89,7 +90,10 @@ public class ParticipantRequestHandler extends AbstractRequestHandler {
 			}
 			
 			try {				
-				message.sendNUL(); //confirm reception of msg
+				OutputDataStream os = new OutputDataStream();
+				os.setComplete();
+				message.sendRPY(os);
+//				message.sendNUL(); //confirm reception of msg
 			} catch (Exception e) {
 				LOG.error("could not send confirmation ["+e.getMessage()+"]");
 			}

@@ -22,6 +22,7 @@ package ch.iserver.ace.net.impl.protocol;
 
 import org.apache.log4j.Logger;
 import org.beepcore.beep.core.MessageMSG;
+import org.beepcore.beep.core.OutputDataStream;
 
 /**
  *
@@ -40,7 +41,10 @@ public class ShutdownFilter extends AbstractRequestFilter {
 			MessageMSG message = request.getMessage();
 			if (message != null) {
 				try {				
-					request.getMessage().sendNUL();
+					OutputDataStream os = new OutputDataStream();
+					os.setComplete();
+					request.getMessage().sendRPY(os);
+//					request.getMessage().sendNUL();
 				} catch (Exception e) {
 					LOG.error("could not send confirmation ["+e+", "+e.getMessage()+"]");
 				}

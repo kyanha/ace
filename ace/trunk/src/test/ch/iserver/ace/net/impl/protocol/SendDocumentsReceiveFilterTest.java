@@ -7,6 +7,7 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.beepcore.beep.core.MessageMSG;
+import org.beepcore.beep.core.OutputDataStream;
 import org.easymock.AbstractMatcher;
 import org.easymock.MockControl;
 
@@ -68,7 +69,9 @@ public class SendDocumentsReceiveFilterTest extends TestCase {
 		Request request = new RequestImpl(ProtocolConstants.SEND_DOCUMENTS, null, docs);
 		MockControl msgCtrl = MockControl.createControl(MessageMSG.class);
 		MessageMSG message = (MessageMSG)msgCtrl.getMock();
-		message.sendNUL();
+		message.sendRPY(null);
+		msgCtrl.setDefaultMatcher(MockControl.ALWAYS_MATCHER);
+//		message.sendNUL();
 		msgCtrl.setDefaultReturnValue(null);
 		msgCtrl.replay();
 		request.setMessage(message);

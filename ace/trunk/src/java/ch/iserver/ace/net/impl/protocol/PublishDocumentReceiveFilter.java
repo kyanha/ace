@@ -23,6 +23,7 @@ package ch.iserver.ace.net.impl.protocol;
 
 import org.apache.log4j.Logger;
 import org.beepcore.beep.core.BEEPError;
+import org.beepcore.beep.core.OutputDataStream;
 
 import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.net.NetworkServiceCallback;
@@ -61,8 +62,11 @@ public class PublishDocumentReceiveFilter extends AbstractRequestFilter {
 					NetworkServiceCallback callback = NetworkServiceImpl.getInstance().getCallback();
 					RemoteDocumentProxy[] docs = new RemoteDocumentProxy[]{ doc };
 					callback.documentDiscovered(docs);
-					//confirm reception of msg				
-					request.getMessage().sendNUL();
+					//confirm reception of msg	
+					OutputDataStream os = new OutputDataStream();
+					os.setComplete();
+					request.getMessage().sendRPY(os);
+//					request.getMessage().sendNUL();
 				} else {
 					LOG.error("session not found for id ["+userId+"]");
 					request.getMessage().sendERR(BEEPError.CODE_PARAMETER_INVALID, "userId unknown");

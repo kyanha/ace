@@ -22,6 +22,7 @@
 package ch.iserver.ace.net.impl.protocol;
 
 import org.apache.log4j.Logger;
+import org.beepcore.beep.core.OutputDataStream;
 
 import ch.iserver.ace.net.InvitationProxy;
 import ch.iserver.ace.net.NetworkServiceCallback;
@@ -52,8 +53,11 @@ public class InviteRequestRecipientFilter extends AbstractRequestFilter {
 				InvitationProxy invitation = InvitationProxyFactory.getInstance().createProxy(proxy, session);
 				callback.invitationReceived(invitation);
 				try {
-					//confirm reception of msg				
-					request.getMessage().sendNUL();
+					//confirm reception of msg	
+					OutputDataStream os = new OutputDataStream();
+					os.setComplete();
+					request.getMessage().sendRPY(os);
+//					request.getMessage().sendNUL();
 				} catch (Exception e) {
 					LOG.error("could not send confirmation ["+e+", "+e.getMessage()+"]");
 				}
