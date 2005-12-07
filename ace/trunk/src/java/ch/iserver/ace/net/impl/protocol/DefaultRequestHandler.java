@@ -119,7 +119,7 @@ public class DefaultRequestHandler extends AbstractRequestHandler {
 		byte[] data = xml.getBytes(NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 		OutputDataStream output = DataStreamHelper.prepare(data);
 		message.sendRPY(output);
-		proxy.setExplicityDiscovered(true);
+		proxy.setDNSSDdiscovered(false);
 		DiscoveryManagerFactory.getDiscoveryManager(null).addUser(proxy);
 		SessionManager.getInstance().createSession(proxy, (TCPSession) channel.getSession(), channel);
 	}
