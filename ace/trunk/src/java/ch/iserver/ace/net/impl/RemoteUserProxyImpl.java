@@ -142,8 +142,12 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 			try {
 				/** pack into remoteusersession -> MainChannel**/
 				ProfileRegistry registry = ProfileRegistryFactory.getProfileRegistry();
+				MutableUserDetails theDetails = getMutableUserDetails();
+				LOG.debug("initiate session to " + theDetails.getAddress());
+				//TODO: TTL is set to around 3 minutes, maybe lower this setting if possible (e.g. to 1 minute)
 				TCPSession session =  TCPSessionCreator.initiate(
-					getMutableUserDetails().getAddress(), getMutableUserDetails().getPort(), registry);
+					theDetails.getAddress(), theDetails.getPort(), registry);
+				LOG.debug("initiate session succeded.");
 				String uri = NetworkProperties.get(NetworkProperties.KEY_PROFILE_URI);
 				RequestHandler requestHandler = ProfileRegistryFactory.getMainRequestHandler();
 				Channel channel = session.startChannel(uri, requestHandler);
