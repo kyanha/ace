@@ -26,6 +26,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.beepcore.beep.core.ReplyListener;
 
+import ch.iserver.ace.FailureCodes;
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;
 
@@ -57,8 +58,8 @@ private static Logger LOG = Logger.getLogger(SendDocumentsPrepareFilter.class);
 	}
 
 	private void processImpl(Request request) {
+		RemoteUserProxyExt user = (RemoteUserProxyExt)request.getPayload();
 		try {			
-			RemoteUserProxyExt user = (RemoteUserProxyExt)request.getPayload(); 
 			RemoteUserSession session = SessionManager.getInstance().getSession(user.getId());
 			if (session == null) {
 				session = SessionManager.getInstance().createSession(user);
@@ -67,6 +68,11 @@ private static Logger LOG = Logger.getLogger(SendDocumentsPrepareFilter.class);
 			Map publishedDocs = NetworkServiceImpl.getInstance().getPublishedDocuments();
 			byte[] message = serializer.createNotification(ProtocolConstants.SEND_DOCUMENTS, publishedDocs);	
 			connection.send(message, user.getUserDetails().getUsername(), listener);
+		} catch (ConnectionException ce) {
+			LOG.error("connection failure for session ["+user.getUserDetails()+"] "+ce.getMessage());
+			NetworkServiceImpl.getInstance().getCallback().serviceFailure(
+					FailureCodes.REMOTE_USER_FAILURE, user.getUserDetails().getUsername(), ce);
+			//TODO: remove userProxy and userSession?
 		} catch (Exception e) {
 			LOG.error("process problem ["+e.getMessage()+"]");
 		}
