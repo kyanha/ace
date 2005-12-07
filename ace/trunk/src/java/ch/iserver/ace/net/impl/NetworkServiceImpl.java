@@ -22,6 +22,7 @@ package ch.iserver.ace.net.impl;
 
 import java.net.InetAddress;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -36,11 +37,13 @@ import ch.iserver.ace.net.DocumentServer;
 import ch.iserver.ace.net.DocumentServerLogic;
 import ch.iserver.ace.net.NetworkServiceCallback;
 import ch.iserver.ace.net.impl.discovery.DiscoveryLauncher;
+import ch.iserver.ace.net.impl.discovery.DiscoveryManagerFactory;
 import ch.iserver.ace.net.impl.discovery.ExplicitUserDiscovery;
 import ch.iserver.ace.net.impl.protocol.BEEPSessionListener;
 import ch.iserver.ace.net.impl.protocol.BEEPSessionListenerFactory;
 import ch.iserver.ace.net.impl.protocol.ParticipantConnectionImplFactory;
 import ch.iserver.ace.net.impl.protocol.ProtocolConstants;
+import ch.iserver.ace.net.impl.protocol.RemoteUserSession;
 import ch.iserver.ace.net.impl.protocol.Request;
 import ch.iserver.ace.net.impl.protocol.RequestFilter;
 import ch.iserver.ace.net.impl.protocol.RequestFilterFactory;
@@ -137,39 +140,55 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	public void stop() {
 		LOG.debug("--> stop()");
 		isStopped = true;
-		//TODO: workout shutdown
+		try {
+			//stop session listener
+			sessionListener.terminate();
+			//end discovery
+			discovery.abort();
+			/** server site **/
+			//close() on all participantconnections of all documents
+			Map docs = getPublishedDocuments();
+			synchronized(docs) {
+				Iterator iter = docs.values().iterator();
+				while (iter.hasNext()) {
+					PublishedDocument doc = (PublishedDocument) iter.next();
+					doc.shutdown();
+				}
+			}
+			
+			/** client site **/
+			//send leave to all joined document publishers
+			Map users = DiscoveryManagerFactory.getDiscoveryManager(null).getUsers();
+			synchronized (users) {
+				Iterator iter = users.values().iterator();
+				while (iter.hasNext()) { //for each user
+					RemoteUserProxyExt user = (RemoteUserProxyExt) iter.next();
+					RemoteUserSession session = SessionManager.getInstance().removeSession(user.getId()); //session may be null
+					docs = user.getDocuments();
+					synchronized(docs) {
+						Iterator iter2 = docs.values().iterator();
+						while (iter2.hasNext()) { //for each doc of the current user
+							RemoteDocumentProxyExt doc = (RemoteDocumentProxyExt) iter.next();
+							if (doc.isJoined() && session != null) {
+								session.getSessionConnection(doc.getId()).leave();
+							}
+						}
+					}
+					if (!user.isDNSSDdiscovered()) { //send sign-off message to explicitly discovered user
+						String message = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+								"<ace><notification><userDiscarded id=\"" + getUserId() + "\"/></notification></ace>";
+						byte[] data = message.getBytes(NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
+						LOG.debug("send userDiscarded to " + user.getUserDetails().getUsername());
+						session.getMainConnection().send(data, null, null);
+					}
+					//close main channel and TCPSession
+					session.close();
+				}
+			}
 		
-		//end discovery
-		
-		/** server site **/
-		//close() on all participantconnections of all documents
-		
-		/** client site **/
-		//leave to all joined document publishers
-		
-		
-		/** common **/
-		//sign off at explicit discovered users
-		
-		//close all channels and sessions
-		
-		
-
-		
-		
-//		try {
-//			//TODO: what if at the same time a new message is received and processed?
-//			//abort discovery
-//			discovery.abort();
-//			//close all open sessions
-//			SessionManager.getInstance().closeSessions();
-//			//stop beep session listener
-//			sessionListener.terminate();
-//		
-//			//TODO: conceal message for documents not necessary -> check with raess
-//		} catch (Exception e) {
-//			LOG.warn("could not stop network layer smoothly ["+e+", "+e.getMessage()+"]");
-//		}
+		} catch (Exception e) {
+			LOG.warn("could not stop network layer smoothly ["+e+", "+e.getMessage()+"]");
+		}
 		LOG.debug("<-- stop()");
 	}
 	
