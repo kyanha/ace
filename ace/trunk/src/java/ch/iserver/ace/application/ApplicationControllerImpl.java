@@ -348,7 +348,7 @@ public class ApplicationControllerImpl implements ApplicationController, Applica
 	 * System.exit. There is no way to stop that!
 	 */
 	protected void shutdown() {
-		getDocumentManager().closeAllDocuments();
+		//getDocumentManager().closeAllDocuments();
 		context.close();
 		System.exit(0);
 	}
