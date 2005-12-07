@@ -201,6 +201,22 @@ Finally, the \texttt{shutdown} method must be called when the session is
 concealed by the publisher. It causes the server to properly dispose
 all resources used by it.
 
+\subsubsection{Participant Management}
+The server logic implementation delegates the management of participants
+to a class implementing the \texttt{ParticipantManager} interface. This
+class is consulted to determine which users are currently in the
+session (\texttt{isParticipant}), whether a user is blacklisted 
+(\texttt{isBlacklisted}), whether the user has already sent a join
+request which was not answered yet (\texttt{isJoining}), and whether a
+user has been invited (\texttt{isInvited}).
+
+% TODO: ParticipantManager
+
+The other methods exist to notify the \texttt{ParticipantManager} about
+participant related events. An implementation of this interface can use
+these methods to keep the internal data structures up-to-date. The
+default implementation is \texttt{ParticipantManagerImpl}.
+
 
 \subsection{Join Requests}
 When a user tries to join, the request is encapsulated in an object

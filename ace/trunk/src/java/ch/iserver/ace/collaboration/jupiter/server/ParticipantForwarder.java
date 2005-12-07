@@ -175,6 +175,9 @@ class ParticipantForwarder implements Forwarder {
 		acknowledgeStrategy.reset();
 	}
 	
+	/**
+	 * Increases the received message count of the acknowledge strategy.
+	 */
 	protected void messageReceived() {
 		acknowledgeStrategy.messageReceived();
 	}
