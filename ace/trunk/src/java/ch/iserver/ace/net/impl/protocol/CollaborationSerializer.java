@@ -140,8 +140,8 @@ public class CollaborationSerializer implements Serializer, ProtocolConstants {
 			attrs.addAttribute("", "", "id", "", Integer.toString(id));
 			handler.startElement("", "", PARTICIPANT, attrs);
 			attrs = new AttributesImpl();
-			String userid, name, address, port, explicitDiscovery;
-			boolean isExplicitlyDiscovered;
+			String userid, name, address, port, isDNSSDdiscoveredStr;
+			boolean isDNSSDdiscovered;
 			if (id == ParticipantConnection.PUBLISHER_ID) {
 				NetworkServiceImpl service = NetworkServiceImpl.getInstance();
 				userid = service.getUserId();
@@ -149,8 +149,8 @@ public class CollaborationSerializer implements Serializer, ProtocolConstants {
 				ServerInfo info = service.getServerInfo();
 				address = info.getAddress().getHostAddress();
 				port = Integer.toString(info.getPort());
-				isExplicitlyDiscovered = false;
-				explicitDiscovery = Boolean.toString(isExplicitlyDiscovered);
+				isDNSSDdiscovered = true; //will be ignored at the receiver site
+				isDNSSDdiscoveredStr = Boolean.toString(isDNSSDdiscovered);
 			} else {
 				RemoteUserProxyExt proxy = (RemoteUserProxyExt) doc.getUserProxy(id);
 				userid = proxy.getId();
@@ -158,17 +158,17 @@ public class CollaborationSerializer implements Serializer, ProtocolConstants {
 				name = details.getUsername();
 				address = details.getAddress().getHostAddress();
 				port = Integer.toString(details.getPort());
-				isExplicitlyDiscovered = proxy.isExplicitlyDiscovered();
-				explicitDiscovery = Boolean.toString(isExplicitlyDiscovered);
+				isDNSSDdiscovered = proxy.isDNSSDdiscovered();
+				isDNSSDdiscoveredStr = Boolean.toString(isDNSSDdiscovered);
 			}
 			attrs.addAttribute("", "", ID, "", userid);
 			attrs.addAttribute("", "", NAME, "", name);
 			attrs.addAttribute("", "", ADDRESS, "", address);
 			attrs.addAttribute("", "", PORT, "", port);
-			attrs.addAttribute("", "", EXPLICIT_DISCOVERY, "", explicitDiscovery);
+			attrs.addAttribute("", "", DNSSD_DISCOVERY, "", isDNSSDdiscoveredStr);
 			handler.startElement("", "", USER, attrs);
-			if (isExplicitlyDiscovered) {
-				//TODO: add published documents of this user
+			if (!isDNSSDdiscovered) {
+				//TODO: add published documents of current user in the for loop
 			}
 			handler.endElement("", "", USER);
 			attrs = new AttributesImpl();
@@ -298,9 +298,9 @@ public class CollaborationSerializer implements Serializer, ProtocolConstants {
 				attrs.addAttribute("", "", NAME, "", details.getUsername());
 				attrs.addAttribute("", "", ADDRESS, "", details.getAddress().getHostAddress());
 				attrs.addAttribute("", "", PORT, "", Integer.toString(details.getPort()));
-				attrs.addAttribute("", "", EXPLICIT_DISCOVERY, "", Boolean.toString(proxy.isExplicitlyDiscovered()));
+				attrs.addAttribute("", "", DNSSD_DISCOVERY, "", Boolean.toString(proxy.isDNSSDdiscovered()));
 				handler.startElement("", "", USER, attrs);
-				if (proxy.isExplicitlyDiscovered()) {
+				if (proxy.isDNSSDdiscovered()) {
 					//TODO: add published documents of this user
 				}
 				handler.endElement("", "", USER);

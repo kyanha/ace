@@ -327,11 +327,11 @@ public class CollaborationParserHandler extends ParserHandler {
 		} catch (Exception e) {
 			LOG.error("could not parse address ["+userAddress+"]");
 		}
-		String explicitDiscovery = attributes.getValue(EXPLICIT_DISCOVERY);
+		String isDNSSDdiscovered = attributes.getValue(DNSSD_DISCOVERY);
 		MutableUserDetails details = new MutableUserDetails(userName, 
 				address, Integer.parseInt(userPort));
 		RemoteUserProxyExt proxy = RemoteUserProxyFactory.getInstance().createProxy(userId, details);
-		proxy.setExplicityDiscovered(Boolean.getBoolean(explicitDiscovery));
+		proxy.setDNSSDdiscovered(Boolean.getBoolean(isDNSSDdiscovered));
 		return proxy;
 	}
 	
