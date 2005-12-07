@@ -57,7 +57,7 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 	private MutableUserDetails details;
 	private Map documents; //docId to RemoteDocumentProxy
 	private boolean isSessionEstablished;
-	private boolean isExplicitlyDiscovered;
+	private boolean isDNSSDdiscovered;
 	
 	public RemoteUserProxyImpl(String id, MutableUserDetails details) {
 		ParameterValidator.notNull("id", id);
@@ -66,7 +66,7 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 		this.details = details;
 		this.documents = Collections.synchronizedMap(new LinkedHashMap());
 		isSessionEstablished = false;
-		isExplicitlyDiscovered = false;
+		isDNSSDdiscovered = true; //default
 	}
 	
 	/********************************************/
@@ -128,17 +128,17 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 		return isSessionEstablished;
 	}
 	
-	public void setExplicityDiscovered(boolean value) {
-		this.isExplicitlyDiscovered = value;
+	public void setDNSSDdiscovered(boolean value) {
+		this.isDNSSDdiscovered = value;
 	}
 	
-	public boolean isExplicitlyDiscovered() {
-		return isExplicitlyDiscovered;
+	public boolean isDNSSDdiscovered() {
+		return isDNSSDdiscovered;
 	}
 	
 	public void discover() throws DiscoveryException {
 		LOG.debug("--> discover()");
-		if (isExplicitlyDiscovered() && !isSessionEstablished()) {
+		if (!isDNSSDdiscovered() && !isSessionEstablished()) {
 			try {
 				/** pack into remoteusersession -> MainChannel**/
 				ProfileRegistry registry = ProfileRegistryFactory.getProfileRegistry();
@@ -147,6 +147,11 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 				String uri = NetworkProperties.get(NetworkProperties.KEY_PROFILE_URI);
 				RequestHandler requestHandler = ProfileRegistryFactory.getMainRequestHandler();
 				Channel channel = session.startChannel(uri, requestHandler);
+				
+//				MutableUserDetails details = getMutableUserDetails();
+//				RemoteUserSession remoteSession = new RemoteUserSession(details.getAddress(), details.getPort(), this);
+//				remoteSession.getMainConnection();
+				
 				/** pack **/
 				
 				NetworkServiceImpl service = NetworkServiceImpl.getInstance();
@@ -220,14 +225,5 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 		hash += details.hashCode();
 		hash += documents.hashCode();
 		return hash;
-	}
-	
-	private class DiscoveryHandler implements RequestHandler {
-		
-		public void receiveMSG(MessageMSG message) {
-			
-			
-			
-		}
 	}
 }
