@@ -101,8 +101,7 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 		if (proxy == null) {
 			LOG.warn("proxy for userid="+userId+" not found.");
 		}
-		peersWithEstablishedSession.put(userId, proxy);
-		
+		peersWithEstablishedSession.put(userId, proxy);		
 	}
 
 	/**
@@ -110,7 +109,6 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 	 */
 	public void setSessionTerminated(String userId) {
 		peersWithEstablishedSession.remove(userId);
-		
 	}
 	
 	/**
@@ -145,7 +143,7 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 		LOG.debug("--> addUser(" + user.getUserDetails().getUsername() + ")");
 		remoteUserProxies.put(user.getId(), user);
 		forward.userDiscovered(user);
-		if (user.isExplicitlyDiscovered()) {
+		if (!user.isDNSSDdiscovered()) {
 			forward.userDiscoveryCompleted(user);
 		}
 		LOG.debug("<-- addUser()");
@@ -186,6 +184,7 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 		RemoteUserProxyExt user = getUser(userId);
 		if (user == null) { //add user
 			user = RemoteUserProxyFactory.getInstance().createProxy(userId, details);
+			user.setDNSSDdiscovered(true);
 			addUser(user);
 		} else { //update user info
 			//user proxy has been created before but with no user details
@@ -243,8 +242,12 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 		if (userId != null) {
 			RemoteUserProxyExt proxy = getUser(userId);
 			MutableUserDetails details = (MutableUserDetails)proxy.getUserDetails();
-			details.setAddress(address);
-			forward.userDiscoveryCompleted(proxy);
+			if (details.getAddress() == null) {
+				details.setAddress(address);
+				forward.userDiscoveryCompleted(proxy);
+			} else {
+				LOG.debug("address already set for [" + details.getUsername() + "], ignore [" + address + "]");
+			}
 		} else {
 			LOG.warn("Host address received for unknown user ["+serviceName+"]");
 		}

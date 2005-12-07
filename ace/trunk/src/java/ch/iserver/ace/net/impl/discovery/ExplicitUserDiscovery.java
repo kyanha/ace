@@ -58,19 +58,17 @@ public class ExplicitUserDiscovery extends Thread {
 		MutableUserDetails details = new MutableUserDetails("discovering...", address, port);
 		String temporaryID = UUID.nextUUID();
 		RemoteUserProxyExt proxy = RemoteUserProxyFactory.getInstance().createProxy(temporaryID, details);
-		proxy.setExplicityDiscovered(true);
+		proxy.setDNSSDdiscovered(false);
 		
 		try {
 			proxy.discover();
+			DiscoveryManagerFactory.getDiscoveryManager(null).addUser(proxy);
+			callback.userDiscoverySucceeded();
 		} catch (DiscoveryException ce) {
 			LOG.debug("could not connect to [" + address + ":" + port + "], explicit user discovery failed");
 			callback.userDiscoveryFailed(FailureCodes.DISCOVERY_FAILED,  address + ":" + port);
-			LOG.debug("<-- run()");
-			return;
 		}
-		DiscoveryManagerFactory.getDiscoveryManager(null).addUser(proxy);
-		callback.userDiscoverySucceeded();
-			
+		
 		LOG.debug("<-- run()");
 	}
 	
