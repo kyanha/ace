@@ -196,7 +196,7 @@ public class CollaborationParserHandlerTest extends TestCase {
 		String participantId = "1234";
 		
 		RemoteUserProxyExt origProxy = new RemoteUserProxyImpl("sadfasd-24", new MutableUserDetails("Jimmy Ritter", InetAddress.getByName("123.43.45.21"), 4123));
-		origProxy.setExplicityDiscovered(false);
+		origProxy.setDNSSDdiscovered(false);
 		byte[] data = serializer.createSessionMessage(ProtocolConstants.PARTICIPANT_JOINED, origProxy, participantId);
 		
 		assertEquals(XML_PARTICIPANT_JOINED, (new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING))));
@@ -216,7 +216,7 @@ public class CollaborationParserHandlerTest extends TestCase {
 		assertEquals("Jimmy Ritter", details.getUsername());
 		assertEquals("123.43.45.21", details.getAddress().getHostAddress());
 		assertEquals(4123, details.getPort());
-		assertFalse(proxy.isExplicitlyDiscovered());
+		assertFalse(proxy.isDNSSDdiscovered());
 	}
 	
 	public void testReceiveParticipantLeftMessage() throws Exception {
@@ -492,7 +492,7 @@ public class CollaborationParserHandlerTest extends TestCase {
 	private static final String XML_PARTICIPANT_JOINED = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
 	"<ace><session>" +
 	"<pJoined id=\"1234\">" +
-	"<user id=\"sadfasd-24\" name=\"Jimmy Ritter\" address=\"123.43.45.21\" port=\"4123\" explicitDiscovery=\"false\"/>" +
+	"<user id=\"sadfasd-24\" name=\"Jimmy Ritter\" address=\"123.43.45.21\" port=\"4123\" dnssdDiscovered=\"true\"/>" +
 	"</pJoined>" +
 	"</session></ace>";	
 	
@@ -529,15 +529,15 @@ public class CollaborationParserHandlerTest extends TestCase {
 		"<document id=\"ASDF-23\" userid=\"adfasdf-21\" participantId=\"3\">" +
 		"<participants>" +
 		"<participant id=\"0\">" +
-		"<user id=\"adfasdf-21\" name=\"John Huderi\" address=\"254.23.12.98\" port=\"4123\" explicitDiscovery=\"false\"/>" +
+		"<user id=\"adfasdf-21\" name=\"John Huderi\" address=\"254.23.12.98\" port=\"4123\" dnssdDiscovered=\"true\"/>" +
 		"<selection mark=\"0\" dot=\"0\"/>" +
 		"</participant>" +
 		"<participant id=\"1\">" +
-		"<user id=\"sadfasd-24\" name=\"Jimmy Ritter\" address=\"123.43.45.21\" port=\"4123\" explicitDiscovery=\"false\"/>" +
+		"<user id=\"sadfasd-24\" name=\"Jimmy Ritter\" address=\"123.43.45.21\" port=\"4123\" dnssdDiscovered=\"true\"/>" +
 		"<selection mark=\"456\" dot=\"456\"/>" +
 		"</participant>" +
 		"<participant id=\"2\">" +
-		"<user id=\"cbvncvvc-24\" name=\"Samuel Fuchs\" address=\"123.43.12.197\" port=\"4123\" explicitDiscovery=\"false\"/>" +
+		"<user id=\"cbvncvvc-24\" name=\"Samuel Fuchs\" address=\"123.43.12.197\" port=\"4123\" dnssdDiscovered=\"true\"/>" +
 		"<selection mark=\"7\" dot=\"7\"/>" +
 		"</participant>" +
 		"</participants>" +

@@ -217,7 +217,7 @@ public class CollaborationSerializerTest extends TestCase {
 		String participantId = "1234";
 		
 		RemoteUserProxyExt proxy = new RemoteUserProxyImpl("sadfasd-24", new MutableUserDetails("Jimmy Ritter", InetAddress.getByName("123.43.45.21"), 4123));
-		proxy.setExplicityDiscovered(false);
+		proxy.setDNSSDdiscovered(false);
 		byte[] data = serializer.createSessionMessage(ProtocolConstants.PARTICIPANT_JOINED, proxy, participantId);
 		String actual = new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 
@@ -283,7 +283,7 @@ public class CollaborationSerializerTest extends TestCase {
 	private static final String XML_PARTICIPANT_JOINED = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
 	"<ace><session>" +
 	"<pJoined id=\"1234\">" +
-	"<user id=\"sadfasd-24\" name=\"Jimmy Ritter\" address=\"123.43.45.21\" port=\"4123\" explicitDiscovery=\"false\"/>" +
+	"<user id=\"sadfasd-24\" name=\"Jimmy Ritter\" address=\"123.43.45.21\" port=\"4123\" dnssdDiscovered=\"true\"/>" +
 	"</pJoined>" +
 	"</session></ace>";	
 	
@@ -385,15 +385,15 @@ public class CollaborationSerializerTest extends TestCase {
 	"<document id=\"ASDF-23\" userid=\"adfasdf-21\" participantId=\"3\">" +
 	"<participants>" +
 	"<participant id=\"0\">" +
-	"<user id=\"adfasdf-21\" name=\"John Huderi\" address=\"254.23.12.98\" port=\"4123\" explicitDiscovery=\"false\"/>" +
+	"<user id=\"adfasdf-21\" name=\"John Huderi\" address=\"254.23.12.98\" port=\"4123\" dnssdDiscovered=\"false\"/>" +
 	"<selection mark=\"0\" dot=\"0\"/>" +
 	"</participant>" +
 	"<participant id=\"1\">" +
-	"<user id=\"sadfasd-24\" name=\"Jimmy Ritter\" address=\"123.43.45.21\" port=\"4123\" explicitDiscovery=\"false\"/>" +
+	"<user id=\"sadfasd-24\" name=\"Jimmy Ritter\" address=\"123.43.45.21\" port=\"4123\" dnssdDiscovered=\"false\"/>" +
 	"<selection mark=\"456\" dot=\"456\"/>" +
 	"</participant>" +
 	"<participant id=\"2\">" +
-	"<user id=\"cbvncvvc-24\" name=\"Samuel Fuchs\" address=\"123.43.12.197\" port=\"4123\" explicitDiscovery=\"false\"/>" +
+	"<user id=\"cbvncvvc-24\" name=\"Samuel Fuchs\" address=\"123.43.12.197\" port=\"4123\" dnssdDiscovered=\"false\"/>" +
 	"<selection mark=\"7\" dot=\"7\"/>" +
 	"</participant>" +
 	"</participants>" +
