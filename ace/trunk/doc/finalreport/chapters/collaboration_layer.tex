@@ -526,7 +526,12 @@ send an acknowledge message. This is left to an object implementing the
 method. That method is invoked by the strategy whenever it thinks it is
 time to send an acknowledge message.
 
-% TODO: AcknowledgeStrategy 
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=13.65cm,height=5.72cm]{../images/finalreport/collaboration_acknowledge_uml.eps}
+ \caption{AcknowledgeStrategy and related interfaces}
+ \label{fig:collaboration.acknowledge}
+\end{figure}
 
 The strategies must be initialized with an action through the \texttt{init}
 method. Code that uses an \texttt{AcknowledgeStrategy} should call
@@ -534,8 +539,6 @@ method. Code that uses an \texttt{AcknowledgeStrategy} should call
 other site. Such a message makes sending acknowledge messages useless, as the
 sent message already contains a timestamp. If a message is received from
 the other site, the \texttt{messageReceived} method should be called.
-
-% TODO: AcknowledgeAction
 
 Acknowledge strategies can decide when it is time to send an acknowledge
 message. A possible strategy is to send an acknowledge message back to the other
@@ -554,8 +557,6 @@ ACE currently uses the simple message counting based implementation and not
 the more complex and precise combined strategy. The timer based strategy
 alone did not prove to be good enough, because potentially many messages
 can be received in the timeout period.
-
-% TODO: AcknowledgeStrategyFactory
 
 \texttt{AcknowledgeStrategy} objects are creates by corresponding factories.
 The factory interface is \texttt{AcknowledgeStrategyFactory}.
