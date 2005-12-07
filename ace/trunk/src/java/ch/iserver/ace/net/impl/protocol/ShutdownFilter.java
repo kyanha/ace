@@ -22,7 +22,6 @@ package ch.iserver.ace.net.impl.protocol;
 
 import org.apache.log4j.Logger;
 
-import ch.iserver.ace.net.impl.NetworkServiceExt;
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
 
 /**
@@ -32,15 +31,12 @@ public class ShutdownFilter extends AbstractRequestFilter {
 
 	private Logger LOG = Logger.getLogger(ShutdownFilter.class);
 	
-	private NetworkServiceExt service;
-	
 	public ShutdownFilter(RequestFilter successor) {
 		super(successor);
-		service = NetworkServiceImpl.getInstance();
 	}
 
 	public void process(Request request) {
-		if (service.isStopped()) {
+		if (NetworkServiceImpl.getInstance().isStopped()) {
 			LOG.warn("Network layer terminated, stop forwarding request [" + request + "]");
 		} else {
 			super.process(request);
