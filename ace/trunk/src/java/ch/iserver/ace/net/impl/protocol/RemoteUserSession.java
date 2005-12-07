@@ -36,7 +36,6 @@ import org.beepcore.beep.core.ProfileRegistry;
 import org.beepcore.beep.core.RequestHandler;
 import org.beepcore.beep.transport.tcp.TCPSession;
 import org.beepcore.beep.transport.tcp.TCPSessionCreator;
-import org.beepcore.beep.util.BufferSegment;
 
 import ch.iserver.ace.FailureCodes;
 import ch.iserver.ace.algorithm.TimestampFactory;
@@ -44,6 +43,7 @@ import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.SessionConnectionCallback;
 import ch.iserver.ace.net.impl.NetworkProperties;
+import ch.iserver.ace.net.impl.NetworkServiceExt;
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.RemoteDocumentProxyExt;
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;

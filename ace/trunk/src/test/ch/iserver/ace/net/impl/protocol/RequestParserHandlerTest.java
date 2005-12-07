@@ -87,6 +87,17 @@ public class RequestParserHandlerTest extends TestCase {
 		assertEquals("501", info.getData());
 	}
 	
+	public void testUserDiscarded() throws Exception {
+		deserializer.deserialize(USER_DISCARDED.getBytes(NetworkConstants.DEFAULT_ENCODING), handler);
+		
+		Request request = handler.getResult();
+		assertEquals(ProtocolConstants.USER_DISCARDED, request.getType());
+		assertEquals("asšdlfkfjasdšlfkj", request.getUserId());
+	}
+	
+	private static final String USER_DISCARDED = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+	"<ace><notification><userDiscarded id=\"asšdlfkfjasdšlfkj\"/></notification></ace>";
+	
 	private static final String PUBLISH = "<ace><notification>" +
 		"<publishDocs userid=\"asdf-w2\">" +
 		"<doc id=\"WERS24-RE2\" name=\"collab.txt\" />" +
