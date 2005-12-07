@@ -27,6 +27,7 @@ import org.apache.log4j.Logger;
 import org.beepcore.beep.core.Channel;
 import org.beepcore.beep.core.OutputDataStream;
 import org.beepcore.beep.core.ReplyListener;
+import org.beepcore.beep.lib.NullReplyListener;
 import org.beepcore.beep.util.BufferSegment;
 
 /**
@@ -74,7 +75,8 @@ public abstract class AbstractConnection {
 					channel.setAppData(data);
 				
 				LOG.debug("--> sendMSG() with "+message.length+" bytes");
-				channel.sendMSG(output, listener);
+				ReplyListener actualListener = (listener != null) ? listener : NullReplyListener.getListener();
+				channel.sendMSG(output, actualListener);
 				LOG.debug("<-- sendMSG()");
 			} else {
 				LOG.warn("cannot send data, channel not in STATE_ACTIVE but in ["+getStateString()+"]");
