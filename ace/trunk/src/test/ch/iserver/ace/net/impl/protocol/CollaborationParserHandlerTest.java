@@ -196,7 +196,7 @@ public class CollaborationParserHandlerTest extends TestCase {
 		String participantId = "1234";
 		
 		RemoteUserProxyExt origProxy = new RemoteUserProxyImpl("sadfasd-24", new MutableUserDetails("Jimmy Ritter", InetAddress.getByName("123.43.45.21"), 4123));
-		origProxy.setDNSSDdiscovered(false);
+		origProxy.setDNSSDdiscovered(true);
 		byte[] data = serializer.createSessionMessage(ProtocolConstants.PARTICIPANT_JOINED, origProxy, participantId);
 		
 		assertEquals(XML_PARTICIPANT_JOINED, (new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING))));

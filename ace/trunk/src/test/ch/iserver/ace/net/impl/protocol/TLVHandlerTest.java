@@ -51,7 +51,6 @@ public class TLVHandlerTest extends TestCase {
 		char[] encoded = TLVHandler.create(document);
 		PortableDocumentExt resultDoc = new PortableDocumentImpl();
 		TLVHandler.parse(new String(encoded), resultDoc);
-		System.out.println(resultDoc);
 		Iterator iter = resultDoc.getFragments();
 		int size = 0;
 		int[] ids = new int[] {0, 1, 2, 1};
