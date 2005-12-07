@@ -187,7 +187,9 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 					}
 					//close main channel and TCPSession
 					LOG.debug("close main channel and TCPSession");
-					session.close();
+					if (session != null) {
+						session.close();
+					}
 				}
 			}
 		

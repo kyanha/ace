@@ -71,21 +71,21 @@ public class ResponseListener implements ReplyListener {
 	 */
 	public void receiveRPY(Message message) throws AbortChannelException {
 		byte[] data = read(message);
-		LOG.error("--> receiveRPY("+(new String(data))+")");
-		try {
-			QueryInfo info = (QueryInfo) message.getChannel().getAppData();
-			handler.setMetaData(info);
-			deserializer.deserialize(data, handler);
-			Request request = handler.getResult();
-			if (message.getMessageType() == Message.MESSAGE_TYPE_MSG) {
-				request.setMessage((MessageMSG) message);
-			}
-			filter.process(request);
-		} catch (DeserializeException de) {
-			//TODO: handling
-			LOG.error("could not deserialize ["+de.getMessage()+"]");
-		}
-		LOG.error("<-- receiveRPY()");
+		LOG.debug("--> receiveRPY("+(new String(data))+")");
+//		try {
+//			QueryInfo info = (QueryInfo) message.getChannel().getAppData();
+//			handler.setMetaData(info);
+//			deserializer.deserialize(data, handler);
+//			Request request = handler.getResult();
+//			if (message.getMessageType() == Message.MESSAGE_TYPE_MSG) {
+//				request.setMessage((MessageMSG) message);
+//			}
+//			filter.process(request);
+//		} catch (DeserializeException de) {
+//			//TODO: handling
+//			LOG.error("could not deserialize ["+de.getMessage()+"]");
+//		}
+		LOG.debug("<-- receiveRPY()");
 	}
 
 
