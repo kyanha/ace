@@ -28,7 +28,6 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.beepcore.beep.core.Channel;
 import org.beepcore.beep.core.InputDataStream;
-import org.beepcore.beep.core.MessageMSG;
 import org.beepcore.beep.core.OutputDataStream;
 import org.beepcore.beep.core.ProfileRegistry;
 import org.beepcore.beep.core.RequestHandler;
@@ -140,7 +139,7 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 		LOG.debug("--> discover()");
 		if (!isDNSSDdiscovered() && !isSessionEstablished()) {
 			try {
-				/** pack into remoteusersession -> MainChannel**/
+				/** TODO: pack into RemoteUserSession -> MainConnection **/
 				ProfileRegistry registry = ProfileRegistryFactory.getProfileRegistry();
 				MutableUserDetails theDetails = getMutableUserDetails();
 				LOG.debug("initiate session to " + theDetails.getAddress());
@@ -150,12 +149,7 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 				LOG.debug("initiate session succeded.");
 				String uri = NetworkProperties.get(NetworkProperties.KEY_PROFILE_URI);
 				RequestHandler requestHandler = ProfileRegistryFactory.getMainRequestHandler();
-				Channel channel = session.startChannel(uri, requestHandler);
-				
-//				MutableUserDetails details = getMutableUserDetails();
-//				RemoteUserSession remoteSession = new RemoteUserSession(details.getAddress(), details.getPort(), this);
-//				remoteSession.getMainConnection();
-				
+				Channel channel = session.startChannel(uri, requestHandler);				
 				/** pack **/
 				
 				NetworkServiceImpl service = NetworkServiceImpl.getInstance();
