@@ -106,6 +106,11 @@ public class RemoteUserImpl implements MutableRemoteUser {
 		support.removePropertyChangeListener(listener);
 	}
 	
+	/**
+	 * Gets an array of all registered property change listeners.
+	 * 
+	 * @return the array of property change listeners
+	 */
 	public PropertyChangeListener[] getPropertyChangeListeners() {
 		return support.getPropertyChangeListeners();
 	}
