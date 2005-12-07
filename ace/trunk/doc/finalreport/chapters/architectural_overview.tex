@@ -1141,3 +1141,54 @@ respectively).
 If the discovery succeeds, the discovered user is passed through the
 \texttt{UserListener}s to the application layer (see the section
 \ref{sect:archoverview.flow.discovery}).
+
+
+
+\section{Reference}
+In this section we show which layer is responsible to implement a given
+interface.
+
+\subsection{Application Layer}
+\begin{itemize}
+ \item \texttt{ch.iserver.ace.collaboration.DiscoveryCallback}
+ \item \texttt{ch.iserver.ace.collaboration.DocumentListener}
+ \item \texttt{ch.iserver.ace.collaboration.InvitationCallback}
+ \item \texttt{ch.iserver.ace.collaboration.JoinCallback}
+ \item \texttt{ch.iserver.ace.collaboration.ParticipantSessionCallback}
+ \item \texttt{ch.iserver.ace.collaboration.PublishedSessionCallback}
+ \item \texttt{ch.iserver.ace.collaboration.ServiceFailureHandler}
+ \item \texttt{ch.iserver.ace.collaboration.SessionCallback}
+ \item \texttt{ch.iserver.ace.collaboration.UserListener}
+\end{itemize}
+
+\subsection{Collaboration Layer}
+\begin{itemize}
+ \item \texttt{ch.iserver.ace.collaboration.CollaborationService}
+ \item \texttt{ch.iserver.ace.collaboration.Invitation}
+ \item \texttt{ch.iserver.ace.collaboration.JoinRequest}
+ \item \texttt{ch.iserver.ace.collaboration.Participant}
+ \item \texttt{ch.iserver.ace.collaboration.PortableDocument}
+ \item \texttt{ch.iserver.ace.collaboration.PublishedSession}
+ \item \texttt{ch.iserver.ace.collaboration.RemoteDocument}
+ \item \texttt{ch.iserver.ace.collaboration.RemoteUser}
+ \item \texttt{ch.iserver.ace.collaboration.Session}
+ \item \texttt{ch.iserver.ace.net.DiscoveryNetworkCallback}
+ \item \texttt{ch.iserver.ace.net.DocumentServerLogic}
+ \item \texttt{ch.iserver.ace.net.InvitationPort}
+ \item \texttt{ch.iserver.ace.net.JoinNetworkCallback}
+ \item \texttt{ch.iserver.ace.net.NetworkServiceCallback}
+ \item \texttt{ch.iserver.ace.net.ParticipantPort}
+ \item \texttt{ch.iserver.ace.net.SessionConnectionCallback}  
+\end{itemize}
+
+\subsection{Network Layer}
+\begin{itemize}
+ \item \texttt{ch.iserver.ace.net.DocumentServer}
+ \item \texttt{ch.iserver.ace.net.InvitationProxy}
+ \item \texttt{ch.iserver.ace.net.NetworkService}
+ \item \texttt{ch.iserver.ace.net.ParticipantConnection}
+ \item \texttt{ch.iserver.ace.net.PortableDocument}
+ \item \texttt{ch.iserver.ace.net.RemoteDocumentProxy}
+ \item \texttt{ch.iserver.ace.net.RemoteUserProxy}
+ \item \texttt{ch.iserver.ace.net.SessionConnection}     
+\end{itemize}
