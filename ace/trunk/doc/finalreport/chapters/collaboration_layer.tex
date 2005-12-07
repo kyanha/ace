@@ -20,6 +20,108 @@ The collaboration layer can basically be split into two different parts: the
 client part and the server part.
 
 
+
+\section{CollaborationService}
+The core entry point into the collaboration layer is the 
+\texttt{Collaboration\-Service}. This interface is implemented by the
+\texttt{Collaboration\-Service\-Impl} class, which also implements the
+\texttt{Network\-Service\-Callback} interface. These interfaces and their
+functionality have been thorougly explained before (see chapter 
+\ref{chap:archoverview}. The implementation passes the calls on 
+the \texttt{Network\-Service\-Callback} methods to the corresponding
+methods of the API between the collaboration and the application
+layer.
+
+
+\subsection{User and Document Management}
+The collaboration service implementation delegates the management of the
+set of currently discovered users and documents to objects implementing
+\texttt{UserRegistry} and \texttt{DocumentRegistry} respectively.
+
+% TODO: UserRegistry and DocumentRegistry
+
+The collaboration layer makes sure that for each unique user id there is
+only one \texttt{RemoteUser}. Thus it is save to register a 
+\texttt{PropertyChangeListener} on the \texttt{RemoteUser} to receive changes
+to that user's name. It takes also care that there is only one 
+\texttt{RemoteDocument} for a unique document id.
+
+The collaboration layer's implementation of \texttt{RemoteUser} 
+is \texttt{RemoteUserImpl} and of \texttt{RemoteDocument} it is 
+\texttt{RemoteDocumentImpl}. These implementations are pretty 
+straightforward. To support changes to the properties, the collaboration
+layer has internal interfaces called \texttt{MutableRemoteUser} and
+\texttt{MutableRemoteDocument}. These are not exposed to the application,
+because the application is not allowed to change user names and document
+titles of other users.
+
+
+\section{Client Side}
+The collaboration layer has to implement several interfaces defined in
+the API to the adjacent layers.
+
+
+\subsection{Receiving Invitations}
+The collaboration layer has to implement the \texttt{Invitation} interface.
+It is implemented by the \texttt{InvitationImpl} class. The implementation
+is straightforward. The calls to \texttt{reject} and \texttt{accept} are
+directly forwarded to the referenced \texttt{InvitationProxy} from the
+network layer. The only thing the collaboration layer does is to wrap the
+passed in \texttt{JoinCallback} with an implementation of 
+\texttt{JoinNetworkCallback}.
+
+
+\subsection{Join Callback}
+To forward a join request to the network layer, the collaboration layer has
+to implement the \texttt{JoinNetworkCallback} interface. The
+\texttt{accepted} method of the interface must create a \texttt{Session}
+and pass that to the \texttt{JoinCallback} of the application layer.
+The callback must also return a \texttt{SessionConnectionCallback} to the
+network layer.
+
+
+\subsection{Creating Sessions}
+\texttt{Session} objects are created by a \texttt{SessionFactory}. The
+\texttt{SessionFactory} creates \texttt{ConfigurableSession} objects, which
+provide methods to set the \texttt{SessionConnection} as well as the
+\texttt{ParticipantSessionCallback}.
+
+
+\subsection{Session Implementation}
+The default implementation for the \texttt{Session} interface is the
+\texttt{SessionImpl} class. It implements the \texttt{ConfigurableSession}
+interface, which also implements the \texttt{SessionConnectionCallback}
+interface. So the implementation acts as both the \texttt{Session} to
+the application layer as well as \texttt{SessionConnectionCallback} to the
+network layer.
+
+\subsubsection{Transformations}
+The \texttt{SessionImpl} class hosts the client-side transformation algorithm.
+Every received request is transformed with that algorithm. Before a
+received request can be transformed, the session has to be locked (locking
+the lock passed from the application layer by the \texttt{getLock} method
+of the \texttt{SessionCallback}). When sending operations, the algorithm
+creates a request that can then be sent to the \texttt{SessionConnection}.
+
+\subsubsection{Session Connection}
+The \texttt{Configurable\-Session} has a method called \texttt{setConnection},
+which passes the \texttt{Session\-Connection} to the \texttt{Session}. The
+\texttt{Session\-Impl} makes use of a \texttt{Thread\-Domain} (see
+chapter \ref{chap:threaddomain}) to execute calls on the 
+\texttt{SessionConnection} asynchronously. This has one significant
+disadvantage. Exceptions thrown by the method invocation cannot be
+thrown back at the caller (i.e. the application layer). That is where
+the \texttt{SessionConnectionWrapper} helps out. It is an implementation
+of the \texttt{SessionConnection} interface which catches all exceptions
+thrown by the target \texttt{SessionConnection} and passes them to an
+object implementing the \texttt{Session\-Connection.Failure\-Handler}
+interface.
+
+% TODO: SessionConnectionWrapper, FailureHandler, ThreadDomain
+
+% TODO: AcknowledgeStrategy
+
+
 \section{Server} 
 
 First of all, to avoid any confusion. The server part in the collaboration
@@ -33,21 +135,21 @@ it controls who joins the session and ensures that the session's list of
 participants is kept up-to-date. The server itself does not have a graphical
 user interface.
 
-\subsection{Overview}
-For each published document, there is an instance of \texttt{ServerLogicImpl}.
-This class implements the \texttt{DocumentServerLogic} interface, which 
-represents the view of the Network Layer of a published document in the
-Collaboration Layer. Further, it provides additional methods to manage
-the set of participants. The interface \texttt{ServerLogic} contains
-the methods exposed by the implementation.
 
-Incoming communication from a particular participant is comming through an
+\subsection{Overview}
+For each published document there is an object implementing the
+\texttt{ServerLogic} interface. This interface extends the
+\texttt{DocumentServerLogic} interface with methods only visible to the
+collaboration layer itself. The only implementation of it is
+\texttt{ServerLogicImpl}.
+
+Incoming communication from a particular participant is coming through an
 implementation of the \texttt{ParticipantPort} interface. The 
 \texttt{ParticipantPort} represents the entry point for messages from
 one particular participant into the server. Outgoing communication happens 
-through an implementation of 
-\texttt{ParticipantConnection}. This interface is used by the Collaboration
-Layer to send messages to one particular participant. For every participant, 
+through an implementation of \texttt{ParticipantConnection}, which is provided 
+by the network layer. This interface is used by the collaboration
+layer to send messages to one particular participant. For every participant, 
 there is such a pair of objects. 
 
 \begin{figure}[H]
@@ -56,62 +158,239 @@ there is such a pair of objects.
  \caption{Collaboration Layer Server}
 \end{figure}
 
-\subsection{Serialized Processing}
-One of the core requirements of the chosen algorithm is that at the
-server only one particular request is processed at a given time. Because
-there are potentially several threads accessing the server part, this 
-serialization becomes very important. Using \texttt{synchronized} blocks
-would result in blocked Network Layer threads. We chose a different
-approach.
+The server acts as a delivery station for messages from participants. For
+instance if there are four participants A-D and A sends a message to the
+server, this message will be delivered (after beeing subject to 
+transformations) to the participants B-D. The server logic itself does
+not implement the delivery itself. An object implementing the
+\texttt{CompositeForwarder} is responsible to the deliver the messages.
 
-To serialize all incoming requests, a blocking queue is used. This queue,
-called serializer queue, decouples the Network Layer threads from the
-processing of requests and provides a simple serialization. The queue
-contains command objects of type \texttt{SerializerCommand}, which is an
+
+\subsection{Participant Port}
+Objects implementing the \texttt{ParticipantPort} interface are used 
+by the network layer to pass messages from one participant to the
+server logic. The implementation of that interface is 
+\texttt{ParticipantPortImpl}. The participant port has a reference to
+the server-side algorithm for the participant. Received requests are
+transformed and then forwarded to a \texttt{Forwarder}.
+
+The \texttt{leave} method of the \texttt{ParticipantPort} interface is
+forwarded to the \texttt{leave} method on the \texttt{ServerLogic}. 
+
+The port for a publisher is described later (see 
+\ref{sect:archoverview.publisherport}).
+
+
+\subsection{Forwarders}
+We have already heard of the \texttt{CompositeForwarder} interface, which
+represents a specialized version of the more general \texttt{Forwarder}
 interface.
 
-\begin{figure}[H]
- \centering
- \caption{Serializer Command}
-\end{figure}
+% TODO: Forwarder / CompositeForwarder / ParticipantForwarder
 
-To explain the reason for this design, let us imagine the following
-imaginary situation. Participant A sent a request to the server, which is
-still in the serializer queue when another user joins the session. Adding
-the user directly to the list of participants would result in the situation
-that he gets a request that was issued before the user joined the session.
-This is an undesirable situation. Through the use of queue, which serializes
-all access, we can maintain the correct temporal order.
+A \texttt{Forwarder} is notified about certain events in the server. For
+instance if a request from a participant is received, the transformed
+operation is passed to the \texttt{sendOperation} method. Similar, there
+is a \texttt{sendCaretUpdate} method for \texttt{CaretUpdate}s. Additionally
+there are two methods that notify the \texttt{Forwarder} about participation
+events. The \texttt{close} method is called when the \texttt{Forwarder}
+is no longer needed.
 
-There are five different serializer commands, which are described in the
-next sections.
+\subsubsection{CompositeForwarder}
+The \texttt{CompositeForwarder} is used by the implementation of the
+server logic to send the events described above to a collection of
+\texttt{Forwarder} objects. This interface adds methods to add and
+remove \texttt{Forwarder} objects from the list of forwarders of the
+\texttt{CompositeForwarder}. The only implementation of that
+interface is \texttt{CompositeForwarderImpl}.
 
-\subsubsection{CaretUpdateSerializerCommand} Processes an incoming
-\texttt{CaretUpdateMessage}. Processing consists of transforming the
-message with the server side algorithm representing the participant, from 
-which the message was received.
+The \texttt{CompositeForwarderImpl} knows the concept of a default
+forwarder. The default forwarder is a \texttt{Forwarder} that receives
+all events as first forwarder. If the default forwarder throws an
+exception, the event is not forwarded to the other forwarders. Instead
+a \texttt{FailureHandler} is notified, which determines what to do
+with that failure. The default forwarder used is described in 
+section \ref{sect:archoverview.documentupdater}.
 
-\subsubsection{RequestSerializerCommand} Processes an incoming
-\texttt{Request}. Processing consists of transforming the reqeust with
-the server side algorithm representing the participant, from which the
-message was received.
+\subsubsection{ParticipantForwarder}
+The \texttt{ParticipantForwarder} has a reference to the server-side algorithm
+for one participant. There is a \texttt{ParticipantForwarder} for each
+participant in the session. This type of forwarder generates requests for
+the operations obtained through the \texttt{sendOperation} method and 
+forwards them to the \texttt{ParticipantConnection} of that particular
+participant. Similarly it generates a \texttt{CaretUpdateMessage} for
+a \texttt{CaretUpdate}.
 
-\subsubsection{JoinCommand} Adds the joining user to the list of participants
-in the session, sends the initial document to the newly joined participant
-and notifies all the other participants about the new participant.
+The \texttt{ParticipantForwarder} gets a \texttt{AcknowledgeStrategy},
+which is used to send acknowledge messages. See the section 
+\ref{archoverview.acknowledgestrategies} for more information about
+\texttt{AcknowledgeStrategy} objects.
 
-\subsubsection{LeaveCommand} Notifies the other participants that a participant
-left the session.
+\subsubsection{DocumentUpdater}
+\label{sect:archoverview.documentupdater}
+The last kind of \texttt{Forwarder} is a bit special. It is the
+\texttt{DocumentUpdater}, which updates an object implementing the
+\texttt{ServerDocument} interface. This is the server copy of the document,
+which is sent to users that join the session. For more information see
+the section \ref{sect:archoverview.serverdocument}.
 
-\subsubsection{ShutdownCommand} Shuts the Collaboration Layer server for the
-session down and closes all \texttt{ParticipantConnection} instances.
+The \texttt{DocumentUpdater} is set as the default forwarder for the
+\texttt{CompositeForwarderImpl}. This has an important implication. If the
+\texttt{ServerDocument} does not accept the operation (e.g. if the insertion
+index is wrong), the \texttt{FailureHandler} is notified. The default
+implementation of the \texttt{FailureHandler} (the class 
+\texttt{ServerLogicImpl}) removes the sender of the failing operation
+from the session and notifies all the other participants that the participant
+left (\texttt{sendParticipantLeft}).
+
+
+\subsection{Server Document}
+\label{sect:archoverview.serverdocument}
+The \texttt{ServerDocument} is used by the server to keep an up-to-date
+copy of the document that can be sent to users that want to join the
+session.
+
+% TODO: ServerDocument
+
+The \texttt{toPortableDocument} interface creates a snapshot of the document
+that can be sent to the \texttt{sendDocument} method of the 
+\texttt{ParticipantConnection}. The other methods are used to update the
+document.
+
+The default implementation extends the \texttt{AbstractDocument} of Swing.
+It uses the \texttt{Element} interface from Swing to model the fragments
+of the document. Each continous block of text that belongs to the
+same participant is an element. This element structure has to be kept
+up-to-date if text is inserted and removed. The participant id of each
+fragment is kept as an attribute in the \texttt{Element}'s 
+\texttt{AttributeSet}.
+
+
+\subsection{Hosting ServerLogic}
+Nothing in the design of the whole server logic prevents it to be used outside
+of ACE. All incoming requests pass through a \texttt{ParticipantPort}, all
+outgoing through a \texttt{ParticipantConnection}. So the server logic
+is totally agnostic about the fact that the publisher is running inside
+the same Java Virtual Machine. So, through the introduction of few additional
+interfaces it would be possible to host the server logic on a different
+computer. This is not supported at the moment by ACE but it would be
+a minor feature to implement the server part.
 
 
 
 \section{Publisher}
+The \texttt{ServerLogicImpl} class has a method 
+\texttt{initPublisherConnection}. The parameter type of that method
+is \texttt{PublisherConnection} and it returns an object implementing
+\texttt{PublisherPort}.
 
 
-\section{Participant}
+\subsection{Publisher Connection}
+% TODO: PublisherConnection
+
+The \texttt{PublisherConnection} extends the \texttt{ParticipantConnection}
+interface with methods that are only available for a connection to the
+publisher. The \texttt{sessionFailed} method is called when there is
+a serious error in the session logic, which does not allow any recovery.
+The session is then no longer usable and the document no longer published.
+
+The \texttt{sendJoinRequest} method sends a join request to the
+publisher of the session.
+
+The default implementation of the \texttt{PublisherConnection} interface
+is the class \texttt{PublishedSessionImpl}. 
+
+
+\subsection{Publisher Port}
+\label{sect:archoverview.publisherport}
+The interface \texttt{PublisherPort} extends the \texttt{ParticipantPort}
+with methods only available to the publisher of the document. 
+
+% TODO: PublisherPort
+
+The \texttt{kick} method provides the publisher of the session a way to kick
+one particular participant from the session. A kicked user is blacklisted
+and no longer allowed to join the session (unless the publisher invites
+him again).
+
+The \texttt{invite} method is used to invite a user to the session and finally,
+the \texttt{setDocumentDetails} method makes it possible to change the 
+document title (for instance if the document is renamed).
+
+The default implementation of the \texttt{PublisherPort} interface is
+the \texttt{PublisherPortImpl} class.
+
+
+\subsection{Published Session}
+The publisher of a document gets a \texttt{PublishedSession} object from
+the \texttt{publish} method of the \texttt{CollaborationService}. The
+implementation of this interface is the \texttt{PublishedSessionImpl}
+class, which, as we have seen, implements the \texttt{PublisherConnection}
+interface too.
+
+% TODO: PublishedSession, PublisherPort, Impl
+
+The published session hosts the client-side algorithm of the publisher.
+It also has a reference to a \texttt{AcknowledgeStrategy}, which is
+used to send acknowledge strategies (see section 
+\ref{sect:archoverview.acknowledgestrategies}).
+
+
+
+\section{Miscellaneous}
+
+\subsection{Acknowledge Strategies}
+\label{sect:archoverview.acknowledgestrategies}
+In the discussion of the algorithm (see section \ref{}) we have noted that
+in some cases the outgoing queues of the \emph{Jupiter} algorithm can 
+grow indefinitely. To avoid this situation, a site that does not generate
+requests on its own but receives requests from the other site should acknowledge
+from time to time the messages processed from the other site in order to 
+avoid that the queues grow too much. Acknowledge messages are rather simple.
+They must consist of the local site id as well as the local timestamp.
+
+The collaboration layer uses objects implementing the 
+\texttt{AcknowledgeStrategy} interface to determine when to send 
+acknowledge messages. The strategy itself does not know how exactly to 
+send an acknowledge message. This is left to an object implementing the
+\texttt{AcknowledgeAction} interface, which has a single \texttt{execute}
+method. That method is invoked by the strategy whenever it thinks it is
+time to send an acknowledge message.
+
+% TODO: AcknowledgeStrategy 
+
+The strategies must be initialized with an action through the \texttt{init}
+method. Code that uses an \texttt{AcknowledgeStrategy} should call
+\texttt{reset} whenever a message with a timestamp in it is sent to the
+other site. Such a message makes sending acknowledge messages useless, as the
+sent message already contains a timestamp. If a message is received from
+the other site, the \texttt{messageReceived} method should be called.
+
+% TODO: AcknowledgeAction
+
+Acknowledge strategies can decide when it is time to send an acknowledge
+message. A possible strategy is to send an acknowledge message back to the other
+site whenever a certain number of messages have been received (this is
+the strategy used by the \texttt{CountingAcknowledgeStrategy}). In that
+case, the \texttt{reset} method resets the message counter to zero.
+
+Another strategy could be based on a timer that fires after 60 seconds of
+not sending any messages to the other site. The \texttt{reset} method in that
+case would simple restart the timer.
+
+The \texttt{AcknowledgeStrategyImpl} combines both strategies described
+above. The timer is just started when there has been a received message.
+
+ACE currently uses the simple message counting based implementation and not
+the more complex and precise combined strategy. The timer based strategy
+alone did not prove to be good enough, because potentially many messages
+can be received in the timeout period.
+
+% TODO: AcknowledgeStrategyFactory
+
+\texttt{AcknowledgeStrategy} objects are creates by corresponding factories.
+The factory interface is \texttt{AcknowledgeStrategyFactory}.
+
 
 
 
