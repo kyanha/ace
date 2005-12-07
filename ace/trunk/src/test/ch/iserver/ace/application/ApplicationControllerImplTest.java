@@ -76,7 +76,7 @@ public class ApplicationControllerImplTest extends TestCase {
 		// define mock behavior
 		documentManager.getSelectedDocument();
 		documentManagerCtrl.setReturnValue(item);
-		documentManager.closeDocument(item);
+		documentManager.closeDocument(item, false);
 		
 		// replay
 		documentManagerCtrl.replay();
@@ -97,7 +97,7 @@ public class ApplicationControllerImplTest extends TestCase {
 		// define mock behavior
 		documentManager.getSelectedDocument();
 		documentManagerCtrl.setReturnValue(item);
-		documentManager.closeDocument(item);
+		documentManager.closeDocument(item, false);
 		
 		dialogController.showConfirmCloseDirty("test");
 		dialogControllerCtrl.setReturnValue(JOptionPane.NO_OPTION);
@@ -122,7 +122,7 @@ public class ApplicationControllerImplTest extends TestCase {
 		// define mock behavior
 		documentManager.getSelectedDocument();
 		documentManagerCtrl.setReturnValue(item);
-		documentManager.closeDocument(item);
+		documentManager.closeDocument(item, false);
 		
 		dialogController.showConfirmCloseDirty("test.txt");
 		dialogControllerCtrl.setReturnValue(JOptionPane.YES_OPTION);

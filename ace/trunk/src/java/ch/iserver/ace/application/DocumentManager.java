@@ -114,7 +114,7 @@ public interface DocumentManager {
 	 * 
 	 * @param item the document to close
 	 */
-	void closeDocument(DocumentItem item);
+	void closeDocument(DocumentItem item, boolean shutdown);
 
 	/**
 	 * Closes all documents. The documents are concealed first if they were
