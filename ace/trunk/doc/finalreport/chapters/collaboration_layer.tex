@@ -119,7 +119,10 @@ interface.
 
 % TODO: SessionConnectionWrapper, FailureHandler, ThreadDomain
 
-% TODO: AcknowledgeStrategy
+\subsubsection{Acknowledge Messages}
+The \texttt{SessionImpl} uses a \texttt{AcknowledgeStrategy} to determine
+when to send acknowledge messages. For details about acknowledge strategies
+see the section \ref{sect:archoverview.acknowledgestrategies}.
 
 
 \section{Server} 
@@ -164,6 +167,49 @@ server, this message will be delivered (after beeing subject to
 transformations) to the participants B-D. The server logic itself does
 not implement the delivery itself. An object implementing the
 \texttt{CompositeForwarder} is responsible to the deliver the messages.
+
+
+\subsection{Server Logic Implementation}
+The \texttt{ServerLogic} interface is depicted in figure 
+\ref{fig:archoverview.serverlogic}. 
+
+\begin{figure}[H]
+ \centering
+ % TODO: ServerLogic
+ \caption{ServerLogic Interface}
+\end{figure}
+
+The \texttt{invite} method allows to invite a \texttt{RemoteUser} to
+the session. The \texttt{joinAccepted} and \texttt{joinRejected} methods
+notify the logic that a join request was accepted or rejected. 
+
+The \texttt{kick} method allows to kick the participant with the given
+id to be kicked from the session. A kicked user is blacklisted, he
+can no longer join the session. 
+
+The \texttt{leave} notifies the
+server logic that the participant identified by the given id left the
+session. 
+
+The \texttt{setDocumentDetails} method provides a way to change the
+title of the document. This is used when the publisher saves the document
+with a different name.
+
+Finally, the \texttt{shutdown} method must be called when the session is
+concealed by the publisher. It causes the server to properly dispose
+all resources used by it.
+
+
+\subsection{Join Requests}
+When a user tries to join, the request is encapsulated in an object
+implementing the \texttt{JoinRequest} interface. The interfaces is
+implemented by the \texttt{JoinRequestImpl} class. The implementation
+is rather straightforward. The \texttt{accept} method is passed to
+the \texttt{joinAccepted} method of the \texttt{ServerLogic} interface.
+The \texttt{reject} method is passed to the \texttt{joinRequested}
+method of the \texttt{ServerLogic} interface.
+
+% TODO: sequence diagram? 
 
 
 \subsection{Participant Port}
@@ -266,6 +312,109 @@ fragment is kept as an attribute in the \texttt{Element}'s
 \texttt{AttributeSet}.
 
 
+\subsection{Failure Handling}
+The \texttt{ServerLogic} needs a solid failure handling, otherwise it can
+easily happen that the replicas start to diverge. The interface
+\texttt{FailureHandler} is used to handle failures in the server logic. 
+
+% TODO: FailureHandler
+
+It is passed to all objects where errors can potentially occur. The failure
+handler is passed to the following places.
+
+\begin{itemize}
+ \item participant ports
+ \item \texttt{ParticipantConnectionWrapper}
+ \item \texttt{CompositeForwarderImpl}
+\end{itemize}
+
+The \texttt{ServerLogicImpl} implements that interface. The 
+\texttt{handleFailure} method has a participant id parameter. That parameter
+is used to determine to which participant the failure is related. If
+it is a normal participant, that participant is removed from the session
+and all other participants are notified about the participant that left.
+
+However, if the failing participant is the publisher, the session is
+terminated. In the current implementation of ACE, the publisher is always
+in the same Java Virtual Machine as the server logic. Thus, there should
+never really be a failure. If there is, it is most likely a bug in the
+implementation, from which we cannot recover.
+
+\subsubsection{Participant Port Failures}
+The participant ports transform incoming requests. If a request cannot
+be transformed because it is invalid, the algorithm throws an exception.
+This exception is caught by the participant ports and the participant
+is expelled from the session. First, a participant that sends invalid requests
+is not an acceptable participant, and second that particular participant
+has an invalid document state. The operation has been applied locally but
+the server rejected the corresponding request. Thus, the document state of
+that particular participant starts to diverge from the correct document
+content and so can no longer be part of the session.
+
+\subsubsection{ParticipantConnectionWrapper}
+The \texttt{ParticipantConnectionWrapper} wraps a \texttt{ParticipantConnection}
+and catches exceptions thrown by the target connection. If the target throws
+an exception, the \texttt{FailureHandler} is called.
+
+A failing \texttt{ParticipantConnection} expells the concerned participant
+from the session. More about the wrapper can be read in .
+% TODO: formulation
+
+% TODO: CompositeForwarderImpl discussion
+
+
+\subsection{Usage of ThreadDomains}
+The server logic uses \texttt{ThreadDomain}s extensively. To learn about
+\texttt{ThreadDomain}s read the chapter \ref{chap:threaddomains}.
+
+\subsubsection{Outgoing ThreadDomain}
+The algorithm requires that the transformation of requests at the server
+occurs sequentially. However, the sending of the resulting transformed
+requests should occur in parallel. If the sending does not occur in parallel
+then a slow connection could slow down the transformation throughput at
+the server.
+
+That is the reason why all the \texttt{ParticipantConnection}s are wrapped 
+with a \texttt{ThreadDomain}. This has the disadvantage that exceptions
+thrown by the target connection are not thrown back at the server logic.
+In a similar way to the \texttt{SessionConnectionWrapper} the
+\texttt{ParticipantConnectionWrapper} is used together with a
+\texttt{FailureHandler} to handle failing connections. If a
+\texttt{ParticipantConnectionWrapper} catches an exception thrown by the
+target connection, the \texttt{FailureHandler} is notified and the
+target connection is replaced with a null connection. The null connection
+is a simple \texttt{ParticipantConnectionWrapper} that simple ignores
+all method calls.
+
+% TODO: ParticipantConnectionWrapper / PublisherConnectionWrapper
+
+The reason why we use these null connections is because the queues employed
+by the thread domains might still contain method calls for that particular
+connection. Instead of trying to remove those method invocations from the
+queue, we simply ignore further calls.
+
+\subsubsection{Incoming ThreadDomain}
+As noted above, only one thread may access the server logic transformation
+section at any time. Now, instead of using synchronized statements or
+locks, we use thread domains to ensure that only one thread accesses the
+server logic at any given moment. How can this be achieved? By wrapping
+all incoming references with a \texttt{SingleThreadDomain}. The possible
+incoming references are:
+\begin{itemize}
+ \item all \texttt{ParticipantPort} instances
+ \item \texttt{ServerLogic}
+ \item \texttt{FailureHandler}
+\end{itemize}
+
+This technique allows to solve two problems: first, the transformation must
+be serialized and second, the caller does not have to wait for the
+transformation to be completed.
+
+\subsubsection{Thread Domain in Server Logic}
+
+% TODO: image with thread domains
+
+
 \subsection{Hosting ServerLogic}
 Nothing in the design of the whole server logic prevents it to be used outside
 of ACE. All incoming requests pass through a \texttt{ParticipantPort}, all
@@ -351,7 +500,8 @@ They must consist of the local site id as well as the local timestamp.
 
 The collaboration layer uses objects implementing the 
 \texttt{AcknowledgeStrategy} interface to determine when to send 
-acknowledge messages. The strategy itself does not know how exactly to 
+acknowledge messages. This is a classical implementation of the
+\emph{Strategy} pattern. The strategy itself does not know how exactly to 
 send an acknowledge message. This is left to an object implementing the
 \texttt{AcknowledgeAction} interface, which has a single \texttt{execute}
 method. That method is invoked by the strategy whenever it thinks it is
