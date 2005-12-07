@@ -29,7 +29,6 @@ import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.Timestamp;
 import ch.iserver.ace.net.SessionConnection;
-import ch.iserver.ace.net.SessionConnectionCallback;
 
 /**
  *

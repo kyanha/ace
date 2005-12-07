@@ -21,8 +21,7 @@
 package ch.iserver.ace.net.impl.protocol;
 
 import org.apache.log4j.Logger;
-
-import ch.iserver.ace.net.impl.NetworkServiceImpl;
+import org.beepcore.beep.core.MessageMSG;
 
 /**
  *
@@ -36,8 +35,16 @@ public class ShutdownFilter extends AbstractRequestFilter {
 	}
 
 	public void process(Request request) {
-		if (NetworkServiceImpl.getInstance().isStopped()) {
+		if (request.getType() == ProtocolConstants.SHUTDOWN) {
 			LOG.warn("Network layer terminated, stop forwarding request [" + request + "]");
+			MessageMSG message = request.getMessage();
+			if (message != null) {
+				try {				
+					request.getMessage().sendNUL();
+				} catch (Exception e) {
+					LOG.error("could not send confirmation ["+e+", "+e.getMessage()+"]");
+				}
+			}
 		} else {
 			super.process(request);
 		}
