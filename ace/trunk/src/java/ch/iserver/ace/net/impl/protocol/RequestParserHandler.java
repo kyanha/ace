@@ -59,8 +59,8 @@ public class RequestParserHandler extends ParserHandler {
 	
 	public void endDocument() throws SAXException {
 		int type = getType();
-		if (type == PUBLISHED_DOCUMENTS) {
-			result = new RequestImpl(PUBLISHED_DOCUMENTS, userId, null);
+		if (type == PUBLISHED_DOCUMENTS || type == USER_DISCARDED) {
+			result = new RequestImpl(type, userId, null);
 		} else if (type == PUBLISH 
 				|| type == CONCEAL 
 				|| type == DOCUMENT_DETAILS_CHANGED 
@@ -179,6 +179,9 @@ public class RequestParserHandler extends ParserHandler {
 			} catch (Exception e) {
 				LOG.error("could not create RemoteUserProxy [" + e + "]");
 			}
+		} else if (qName.equals(TAG_USER_DISCARDED)) {
+			requestType = USER_DISCARDED;
+			userId = attributes.getValue(ID);
 		}
 	}
 	
