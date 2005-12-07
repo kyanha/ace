@@ -48,6 +48,8 @@ public class JoinRejectedRecipientFilter extends AbstractRequestFilter {
 				if (doc!= null) {
 					String reason = info.getData();
 					doc.joinRejected(Integer.parseInt(reason));
+				} else {
+					LOG.debug("received joinRejected for concealed document");
 				}
 				
 				try {

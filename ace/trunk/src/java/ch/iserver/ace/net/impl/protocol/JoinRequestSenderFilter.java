@@ -46,10 +46,15 @@ public class JoinRequestSenderFilter extends AbstractRequestFilter {
 				LOG.info("--> process()");		
 				byte[] data = serializer.createRequest(ProtocolConstants.JOIN, request.getPayload());
 				RemoteUserSession session = SessionManager.getInstance().getSession(request.getUserId());
-				MainConnection connection = session.getMainConnection();
-				LOG.debug("send data to ["+session.getUser().getUserDetails().getUsername()+"] ["+(new String(data))+"]");
-				connection.send(data, session.getUser().getUserDetails().getUsername(), listener);
-				LOG.info("<-- process()");
+				if (session != null) {
+					MainConnection connection = session.getMainConnection();
+					LOG.debug("send data to ["+session.getUser().getUserDetails().getUsername()+"] ["+(new String(data))+"]");
+					connection.send(data, session.getUser().getUserDetails().getUsername(), listener);
+					LOG.info("<-- process()");
+				} else {
+					LOG.warn("no RemoteUserSession for [" + request.getUserId() + "] available");
+					//TODO: can it ever come here? if yes, create session?
+				}
 			} else {
 				super.process(request);
 			}
