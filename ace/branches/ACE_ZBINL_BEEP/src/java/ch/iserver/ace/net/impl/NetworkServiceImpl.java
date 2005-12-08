@@ -167,9 +167,9 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 					RemoteUserProxyExt user = (RemoteUserProxyExt) iter.next();
 					LOG.debug("process stop() for "+user.getUserDetails().getUsername());
 					RemoteUserSession session = SessionManager.getInstance().removeSession(user.getId()); //session may be null
-					docs = user.getDocuments();
-					synchronized(docs) {
-						Iterator iter2 = docs.values().iterator();
+					Map documents = user.getDocuments();
+					synchronized(documents) {
+						Iterator iter2 = documents.values().iterator();
 						while (iter2.hasNext()) { //for each doc of the current user
 							RemoteDocumentProxyExt doc = (RemoteDocumentProxyExt) iter2.next();
 							if (doc.isJoined() && session != null) {
