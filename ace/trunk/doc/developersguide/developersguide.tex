@@ -309,4 +309,38 @@ for those files that are explicitely excluded by an exclude element.
 \end{verbatim}
 }
 
+\subsection{Windows}
+The ACE-Installer for windows is based on \textit{Nullsoft Scriptable Install System (NSIS)} (\href{http://nsis.sf.net/}{http://nsis.sf.net/}). Two scripts named \texttt{MakeACELauncherJavaw.nsi} and \texttt{MakeACEInstaller.nsi} are needed to build the windows installer executable. Both can be found in \texttt{src/windows/installer} in the ACE source repository. \\
+
+Compile the nsis-script's eighter in console with the command:
+\begin{verbatim}
+[...]src\windows\installer>makensis.exe SCRIPT_NAME.nsis
+\end{verbatim}
+or start \texttt{makensisw.exe} and drag \& drop your files into it. \\
+
+\begin{description}
+\item[Step 1:] Build all jar files and copy them into the library folder in your installer directory. Use the following steps:
+  \begin{itemize}
+  \item Make a new library folder in your installer directory called \texttt{lib}.
+  \item Run the ant-targets \texttt{ant dist} and \texttt{ant dist-windows}.
+  \item Copy all files from the \texttt{build/lib} into the ceated library folder.
+  \end{itemize}
+
+\item[Step 2:] Make the \texttt{ACE.exe} executable. Open the nsis-scipt \texttt{MakeACELauncherJavaw.nsi} in a simple text editor and add all libraries to the classpath variable. Further, check that the class variable has the correct value:
+\begin{verbatim}
+  !define CLASSPATH "lib\lib-1.jar; lib\lib-2.jar; ... "
+  
+  !define CLASS "ch.iserver.ace.application.Main"
+\end{verbatim}
+
+\item[Step 3:] Make the \texttt{ACEInstaller.exe} executable. Open the nsis-script \texttt{MakeACEInstaller.nsi} in a simple text editor and add all libraries to the install section. Note: you dont have to put them into the uninstall section too because uninstall will delete the whole library folder automatically.
+\begin{verbatim}
+Section "Install" InstallSection
+[...]
+
+File "lib\lib-1.jar"
+File "lib\lib-2.jar"
+File "lib\ ... "
+\end{verbatim}
+
 \end{document}
