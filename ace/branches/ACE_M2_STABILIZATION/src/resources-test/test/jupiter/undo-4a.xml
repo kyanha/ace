@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jupiter-scenario initial="b" final="">
+            
+    <server>
+        <relay ref="1" id="10"/>
+        <relay ref="2" id="20"/>
+        <relay ref="4" id="40"/>
+        <relay ref="3" id="30"/>
+        <relay ref="5" id="50"/>
+    </server>
+    
+    <site id="1">
+        <generate id="1">
+            <operation type="ch.iserver.ace.text.DeleteOperation">
+                <property name="position" value="0"/>
+                <property name="text" value="b"/>
+            </operation>
+        </generate>
+        <generate id="2">
+            <operation type="ch.iserver.ace.text.InsertOperation">
+                <property name="position" value="0"/>
+                <property name="text" value="a"/>
+            </operation>
+        </generate>
+        <undo id="4"/>
+        <undo id="5"/>
+        <receive ref="30"/>
+    </site>
+    
+    <site id="2">
+        <generate id="3">
+            <operation type="ch.iserver.ace.text.DeleteOperation">
+                <property name="position" value="0"/>
+                <property name="text" value="b"/>
+            </operation>
+        </generate>
+        <receive ref="10"/>
+        <receive ref="20"/>
+        <receive ref="40"/>
+        <receive ref="50"/>
+    </site>
+    
+</jupiter-scenario>
