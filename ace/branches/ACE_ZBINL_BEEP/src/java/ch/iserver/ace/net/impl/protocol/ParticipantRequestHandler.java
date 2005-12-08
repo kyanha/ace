@@ -98,6 +98,11 @@ public class ParticipantRequestHandler extends AbstractRequestHandler {
 				LOG.error("could not send confirmation ["+e.getMessage()+"]");
 			}
 			
+			if (port == null) {
+				LOG.error("ParticipantRequestHandler has no ParticipantPort, return without any further processing");
+				return;
+			}
+			
 			if (type == ProtocolConstants.LEAVE) {
 				port.leave();
 				LOG.debug("participant ["+((DocumentInfo)result.getPayload()).getParticipantId()+"] left.");

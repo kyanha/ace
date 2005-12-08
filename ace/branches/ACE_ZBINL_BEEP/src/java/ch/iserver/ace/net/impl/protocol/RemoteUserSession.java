@@ -389,7 +389,9 @@ public class RemoteUserSession {
 				parserHandler.setTimestampFactory(getTimestampFactory());
 				NetworkServiceExt service = NetworkServiceImpl.getInstance();
 				ParticipantRequestHandler pHandler = new ParticipantRequestHandler(deserializer, getTimestampFactory(), service);
-				pHandler.setParticipantPort(port);
+				if (port != null) {Ê
+					pHandler.setParticipantPort(port);
+				}
 				handler = (RequestHandler) domain.wrap(pHandler, RequestHandler.class);
 				channelType = getChannelTypeXML(CHANNEL_SESSION);
 			} else {
