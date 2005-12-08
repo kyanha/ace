@@ -1,0 +1,36 @@
+Milestone 2 (08.12.2005)
+
+[New Features]
+
+* join published documents
+* leave joined sessions
+* kick participant
+* invitations
+* collaborative editing
+* awareness information (caret and selection)
+* explicit user discovery
+
+
+Milestone 1 (21.11.2005)
+
+[New Features]
+
+ * creating new text documents
+ * loading documents
+ * saving documents
+   * save
+   * save as
+   * save all
+ * close document / close all open documents
+ * multi document user interface
+ * cut/copy/paste
+ * publish local documents
+ * conceal published documents
+ * automatic discovery of other users (user discovery)
+ * automatic discovery of published documents (document discovery)
+ * changing of user name and document name visible
+ * preferences
+   * user name
+   * font size of editor
+   * character encoding used to load/save files
+ * about dialog 
