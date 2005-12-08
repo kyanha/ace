@@ -8,6 +8,13 @@ as a page that talks about the technical <a href="index.php?page=3">Background</
 <br/>
 
 <h3>News</h3>
+
+<p><b>Milestone 2 Released</b> <span class="date">08.12.2005</span><p>
+<p>Finally, Milestone 2 is released. It can be downloaded from the
+<a href="index.php?page=8">download page</a>. Milestone 2 has some open
+issues in the network layer, most notably sessions fail from time to
+time.</p>
+
 <p><b>Milestone 1 Released</b> <span class="date">21.11.2005</span></p>
 <p>We are happy to announce the first public release of ACE. The 
 Milestone 1 release can be found on the <a href="index.php?page=8">download page</a>. You can write an e-mail to give us some <a href="mailto:feedback@ace.iserver.ch">feedback</a>.</p>
