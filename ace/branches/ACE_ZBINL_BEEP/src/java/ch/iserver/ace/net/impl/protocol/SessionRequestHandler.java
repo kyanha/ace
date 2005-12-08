@@ -98,8 +98,10 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 			
 			if (sessionCallback == null && type != ProtocolConstants.JOIN_DOCUMENT) {
 				try {
-					RemoteUserSession session = SessionManager.getInstance().getSession(info.getUserId());
-					sessionCallback = session.getUser().getSharedDocument(info.getDocId()).getSessionConnectionCallback();
+					publisherId = info.getUserId();
+					docId = info.getDocId();
+					RemoteUserSession session = SessionManager.getInstance().getSession(publisherId);
+					sessionCallback = session.getUser().getSharedDocument(docId).getSessionConnectionCallback();
 					ParameterValidator.notNull("sessionConnectionCallback", sessionCallback);
 				} catch (Exception e) {
 					LOG.error("error in initializing the sessionCallback [" + e + ", " + e.getMessage() + "]");

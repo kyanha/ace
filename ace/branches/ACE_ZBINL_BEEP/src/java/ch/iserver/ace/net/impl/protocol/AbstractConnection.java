@@ -80,7 +80,6 @@ public abstract class AbstractConnection {
 				Reply reply = new Reply();
 				channel.sendMSG(output, reply);
 				reply.getNextReply(); //wait for synchronous response
-				LOG.debug("<-- sendMSG()");
 			} else {
 				LOG.warn("cannot send data, channel not in STATE_ACTIVE but in ["+getStateString()+"]");
 			}
@@ -89,6 +88,8 @@ public abstract class AbstractConnection {
 			String trace = getStackTrace(e);
 			LOG.debug("caught exception [" + e + ", " + trace + "]");
 			throw new ProtocolException(e.getMessage());
+		} finally {
+			LOG.debug("<-- sendMSG()");
 		}
 	}
 	

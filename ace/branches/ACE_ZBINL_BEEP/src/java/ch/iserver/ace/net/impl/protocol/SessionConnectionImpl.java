@@ -64,10 +64,12 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 	/** methods from abstract class AbstractConnection  **/
 	/*****************************************************/
 	public void cleanup() {
+		LOG.debug("--> cleanup()");
 		serializer = null;
 		setReplyListener(null);
 		setChannel(null);
 		setState(STATE_CLOSED);
+		LOG.debug("<-- cleanup()");
 	}
 	
 	/***********************************************/
