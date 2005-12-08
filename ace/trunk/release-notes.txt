@@ -5,8 +5,9 @@ Milestone 2 (08.12.2005)
 * join published documents
 * leave joined sessions
 * kick participant
-* invitationts
+* invitations
 * collaborative editing
+* awareness information (caret and selection)
 * explicit user discovery
 
 

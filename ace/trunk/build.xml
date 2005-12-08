@@ -381,7 +381,7 @@
 		</scp>
 	</target>
 	
-	<target name="dist" depends="clean,javadoc,jar,copy-dependencies,test,integration-test">
+	<target name="dist" depends="clean,javadoc,jar,copy-dependencies,test">
         <description>creates the distribution tar.gz and zip files</description>
 	    <tstamp/>
 	    <property name="dist.dir.current" value="${dist.dir}/target/ace-${DSTAMP}"/>
