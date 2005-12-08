@@ -39,22 +39,47 @@ The collaboration service implementation delegates the management of the
 set of currently discovered users and documents to objects implementing
 \texttt{UserRegistry} and \texttt{DocumentRegistry} respectively.
 
-% TODO: UserRegistry and DocumentRegistry
-
 The collaboration layer makes sure that for each unique user id there is
 only one \texttt{RemoteUser}. Thus it is save to register a 
 \texttt{PropertyChangeListener} on the \texttt{RemoteUser} to receive changes
 to that user's name. It takes also care that there is only one 
 \texttt{RemoteDocument} for a unique document id.
 
-The collaboration layer's implementation of \texttt{RemoteUser} 
-is \texttt{RemoteUserImpl} and of \texttt{RemoteDocument} it is 
-\texttt{RemoteDocumentImpl}. These implementations are pretty 
-straightforward. To support changes to the properties, the collaboration
-layer has internal interfaces called \texttt{MutableRemoteUser} and
-\texttt{MutableRemoteDocument}. These are not exposed to the application,
-because the application is not allowed to change user names and document
-titles of other users.
+The \texttt{UserRegistry} manages the currently known set of users. The
+objects registered in the registry are of type \texttt{MutableRemoteUser},
+which adds a single method \texttt{setName} to the \texttt{RemoteUser}
+interface. This method allows the collaboration layer to change the
+name of a user, if such a change is reported from the network layer.
+The \texttt{getUser} method with an argument of type
+\texttt{RemoteUserProxy} creates a new \texttt{MutableRemoteUser}, if 
+a user with the same id does not already exist. This makes sure that
+there is only one \texttt{RemoteUser} object for a unique user. The
+other \texttt{getUser} method returns null if there is no user in the
+registry with the given id.
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=16.37cm,height=4.62cm]{../images/finalreport/collaboration_userregistry_uml.eps}
+ \caption{UserRegistry Interface}
+ \label{fig:collaboration.userregistry}
+\end{figure}
+
+The \texttt{Document\-Registry} is the equivalent class for 
+\texttt{Mutable\-Remote\-Document} objects. \texttt{Mutable\-Remote\-Document}
+adds the \texttt{setTitle} method to the \texttt{RemoteDocument}.
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=16.72cm,height=4.59cm]{../images/finalreport/collaboration_documentregistry_uml.eps}
+ \caption{DocumentRegistry Interface}
+ \label{fig:collaboration.documentregistry}
+\end{figure}
+
+The mutable subinterfaces of \texttt{RemoteUser} and \texttt{RemoteDocument}
+are passed to the application layer, because the user is never allowed to
+change the name of other users or the title of documents published by other
+users.
+
 
 
 \section{Client Side}
