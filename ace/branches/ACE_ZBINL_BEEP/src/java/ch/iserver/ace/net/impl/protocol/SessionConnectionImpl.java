@@ -104,6 +104,7 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 				LOG.error("exception processing leave ["+e+", "+e.getMessage()+"]");
 			}
 			setState(STATE_CLOSED);
+			executeCleanup();
 		} else {
 			LOG.warn("not sending leave, state is " + getStateString());
 		}
