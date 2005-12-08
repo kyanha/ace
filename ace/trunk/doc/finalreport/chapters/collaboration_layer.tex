@@ -151,7 +151,7 @@ shows exactly the described setup.
 
 \begin{figure}[H]
  \centering
- \includegraphics[width=10.87cm,7.97cm]{../images/finalreport/collaboration_sessionconnectionwrapper.eps}
+ \includegraphics[width=10.87cm,9.28cm]{../images/finalreport/collaboration_sessionconnectionwrapper.eps}
  \caption{Wrapped session connection with ThreadDomains}
  \label{fig:collaboration.sessionconnectionwrapper}
 \end{figure}
@@ -203,21 +203,58 @@ there is such a pair of objects.
 
 \begin{figure}[H]
  \centering
- % TODO: nice little picture of nice little server ;)
+ \includegraphics[width=16.9cm,height=9.67cm]{../images/finalreport/collaboration_serverflow.eps}
  \caption{Collaboration Layer Server}
+ \label{fig:collaboration.serverflow}
 \end{figure}
 
-The server acts as a delivery station for messages from participants. For
-instance if there are four participants A-D and A sends a message to the
-server, this message will be delivered (after beeing subject to 
-transformations) to the participants B-D. The server logic itself does
-not implement the delivery itself. An object implementing the
-\texttt{CompositeForwarder} is responsible to the deliver the messages.
+The server acts as a delivery station for messages from participants. 
+Incoming requests are transformed by the corresponding 
+\texttt{ParticipantPort} (1).
+The resulting operation is passed to the \texttt{CompositeForwarder}, which in 
+turn gives the request to all its child \texttt{Forwarders} (2 and 3). One child
+forwarder is responsible to keep an up-to-date version of the document, whose
+is named \texttt{DocumentUpdater} (3). The \texttt{DocumentUpdater} updates
+a \texttt{ServerDocument} (4).
+
+The other forwarders are \texttt{Participant\-Forwarder}s (2). They generate
+requests, by using the server-side \texttt{Algorithm} for the corresponding
+participant. The generated request is passed to a 
+\texttt{Participant\-Connection\-Wrapper}, which forwards the request to
+a target \texttt{Participant\-Connection}. The wrapper catches any exceptions
+thrown by the target connection and notifies a \texttt{FailureHandler}
+(not depicted in the figure \ref{fig:collaboration.serverflow}). The
+\texttt{FailureHandler} is responsible to take the necessary actions in
+case of a failure.
+
+Objects assigned to the same participant are aligned vertically. So the
+objects 1, 2, 5, and 6 that are aligned vertically belong all to the
+same participant. One participant is the publisher of the document. In the 
+figure it is the participant on the left.
+
+The processing in the server from the point where a request crosses the
+dashed line at the top to the point where all resulting requests have passed
+the dashed line at the bottom must be sequential. This goal is achieved by
+use of a \texttt{SingleThreadDomain} (see section 
+\ref{sect:collaboration.threaddomains}).
+
+\subsubsection{Example}
+The bold arrows represent a request as it passes through the server. First,
+it is received by the second \texttt{Participant\-Port} from the left. Then it 
+is passed
+to the \texttt{Composite\-Forwarder}, which forwards the request to all
+its children. The \texttt{Participant\-Forwarder} (2) for the same 
+participant filters the message. All the other \texttt{Forwarder}s pass the
+message on to the \texttt{ParticipantConnectionWrapper} (5) (or to the
+\texttt{ServerDocument} (4) in case of the \texttt{DocumentUpdater} (3)).
 
 
-\subsection{Server Logic Implementation}
-The \texttt{ServerLogic} interface is depicted in figure 
-\ref{fig:archoverview.serverlogic}. 
+\subsection{Server Logic}
+The \texttt{ServerLogic} provides methods that allows users to join,
+participants leave, setting the document details, inviting users as well
+as shutting down the server logic. So it provides the core methods
+to manage the participants of a session. The interface is depicted in figure 
+\ref{fig:collaboration.serverlogic}. 
 
 \begin{figure}[H]
  \centering
@@ -227,7 +264,9 @@ The \texttt{ServerLogic} interface is depicted in figure
 \end{figure}
 
 The \texttt{invite} method allows to invite a \texttt{RemoteUser} to
-the session. The \texttt{joinAccepted} and \texttt{joinRejected} methods
+the session. The inherited \texttt{join} method from the
+\texttt{DocumentServerLogic} interface allows the network layer to send
+join requests. The \texttt{joinAccepted} and \texttt{joinRejected} methods
 notify the logic that a join request was accepted or rejected. 
 
 The \texttt{kick} method allows to kick the participant with the given
@@ -277,20 +316,22 @@ default implementation is \texttt{ParticipantManagerImpl}.
 
 \subsection{Join Requests}
 When a user tries to join, the request is encapsulated in an object
-implementing the \texttt{JoinRequest} interface. The interfaces is
-implemented by the \texttt{JoinRequestImpl} class. The implementation
-is rather straightforward. The \texttt{accept} method is passed to
-the \texttt{joinAccepted} method of the \texttt{ServerLogic} interface.
-The \texttt{reject} method is passed to the \texttt{joinRequested}
-method of the \texttt{ServerLogic} interface.
+implementing the \texttt{Join\-Request} interface. The \texttt{Join\-Request}
+is then passed to the publisher through the \texttt{Publisher\-Connection}.
 
-% TODO: sequence diagram? 
+The \texttt{Join\-Request} interface is
+implemented by the \texttt{Join\-Request\-Impl} class. The implementation
+is rather straightforward. The \texttt{accept} method is passed to
+the \texttt{join\-Accepted} method of the \texttt{Server\-Logic} interface.
+The \texttt{reject} method is passed to the \texttt{join\-Requested}
+method of the \texttt{Server\-Logic} interface.
 
 
 \subsection{Participant Port}
 Objects implementing the \texttt{ParticipantPort} interface are used 
 by the network layer to pass messages from one participant to the
-server logic. The implementation of that interface is 
+server logic (see figure \ref{fig:archoverview.participantport}). 
+The implementation of that interface is 
 \texttt{ParticipantPortImpl}. The participant port has a reference to
 the server-side algorithm for the participant. Received requests are
 transformed and then forwarded to a \texttt{Forwarder}.
@@ -323,6 +364,7 @@ events. The \texttt{close} method is called when the \texttt{Forwarder}
 is no longer needed.
 
 \subsubsection{CompositeForwarder}
+\label{sect:collaboration.compositeforwarder}
 The \texttt{CompositeForwarder} is used by the implementation of the
 server logic to send the events described above to a collection of
 \texttt{Forwarder} objects. This interface adds methods to add and
@@ -456,17 +498,22 @@ and catches exceptions thrown by the target connection. If the target throws
 an exception, the \texttt{FailureHandler} is called.
 
 A failing \texttt{ParticipantConnection} expells the concerned participant
-from the session. More about the wrapper can be read in .
-% TODO: formulation
+from the session. More about the wrapper class can be read in the section
+\ref{sect:collaboration.outgoingthreaddomain}.
 
-% TODO: CompositeForwarderImpl discussion
+\subsubsection{CompositeForwarderImpl}
+The failure handling of the \texttt{CompositeForwarderImpl} is described
+in detail in the section about composite forwarders (see section
+\ref{sect:collaboration.compositeforwarder}).
 
 
 \subsection{Usage of ThreadDomains}
+\label{sect:collaboration.threaddomain}
 The server logic uses \texttt{ThreadDomain}s extensively. To learn about
 \texttt{ThreadDomain}s read the chapter \ref{chapter:threaddomains}.
 
 \subsubsection{Outgoing ThreadDomain}
+\label{sect:collaboration.outgoingthreaddomain}
 The algorithm requires that the transformation of requests at the server
 occurs sequentially. However, the sending of the resulting transformed
 requests should occur in parallel. If the sending does not occur in parallel
@@ -485,12 +532,22 @@ target connection is replaced with a null connection. The null connection
 is a simple \texttt{ParticipantConnectionWrapper} that simple ignores
 all method calls.
 
-% TODO: ParticipantConnectionWrapper / PublisherConnectionWrapper
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=11.47cm,6.35cm]{../images/finalreport/collaboration_participantconnectionwrapper.eps}
+ \caption{Wrapped participant connection with ThreadDomains}
+ \label{fig:collaboration.participantconnectionwrapper}
+\end{figure}
 
 The reason why we use these null connections is because the queues employed
 by the thread domains might still contain method calls for that particular
 connection. Instead of trying to remove those method invocations from the
 queue, we simply ignore further calls.
+
+There is also a \texttt{Publisher\-Connection\-Wrapper} that serves the same
+purpose for \texttt{Publisher\-Connection} as the 
+\texttt{Participant\-Connection\-Wrapper} serves for the
+\texttt{Participant\-Connection}.
 
 \subsubsection{Incoming ThreadDomain}
 As noted above, only one thread may access the server logic transformation
