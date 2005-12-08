@@ -54,6 +54,7 @@ public class ConcealDocumentPrepareFilter extends AbstractRequestFilter {
 		if (request.getType() == ProtocolConstants.CONCEAL) {
 			LOG.info("--> process()");
 			PublishedDocument doc = (PublishedDocument)request.getPayload();
+			boolean isNetworkServiceStopped = NetworkServiceImpl.getInstance().isStopped();
 			try {
 				byte[] data = serializer.createNotification(ProtocolConstants.CONCEAL, doc);
 			
@@ -66,10 +67,12 @@ public class ConcealDocumentPrepareFilter extends AbstractRequestFilter {
 					while (iter.hasNext()) {
 						RemoteUserSession session = (RemoteUserSession)iter.next();
 						LOG.debug("conceal to " + session.getUser().getUserDetails().getUsername());
-						//send sessionTerminated message first to the user (if a participant), then conceal document
-						ParticipantConnectionImpl conn = session.getParticipantConnection(doc.getId());
-						if (conn != null) {
-							conn.close();
+						if (isNetworkServiceStopped) { //only close participant connections here if network service stopped
+							//send sessionTerminated message first to the user (if a participant), then conceal document
+							ParticipantConnectionImpl conn = session.getParticipantConnection(doc.getId());
+							if (conn != null) {
+								conn.close();
+							}
 						}
 						try {
 							MainConnection connection = session.getMainConnection();
