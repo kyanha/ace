@@ -1,0 +1,95 @@
+\chapter{Outlook}
+\label{chapter:outlook}
+
+In this chapter we look beyond the diploma project and present our ideas
+what could be improved.
+
+
+
+\section{Hosting Documents on a Server}
+Currently, if a user publishes a document, the server logic is hosted
+in the same Java Virtual Machine as the client application. We considered
+this the most natural architecture. However, in some cases it might be
+desirable to have a dedicated server machine that can host the server
+logic instead of the publisher.
+
+The server logic itself does not make any assumptions about the location
+of the publisher. The publisher may be inside the same JVM or he may be
+on a different computer. It does not make any difference to the server logic.
+Therefore, it would be relatively straightforward to create a standalone
+document hoster, a server application that hosts published documents.
+
+This would require some changes to different APIs. The following high-level
+changes would be needed:
+
+\begin{itemize}
+ \item make \texttt{PublisherPort} and \texttt{PublisherConnection} part of
+       the public API between the network and the collaboration layer
+ \item add interfaces that allow the network layer to publish a document
+       on a host
+ \item enhance the \texttt{publish} method of the \texttt{CollaborationService}
+       to allow the application to specify a target document host (defaults to
+       the local machine)
+\end{itemize}
+
+
+
+\section{Network Simulator}
+A simulated network layer would simplify testing both the collaboration as 
+well as the network layer. Therefore, creating a simulated network layer
+will be one of the first things we will do. Possible features for such
+a simulation include:
+
+\begin{itemize}
+ \item simulate connection failures
+ \item simulate slow connections
+\end{itemize}
+
+The idea is to have the possibility to start several instances of the
+application inside the same JVM. These instances represent distinct users.
+By switching between these users, the application could be tested to
+some extent.
+
+
+
+\section{Improved Access Control}
+ACE has a very rudimentary access control. Each user that wants to join a
+session needs the approval of the publisher. Once he is part of the session
+he has full read-write access. Alternatively we could add a read-only
+access mode. A user in read-only access mode cannot write anything in
+the session, but he sees all the changes.
+
+Adding a read-only access mode would need some changes to all layers of
+the application:
+
+\begin{itemize}
+ \item support assigning access rights to a user by the publisher
+ \item notify all participants about their access rights as well as about
+       the access rights of the other participants
+ \item enforce the access rights in the server logic
+\end{itemize}
+
+Some interesting issues need to be resolved before this feature can be
+implemented. First, if the publisher changes the access rights of a 
+participant, this change has to be sent to the other participant. In the
+meantime that participant still sends requests to the server logic. The
+question arises, at which moment the new access rights should be enforced.
+If the access rights are enforced right from the moment where the publisher
+assigns the rights, some requests from the participant might be rejected by the 
+server. However, the operations of the request have already been applied
+to the participant's document. Therefore, the participant would have to
+be notified about these rejected requests and would have to undo their
+effect on the local document.
+
+
+
+\section{User Authentication with Digital Signatures}
+A very interesting addition would be the use of digital signatures to help
+the user decide who should be allowed to join. By using digital
+signatures, the user could be confident about the identity of joining users.
+However, we think that this feature should not sacrifice the simplicity
+of the application. It should be possible to support standard certificates
+as well as PGP (Pretty Good Privacy) certificates.
+
+
+
