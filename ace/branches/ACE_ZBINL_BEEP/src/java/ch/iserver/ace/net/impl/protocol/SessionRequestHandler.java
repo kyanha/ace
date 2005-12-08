@@ -86,12 +86,12 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 			}
 			
 			try {
-				if (type != ProtocolConstants.KICKED && type != ProtocolConstants.SESSION_TERMINATED) {
+//				if (type != ProtocolConstants.KICKED && type != ProtocolConstants.SESSION_TERMINATED) {
 					OutputDataStream os = new OutputDataStream();
 					os.setComplete();
 					message.sendRPY(os);
 //					message.sendNUL(); //confirm reception of msg
-				}
+//				}
 			} catch (Exception e) {
 				LOG.error("could not send confirmation ["+e.getMessage()+"]");
 			}
