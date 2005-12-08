@@ -116,6 +116,7 @@ public class SessionManager {
 	 * @return the session of the user
 	 */
 	public RemoteUserSession getSession(String id) {
+		LOG.debug("getSession for [" + id + "]");
 		RemoteUserSession session = (RemoteUserSession) sessions.get(id);
 		if (session == null) 
 			LOG.warn("session for ["+id+"] not found");

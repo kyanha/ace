@@ -90,8 +90,7 @@ public class SendDocumentsReceiveFilter extends AbstractRequestFilter {
 		String docName = doc.getName();
 		String userId = doc.getUserId();
 
-		RemoteUserProxyExt user = SessionManager.getInstance().getSession(
-				userId).getUser();
+		RemoteUserProxyExt user = SessionManager.getInstance().getSession(userId).getUser();
 		DocumentDetails details = new DocumentDetails(docName);
 		RemoteDocumentProxyExt proxy = factory.createProxy(docId, details, user);
 		user.addSharedDocument(proxy);
