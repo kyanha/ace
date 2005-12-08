@@ -33,6 +33,7 @@ import ch.iserver.ace.net.impl.NetworkProperties;
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;
 import ch.iserver.ace.net.impl.discovery.DiscoveryManagerFactory;
+import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
 
 /**
  * Determines the correct RequestHandler a Channel, i.e. it sets
@@ -81,7 +82,8 @@ public class DefaultRequestHandler extends AbstractRequestHandler {
 					proxy = (RemoteUserProxyExt) response.getPayload();
 					isDiscovery = (proxy != null);
 				} else if (type == ProtocolConstants.CHANNEL_SESSION) {
-					requestHandler = SessionRequestHandlerFactory.getInstance().createHandler();
+					DocumentInfo info = (DocumentInfo) response.getPayload();
+					requestHandler = SessionRequestHandlerFactory.getInstance().createHandler(info);
 				} else { 
 					LOG.warn("unkown channel type, use main as default");
 					requestHandler = mainHandler;

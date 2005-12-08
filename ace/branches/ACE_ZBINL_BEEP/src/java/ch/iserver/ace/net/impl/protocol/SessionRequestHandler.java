@@ -55,13 +55,15 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 	private String docId, publisherId;
 	private SessionConnectionCallback sessionCallback;
 	private NetworkServiceExt service;
+	private DocumentInfo info;
 	
-	public SessionRequestHandler(Deserializer deserializer, ParserHandler handler, NetworkServiceExt service) {
+	public SessionRequestHandler(Deserializer deserializer, ParserHandler handler, NetworkServiceExt service, DocumentInfo info) {
 		ParameterValidator.notNull("deserializer", deserializer);
 		ParameterValidator.notNull("parserHandler", handler);
 		this.deserializer = deserializer;
 		this.handler = handler;
 		this.service = service;
+		this.info = info;
 	}
 	
 	public void receiveMSG(MessageMSG message) {
@@ -71,8 +73,6 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 		try {
 			Request response = null;
 			int type = ProtocolConstants.NO_TYPE;
-//			synchronized(this) {
-//				LOG.debug("--> synchronize()");
 			if (!service.isStopped()) {
 				InputDataStream input = message.getDataStream();
 				byte[] rawData = DataStreamHelper.read(input); //only one thread shall read data at a time
@@ -84,21 +84,28 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 				type = response.getType();
 				readInData = null;
 			}
-				//testhalber
-				try {
-					if (type != ProtocolConstants.KICKED && type != ProtocolConstants.SESSION_TERMINATED) {
-						OutputDataStream os = new OutputDataStream();
-						os.setComplete();
-						message.sendRPY(os);
-//						message.sendNUL(); //confirm reception of msg
-					}
-				} catch (Exception e) {
-					LOG.error("could not send confirmation ["+e.getMessage()+"]");
-				}
-//				LOG.debug("<-- synchronize()");
-//			}
 			
-//			int type = response.getType();
+			try {
+				if (type != ProtocolConstants.KICKED && type != ProtocolConstants.SESSION_TERMINATED) {
+					OutputDataStream os = new OutputDataStream();
+					os.setComplete();
+					message.sendRPY(os);
+//					message.sendNUL(); //confirm reception of msg
+				}
+			} catch (Exception e) {
+				LOG.error("could not send confirmation ["+e.getMessage()+"]");
+			}
+			
+			if (sessionCallback == null && type != ProtocolConstants.JOIN_DOCUMENT) {
+				try {
+					RemoteUserSession session = SessionManager.getInstance().getSession(info.getUserId());
+					sessionCallback = session.getUser().getSharedDocument(info.getDocId()).getSessionConnectionCallback();
+					ParameterValidator.notNull("sessionConnectionCallback", sessionCallback);
+				} catch (Exception e) {
+					LOG.error("error in initializing the sessionCallback [" + e + ", " + e.getMessage() + "]");
+				}
+			}
+			
 			if (type == ProtocolConstants.JOIN_DOCUMENT) {	
 				//reception and processing of a joined document
 				PortableDocumentExt doc = (PortableDocumentExt) response.getPayload();

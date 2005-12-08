@@ -25,6 +25,7 @@ import org.apache.log4j.Logger;
 import org.beepcore.beep.core.RequestHandler;
 
 import ch.iserver.ace.net.impl.NetworkServiceExt;
+import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
 import ch.iserver.ace.util.ParameterValidator;
 import ch.iserver.ace.util.SingleThreadDomain;
 import ch.iserver.ace.util.ThreadDomain;
@@ -65,8 +66,8 @@ public class SessionRequestHandlerFactory {
 		return instance;
 	}
 	
-	public RequestHandler createHandler() {
-		return (RequestHandler) domain.wrap(new SessionRequestHandler(deserializer, handler, service), RequestHandler.class);
+	public RequestHandler createHandler(DocumentInfo info) {
+		return (RequestHandler) domain.wrap(new SessionRequestHandler(deserializer, handler, service, info), RequestHandler.class);
 	}
 	
 }
