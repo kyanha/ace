@@ -262,7 +262,7 @@ public class RemoteUserSession {
 	 * after a call to <code>cleanup()</code>. This method
 	 * is called when the BEEP session has terminated already.
 	 */
-	public synchronized void cleanup() {
+	public void cleanup() {
 		LOG.debug("--> cleanup()");
 		
 		Iterator iter = participantConnections.values().iterator();
