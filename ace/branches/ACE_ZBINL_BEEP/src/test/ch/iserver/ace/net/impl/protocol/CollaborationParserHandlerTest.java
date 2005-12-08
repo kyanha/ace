@@ -140,7 +140,7 @@ public class CollaborationParserHandlerTest extends TestCase {
 		CollaborationParserHandler handler = new CollaborationParserHandler();
 		handler.setTimestampFactory(new JupiterTimestampFactory());
 		
-		final int TIMES = 10;
+		final int TIMES = 1;
 		for (int i = 0; i < TIMES; i++) {
 			deserializer.deserialize(data, handler);
 			Request result = handler.getResult();
