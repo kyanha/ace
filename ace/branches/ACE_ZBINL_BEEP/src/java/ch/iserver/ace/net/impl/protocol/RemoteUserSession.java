@@ -389,7 +389,7 @@ public class RemoteUserSession {
 				parserHandler.setTimestampFactory(getTimestampFactory());
 				NetworkServiceExt service = NetworkServiceImpl.getInstance();
 				ParticipantRequestHandler pHandler = new ParticipantRequestHandler(deserializer, getTimestampFactory(), service);
-				if (port != null) {Ê
+				if (port != null) {
 					pHandler.setParticipantPort(port);
 				}
 				handler = (RequestHandler) domain.wrap(pHandler, RequestHandler.class);
