@@ -421,7 +421,8 @@ public class RemoteUserSession {
 		if (type.equals(CHANNEL_MAIN)) {
 			result = "<ace><channel type=\"" + type + "\"/></ace>";
 		} else if (type.equals(CHANNEL_SESSION)) {
-			result = "<ace><channel type=\"" + type + "\" docId=\"" + docId + "\" userid=\"" + getUser().getId() + "\"/></ace>";
+			String id = NetworkServiceImpl.getInstance().getUserId();
+			result = "<ace><channel type=\"" + type + "\" docId=\"" + docId + "\" userid=\"" + id + "\"/></ace>";
 		}
 		 
 		 return result;
