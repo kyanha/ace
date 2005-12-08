@@ -45,6 +45,7 @@ public class ParticipantRequestHandler extends AbstractRequestHandler {
 	
 	private Deserializer deserializer;
 	private ParticipantPort port;
+	private ParticipantConnectionImpl connection;
 	private TimestampFactory factory;
 	private NetworkServiceExt service;
 	
@@ -60,6 +61,10 @@ public class ParticipantRequestHandler extends AbstractRequestHandler {
 	public void setParticipantPort(ParticipantPort port) {
 		ParameterValidator.notNull("ParticipantPort", port);
 		this.port = port;
+	}
+	
+	public void setParticipantConnection(ParticipantConnectionImpl connection) {
+		this.connection = connection;
 	}
 	
 	public void cleanup() {
@@ -93,7 +98,6 @@ public class ParticipantRequestHandler extends AbstractRequestHandler {
 				OutputDataStream os = new OutputDataStream();
 				os.setComplete();
 				message.sendRPY(os);
-//				message.sendNUL(); //confirm reception of msg
 			} catch (Exception e) {
 				LOG.error("could not send confirmation ["+e.getMessage()+"]");
 			}
@@ -104,6 +108,8 @@ public class ParticipantRequestHandler extends AbstractRequestHandler {
 			}
 			
 			if (type == ProtocolConstants.LEAVE) {
+				//notify ParticipantConnectionImpl in order that no sessionTerminated message is sent
+				connection.setHasLeft(true);
 				port.leave();
 				LOG.debug("participant ["+((DocumentInfo)result.getPayload()).getParticipantId()+"] left.");
 				//cleanup of participant resources is done in ParticipantConnectionImpl.close()
@@ -121,12 +127,6 @@ public class ParticipantRequestHandler extends AbstractRequestHandler {
 				LOG.debug("receiveAcknowledge("+siteId+", "+timestamp);
 				port.receiveAcknowledge(Integer.parseInt(siteId), timestamp);
 			} 
-			
-//			try {				
-//				message.sendNUL(); //confirm reception of msg
-//			} catch (Exception e) {
-//				LOG.error("could not send confirmation ["+e.getMessage()+"]");
-//			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			LOG.error("could not process request ["+e+"]");

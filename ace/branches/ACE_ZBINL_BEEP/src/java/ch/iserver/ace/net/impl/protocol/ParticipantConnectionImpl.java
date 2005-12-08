@@ -51,7 +51,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 	private Serializer serializer;
 	private int participantId = -1;
 	private String docId;
-	private boolean isKicked;
+	private boolean isKicked, hasLeft;
 	private String username;
 	private ParticipantPort port;
 	private Channel incoming;
@@ -67,6 +67,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 		setReplyListener(listener);
 		super.LOG = Logger.getLogger(ParticipantConnectionImpl.class);
 		isKicked = false;
+		setHasLeft(false);
 		username = session.getUser().getUserDetails().getUsername();
 	}
 	
@@ -80,6 +81,15 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 	
 	public ParticipantPort getParticipantPort() {
 		return port;
+	}
+	
+	public void setHasLeft(boolean value) {
+		LOG.debug("setHasLeft(" + value + ")");
+		hasLeft = value;
+	}
+	
+	public boolean hasLeft() {
+		return hasLeft;
 	}
 
 	/*****************************************************/
@@ -125,7 +135,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 			setChannel(outgoing);
 			
 			//channel for incoming messages
-			incoming = session.startChannel(RemoteUserSession.CHANNEL_SESSION, port, getDocumentId());
+			incoming = session.startChannel(RemoteUserSession.CHANNEL_SESSION, this, getDocumentId());
 			LOG.debug("done.");
 			
 			setState(STATE_ACTIVE);
@@ -282,7 +292,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 		LOG.info("--> close("+getParticipantId()+", "+username+")");
 		if (getState() == STATE_ACTIVE) {
 			try {
-				if (!isKicked) { //TODO: should not send SessionTerminated either upon user leave()
+				if (!isKicked && !hasLeft()) {
 					sendSessionTerminated();
 				}
 				getChannel().close();

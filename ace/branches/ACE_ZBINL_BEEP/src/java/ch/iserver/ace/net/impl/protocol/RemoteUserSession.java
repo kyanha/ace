@@ -156,8 +156,8 @@ public class RemoteUserSession {
 	 * @return
 	 * @throws ConnectionException
 	 */
-	public Channel startChannel(String type, ParticipantPort port, String docId) throws ConnectionException {
-		return startChannelImpl(type, port, docId);
+	public Channel startChannel(String type, ParticipantConnectionImpl connection, String docId) throws ConnectionException {
+		return startChannelImpl(type, connection, docId);
 	}
 	
 	/********************************************/
@@ -374,7 +374,7 @@ public class RemoteUserSession {
 	 * @return
 	 * @throws ConnectionException
 	 */
-	private Channel startChannelImpl(String type, ParticipantPort port, String docId) throws ConnectionException {
+	private Channel startChannelImpl(String type, ParticipantConnectionImpl connection, String docId) throws ConnectionException {
 		try {
 			String uri = NetworkProperties.get(NetworkProperties.KEY_PROFILE_URI);
 			LOG.debug("startChannel(type="+type+")");
@@ -390,8 +390,9 @@ public class RemoteUserSession {
 				parserHandler.setTimestampFactory(getTimestampFactory());
 				NetworkServiceExt service = NetworkServiceImpl.getInstance();
 				ParticipantRequestHandler pHandler = new ParticipantRequestHandler(deserializer, getTimestampFactory(), service);
-				if (port != null) {
-					pHandler.setParticipantPort(port);
+				if (connection != null) {
+					pHandler.setParticipantConnection(connection);
+					pHandler.setParticipantPort(connection.getParticipantPort());
 				}
 				handler = (RequestHandler) domain.wrap(pHandler, RequestHandler.class);
 				channelType = getChannelTypeXML(CHANNEL_SESSION, docId);
