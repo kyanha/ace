@@ -82,7 +82,7 @@ public class DefaultRequestHandler extends AbstractRequestHandler {
 					isDiscovery = (proxy != null);
 				} else if (type == ProtocolConstants.CHANNEL_SESSION) {
 					requestHandler = SessionRequestHandlerFactory.getInstance().createHandler();
-				} else { //TODO: if channel is for outoging messages, set to SessionConnectionImpl
+				} else { 
 					LOG.warn("unkown channel type, use main as default");
 					requestHandler = mainHandler;
 				}
