@@ -367,6 +367,13 @@ The last kind of \texttt{Forwarder} is a bit special. It is the
 which is sent to users that join the session. For more information see
 the section \ref{sect:archoverview.serverdocument}.
 
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=15.00cm,height=5.08cm]{../images/finalreport/collaboration_documentupdater_uml.eps}
+ \caption{DocumentUpdater and ServerDocument}
+ \label{fig:collaboration.documentupdater}
+\end{figure}
+
 The \texttt{DocumentUpdater} is set as the default forwarder for the
 \texttt{CompositeForwarderImpl}. This has an important implication. If the
 \texttt{ServerDocument} does not accept the operation (e.g. if the insertion
@@ -381,11 +388,11 @@ left (\texttt{sendParticipantLeft}).
 \label{sect:archoverview.serverdocument}
 The \texttt{ServerDocument} is used by the server to keep an up-to-date
 copy of the document that can be sent to users that want to join the
-session.
+session. The class diagram of the \texttt{ServerDocument} can be found
+in the section about the \texttt{DocumentUpdater} (see figure 
+\ref{fig:collaboration.documentupdater}.
 
-% TODO: ServerDocument
-
-The \texttt{toPortableDocument} interface creates a snapshot of the document
+The \texttt{toPortableDocument} method creates a snapshot of the document
 that can be sent to the \texttt{sendDocument} method of the 
 \texttt{ParticipantConnection}. The other methods are used to update the
 document.
@@ -404,7 +411,12 @@ The \texttt{ServerLogic} needs a solid failure handling, otherwise it can
 easily happen that the replicas start to diverge. The interface
 \texttt{FailureHandler} is used to handle failures in the server logic. 
 
-% TODO: FailureHandler
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=7.16cm,height=1.55cm]{../images/finalreport/collaboration_failurehandler_uml.eps}
+ \caption{FailureHandler Interface}
+ \label{fig:collaboration.failurehandler}
+\end{figure}
 
 It is passed to all objects where errors can potentially occur. The failure
 handler is passed to the following places.
