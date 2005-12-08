@@ -28,7 +28,7 @@ import org.beepcore.beep.core.Channel;
 import org.beepcore.beep.core.OutputDataStream;
 import org.beepcore.beep.core.ReplyListener;
 import org.beepcore.beep.lib.NullReplyListener;
-import org.beepcore.beep.util.BufferSegment;
+import org.beepcore.beep.lib.Reply;
 
 /**
  * AbstractConnection contains all common functionality for a 
@@ -76,7 +76,10 @@ public abstract class AbstractConnection {
 				
 				LOG.debug("--> sendMSG() with "+message.length+" bytes");
 				ReplyListener actualListener = (listener != null) ? listener : NullReplyListener.getListener();
-				channel.sendMSG(output, actualListener);
+//				channel.sendMSG(output, actualListener);
+				Reply reply = new Reply();
+				channel.sendMSG(output, reply);
+				reply.getNextReply(); //wait for synchronous response
 				LOG.debug("<-- sendMSG()");
 			} else {
 				LOG.warn("cannot send data, channel not in STATE_ACTIVE but in ["+getStateString()+"]");

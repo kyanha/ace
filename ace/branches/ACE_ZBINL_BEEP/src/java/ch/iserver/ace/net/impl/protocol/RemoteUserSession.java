@@ -34,6 +34,7 @@ import org.beepcore.beep.core.Channel;
 import org.beepcore.beep.core.OutputDataStream;
 import org.beepcore.beep.core.ProfileRegistry;
 import org.beepcore.beep.core.RequestHandler;
+import org.beepcore.beep.lib.Reply;
 import org.beepcore.beep.transport.tcp.TCPSession;
 import org.beepcore.beep.transport.tcp.TCPSessionCreator;
 
@@ -399,7 +400,10 @@ public class RemoteUserSession {
 			byte[] data = channelType.getBytes(NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 			OutputDataStream output = DataStreamHelper.prepare(data);
 			LOG.debug("--> sendMSG() for channel type");
-			channel.sendMSG(output, ResponseListener.getInstance());
+//			channel.sendMSG(output, ResponseListener.getInstance());
+			Reply reply = new Reply();
+			channel.sendMSG(output, reply);
+			reply.getNextReply(); //wait for synchronous response
 			LOG.debug("<-- sendMSG()");
 			return channel;
 		} catch (Exception be) {

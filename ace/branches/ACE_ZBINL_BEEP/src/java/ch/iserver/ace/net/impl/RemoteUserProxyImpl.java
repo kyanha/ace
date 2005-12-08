@@ -167,9 +167,9 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 				channel.sendMSG(output, reply);
 				
 				//process response
-				LOG.debug("--> getNextReply()");
+				LOG.debug("--> getReply()");
 				InputDataStream response = reply.getNextReply().getDataStream();
-				LOG.debug("<-- getNextReply()");
+				LOG.debug("<-- getReply()");
 				byte[] rawData = DataStreamHelper.read(response);
 				ResponseParserHandler handler = new ResponseParserHandler();
 				DeserializerImpl.getInstance().deserialize(rawData, handler);
