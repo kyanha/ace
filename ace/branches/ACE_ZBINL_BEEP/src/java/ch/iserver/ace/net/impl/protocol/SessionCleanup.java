@@ -49,12 +49,16 @@ public class SessionCleanup {
 	public void execute() {
 		LOG.debug("--> execute()");
 		RemoteUserSession session = SessionManager.getInstance().getSession(userId);
-		session.removeSessionConnection(docId);
-		RemoteDocumentProxyExt doc = session.getUser().getSharedDocument(docId);
-		if (doc != null) {
-			doc.cleanupAfterLeave();
+		if (session != null) {
+			session.removeSessionConnection(docId);
+			RemoteDocumentProxyExt doc = session.getUser().getSharedDocument(docId);
+			if (doc != null) {
+				doc.cleanupAfterLeave();
+			} else {
+				LOG.warn("doc with id="+docId+" not found.");
+			}
 		} else {
-			LOG.warn("doc with id="+docId+" not found.");
+			LOG.warn("session for cleanup not found");
 		}
 		LOG.debug("<-- execute()");
 	}
