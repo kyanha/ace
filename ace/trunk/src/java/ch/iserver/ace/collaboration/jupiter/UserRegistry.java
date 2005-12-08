@@ -27,11 +27,12 @@ import ch.iserver.ace.net.RemoteUserProxy;
  * Registry class and factory for RemoteUser objects.
  */
 public interface UserRegistry {
-		
+	
 	/**
 	 * Creates a new RemoteUser, if there is not already a RemoteUser for the
 	 * passed in proxy. The passed in RemoteUserProxy is
-	 * used to create the RemoteUser.
+	 * used to create the RemoteUser. This method ensures that there is only
+	 * one RemoteUser object for a unique user.
 	 * 
 	 * @param proxy the proxy object from the network layer
 	 * @return the newly created MutableRemoteUser
