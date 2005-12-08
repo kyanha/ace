@@ -442,6 +442,7 @@
 			<fileset dir="${build.dir}/lib">
 				<include name="junit*.jar"/>
 				<include name="easymock*.jar"/>
+				<include name="jmock*.jar"/>
 				<include name="jamon*.jar"/>
 				<include name="cglib*.jar"/>
 				<include name="commons-attributes*.jar"/>
@@ -501,6 +502,7 @@
 			<fileset refid="dependency.fileset"/>
 			<exclude name="junit*.jar"/>
 			<exclude name="easymock*.jar"/>
+			<exclude name="jmock*.jar"/>
 			<exclude name="jamon*.jar"/>
             <exclude name="cglib*.jar"/>
 			<exclude name="commons-attributes*.jar"/>
