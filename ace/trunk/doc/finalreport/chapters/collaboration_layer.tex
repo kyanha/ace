@@ -591,7 +591,13 @@ is \texttt{PublisherConnection} and it returns an object implementing
 
 
 \subsection{Publisher Connection}
-% TODO: PublisherConnection
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=6.74cm,height=4.41cm]{../images/finalreport/collaboration_publisherconnection_uml.eps}
+ \caption{PublisherConnection Interface}
+ \label{fig:collaboration.publisherconnection}
+\end{figure}
 
 The \texttt{PublisherConnection} extends the \texttt{ParticipantConnection}
 interface with methods that are only available for a connection to the
@@ -611,7 +617,12 @@ is the class \texttt{PublishedSessionImpl}.
 The interface \texttt{PublisherPort} extends the \texttt{ParticipantPort}
 with methods only available to the publisher of the document. 
 
-% TODO: PublisherPort
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=7.16cm,height=4.83cm]{../images/finalreport/collaboration_publisherport_uml.eps}
+ \caption{PublisherPort Interface}
+ \label{fig:collaboration.publisherport}
+\end{figure}
 
 The \texttt{kick} method provides the publisher of the session a way to kick
 one particular participant from the session. A kicked user is blacklisted
