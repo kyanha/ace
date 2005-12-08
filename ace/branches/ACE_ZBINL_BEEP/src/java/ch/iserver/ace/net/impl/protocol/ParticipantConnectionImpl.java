@@ -54,6 +54,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 	private boolean isKicked;
 	private String username;
 	private ParticipantPort port;
+	private Channel incoming;
 	
 	public ParticipantConnectionImpl(String docId, RemoteUserSession session, ReplyListener listener, Serializer serializer, RequestFilter filter) {
 		super(null);
@@ -94,7 +95,11 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 //		if (channel != null) {
 			//TODO: cannot cast anymore because of SingleThreadDomain
 //			((ParticipantRequestHandler)channel.getRequestHandler()).cleanup();
-			setChannel(null);
+		setChannel(null);
+		if (incoming != null) {
+			incoming.setRequestHandler(null);
+			incoming = null;
+		}
 //		}
 		setState(STATE_CLOSED);
 		LOG.debug("<-- cleanup()");
@@ -114,8 +119,15 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 		this.port = port;
 		//initiate collaboration channel
 		try {
-			Channel channel = session.startChannel(RemoteUserSession.CHANNEL_SESSION, port);
-			setChannel(channel);
+			LOG.debug("initiate incoming and outgoing channel to peer");
+			//channel for outgoing messages
+			Channel outgoing = session.startChannel(RemoteUserSession.CHANNEL_SESSION, null);
+			setChannel(outgoing);
+			
+			//channel for incoming messages
+			incoming = session.startChannel(RemoteUserSession.CHANNEL_SESSION, port);
+			LOG.debug("done.");
+			
 			setState(STATE_ACTIVE);
 		} catch (ConnectionException ce) {
 			NetworkServiceImpl.getInstance().getCallback().serviceFailure(
@@ -150,7 +162,15 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 				} catch (SerializeException se) {
 					LOG.error("could not serialize document ["+se.getMessage()+"]");
 				}
+				
+				//send via incoming channel so that the channel is set correctly at the receiver site
+				LOG.debug("use incoming channel to send document");
+				Channel outgoing = getChannel();
+				setChannel(incoming);
 				sendToPeer(data);
+				setChannel(outgoing);
+				LOG.debug("set outgoing channel as default channel again");
+				
 			} else {
 				LOG.warn("do not send Document, connection is in state " + getStateString());
 			}
