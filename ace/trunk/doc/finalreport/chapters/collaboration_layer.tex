@@ -134,26 +134,45 @@ The \texttt{Configurable\-Session} has a method called \texttt{setConnection},
 which passes the \texttt{Session\-Connection} to the \texttt{Session}. The
 \texttt{Session\-Impl} makes use of a \texttt{Thread\-Domain} (see
 chapter \ref{chapter:threaddomains}) to execute calls on the 
-\texttt{SessionConnection} asynchronously. This has one significant
+\texttt{SessionConnection} asynchronously. The main reason for doing this
+is that the caller thread (most likely the AWT event dispatch thread)
+is by a potentially slow network connection. The caller thread can go
+on and execute other tasks.
+
+However, using asynchronous calls has one significant
 disadvantage. Exceptions thrown by the method invocation cannot be
 thrown back at the caller (i.e. the application layer). That is where
 the \texttt{SessionConnectionWrapper} helps out. It is an implementation
-of the \texttt{SessionConnection} interface which catches all exceptions
+of the \texttt{SessionConnection} interface that catches all exceptions
 thrown by the target \texttt{SessionConnection} and passes them to an
 object implementing the \texttt{Session\-Connection.Failure\-Handler}
-interface.
+interface. The figure \ref{fig:collaboration.sessionconnectionwrapper}
+shows exactly the described setup.
 
-% TODO: SessionConnectionWrapper, FailureHandler, ThreadDomain
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=10.87cm,7.97cm]{../images/finalreport/collaboration_sessionconnectionwrapper.eps}
+ \caption{Wrapped session connection with ThreadDomains}
+ \label{fig:collaboration.sessionconnectionwrapper}
+\end{figure}
 
+The call from the dynamic proxy to the \texttt{Session\-Connection\-Wrapper}
+is asynchronous. The methods of the \texttt{Session\-Connection\-Wrapper}
+are executed by a designated worker thread. If the target 
+\texttt{Session\-Connection} throws an exception, the method 
+\texttt{handle\-Failure} is invoked on the \texttt{Failure\-Handler}. The
+\texttt{Session\-Impl} implements the \texttt{Failure\-Handler} interface and
+passes the failure to the \texttt{Session\-Callback}. A session that failed
+once cannot be used any longer. 
 
 \subsubsection{Acknowledge Messages}
-The \texttt{SessionImpl} uses a \texttt{AcknowledgeStrategy} to determine
+The \texttt{Session\-Impl} uses a \texttt{Acknowledge\-Strategy} to determine
 when to send acknowledge messages. For details about acknowledge strategies
 see the section \ref{sect:archoverview.acknowledgestrategies}.
 
 
-\section{Server} 
 
+\section{Server} 
 First of all, to avoid any confusion. The server part in the collaboration
 layer has nothing to do with a network layer server, for instance a Java
 application listening on a \texttt{ServerSocket}. The collaboration layer
@@ -184,7 +203,7 @@ there is such a pair of objects.
 
 \begin{figure}[H]
  \centering
- 
+ % TODO: nice little picture of nice little server ;)
  \caption{Collaboration Layer Server}
 \end{figure}
 
@@ -202,9 +221,9 @@ The \texttt{ServerLogic} interface is depicted in figure
 
 \begin{figure}[H]
  \centering
- % TODO: ServerLogic
+ \includegraphics[width=13.93cm,height=6.39cm]{../images/finalreport/collaboration_serverlogic_uml.eps}
  \caption{ServerLogic Interface}
- \label{fig:archoverview.serverlogic}
+ \label{fig:collaboration.serverlogic}
 \end{figure}
 
 The \texttt{invite} method allows to invite a \texttt{RemoteUser} to
@@ -236,7 +255,19 @@ session (\texttt{isParticipant}), whether a user is blacklisted
 request which was not answered yet (\texttt{isJoining}), and whether a
 user has been invited (\texttt{isInvited}).
 
-% TODO: ParticipantManager
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=10.16cm,height=7.48cm]{../images/finalreport/collaboration_participantmanager_uml.eps}
+ \caption{ParticipantManager Interface}
+ \label{fig:collaboration.participantmanager}
+\end{figure}
+
+The method \texttt{getParticipantId} is used to assign a user a participant
+id. An implementation can assign a user that joins, leaves, and
+rejoins the same session to assign the same participant id. The
+\texttt{addParticipant} method is used to add a participant to the
+session. The \texttt{getParticipantConnection} allows to get the 
+\texttt{ParticipantConnection} for a participant.
 
 The other methods exist to notify the \texttt{ParticipantManager} about
 participant related events. An implementation of this interface can use
@@ -276,7 +307,12 @@ We have already heard of the \texttt{CompositeForwarder} interface, which
 represents a specialized version of the more general \texttt{Forwarder}
 interface.
 
-% TODO: Forwarder / CompositeForwarder / ParticipantForwarder
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=16.51cm,height=6.81cm]{../images/finalreport/collaboration_forwarder_uml.eps}
+ \caption{Forwarder inheritance hierarchy}
+ \label{fig:collaboration.forwarder}
+\end{figure}
 
 A \texttt{Forwarder} is notified about certain events in the server. For
 instance if a request from a participant is received, the transformed
@@ -310,6 +346,13 @@ the operations obtained through the \texttt{sendOperation} method and
 forwards them to the \texttt{ParticipantConnection} of that particular
 participant. Similarly it generates a \texttt{CaretUpdateMessage} for
 a \texttt{CaretUpdate}.
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=15.63cm,height=6.28cm]{../images/finalreport/collaboration_participantforwarder_uml.eps}
+ \caption{Forwarder for participants}
+ \label{fig:collaboration.participantforwarder}
+\end{figure}
 
 The \texttt{ParticipantForwarder} gets a \texttt{AcknowledgeStrategy},
 which is used to send acknowledge messages. See the section 
