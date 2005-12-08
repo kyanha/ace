@@ -139,7 +139,7 @@ public class RemoteUserSession {
 		if (!isInitiated())
 			initiateTCPSession();
 		if (mainConnection == null) {
-			Channel channel = startChannel(CHANNEL_MAIN, null);
+			Channel channel = startChannel(CHANNEL_MAIN, null, null);
 			LOG.debug("main channel to ["+user.getUserDetails().getUsername()+"] started");
 			mainConnection = new MainConnection(channel);
 		} else {
@@ -152,11 +152,12 @@ public class RemoteUserSession {
 	 * 
 	 * @param type the type of the channel
 	 * @param port the ParticipantPort for the ParticipantRequestHandler (optional)
+	 * @param docId to open a session channel a document id can be passed
 	 * @return
 	 * @throws ConnectionException
 	 */
-	public Channel startChannel(String type, ParticipantPort port) throws ConnectionException {
-		return startChannelImpl(type, port);
+	public Channel startChannel(String type, ParticipantPort port, String docId) throws ConnectionException {
+		return startChannelImpl(type, port, docId);
 	}
 	
 	/********************************************/
@@ -373,7 +374,7 @@ public class RemoteUserSession {
 	 * @return
 	 * @throws ConnectionException
 	 */
-	private Channel startChannelImpl(String type, ParticipantPort port) throws ConnectionException {
+	private Channel startChannelImpl(String type, ParticipantPort port, String docId) throws ConnectionException {
 		try {
 			String uri = NetworkProperties.get(NetworkProperties.KEY_PROFILE_URI);
 			LOG.debug("startChannel(type="+type+")");
@@ -382,7 +383,7 @@ public class RemoteUserSession {
 			String channelType;
 			if (type == CHANNEL_MAIN) {
 				handler = ProfileRegistryFactory.getMainRequestHandler();
-				channelType = getChannelTypeXML(CHANNEL_MAIN);
+				channelType = getChannelTypeXML(CHANNEL_MAIN, null);
 			} else if (type == CHANNEL_SESSION) {
 				CollaborationDeserializer deserializer = new CollaborationDeserializer();
 				CollaborationParserHandler parserHandler = new CollaborationParserHandler();
@@ -393,7 +394,7 @@ public class RemoteUserSession {
 					pHandler.setParticipantPort(port);
 				}
 				handler = (RequestHandler) domain.wrap(pHandler, RequestHandler.class);
-				channelType = getChannelTypeXML(CHANNEL_SESSION);
+				channelType = getChannelTypeXML(CHANNEL_SESSION, docId);
 			} else {
 				//TODO: proxy channel?
 				throw new IllegalStateException("unknown channel type ["+type+"]");
@@ -415,7 +416,14 @@ public class RemoteUserSession {
 		}
 	}
 	
-	private String getChannelTypeXML(String type) {
-		 return "<ace><channel type=\"" + type + "\"/></ace>";
+	private String getChannelTypeXML(String type, String docId) {
+		String result = "";
+		if (type.equals(CHANNEL_MAIN)) {
+			result = "<ace><channel type=\"" + type + "\"/></ace>";
+		} else if (type.equals(CHANNEL_SESSION)) {
+			result = "<ace><channel type=\"" + type + "\" docId=\"" + docId + "\" userid=\"" + getUser().getId() + "\"/></ace>";
+		}
+		 
+		 return result;
 	}
 }

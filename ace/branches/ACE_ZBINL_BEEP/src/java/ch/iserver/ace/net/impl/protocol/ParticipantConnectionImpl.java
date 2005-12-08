@@ -121,11 +121,11 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 		try {
 			LOG.debug("initiate incoming and outgoing channel to peer");
 			//channel for outgoing messages
-			Channel outgoing = session.startChannel(RemoteUserSession.CHANNEL_SESSION, null);
+			Channel outgoing = session.startChannel(RemoteUserSession.CHANNEL_SESSION, null, getDocumentId());
 			setChannel(outgoing);
 			
 			//channel for incoming messages
-			incoming = session.startChannel(RemoteUserSession.CHANNEL_SESSION, port);
+			incoming = session.startChannel(RemoteUserSession.CHANNEL_SESSION, port, getDocumentId());
 			LOG.debug("done.");
 			
 			setState(STATE_ACTIVE);
