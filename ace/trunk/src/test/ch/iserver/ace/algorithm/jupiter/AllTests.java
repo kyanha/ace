@@ -27,7 +27,8 @@ import junit.framework.TestSuite;
 public class AllTests {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for ch.iserver.ace.algorithm.jupiter");
+		TestSuite suite = new TestSuite(
+						"Test for ch.iserver.ace.algorithm.jupiter");
 		//$JUnit-BEGIN$
 		suite.addTestSuite(NWayScenarioTest.class);
 		suite.addTestSuite(SplitOperationTest.class);

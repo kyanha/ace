@@ -30,23 +30,24 @@ import junit.framework.TestSuite;
 public class AllTests {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for ch.iserver.ace.net.impl.protocol");
+		TestSuite suite = new TestSuite(
+						"Test for ch.iserver.ace.net.impl.protocol");
 		//$JUnit-BEGIN$
-		suite.addTestSuite(CollaborationParserHandlerTest.class);
+		suite.addTestSuite(RequestParserHandlerTest.class);
 		suite.addTestSuite(CollaborationSerializerTest.class);
 		suite.addTestSuite(ConcealDocumentPrepareFilterTest.class);
-		suite.addTestSuite(ConcealDocumentReceiveFilterTest.class);
 		suite.addTestSuite(DeserializerImplTest.class);
-		suite.addTestSuite(ParticipantConnectionImplTest.class);
-		suite.addTestSuite(RequestParserHandlerTest.class);
-		suite.addTestSuite(ResponseParserHandlerTest.class);
-		suite.addTestSuite(SendDocumentsReceiveFilterTest.class);
-		suite.addTestSuite(SerializerImplTest.class);
-		suite.addTestSuite(SessionManagerTest.class);
-		suite.addTestSuite(StartChannelListenerImplTest.class);
 		suite.addTestSuite(TLVHandlerTest.class);
+		suite.addTestSuite(SendDocumentsReceiveFilterTest.class);
+		suite.addTestSuite(ResponseParserHandlerTest.class);
+		suite.addTestSuite(SessionManagerTest.class);
+		suite.addTestSuite(CollaborationParserHandlerTest.class);
+		suite.addTestSuite(ConcealDocumentReceiveFilterTest.class);
+		suite.addTestSuite(SerializerImplTest.class);
+		suite.addTestSuite(ParticipantConnectionImplTest.class);
+		suite.addTestSuite(StartChannelListenerImplTest.class);
 		//$JUnit-END$
 		return suite;
 	}
-	
+
 }

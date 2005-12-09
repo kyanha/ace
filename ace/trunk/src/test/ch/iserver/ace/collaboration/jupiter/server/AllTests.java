@@ -28,16 +28,16 @@ public class AllTests {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite(
-				"Test for ch.iserver.ace.collaboration.jupiter.server");
+						"Test for ch.iserver.ace.collaboration.jupiter.server");
 		//$JUnit-BEGIN$
-		suite.addTestSuite(CompositeForwarderTest.class);
-		suite.addTestSuite(ServerDocumentImplTest.class);
-		suite.addTestSuite(ParticipantForwarderTest.class);
-		suite.addTestSuite(ParticipantPortImplTest.class);
 		suite.addTestSuite(DocumentUpdaterTest.class);
-		suite.addTestSuite(ParticipantConnectionWrapperTest.class);
-		suite.addTestSuite(ServerLogicImplTest.class);
+		suite.addTestSuite(ParticipantPortImplTest.class);
 		suite.addTestSuite(ParticipantManagerImplTest.class);
+		suite.addTestSuite(CompositeForwarderTest.class);
+		suite.addTestSuite(ParticipantForwarderTest.class);
+		suite.addTestSuite(ServerLogicImplTest.class);
+		suite.addTestSuite(ServerDocumentImplTest.class);
+		suite.addTestSuite(ParticipantConnectionWrapperTest.class);
 		//$JUnit-END$
 		return suite;
 	}

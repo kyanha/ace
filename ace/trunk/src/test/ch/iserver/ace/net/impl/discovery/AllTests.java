@@ -26,14 +26,15 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 public class AllTests extends TestCase {
-	
+
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for ch.iserver.ace.net.impl.discovery");
+		TestSuite suite = new TestSuite(
+						"Test for ch.iserver.ace.net.impl.discovery");
 		//$JUnit-BEGIN$
-		suite.addTestSuite(BonjourTest.class);
-		suite.addTestSuite(DiscoveryCallbackAdapterTest.class);
-		suite.addTestSuite(DiscoveryManagerImplTest.class);
 		suite.addTestSuite(TXTRecordProxyTest.class);
+		suite.addTestSuite(DiscoveryManagerImplTest.class);
+		suite.addTestSuite(DiscoveryCallbackAdapterTest.class);
+		suite.addTestSuite(BonjourTest.class);
 		//$JUnit-END$
 		return suite;
 	}
