@@ -102,7 +102,7 @@ The current version of ACE can be downloaded at \href{http://ace.iserver.ch}{htt
 % 3. OVERVIEW
 \section{Overview}
 ACE 
-\begin{figure}[htbp]
+\begin{figure}[H]
 \begin{center}
   \includegraphics[height=30pt, width=30pt]{../images/usermanual/ace_overview.bmp.eps}
 \caption{Browse View Filtering}
@@ -133,7 +133,7 @@ ACE
 
 % 3.3.1 DOCUMENT VIEW
 \subsubsection{Document View}
-\begin{figure}[htbp]
+\begin{figure}[H]
 \begin{center}
   \includegraphics[height=30pt, width=30pt]{../images/usermanual/dview_overview.bmp.eps}
 \caption{Document View}
@@ -141,25 +141,25 @@ ACE
 \end{center}
 \end{figure}
 
-The \textit{Document View} shows all your currently open documents. Basically there are two different document types. \textit{Local documents} are documents on your local machine. ACE provides you the standard editor functionalities as create new, open, save and close local documents. Further, you can publish (see \ref{Publish / Conceal Documents}) your local documents to make it accessible for other users. \textit{Joined documents} are documents published by other users over the network which you joined. See \ref{Join / Leave Network Documents} for more informations about joining documents.
+The \textit{Document View} shows all your currently open documents. Basically there are two different document types. \textit{Local documents} are documents on your local machine. ACE provides you the standard editor functionalities as create new, open, save and close local documents. Further, you can publish (see \ref{Publish / Conceal Documents}) your local documents to make it accessible for other users. \textit{Joined documents} are documents published by other users over the network which you joined. See \ref{Join / Leave Network Documents} for more informations about joining documents. \\
 \\
-Different images for each document type makes them well distinguishable:
+Different images for each document type makes them well distinguishable (from left to right: local, published \& remote icon):
 
-\begin{figure}[htbp]
+\begin{figure}[H]
 \begin{center}
   \includegraphics[height=30pt, width=30pt]{../images/usermanual/icon_local.bmp.eps}
 \vspace{9pt}
   \includegraphics[height=30pt, width=30pt]{../images/usermanual/icon_published.bmp.eps}
 \vspace{9pt}
   \includegraphics[height=30pt, width=30pt]{../images/usermanual/icon_remote.bmp.eps}
-\caption{Local, published \& remote document icons}
+\caption{Document Icons}
 \label{default}
 \end{center}
 \end{figure}
 
 % 3.3.2 USER VIEW
 \subsubsection{User View}
-\begin{figure}[htbp]
+\begin{figure}[H]
 \begin{center}
   \includegraphics[height=30pt, width=30pt]{../images/usermanual/uview_overview.bmp.eps}
 \caption{User View}
@@ -171,7 +171,7 @@ The \textit{User View} shows all other users currently using ACE in your network
 \\
 To avoid a complex list with usernames you can use the user view filter. Typing full usernames or parts of it into the textfield below excludes all users not matching.
 
-\begin{figure}[htbp]
+\begin{figure}[H]
 \begin{center}
   \includegraphics[height=30pt, width=30pt]{../images/usermanual/uview_filtering.bmp.eps}
 \caption{User View Filtering}
@@ -182,7 +182,7 @@ To avoid a complex list with usernames you can use the user view filter. Typing 
 % 3.3.3 BROWSE VIEW
 \subsubsection{Browse View}
 
-\begin{figure}[htbp]
+\begin{figure}[H]
 \begin{center}
   \includegraphics[height=30pt, width=30pt]{../images/usermanual/bview_overview.bmp.eps}
 \caption{Browse View}
@@ -192,7 +192,7 @@ To avoid a complex list with usernames you can use the user view filter. Typing 
 
 The \textit{Browse View} contains a list with all published documents that can be found in a network. Each list entry contains the document title and the name of the publisher. You need this list to join (see \ref{Join / Leave Network Documents}) published documents.
 
-\begin{figure}[htbp]
+\begin{figure}[H]
 \begin{center}
   \includegraphics[height=30pt, width=30pt]{../images/usermanual/bview_filtering.bmp.eps}
 \caption{Browse View Filtering}
@@ -203,9 +203,9 @@ The \textit{Browse View} contains a list with all published documents that can b
 % 3.3.4 PARTICIPANT VIEW
 \subsubsection{Participant View}
 
-\begin{figure}[htbp]
+\begin{figure}[H]
 \begin{center}
-  \includegraphics[height=30pt, width=30pt]{../images/usermanual/pview_overview.bmp.eps}
+  \includegraphics[height=1.56in, width=2.56in]{../images/usermanual/pview_overview.bmp.eps}
 \caption{Participant View}
 \label{default}
 \end{center}
@@ -215,8 +215,13 @@ When you publish or join a network document you can see a list of all participan
 
 % 3.5 PREFERENCES
 \subsection{Preferences}
-
-
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[height=1.56in, width=2.56in]{../images/usermanual/nmenu_file_preferences.bmp.eps}
+\caption{Preferences}
+\label{default}
+\end{center}
+\end{figure}
 
 
 
@@ -227,12 +232,35 @@ When you publish or join a network document you can see a list of all participan
 
 % 4.1 CREATE
 \subsection{Create a new Document}
+First of all, you need to create a new document to start writing text.
+
+There are three different ways to create a new document:
+\begin{itemize}
+\item The most comon way to create a new document is by clicking on \textit{new document} on the \textbf{toolbar}.
+\item You can also create new document by using the \textbf{menu} (File -> New) or
+\item by using the \textbf{shortcut} \textit{CTRL+N}.
+\end{itemize}
+
+After you created a new document it appears in the \textit{Document View} on upper left side of your editor.
 
 % 4.2 OPEN
 \subsection{Open an existing Document}
+To open a existing document you have three posibilites:
+\begin{itemize}
+\item \textit{open document} on the \textbf{toolbar}.
+\item You can also create new document by using the \textbf{menu} (File -> Open) or
+\item by using the \textbf{shortcut} \textit{CTRL+O}.
+\end{itemize}
 
 % 4.3 SAVE
 \subsection{Save open Documents}
+
+To open a existing document you have three posibilites:
+\begin{itemize}
+\item \textit{open document} on the \textbf{toolbar}.
+\item You can also create new document by using the \textbf{menu} (File -> Open) or
+\item by using the \textbf{shortcut} \textit{CTRL+S}.
+\end{itemize}
 
 % 4.4 QUIT
 \subsection{Quit}
@@ -247,26 +275,82 @@ When you publish or join a network document you can see a list of all participan
 
 % 5.1 PUBLISH / CONCEAL
 \subsection{Publish / Conceal Documents}
-- (Bild: %editor_view_publish)
-- (Bild: %editor_view_conceal)
-- (Bild: %nmenu_collaboration_publish)
-- (Bild: %nmenu_collaboration_conceal)
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[height=1.56in, width=2.56in]{../images/usermanual/editor_view_publish.bmp.eps}
+\caption{Preferences}
+\label{default}
+\end{center}
+\end{figure}
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[height=1.56in, width=2.56in]{../images/usermanual/editor_view_conceal.bmp.eps}
+\caption{Preferences}
+\label{default}
+\end{center}
+\end{figure}
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[height=1.56in, width=2.56in]{../images/usermanual/nmenu_collaboration_publish.bmp.eps}
+\caption{Preferences}
+\label{default}
+\end{center}
+\end{figure}
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[height=1.56in, width=2.56in]{../images/usermanual/nmenu_collaboration_conceal.bmp.eps}
+\caption{Preferences}
+\label{default}
+\end{center}
+\end{figure}
 
 % 5.2 INVITE / KICK
 \subsection{Invite / Kick Users}
-- (Bild: %pview_invite)
-- (Bild: %nmenu_collaboration_invite)
-- (Bild: %pview_kick)
-- (Bild: %nmenu_collaboration_kick)
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[height=1.56in, width=2.56in]{../images/usermanual/uview_invite.bmp.eps}
+\caption{Preferences}
+\label{default}
+\end{center}
+\end{figure}
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[height=1.56in, width=2.56in]{../images/usermanual/nmenu_collaboration_invite.bmp.eps}
+\caption{Preferences}
+\label{default}
+\end{center}
+\end{figure}
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[height=1.56in, width=2.56in]{../images/usermanual/pview_kick.bmp.eps}
+\caption{Preferences}
+\label{default}
+\end{center}
+\end{figure}
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[height=1.56in, width=2.56in]{../images/usermanual/nmenu_collaboration_kick.bmp.eps}
+\caption{Preferences}
+\label{default}
+\end{center}
+\end{figure}
 
 % 5.3 JOIN / LEAVE
 \subsection{Join / Leave Network Documents}
+
 - (Bild: %bview_join.eps)
 - (Bild: %dview_joined.eps)
 
 % 5.4 DISCOVER
 \subsection{Discover Users}
-- (Bild: %nmenu_collaboration_discover)
+
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[height=1.56in, width=2.56in]{../images/usermanual/nmenu_collaboration_discover.bmp.eps}
+\caption{Preferences}
+\label{default}
+\end{center}
+\end{figure}
 
 
 
