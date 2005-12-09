@@ -67,7 +67,7 @@ public class ConcealDocumentPrepareFilter extends AbstractRequestFilter {
 					while (iter.hasNext()) {
 						RemoteUserSession session = (RemoteUserSession)iter.next();
 						LOG.debug("conceal to " + session.getUser().getUserDetails().getUsername());
-						if (isNetworkServiceStopped) { //only close participant connections here if network service stopped
+						if (isNetworkServiceStopped) { //only close participant connections here if network service stopped.
 							//send sessionTerminated message first to the user (if a participant), then conceal document
 							ParticipantConnectionImpl conn = session.getParticipantConnection(doc.getId());
 							if (conn != null) {
@@ -81,7 +81,6 @@ public class ConcealDocumentPrepareFilter extends AbstractRequestFilter {
 							LOG.warn("connection failure for session ["+session.getUser().getUserDetails()+"] "+ce.getMessage());
 							NetworkServiceImpl.getInstance().getCallback().serviceFailure(
 									FailureCodes.REMOTE_USER_FAILURE, session.getUser().getUserDetails().getUsername(), ce);
-							//TODO: remove userProxy and userSession?
 						}
 					}
 				}
