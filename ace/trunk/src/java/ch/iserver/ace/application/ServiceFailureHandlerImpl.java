@@ -21,16 +21,17 @@
 
 package ch.iserver.ace.application;
 
-import java.lang.reflect.InvocationTargetException;
 import javax.swing.SwingUtilities;
 
-import javax.swing.JOptionPane;
+import org.apache.log4j.Logger;
 
 import ch.iserver.ace.collaboration.ServiceFailureHandler;
 
 
 
 public class ServiceFailureHandlerImpl implements ServiceFailureHandler {
+
+	private static final Logger LOG = Logger.getLogger(ServiceFailureHandlerImpl.class);
 
 	private DialogController dialogController;
 	
@@ -39,11 +40,10 @@ public class ServiceFailureHandlerImpl implements ServiceFailureHandler {
 	}
 	
 	public void serviceFailed(final int code, final String msg, Exception e) {
-	
+		LOG.info(e);
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				dialogController.showServiceFailure(code, msg);
-				//TODO: log exception
 			}
 		});
 		

@@ -21,22 +21,18 @@
 
 package ch.iserver.ace.application;
 
-import ch.iserver.ace.Fragment;
-import ch.iserver.ace.collaboration.Participant;
-import ch.iserver.ace.collaboration.PortableDocument;
-import ch.iserver.ace.collaboration.ParticipantSessionCallback;
-import ch.iserver.ace.application.editor.*;
-import ch.iserver.ace.CaretUpdate;
-
 import java.awt.Color;
 import java.util.Iterator;
-import javax.swing.event.*;
+
+import javax.swing.SwingUtilities;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
-import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 
-import ch.iserver.ace.util.CaretHandler;
+import ch.iserver.ace.CaretUpdate;
+import ch.iserver.ace.Fragment;
+import ch.iserver.ace.collaboration.Participant;
+import ch.iserver.ace.collaboration.ParticipantSessionCallback;
+import ch.iserver.ace.collaboration.PortableDocument;
 
 
 

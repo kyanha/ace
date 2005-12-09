@@ -21,12 +21,14 @@
 
 package ch.iserver.ace.application;
 
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.beans.PropertyChangeEvent;
-import ch.iserver.ace.util.CaretHandler;
+
 import javax.swing.event.DocumentEvent;
+
 import ch.iserver.ace.CaretUpdate;
+import ch.iserver.ace.util.CaretHandler;
 
 
 

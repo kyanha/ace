@@ -39,7 +39,6 @@ import ch.iserver.ace.application.dialog.DialogResult;
 import ch.iserver.ace.application.dialog.PreferencesDialog;
 import ch.iserver.ace.application.dialog.SaveFilesDialog;
 import ch.iserver.ace.application.preferences.PreferencesStore;
-import ch.iserver.ace.collaboration.JoinRequest;
 
 /**
  *

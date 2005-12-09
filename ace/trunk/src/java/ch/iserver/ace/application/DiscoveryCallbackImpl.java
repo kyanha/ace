@@ -22,9 +22,9 @@
 package ch.iserver.ace.application;
 
 import javax.swing.SwingUtilities;
+
 import ch.iserver.ace.collaboration.DiscoveryCallback;
 import ch.iserver.ace.collaboration.DiscoveryResult;
-import ch.iserver.ace.application.DialogController;
 
 
 

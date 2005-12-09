@@ -21,19 +21,21 @@
 
 package ch.iserver.ace.application.action;
 
-import ch.iserver.ace.collaboration.Participant;
-import ch.iserver.ace.collaboration.PublishedSession;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.Iterator;
+import java.util.Set;
+
 import ch.iserver.ace.application.DocumentItem;
-import ch.iserver.ace.application.UserItem;
 import ch.iserver.ace.application.DocumentManager;
+import ch.iserver.ace.application.DocumentViewController;
 import ch.iserver.ace.application.ItemSelectionChangeEvent;
 import ch.iserver.ace.application.LocaleMessageSource;
-import ch.iserver.ace.application.DocumentViewController;
+import ch.iserver.ace.application.UserItem;
 import ch.iserver.ace.application.UserViewController;
-import java.awt.event.ActionEvent;
-import javax.swing.AbstractAction;
-import java.awt.event.*;
-import java.util.*;
+import ch.iserver.ace.collaboration.Participant;
+import ch.iserver.ace.collaboration.PublishedSession;
 
 
 

@@ -70,7 +70,6 @@ public class DocumentViewCellRenderer extends JPanel implements ListCellRenderer
 
 		Color textColor = g.getColor();
 		int itemHeight = getHeight();
-		int itemWidth = getWidth();
 		
 		// draw document icon
 		int imageHeight = 16; //iconLocal.getIconHeight();
@@ -90,7 +89,6 @@ public class DocumentViewCellRenderer extends JPanel implements ListCellRenderer
 			break;
 		}
 
-		// draw document title & dirty flag (TODO: dynamic border)
 		g.setColor(textColor);
 		int textAscent = g.getFontMetrics().getAscent();
 		int textDescent = g.getFontMetrics().getDescent();		

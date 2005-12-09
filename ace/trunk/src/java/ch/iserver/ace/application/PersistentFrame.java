@@ -21,19 +21,16 @@
 
 package ch.iserver.ace.application;
 
-import ch.iserver.ace.application.ApplicationFactory;
-import ch.iserver.ace.application.LocaleMessageSource;
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.Action;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
-import javax.swing.JToolBar;
 import javax.swing.JPanel;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import javax.swing.JToolBar;
 
 
 

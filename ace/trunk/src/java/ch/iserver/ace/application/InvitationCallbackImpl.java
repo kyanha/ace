@@ -21,16 +21,13 @@
 
 package ch.iserver.ace.application;
 
-import java.lang.reflect.InvocationTargetException;
-import javax.swing.SwingUtilities;
-
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import ch.iserver.ace.application.editor.CollaborativeDocument;
 import ch.iserver.ace.collaboration.Invitation;
 import ch.iserver.ace.collaboration.InvitationCallback;
 import ch.iserver.ace.collaboration.JoinCallback;
-import ch.iserver.ace.collaboration.ParticipantSessionCallback;
 
 
 

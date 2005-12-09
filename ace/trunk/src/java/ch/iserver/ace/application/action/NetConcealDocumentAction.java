@@ -21,16 +21,17 @@
 
 package ch.iserver.ace.application.action;
 
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
+
+import javax.swing.KeyStroke;
 
 import ch.iserver.ace.application.DocumentItem;
 import ch.iserver.ace.application.DocumentManager;
 import ch.iserver.ace.application.DocumentViewController;
 import ch.iserver.ace.application.ItemSelectionChangeEvent;
 import ch.iserver.ace.application.LocaleMessageSource;
-import java.awt.Toolkit;
-import javax.swing.KeyStroke;
 
 
 

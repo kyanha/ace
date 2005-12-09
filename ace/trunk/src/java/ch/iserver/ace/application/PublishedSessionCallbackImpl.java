@@ -21,17 +21,20 @@
 
 package ch.iserver.ace.application;
 
-import ch.iserver.ace.collaboration.JoinRequest;
-import ch.iserver.ace.collaboration.PublishedSessionCallback;
-import ch.iserver.ace.application.editor.CollaborativeDocument;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
-import ch.iserver.ace.util.CaretHandler;
+
+import org.apache.log4j.Logger;
+
+import ch.iserver.ace.collaboration.JoinRequest;
+import ch.iserver.ace.collaboration.PublishedSessionCallback;
 
 
 
 public class PublishedSessionCallbackImpl extends SessionCallbackImpl implements PublishedSessionCallback {
-
+	
+	private static final Logger LOG = Logger.getLogger(PublishedSessionCallbackImpl.class);
+	
 	public PublishedSessionCallbackImpl(DocumentItem documentItem, DialogController dialogController) {
 		super(documentItem, dialogController);
 
@@ -54,7 +57,7 @@ public class PublishedSessionCallbackImpl extends SessionCallbackImpl implements
 						request.reject();
 					}
 				} catch(IllegalStateException e) {
-					// TODO: log exception
+					LOG.info(e);
 				}				
 			}
 		});

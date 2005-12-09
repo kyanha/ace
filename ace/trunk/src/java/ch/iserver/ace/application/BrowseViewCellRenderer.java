@@ -21,20 +21,16 @@
 
 package ch.iserver.ace.application;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Color;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
-import javax.swing.BorderFactory;
-import javax.swing.Scrollable;
-import java.awt.Rectangle;
 
 
 
@@ -76,7 +72,6 @@ public class BrowseViewCellRenderer extends JPanel implements ListCellRenderer {
 
 		Color textColor = g.getColor();
 		int itemHeight = getHeight();
-		int itemWidth = getWidth();
 		
 		// draw document icon
 		int imageHeight = 16; //iconLocal.getIconHeight();
@@ -92,7 +87,6 @@ public class BrowseViewCellRenderer extends JPanel implements ListCellRenderer {
 			break;
 		}
 
-		// draw document title (TODO: dynamic border)
 		g.setColor(textColor);
 		int textAscent = g.getFontMetrics().getAscent();
 		int textDescent = g.getFontMetrics().getDescent();		

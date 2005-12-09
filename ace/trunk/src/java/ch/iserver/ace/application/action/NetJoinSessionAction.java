@@ -21,17 +21,18 @@
 
 package ch.iserver.ace.application.action;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+import javax.swing.AbstractAction;
+
+import ch.iserver.ace.application.BrowseViewController;
 import ch.iserver.ace.application.DocumentItem;
-import ch.iserver.ace.application.DocumentManager;
+import ch.iserver.ace.application.DocumentViewController;
 import ch.iserver.ace.application.ItemSelectionChangeEvent;
 import ch.iserver.ace.application.ItemSelectionChangeListener;
 import ch.iserver.ace.application.LocaleMessageSource;
-import ch.iserver.ace.application.BrowseViewController;
-import ch.iserver.ace.application.DocumentViewController;
-import ch.iserver.ace.application.DialogController;
-import java.awt.event.ActionEvent;
-import javax.swing.AbstractAction;
-import java.awt.event.*;
 
 
 

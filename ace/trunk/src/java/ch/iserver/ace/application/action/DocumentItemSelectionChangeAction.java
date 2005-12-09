@@ -21,11 +21,12 @@
 
 package ch.iserver.ace.application.action;
 
-import ch.iserver.ace.application.ItemSelectionChangeEvent;
-import ch.iserver.ace.application.ItemSelectionChangeListener;
-import ch.iserver.ace.application.DocumentViewController;
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
+
+import ch.iserver.ace.application.DocumentViewController;
+import ch.iserver.ace.application.ItemSelectionChangeEvent;
+import ch.iserver.ace.application.ItemSelectionChangeListener;
 
 
 

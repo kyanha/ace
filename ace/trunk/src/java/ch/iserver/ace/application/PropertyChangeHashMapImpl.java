@@ -21,9 +21,9 @@
 
 package ch.iserver.ace.application;
 
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.beans.PropertyChangeEvent;
 import java.util.HashMap;
 
 

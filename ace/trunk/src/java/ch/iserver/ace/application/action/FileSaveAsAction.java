@@ -21,16 +21,17 @@
 
 package ch.iserver.ace.application.action;
 
-import ch.iserver.ace.application.DocumentItem;
-import ch.iserver.ace.application.ApplicationController;
-import ch.iserver.ace.application.DocumentManager;
-import ch.iserver.ace.application.ItemSelectionChangeEvent;
-import ch.iserver.ace.application.LocaleMessageSource;
-import ch.iserver.ace.application.DocumentViewController;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
-import java.awt.Toolkit;
+
 import javax.swing.KeyStroke;
+
+import ch.iserver.ace.application.ApplicationController;
+import ch.iserver.ace.application.DocumentItem;
+import ch.iserver.ace.application.DocumentViewController;
+import ch.iserver.ace.application.ItemSelectionChangeEvent;
+import ch.iserver.ace.application.LocaleMessageSource;
 
 
 
@@ -51,8 +52,7 @@ public class FileSaveAsAction extends DocumentItemSelectionChangeAction {
 	}
 
 	public void itemSelectionChanged(ItemSelectionChangeEvent e) {
-		// TODO: maybe disable when document hasnt been saved yet?
-		if(e.getItem() == null) {
+		if (e.getItem() == null) {
 			setEnabled(false);
 		} else {
 			DocumentItem item = (DocumentItem)e.getItem();

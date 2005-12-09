@@ -21,16 +21,18 @@
 
 package ch.iserver.ace.application.action;
 
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+import javax.swing.AbstractAction;
+import javax.swing.KeyStroke;
+
 import ch.iserver.ace.application.LocaleMessageSource;
 import ch.iserver.ace.application.PersistentContentPane;
 import ch.iserver.ace.application.editor.Editor;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.*;
-import java.awt.Toolkit;
-import javax.swing.KeyStroke;
-
-import javax.swing.AbstractAction;
 
 
 

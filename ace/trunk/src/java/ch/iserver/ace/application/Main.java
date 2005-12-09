@@ -29,7 +29,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import ch.iserver.ace.UserDetails;
-import ch.iserver.ace.application.action.ToggleFullScreenEditingAction;
 import ch.iserver.ace.application.preferences.PreferencesStore;
 import ch.iserver.ace.collaboration.CollaborationService;
 import ch.iserver.ace.collaboration.InvitationCallback;

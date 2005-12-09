@@ -21,10 +21,11 @@
 
 package ch.iserver.ace.application;
 
+import java.awt.Dimension;
+
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.event.EventListenerList;
-import java.awt.Dimension;
 
 import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.swing.EventListModel;

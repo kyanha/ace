@@ -21,11 +21,11 @@
 
 package ch.iserver.ace.application;
 
+import javax.swing.SwingUtilities;
+
 import ch.iserver.ace.collaboration.JoinCallback;
-import ch.iserver.ace.collaboration.Session;
 import ch.iserver.ace.collaboration.ParticipantSessionCallback;
-import javax.swing.*;
-import java.awt.*;
+import ch.iserver.ace.collaboration.Session;
 
 
 

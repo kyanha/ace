@@ -21,12 +21,12 @@
 
 package ch.iserver.ace.application.action;
 
+import java.awt.event.ActionEvent;
+
 import ch.iserver.ace.application.ApplicationController;
-import ch.iserver.ace.application.DocumentManager;
+import ch.iserver.ace.application.DocumentViewController;
 import ch.iserver.ace.application.ItemSelectionChangeEvent;
 import ch.iserver.ace.application.LocaleMessageSource;
-import ch.iserver.ace.application.DocumentViewController;
-import java.awt.event.ActionEvent;
 
 
 
@@ -41,8 +41,6 @@ public class FileSaveAllAction extends DocumentItemSelectionChangeAction {
 		setEnabled(false);
 	}
 	
-	// TODO: ask document manager for list of unsaved documents. if list->size == 0 then disable
-
 	public void actionPerformed(ActionEvent e) {
 		appController.saveAllDocuments();
 	}

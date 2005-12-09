@@ -21,24 +21,34 @@
 
 package ch.iserver.ace.application;
 
-import ch.iserver.ace.ServerInfo;
-import ch.iserver.ace.application.editor.*;
-import ch.iserver.ace.collaboration.CollaborationService;
-
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JToolBar;
-
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.*;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JPanel;
+import javax.swing.JSplitPane;
+import javax.swing.JToolBar;
+import javax.swing.KeyStroke;
+import javax.swing.Timer;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+
+import ch.iserver.ace.ServerInfo;
+import ch.iserver.ace.application.editor.CollaborativeEditor;
+import ch.iserver.ace.application.editor.Editor;
+import ch.iserver.ace.collaboration.CollaborationService;
 
 
 

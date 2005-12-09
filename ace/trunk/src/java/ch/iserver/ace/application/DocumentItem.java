@@ -21,33 +21,30 @@
 
 package ch.iserver.ace.application;
 
+import java.awt.Color;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.util.HashMap;
 
-import ch.iserver.ace.text.InsertOperation;
+import javax.swing.SwingUtilities;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+
+import ca.odell.glazedlists.EventList;
 import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.DocumentModel;
-import ch.iserver.ace.collaboration.*;
+import ch.iserver.ace.application.editor.CollaborativeDocument;
+import ch.iserver.ace.collaboration.CollaborationService;
+import ch.iserver.ace.collaboration.PublishedSessionCallback;
 import ch.iserver.ace.collaboration.RemoteDocument;
 import ch.iserver.ace.collaboration.RemoteUser;
 import ch.iserver.ace.collaboration.Session;
-
+import ch.iserver.ace.collaboration.SessionCallback;
 import ch.iserver.ace.util.UUID;
-
-import javax.swing.event.DocumentListener;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.*;
-import javax.swing.text.*;
-import java.util.*;
-import java.io.File;
-import java.awt.*;
-import ch.iserver.ace.application.editor.*;
-
-import ca.odell.glazedlists.EventList;
-import spin.Spin;
-import java.lang.reflect.InvocationTargetException;
-
-import javax.swing.SwingUtilities;
 
 
 

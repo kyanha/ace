@@ -24,6 +24,7 @@ package ch.iserver.ace.application;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
@@ -40,7 +41,7 @@ import ca.odell.glazedlists.ObservableElementList;
 import ca.odell.glazedlists.SortedList;
 import ca.odell.glazedlists.swing.EventListModel;
 import ca.odell.glazedlists.swing.EventSelectionModel;
-import java.util.List;
+
 import com.jgoodies.uif_lite.panel.SimpleInternalFrame;
 
 

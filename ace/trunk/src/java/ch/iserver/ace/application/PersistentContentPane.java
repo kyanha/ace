@@ -21,10 +21,14 @@
 
 package ch.iserver.ace.application;
 
-import ch.iserver.ace.application.editor.Editor;
+import java.awt.BorderLayout;
+import java.awt.Component;
+
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
-import java.awt.*;
-import javax.swing.*;
+import javax.swing.JSplitPane;
+
+import ch.iserver.ace.application.editor.Editor;
 
 
 

@@ -21,15 +21,16 @@
 
 package ch.iserver.ace.application.action;
 
-import ch.iserver.ace.application.DocumentItem;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+
+import javax.swing.KeyStroke;
+
 import ch.iserver.ace.application.ApplicationController;
-import ch.iserver.ace.application.DocumentManager;
+import ch.iserver.ace.application.DocumentItem;
+import ch.iserver.ace.application.DocumentViewController;
 import ch.iserver.ace.application.ItemSelectionChangeEvent;
 import ch.iserver.ace.application.LocaleMessageSource;
-import ch.iserver.ace.application.DocumentViewController;
-import java.awt.event.ActionEvent;
-import java.awt.Toolkit;
-import javax.swing.KeyStroke;
 
 
 
@@ -51,7 +52,6 @@ public class FileSaveAction extends DocumentItemSelectionChangeAction {
 	}
 	
 	public void itemSelectionChanged(ItemSelectionChangeEvent e) {
-		// TODO: disable when document is not dirty
 		if(e.getItem() == null) {
 			setEnabled(false);
 		} else {

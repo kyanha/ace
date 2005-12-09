@@ -21,13 +21,14 @@
 
 package ch.iserver.ace.application;
 
-import ch.iserver.ace.ApplicationError;
+import java.net.URL;
 import java.util.Locale;
 
-import java.net.URL;
 import javax.swing.ImageIcon;
 
 import org.springframework.context.MessageSource;
+
+import ch.iserver.ace.ApplicationError;
 
 
 
