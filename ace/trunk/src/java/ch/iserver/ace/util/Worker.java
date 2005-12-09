@@ -54,7 +54,7 @@ public abstract class Worker extends Thread {
 				}
 			}
 		} catch (InterruptedException e) {
-			// TODO: log interruption?
+			LOG.info("worker " + getName() + " has been interrupted");
 		} finally {
 			LOG.info(getName() + " terminated");
 		}
