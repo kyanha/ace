@@ -484,8 +484,8 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	public synchronized void userDetailsChanged(RemoteUserProxy proxy) {
 		MutableRemoteUser user = getUserRegistry().getUser(proxy.getId());
 		if (user == null) {
-			// TODO: throw exception
 			LOG.error("userDetailsChanged called with an unkown user id (i.e. userDiscovered not called)");
+			// TODO: throw exception?
 		} else {
 			user.setName(proxy.getUserDetails().getUsername());
 		}
@@ -497,7 +497,6 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	public synchronized void userDiscarded(RemoteUserProxy proxy) {
 		RemoteUser user = getUserRegistry().removeUser(proxy);
 		if (user == null) {
-			// TODO: throw exception
 			LOG.error("userDiscarded called without previous userDiscovered call");
 		} else {
 			UserListener[] listeners = (UserListener[]) this.listeners.getListeners(UserListener.class);
