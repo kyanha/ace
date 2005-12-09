@@ -70,6 +70,7 @@ public class ParticipantRequestHandler implements RequestHandler {
 	
 	public void cleanup() {
 		deserializer = null;
+		connection = null;
 		port = null;
 	}
 	

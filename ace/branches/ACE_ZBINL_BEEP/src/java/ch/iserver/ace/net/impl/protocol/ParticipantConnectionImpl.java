@@ -101,10 +101,12 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 		serializer = null;
 		port = null;
 		setReplyListener(null);
-//		Channel channel = getChannel();
-//		if (channel != null) {
+		Channel channel = getChannel();
+		if (channel != null) {
 			//TODO: cannot cast anymore because of SingleThreadDomain
-//			((ParticipantRequestHandler)channel.getRequestHandler()).cleanup();
+			//((ParticipantRequestHandler)channel.getRequestHandler()).cleanup();
+			channel.setRequestHandler(null);
+		}
 		setChannel(null);
 		if (incoming != null) {
 			incoming.setRequestHandler(null);

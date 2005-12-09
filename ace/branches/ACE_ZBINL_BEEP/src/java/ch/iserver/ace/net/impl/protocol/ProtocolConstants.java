@@ -66,7 +66,9 @@ public interface ProtocolConstants {
 	/********************/
 	/** Top level tags **/
 	/********************/
-	public static final String TAG_QUERY = "query";
+	public static final String TAG_ACE = "ace";
+	public static final String TAG_NOTIFICATION = "notification";
+	public static final String TAG_SESSION = "session";
 	public static final String TAG_PUBLISHED_DOCS = "publishedDocs";
 	public static final String TAG_PUBLISH = "publishDocs";
 	public static final String TAG_CONCEAL = "concealDocs";
@@ -102,9 +104,6 @@ public interface ProtocolConstants {
 	/***********************************/
 	/** Sub-level tags 				**/
 	/***********************************/
-	public static final String QUERY_TYPE= "type";
-	public static final String QUERY_TYPE_PUBLISHED_DOCUMENTS = "docs";
-	
 	public static final String NAME = "name";
 	public static final String DOCUMENT_ID = "id";
 	public static final String USER_ID = "userid";
