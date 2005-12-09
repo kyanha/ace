@@ -12,8 +12,6 @@ pdftitle={Final Report},
 pdfcreator={pdftex},
 ]{hyperref}
 
-\includeonly{ace,chapters/preface}
-
 \include{ace}
 
 \begin{document}
@@ -22,6 +20,7 @@ pdfcreator={pdftex},
 
 \setlength{\parindent}{0pt}
 \bibliographystyle{plain}
+\sloppy
 
 \frontmatter
 
@@ -39,7 +38,7 @@ pdfcreator={pdftex},
 \mainmatter
 \part{Introduction}
 
-\include{chapters/introduction}
+\include{chapters/overview}
 
 \include{chapters/functionality}
 
@@ -74,7 +73,7 @@ pdfcreator={pdftex},
 
 \include{chapters/openissues}
 
-\include{chapters/lessionslearned}
+\include{chapters/lessonslearned}
 
 \include{chapters/outlook}
 
@@ -91,7 +90,7 @@ pdfcreator={pdftex},
 
 \include{appendix/threaddomains}
 
-\include{appendix/tools}
+\include{appendix/glossary}
 
 \bibliography{ace}
 
