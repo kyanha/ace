@@ -76,7 +76,6 @@ public class SessionManager {
 	}
 	
 	public RemoteUserSession createSession(RemoteUserProxyExt user, TCPSession session, Channel mainChannel) {
-		//TODO: must not be synchronized right?
 		RemoteUserSession newSession = new RemoteUserSession(session, new MainConnection(mainChannel), user);
 		newSession.setTimestampFactory(factory);
 		sessions.put(user.getId(), newSession);
@@ -95,7 +94,6 @@ public class SessionManager {
 	 */
 	public void closeSessions() {
 		LOG.debug("--> closeSessions()");
-		//TODO: could end up in deadlock?
 		synchronized(sessions) {
 			Iterator iter = sessions.values().iterator();
 			while (iter.hasNext()) {
