@@ -135,7 +135,9 @@ public class PublishedDocument implements DocumentServer {
 		if (isShutdown()) throw new IllegalStateException("document has been shutdown already");
 		Request request = new RequestImpl(ProtocolConstants.CONCEAL, null, this);
 		filter.process(request);
-		service.conceal(getId());
+		if (!service.isStopped()) {
+			service.conceal(getId());
+		}
 		//stop accepting joins
 		isShutdown = true;
 		LOG.debug("<-- shutdown()");
