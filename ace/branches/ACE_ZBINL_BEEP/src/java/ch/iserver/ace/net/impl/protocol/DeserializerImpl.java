@@ -48,7 +48,6 @@ public class DeserializerImpl implements Deserializer {
 	/**
 	 * 
 	 */
-	//TODO: is synchronization needed here? 
 	public void deserialize(byte[] data, ParserHandler handler) throws DeserializeException {
 		try {
 			ByteArrayInputStream input = new ByteArrayInputStream(data);

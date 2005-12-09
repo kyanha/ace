@@ -54,7 +54,7 @@ public class MainConnection extends AbstractConnection {
 	public void close() {
 		try {
 			if (getState() == STATE_ACTIVE) {
-				//TODO: consider if there could be other states upon which a close() should be done
+				//consider if there could be other states upon which a close() should be done
 				getChannel().close();
 			}
 		} catch (BEEPException be) {

@@ -46,8 +46,12 @@ public class MainRequestHandler implements RequestHandler {
 	private Deserializer deserializer;
 	private RequestParserHandler handler;	
 	
-	
-	//TODO: write integration-test for this class
+	/**
+	 * 
+	 * @param deserializer
+	 * @param filter
+	 * @param handler
+	 */
 	public MainRequestHandler(Deserializer deserializer, RequestFilter filter, RequestParserHandler handler) {
 		this.deserializer = deserializer;
 		this.filter = filter;
