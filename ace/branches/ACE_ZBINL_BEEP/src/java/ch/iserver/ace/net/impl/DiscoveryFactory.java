@@ -21,6 +21,8 @@
 package ch.iserver.ace.net.impl;
 
 import ch.iserver.ace.net.impl.discovery.BonjourFactory;
+import ch.iserver.ace.net.impl.discovery.PeerDiscovery;
+import ch.iserver.ace.net.impl.discovery.UserRegistration;
 
 /**
  * 
@@ -41,6 +43,16 @@ public abstract class DiscoveryFactory {
 		}
 		return instance;
 	}
+	
+	/**
+	 * Inits this DiscoveryFactory (optional). If <code>init</code> is not called,
+	 * default implementations will be used.
+	 * This method is actually intended for testability.
+	 * 
+	 * @param registration 	the UserRegistration implementation
+	 * @param discovery		the PeerDiscovery implementation
+	 */
+	public abstract void init(UserRegistration registration, PeerDiscovery discovery);
 	
 	public abstract Discovery createDiscovery(DiscoveryCallback callback);
 

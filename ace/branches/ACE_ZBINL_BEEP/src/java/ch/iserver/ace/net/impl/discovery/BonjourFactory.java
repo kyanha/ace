@@ -29,10 +29,17 @@ import com.apple.dnssd.ResolveListener;
 
 public class BonjourFactory extends DiscoveryFactory {
 	
+	private UserRegistration registration;
+	private PeerDiscovery discovery;
+	
+	public void init(UserRegistration registration, PeerDiscovery discovery) {
+		this.registration = registration;
+		this.discovery = discovery;
+	}
 	public Discovery createDiscovery(DiscoveryCallback callback) {
-		UserRegistration registration = new UserRegistrationImpl();
-		PeerDiscovery discovery = createPeerDiscovery(callback);
-		Bonjour b = new Bonjour(registration, discovery);
+		UserRegistration actualRegistration = (registration != null) ? registration : new UserRegistrationImpl();
+		PeerDiscovery actualDiscovery = (discovery != null) ? discovery : createPeerDiscovery(callback);
+		Bonjour b = new Bonjour(actualRegistration, actualDiscovery);
 		Bonjour.setLocalServiceName(System.getProperty("user.name"));
 		return b;
 	}
