@@ -75,7 +75,7 @@ public abstract class AbstractConnection {
 					channel.setAppData(data);
 				
 				LOG.debug("--> sendMSG() with "+message.length+" bytes");
-				ReplyListener actualListener = (listener != null) ? listener : NullReplyListener.getListener();
+//				ReplyListener actualListener = (listener != null) ? listener : NullReplyListener.getListener();
 //				channel.sendMSG(output, actualListener);
 				Reply reply = new Reply();
 				channel.sendMSG(output, reply);
