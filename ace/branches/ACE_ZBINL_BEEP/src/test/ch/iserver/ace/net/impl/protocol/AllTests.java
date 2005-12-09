@@ -37,7 +37,6 @@ public class AllTests {
 		suite.addTestSuite(ConcealDocumentPrepareFilterTest.class);
 		suite.addTestSuite(ConcealDocumentReceiveFilterTest.class);
 		suite.addTestSuite(DeserializerImplTest.class);
-		suite.addTestSuite(ParticipantConnectionImplTest.class);
 		suite.addTestSuite(RequestParserHandlerTest.class);
 		suite.addTestSuite(ResponseParserHandlerTest.class);
 		suite.addTestSuite(SendDocumentsReceiveFilterTest.class);

@@ -22,6 +22,7 @@ public class DiscoveryCallbackImplTest extends TestCase {
 		
 		RequestFilter filter = new LogFilter(null ,false);
 		DiscoveryCallbackImpl discoveryCallback = new DiscoveryCallbackImpl(callback, service, filter);
+		DiscoveryManagerFactory.init(discoveryCallback);
 		DiscoveryManagerFactory.getDiscoveryManager();
 		RemoteUserProxyFactory.init(new LogFilter(null, false));
 		RemoteUserProxyExt proxy = RemoteUserProxyFactory.getInstance().

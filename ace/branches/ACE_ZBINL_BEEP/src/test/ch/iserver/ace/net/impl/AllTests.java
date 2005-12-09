@@ -32,7 +32,7 @@ public class AllTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for ch.iserver.ace.net.impl");
 		//$JUnit-BEGIN$
-		suite.addTestSuite(DiscoveryCallbackImpl.class);
+		suite.addTestSuite(DiscoveryCallbackImplTest.class);
 		suite.addTestSuite(NetworkPropertiesTest.class);
 		suite.addTestSuite(NetworkServiceImplTest.class);
 		//$JUnit-END$
