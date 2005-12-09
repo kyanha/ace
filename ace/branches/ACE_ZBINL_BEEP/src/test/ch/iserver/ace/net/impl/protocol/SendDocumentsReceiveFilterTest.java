@@ -71,7 +71,6 @@ public class SendDocumentsReceiveFilterTest extends TestCase {
 		MessageMSG message = (MessageMSG)msgCtrl.getMock();
 		message.sendRPY(null);
 		msgCtrl.setDefaultMatcher(MockControl.ALWAYS_MATCHER);
-//		message.sendNUL();
 		msgCtrl.setDefaultReturnValue(null);
 		msgCtrl.replay();
 		request.setMessage(message);
