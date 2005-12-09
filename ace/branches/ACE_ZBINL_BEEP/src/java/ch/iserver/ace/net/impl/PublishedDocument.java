@@ -116,7 +116,7 @@ public class PublishedDocument implements DocumentServer {
 		LOG.debug("--> invite("+invitation.getUser()+")");
 		String userId = invitation.getUser().getId();
 		invitations.put(userId, invitation);
-		Request request = new RequestImpl(ProtocolConstants.INVITE, userId, docId);
+		Request request = new RequestImpl(ProtocolConstants.INVITE, userId, this);
 		filter.process(request);
 		LOG.debug("<-- invite()");
 	}

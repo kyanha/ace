@@ -43,7 +43,6 @@ private static Logger LOG = Logger.getLogger(SendDocumentsPrepareFilter.class);
 	public SendDocumentsPrepareFilter(RequestFilter successor, Serializer serializer, ReplyListener listener) {
 		super(successor);
 		this.serializer = serializer;
-		//TODO: could use NullReplyListener here
 		this.listener = listener;
 	}
 	

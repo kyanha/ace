@@ -26,7 +26,6 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.beepcore.beep.core.OutputDataStream;
 
-import ch.iserver.ace.FailureCodes;
 import ch.iserver.ace.collaboration.JoinRequest;
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.PublishedDocument;

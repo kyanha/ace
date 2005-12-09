@@ -93,7 +93,6 @@ public class PublishDocumentPrepareFilter extends AbstractRequestFilter {
 						}
 					}
 				} catch (Exception e) {
-					//TODO: handling
 					LOG.error("caught exception [" + e + ", " + e.getMessage() + "]");
 				}
 			} else {

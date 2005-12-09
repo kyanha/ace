@@ -27,7 +27,6 @@ import ch.iserver.ace.collaboration.JoinRequest;
 import ch.iserver.ace.net.InvitationProxy;
 import ch.iserver.ace.net.JoinNetworkCallback;
 import ch.iserver.ace.net.RemoteDocumentProxy;
-import ch.iserver.ace.net.impl.protocol.JoinRequestSenderFilter;
 import ch.iserver.ace.net.impl.protocol.ProtocolConstants;
 import ch.iserver.ace.net.impl.protocol.RemoteUserSession;
 import ch.iserver.ace.net.impl.protocol.Request;
