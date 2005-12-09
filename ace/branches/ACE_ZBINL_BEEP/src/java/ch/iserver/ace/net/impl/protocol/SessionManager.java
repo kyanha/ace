@@ -81,7 +81,7 @@ public class SessionManager {
 		newSession.setTimestampFactory(factory);
 		sessions.put(user.getId(), newSession);
 		//TODO: test discoveryManager
-		DiscoveryManagerFactory.getDiscoveryManager(null).setSessionEstablished(user.getId());
+		DiscoveryManagerFactory.getDiscoveryManager().setSessionEstablished(user.getId());
 		return newSession;
 	}
 	

@@ -50,7 +50,7 @@ public class UserDiscardedRecipientFilter extends AbstractRequestFilter {
 					LOG.error("could not send confirmation ["+e.getMessage()+"]");
 				}
 				String userId = request.getUserId();
-				DiscoveryManagerFactory.getDiscoveryManager(null).discardUser(userId);
+				DiscoveryManagerFactory.getDiscoveryManager().discardUser(userId);
 				LOG.info("<-- process()");
 			} else {
 				super.process(request);
