@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:DiscoveryCallback.java 1205 2005-11-14 07:57:10Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -18,43 +18,41 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package ch.iserver.ace.net.impl;
 
-import ch.iserver.ace.UserDetails;
+package ch.iserver.ace.net.core;
+
 
 /**
  * 
  *
  */
-public interface Discovery {
-	
-	public static final String KEY_DISCOVERY_PORT = "discovery.port";
-	
+public interface DiscoveryCallback {
+
 	/**
-	 * Sets the UUID for the local user.
 	 * 
-	 * @param uuid
+	 * @param proxy
 	 */
-	void setUserId(String uuid);
+	void userDiscovered(RemoteUserProxyExt proxy);
 	
 	/**
 	 * 
-	 * @param details
+	 * @param proxy
 	 */
-	void setUserDetails(UserDetails details);
+	void userDiscarded(RemoteUserProxyExt proxy);
 	
 	/**
-	 * Executes the Bonjour zeroconf discovery process.
-	 * First, the user is registered. Afterwards, the network
-	 * is searched for other users.
+	 * Called when the user discovery completed, i.e.
+	 * when all information for a user has been gathered, 
+	 * including its host address.
 	 * 
-	 * @see DiscoveryCallback
+	 * @param proxy
 	 */
-	void execute();
+	void userDiscoveryCompleted(RemoteUserProxyExt proxy); 
 	
 	/**
-	 *
+	 * 
+	 * @param proxy
 	 */
-	void abort();
+	void userDetailsChanged(RemoteUserProxyExt proxy);
 	
 }

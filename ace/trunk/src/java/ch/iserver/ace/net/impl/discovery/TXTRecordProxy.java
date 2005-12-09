@@ -24,7 +24,7 @@ import java.io.UnsupportedEncodingException;
 
 import org.apache.log4j.Logger;
 
-import ch.iserver.ace.net.impl.NetworkProperties;
+import ch.iserver.ace.net.core.NetworkProperties;
 import ch.iserver.ace.util.ParameterValidator;
 
 import com.apple.dnssd.TXTRecord;

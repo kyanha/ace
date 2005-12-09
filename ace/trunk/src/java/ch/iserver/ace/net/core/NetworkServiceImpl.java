@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package ch.iserver.ace.net.impl;
+package ch.iserver.ace.net.core;
 
 import java.net.InetAddress;
 import java.util.Collections;

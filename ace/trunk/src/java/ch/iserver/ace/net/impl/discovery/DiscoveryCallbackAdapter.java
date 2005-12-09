@@ -22,7 +22,7 @@ package ch.iserver.ace.net.impl.discovery;
 
 import java.net.InetAddress;
 
-import ch.iserver.ace.net.impl.DiscoveryCallback;
+import ch.iserver.ace.net.core.DiscoveryCallback;
 
 /**
  * Interface between Bonjour related class and the network layer.

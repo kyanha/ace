@@ -24,7 +24,7 @@ package ch.iserver.ace.net.impl.protocol;
 import org.apache.log4j.Logger;
 import org.beepcore.beep.core.ReplyListener;
 
-import ch.iserver.ace.net.impl.PublishedDocument;
+import ch.iserver.ace.net.core.PublishedDocument;
 
 /**
  *

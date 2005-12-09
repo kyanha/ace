@@ -10,9 +10,9 @@ import org.easymock.MockControl;
 
 import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.net.DocumentServerLogic;
-import ch.iserver.ace.net.impl.NetworkProperties;
-import ch.iserver.ace.net.impl.NetworkServiceImpl;
-import ch.iserver.ace.net.impl.PublishedDocument;
+import ch.iserver.ace.net.core.NetworkProperties;
+import ch.iserver.ace.net.core.NetworkServiceImpl;
+import ch.iserver.ace.net.core.PublishedDocument;
 
 public class SerializerImplTest extends TestCase {
 	

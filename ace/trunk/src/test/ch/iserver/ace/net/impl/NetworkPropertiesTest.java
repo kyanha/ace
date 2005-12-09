@@ -1,5 +1,6 @@
 package ch.iserver.ace.net.impl;
 
+import ch.iserver.ace.net.core.NetworkProperties;
 import junit.framework.TestCase;
 
 public class NetworkPropertiesTest extends TestCase {

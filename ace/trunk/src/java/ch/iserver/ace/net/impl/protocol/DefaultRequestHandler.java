@@ -29,9 +29,9 @@ import org.beepcore.beep.core.OutputDataStream;
 import org.beepcore.beep.core.RequestHandler;
 import org.beepcore.beep.transport.tcp.TCPSession;
 
-import ch.iserver.ace.net.impl.NetworkProperties;
-import ch.iserver.ace.net.impl.NetworkServiceImpl;
-import ch.iserver.ace.net.impl.RemoteUserProxyExt;
+import ch.iserver.ace.net.core.NetworkProperties;
+import ch.iserver.ace.net.core.NetworkServiceImpl;
+import ch.iserver.ace.net.core.RemoteUserProxyExt;
 import ch.iserver.ace.net.impl.discovery.DiscoveryManagerFactory;
 import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
 

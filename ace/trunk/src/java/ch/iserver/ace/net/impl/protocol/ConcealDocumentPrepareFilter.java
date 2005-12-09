@@ -28,8 +28,8 @@ import org.apache.log4j.Logger;
 import org.beepcore.beep.core.ReplyListener;
 
 import ch.iserver.ace.FailureCodes;
-import ch.iserver.ace.net.impl.NetworkServiceImpl;
-import ch.iserver.ace.net.impl.PublishedDocument;
+import ch.iserver.ace.net.core.NetworkServiceImpl;
+import ch.iserver.ace.net.core.PublishedDocument;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**

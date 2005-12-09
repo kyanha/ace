@@ -32,8 +32,8 @@ import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Timestamp;
 import ch.iserver.ace.algorithm.TimestampFactory;
 import ch.iserver.ace.net.ParticipantPort;
-import ch.iserver.ace.net.impl.NetworkServiceExt;
-import ch.iserver.ace.net.impl.NetworkServiceImpl;
+import ch.iserver.ace.net.core.NetworkServiceExt;
+import ch.iserver.ace.net.core.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
 import ch.iserver.ace.util.ParameterValidator;
 

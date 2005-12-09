@@ -25,8 +25,8 @@ import org.apache.log4j.Logger;
 import ch.iserver.ace.ApplicationError;
 import ch.iserver.ace.FailureCodes;
 import ch.iserver.ace.UserDetails;
-import ch.iserver.ace.net.impl.Discovery;
-import ch.iserver.ace.net.impl.NetworkServiceImpl;
+import ch.iserver.ace.net.core.Discovery;
+import ch.iserver.ace.net.core.NetworkServiceImpl;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**

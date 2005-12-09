@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.net.impl;
+package ch.iserver.ace.net.core;
 
 import org.apache.log4j.Logger;
 
@@ -72,7 +72,7 @@ public class RemoteDocumentProxyImpl implements RemoteDocumentProxyExt {
 	}
 	
 	/**
-	 * @see ch.iserver.ace.net.impl.RemoteDocumentProxyExt#setDocumentDetails(DocumentDetails)
+	 * @see ch.iserver.ace.net.core.RemoteDocumentProxyExt#setDocumentDetails(DocumentDetails)
 	 */
 	public void setDocumentDetails(DocumentDetails details) {
 		this.details = details;

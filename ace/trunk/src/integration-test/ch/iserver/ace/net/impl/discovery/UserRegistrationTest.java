@@ -27,10 +27,10 @@ import org.easymock.MockControl;
 
 import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.net.NetworkServiceCallback;
-import ch.iserver.ace.net.impl.Discovery;
-import ch.iserver.ace.net.impl.DiscoveryCallback;
-import ch.iserver.ace.net.impl.DiscoveryCallbackImpl;
-import ch.iserver.ace.net.impl.NetworkProperties;
+import ch.iserver.ace.net.core.Discovery;
+import ch.iserver.ace.net.core.DiscoveryCallback;
+import ch.iserver.ace.net.core.DiscoveryCallbackImpl;
+import ch.iserver.ace.net.core.NetworkProperties;
 import ch.iserver.ace.net.impl.protocol.LogFilter;
 import ch.iserver.ace.net.impl.protocol.RequestFilter;
 

@@ -27,9 +27,9 @@ import org.apache.log4j.Logger;
 
 import ch.iserver.ace.FailureCodes;
 import ch.iserver.ace.net.DiscoveryNetworkCallback;
-import ch.iserver.ace.net.impl.MutableUserDetails;
-import ch.iserver.ace.net.impl.RemoteUserProxyExt;
-import ch.iserver.ace.net.impl.RemoteUserProxyFactory;
+import ch.iserver.ace.net.core.MutableUserDetails;
+import ch.iserver.ace.net.core.RemoteUserProxyExt;
+import ch.iserver.ace.net.core.RemoteUserProxyFactory;
 import ch.iserver.ace.net.impl.protocol.DiscoveryException;
 import ch.iserver.ace.util.ParameterValidator;
 import ch.iserver.ace.util.UUID;

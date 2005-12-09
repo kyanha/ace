@@ -28,10 +28,10 @@ import org.beepcore.beep.core.MessageMSG;
 import org.beepcore.beep.core.RequestHandler;
 import org.beepcore.beep.transport.tcp.TCPSession;
 
-import ch.iserver.ace.net.impl.MutableUserDetails;
-import ch.iserver.ace.net.impl.NetworkServiceImpl;
-import ch.iserver.ace.net.impl.RemoteUserProxyExt;
-import ch.iserver.ace.net.impl.RemoteUserProxyFactory;
+import ch.iserver.ace.net.core.MutableUserDetails;
+import ch.iserver.ace.net.core.NetworkServiceImpl;
+import ch.iserver.ace.net.core.RemoteUserProxyExt;
+import ch.iserver.ace.net.core.RemoteUserProxyFactory;
 import ch.iserver.ace.net.impl.discovery.DiscoveryManager;
 import ch.iserver.ace.net.impl.discovery.DiscoveryManagerFactory;
 

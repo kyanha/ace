@@ -24,7 +24,7 @@ package ch.iserver.ace.net.impl.protocol;
 import org.apache.log4j.Logger;
 import org.beepcore.beep.core.RequestHandler;
 
-import ch.iserver.ace.net.impl.NetworkServiceExt;
+import ch.iserver.ace.net.core.NetworkServiceExt;
 import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
 import ch.iserver.ace.util.ParameterValidator;
 import ch.iserver.ace.util.SingleThreadDomain;

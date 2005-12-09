@@ -24,7 +24,7 @@ package ch.iserver.ace.net.impl.discovery.dnssd;
 import org.apache.log4j.Logger;
 
 import ch.iserver.ace.FailureCodes;
-import ch.iserver.ace.net.impl.NetworkServiceImpl;
+import ch.iserver.ace.net.core.NetworkServiceImpl;
 
 
 

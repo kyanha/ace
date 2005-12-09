@@ -19,40 +19,42 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.net.impl;
+package ch.iserver.ace.net.core;
 
+import ch.iserver.ace.net.InvitationProxy;
+import ch.iserver.ace.net.RemoteDocumentProxy;
+import ch.iserver.ace.net.impl.protocol.RemoteUserSession;
 import ch.iserver.ace.net.impl.protocol.RequestFilter;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
  *
  */
-public class RemoteUserProxyFactory {
+public class InvitationProxyFactory {
 
 	private RequestFilter filter;
 	
-	private static RemoteUserProxyFactory instance;
+	private static InvitationProxyFactory instance;
 	
-	private RemoteUserProxyFactory(RequestFilter filter) {
+	private InvitationProxyFactory(RequestFilter filter) {
 		this.filter = filter;
 	}
 	
-	//TODO: since we no longer need the filter chain in RemoteUserProxyImpl,
-	//the RemoteUserProxyFactory could be considered as obsolete i.e. could be removed
 	public static void init(RequestFilter filter) {
 		ParameterValidator.notNull("filter", filter);
-		instance = new RemoteUserProxyFactory(filter);
+		instance = new InvitationProxyFactory(filter);
 	}
 	
-	public static RemoteUserProxyFactory getInstance() {
+	public static InvitationProxyFactory getInstance() {
 		if (instance == null) {
 			throw new IllegalStateException("instance has not been initialized");
 		}
 		return instance;
 	}
 	
-	public RemoteUserProxyExt createProxy(String id, MutableUserDetails details) {
-		return new RemoteUserProxyImpl(id, details);
+	public InvitationProxy createProxy(RemoteDocumentProxyExt proxy, RemoteUserSession session) {
+		return new InvitationProxyImpl(proxy, session, filter);
 	}
+	
 	
 }

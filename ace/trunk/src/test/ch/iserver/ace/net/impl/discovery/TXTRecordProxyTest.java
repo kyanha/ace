@@ -1,7 +1,7 @@
 package ch.iserver.ace.net.impl.discovery;
 
 import junit.framework.TestCase;
-import ch.iserver.ace.net.impl.NetworkProperties;
+import ch.iserver.ace.net.core.NetworkProperties;
 
 import com.apple.dnssd.TXTRecord;
 

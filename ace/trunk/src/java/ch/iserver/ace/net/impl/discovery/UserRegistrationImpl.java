@@ -6,8 +6,8 @@ import org.apache.log4j.Logger;
 
 import ch.iserver.ace.ServerInfo;
 import ch.iserver.ace.UserDetails;
-import ch.iserver.ace.net.impl.NetworkProperties;
-import ch.iserver.ace.net.impl.NetworkServiceImpl;
+import ch.iserver.ace.net.core.NetworkProperties;
+import ch.iserver.ace.net.core.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.discovery.dnssd.DNSSDUnavailable;
 import ch.iserver.ace.net.impl.discovery.dnssd.QueryRecord;
 import ch.iserver.ace.net.impl.discovery.dnssd.Register;

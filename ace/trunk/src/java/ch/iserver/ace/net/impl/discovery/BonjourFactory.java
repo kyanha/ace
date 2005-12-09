@@ -20,9 +20,9 @@
  */
 package ch.iserver.ace.net.impl.discovery;
 
-import ch.iserver.ace.net.impl.Discovery;
-import ch.iserver.ace.net.impl.DiscoveryCallback;
-import ch.iserver.ace.net.impl.DiscoveryFactory;
+import ch.iserver.ace.net.core.Discovery;
+import ch.iserver.ace.net.core.DiscoveryCallback;
+import ch.iserver.ace.net.core.DiscoveryFactory;
 
 import com.apple.dnssd.BrowseListener;
 import com.apple.dnssd.ResolveListener;

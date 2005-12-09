@@ -7,12 +7,12 @@ import junit.framework.TestCase;
 import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.Fragment;
 import ch.iserver.ace.net.ParticipantConnection;
-import ch.iserver.ace.net.impl.FragmentImpl;
-import ch.iserver.ace.net.impl.MutableUserDetails;
-import ch.iserver.ace.net.impl.NetworkServiceImpl;
-import ch.iserver.ace.net.impl.PortableDocumentExt;
-import ch.iserver.ace.net.impl.PortableDocumentImpl;
-import ch.iserver.ace.net.impl.RemoteUserProxyFactory;
+import ch.iserver.ace.net.core.FragmentImpl;
+import ch.iserver.ace.net.core.MutableUserDetails;
+import ch.iserver.ace.net.core.NetworkServiceImpl;
+import ch.iserver.ace.net.core.PortableDocumentExt;
+import ch.iserver.ace.net.core.PortableDocumentImpl;
+import ch.iserver.ace.net.core.RemoteUserProxyFactory;
 
 public class TLVHandlerTest extends TestCase {
 

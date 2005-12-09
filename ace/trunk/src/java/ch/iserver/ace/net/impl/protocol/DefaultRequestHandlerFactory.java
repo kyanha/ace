@@ -23,10 +23,10 @@ package ch.iserver.ace.net.impl.protocol;
 
 import org.beepcore.beep.core.RequestHandler;
 
-import ch.iserver.ace.net.impl.MutableUserDetails;
-import ch.iserver.ace.net.impl.RemoteUserProxyExt;
-import ch.iserver.ace.net.impl.RemoteUserProxyFactory;
-import ch.iserver.ace.net.impl.RemoteUserProxyImpl;
+import ch.iserver.ace.net.core.MutableUserDetails;
+import ch.iserver.ace.net.core.RemoteUserProxyExt;
+import ch.iserver.ace.net.core.RemoteUserProxyFactory;
+import ch.iserver.ace.net.core.RemoteUserProxyImpl;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**

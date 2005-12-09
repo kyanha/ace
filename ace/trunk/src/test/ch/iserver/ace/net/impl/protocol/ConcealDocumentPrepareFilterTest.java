@@ -5,7 +5,7 @@ import junit.framework.TestCase;
 import org.easymock.MockControl;
 
 import ch.iserver.ace.net.DocumentServerLogic;
-import ch.iserver.ace.net.impl.PublishedDocument;
+import ch.iserver.ace.net.core.PublishedDocument;
 
 public class ConcealDocumentPrepareFilterTest extends TestCase {
 

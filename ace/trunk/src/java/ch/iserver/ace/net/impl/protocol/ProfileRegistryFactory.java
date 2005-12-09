@@ -27,9 +27,9 @@ import org.beepcore.beep.core.RequestHandler;
 import org.beepcore.beep.core.StartChannelListener;
 
 import ch.iserver.ace.algorithm.TimestampFactory;
-import ch.iserver.ace.net.impl.NetworkProperties;
-import ch.iserver.ace.net.impl.NetworkServiceExt;
-import ch.iserver.ace.net.impl.NetworkServiceImpl;
+import ch.iserver.ace.net.core.NetworkProperties;
+import ch.iserver.ace.net.core.NetworkServiceExt;
+import ch.iserver.ace.net.core.NetworkServiceImpl;
 import ch.iserver.ace.util.SingleThreadDomain;
 
 /**

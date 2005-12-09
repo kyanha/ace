@@ -30,8 +30,8 @@ import org.beepcore.beep.transport.tcp.TCPSession;
 import org.beepcore.beep.transport.tcp.TCPSessionCreator;
 
 import ch.iserver.ace.FailureCodes;
-import ch.iserver.ace.net.impl.NetworkProperties;
-import ch.iserver.ace.net.impl.NetworkServiceImpl;
+import ch.iserver.ace.net.core.NetworkProperties;
+import ch.iserver.ace.net.core.NetworkServiceImpl;
 
 /**
  *

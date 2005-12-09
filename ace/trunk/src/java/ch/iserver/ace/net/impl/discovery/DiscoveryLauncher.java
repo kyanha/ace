@@ -24,11 +24,11 @@ package ch.iserver.ace.net.impl.discovery;
 import org.apache.log4j.Logger;
 
 import ch.iserver.ace.UserDetails;
-import ch.iserver.ace.net.impl.Discovery;
-import ch.iserver.ace.net.impl.DiscoveryCallback;
-import ch.iserver.ace.net.impl.DiscoveryCallbackImpl;
-import ch.iserver.ace.net.impl.DiscoveryFactory;
-import ch.iserver.ace.net.impl.NetworkServiceImpl;
+import ch.iserver.ace.net.core.Discovery;
+import ch.iserver.ace.net.core.DiscoveryCallback;
+import ch.iserver.ace.net.core.DiscoveryCallbackImpl;
+import ch.iserver.ace.net.core.DiscoveryFactory;
+import ch.iserver.ace.net.core.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.protocol.RequestFilter;
 
 /**

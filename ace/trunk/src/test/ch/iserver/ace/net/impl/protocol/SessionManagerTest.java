@@ -7,12 +7,12 @@ import junit.framework.TestCase;
 import org.easymock.MockControl;
 
 import ch.iserver.ace.net.NetworkServiceCallback;
-import ch.iserver.ace.net.impl.DiscoveryCallback;
-import ch.iserver.ace.net.impl.DiscoveryCallbackImpl;
-import ch.iserver.ace.net.impl.MutableUserDetails;
-import ch.iserver.ace.net.impl.RemoteUserProxyExt;
-import ch.iserver.ace.net.impl.RemoteUserProxyFactory;
-import ch.iserver.ace.net.impl.RemoteUserProxyImpl;
+import ch.iserver.ace.net.core.DiscoveryCallback;
+import ch.iserver.ace.net.core.DiscoveryCallbackImpl;
+import ch.iserver.ace.net.core.MutableUserDetails;
+import ch.iserver.ace.net.core.RemoteUserProxyExt;
+import ch.iserver.ace.net.core.RemoteUserProxyFactory;
+import ch.iserver.ace.net.core.RemoteUserProxyImpl;
 import ch.iserver.ace.net.impl.discovery.DiscoveryManagerFactory;
 
 public class SessionManagerTest extends TestCase {

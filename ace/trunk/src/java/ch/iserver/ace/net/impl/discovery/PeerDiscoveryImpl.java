@@ -22,7 +22,7 @@ package ch.iserver.ace.net.impl.discovery;
 
 import org.apache.log4j.Logger;
 
-import ch.iserver.ace.net.impl.NetworkProperties;
+import ch.iserver.ace.net.core.NetworkProperties;
 import ch.iserver.ace.net.impl.discovery.dnssd.Browse;
 import ch.iserver.ace.net.impl.discovery.dnssd.DNSSDUnavailable;
 import ch.iserver.ace.util.ParameterValidator;

@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import ch.iserver.ace.net.impl.NetworkProperties;
+import ch.iserver.ace.net.core.NetworkProperties;
 
 import com.apple.dnssd.DNSSD;
 import com.apple.dnssd.DNSSDRegistration;

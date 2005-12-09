@@ -21,7 +21,7 @@
 
 package ch.iserver.ace.net.impl.discovery.dnssd;
 
-import ch.iserver.ace.net.impl.NetworkProperties;
+import ch.iserver.ace.net.core.NetworkProperties;
 
 /**
  *

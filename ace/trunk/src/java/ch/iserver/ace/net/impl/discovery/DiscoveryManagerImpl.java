@@ -30,10 +30,10 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import ch.iserver.ace.net.impl.DiscoveryCallback;
-import ch.iserver.ace.net.impl.MutableUserDetails;
-import ch.iserver.ace.net.impl.RemoteUserProxyExt;
-import ch.iserver.ace.net.impl.RemoteUserProxyFactory;
+import ch.iserver.ace.net.core.DiscoveryCallback;
+import ch.iserver.ace.net.core.MutableUserDetails;
+import ch.iserver.ace.net.core.RemoteUserProxyExt;
+import ch.iserver.ace.net.core.RemoteUserProxyFactory;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
@@ -180,7 +180,7 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 	/*****************************************************/
 	
 	/**
-	 * @see ch.iserver.ace.net.impl.discovery.DiscoveryCallbackAdapter#setDiscoveryCallback(ch.iserver.ace.net.impl.DiscoveryCallback)
+	 * @see ch.iserver.ace.net.impl.discovery.DiscoveryCallbackAdapter#setDiscoveryCallback(ch.iserver.ace.net.core.DiscoveryCallback)
 	 */
 	public void setDiscoveryCallback(DiscoveryCallback forward) {
 		ParameterValidator.notNull("forward", forward);

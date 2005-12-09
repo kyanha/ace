@@ -21,7 +21,7 @@
 
 package ch.iserver.ace.net.impl.discovery;
 
-import ch.iserver.ace.net.impl.DiscoveryCallback;
+import ch.iserver.ace.net.core.DiscoveryCallback;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**

@@ -23,7 +23,7 @@ package ch.iserver.ace.net.impl.discovery;
 
 import java.util.Map;
 
-import ch.iserver.ace.net.impl.RemoteUserProxyExt;
+import ch.iserver.ace.net.core.RemoteUserProxyExt;
 
 /**
  * Handles the managment of RemoteUserProxy and RemoteUserSession.

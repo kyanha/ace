@@ -1,5 +1,5 @@
 /*
- * $Id:DiscoveryCallback.java 1205 2005-11-14 07:57:10Z zbinl $
+ * $Id$
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -19,40 +19,37 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.net.impl;
+package ch.iserver.ace.net.core;
 
+import java.util.List;
+
+import ch.iserver.ace.CaretUpdate;
+import ch.iserver.ace.Fragment;
+import ch.iserver.ace.net.PortableDocument;
 
 /**
- * 
  *
  */
-public interface DiscoveryCallback {
+public interface PortableDocumentExt extends PortableDocument {
 
-	/**
-	 * 
-	 * @param proxy
-	 */
-	void userDiscovered(RemoteUserProxyExt proxy);
+	public int getParticipantId();
 	
-	/**
-	 * 
-	 * @param proxy
-	 */
-	void userDiscarded(RemoteUserProxyExt proxy);
+	public void setParticpantId(int id);
 	
-	/**
-	 * Called when the user discovery completed, i.e.
-	 * when all information for a user has been gathered, 
-	 * including its host address.
-	 * 
-	 * @param proxy
-	 */
-	void userDiscoveryCompleted(RemoteUserProxyExt proxy); 
+	public void addFragment(Fragment fragment);
 	
-	/**
-	 * 
-	 * @param proxy
-	 */
-	void userDetailsChanged(RemoteUserProxyExt proxy);
+	public void addParticipant(int id, RemoteUserProxyExt proxy);
+	
+	public void setSelection(int participantId, CaretUpdate selection);
+	
+	public void setDocumentId(String docId);
+	
+	public String getDocumentId();
+	
+	public void setPublisherId(String publisherId);
+	
+	public String getPublisherId();
+	
+	public List getUsers();
 	
 }

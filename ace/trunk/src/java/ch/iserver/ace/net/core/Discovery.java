@@ -18,38 +18,43 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+package ch.iserver.ace.net.core;
 
-package ch.iserver.ace.net.impl;
-
-import ch.iserver.ace.DocumentDetails;
-import ch.iserver.ace.net.JoinNetworkCallback;
-import ch.iserver.ace.net.RemoteDocumentProxy;
-import ch.iserver.ace.net.SessionConnection;
-import ch.iserver.ace.net.SessionConnectionCallback;
+import ch.iserver.ace.UserDetails;
 
 /**
+ * 
  *
  */
-public interface RemoteDocumentProxyExt extends RemoteDocumentProxy {
-
-	public void setDocumentDetails(DocumentDetails details);
+public interface Discovery {
 	
-	public void joinRejected(int code);
-	
-	public SessionConnectionCallback joinAccepted(SessionConnection connection);
-	
-	public SessionConnectionCallback getSessionConnectionCallback();
+	public static final String KEY_DISCOVERY_PORT = "discovery.port";
 	
 	/**
-	 * Called when the local user accepted an invitation to join this document.
+	 * Sets the UUID for the local user.
 	 * 
-	 * @param callback the JoinNetworkCallback instance
-	 * @see JoinNetworkCallback
+	 * @param uuid
 	 */
-	public void invitationAccepted(JoinNetworkCallback callback);
+	void setUserId(String uuid);
 	
-	public void cleanupAfterLeave();
+	/**
+	 * 
+	 * @param details
+	 */
+	void setUserDetails(UserDetails details);
 	
-	public boolean isJoined();
+	/**
+	 * Executes the Bonjour zeroconf discovery process.
+	 * First, the user is registered. Afterwards, the network
+	 * is searched for other users.
+	 * 
+	 * @see DiscoveryCallback
+	 */
+	void execute();
+	
+	/**
+	 *
+	 */
+	void abort();
 	
 }

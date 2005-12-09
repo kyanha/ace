@@ -33,9 +33,9 @@ import sun.misc.BASE64Encoder;
 
 import ch.iserver.ace.Fragment;
 import ch.iserver.ace.net.PortableDocument;
-import ch.iserver.ace.net.impl.FragmentImpl;
-import ch.iserver.ace.net.impl.NetworkProperties;
-import ch.iserver.ace.net.impl.PortableDocumentExt;
+import ch.iserver.ace.net.core.FragmentImpl;
+import ch.iserver.ace.net.core.NetworkProperties;
+import ch.iserver.ace.net.core.PortableDocumentExt;
 import ch.iserver.ace.util.Base64;
 
 /**

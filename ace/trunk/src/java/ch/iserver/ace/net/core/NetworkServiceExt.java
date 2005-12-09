@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:NetworkServiceExt.java 1205 2005-11-14 07:57:10Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -19,35 +19,32 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.net.impl;
+package ch.iserver.ace.net.core;
 
-import ch.iserver.ace.Fragment;
+import ch.iserver.ace.ServerInfo;
+import ch.iserver.ace.algorithm.TimestampFactory;
+import ch.iserver.ace.net.NetworkService;
 
 /**
  *
  */
-public class FragmentImpl implements Fragment {
+public interface NetworkServiceExt extends NetworkService {
 
-	private int participantId;
-	private String text;
+	public void setDiscovery(Discovery discovery);
 	
-	public FragmentImpl(int participantId, String text) {
-		this.participantId = participantId;
-		this.text = text;
-	}
+	public void setServerInfo(ServerInfo info);
+	
+	public void conceal(String docId);
+	
+	public boolean hasPublishedDocuments();
+	
+	public TimestampFactory getTimestampFactory();
 	
 	/**
-	 * @see ch.iserver.ace.Fragment#getParticipantId()
+	 * Returns whether the network layer has been stopped.
+	 * If true, no messages shall be received and processed anymore.
+	 * 
+	 * @return
 	 */
-	public int getParticipantId() {
-		return participantId;
-	}
-
-	/**
-	 * @see ch.iserver.ace.Fragment#getText()
-	 */
-	public String getText() {
-		return text;
-	}
-
+	public boolean isStopped();
 }

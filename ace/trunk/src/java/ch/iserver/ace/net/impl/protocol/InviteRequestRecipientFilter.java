@@ -26,9 +26,9 @@ import org.beepcore.beep.core.OutputDataStream;
 
 import ch.iserver.ace.net.InvitationProxy;
 import ch.iserver.ace.net.NetworkServiceCallback;
-import ch.iserver.ace.net.impl.InvitationProxyFactory;
-import ch.iserver.ace.net.impl.NetworkServiceImpl;
-import ch.iserver.ace.net.impl.RemoteDocumentProxyExt;
+import ch.iserver.ace.net.core.InvitationProxyFactory;
+import ch.iserver.ace.net.core.NetworkServiceImpl;
+import ch.iserver.ace.net.core.RemoteDocumentProxyExt;
 import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
 
 /**
