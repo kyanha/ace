@@ -98,11 +98,12 @@ public interface DocumentManager {
 	 * Saves a document into a new file. The file will be overwritten if it
 	 * exists. The file is associated with the item, further calls to
 	 * {@link #saveDocument(DocumentItem)} save the document to the new
-	 * file.
+	 * file. If the copy parameter is false, the file property of the
+	 * item is set to the new file. Otherwise it is left as it is.
 	 * 
 	 * @param file where to save the document
 	 * @param item the document item to save
-	 * @param copy TODO
+	 * @param copy whether this saveDocumentAs call should create a copy
 	 * @throws IOException in case of IO problems
 	 */
 	void saveDocumentAs(File file, DocumentItem item, boolean copy) throws IOException;
