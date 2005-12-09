@@ -24,6 +24,8 @@ package ch.iserver.ace.net.impl.protocol;
 import org.apache.log4j.Logger;
 import org.beepcore.beep.core.ReplyListener;
 
+import ch.iserver.ace.net.impl.PublishedDocument;
+
 /**
  *
  */
@@ -44,17 +46,23 @@ public class InviteRequestSenderFilter extends AbstractRequestFilter {
 		try {
 			if (request.getType() == ProtocolConstants.INVITE) {
 				LOG.info("--> process()");		
-				byte[] data = serializer.createRequest(ProtocolConstants.INVITE, request.getPayload());
+				PublishedDocument doc = (PublishedDocument) request.getPayload();
+				byte[] data = serializer.createRequest(ProtocolConstants.INVITE, doc.getId());
 				RemoteUserSession session = SessionManager.getInstance().getSession(request.getUserId());
 				if (session != null) {
 					MainConnection connection = session.getMainConnection();
 					LOG.debug("send data to ["+session.getUser().getUserDetails().getUsername()+"] ["+(new String(data))+"]");
 					connection.send(data, session.getUser().getUserDetails().getUsername(), listener);
-					LOG.info("<-- process()");
 				} else {
-					LOG.warn("no RemoteUserSession for [" + request.getUserId() + "] available");
-					//TODO: can it ever come here? if yes, create session?
+					LOG.warn("no RemoteUserSession for [" + request.getUserId() + "] available, reject invitation");
+					//can it ever come here? if yes, create session? -> should not: in order
+					//to invite, a document must be published and in order to publish a document
+					//a RemoteUserSession must be established, so usually session is always available 
+					//possible case: user has been discarded in the meanwhile of the invite processing, 
+					//so reject the invitation
+					doc.rejectInvitedUser(request.getUserId());
 				}
+				LOG.info("<-- process()");
 			} else {
 				super.process(request);
 			}
