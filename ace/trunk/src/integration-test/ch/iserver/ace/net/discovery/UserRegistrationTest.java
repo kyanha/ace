@@ -18,11 +18,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package ch.iserver.ace.net.impl.discovery;
+package ch.iserver.ace.net.discovery;
 
 import junit.framework.TestCase;
 
-import org.apache.log4j.Logger;
 import org.easymock.MockControl;
 
 import ch.iserver.ace.UserDetails;
@@ -33,9 +32,7 @@ import ch.iserver.ace.net.core.DiscoveryCallbackImpl;
 import ch.iserver.ace.net.core.NetworkProperties;
 import ch.iserver.ace.net.discovery.Bonjour;
 import ch.iserver.ace.net.discovery.PeerDiscovery;
-import ch.iserver.ace.net.discovery.TXTRecordProxy;
 import ch.iserver.ace.net.discovery.UserRegistration;
-import ch.iserver.ace.net.discovery.UserRegistrationImpl;
 import ch.iserver.ace.net.protocol.LogFilter;
 import ch.iserver.ace.net.protocol.RequestFilter;
 

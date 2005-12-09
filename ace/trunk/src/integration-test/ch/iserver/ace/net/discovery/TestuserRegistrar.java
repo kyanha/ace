@@ -19,14 +19,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.net.impl.discovery;
+package ch.iserver.ace.net.discovery;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import ch.iserver.ace.net.core.NetworkProperties;
-import ch.iserver.ace.net.discovery.TXTRecordProxy;
 
 import com.apple.dnssd.DNSSD;
 import com.apple.dnssd.DNSSDRegistration;

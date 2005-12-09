@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package ch.iserver.ace.net.impl.discovery;
+package ch.iserver.ace.net.discovery;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,16 +37,10 @@ import ch.iserver.ace.net.core.RemoteUserProxyExt;
 import ch.iserver.ace.net.core.RemoteUserProxyFactory;
 import ch.iserver.ace.net.discovery.AbstractQueryListener;
 import ch.iserver.ace.net.discovery.Bonjour;
-import ch.iserver.ace.net.discovery.BrowseListenerImpl;
-import ch.iserver.ace.net.discovery.DiscoveryCallbackAdapter;
-import ch.iserver.ace.net.discovery.DiscoveryManagerImpl;
 import ch.iserver.ace.net.discovery.IPQueryListener;
 import ch.iserver.ace.net.discovery.PeerDiscovery;
-import ch.iserver.ace.net.discovery.PeerDiscoveryImpl;
-import ch.iserver.ace.net.discovery.ResolveListenerImpl;
 import ch.iserver.ace.net.discovery.TXTQueryListener;
 import ch.iserver.ace.net.discovery.UserRegistration;
-import ch.iserver.ace.net.discovery.UserRegistrationImpl;
 import ch.iserver.ace.net.protocol.LogFilter;
 
 import com.apple.dnssd.BrowseListener;
