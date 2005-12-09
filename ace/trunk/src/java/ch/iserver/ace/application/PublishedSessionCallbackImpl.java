@@ -47,7 +47,7 @@ public class PublishedSessionCallbackImpl extends SessionCallbackImpl implements
 	public void joinRequest(final JoinRequest request) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				String user = "\"" + request.getUser().getName() + "\"";
+				String user = request.getUser().getName();
 				String title = "\"" + documentItem.getTitle() + "\"";
 				int result = dialogController.showJoinRequest(user, title);
 				try {

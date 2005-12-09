@@ -25,6 +25,7 @@ import org.apache.log4j.Logger;
 import org.beepcore.beep.core.Channel;
 import org.beepcore.beep.core.InputDataStream;
 import org.beepcore.beep.core.MessageMSG;
+import org.beepcore.beep.core.RequestHandler;
 import org.beepcore.beep.transport.tcp.TCPSession;
 
 import ch.iserver.ace.net.impl.MutableUserDetails;
@@ -37,7 +38,7 @@ import ch.iserver.ace.net.impl.discovery.DiscoveryManagerFactory;
 /**
  *
  */
-public class MainRequestHandler extends AbstractRequestHandler {
+public class MainRequestHandler implements RequestHandler {
 	
 	private static Logger LOG = Logger.getLogger(MainRequestHandler.class);
 	
@@ -45,8 +46,12 @@ public class MainRequestHandler extends AbstractRequestHandler {
 	private Deserializer deserializer;
 	private RequestParserHandler handler;	
 	
-	
-	//TODO: write integration-test for this class
+	/**
+	 * 
+	 * @param deserializer
+	 * @param filter
+	 * @param handler
+	 */
 	public MainRequestHandler(Deserializer deserializer, RequestFilter filter, RequestParserHandler handler) {
 		this.deserializer = deserializer;
 		this.filter = filter;
@@ -69,7 +74,7 @@ public class MainRequestHandler extends AbstractRequestHandler {
 				deserializer.deserialize(rawData, handler);
 				request = handler.getResult();
 				String userid = request.getUserId();
-				DiscoveryManager discoveryManager = DiscoveryManagerFactory.getDiscoveryManager(null);
+				DiscoveryManager discoveryManager = DiscoveryManagerFactory.getDiscoveryManager();
 				RemoteUserProxyExt user = discoveryManager.getUser(userid);
 				if (user == null) {
 					//user is not known yet
@@ -94,15 +99,5 @@ public class MainRequestHandler extends AbstractRequestHandler {
 			LOG.error("could not process request ["+e+"]");
 		}
 		LOG.debug("<-- receiveMSG");
-	}
-	
-
-	public void cleanup() {
-		//TODO: consider a thorough and meaningful cleanup
-		throw new UnsupportedOperationException();
-	}
-	
-	protected Logger getLogger() {
-		return LOG;
 	}
 }

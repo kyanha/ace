@@ -56,7 +56,7 @@ public class PublishDocumentPrepareFilter extends AbstractRequestFilter {
 	public void process(Request request) {
 		if (request.getType() == ProtocolConstants.PUBLISH) {
 			LOG.info("--> process()");
-			DiscoveryManager discoveryManager = DiscoveryManagerFactory.getDiscoveryManager(null);
+			DiscoveryManager discoveryManager = DiscoveryManagerFactory.getDiscoveryManager();
 			if (discoveryManager.getSize() > 0) {
 				Object doc = request.getPayload();
 				try {
@@ -93,7 +93,6 @@ public class PublishDocumentPrepareFilter extends AbstractRequestFilter {
 						}
 					}
 				} catch (Exception e) {
-					//TODO: handling
 					LOG.error("caught exception [" + e + ", " + e.getMessage() + "]");
 				}
 			} else {

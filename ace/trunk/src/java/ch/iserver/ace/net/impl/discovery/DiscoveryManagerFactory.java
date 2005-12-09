@@ -29,12 +29,25 @@ import ch.iserver.ace.util.ParameterValidator;
  */
 public class DiscoveryManagerFactory {
 
-	private static DiscoveryManager instance;
+	private static DiscoveryManagerImpl instance;
 	
-	public static DiscoveryManager getDiscoveryManager(DiscoveryCallback callback) {
+	public static void init(DiscoveryCallback callback) {
 		if (instance == null) {
 			ParameterValidator.notNull("callback", callback);
 			instance = new DiscoveryManagerImpl(callback);
+		}
+	}
+	
+	public static DiscoveryManager getDiscoveryManager() {
+		if (instance == null) {
+			throw new IllegalStateException("init(callback) must be called first");
+		}
+		return instance;
+	}
+	
+	public static DiscoveryCallbackAdapter getDiscoveryCallbackAdapter() {
+		if (instance == null) {
+			throw new IllegalStateException("init(callback) must be called first");
 		}
 		return instance;
 	}

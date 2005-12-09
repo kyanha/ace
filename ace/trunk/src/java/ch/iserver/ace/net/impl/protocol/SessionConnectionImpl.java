@@ -64,10 +64,12 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 	/** methods from abstract class AbstractConnection  **/
 	/*****************************************************/
 	public void cleanup() {
+		LOG.debug("--> cleanup()");
 		serializer = null;
 		setReplyListener(null);
 		setChannel(null);
 		setState(STATE_CLOSED);
+		LOG.debug("<-- cleanup()");
 	}
 	
 	/***********************************************/
@@ -102,6 +104,7 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 				LOG.error("exception processing leave ["+e+", "+e.getMessage()+"]");
 			}
 			setState(STATE_CLOSED);
+			executeCleanup();
 		} else {
 			LOG.warn("not sending leave, state is " + getStateString());
 		}

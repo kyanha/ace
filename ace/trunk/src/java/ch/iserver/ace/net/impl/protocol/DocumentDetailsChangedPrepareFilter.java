@@ -76,7 +76,7 @@ public class DocumentDetailsChangedPrepareFilter extends AbstractRequestFilter {
 					}
 				}
 			} catch (Exception e) {
-				//TODO: handling
+				e.printStackTrace();
 				LOG.error("caught exception ["+e.getMessage()+"]");
 			}
 			LOG.info("<-- process()");

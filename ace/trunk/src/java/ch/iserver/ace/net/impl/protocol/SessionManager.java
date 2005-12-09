@@ -76,12 +76,11 @@ public class SessionManager {
 	}
 	
 	public RemoteUserSession createSession(RemoteUserProxyExt user, TCPSession session, Channel mainChannel) {
-		//TODO: must not be synchronized right?
 		RemoteUserSession newSession = new RemoteUserSession(session, new MainConnection(mainChannel), user);
 		newSession.setTimestampFactory(factory);
 		sessions.put(user.getId(), newSession);
 		//TODO: test discoveryManager
-		DiscoveryManagerFactory.getDiscoveryManager(null).setSessionEstablished(user.getId());
+		DiscoveryManagerFactory.getDiscoveryManager().setSessionEstablished(user.getId());
 		return newSession;
 	}
 	
@@ -95,7 +94,6 @@ public class SessionManager {
 	 */
 	public void closeSessions() {
 		LOG.debug("--> closeSessions()");
-		//TODO: could end up in deadlock?
 		synchronized(sessions) {
 			Iterator iter = sessions.values().iterator();
 			while (iter.hasNext()) {
@@ -116,6 +114,7 @@ public class SessionManager {
 	 * @return the session of the user
 	 */
 	public RemoteUserSession getSession(String id) {
+		LOG.debug("getSession for [" + id + "]");
 		RemoteUserSession session = (RemoteUserSession) sessions.get(id);
 		if (session == null) 
 			LOG.warn("session for ["+id+"] not found");

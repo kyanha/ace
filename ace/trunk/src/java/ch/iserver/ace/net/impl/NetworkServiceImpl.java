@@ -134,7 +134,6 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 		//start discovery process
 		DiscoveryLauncher launcher = new DiscoveryLauncher(this, requestChain);
 		launcher.start();
-		//TODO: warn message if dnssd is not installed locally
 	}
 	
 	public void stop() {
@@ -147,8 +146,8 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 			discovery.abort();
 			/** server site **/
 			//close() on all participantconnections of all documents
-			LOG.debug("close() on all participantconnections of all documents");
 			Map docs = getPublishedDocuments();
+			LOG.debug("close() on all participant connections of all documents (" + docs.size() + ")");
 			synchronized(docs) {
 				Iterator iter = docs.values().iterator();
 				while (iter.hasNext()) {
@@ -160,16 +159,16 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 			/** client site **/
 			//send leave to all joined document publishers
 			LOG.debug("send leave to all joined document publishers");
-			Map users = DiscoveryManagerFactory.getDiscoveryManager(null).getUsers();
+			Map users = DiscoveryManagerFactory.getDiscoveryManager().getUsers();
 			synchronized (users) {
 				Iterator iter = users.values().iterator();
 				while (iter.hasNext()) { //for each user
 					RemoteUserProxyExt user = (RemoteUserProxyExt) iter.next();
 					LOG.debug("process stop() for "+user.getUserDetails().getUsername());
 					RemoteUserSession session = SessionManager.getInstance().removeSession(user.getId()); //session may be null
-					docs = user.getDocuments();
-					synchronized(docs) {
-						Iterator iter2 = docs.values().iterator();
+					Map documents = user.getDocuments();
+					synchronized(documents) {
+						Iterator iter2 = documents.values().iterator();
 						while (iter2.hasNext()) { //for each doc of the current user
 							RemoteDocumentProxyExt doc = (RemoteDocumentProxyExt) iter2.next();
 							if (doc.isJoined() && session != null) {
@@ -246,6 +245,7 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	}
 	
 	public void conceal(String docId) {
+		LOG.debug("conceal(" + docId + ")");
 		publishedDocs.remove(docId);
 	}
 	

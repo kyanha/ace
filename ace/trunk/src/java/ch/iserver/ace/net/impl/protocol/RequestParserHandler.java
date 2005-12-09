@@ -59,7 +59,7 @@ public class RequestParserHandler extends ParserHandler {
 	
 	public void endDocument() throws SAXException {
 		int type = getType();
-		if (type == PUBLISHED_DOCUMENTS || type == USER_DISCARDED) {
+		if (type == USER_DISCARDED) {
 			result = new RequestImpl(type, userId, null);
 		} else if (type == PUBLISH 
 				|| type == CONCEAL 
@@ -67,13 +67,15 @@ public class RequestParserHandler extends ParserHandler {
 				|| type == JOIN
 				|| type == INVITE
 				|| type == INVITE_REJECTED
-				|| type == JOIN_REJECTED) {
+				|| type == JOIN_REJECTED
+				|| type == CHANNEL_SESSION) {
 			result = new RequestImpl(type, userId, info);
+			info = null;
 		} else if (type == SEND_DOCUMENTS) {
 			result = new RequestImpl(SEND_DOCUMENTS, userId, requestPayload);
 			requestPayload = null;
-		} else if (type == CHANNEL_MAIN || type == CHANNEL_SESSION) {
-			result = new RequestImpl(type, userId, user);
+		} else if (type == CHANNEL_MAIN) {
+			result = new RequestImpl(CHANNEL_MAIN, userId, user);
 			user = null;
 		}
 	}
@@ -121,12 +123,6 @@ public class RequestParserHandler extends ParserHandler {
 		} else if (requestType == JOIN_REJECTED) {
 			String code = attributes.getValue(CODE);
 			info.setData(code);
-		} else if (qName.equals(TAG_QUERY)) { //TODO: remove tag query, is discarded
-			if (attributes.getValue(QUERY_TYPE).equals(QUERY_TYPE_PUBLISHED_DOCUMENTS)) {
-				requestType = PUBLISHED_DOCUMENTS;
-			} else {
-				LOG.warn("unkown query type "+attributes.getValue(QUERY_TYPE));
-			}
 		} else if (qName.equals(TAG_PUBLISHED_DOCS)) {
 			userId = attributes.getValue(USER_ID);
 			requestType = SEND_DOCUMENTS;
@@ -148,12 +144,13 @@ public class RequestParserHandler extends ParserHandler {
 			requestType = INVITE;
 		} else if (qName.equals(TAG_CHANNEL)) {
 			String type = attributes.getValue(TYPE);
-//			String discovery = attributes.getValue(DISCOVERY);
-//			isDiscovery =  (discovery != null) ? Boolean.valueOf(discovery) : Boolean.FALSE; 
 			if (type.equals(RemoteUserSession.CHANNEL_MAIN)) {
 				requestType = CHANNEL_MAIN;
 			} else if (type.equals(RemoteUserSession.CHANNEL_SESSION)) {
 				requestType = CHANNEL_SESSION;
+				userId = attributes.getValue(USER_ID);
+				String docId = attributes.getValue(DOC_ID);
+				info = new DocumentInfo(docId, null, userId);
 			} else {
 				LOG.warn("unkown channel type ["+type+"], use '" + RemoteUserSession.CHANNEL_MAIN + " as default.");
 				requestType = CHANNEL_MAIN;

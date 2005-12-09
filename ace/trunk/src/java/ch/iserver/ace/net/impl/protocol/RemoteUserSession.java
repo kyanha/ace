@@ -34,6 +34,7 @@ import org.beepcore.beep.core.Channel;
 import org.beepcore.beep.core.OutputDataStream;
 import org.beepcore.beep.core.ProfileRegistry;
 import org.beepcore.beep.core.RequestHandler;
+import org.beepcore.beep.lib.Reply;
 import org.beepcore.beep.transport.tcp.TCPSession;
 import org.beepcore.beep.transport.tcp.TCPSessionCreator;
 
@@ -138,7 +139,7 @@ public class RemoteUserSession {
 		if (!isInitiated())
 			initiateTCPSession();
 		if (mainConnection == null) {
-			Channel channel = startChannel(CHANNEL_MAIN, null);
+			Channel channel = startChannel(CHANNEL_MAIN, null, null);
 			LOG.debug("main channel to ["+user.getUserDetails().getUsername()+"] started");
 			mainConnection = new MainConnection(channel);
 		} else {
@@ -151,11 +152,12 @@ public class RemoteUserSession {
 	 * 
 	 * @param type the type of the channel
 	 * @param port the ParticipantPort for the ParticipantRequestHandler (optional)
+	 * @param docId to open a session channel a document id can be passed
 	 * @return
 	 * @throws ConnectionException
 	 */
-	public Channel startChannel(String type, ParticipantPort port) throws ConnectionException {
-		return startChannelImpl(type, port);
+	public Channel startChannel(String type, ParticipantConnectionImpl connection, String docId) throws ConnectionException {
+		return startChannelImpl(type, connection, docId);
 	}
 	
 	/********************************************/
@@ -169,7 +171,6 @@ public class RemoteUserSession {
 	 * @return
 	 */
 	public SessionConnectionImpl addSessionConnection(String docId, Channel collaborationChannel) {
-		//TODO: must not be snychronized right?
 		LOG.debug("--> addSessionConnection() for doc ["+docId+"]");
 		String username = getUser().getUserDetails().getUsername();
 		SessionConnectionImpl conn = new SessionConnectionImpl(docId, collaborationChannel, 
@@ -221,7 +222,6 @@ public class RemoteUserSession {
 	 * @return
 	 */
 	public ParticipantConnectionImpl addParticipantConnection(String docId) {
-		//TODO: do i have to check for isAlive as well?
 		LOG.debug("--> createParticipantConnection() for doc ["+docId+"]");
 		assert !participantConnections.containsKey(docId);
 		ParticipantConnectionImpl connection = ParticipantConnectionImplFactory.getInstance().
@@ -261,22 +261,27 @@ public class RemoteUserSession {
 	 * after a call to <code>cleanup()</code>. This method
 	 * is called when the BEEP session has terminated already.
 	 */
-	public synchronized void cleanup() {
+	public void cleanup() {
 		LOG.debug("--> cleanup()");
-		
+		LOG.debug(participantConnections.size() + " pConnection(s)");
 		Iterator iter = participantConnections.values().iterator();
 		while (iter.hasNext()) {
 			ParticipantConnectionImpl conn = (ParticipantConnectionImpl) iter.next();
 			ParticipantPort port = conn.getParticipantPort();
-			removeParticipantConnection(conn.getDocumentId());
+//			removeParticipantConnection(conn.getDocumentId());
+			conn.cleanup();
 			port.leave();
 		}
+		participantConnections = null;
+		
+		LOG.debug(sessionConnections.size() + " sessionConnection(s)");
 		iter = sessionConnections.values().iterator();
 		while (iter.hasNext()) {
 			SessionConnectionImpl conn = (SessionConnectionImpl) iter.next();
 			RemoteDocumentProxyExt doc = getUser().getSharedDocument(conn.getDocumentId());
 			SessionConnectionCallback callback = doc.getSessionConnectionCallback();
-			removeSessionConnection(conn.getDocumentId());
+			conn.cleanup();
+//			removeSessionConnection(conn.getDocumentId());
 			if (getUser().getId().equals(doc.getPublisher().getId())) { //terminated user was publisher
 				callback.sessionTerminated();
 			} else { //terminated user was participant
@@ -284,7 +289,6 @@ public class RemoteUserSession {
 			}
 		}
 		
-		participantConnections = null;
 		sessionConnections = null;
 		mainConnection = null;
 		setTCPSession(null);
@@ -347,15 +351,14 @@ public class RemoteUserSession {
 		LOG.debug("--> initiateTCPSession()");
 		try {
 			//TODO: how to handle when a connection to a user is to be established who resides
-			//behind a router? timeout?
+			//behind a router? timeout? -> use proxy?
 			ProfileRegistry registry = ProfileRegistryFactory.getProfileRegistry();
 			TCPSession newSession = TCPSessionCreator.initiate(host, port, registry); 
 			setTCPSession( newSession );
 			LOG.info("initiated session to "+host+":"+port);
 			isInitiated = true;
-			DiscoveryManagerFactory.getDiscoveryManager(null).setSessionEstablished(user.getId());
+			DiscoveryManagerFactory.getDiscoveryManager().setSessionEstablished(user.getId());
 		} catch (BEEPException be) {
-			//TODO: retry strategy?
 			LOG.error("could not initiate session ["+be+"]");
 			if (be.getCause() instanceof ConnectException) {
 				String msg = getUser().getUserDetails().getUsername() + "[" + host + ":" + port + "]";
@@ -372,7 +375,7 @@ public class RemoteUserSession {
 	 * @return
 	 * @throws ConnectionException
 	 */
-	private Channel startChannelImpl(String type, ParticipantPort port) throws ConnectionException {
+	private Channel startChannelImpl(String type, ParticipantConnectionImpl connection, String docId) throws ConnectionException {
 		try {
 			String uri = NetworkProperties.get(NetworkProperties.KEY_PROFILE_URI);
 			LOG.debug("startChannel(type="+type+")");
@@ -381,16 +384,19 @@ public class RemoteUserSession {
 			String channelType;
 			if (type == CHANNEL_MAIN) {
 				handler = ProfileRegistryFactory.getMainRequestHandler();
-				channelType = getChannelTypeXML(CHANNEL_MAIN);
+				channelType = getChannelTypeXML(CHANNEL_MAIN, null);
 			} else if (type == CHANNEL_SESSION) {
 				CollaborationDeserializer deserializer = new CollaborationDeserializer();
 				CollaborationParserHandler parserHandler = new CollaborationParserHandler();
 				parserHandler.setTimestampFactory(getTimestampFactory());
 				NetworkServiceExt service = NetworkServiceImpl.getInstance();
 				ParticipantRequestHandler pHandler = new ParticipantRequestHandler(deserializer, getTimestampFactory(), service);
-				pHandler.setParticipantPort(port);
+				if (connection != null) {
+					pHandler.setParticipantConnection(connection);
+					pHandler.setParticipantPort(connection.getParticipantPort());
+				}
 				handler = (RequestHandler) domain.wrap(pHandler, RequestHandler.class);
-				channelType = getChannelTypeXML(CHANNEL_SESSION);
+				channelType = getChannelTypeXML(CHANNEL_SESSION, docId);
 			} else {
 				//TODO: proxy channel?
 				throw new IllegalStateException("unknown channel type ["+type+"]");
@@ -399,17 +405,27 @@ public class RemoteUserSession {
 			byte[] data = channelType.getBytes(NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 			OutputDataStream output = DataStreamHelper.prepare(data);
 			LOG.debug("--> sendMSG() for channel type");
-			channel.sendMSG(output, ResponseListener.getInstance());
+//			channel.sendMSG(output, ResponseListener.getInstance());
+			Reply reply = new Reply();
+			channel.sendMSG(output, reply);
+			reply.getNextReply(); //wait for synchronous response
 			LOG.debug("<-- sendMSG()");
 			return channel;
 		} catch (Exception be) {
-			//TODO: retry strategy?
 			LOG.error("could not start channel ["+be+"]");
 			throw new ConnectionException("could not start channel");
 		}
 	}
 	
-	private String getChannelTypeXML(String type) {
-		 return "<ace><channel type=\"" + type + "\"/></ace>";
+	private String getChannelTypeXML(String type, String docId) {
+		String result = "";
+		if (type.equals(CHANNEL_MAIN)) {
+			result = "<ace><channel type=\"" + type + "\"/></ace>";
+		} else if (type.equals(CHANNEL_SESSION)) {
+			String id = NetworkServiceImpl.getInstance().getUserId();
+			result = "<ace><channel type=\"" + type + "\" docId=\"" + docId + "\" userid=\"" + id + "\"/></ace>";
+		}
+		 
+		 return result;
 	}
 }

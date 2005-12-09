@@ -25,6 +25,7 @@ import org.apache.log4j.Logger;
 import org.beepcore.beep.core.InputDataStream;
 import org.beepcore.beep.core.MessageMSG;
 import org.beepcore.beep.core.OutputDataStream;
+import org.beepcore.beep.core.RequestHandler;
 
 import ch.iserver.ace.FailureCodes;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
@@ -39,12 +40,13 @@ import ch.iserver.ace.util.ParameterValidator;
 /**
  * Server side request handler for a collaborative session.
  */
-public class ParticipantRequestHandler extends AbstractRequestHandler {
+public class ParticipantRequestHandler implements RequestHandler {
 
 	private static Logger LOG = Logger.getLogger(ParticipantRequestHandler.class);
 	
 	private Deserializer deserializer;
 	private ParticipantPort port;
+	private ParticipantConnectionImpl connection;
 	private TimestampFactory factory;
 	private NetworkServiceExt service;
 	
@@ -62,8 +64,13 @@ public class ParticipantRequestHandler extends AbstractRequestHandler {
 		this.port = port;
 	}
 	
+	public void setParticipantConnection(ParticipantConnectionImpl connection) {
+		this.connection = connection;
+	}
+	
 	public void cleanup() {
 		deserializer = null;
+		connection = null;
 		port = null;
 	}
 	
@@ -93,12 +100,18 @@ public class ParticipantRequestHandler extends AbstractRequestHandler {
 				OutputDataStream os = new OutputDataStream();
 				os.setComplete();
 				message.sendRPY(os);
-//				message.sendNUL(); //confirm reception of msg
 			} catch (Exception e) {
 				LOG.error("could not send confirmation ["+e.getMessage()+"]");
 			}
 			
+			if (port == null) {
+				LOG.error("ParticipantRequestHandler has no ParticipantPort, return without any further processing");
+				return;
+			}
+			
 			if (type == ProtocolConstants.LEAVE) {
+				//notify ParticipantConnectionImpl in order that no sessionTerminated message is sent
+				connection.setHasLeft(true);
 				port.leave();
 				LOG.debug("participant ["+((DocumentInfo)result.getPayload()).getParticipantId()+"] left.");
 				//cleanup of participant resources is done in ParticipantConnectionImpl.close()
@@ -116,12 +129,6 @@ public class ParticipantRequestHandler extends AbstractRequestHandler {
 				LOG.debug("receiveAcknowledge("+siteId+", "+timestamp);
 				port.receiveAcknowledge(Integer.parseInt(siteId), timestamp);
 			} 
-			
-//			try {				
-//				message.sendNUL(); //confirm reception of msg
-//			} catch (Exception e) {
-//				LOG.error("could not send confirmation ["+e.getMessage()+"]");
-//			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			LOG.error("could not process request ["+e+"]");
@@ -129,10 +136,6 @@ public class ParticipantRequestHandler extends AbstractRequestHandler {
 		}
 		LOG.debug("<-- receiveMSG");
 		
-	}
-	
-	protected Logger getLogger() {
-		return LOG;
 	}
 
 }

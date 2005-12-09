@@ -116,7 +116,7 @@ public class PublishedDocument implements DocumentServer {
 		LOG.debug("--> invite("+invitation.getUser()+")");
 		String userId = invitation.getUser().getId();
 		invitations.put(userId, invitation);
-		Request request = new RequestImpl(ProtocolConstants.INVITE, userId, docId);
+		Request request = new RequestImpl(ProtocolConstants.INVITE, userId, this);
 		filter.process(request);
 		LOG.debug("<-- invite()");
 	}
@@ -135,7 +135,9 @@ public class PublishedDocument implements DocumentServer {
 		if (isShutdown()) throw new IllegalStateException("document has been shutdown already");
 		Request request = new RequestImpl(ProtocolConstants.CONCEAL, null, this);
 		filter.process(request);
-		service.conceal(getId());
+		if (!service.isStopped()) {
+			service.conceal(getId());
+		}
 		//stop accepting joins
 		isShutdown = true;
 		LOG.debug("<-- shutdown()");

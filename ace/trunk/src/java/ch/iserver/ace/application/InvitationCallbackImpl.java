@@ -48,7 +48,7 @@ public class InvitationCallbackImpl implements InvitationCallback {
 	
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				String inviterName = "\"" + invitation.getInviter().getName() + "\"";
+				String inviterName = invitation.getInviter().getName();
 				String docTitle = "\"" + invitation.getDocument().getTitle() + "\"";
 				int result = dialogController.showInvitationReceived(inviterName, docTitle);
 				//int result = dialogController.showInvitationReceived(inviterName, docTitle);

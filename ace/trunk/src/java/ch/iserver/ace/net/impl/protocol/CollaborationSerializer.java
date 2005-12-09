@@ -42,7 +42,6 @@ import ch.iserver.ace.algorithm.Timestamp;
 import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.net.PortableDocument;
 import ch.iserver.ace.net.impl.MutableUserDetails;
-import ch.iserver.ace.net.impl.NetworkConstants;
 import ch.iserver.ace.net.impl.NetworkProperties;
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;
@@ -72,7 +71,6 @@ public class CollaborationSerializer implements Serializer, ProtocolConstants {
 	 * @see ch.iserver.ace.net.impl.protocol.Serializer#createQuery(int)
 	 */
 	public byte[] createQuery(int type) throws SerializeException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -81,7 +79,6 @@ public class CollaborationSerializer implements Serializer, ProtocolConstants {
 	 */
 	public byte[] createRequest(int type, Object data)
 			throws SerializeException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -97,8 +94,8 @@ public class CollaborationSerializer implements Serializer, ProtocolConstants {
 			handler.setResult(result);
 			handler.startDocument();
 			AttributesImpl attrs = new AttributesImpl();
-			handler.startElement("", "", "ace", attrs);
-			handler.startElement("", "", "response", attrs);
+			handler.startElement("", "", TAG_ACE, attrs);
+			handler.startElement("", "", TAG_RESPONSE, attrs);
 			String userid = NetworkServiceImpl.getInstance().getUserId();
 			
 			if (type == JOIN_DOCUMENT) {
@@ -118,8 +115,8 @@ public class CollaborationSerializer implements Serializer, ProtocolConstants {
 			} else if (type == JOIN_REJECTED) {
 				throw new IllegalStateException("JOIN_REJECTED must be serialized with instance of SerializerImpl");
 			}
-			handler.endElement("", "", "response");
-			handler.endElement("", "", "ace");
+			handler.endElement("", "", TAG_RESPONSE);
+			handler.endElement("", "", TAG_ACE);
 			handler.endDocument();
 			output.flush();
 			return output.toByteArray();
@@ -137,7 +134,7 @@ public class CollaborationSerializer implements Serializer, ProtocolConstants {
 		for (int i = 0; i < ids.length; i++) {
 			attrs = new AttributesImpl();
 			int id = ids[i];
-			attrs.addAttribute("", "", "id", "", Integer.toString(id));
+			attrs.addAttribute("", "", ID, "", Integer.toString(id));
 			handler.startElement("", "", PARTICIPANT, attrs);
 			attrs = new AttributesImpl();
 			String userid, name, address, port, isDNSSDdiscoveredStr;
@@ -198,8 +195,8 @@ public class CollaborationSerializer implements Serializer, ProtocolConstants {
 			handler.setResult(result);
 			handler.startDocument();
 			AttributesImpl attrs = new AttributesImpl();
-			handler.startElement("", "", "ace", attrs);
-			handler.startElement("", "", "notification", attrs);
+			handler.startElement("", "", TAG_ACE, attrs);
+			handler.startElement("", "", TAG_NOTIFICATION, attrs);
 			if (type == LEAVE) {
 				SessionConnectionImpl conn = (SessionConnectionImpl) data;
 				attrs.addAttribute("", "", DOC_ID, "", conn.getDocumentId());
@@ -214,8 +211,8 @@ public class CollaborationSerializer implements Serializer, ProtocolConstants {
 			} else {
 				LOG.error("unknown notification type ["+type+"]");
 			}
-			handler.endElement("", "", "notification");
-			handler.endElement("", "", "ace");
+			handler.endElement("", "", TAG_NOTIFICATION);
+			handler.endElement("", "", TAG_ACE);
 			handler.endDocument();
 			output.flush();
 			return output.toByteArray();
@@ -233,8 +230,8 @@ public class CollaborationSerializer implements Serializer, ProtocolConstants {
 			handler.setResult(result);
 			handler.startDocument();
 			AttributesImpl attrs = new AttributesImpl();
-			handler.startElement("", "", "ace", attrs);
-			handler.startElement("", "", "session", attrs);
+			handler.startElement("", "", TAG_ACE, attrs);
+			handler.startElement("", "", TAG_SESSION, attrs);
 			
 			if (type == REQUEST) {
 				Request algoRequest = (Request) data;
@@ -323,8 +320,8 @@ public class CollaborationSerializer implements Serializer, ProtocolConstants {
 				LOG.error("unknown notification type ["+type+"]");
 			}
 			
-			handler.endElement("", "", "session");
-			handler.endElement("", "", "ace");
+			handler.endElement("", "", TAG_SESSION);
+			handler.endElement("", "", TAG_ACE);
 			handler.endDocument();
 			output.flush();
 			return output.toByteArray();
@@ -424,10 +421,10 @@ public class CollaborationSerializer implements Serializer, ProtocolConstants {
 		try {
 			handler = factory.newTransformerHandler();
 			Transformer serializer = handler.getTransformer();
-			serializer.setOutputProperty(OutputKeys.ENCODING, NetworkConstants.DEFAULT_ENCODING);;
+			serializer.setOutputProperty(OutputKeys.ENCODING, 
+					NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 			serializer.setOutputProperty(OutputKeys.INDENT,"no");
 		} catch (TransformerConfigurationException tce) {
-			//TODO: handling
 			LOG.error("transformer could not be configured.");
 		} 
 		return handler;

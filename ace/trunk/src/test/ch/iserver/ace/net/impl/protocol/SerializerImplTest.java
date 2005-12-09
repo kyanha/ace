@@ -10,7 +10,6 @@ import org.easymock.MockControl;
 
 import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.net.DocumentServerLogic;
-import ch.iserver.ace.net.impl.NetworkConstants;
 import ch.iserver.ace.net.impl.NetworkProperties;
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.PublishedDocument;
@@ -26,31 +25,23 @@ public class SerializerImplTest extends TestCase {
 		docServerLogicCtrl.replay();
 	}
 	
-	public void testCreateQueryForPublishedDocuments() throws Exception {
-		Serializer serializer = SerializerImpl.getInstance();
-		
-		byte[] data = serializer.createQuery(ProtocolConstants.PUBLISHED_DOCUMENTS);
-		String actual = new String(data, NetworkConstants.DEFAULT_ENCODING);
-		
-		assertEquals(EXPECTED_QUERY, actual);
-	}
-	
-	public void testCreateResponseForPublishedDocuments() throws Exception {
-		Serializer serializer = SerializerImpl.getInstance();
-		
-		Map docs = new LinkedHashMap();
-		PublishedDocument doc = new PublishedDocument("WERS24-RE2", logic, new DocumentDetails("testfile.txt"), null, null);
-		docs.put("WERS24-RE2", doc);
-		doc = new PublishedDocument("ADSFBW-45S", logic, new DocumentDetails("meeting2.txt"), null, null);
-		docs.put("ADSFBW-45S",doc);
-		doc = new PublishedDocument("23SSWD-3ED", logic, new DocumentDetails("notes232.txt"), null, null);
-		docs.put("23SSWD-3ED", doc);
-		
-		byte[] data = serializer.createResponse(ProtocolConstants.PUBLISHED_DOCUMENTS, docs, null);
-		String actual = new String(data, NetworkConstants.DEFAULT_ENCODING);
-		
-		assertEquals(EXPECTED_RESPONSE, actual);
-	}
+	//PUBLISHED_DOCUMENT response discarded
+//	public void testCreateResponseForPublishedDocuments() throws Exception {
+//		Serializer serializer = SerializerImpl.getInstance();
+//		
+//		Map docs = new LinkedHashMap();
+//		PublishedDocument doc = new PublishedDocument("WERS24-RE2", logic, new DocumentDetails("testfile.txt"), null, null);
+//		docs.put("WERS24-RE2", doc);
+//		doc = new PublishedDocument("ADSFBW-45S", logic, new DocumentDetails("meeting2.txt"), null, null);
+//		docs.put("ADSFBW-45S",doc);
+//		doc = new PublishedDocument("23SSWD-3ED", logic, new DocumentDetails("notes232.txt"), null, null);
+//		docs.put("23SSWD-3ED", doc);
+//		
+//		byte[] data = serializer.createResponse(ProtocolConstants.PUBLISHED_DOCUMENTS, docs, null);
+//		String actual = new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
+//		
+//		assertEquals(EXPECTED_RESPONSE, actual);
+//	}
 	
 	public void testCreateNotificationPublish() throws Exception {
 		Serializer serializer = SerializerImpl.getInstance();
@@ -59,7 +50,7 @@ public class SerializerImplTest extends TestCase {
 		PublishedDocument doc = new PublishedDocument("WERS24-RE2", logic, new DocumentDetails("testfile.txt"), null, null);
 		
 		byte[] data = serializer.createNotification(ProtocolConstants.PUBLISH, doc);
-		String actual = new String(data, NetworkConstants.DEFAULT_ENCODING);
+		String actual = new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 
 		String xmlPublish = XML_PUBLISH_1+userId+XML_PUBLISH_2;
 		
@@ -74,7 +65,7 @@ public class SerializerImplTest extends TestCase {
 		PublishedDocument doc = new PublishedDocument("WERS24-RE2", logic, new DocumentDetails("testfile.txt"), null, null);
 		
 		byte[] data = serializer.createNotification(ProtocolConstants.CONCEAL, doc);
-		String actual = new String(data, NetworkConstants.DEFAULT_ENCODING);
+		String actual = new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 
 		String xmlPublish = XML_CONCEAL_1+userId+XML_CONCEAL_2;
 		
@@ -95,7 +86,7 @@ public class SerializerImplTest extends TestCase {
 		docs.put("23SSWD-3ED", doc);
 		
 		byte[] data = serializer.createNotification(ProtocolConstants.SEND_DOCUMENTS, docs);
-		String actual = new String(data, NetworkConstants.DEFAULT_ENCODING);
+		String actual = new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 
 		assertEquals(XML_SEND_DOCUMENTS, actual);
 	}
@@ -122,6 +113,9 @@ public class SerializerImplTest extends TestCase {
 		String docId = "doc-id-234b";
 		
 //		LOG.debug("--> testCreateRequestInvite()");
+		MockControl serverCtrl = MockControl.createControl(DocumentServerLogic.class);
+		DocumentServerLogic logic = (DocumentServerLogic) serverCtrl.getMock();
+		PublishedDocument doc = new PublishedDocument(docId, logic, null, null, null);
 		byte[] data = serializer.createRequest(ProtocolConstants.INVITE, docId);
 		String actual = new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 
@@ -161,11 +155,6 @@ public class SerializerImplTest extends TestCase {
 	"<reason code=\"501\"/>" +
 	"</joinRejected>" +
 	"</response></ace>";
-	
-	private static final String EXPECTED_QUERY = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-			"<ace><request>" +
-			"<query type=\"docs\"/>" +
-			"</request></ace>";
 	
 	private static final String EXPECTED_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
 			"<ace><response>" +

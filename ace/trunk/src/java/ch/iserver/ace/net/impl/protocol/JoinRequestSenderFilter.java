@@ -24,6 +24,9 @@ package ch.iserver.ace.net.impl.protocol;
 import org.apache.log4j.Logger;
 import org.beepcore.beep.core.ReplyListener;
 
+import ch.iserver.ace.collaboration.JoinRequest;
+import ch.iserver.ace.net.JoinNetworkCallback;
+
 /**
  *
  */
@@ -44,7 +47,8 @@ public class JoinRequestSenderFilter extends AbstractRequestFilter {
 		try {
 			if (request.getType() == ProtocolConstants.JOIN) {
 				LOG.info("--> process()");		
-				byte[] data = serializer.createRequest(ProtocolConstants.JOIN, request.getPayload());
+				JoinNetworkCallbackWrapper wrapper = (JoinNetworkCallbackWrapper) request.getPayload();
+				byte[] data = serializer.createRequest(ProtocolConstants.JOIN, wrapper.getDocId());
 				RemoteUserSession session = SessionManager.getInstance().getSession(request.getUserId());
 				if (session != null) {
 					MainConnection connection = session.getMainConnection();
@@ -53,7 +57,7 @@ public class JoinRequestSenderFilter extends AbstractRequestFilter {
 					LOG.info("<-- process()");
 				} else {
 					LOG.warn("no RemoteUserSession for [" + request.getUserId() + "] available");
-					//TODO: can it ever come here? if yes, create session?
+					wrapper.getCallback().rejected(JoinRequest.REJECTED);
 				}
 			} else {
 				super.process(request);
@@ -64,4 +68,23 @@ public class JoinRequestSenderFilter extends AbstractRequestFilter {
 		}
 	}
 
+	public static class JoinNetworkCallbackWrapper {
+		
+		private String docId;
+		private JoinNetworkCallback callback;
+		
+		public JoinNetworkCallbackWrapper(String docId, JoinNetworkCallback callback) {
+			this.docId = docId;
+			this.callback = callback;
+		}
+
+		public JoinNetworkCallback getCallback() {
+			return callback;
+		}
+
+		public String getDocId() {
+			return docId;
+		}
+	}
+	
 }

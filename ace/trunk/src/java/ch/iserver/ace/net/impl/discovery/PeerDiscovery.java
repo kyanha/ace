@@ -25,7 +25,7 @@ package ch.iserver.ace.net.impl.discovery;
  * 
  *
  */
-interface PeerDiscovery {
+public interface PeerDiscovery {
 
 	/**
 	 * Browses the local network for other services of the same type, i.e.

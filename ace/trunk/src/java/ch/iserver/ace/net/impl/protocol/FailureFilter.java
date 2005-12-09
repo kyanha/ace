@@ -44,8 +44,7 @@ public class FailureFilter extends AbstractRequestFilter {
 		if (message != null) {
 			try {
 				message.sendERR(BEEPError.CODE_SERVICE_NOT_AVAILABLE, "could not process request.");
-			} catch (BEEPException be) {
-				//TODO: handling			
+			} catch (BEEPException be) {			
 				LOG.error("could not send BEEPError ["+be.getMessage()+"]");
 			}
 		} else {

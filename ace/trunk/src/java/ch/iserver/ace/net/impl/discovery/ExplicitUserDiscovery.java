@@ -62,7 +62,7 @@ public class ExplicitUserDiscovery extends Thread {
 		
 		try {
 			proxy.discover();
-			DiscoveryManagerFactory.getDiscoveryManager(null).addUser(proxy);
+			DiscoveryManagerFactory.getDiscoveryManager().addUser(proxy);
 			callback.userDiscoverySucceeded();
 		} catch (DiscoveryException ce) {
 			LOG.debug("could not connect to [" + address + ":" + port + "], explicit user discovery failed");

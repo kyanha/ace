@@ -28,6 +28,7 @@ import org.apache.log4j.Logger;
 import org.beepcore.beep.core.InputDataStream;
 import org.beepcore.beep.core.MessageMSG;
 import org.beepcore.beep.core.OutputDataStream;
+import org.beepcore.beep.core.RequestHandler;
 
 import ch.iserver.ace.FailureCodes;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
@@ -46,7 +47,7 @@ import ch.iserver.ace.util.ParameterValidator;
 /**
  * Client side request handler for a collaborative session.
  */
-public class SessionRequestHandler extends AbstractRequestHandler {
+public class SessionRequestHandler implements RequestHandler {
 
 	private static Logger LOG = Logger.getLogger(SessionRequestHandler.class);
 	
@@ -55,13 +56,15 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 	private String docId, publisherId;
 	private SessionConnectionCallback sessionCallback;
 	private NetworkServiceExt service;
+	private DocumentInfo info;
 	
-	public SessionRequestHandler(Deserializer deserializer, ParserHandler handler, NetworkServiceExt service) {
+	public SessionRequestHandler(Deserializer deserializer, ParserHandler handler, NetworkServiceExt service, DocumentInfo info) {
 		ParameterValidator.notNull("deserializer", deserializer);
 		ParameterValidator.notNull("parserHandler", handler);
 		this.deserializer = deserializer;
 		this.handler = handler;
 		this.service = service;
+		this.info = info;
 	}
 	
 	public void receiveMSG(MessageMSG message) {
@@ -71,8 +74,6 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 		try {
 			Request response = null;
 			int type = ProtocolConstants.NO_TYPE;
-//			synchronized(this) {
-//				LOG.debug("--> synchronize()");
 			if (!service.isStopped()) {
 				InputDataStream input = message.getDataStream();
 				byte[] rawData = DataStreamHelper.read(input); //only one thread shall read data at a time
@@ -84,21 +85,27 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 				type = response.getType();
 				readInData = null;
 			}
-				//testhalber
-				try {
-					if (type != ProtocolConstants.KICKED && type != ProtocolConstants.SESSION_TERMINATED) {
-						OutputDataStream os = new OutputDataStream();
-						os.setComplete();
-						message.sendRPY(os);
-//						message.sendNUL(); //confirm reception of msg
-					}
-				} catch (Exception e) {
-					LOG.error("could not send confirmation ["+e.getMessage()+"]");
-				}
-//				LOG.debug("<-- synchronize()");
-//			}
 			
-//			int type = response.getType();
+			try {
+				OutputDataStream os = new OutputDataStream();
+				os.setComplete();
+				message.sendRPY(os);
+			} catch (Exception e) {
+				LOG.error("could not send confirmation ["+e.getMessage()+"]");
+			}
+			
+			if (sessionCallback == null && type != ProtocolConstants.JOIN_DOCUMENT) {
+				try {
+					publisherId = info.getUserId();
+					docId = info.getDocId();
+					RemoteUserSession session = SessionManager.getInstance().getSession(publisherId);
+					sessionCallback = session.getUser().getSharedDocument(docId).getSessionConnectionCallback();
+					ParameterValidator.notNull("sessionConnectionCallback", sessionCallback);
+				} catch (Exception e) {
+					LOG.error("error in initializing the sessionCallback [" + e + ", " + e.getMessage() + "]");
+				}
+			}
+			
 			if (type == ProtocolConstants.JOIN_DOCUMENT) {	
 				//reception and processing of a joined document
 				PortableDocumentExt doc = (PortableDocumentExt) response.getPayload();
@@ -108,8 +115,7 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 				int participantId = doc.getParticipantId();
 				RemoteUserSession session = SessionManager.getInstance().getSession(publisherId);
 				if (session != null) {
-					SessionConnectionImpl connection = null;
-					connection = session.addSessionConnection(docId, message.getChannel());
+					SessionConnectionImpl connection = session.addSessionConnection(docId, message.getChannel());
 					connection.setParticipantId(participantId);
 					RemoteDocumentProxyExt proxy = session.getUser().getSharedDocument(docId);
 					sessionCallback = proxy.joinAccepted(connection); 
@@ -154,14 +160,6 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 				sessionCallback.sessionTerminated();
 				executeCleanup();
 			}
-
-//			try {
-//				if (type != ProtocolConstants.KICKED && type != ProtocolConstants.SESSION_TERMINATED) { //on KICKED message, channel is already closed here
-//					message.sendNUL(); //confirm reception of msg
-//				}
-//			} catch (Exception e) {
-//				LOG.error("could not send confirmation ["+e.getMessage()+"]");
-//			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -184,7 +182,7 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 	}
 	
 	private void addNewUser(RemoteUserProxyExt user) {
-		DiscoveryManager discoveryManager = DiscoveryManagerFactory.getDiscoveryManager(null);
+		DiscoveryManager discoveryManager = DiscoveryManagerFactory.getDiscoveryManager();
 		if (discoveryManager.getUser(user.getId()) == null) {
 			discoveryManager.addUser(user); //TODO: make shure the new user receives published documents
 		}
@@ -210,8 +208,5 @@ public class SessionRequestHandler extends AbstractRequestHandler {
 		return publisherId;
 	}
 	
-	protected Logger getLogger() {
-		return LOG;
-	}
 	
 }

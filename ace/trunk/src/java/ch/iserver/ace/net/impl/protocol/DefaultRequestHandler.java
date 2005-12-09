@@ -33,12 +33,13 @@ import ch.iserver.ace.net.impl.NetworkProperties;
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;
 import ch.iserver.ace.net.impl.discovery.DiscoveryManagerFactory;
+import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
 
 /**
  * Determines the correct RequestHandler a Channel, i.e. it sets
  * the correct request handler to a newly initiated channel.
  */
-public class DefaultRequestHandler extends AbstractRequestHandler {
+public class DefaultRequestHandler implements RequestHandler {
 
 	private static Logger LOG = Logger.getLogger(DefaultRequestHandler.class);
 	
@@ -81,8 +82,9 @@ public class DefaultRequestHandler extends AbstractRequestHandler {
 					proxy = (RemoteUserProxyExt) response.getPayload();
 					isDiscovery = (proxy != null);
 				} else if (type == ProtocolConstants.CHANNEL_SESSION) {
-					requestHandler = SessionRequestHandlerFactory.getInstance().createHandler();
-				} else { //TODO: if channel is for outoging messages, set to SessionConnectionImpl
+					DocumentInfo info = (DocumentInfo) response.getPayload();
+					requestHandler = SessionRequestHandlerFactory.getInstance().createHandler(info);
+				} else { 
 					LOG.warn("unkown channel type, use main as default");
 					requestHandler = mainHandler;
 				}
@@ -127,7 +129,7 @@ public class DefaultRequestHandler extends AbstractRequestHandler {
 		OutputDataStream output = DataStreamHelper.prepare(data);
 		message.sendRPY(output);
 		proxy.setDNSSDdiscovered(false);
-		DiscoveryManagerFactory.getDiscoveryManager(null).addUser(proxy);
+		DiscoveryManagerFactory.getDiscoveryManager().addUser(proxy);
 		SessionManager.getInstance().createSession(proxy, (TCPSession) channel.getSession(), channel);
 	}
 
@@ -137,10 +139,4 @@ public class DefaultRequestHandler extends AbstractRequestHandler {
 		deserializer = null;
 		handler = null;
 	}
-
-
-	protected Logger getLogger() {
-		return LOG;
-	}
-
 }

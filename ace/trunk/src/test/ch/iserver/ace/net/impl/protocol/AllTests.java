@@ -39,12 +39,12 @@ public class AllTests {
 		suite.addTestSuite(DeserializerImplTest.class);
 		suite.addTestSuite(TLVHandlerTest.class);
 		suite.addTestSuite(SendDocumentsReceiveFilterTest.class);
+		suite.addTestSuite(RequestParserHandlerTest.class);
 		suite.addTestSuite(ResponseParserHandlerTest.class);
 		suite.addTestSuite(SessionManagerTest.class);
 		suite.addTestSuite(CollaborationParserHandlerTest.class);
 		suite.addTestSuite(ConcealDocumentReceiveFilterTest.class);
 		suite.addTestSuite(SerializerImplTest.class);
-		suite.addTestSuite(ParticipantConnectionImplTest.class);
 		suite.addTestSuite(StartChannelListenerImplTest.class);
 		//$JUnit-END$
 		return suite;

@@ -38,7 +38,7 @@ public class DefaultProfile implements Profile {
 	}
 	
 	public StartChannelListener init(String uri, ProfileConfiguration config) throws BEEPException {
-		//TODO: check if uri and config must/can be used in any concern
+		//can uri and config be used in any concern?
 		return listener;
 	}
 

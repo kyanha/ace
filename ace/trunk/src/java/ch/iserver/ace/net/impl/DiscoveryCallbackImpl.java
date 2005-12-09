@@ -116,13 +116,13 @@ public class DiscoveryCallbackImpl implements DiscoveryCallback {
 		}
 		callback.userDiscarded(proxy);
 		
-		DiscoveryManager manager = DiscoveryManagerFactory.getDiscoveryManager(null);
+		DiscoveryManager manager = DiscoveryManagerFactory.getDiscoveryManager();
 		String userId = proxy.getId();
 		if (manager.hasSessionEstablished(userId)) {
 			RemoteUserSession session = 
 				SessionManager.getInstance().removeSession(userId);
 			session.cleanup();
-			DiscoveryManagerFactory.getDiscoveryManager(null).setSessionTerminated(userId);
+			DiscoveryManagerFactory.getDiscoveryManager().setSessionTerminated(userId);
 		}
 		LOG.debug("<-- userDiscarded()");
 	}

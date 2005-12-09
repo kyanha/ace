@@ -32,6 +32,7 @@ import ch.iserver.ace.net.impl.protocol.ProtocolConstants;
 import ch.iserver.ace.net.impl.protocol.Request;
 import ch.iserver.ace.net.impl.protocol.RequestFilter;
 import ch.iserver.ace.net.impl.protocol.RequestImpl;
+import ch.iserver.ace.net.impl.protocol.JoinRequestSenderFilter.JoinNetworkCallbackWrapper;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
@@ -145,7 +146,8 @@ public class RemoteDocumentProxyImpl implements RemoteDocumentProxyExt {
 		} else {
 			ParameterValidator.notNull("callback", callback);
 			this.callback = callback;
-			Request request = new RequestImpl(ProtocolConstants.JOIN, publisher.getId(), id);
+			JoinNetworkCallbackWrapper wrapper =  new JoinNetworkCallbackWrapper(id, callback);
+			Request request = new RequestImpl(ProtocolConstants.JOIN, publisher.getId(), wrapper);
 			filterChain.process(request);
 		}
 		LOG.debug("<-- join()");

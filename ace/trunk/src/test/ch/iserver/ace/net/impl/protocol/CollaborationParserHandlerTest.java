@@ -12,7 +12,6 @@ import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Timestamp;
 import ch.iserver.ace.algorithm.jupiter.JupiterTimestampFactory;
 import ch.iserver.ace.net.impl.MutableUserDetails;
-import ch.iserver.ace.net.impl.NetworkConstants;
 import ch.iserver.ace.net.impl.NetworkProperties;
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.PortableDocumentExt;
@@ -65,7 +64,7 @@ public class CollaborationParserHandlerTest extends TestCase {
 		joinDocument += Base64.encodeBytes(payload.getBytes(NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING)), Base64.GZIP);
 		joinDocument += XML_JOIN_DOCUMENT_2;
 		
-		byte[] data = joinDocument.getBytes(NetworkConstants.DEFAULT_ENCODING);
+		byte[] data = joinDocument.getBytes(NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 		String userId = "sadfasd-24";
 		NetworkServiceImpl.getInstance().setUserId(userId);
 		
@@ -140,7 +139,7 @@ public class CollaborationParserHandlerTest extends TestCase {
 		CollaborationParserHandler handler = new CollaborationParserHandler();
 		handler.setTimestampFactory(new JupiterTimestampFactory());
 		
-		final int TIMES = 10;
+		final int TIMES = 1;
 		for (int i = 0; i < TIMES; i++) {
 			deserializer.deserialize(data, handler);
 			Request result = handler.getResult();
