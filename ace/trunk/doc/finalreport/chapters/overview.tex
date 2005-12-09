@@ -1,0 +1,68 @@
+\chapter{Overview}
+\label{chapter:overview}
+
+
+
+\section{What is Collaborative Editing?}
+
+
+
+\section{Use Cases of Collaborative Editing}
+
+
+
+\section{Requirements of a Collaborative Application}
+The following requirements have been identified for a synchronous collaborative
+editing system by \cite{sun98achieving}.
+
+\subsection{Real-time} 
+The response to local user actions must be quick, ideally
+as quick as a single-user editor. Imposing a global total order is not
+an option because of the distributed nature of the system (i.e. network
+latency). Thus, generally these systems replicate the document at each
+user's site.
+
+\subsubsection{Distributed} 
+Cooperating users reside on different machines 
+connected by communication networks with nondeterministic latency.
+
+\subsubsection{Unconstrained} 
+Multiple users are allowed to concurrently and
+independently edit any part of the document at any time, in order to 
+facilitate free and natural information flow among multiple users.
+
+
+
+\section{Previous Work}
+
+
+\subsection{Semester Project}
+In the semester project we have implemented the following things:
+\begin{itemize}
+ \item consistency control algorithm (\emph{Jupiter})
+ \item test framework for algorithm
+\end{itemize}
+
+In the first stage of the semester project we evaluated different
+consistency control algorithm. The \emph{Report Evaluation Algorithm}
+documents the evaluation process. The implementation of the
+algorithm is documented in \emph{Report Implementation Algorithm}. The
+test framework is documented in \emph{Report Testframework}.
+
+Futher, we did some research to find out how we want to implement the
+network as well as the application layer. The results of this research
+is documented in \emph{Report Evaluation Network} and 
+\emph{Report Evaluation GUI} respectively.
+
+
+\subsection{Summer Time}
+During the summer break we tried to finish the implementation of undo/redo
+in the algorithm. However, we stumbled across some issues that could not
+be resolved in reasonable time. Read section \ref{sect:algorithm.undoredo} for
+a detailed description of the problem.
+
+We also investigated how difficult it would be to create a collaborative 
+editing plugin for jEdit (see \href{http://jedit.org/}{http://jedit.org/}.
+More about this investigation can be read in section 
+\ref{sect:decisions.gui}.
+
