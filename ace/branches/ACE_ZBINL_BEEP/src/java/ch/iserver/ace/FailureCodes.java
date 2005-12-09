@@ -26,11 +26,6 @@ package ch.iserver.ace;
  * the {@link ch.iserver.ace.collaboration.ServiceFailureHandler}.
  */
 public interface FailureCodes {
-
-	
-	
-	//TODO: align with gui layer that 4 means 'shutdown'
-	public static final int DOCUMENT_SHUTDOWN = 4;
 	
 	/*********************************************************/
 	/** Failure codes for network layer between 100 and 199 **/
