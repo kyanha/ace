@@ -10,7 +10,6 @@ import org.easymock.MockControl;
 
 import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.net.DocumentServerLogic;
-import ch.iserver.ace.net.impl.NetworkConstants;
 import ch.iserver.ace.net.impl.NetworkProperties;
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.PublishedDocument;

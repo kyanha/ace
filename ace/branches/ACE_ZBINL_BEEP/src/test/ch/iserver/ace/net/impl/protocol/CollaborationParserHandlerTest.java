@@ -12,7 +12,6 @@ import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Timestamp;
 import ch.iserver.ace.algorithm.jupiter.JupiterTimestampFactory;
 import ch.iserver.ace.net.impl.MutableUserDetails;
-import ch.iserver.ace.net.impl.NetworkConstants;
 import ch.iserver.ace.net.impl.NetworkProperties;
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.PortableDocumentExt;

@@ -3,7 +3,6 @@ package ch.iserver.ace.net.impl.protocol;
 import java.util.List;
 
 import junit.framework.TestCase;
-import ch.iserver.ace.net.impl.NetworkConstants;
 import ch.iserver.ace.net.impl.NetworkProperties;
 import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
 
