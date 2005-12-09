@@ -223,7 +223,6 @@ public class RemoteUserSession {
 	 * @return
 	 */
 	public ParticipantConnectionImpl addParticipantConnection(String docId) {
-		//TODO: do i have to check for isAlive as well?
 		LOG.debug("--> createParticipantConnection() for doc ["+docId+"]");
 		assert !participantConnections.containsKey(docId);
 		ParticipantConnectionImpl connection = ParticipantConnectionImplFactory.getInstance().
@@ -265,20 +264,25 @@ public class RemoteUserSession {
 	 */
 	public void cleanup() {
 		LOG.debug("--> cleanup()");
-		
+		LOG.debug(participantConnections.size() + " pConnection(s)");
 		Iterator iter = participantConnections.values().iterator();
 		while (iter.hasNext()) {
 			ParticipantConnectionImpl conn = (ParticipantConnectionImpl) iter.next();
 			ParticipantPort port = conn.getParticipantPort();
-			removeParticipantConnection(conn.getDocumentId());
+//			removeParticipantConnection(conn.getDocumentId());
+			conn.cleanup();
 			port.leave();
 		}
+		participantConnections = null;
+		
+		LOG.debug(sessionConnections.size() + " sessionConnection(s)");
 		iter = sessionConnections.values().iterator();
 		while (iter.hasNext()) {
 			SessionConnectionImpl conn = (SessionConnectionImpl) iter.next();
 			RemoteDocumentProxyExt doc = getUser().getSharedDocument(conn.getDocumentId());
 			SessionConnectionCallback callback = doc.getSessionConnectionCallback();
-			removeSessionConnection(conn.getDocumentId());
+			conn.cleanup();
+//			removeSessionConnection(conn.getDocumentId());
 			if (getUser().getId().equals(doc.getPublisher().getId())) { //terminated user was publisher
 				callback.sessionTerminated();
 			} else { //terminated user was participant
@@ -286,7 +290,6 @@ public class RemoteUserSession {
 			}
 		}
 		
-		participantConnections = null;
 		sessionConnections = null;
 		mainConnection = null;
 		setTCPSession(null);
@@ -355,7 +358,7 @@ public class RemoteUserSession {
 			setTCPSession( newSession );
 			LOG.info("initiated session to "+host+":"+port);
 			isInitiated = true;
-			DiscoveryManagerFactory.getDiscoveryManager(null).setSessionEstablished(user.getId());
+			DiscoveryManagerFactory.getDiscoveryManager().setSessionEstablished(user.getId());
 		} catch (BEEPException be) {
 			//TODO: retry strategy?
 			LOG.error("could not initiate session ["+be+"]");
