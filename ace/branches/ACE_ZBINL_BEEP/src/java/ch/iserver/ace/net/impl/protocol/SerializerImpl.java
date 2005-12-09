@@ -71,7 +71,6 @@ public class SerializerImpl implements Serializer, ProtocolConstants {
 					NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 			serializer.setOutputProperty(OutputKeys.INDENT,"no");
 		} catch (TransformerConfigurationException tce) {
-			//TODO: handling
 			LOG.error("transformer could not be configured.");
 		} 
 		return handler;
@@ -81,29 +80,7 @@ public class SerializerImpl implements Serializer, ProtocolConstants {
 	 * @see ch.iserver.ace.net.impl.protocol.Serializer#createQuery(int)
 	 */
 	public byte[] createQuery(int type) throws SerializeException {
-		//TODO: query obsolete
-		try {
-			TransformerHandler handler = createHandler();
-			ByteArrayOutputStream output = new ByteArrayOutputStream();
-			StreamResult result = new StreamResult(output);
-			AttributesImpl attrs = new AttributesImpl();
-			handler.setResult(result);
-			handler.startDocument();
-			handler.startElement("", "", "ace", attrs);
-			handler.startElement("", "", "request", attrs);
-			//default type is 'docs', yet no other types
-			attrs.addAttribute("", "", "type", "", QUERY_TYPE_PUBLISHED_DOCUMENTS);
-			handler.startElement("", "", "query", attrs);
-			handler.endElement("", "", "query");
-			handler.endElement("", "", "request");
-			handler.endElement("", "", "ace");
-			handler.endDocument();
-			output.flush();
-			return output.toByteArray();
-		} catch (Exception e) {
-			LOG.error("could not serialize ["+e.getMessage()+"]");
-			throw new SerializeException(e.getMessage());
-		}
+		return null;
 	}
 	
 	
@@ -115,7 +92,7 @@ public class SerializerImpl implements Serializer, ProtocolConstants {
 			handler.setResult(result);
 			handler.startDocument();
 			AttributesImpl attrs = new AttributesImpl();
-			handler.startElement("", "", "ace", attrs);
+			handler.startElement("", "", TAG_ACE, attrs);
 			String userid = NetworkServiceImpl.getInstance().getUserId();
 			if (type == JOIN) {
 				String docId = (String) data;
@@ -126,7 +103,7 @@ public class SerializerImpl implements Serializer, ProtocolConstants {
 			} else {
 				LOG.error("createRequest(): unknown notification type ["+type+"]");
 			}
-			handler.endElement("", "", "ace");
+			handler.endElement("", "", TAG_ACE);
 			handler.endDocument();
 			output.flush();
 			return output.toByteArray();
@@ -138,49 +115,32 @@ public class SerializerImpl implements Serializer, ProtocolConstants {
 	
 	private void createRequest(TransformerHandler handler, String type, String userid, String docId) throws SAXException {
 		AttributesImpl attrs = new AttributesImpl();
-		handler.startElement("", "", "request", attrs);
+		handler.startElement("", "", TAG_REQUEST, attrs);
 		attrs.addAttribute("", "", USER_ID, "", userid);	
 		handler.startElement("", "", type, attrs);
 		attrs = new AttributesImpl();
-		attrs.addAttribute("", "", "id", "", docId);
-		handler.startElement("", "", "doc", attrs);
-		handler.endElement("", "", "doc");
+		attrs.addAttribute("", "", DOCUMENT_ID, "", docId);
+		handler.startElement("", "", TAG_DOC, attrs);
+		handler.endElement("", "", TAG_DOC);
 		handler.endElement("", "", type);
-		handler.endElement("", "", "request");
+		handler.endElement("", "", TAG_REQUEST);
 	}
 	
 
 	public byte[] createResponse(int type, Object data1, Object data2) throws SerializeException {
 		try {
-			//TODO: don't use strings directly for tag names, instead use ProtocolConstants
 			TransformerHandler handler = createHandler();
 			ByteArrayOutputStream output = new ByteArrayOutputStream();
 			StreamResult result = new StreamResult(output);
 			handler.setResult(result);
 			handler.startDocument();
 			AttributesImpl attrs = new AttributesImpl();
-			handler.startElement("", "", "ace", attrs);
-			handler.startElement("", "", "response", attrs);
+			handler.startElement("", "", TAG_ACE, attrs);
+			handler.startElement("", "", TAG_RESPONSE, attrs);
 			//TODO: find a smoother way to get userid
 			String userid = NetworkServiceImpl.getInstance().getUserId();
 			
-			if (type == PUBLISHED_DOCUMENTS) {
-				//TODO: published documents obsolete
-				handler.startElement("", "", TAG_PUBLISHED_DOCS, attrs);
-				Map docs = (Map)data1;
-				synchronized(docs) {
-					Iterator docIter = docs.values().iterator();
-					while (docIter.hasNext()) {
-						PublishedDocument doc = (PublishedDocument)docIter.next();
-						attrs = new AttributesImpl();
-						attrs.addAttribute("", "", "id", "", doc.getId());
-						attrs.addAttribute("", "", "name", "", doc.getDocumentDetails().getTitle());
-						handler.startElement("", "", "doc", attrs);
-						handler.endElement("", "", "doc");
-					}
-				}
-				handler.endElement("", "", TAG_PUBLISHED_DOCS);
-			} else if (type == INVITE_REJECTED) {
+			if (type == INVITE_REJECTED) {
 				String docId = (String) data1;
 				attrs.addAttribute("", "", DOC_ID, "", docId);
 				attrs.addAttribute("", "", USER_ID, "", userid);
@@ -198,8 +158,8 @@ public class SerializerImpl implements Serializer, ProtocolConstants {
 				handler.endElement("", "", TAG_REASON);
 				handler.endElement("", "", TAG_JOIN_REJECTED);
 			}
-			handler.endElement("", "", "response");
-			handler.endElement("", "", "ace");
+			handler.endElement("", "", TAG_RESPONSE);
+			handler.endElement("", "", TAG_ACE);
 			handler.endDocument();
 			output.flush();
 			return output.toByteArray();
@@ -218,7 +178,7 @@ public class SerializerImpl implements Serializer, ProtocolConstants {
 			handler.setResult(result);
 			handler.startDocument();
 			AttributesImpl attrs = new AttributesImpl();
-			handler.startElement("", "", "ace", attrs);
+			handler.startElement("", "", TAG_ACE, attrs);
 			
 			if (type == SEND_DOCUMENTS) {
 				Map docs = (Map) data;
@@ -235,7 +195,7 @@ public class SerializerImpl implements Serializer, ProtocolConstants {
 			} else {
 				LOG.error("createNotification(): unknown notification type ["+type+"]");
 			}
-			handler.endElement("", "", "ace");
+			handler.endElement("", "", TAG_ACE);
 			handler.endDocument();
 			output.flush();
 			return output.toByteArray();
@@ -247,68 +207,68 @@ public class SerializerImpl implements Serializer, ProtocolConstants {
 	//TODO: write unit test
 	private void generateDocumentDetailsChangedXML(TransformerHandler handler, PublishedDocument doc) throws Exception {
 		AttributesImpl attrs = new AttributesImpl();
-		handler.startElement("", "", "notification", attrs);
+		handler.startElement("", "", TAG_NOTIFICATION, attrs);
 		String userid = NetworkServiceImpl.getInstance().getUserId();
-		attrs.addAttribute("", "", "userid", "", userid);	
+		attrs.addAttribute("", "", USER_ID, "", userid);	
 		handler.startElement("", "", TAG_DOCUMENT_DETAILS_CHANGED, attrs);
 		attrs = new AttributesImpl();
-		attrs.addAttribute("", "", "id", "", doc.getId());
-		attrs.addAttribute("", "", "name", "", doc.getDocumentDetails().getTitle());
-		handler.startElement("", "", "doc", attrs);
-		handler.endElement("", "", "doc");
+		attrs.addAttribute("", "", DOCUMENT_ID, "", doc.getId());
+		attrs.addAttribute("", "", NAME, "", doc.getDocumentDetails().getTitle());
+		handler.startElement("", "", TAG_DOC, attrs);
+		handler.endElement("", "", TAG_DOC);
 		handler.endElement("", "", TAG_DOCUMENT_DETAILS_CHANGED);
-		handler.endElement("", "", "notification");
+		handler.endElement("", "", TAG_NOTIFICATION);
 	}
 
 	private void generateSendDocumentsXML(TransformerHandler handler, Map docs) throws Exception {
 		AttributesImpl attrs = new AttributesImpl();
-		handler.startElement("", "", "notification", attrs);
+		handler.startElement("", "", TAG_NOTIFICATION, attrs);
 		String userid = NetworkServiceImpl.getInstance().getUserId();
-		attrs.addAttribute("", "", "userid", "", userid);	
+		attrs.addAttribute("", "", USER_ID, "", userid);	
 		handler.startElement("", "", TAG_PUBLISHED_DOCS, attrs);
 		synchronized(docs) {
 			Iterator docIter = docs.values().iterator();
 			while (docIter.hasNext()) {
 				PublishedDocument doc = (PublishedDocument)docIter.next();
 				attrs = new AttributesImpl();
-				attrs.addAttribute("", "", "id", "", doc.getId());
-				attrs.addAttribute("", "", "name", "", doc.getDocumentDetails().getTitle());
-				handler.startElement("", "", "doc", attrs);
-				handler.endElement("", "", "doc");
+				attrs.addAttribute("", "", DOCUMENT_ID, "", doc.getId());
+				attrs.addAttribute("", "", NAME, "", doc.getDocumentDetails().getTitle());
+				handler.startElement("", "", TAG_DOC, attrs);
+				handler.endElement("", "", TAG_DOC);
 			}
 		}
 		handler.endElement("", "", TAG_PUBLISHED_DOCS);
-		handler.endElement("", "", "notification");
+		handler.endElement("", "", TAG_NOTIFICATION);
 		handler.endDocument();
 	}
 
 	private void generatePublishXML(TransformerHandler handler, PublishedDocument doc) throws Exception {
 		AttributesImpl attrs = new AttributesImpl();
-		handler.startElement("", "", "notification", attrs);
+		handler.startElement("", "", TAG_NOTIFICATION, attrs);
 		String userid = NetworkServiceImpl.getInstance().getUserId();
-		attrs.addAttribute("", "", "userid", "", userid);	
+		attrs.addAttribute("", "", USER_ID, "", userid);	
 		handler.startElement("", "", TAG_PUBLISH, attrs);
 		attrs = new AttributesImpl();
-		attrs.addAttribute("", "", "id", "", doc.getId());
-		attrs.addAttribute("", "", "name", "", doc.getDocumentDetails().getTitle());
-		handler.startElement("", "", "doc", attrs);
-		handler.endElement("", "", "doc");
+		attrs.addAttribute("", "", DOCUMENT_ID, "", doc.getId());
+		attrs.addAttribute("", "", NAME, "", doc.getDocumentDetails().getTitle());
+		handler.startElement("", "", TAG_DOC, attrs);
+		handler.endElement("", "", TAG_DOC);
 		handler.endElement("", "", TAG_PUBLISH);
-		handler.endElement("", "", "notification");
+		handler.endElement("", "", TAG_NOTIFICATION);
 	}
 	
 	private void generateConcealXML(TransformerHandler handler, PublishedDocument doc) throws Exception {
 		AttributesImpl attrs = new AttributesImpl();
-		handler.startElement("", "", "notification", attrs);
+		handler.startElement("", "", TAG_NOTIFICATION, attrs);
 		String userid = NetworkServiceImpl.getInstance().getUserId();
-		attrs.addAttribute("", "", "userid", "", userid);
+		attrs.addAttribute("", "", USER_ID, "", userid);
 		handler.startElement("", "", TAG_CONCEAL, attrs);
 		attrs = new AttributesImpl();
-		attrs.addAttribute("", "", "id", "", doc.getId());
-		handler.startElement("", "", "doc", attrs);
-		handler.endElement("", "", "doc");
+		attrs.addAttribute("", "", DOCUMENT_ID, "", doc.getId());
+		handler.startElement("", "", TAG_DOC, attrs);
+		handler.endElement("", "", TAG_DOC);
 		handler.endElement("", "", TAG_CONCEAL);
-		handler.endElement("", "", "notification");
+		handler.endElement("", "", TAG_NOTIFICATION);
 	}
 
 	public byte[] createSessionMessage(int type, Object data1, Object data2) throws SerializeException {
