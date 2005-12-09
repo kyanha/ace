@@ -1,2 +1,143 @@
 \chapter{Test Concept and Results}
 \label{chapter:testing}
+
+We did the following testing of ACE:
+
+\begin{itemize}
+ \item unit tests
+ \item integration tests
+ \item test applications
+ \item manual tests
+ \item tests of algorithm with test framework
+\end{itemize}
+
+
+
+\section{Unit Tests}
+We used \emph{JUnit} to unit test many classes of ACE. There are around
+250 unit tests. The unit tests can be found in the folder \texttt{src/test}.
+To facilitate mocking of objects, we used to mock object framework. So
+what is a mock object? 
+\href{http://www.mockobject.org/}{http://www.mockobject.org/} gives the
+following description.
+
+\begin{quote}
+A mock object is a "double agent" used to test the behaviour of other objects. 
+First, a mock object acts as a faux implementation of an interface or class that 
+mimics the external behaviour of a true implementation. Second, a mock object 
+observes how other objects interact with its methods and compares actual 
+behaviour with preset expectations. When a discrepancy occurs, a mock object can 
+interrupt the test and report the anomaly. If the discrepancy cannot be noted 
+during the test, a verification method called by the tester ensures that all 
+expectations have been met or failures reported.
+\end{quote}
+
+Mock objects provided invaluable in unit testing ACE. For instance while
+testing the collaboration layer it was possible to create mock objects for
+the other layers, thus reducing the scope of the test down to the unit
+under test, in that case a particular class in the collaboration layer.
+
+We used two different mock object frameworks that proved to be useful in
+different situations.
+
+\begin{itemize}
+ \item EasyMock (\href{http://www.easymock.org/}{http://www.easymock.org/}
+ \item jMock (\href{http://www.jmock.org/}{http://www.jmock.org/})
+\end{itemize}
+
+
+\subsection{Comparing jMock and EasyMock}
+Both, jMock and EasyMock, are a dynamic mock object library for Java. There
+is no need to write custom code to create a mock object. Both libraries
+create mock objects on the fly through the use of dynamic proxies (Java 1.3)
+and dynamic subclasses created through CGLIB (for classes). So what
+are the differences between jMock and EasyMock?
+
+\subsubsection{jMock uses Strings to identify methods}
+EasyMock uses actual method calls to define expectations. Therefore it works
+with an IDE's code completion and refactoring tools.
+
+EasyMock:
+\small{\begin{verbatim}
+mock.method(a);
+\end{verbatim}}
+
+jMock:
+\small{\begin{verbatim}
+mock.expectes(once()).method("method").with(eq(a));
+\end{verbatim}}
+
+One obvious difference is that jMock requires far more typing than
+EasyMock.
+
+\subsubsection{jMock provides more flexibility}
+jMock provides far more flexibility for parameter constraints, stubbing
+method calls, as well as specifying invocation order. One reason to use
+jMock was that jMock allows writing custom stubs that provide the ability
+to execute methods on method parameters of the mock.
+
+\subsubsection{jMock's API is extensible}
+jMock's API is far more extensible as EasyMock. It is built from scratch to
+be extensible.
+
+\subsubsection{Verification of Expectations}
+Mocking objects with EasyMock requires three distinct steps:
+
+\begin{itemize}
+ \item defining the expectations (record state)
+ \item enter the replay state (by calling \texttt{replay} on the 
+       \texttt{MockControl})
+ \item verify the expectations (by calling \texttt{verify} on  the
+       \texttt{MockControl})
+\end{itemize}
+
+jMock automatically verifies mock objects at the end of the test. 
+
+\subsubsection{Conclusion}
+EasyMock was mainly used because it provides refactoring save tests. The
+features provided by it proved to be sufficient for most cases. jMock
+was used in the situation were the extra flexibility was needed to write
+the unit test.
+
+
+\section{Integration Tests}
+We did some integration testing using jUnit as well as the two described
+mock frameworks. The integration tests can be found in the folder
+\texttt{src/integration-test}. The tests in that folder are testing the
+integration of different units. They are typically running longer than
+simple unit tests. That is also the main reason to separate these tests
+from the standard unit tests. The unit tests should run as quick as
+possible in order that the developer runs them regularly.
+
+
+
+\section{Test Applications}
+Integration tests that do not run deterministically (for instance
+because they need to access the network) are found in the folder
+\texttt{src/test-app}. In that folder we placed also some miscellaneous
+test applications used while developing ACE.
+
+
+
+
+\section{Manual Tests}
+We did manual tests to verify that the goals are reached. Further we have
+15 test users that tested the application and provided invaluable
+feedback. The biggest problem was to find testers that have a LAN and
+more than one computer available for testing the networking functionality
+of ACE.
+
+
+
+\section{Test Framework Algorithm}
+In the semester project we have created a test framework for the algorithm.
+The source code of it can be found in the package
+\texttt{ch.iserver.ace.test}. The test framework is described in the
+\texttt{Report Testframework}.
+
+Tests using the test framework use a specification of a scenario
+of a collaborative editing session. It specifies which events occur at
+which site in which order. At the end, the resulting document state is
+compared with the expected document state. This allows to test whether
+the algorithm implementation achieves convergence in the given scenario.
+
