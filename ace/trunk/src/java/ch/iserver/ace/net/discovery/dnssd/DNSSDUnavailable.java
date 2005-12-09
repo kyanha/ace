@@ -19,26 +19,27 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.net.impl.discovery.dnssd;
+package ch.iserver.ace.net.discovery.dnssd;
 
 /**
- * Exception thrown if a retry strategy failed.
+ * Exception thrown if a DNNSD call.
  * 
- * @see ch.iserver.ace.net.impl.discovery.dnssd.RetryStrategy
+ * @see ch.iserver.ace.net.discovery.dnssd.DNSSDCall
  */
-public class RetryException extends Exception {
+public class DNSSDUnavailable extends Exception {
 
 	/**
 	 * Constructor.
 	 */
-	public RetryException() { }
+	public DNSSDUnavailable() { }
 	
 	/**
 	 * Constructor.
 	 * 
 	 * @param message an error message
 	 */
-	public RetryException(String message) {
+	public DNSSDUnavailable(String message) {
 		super(message);
 	}
+	
 }

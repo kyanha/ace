@@ -19,27 +19,45 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.net.impl.discovery.dnssd;
+package ch.iserver.ace.net.discovery.dnssd;
+
+import org.apache.log4j.Logger;
+
+import com.apple.dnssd.DNSRecord;
+import com.apple.dnssd.DNSSDException;
+import com.apple.dnssd.DNSSDRegistration;
 
 /**
- * Exception thrown if a DNNSD call.
- * 
- * @see ch.iserver.ace.net.impl.discovery.dnssd.DNSSDCall
+ *
  */
-public class DNSSDUnavailable extends Exception {
+public class TXTUpdate extends DNSSDCall {
 
-	/**
-	 * Constructor.
-	 */
-	public DNSSDUnavailable() { }
+	private Logger LOG = Logger.getLogger(TXTUpdate.class);
 	
-	/**
-	 * Constructor.
-	 * 
-	 * @param message an error message
-	 */
-	public DNSSDUnavailable(String message) {
-		super(message);
+	private DNSSDRegistration registration;
+	private byte[] rawTXT;
+	
+	public TXTUpdate(DNSSDRegistration registration, byte[] rawTXT) {
+		this.registration = registration;
+		this.rawTXT = rawTXT;
 	}
 	
+	
+	/**
+	 * @see ch.iserver.ace.net.discovery.dnssd.DNSSDCall#makeCall()
+	 */
+	protected Object makeCall() throws DNSSDCallException {
+		try {
+			DNSRecord record = registration.getTXTRecord();
+			record.update(0, rawTXT, 0);
+			return null;
+		} catch (DNSSDException de) {
+			throw new DNSSDCallException(de);
+		}
+	}
+	
+	protected Logger getLogger() {
+		return LOG;
+	}
+
 }

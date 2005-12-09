@@ -23,8 +23,8 @@ package ch.iserver.ace.net.discovery;
 
 import org.apache.log4j.Logger;
 
-import ch.iserver.ace.net.impl.discovery.dnssd.Resolve;
-import ch.iserver.ace.net.impl.discovery.dnssd.DNSSDUnavailable;
+import ch.iserver.ace.net.discovery.dnssd.DNSSDUnavailable;
+import ch.iserver.ace.net.discovery.dnssd.Resolve;
 
 import com.apple.dnssd.BrowseListener;
 import com.apple.dnssd.DNSSDService;

@@ -23,6 +23,9 @@ package ch.iserver.ace.net.impl.discovery.dnssd;
 
 import org.apache.log4j.Logger;
 
+import ch.iserver.ace.net.discovery.dnssd.DNSSDCall;
+import ch.iserver.ace.net.discovery.dnssd.DNSSDCallException;
+
 /**
  *
  */
@@ -33,7 +36,7 @@ public class CallStub extends DNSSDCall {
 	private int callCount = 0;
 	
 	/**
-	 * @see ch.iserver.ace.net.impl.discovery.dnssd.DNSSDCall#makeCall()
+	 * @see ch.iserver.ace.net.discovery.dnssd.DNSSDCall#makeCall()
 	 */
 	protected Object makeCall() throws DNSSDCallException {
 		++callCount;

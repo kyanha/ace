@@ -8,11 +8,11 @@ import ch.iserver.ace.ServerInfo;
 import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.net.core.NetworkProperties;
 import ch.iserver.ace.net.core.NetworkServiceImpl;
-import ch.iserver.ace.net.impl.discovery.dnssd.DNSSDUnavailable;
-import ch.iserver.ace.net.impl.discovery.dnssd.QueryRecord;
-import ch.iserver.ace.net.impl.discovery.dnssd.Register;
-import ch.iserver.ace.net.impl.discovery.dnssd.Resolve;
-import ch.iserver.ace.net.impl.discovery.dnssd.TXTUpdate;
+import ch.iserver.ace.net.discovery.dnssd.DNSSDUnavailable;
+import ch.iserver.ace.net.discovery.dnssd.QueryRecord;
+import ch.iserver.ace.net.discovery.dnssd.Register;
+import ch.iserver.ace.net.discovery.dnssd.Resolve;
+import ch.iserver.ace.net.discovery.dnssd.TXTUpdate;
 import ch.iserver.ace.util.ParameterValidator;
 
 import com.apple.dnssd.DNSSD;

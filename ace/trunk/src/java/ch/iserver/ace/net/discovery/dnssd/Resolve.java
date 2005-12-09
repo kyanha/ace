@@ -1,5 +1,5 @@
 /*
- * $Id:QueryRecord.java 1205 2005-11-14 07:57:10Z zbinl $
+ * $Id$
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -19,46 +19,50 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.net.impl.discovery.dnssd;
+package ch.iserver.ace.net.discovery.dnssd;
 
 import org.apache.log4j.Logger;
 
 import com.apple.dnssd.DNSSD;
 import com.apple.dnssd.DNSSDException;
-import com.apple.dnssd.QueryListener;
+import com.apple.dnssd.ResolveListener;
 
 /**
  *
  */
-public class QueryRecord extends DNSSDCall {
+public class Resolve extends DNSSDCall {
 
-	private Logger LOG = Logger.getLogger(QueryRecord.class);
+	private Logger LOG = Logger.getLogger(Resolve.class);
 	
-	private int ifIndex, rrtype;
-	private String hostName;
-	private QueryListener listener;
+	private int flags, ifIndex;
+	private String serviceName, regType, domain;
+	private ResolveListener resolver;
 	
 	/**
-	 * Constructor. 
+	 * Constructor.
 	 * 
+	 * @param flags
 	 * @param ifIndex
-	 * @param hostName
-	 * @param rrtype
-	 * @param listener
+	 * @param serviceName
+	 * @param regType
+	 * @param domain
+	 * @param resolver
 	 */
-	public QueryRecord(int ifIndex, String hostName, int rrtype, QueryListener listener) {
+	public Resolve(int flags, int ifIndex, String serviceName, String regType, String domain, ResolveListener resolver) {
+		this.flags = flags;
 		this.ifIndex = ifIndex;
-		this.hostName = hostName;
-		this.rrtype = rrtype;
-		this.listener = listener;
+		this.serviceName = serviceName;
+		this.regType = regType;
+		this.domain = domain;
+		this.resolver = resolver;
 	}
 	
 	/**
-	 * @see ch.iserver.ace.net.impl.discovery.dnssd.DNSSDCall#makeCall()
+	 * @see ch.iserver.ace.net.discovery.dnssd.DNSSDCall#makeCall()
 	 */
 	protected Object makeCall() throws DNSSDCallException {
 		try {
-			return DNSSD.queryRecord(0, ifIndex, hostName, rrtype, 1 /* ns_c_in */, listener);
+			return DNSSD.resolve(flags, ifIndex, serviceName, regType, domain, resolver);
 		} catch (DNSSDException de) {
 			throw new DNSSDCallException(de);
 		}

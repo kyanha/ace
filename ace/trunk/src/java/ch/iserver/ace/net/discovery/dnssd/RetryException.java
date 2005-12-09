@@ -19,42 +19,26 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.net.impl.discovery.dnssd;
-
-import com.apple.dnssd.DNSSDException;
-
+package ch.iserver.ace.net.discovery.dnssd;
 
 /**
- *
+ * Exception thrown if a retry strategy failed.
+ * 
+ * @see ch.iserver.ace.net.discovery.dnssd.RetryStrategy
  */
-public class DNSSDCallException extends Exception {
+public class RetryException extends Exception {
 
-	private DNSSDException exception;
+	/**
+	 * Constructor.
+	 */
+	public RetryException() { }
 	
 	/**
+	 * Constructor.
 	 * 
-	 * @param exception
+	 * @param message an error message
 	 */
-	public DNSSDCallException(DNSSDException exception) {
-		this.exception = exception;
-	}
-	
-	/**
-	 * 
-	 * @param message
-	 */
-	public DNSSDCallException(String message) {
+	public RetryException(String message) {
 		super(message);
 	}
-	
-	/**
-	 * 
-	 *
-	 */
-	public DNSSDCallException() {}
-	
-	public DNSSDException getDNSSDException() {
-		return exception; 
-	}
-	
 }

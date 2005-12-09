@@ -19,45 +19,24 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.net.impl.discovery.dnssd;
+package ch.iserver.ace.net.discovery.dnssd;
 
-import org.apache.log4j.Logger;
-
-import com.apple.dnssd.DNSRecord;
-import com.apple.dnssd.DNSSDException;
-import com.apple.dnssd.DNSSDRegistration;
+import ch.iserver.ace.net.core.NetworkProperties;
 
 /**
  *
  */
-public class TXTUpdate extends DNSSDCall {
+public class RetryStrategyFactory {
 
-	private Logger LOG = Logger.getLogger(TXTUpdate.class);
-	
-	private DNSSDRegistration registration;
-	private byte[] rawTXT;
-	
-	public TXTUpdate(DNSSDRegistration registration, byte[] rawTXT) {
-		this.registration = registration;
-		this.rawTXT = rawTXT;
-	}
-	
-	
 	/**
-	 * @see ch.iserver.ace.net.impl.discovery.dnssd.DNSSDCall#makeCall()
+	 * Creates a {@link RetryStrategy}.
+	 * 
+	 * @return a retry strategy
 	 */
-	protected Object makeCall() throws DNSSDCallException {
-		try {
-			DNSRecord record = registration.getTXTRecord();
-			record.update(0, rawTXT, 0);
-			return null;
-		} catch (DNSSDException de) {
-			throw new DNSSDCallException(de);
-		}
+	public static RetryStrategy create() {
+		return new AdditiveWaitRetryStrategy(
+				Integer.parseInt(NetworkProperties.get(NetworkProperties.KEY_NUMBER_OF_RETRIES)),
+				Long.parseLong(NetworkProperties.get(NetworkProperties.KEY_INITIAL_WAITINGTIME)), 
+				Long.parseLong(NetworkProperties.get(NetworkProperties.KEY_SUBSEQUENT_WAITINGTIME)));
 	}
-	
-	protected Logger getLogger() {
-		return LOG;
-	}
-
 }

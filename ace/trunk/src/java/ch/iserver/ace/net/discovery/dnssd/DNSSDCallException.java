@@ -19,24 +19,42 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.net.impl.discovery.dnssd;
+package ch.iserver.ace.net.discovery.dnssd;
 
-import ch.iserver.ace.net.core.NetworkProperties;
+import com.apple.dnssd.DNSSDException;
+
 
 /**
  *
  */
-public class RetryStrategyFactory {
+public class DNSSDCallException extends Exception {
 
+	private DNSSDException exception;
+	
 	/**
-	 * Creates a {@link RetryStrategy}.
 	 * 
-	 * @return a retry strategy
+	 * @param exception
 	 */
-	public static RetryStrategy create() {
-		return new AdditiveWaitRetryStrategy(
-				Integer.parseInt(NetworkProperties.get(NetworkProperties.KEY_NUMBER_OF_RETRIES)),
-				Long.parseLong(NetworkProperties.get(NetworkProperties.KEY_INITIAL_WAITINGTIME)), 
-				Long.parseLong(NetworkProperties.get(NetworkProperties.KEY_SUBSEQUENT_WAITINGTIME)));
+	public DNSSDCallException(DNSSDException exception) {
+		this.exception = exception;
 	}
+	
+	/**
+	 * 
+	 * @param message
+	 */
+	public DNSSDCallException(String message) {
+		super(message);
+	}
+	
+	/**
+	 * 
+	 *
+	 */
+	public DNSSDCallException() {}
+	
+	public DNSSDException getDNSSDException() {
+		return exception; 
+	}
+	
 }

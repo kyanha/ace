@@ -1,5 +1,5 @@
 /*
- * $Id:Register.java 1205 2005-11-14 07:57:10Z zbinl $
+ * $Id$
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -19,58 +19,48 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.net.impl.discovery.dnssd;
+package ch.iserver.ace.net.discovery.dnssd;
 
 import org.apache.log4j.Logger;
 
+import com.apple.dnssd.BrowseListener;
 import com.apple.dnssd.DNSSD;
 import com.apple.dnssd.DNSSDException;
-import com.apple.dnssd.RegisterListener;
-import com.apple.dnssd.TXTRecord;
+import com.apple.dnssd.DNSSDService;
 
 /**
  *
  */
-public class Register extends DNSSDCall {
+public class Browse extends DNSSDCall {
 
-	private Logger LOG = Logger.getLogger(Register.class);
+	private Logger LOG = Logger.getLogger(Browse.class);
 	
-	private String serviceName, registrationType;
-	private int port;
-	private TXTRecord txt;
-	private RegisterListener listener;
+	private String registrationType;
+	private BrowseListener listener;
 	
 	/**
 	 * Constructor.
 	 * 
-	 * @param serviceName
 	 * @param registrationType
-	 * @param port
-	 * @param txt
 	 * @param listener
 	 */
-	public Register(String serviceName, String registrationType, int port, TXTRecord txt, RegisterListener listener) {
-		this.serviceName = serviceName;
+	public Browse(String registrationType, BrowseListener listener) {
 		this.registrationType = registrationType;
-		this.port = port;
-		this.txt = txt;
 		this.listener = listener;
 	}
 	
 	/**
-	 * @see ch.iserver.ace.net.impl.discovery.dnssd.DNSSDCall#makeCall()
+	 * @see ch.iserver.ace.net.discovery.dnssd.DNSSDCall#makeCall()
 	 */
 	protected Object makeCall() throws DNSSDCallException {
 		try {
-			//TODO: set host as on some hosts there may be multiple interfaces and IP addresses respectively 
-			return DNSSD.register(0, 0, serviceName, registrationType, "", "", port, txt, listener);
+			return DNSSD.browse(0, 0, registrationType, "", listener);
 		} catch (DNSSDException de) {
 			throw new DNSSDCallException(de);
 		}
 	}
-	
+
 	protected Logger getLogger() {
 		return LOG;
 	}
-
 }

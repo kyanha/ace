@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.net.impl.discovery.dnssd;
+package ch.iserver.ace.net.discovery.dnssd;
 
 /**
  *
@@ -54,7 +54,7 @@ public class AdditiveWaitRetryStrategy extends RetryStrategy {
 	}
 
 	/**
-	 * @see ch.iserver.ace.net.impl.discovery.dnssd.RetryStrategy#getTimeToWait()
+	 * @see ch.iserver.ace.net.discovery.dnssd.RetryStrategy#getTimeToWait()
 	 */
 	protected long getTimeToWait() {
 		long returnValue = currentTimeToWait;
