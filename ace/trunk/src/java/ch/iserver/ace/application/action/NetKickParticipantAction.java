@@ -36,7 +36,6 @@ import ch.iserver.ace.collaboration.PublishedSession;
 
 public class NetKickParticipantAction extends DocumentItemSelectionChangeAction {
 
-	private DocumentManager documentManager;
 	private DocumentItem currentDocumentItem;
 	private ParticipantItem currentParticipantItem;
 	
@@ -48,7 +47,6 @@ public class NetKickParticipantAction extends DocumentItemSelectionChangeAction 
 		super(messageSource.getMessage("mNetKick"), messageSource.getIcon("iMenuNetKick"), viewController);
 		putValue(SHORT_DESCRIPTION, messageSource.getMessage("mNetKickTT"));
 		participantController.addItemSelectionChangeListener(this);
-		this.documentManager = documentManager;
 		this.viewController = viewController;
 		this.participantController = participantController;
 		setEnabled(false);

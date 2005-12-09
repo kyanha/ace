@@ -41,7 +41,6 @@ import ch.iserver.ace.collaboration.PublishedSession;
 
 public class NetInviteUserAction extends DocumentItemSelectionChangeAction {
 
-	private DocumentManager documentManager;
 	private DocumentItem currentDocumentItem;
 	private UserItem currentUserItem;
 	private DocumentViewController viewController;
@@ -59,7 +58,6 @@ public class NetInviteUserAction extends DocumentItemSelectionChangeAction {
 				}
 			}
 		});
-		this.documentManager = documentManager;
 		this.viewController = viewController;
 		this.userController = userController;
 		setEnabled(false);
