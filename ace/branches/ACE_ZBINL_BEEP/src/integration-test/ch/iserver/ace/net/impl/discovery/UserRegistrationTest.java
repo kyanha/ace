@@ -37,8 +37,6 @@ import ch.iserver.ace.net.impl.protocol.RequestFilter;
 import com.apple.dnssd.TXTRecord;
 
 public class UserRegistrationTest extends TestCase {
-
-	private static Logger LOG = Logger.getLogger(UserRegistrationTest.class);
 	
 	private MockControl peerDiscoveryCtrl;
 	private UserRegistration registration;

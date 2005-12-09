@@ -35,7 +35,7 @@ import ch.iserver.ace.net.impl.DiscoveryCallback;
 import ch.iserver.ace.net.impl.MutableUserDetails;
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;
 import ch.iserver.ace.net.impl.RemoteUserProxyFactory;
-import ch.iserver.ace.net.impl.RemoteUserProxyImpl;
+import ch.iserver.ace.net.impl.protocol.LogFilter;
 
 import com.apple.dnssd.BrowseListener;
 import com.apple.dnssd.ResolveListener;
@@ -45,6 +45,10 @@ public class PeerDiscoveryTest extends TestCase {
 	private PeerDiscovery peerDiscovery;
 	private UserRegistration registration;
 	
+	/**
+	 * Note: Before running this test, make shure that no instances of ACE are running 
+	 * on this hosts subnet, otherwise the test will fail.
+	 */
 	public void testPeerDiscoveryTest() {
 		//register 4 (local) peers
 		List users = new ArrayList();
@@ -74,6 +78,7 @@ public class PeerDiscoveryTest extends TestCase {
 		discovery.setUserId("user-id");
 		
 		//problem: ordering of userDiscovered calls not predictable
+		RemoteUserProxyFactory.init(new LogFilter(null, false));
 		RemoteUserProxyExt rem1 = RemoteUserProxyFactory.getInstance().createProxy("peer1"+ports[0], new MutableUserDetails("peer1", null, ports[0]));
 		callback.userDiscovered(rem1);
 		//note: InetAddress will not be compared in comparison, c.f. RemoteUserProxyMatcher
