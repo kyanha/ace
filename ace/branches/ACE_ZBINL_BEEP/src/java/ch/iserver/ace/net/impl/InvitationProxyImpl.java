@@ -23,17 +23,17 @@ package ch.iserver.ace.net.impl;
 
 import org.apache.log4j.Logger;
 
-import ch.iserver.ace.FailureCodes;
+import ch.iserver.ace.collaboration.JoinRequest;
 import ch.iserver.ace.net.InvitationProxy;
 import ch.iserver.ace.net.JoinNetworkCallback;
 import ch.iserver.ace.net.RemoteDocumentProxy;
-import ch.iserver.ace.net.SessionConnection;
-import ch.iserver.ace.net.SessionConnectionCallback;
+import ch.iserver.ace.net.impl.protocol.JoinRequestSenderFilter;
 import ch.iserver.ace.net.impl.protocol.ProtocolConstants;
 import ch.iserver.ace.net.impl.protocol.RemoteUserSession;
 import ch.iserver.ace.net.impl.protocol.Request;
 import ch.iserver.ace.net.impl.protocol.RequestFilter;
 import ch.iserver.ace.net.impl.protocol.RequestImpl;
+import ch.iserver.ace.net.impl.protocol.JoinRequestSenderFilter.JoinNetworkCallbackWrapper;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
@@ -70,12 +70,13 @@ public class InvitationProxyImpl implements InvitationProxy {
 		if (user != null && user.hasDocumentShared(proxy.getId())) {
 			proxy.invitationAccepted(callback);
 			String docId = proxy.getId();
-			Request request = new RequestImpl(ProtocolConstants.JOIN, proxy.getPublisher().getId(), docId);
+			JoinNetworkCallbackWrapper wrapper =  new JoinNetworkCallbackWrapper(docId, callback);
+			Request request = new RequestImpl(ProtocolConstants.JOIN, proxy.getPublisher().getId(), wrapper);
 			filter.process(request);
 		} else { //user or documents has been discarded in the meanwhile
 			LOG.warn("document to be joined no longer available [" +
 					((user != null) ? user.getUserDetails().getUsername() : null) + ", "+proxy.getId() + "]");
-			callback.rejected(FailureCodes.DOCUMENT_SHUTDOWN);
+			callback.rejected(JoinRequest.SHUTDOWN);
 			proxy = null;
 			session = null;
 			filter = null;

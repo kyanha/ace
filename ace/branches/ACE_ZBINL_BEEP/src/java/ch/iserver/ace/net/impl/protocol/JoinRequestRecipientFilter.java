@@ -27,6 +27,7 @@ import org.apache.log4j.Logger;
 import org.beepcore.beep.core.OutputDataStream;
 
 import ch.iserver.ace.FailureCodes;
+import ch.iserver.ace.collaboration.JoinRequest;
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.PublishedDocument;
 import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
@@ -68,7 +69,7 @@ public class JoinRequestRecipientFilter extends AbstractRequestFilter {
 					} else {
 						LOG.warn("join request for shutdown document [" + info.getDocId() + "] received");
 					}
-					info.setData(Integer.toString(FailureCodes.DOCUMENT_SHUTDOWN));
+					info.setData(Integer.toString(JoinRequest.SHUTDOWN));
 					Request response = new RequestImpl(ProtocolConstants.JOIN_REJECTED, request.getUserId(), info);
 					clientChain.process(response);
 				}
