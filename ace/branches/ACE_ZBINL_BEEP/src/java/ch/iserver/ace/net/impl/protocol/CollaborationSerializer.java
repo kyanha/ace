@@ -72,7 +72,6 @@ public class CollaborationSerializer implements Serializer, ProtocolConstants {
 	 * @see ch.iserver.ace.net.impl.protocol.Serializer#createQuery(int)
 	 */
 	public byte[] createQuery(int type) throws SerializeException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -81,7 +80,6 @@ public class CollaborationSerializer implements Serializer, ProtocolConstants {
 	 */
 	public byte[] createRequest(int type, Object data)
 			throws SerializeException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -424,10 +422,10 @@ public class CollaborationSerializer implements Serializer, ProtocolConstants {
 		try {
 			handler = factory.newTransformerHandler();
 			Transformer serializer = handler.getTransformer();
-			serializer.setOutputProperty(OutputKeys.ENCODING, NetworkConstants.DEFAULT_ENCODING);;
+			serializer.setOutputProperty(OutputKeys.ENCODING, 
+					NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 			serializer.setOutputProperty(OutputKeys.INDENT,"no");
 		} catch (TransformerConfigurationException tce) {
-			//TODO: handling
 			LOG.error("transformer could not be configured.");
 		} 
 		return handler;

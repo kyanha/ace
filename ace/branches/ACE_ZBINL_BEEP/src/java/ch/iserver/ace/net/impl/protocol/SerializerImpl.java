@@ -42,6 +42,7 @@ import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.net.PortableDocument;
 import ch.iserver.ace.net.impl.MutableUserDetails;
 import ch.iserver.ace.net.impl.NetworkConstants;
+import ch.iserver.ace.net.impl.NetworkProperties;
 import ch.iserver.ace.net.impl.NetworkServiceImpl;
 import ch.iserver.ace.net.impl.PublishedDocument;
 import ch.iserver.ace.net.impl.RemoteUserProxyExt;
@@ -73,7 +74,8 @@ public class SerializerImpl implements Serializer, ProtocolConstants {
 		try {
 			handler = factory.newTransformerHandler();
 			Transformer serializer = handler.getTransformer();
-			serializer.setOutputProperty(OutputKeys.ENCODING, NetworkConstants.DEFAULT_ENCODING);;
+			serializer.setOutputProperty(OutputKeys.ENCODING, 
+					NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 			serializer.setOutputProperty(OutputKeys.INDENT,"no");
 		} catch (TransformerConfigurationException tce) {
 			//TODO: handling

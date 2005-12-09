@@ -38,7 +38,7 @@ public class SendDocumentsReceiveFilterTest extends TestCase {
 		RemoteUserProxyExt user = RemoteUserProxyFactory.getInstance().createProxy("userid1", new MutableUserDetails("user1", InetAddress.getLocalHost(), 41234));
 		RequestFilter logfilter = new LogFilter(null ,false);
 		DiscoveryCallbackImpl discoveryCallback = new DiscoveryCallbackImpl(callback, NetworkServiceImpl.getInstance(), logfilter);
-		DiscoveryManagerFactory.getDiscoveryManager(discoveryCallback);
+		DiscoveryManagerFactory.getDiscoveryManager();
 		SessionManager.getInstance().createSession(user);
 		
 		MockControl filterCtrl = MockControl.createControl(RequestFilter.class);

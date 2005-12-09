@@ -30,7 +30,7 @@ public class SerializerImplTest extends TestCase {
 		Serializer serializer = SerializerImpl.getInstance();
 		
 		byte[] data = serializer.createQuery(ProtocolConstants.PUBLISHED_DOCUMENTS);
-		String actual = new String(data, NetworkConstants.DEFAULT_ENCODING);
+		String actual = new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 		
 		assertEquals(EXPECTED_QUERY, actual);
 	}
@@ -47,7 +47,7 @@ public class SerializerImplTest extends TestCase {
 		docs.put("23SSWD-3ED", doc);
 		
 		byte[] data = serializer.createResponse(ProtocolConstants.PUBLISHED_DOCUMENTS, docs, null);
-		String actual = new String(data, NetworkConstants.DEFAULT_ENCODING);
+		String actual = new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 		
 		assertEquals(EXPECTED_RESPONSE, actual);
 	}
@@ -59,7 +59,7 @@ public class SerializerImplTest extends TestCase {
 		PublishedDocument doc = new PublishedDocument("WERS24-RE2", logic, new DocumentDetails("testfile.txt"), null, null);
 		
 		byte[] data = serializer.createNotification(ProtocolConstants.PUBLISH, doc);
-		String actual = new String(data, NetworkConstants.DEFAULT_ENCODING);
+		String actual = new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 
 		String xmlPublish = XML_PUBLISH_1+userId+XML_PUBLISH_2;
 		
@@ -74,7 +74,7 @@ public class SerializerImplTest extends TestCase {
 		PublishedDocument doc = new PublishedDocument("WERS24-RE2", logic, new DocumentDetails("testfile.txt"), null, null);
 		
 		byte[] data = serializer.createNotification(ProtocolConstants.CONCEAL, doc);
-		String actual = new String(data, NetworkConstants.DEFAULT_ENCODING);
+		String actual = new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 
 		String xmlPublish = XML_CONCEAL_1+userId+XML_CONCEAL_2;
 		
@@ -95,7 +95,7 @@ public class SerializerImplTest extends TestCase {
 		docs.put("23SSWD-3ED", doc);
 		
 		byte[] data = serializer.createNotification(ProtocolConstants.SEND_DOCUMENTS, docs);
-		String actual = new String(data, NetworkConstants.DEFAULT_ENCODING);
+		String actual = new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 
 		assertEquals(XML_SEND_DOCUMENTS, actual);
 	}

@@ -65,7 +65,7 @@ public class CollaborationParserHandlerTest extends TestCase {
 		joinDocument += Base64.encodeBytes(payload.getBytes(NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING)), Base64.GZIP);
 		joinDocument += XML_JOIN_DOCUMENT_2;
 		
-		byte[] data = joinDocument.getBytes(NetworkConstants.DEFAULT_ENCODING);
+		byte[] data = joinDocument.getBytes(NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 		String userId = "sadfasd-24";
 		NetworkServiceImpl.getInstance().setUserId(userId);
 		

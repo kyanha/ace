@@ -10,6 +10,7 @@ import org.easymock.ArgumentsMatcher;
 import org.easymock.MockControl;
 
 import ch.iserver.ace.net.impl.NetworkConstants;
+import ch.iserver.ace.net.impl.NetworkProperties;
 
 public class ParticipantConnectionImplTest extends TestCase {
 
@@ -20,7 +21,7 @@ public class ParticipantConnectionImplTest extends TestCase {
 		Channel channel = (Channel)channelCtrl.getMock();
 		
 		MainConnection connection = new MainConnection(channel);
-		byte[] data = DATA.getBytes(NetworkConstants.DEFAULT_ENCODING);
+		byte[] data = DATA.getBytes(NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 		
 		QueryInfo queryInfo = new QueryInfo("test-id", 0);
 		channel.setAppData(queryInfo);
