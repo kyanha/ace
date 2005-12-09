@@ -25,16 +25,21 @@ import ch.iserver.ace.net.discovery.PeerDiscovery;
 import ch.iserver.ace.net.discovery.UserRegistration;
 
 /**
- * 
+ * Factory class for creating discovery implementations. 
  *
+ * @see ch.iserver.ace.net.core.Discovery
  */
 public abstract class DiscoveryFactory {
 
+	/**
+	 * The single DiscoveryFactory instance
+	 */
 	private static DiscoveryFactory instance;
 	
 	/**
+	 * Gets the DiscoveryFactory instance.
 	 * 
-	 * @return a discovery implementation
+	 * @return a DiscoveryFactory implementation
 	 */
 	public static DiscoveryFactory getInstance() {
 		if (instance == null) {
@@ -54,6 +59,12 @@ public abstract class DiscoveryFactory {
 	 */
 	public abstract void init(UserRegistration registration, PeerDiscovery discovery);
 	
+	/**
+	 * Creates a new discovery implementation.
+	 * 
+	 * @param callback the DiscoveryCallback for the discovery
+	 * @return an instance of a Discovery implementation
+	 */
 	public abstract Discovery createDiscovery(DiscoveryCallback callback);
 
 }

@@ -26,25 +26,58 @@ import ch.iserver.ace.algorithm.TimestampFactory;
 import ch.iserver.ace.net.NetworkService;
 
 /**
- *
+ * This interface extends interface {@link ch.iserver.ace.net.NetworkService}
+ * for the network layer.
  */
 public interface NetworkServiceExt extends NetworkService {
 
+	/**
+	 * Sets the discovery object. 
+	 * 
+	 * @param discovery the discovery object
+	 * @see Discovery
+	 */
 	public void setDiscovery(Discovery discovery);
 	
+	/**
+	 * Sets the server info. The server info includes the address
+	 * and port information for the local user.
+	 * 
+	 * @param info the server info for the local user
+	 * @see ServerInfo
+	 */
 	public void setServerInfo(ServerInfo info);
 	
+	/**
+	 * Conceals a document from the local user. This method
+	 * does not cause any physical network traffic and is used 
+	 * for management purpose.
+	 * 
+	 * @param docId the id of the document to conceal
+	 */
 	public void conceal(String docId);
 	
+	/**
+	 * Returns true if the local user has one or more published documents.
+	 * 
+	 * @return true iff the local user has one or more published documents
+	 */
 	public boolean hasPublishedDocuments();
 	
+	/**
+	 * Gets the TimestampFactory.
+	 * 
+	 * @return the TimestampFactory
+	 * @see TimestampFactory
+	 */
 	public TimestampFactory getTimestampFactory();
 	
 	/**
-	 * Returns whether the network layer has been stopped.
-	 * If true, no messages shall be received and processed anymore.
+	 * Returns whether the network layer is stopped.
+	 * If true, no messages from the physical network shall be 
+	 * received and processed anymore.
 	 * 
-	 * @return
+	 * @return true iff the network layer is stopped
 	 */
 	public boolean isStopped();
 }

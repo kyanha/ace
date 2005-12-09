@@ -35,19 +35,47 @@ import ch.iserver.ace.Fragment;
 import ch.iserver.ace.net.RemoteUserProxy;
 
 /**
- *
+ * Default implementation of interface {@link ch.iserver.ace.net.PortableDocument} for 
+ * the network layer.
+ * This object contains the actual data of the document. 
  */
 public class PortableDocumentImpl implements PortableDocumentExt {
 
 	private static Logger LOG = Logger.getLogger(PortableDocumentImpl.class);
 	
+	/**
+	 * A list of fragments
+	 */
 	private List fragments;
+	
+	/**
+	 * A map of selections
+	 */
 	private Map selections; 	//participantId to caretupdate
+	
+	/**
+	 * A map with the RemoteUserProxy's
+	 */
 	private Map proxies;		//participantId to remoteuserproxy
+	
+	/**
+	 * The document id
+	 */
 	private String docId;
+	
+	/**
+	 * The publisher id
+	 */
 	private String publisherId;
+	
+	/**
+	 * The participant id of the local user
+	 */
 	private int participantId;
 	
+	/**
+	 * Default constructor.
+	 */
 	public PortableDocumentImpl() {
 		fragments = Collections.synchronizedList(new ArrayList());
 		selections = Collections.synchronizedMap(new LinkedHashMap());
@@ -58,43 +86,73 @@ public class PortableDocumentImpl implements PortableDocumentExt {
 	/** methods from interface PortableDocumentExt **/
 	/************************************************/
 	
+	/**
+	 * @inheritDoc
+	 */
 	public void addFragment(Fragment fragment) {
 		fragments.add(fragment);
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public void addParticipant(int id, RemoteUserProxyExt proxy) {
 		proxies.put(new Integer(id), proxy);
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public void setSelection(int participantId, CaretUpdate selection) {
 		selections.put(new Integer(participantId), selection);
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public void setDocumentId(String id) {
 		this.docId = id;
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public String getDocumentId() {
 		return docId;
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public void setPublisherId(String publisherId) {
 		this.publisherId = publisherId;
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public String getPublisherId() {
 		return publisherId;
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public int getParticipantId() {
 		return participantId;
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public void setParticpantId(int id) {
 		LOG.debug("setParticipantId(" + id + ")");
 		this.participantId = id;
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public List getUsers() {
 		return new ArrayList(proxies.values());
 	}
@@ -138,6 +196,9 @@ public class PortableDocumentImpl implements PortableDocumentExt {
 		return fragments.iterator();
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public String toString() {
 		return "PortableDocumentImpl("+docId+", "+publisherId+", "+proxies.keySet()+" participants, "+fragments.size()+" fragments, "+selections.keySet()+" selections)";
 	}

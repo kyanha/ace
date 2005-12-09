@@ -24,6 +24,13 @@ import java.net.InetAddress;
 
 import ch.iserver.ace.UserDetails;
 
+/**
+ * This class extends <code>UserDetails</code> for the network layer for
+ * more modification flexibility. Besdies, MutableUserDetails hold address
+ * and port information about the user.
+ *
+ * @see ch.iserver.ace.UserDetails
+ */
 public class MutableUserDetails extends UserDetails {
 
 	
@@ -31,15 +38,29 @@ public class MutableUserDetails extends UserDetails {
 	 * The address of the user.
 	 */
 	protected InetAddress address;
+	
 	/**
 	 * The port of the user.
 	 */
 	protected int port;
 
+	/**
+	 * Creates a new MutableUserDetails with the given user name.
+	 * 
+	 * @param username the user name
+	 */
 	public MutableUserDetails(String username) {
 		super(username);
 	}
 	
+	/**
+	 * Creates a new MutableUserDetails with the given user name, address
+	 * and port.
+	 * 
+	 * @param username	the user name
+	 * @param address	the user's address
+	 * @param port		the user's port
+	 */
 	public MutableUserDetails(String username, InetAddress address, int port) {
 		super(username);
 		this.address = address;
@@ -110,6 +131,9 @@ public class MutableUserDetails extends UserDetails {
 		return val;
 	}
 	
+	/**
+	 * @see java.lang.Object#toString()
+	 */
 	public String toString() {
 		return "MutableUserDetails('"+getUsername()+"', "+getAddress()+", "+getPort()+")";
 	}

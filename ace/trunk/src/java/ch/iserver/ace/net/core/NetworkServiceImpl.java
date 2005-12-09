@@ -53,20 +53,52 @@ import ch.iserver.ace.util.ParameterValidator;
 import ch.iserver.ace.util.UUID;
 
 /**
- *
+ * Default implementation for interface {@link ch.iserver.ace.net.NetworkService}.
+ * This class is the main entry point to the network layer for the upper layer.
  */
 public class NetworkServiceImpl implements NetworkServiceExt {
 	
 	private static Logger LOG = Logger.getLogger(NetworkServiceImpl.class);
 	
+	/**
+	 * The TimestampFactory object used for the creation of timestamps
+	 * when incoming requests are parsed.
+	 */
 	private TimestampFactory timestampFactory;
+	
+	/**
+	 * The callback for the upper layer.
+	 */
 	private NetworkServiceCallback networkCallback;
+	
+	/**
+	 * The request filter chain to process outoing requests.
+	 */
 	private RequestFilter requestChain;
+	
+	/**
+	 * The BEEP session listener object.
+	 */
 	private BEEPSessionListener sessionListener;
 	
+	/**
+	 * The discovery object to communicate with the discovery .
+	 */
 	private Discovery discovery;
+	
+	/**
+	 * Ther server info for the local user.
+	 */
 	private ServerInfo info;
+	
+	/**
+	 * The user details of the local user.
+	 */
 	private UserDetails details;
+	
+	/**
+	 * The user id for the local user.
+	 */
 	private String userId;
 	
 	/**
@@ -74,10 +106,21 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	 */
 	private boolean isStopped = false;
 	
+	/**
+	 * The published documents of the local user.
+	 */
 	private Map publishedDocs;
 	
+	/**
+	 * The singleton instance.
+	 */
 	private static NetworkServiceImpl instance;
 	
+	/**
+	 * Private constructor. 
+	 * 
+	 * Initializes several factories and the RequestFilter chain.
+	 */
 	private NetworkServiceImpl() {
 		publishedDocs = Collections.synchronizedMap(new LinkedHashMap());
 		requestChain = RequestFilterFactory.createClientChain();
@@ -87,6 +130,11 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 		ParticipantConnectionImplFactory.init(requestChain);
 	}
 	
+	/**
+	 * Gets the NetworkServiceImpl instance.
+	 * 
+	 * @return the NetworkServiceImpl object
+	 */
 	public static NetworkServiceImpl getInstance() {
 		if (instance == null) {
 			instance = new NetworkServiceImpl();
@@ -94,19 +142,39 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 		return instance;
 	}
 	
+	/**
+	 * Gets the NetworkServiceCallback object.
+	 * 
+	 * @return the callback
+	 */
 	public NetworkServiceCallback getCallback() {
 		return networkCallback;
 	}
 
+	/**
+	 * Gets the id of the local user.
+	 * 
+	 * @return the id
+	 */
 	public String getUserId() {
 		return userId;
 	}
 	
+	/**
+	 * Gets the details of the local user.
+	 * 
+	 * @return the UserDetails
+	 */
 	public UserDetails getUserDetails() {
 		return details;
 	}
 	
-	
+	/**
+	 * Gets the published documents as a document id to
+	 * <code>PublishedDocument</code> map.
+	 * 
+	 * @return the published documents in a Map
+	 */
 	public Map getPublishedDocuments() {
 		return publishedDocs;
 	}
@@ -115,10 +183,17 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	/*******************************************/
 	/** Methods from interface NetworkService **/
 	/*******************************************/
+	
+	/**
+	 * @inheritDoc
+	 */
 	public ServerInfo getServerInfo() {
 		return info;
 	} 
 	
+	/**
+	 * @inheritDoc
+	 */
 	public void setUserId(String id) {
 		this.userId = id;
 	}
@@ -136,6 +211,9 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 		launcher.start();
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public void stop() {
 		LOG.debug("--> stop()");
 		isStopped = true;
@@ -199,6 +277,9 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 		LOG.debug("<-- stop()");
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public void setUserDetails(UserDetails details) {
 		this.details = details;
 		if (discovery != null) {
@@ -206,6 +287,9 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 		}
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public void setTimestampFactory(TimestampFactory factory) {
 		this.timestampFactory = factory;
 	}
@@ -215,6 +299,9 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 		this.networkCallback = callback;
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public void discoverUser(DiscoveryNetworkCallback callback, InetAddress addr, int port) {
 		LOG.debug("--> discoverUser(" + addr + ")");
 		String defaultPort = NetworkProperties.get(NetworkProperties.KEY_PROTOCOL_PORT);
@@ -223,6 +310,9 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 		LOG.debug("<-- discoverUser()");
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public synchronized DocumentServer publish(DocumentServerLogic logic, DocumentDetails details) {
 		LOG.info("--> publish("+details+")");
 		PublishedDocument doc = new PublishedDocument(UUID.nextUUID(), logic, details, requestChain, this);
@@ -236,28 +326,46 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	/**********************************************/
 	/** Methods from interface NetworkServiceExt **/
 	/**********************************************/
+	
+	/**
+	 * @inheritDoc
+	 */
 	public boolean isStopped() {
 		return isStopped;
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public TimestampFactory getTimestampFactory() {
 		return timestampFactory;
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public void conceal(String docId) {
 		LOG.debug("conceal(" + docId + ")");
 		publishedDocs.remove(docId);
 	}
 	
-	
+	/**
+	 * @inheritDoc
+	 */
 	public void setDiscovery(Discovery discovery) {
 		this.discovery = discovery;
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public void setServerInfo(ServerInfo info) {
 		this.info = info;
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public boolean hasPublishedDocuments() {
 		return !publishedDocs.isEmpty();
 	}

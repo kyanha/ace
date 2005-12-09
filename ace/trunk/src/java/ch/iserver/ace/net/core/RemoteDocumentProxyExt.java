@@ -28,16 +28,45 @@ import ch.iserver.ace.net.SessionConnection;
 import ch.iserver.ace.net.SessionConnectionCallback;
 
 /**
- *
+ * Interface extension of {@link ch.iserver.ace.net.RemoteDocumentProxy} for 
+ * the network layer.
+ * It adds methods concerning the join and invitation process of other users.
  */
 public interface RemoteDocumentProxyExt extends RemoteDocumentProxy {
 
+	/**
+	 * Sets the document details.
+	 * 
+	 * @param details	the document details to set
+	 * @see DocumentDetails
+	 */
 	public void setDocumentDetails(DocumentDetails details);
 	
+	/**
+	 * Notifies the RemoteDocumentProxy that the join request was 
+	 * rejected by the publisher.
+	 * 
+	 * @param code	the reason for the rejection
+	 */
 	public void joinRejected(int code);
 	
+	/**
+	 * Notifies the RemoteDocumentProxy that the join request was 
+	 * accepted by the publisher.
+	 * 
+	 * @param connection the SessionConnection for the local user to the publisher
+	 * @return the SessionConnectionCallback
+	 * @see SessionConnectionCallback
+	 */
 	public SessionConnectionCallback joinAccepted(SessionConnection connection);
 	
+	/**
+	 * Gets the SessionConnectionCallback object. Returns null as long as a join request
+	 * has not been accepted.
+	 * 
+	 * @return the SessionConnectionCallback object or null if {@link #joinAccepted(SessionConnection)} 
+	 * 				was not called prior
+	 */
 	public SessionConnectionCallback getSessionConnectionCallback();
 	
 	/**
@@ -48,8 +77,18 @@ public interface RemoteDocumentProxyExt extends RemoteDocumentProxy {
 	 */
 	public void invitationAccepted(JoinNetworkCallback callback);
 	
+	/**
+	 * Cleans up this object. To be called after the local user
+	 * left the session of this document. Otherwise this call
+	 * has no impact.
+	 */
 	public void cleanupAfterLeave();
 	
+	/**
+	 * Returns true if this document has been joined, false otherwise
+	 * 
+	 * @return truee iff this document has been joined by the local user
+	 */
 	public boolean isJoined();
 	
 }

@@ -36,16 +36,36 @@ import ch.iserver.ace.net.protocol.JoinRequestSenderFilter.JoinNetworkCallbackWr
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
- *
+ * Default implementation of interface {@link ch.iserver.ace.net.InvitationProxy}.
+ * 
  */
 public class InvitationProxyImpl implements InvitationProxy {
 
 	private static Logger LOG = Logger.getLogger(InvitationProxyImpl.class);
 	
+	/**
+	 * The RemoteDocumentProxy this invitation is about.
+	 */
 	private RemoteDocumentProxyExt proxy;
+	
+	/**
+	 * The RemoteUserSession this invitation is directed to.
+	 */
 	private RemoteUserSession session;
+	
+	/**
+	 * The request filter chain to process outoing requests.
+	 */
 	private RequestFilter filter;
 	
+	
+	/**
+	 * Creates a new InvitationProxy.
+	 * 
+	 * @param proxy		the RemoteDocumentProxy object this invitation is about
+	 * @param session	the RemoteUserSession object	this invitation is for
+	 * @param filter		the RequestFilter object to process outgoing requests
+	 */
 	public InvitationProxyImpl(RemoteDocumentProxyExt proxy, RemoteUserSession session, RequestFilter filter) {
 		ParameterValidator.notNull("proxy", proxy);
 		ParameterValidator.notNull("session", session);
@@ -55,6 +75,9 @@ public class InvitationProxyImpl implements InvitationProxy {
 		this.filter = filter;
 	}
 	
+	/**
+	 * @see ch.iserver.ace.net.InvitationProxy#getDocument()
+	 */
 	public RemoteDocumentProxy getDocument() {
 		return proxy;
 	}
@@ -83,6 +106,9 @@ public class InvitationProxyImpl implements InvitationProxy {
 		LOG.debug("<-- accept()");		
 	}
 
+	/**
+	 * @see ch.iserver.ace.net.InvitationProxy#reject()
+	 */
 	public void reject() {
 		LOG.debug("invitation for '"+getDocument().getDocumentDetails().getTitle()+"' rejected.");
 		RemoteUserProxyExt user = session.getUser();

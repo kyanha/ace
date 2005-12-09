@@ -24,17 +24,39 @@ package ch.iserver.ace.net.core;
 import ch.iserver.ace.Fragment;
 
 /**
- *
+ * Implementation of interface {@link ch.iserver.ace.Fragment} for
+ * the network layer.
+ * 
+ * @see Fragment
  */
 public class FragmentImpl implements Fragment {
 
+	/**
+	 * The participant id of the owner of this fragment 
+	 */
 	private int participantId;
+	
+	/**
+	 * The text of this fragment
+	 */
 	private String text;
 	
+	
+	/**
+	 * Creates a new Fragment with the <code>participantId</code> 
+	 * and the <code>text</code>.
+	 * 
+	 * @param participantId 	the participant id of this fragment's owner
+	 * @param text			the text for this fragment
+	 */
 	public FragmentImpl(int participantId, String text) {
 		this.participantId = participantId;
 		this.text = text;
 	}
+	
+	/*************************************/
+	/** methods from interface Fragment **/
+	/*************************************/
 	
 	/**
 	 * @see ch.iserver.ace.Fragment#getParticipantId()

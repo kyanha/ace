@@ -23,23 +23,26 @@ package ch.iserver.ace.net.core;
 import ch.iserver.ace.UserDetails;
 
 /**
- * 
+ * Interface for the service discovery, i.e. the discovery of up and running
+ * users of ACE. Provides the necessary methods to properly initialize, execute
+ * and stop the discovery process.
  *
+ * @see ch.iserver.ace.net.core.DiscoveryFactory
  */
 public interface Discovery {
-	
-	public static final String KEY_DISCOVERY_PORT = "discovery.port";
 	
 	/**
 	 * Sets the UUID for the local user.
 	 * 
-	 * @param uuid
+	 * @param uuid the unique id for the local user
 	 */
 	void setUserId(String uuid);
 	
 	/**
+	 * Sets the user details for the local user. Currently this includes only the
+	 * user name.
 	 * 
-	 * @param details
+	 * @param details the UserDetails to be set
 	 */
 	void setUserDetails(UserDetails details);
 	
@@ -53,7 +56,8 @@ public interface Discovery {
 	void execute();
 	
 	/**
-	 *
+	 * Stops the discovery process. To be called only once in the
+	 * applications lifetime.
 	 */
 	void abort();
 	

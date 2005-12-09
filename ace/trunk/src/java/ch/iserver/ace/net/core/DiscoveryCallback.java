@@ -23,20 +23,26 @@ package ch.iserver.ace.net.core;
 
 
 /**
- * 
- *
+ * Discovery callback interface used by the discovery implementation to 
+ * notify about events received from the network. E.g. the discovery
+ * of a new user or the loss of a user.
  */
 public interface DiscoveryCallback {
 
 	/**
+	 * Called when a new user has been discovered. At the time
+	 * of this call, it is possible that not all essential information for this
+	 * user could be gathered. Wait until {@link #userDiscoveryCompleted(RemoteUserProxyExt)}
+	 * is called.
 	 * 
-	 * @param proxy
+	 * @param proxy the RemoteUserProxy for the discovered user
 	 */
 	void userDiscovered(RemoteUserProxyExt proxy);
 	
 	/**
-	 * 
-	 * @param proxy
+	 * Called when a user has discarded. 
+	 *  
+	 * @param proxy the RemoteUserProxy of the discarded user
 	 */
 	void userDiscarded(RemoteUserProxyExt proxy);
 	
@@ -45,13 +51,15 @@ public interface DiscoveryCallback {
 	 * when all information for a user has been gathered, 
 	 * including its host address.
 	 * 
-	 * @param proxy
+	 * @param proxy the RemoteUserProxy for the user which is completely discovered
 	 */
 	void userDiscoveryCompleted(RemoteUserProxyExt proxy); 
 	
 	/**
+	 * Called when the details of a user have changed. This is currently
+	 * only the user's name.
 	 * 
-	 * @param proxy
+	 * @param proxy the RemoteUserProxy of the user whose details have changed
 	 */
 	void userDetailsChanged(RemoteUserProxyExt proxy);
 	

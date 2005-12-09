@@ -37,20 +37,34 @@ import ch.iserver.ace.net.protocol.SessionManager;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
- * 
+ * Default implementation of interface {@link ch.iserver.ace.net.core.DiscoveryCallback}.
  *
  */
 public class DiscoveryCallbackImpl implements DiscoveryCallback {
 
 	private static Logger LOG = Logger.getLogger(DiscoveryCallbackImpl.class);
 	
+	/**
+	 *  The network service callback to notify the upper layer about events.
+	 */
 	private NetworkServiceCallback callback;
+	
+	/**
+	 * The network service reference used for document management.
+	 */
 	private NetworkServiceExt service;
+	
+	/**
+	 * The request filter chain to process outoing requests.
+	 */
 	private RequestFilter filter;
 	
 	/**
+	 * Creates a new DiscoveryCallbackImpl.
 	 * 
-	 * @param callback
+	 * @param callback	the network service callback object from the upper layer
+	 * @param service	the network service object for document management
+	 * @param filter		the request filter object for request processing
 	 */
 	public DiscoveryCallbackImpl(NetworkServiceCallback callback, NetworkServiceExt service, RequestFilter filter) {
 		ParameterValidator.notNull("callback", callback);
@@ -60,8 +74,13 @@ public class DiscoveryCallbackImpl implements DiscoveryCallback {
 		this.filter = filter;
 	}
 	
+	
+	/**********************************************/
+	/** methods from interface DiscoveryCallback **/
+	/**********************************************/
+	
 	/**
-	 * 
+	 * @inheritDoc
 	 */
 	public void userDiscovered(RemoteUserProxyExt proxy) {
 		LOG.debug("--> userDiscovered("+proxy+")");
@@ -70,7 +89,7 @@ public class DiscoveryCallbackImpl implements DiscoveryCallback {
 	}
 	
 	/**
-	 * 
+	 * @inheritDoc
 	 */
 	public void userDiscoveryCompleted(RemoteUserProxyExt user) {
 		LOG.debug("--> userDiscoveryCompleted("+user+")");
@@ -83,6 +102,9 @@ public class DiscoveryCallbackImpl implements DiscoveryCallback {
 		LOG.debug("<-- userDiscoveryCompleted()");
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	private void sendDocuments(RemoteUserProxyExt user) {
 		LOG.info("--> sendDocuments() to ["+user.getUserDetails().getUsername()+"]");
 		Request request = new RequestImpl(ProtocolConstants.SEND_DOCUMENTS, null, user);
@@ -91,7 +113,7 @@ public class DiscoveryCallbackImpl implements DiscoveryCallback {
 	}
 
 	/**
-	 * 
+	 * @inheritDoc
 	 */
 	public void userDetailsChanged(RemoteUserProxyExt proxy) {
 		LOG.debug("--> userDetailsChanged("+proxy+")");
@@ -100,7 +122,7 @@ public class DiscoveryCallbackImpl implements DiscoveryCallback {
 	}
 	
 	/**
-	 * 
+	 * @inheritDoc
 	 */
 	public void userDiscarded(RemoteUserProxyExt proxy) {
 		LOG.debug("--> userDiscarded("+proxy+")");

@@ -40,21 +40,66 @@ import ch.iserver.ace.net.protocol.RequestImpl;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
- *
+ * Default implementation for interface {@link ch.iserver.ace.net.DocumentServer}.
+ * PublishedDocument represents a published document of the local user and is responsible
+ * for processing invitations as well as accepted join requests from other users. 
+ * 
+ * This class represents the server view of a published, shared document by the local user.
+ * 
+ * @see ch.iserver.ace.net.DocumentServer
  */
 public class PublishedDocument implements DocumentServer {
 
 	private static Logger LOG = Logger.getLogger(PublishedDocument.class);
 	
+	/**
+	 * The id of this document
+	 */
 	private String docId;
+	
+	/**
+	 * The document server logic. Used to pass ParticipantConnection's
+	 * to the upper layer for users who want to join this document.
+	 */
 	private DocumentServerLogic docServer;
+	
+	/**
+	 * The document details of this document.
+	 */
 	private DocumentDetails details;
+	
+	/**
+	 * The request filter chain to process outoing requests.
+	 */
 	private RequestFilter filter;
+	
+	/**
+	 * The network service object used for published document
+	 * management.
+	 */
 	private NetworkServiceExt service;
+	
+	/**
+	 * Flag to indicate if this document is shutdown.
+	 */
 	private boolean isShutdown;
+	
+	/**
+	 * A map containing InvitationPorts for invited users.
+	 */
 	private Map invitations;
 	
-	public PublishedDocument(String id, DocumentServerLogic docServer, DocumentDetails details, RequestFilter filter, NetworkServiceExt service) {
+	/**
+	 * Creates a new PublishedDocument with the given data.
+	 * 
+	 * @param id			the document id
+	 * @param docServer	the document server logic 
+	 * @param details	the document details 
+	 * @param filter		the request filter chain for request processing
+	 * @param service	the network service 
+	 */
+	public PublishedDocument(String id, DocumentServerLogic docServer, 
+			DocumentDetails details, RequestFilter filter, NetworkServiceExt service) {
 		ParameterValidator.notNull("id", id);
 		ParameterValidator.notNull("documentServerLogic", docServer);
 		this.docId = id;
@@ -66,30 +111,62 @@ public class PublishedDocument implements DocumentServer {
 		this.invitations  = Collections.synchronizedMap(new LinkedHashMap());
 	}
 
+	/**
+	 * Gets the document details.
+	 * 
+	 * @return the DocumentDetails
+	 */
 	public DocumentDetails getDocumentDetails() {
 		return details;
 	}
 	
+	/**
+	 * Join request by a user represented by the given
+	 * <cdoe>ParticipantConnection</code>.
+	 * 
+	 * @param connection	the connection to the joining user
+	 * @see ParticipantConnection
+	 */
 	public void join(ParticipantConnection connection) {
 		docServer.join(connection);
 	}
 
+	/**
+	 * Gets the document id.
+	 * 
+	 * @return the document id
+	 */
 	public String getId() {
 		return docId;
 	}
 	
+	/**
+	 * Returns true if this document is shutdown.
+	 * 
+	 * @return true iff this document is shutdown
+	 */
 	public synchronized boolean isShutdown() {
 		return isShutdown;
 	}
 	
-	public String toString() {
-		return "PublishedDocument("+docId+", '"+details.getTitle()+"')";
-	}
-	
+	/**
+	 * Checks wheter the given user has been invited.
+	 * 
+	 * @param userId		the user id
+	 * @return	true iff the user has been invited, false otherwise
+	 */
 	public boolean isUserInvited(String userId) {
 		return invitations.containsKey(userId);
 	}
 	
+	/**
+	 * Joins an invited user to this document. This method is to be called
+	 * when the invited user accepted the invitation and wants to join.
+	 * 
+	 * @param userId			the user id
+	 * @param connection		the ParticipantConnection for the user
+	 * @see ParticipantConnection
+	 */
 	public void joinInvitedUser(String userId, ParticipantConnection connection) {
 		LOG.debug("--> joinInvitedUser()");
 		InvitationPort port = (InvitationPort) invitations.remove(userId);
@@ -97,6 +174,12 @@ public class PublishedDocument implements DocumentServer {
 		LOG.debug("<-- joinInvitedUser()");
 	}
 	
+	/**
+	 * Notifies the upper layer that the invited user rejected the
+	 * invitation.
+	 * 
+	 * @param userId 	the id of the user who rejected the invitation
+	 */
 	public void rejectInvitedUser(String userId) {
 		LOG.debug("--> rejectedInvitedUser()");
 		InvitationPort port = (InvitationPort) invitations.remove(userId);
@@ -107,11 +190,21 @@ public class PublishedDocument implements DocumentServer {
 		}
 		LOG.debug("<-- rejectedInvitedUser()");
 	}
+	
+	/**
+	 * @inheritDoc
+	 */
+	public String toString() {
+		return "PublishedDocument("+docId+", '"+details.getTitle()+"')";
+	}
 
 	/********************************************/
 	/** methods from interface DocumentServer  **/
 	/********************************************/
 	
+	/**
+	 * @inheritDoc
+	 */
 	public void invite(InvitationPort invitation) {
 		LOG.debug("--> invite("+invitation.getUser()+")");
 		String userId = invitation.getUser().getId();
@@ -121,6 +214,9 @@ public class PublishedDocument implements DocumentServer {
 		LOG.debug("<-- invite()");
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public void setDocumentDetails(DocumentDetails details) {
 		if (isShutdown()) { 
 			throw new IllegalStateException("document has been shutdown");
@@ -130,6 +226,9 @@ public class PublishedDocument implements DocumentServer {
 		filter.process(request);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public synchronized void shutdown() {
 		LOG.debug("--> shutdown()");
 		if (isShutdown()) throw new IllegalStateException("document has been shutdown already");
