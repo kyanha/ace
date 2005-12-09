@@ -59,7 +59,7 @@ public class RequestParserHandler extends ParserHandler {
 	
 	public void endDocument() throws SAXException {
 		int type = getType();
-		if (type == PUBLISHED_DOCUMENTS || type == USER_DISCARDED) {
+		if (type == USER_DISCARDED) {
 			result = new RequestImpl(type, userId, null);
 		} else if (type == PUBLISH 
 				|| type == CONCEAL 
@@ -123,12 +123,6 @@ public class RequestParserHandler extends ParserHandler {
 		} else if (requestType == JOIN_REJECTED) {
 			String code = attributes.getValue(CODE);
 			info.setData(code);
-		} else if (qName.equals(TAG_QUERY)) { //TODO: remove tag query, is discarded
-			if (attributes.getValue(QUERY_TYPE).equals(QUERY_TYPE_PUBLISHED_DOCUMENTS)) {
-				requestType = PUBLISHED_DOCUMENTS;
-			} else {
-				LOG.warn("unkown query type "+attributes.getValue(QUERY_TYPE));
-			}
 		} else if (qName.equals(TAG_PUBLISHED_DOCS)) {
 			userId = attributes.getValue(USER_ID);
 			requestType = SEND_DOCUMENTS;

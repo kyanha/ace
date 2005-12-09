@@ -171,7 +171,6 @@ public class RemoteUserSession {
 	 * @return
 	 */
 	public SessionConnectionImpl addSessionConnection(String docId, Channel collaborationChannel) {
-		//TODO: must not be snychronized right?
 		LOG.debug("--> addSessionConnection() for doc ["+docId+"]");
 		String username = getUser().getUserDetails().getUsername();
 		SessionConnectionImpl conn = new SessionConnectionImpl(docId, collaborationChannel, 
@@ -352,7 +351,7 @@ public class RemoteUserSession {
 		LOG.debug("--> initiateTCPSession()");
 		try {
 			//TODO: how to handle when a connection to a user is to be established who resides
-			//behind a router? timeout?
+			//behind a router? timeout? -> use proxy?
 			ProfileRegistry registry = ProfileRegistryFactory.getProfileRegistry();
 			TCPSession newSession = TCPSessionCreator.initiate(host, port, registry); 
 			setTCPSession( newSession );
@@ -360,7 +359,6 @@ public class RemoteUserSession {
 			isInitiated = true;
 			DiscoveryManagerFactory.getDiscoveryManager().setSessionEstablished(user.getId());
 		} catch (BEEPException be) {
-			//TODO: retry strategy?
 			LOG.error("could not initiate session ["+be+"]");
 			if (be.getCause() instanceof ConnectException) {
 				String msg = getUser().getUserDetails().getUsername() + "[" + host + ":" + port + "]";
@@ -414,7 +412,6 @@ public class RemoteUserSession {
 			LOG.debug("<-- sendMSG()");
 			return channel;
 		} catch (Exception be) {
-			//TODO: retry strategy?
 			LOG.error("could not start channel ["+be+"]");
 			throw new ConnectionException("could not start channel");
 		}
