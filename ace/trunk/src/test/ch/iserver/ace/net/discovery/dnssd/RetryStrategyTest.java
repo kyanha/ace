@@ -1,7 +1,5 @@
 package ch.iserver.ace.net.discovery.dnssd;
 
-import ch.iserver.ace.net.discovery.dnssd.CallStub;
-import ch.iserver.ace.net.discovery.dnssd.DNSSDUnavailable;
 import junit.framework.TestCase;
 
 public class RetryStrategyTest extends TestCase {

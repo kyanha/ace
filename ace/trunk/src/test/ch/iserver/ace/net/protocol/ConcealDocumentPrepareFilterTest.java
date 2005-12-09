@@ -6,10 +6,6 @@ import org.easymock.MockControl;
 
 import ch.iserver.ace.net.DocumentServerLogic;
 import ch.iserver.ace.net.core.PublishedDocument;
-import ch.iserver.ace.net.protocol.ParticipantConnectionExt;
-import ch.iserver.ace.net.protocol.ProtocolConstants;
-import ch.iserver.ace.net.protocol.Request;
-import ch.iserver.ace.net.protocol.RequestImpl;
 
 public class ConcealDocumentPrepareFilterTest extends TestCase {
 

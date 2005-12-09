@@ -21,6 +21,8 @@
 
 package ch.iserver.ace.collaboration.jupiter;
 
+import junit.framework.TestCase;
+
 import org.easymock.MockControl;
 
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
@@ -28,7 +30,6 @@ import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.RequestImpl;
 import ch.iserver.ace.collaboration.Session;
 import ch.iserver.ace.net.SessionConnection;
-import junit.framework.TestCase;
 
 /**
  *

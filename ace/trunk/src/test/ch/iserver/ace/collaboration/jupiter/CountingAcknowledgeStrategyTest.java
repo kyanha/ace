@@ -21,9 +21,9 @@
 
 package ch.iserver.ace.collaboration.jupiter;
 
-import org.easymock.MockControl;
-
 import junit.framework.TestCase;
+
+import org.easymock.MockControl;
 
 public class CountingAcknowledgeStrategyTest extends TestCase {
 	

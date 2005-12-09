@@ -21,16 +21,13 @@
 
 package ch.iserver.ace.collaboration.jupiter;
 
+import junit.framework.TestCase;
+
 import org.easymock.MockControl;
 
 import ch.iserver.ace.collaboration.DiscoveryCallback;
 import ch.iserver.ace.collaboration.DiscoveryResult;
-import ch.iserver.ace.collaboration.RemoteUser;
-import ch.iserver.ace.collaboration.RemoteUserStub;
 import ch.iserver.ace.net.DiscoveryNetworkCallback;
-import ch.iserver.ace.net.RemoteUserProxy;
-import ch.iserver.ace.net.RemoteUserProxyStub;
-import junit.framework.TestCase;
 
 /**
  *

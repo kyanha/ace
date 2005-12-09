@@ -8,12 +8,6 @@ import org.beepcore.beep.core.StartChannelListener;
 import org.easymock.AbstractMatcher;
 import org.easymock.MockControl;
 
-import ch.iserver.ace.net.protocol.DefaultRequestHandlerFactory;
-import ch.iserver.ace.net.protocol.Deserializer;
-import ch.iserver.ace.net.protocol.RemoteUserSession;
-import ch.iserver.ace.net.protocol.ResponseParserHandler;
-import ch.iserver.ace.net.protocol.StartChannelListenerImpl;
-
 public class StartChannelListenerImplTest extends TestCase {
 	
 	public void testAdvertiseProfile() throws Exception {

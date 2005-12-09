@@ -23,8 +23,6 @@ package ch.iserver.ace.util;
 
 import javax.swing.text.PlainDocument;
 
-import ch.iserver.ace.util.CaretHandler;
-
 import junit.framework.TestCase;
 
 public class CaretHandlerTest extends TestCase {

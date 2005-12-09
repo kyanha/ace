@@ -21,12 +21,12 @@
 
 package ch.iserver.ace.collaboration.jupiter.server;
 
+import junit.framework.TestCase;
+
 import org.easymock.MockControl;
 
 import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.net.RemoteUserProxyStub;
-
-import junit.framework.TestCase;
 
 public class ParticipantManagerImplTest extends TestCase {
 	
