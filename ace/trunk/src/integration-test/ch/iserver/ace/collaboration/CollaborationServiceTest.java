@@ -50,6 +50,10 @@ public class CollaborationServiceTest extends TestCase {
 		
 		NetworkServiceStub networkService = new NetworkServiceStub();
 		
+		// define mock behavior
+		callback.getLock();
+		callbackCtrl.setDefaultReturnValue(null);
+		
 		// replay
 		callbackCtrl.replay();
 		
@@ -74,6 +78,8 @@ public class CollaborationServiceTest extends TestCase {
 		NetworkServiceStub networkService = new NetworkServiceStub();
 		
 		// define mock behavior		
+		callback.getLock();
+		callbackCtrl.setDefaultReturnValue(null);
 		callback.participantJoined(new ParticipantImpl(1, new RemoteUserStub("X")));
 		callback.participantJoined(new ParticipantImpl(2, new RemoteUserStub("Y")));
 		
