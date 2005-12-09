@@ -11,33 +11,12 @@ design decisions made in the implementation.
 
 
 \section{Introduction}
-Real-time cooperative editing systems allow multiple users to view and edit the 
-same document at the same. The changes of other participants in an editing
+Real-time cooperative editing systems allow multiple users to view and edit a
+document at the same. The changes of other participants in an editing
 session are immediately visible on the local screen. Consistency maintenance
 is one of the most significant challenges in designing and implementing
 these systems. Fortunately, researchers have found algorithms that solve the
 problems present in these systems.
-
-
-\subsection{Requirements}
-The following requirements have been identified for synchronous collaborative
-editing systems.
-
-\subsubsection{Real-time} 
-The response to local user actions must be quick, ideally
-as quick as a single-user editor. Imposing a global total order is not
-an option because of the distributed nature of the system (i.e. network
-latency). Thus, generally these systems replicate the document at each
-user's site.
-
-\subsubsection{Distributed} 
-Cooperating users reside on different machines 
-connected by communication networks with nondeterministic latency.
-
-\subsubsection{Unconstrained} 
-Multiple users are allowed to concurrently and
-independently edit any part of the document at any time, in order to 
-facilitate free and natural information flow among multiple users.
 
 
 \subsection{Document Model}
