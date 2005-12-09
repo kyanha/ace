@@ -21,16 +21,12 @@
 
 package ch.iserver.ace.net.impl.protocol;
 
-import java.io.ByteArrayOutputStream;
-
 import org.apache.log4j.Logger;
 import org.beepcore.beep.core.AbortChannelException;
 import org.beepcore.beep.core.InputDataStream;
 import org.beepcore.beep.core.Message;
-import org.beepcore.beep.core.MessageMSG;
 import org.beepcore.beep.core.ReplyListener;
 import org.beepcore.beep.transport.tcp.TCPSession;
-import org.beepcore.beep.util.BufferSegment;
 
 import ch.iserver.ace.util.ParameterValidator;
 
@@ -70,22 +66,15 @@ public class ResponseListener implements ReplyListener {
 	 * @see org.beepcore.beep.core.ReplyListener#receiveRPY(org.beepcore.beep.core.Message)
 	 */
 	public void receiveRPY(Message message) throws AbortChannelException {
-		byte[] data = read(message);
-		LOG.debug("--> receiveRPY("+(new String(data))+")");
-//		try {
-//			QueryInfo info = (QueryInfo) message.getChannel().getAppData();
-//			handler.setMetaData(info);
-//			deserializer.deserialize(data, handler);
-//			Request request = handler.getResult();
-//			if (message.getMessageType() == Message.MESSAGE_TYPE_MSG) {
-//				request.setMessage((MessageMSG) message);
-//			}
-//			filter.process(request);
-//		} catch (DeserializeException de) {
-//			//TODO: handling
-//			LOG.error("could not deserialize ["+de.getMessage()+"]");
-//		}
-		LOG.debug("<-- receiveRPY()");
+		String result = "n/a";
+		try {
+			InputDataStream stream = message.getDataStream();
+			byte[] data = DataStreamHelper.read(stream);
+			result = new String(data);
+		} catch (Exception e) {
+			LOG.error("could not read stream [" + e + "]");
+		}
+		LOG.debug("receiveRPY(" + result + ")");
 	}
 
 
@@ -112,26 +101,4 @@ public class ResponseListener implements ReplyListener {
 		TCPSession session = (TCPSession) message.getChannel().getSession();
 		LOG.debug("received confirmation from ["+appData+", "+session.getSocket()+"]");
 	}
-	
-	private byte[] read(Message message) throws AbortChannelException {
-		InputDataStream input = message.getDataStream();
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		do {
-			try {
-				BufferSegment b = input.waitForNextSegment();
-				if (b == null) {
-					out.flush();
-					break;
-				}
-				out.write(b.getData());
-			} catch (Exception e) {
-				//message.getChannel().getSession().terminate(e.getMessage());
-				throw new AbortChannelException(e.getMessage());
-			}
-		} while (!input.isComplete());
-
-		LOG.debug("read " + out.size() + " bytes from input stream.");
-		return out.toByteArray();
-	}
-
 }
