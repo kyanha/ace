@@ -24,7 +24,7 @@ package ch.iserver.ace.net.impl.protocol;
 import org.apache.log4j.Logger;
 import org.beepcore.beep.core.OutputDataStream;
 
-import ch.iserver.ace.net.impl.discovery.DiscoveryManagerFactory;
+import ch.iserver.ace.net.discovery.DiscoveryManagerFactory;
 
 /**
  *

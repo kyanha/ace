@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:UserRegistration.java 1205 2005-11-14 07:57:10Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -18,25 +18,47 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package ch.iserver.ace.net.impl.discovery;
+package ch.iserver.ace.net.discovery;
 
+import ch.iserver.ace.UserDetails;
+
+import com.apple.dnssd.QueryListener;
+import com.apple.dnssd.RegisterListener;
+import com.apple.dnssd.ResolveListener;
 
 /**
  * 
  *
  */
-public interface PeerDiscovery {
-
-	/**
-	 * Browses the local network for other services of the same type, i.e.
-	 * other users.
-	 * 
-	 * @see com.apple.dnssd.DNSSD
-	 */
-	void browse();
+public interface UserRegistration extends RegisterListener, ResolveListener, QueryListener {
 	
 	/**
-	 * Stops the Bonjour peer discovery process.
+	 * Registers the user for dynamic discovery.
+	 * 
+	 * @param username 	the name of the local user
+	 * @param userid 	the id of the local user
+	 * @see com.apple.dnssd.DNSSD
+	 */
+	void register(String username, String userid);
+	
+	/**
+	 * Determines if the user has been successfully
+	 * registered.
+	 * 
+	 * @return true iff the user is registered
+	 */
+	boolean isRegistered();
+	
+	/**
+	 * Updates the user's details in the TXT record of this service.
+	 * 
+	 * @param details the updated UserDetails
+	 */
+	void updateUserDetails(UserDetails details);
+	
+	/**
+	 * Stops the user's registration.
 	 */
 	void stop();
+
 }

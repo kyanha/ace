@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package ch.iserver.ace.net.impl.discovery;
+package ch.iserver.ace.net.discovery;
 
 import java.net.InetAddress;
 import java.util.Collections;
@@ -180,7 +180,7 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 	/*****************************************************/
 	
 	/**
-	 * @see ch.iserver.ace.net.impl.discovery.DiscoveryCallbackAdapter#setDiscoveryCallback(ch.iserver.ace.net.core.DiscoveryCallback)
+	 * @see ch.iserver.ace.net.discovery.DiscoveryCallbackAdapter#setDiscoveryCallback(ch.iserver.ace.net.core.DiscoveryCallback)
 	 */
 	public void setDiscoveryCallback(DiscoveryCallback forward) {
 		ParameterValidator.notNull("forward", forward);
@@ -188,7 +188,7 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 	}
 	
 	/**
-	 * @see ch.iserver.ace.net.impl.discovery.DiscoveryCallbackAdapter#userDiscovered(java.lang.String, java.lang.String, java.lang.String, int)
+	 * @see ch.iserver.ace.net.discovery.DiscoveryCallbackAdapter#userDiscovered(java.lang.String, java.lang.String, java.lang.String, int)
 	 */
 	public void userDiscovered(String serviceName, String username, String userId, int port) {
 		ParameterValidator.notNull("serviceName", serviceName);
@@ -213,7 +213,7 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 	}
 
 	/**
-	 * @see ch.iserver.ace.net.impl.discovery.DiscoveryCallbackAdapter#userDiscarded(java.lang.String)
+	 * @see ch.iserver.ace.net.discovery.DiscoveryCallbackAdapter#userDiscarded(java.lang.String)
 	 */
 	public void userDiscarded(String serviceName) {
 		if (serviceName != null) {
@@ -229,7 +229,7 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 	}
 
 	/**
-	 * @see ch.iserver.ace.net.impl.discovery.DiscoveryCallbackAdapter#userNameChanged(java.lang.String, java.lang.String)
+	 * @see ch.iserver.ace.net.discovery.DiscoveryCallbackAdapter#userNameChanged(java.lang.String, java.lang.String)
 	 */
 	public void userNameChanged(String serviceName, String userName) {
 		ParameterValidator.notNull("serviceName", serviceName);
@@ -249,7 +249,7 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 	}
 	
 	/**
-	 * @see ch.iserver.ace.net.impl.discovery.DiscoveryCallbackAdapter#userAddressResolved(java.lang.String, java.net.InetAddress)
+	 * @see ch.iserver.ace.net.discovery.DiscoveryCallbackAdapter#userAddressResolved(java.lang.String, java.net.InetAddress)
 	 */
 	public void userAddressResolved(String serviceName, InetAddress address) {
 		ParameterValidator.notNull("serviceName", serviceName);
@@ -271,7 +271,7 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 	}
 	
 	/**
-	 * @see ch.iserver.ace.net.impl.discovery.DiscoveryCallbackAdapter#isServiceKnown(java.lang.String)
+	 * @see ch.iserver.ace.net.discovery.DiscoveryCallbackAdapter#isServiceKnown(java.lang.String)
 	 */
 	public boolean isServiceKnown(String serviceName) {
 		return services.containsKey(serviceName);

@@ -1,5 +1,5 @@
 /*
- * $Id:BaseListenerImpl.java 1205 2005-11-14 07:57:10Z zbinl $
+ * $Id:IPQueryListener.java 1205 2005-11-14 07:57:10Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -19,31 +19,43 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.net.impl.discovery;
+package ch.iserver.ace.net.discovery;
+
+import java.net.InetAddress;
 
 import org.apache.log4j.Logger;
 
-import com.apple.dnssd.BaseListener;
 import com.apple.dnssd.DNSSDService;
 
 /**
  *
  */
-abstract class BaseListenerImpl implements BaseListener {
+public class IPQueryListener extends AbstractQueryListener {
 
-	private static Logger LOG = Logger.getLogger(BaseListenerImpl.class);
+	private static Logger LOG = Logger.getLogger(IPQueryListener.class);
 	
-	protected DiscoveryCallbackAdapter adapter;
-	
-	public BaseListenerImpl(DiscoveryCallbackAdapter adapter) {
-		this.adapter = adapter;
+	/**
+	 * 
+	 * @param adapter
+	 */
+	public IPQueryListener(DiscoveryCallbackAdapter adapter) {
+		super(adapter);
 	}
 	
 	/**
-	 * @see com.apple.dnssd.BaseListener#operationFailed(com.apple.dnssd.DNSSDService, int)
+	 * @inherit
 	 */
-	public void operationFailed(DNSSDService service, int errorCode) {
-		Bonjour.writeErrorLog(new Exception("operationFailed("+service+", "+errorCode+")"));
+	protected void processQuery(DNSSDService query, int flags, int ifIndex,
+			String fullName, int rrtype, int rrclass, byte[] rdata, int ttl) {
+		InetAddress address = null;
+		try {
+			address = InetAddress.getByAddress(rdata);
+		} catch (Exception e) {
+			LOG.error("Could not resolve address ["+e.getMessage()+"]");
+		}
+		String serviceName = getNextService();
+		LOG.info("userAddressResolved("+serviceName+", "+address);
+		adapter.userAddressResolved(serviceName, address);
+		query.stop();
 	}
-
 }

@@ -5,6 +5,9 @@ import junit.framework.TestCase;
 import org.easymock.MockControl;
 
 import ch.iserver.ace.UserDetails;
+import ch.iserver.ace.net.discovery.Bonjour;
+import ch.iserver.ace.net.discovery.PeerDiscovery;
+import ch.iserver.ace.net.discovery.UserRegistration;
 
 public class BonjourTest extends TestCase {
 	

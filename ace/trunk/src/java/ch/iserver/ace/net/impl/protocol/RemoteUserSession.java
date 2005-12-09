@@ -48,7 +48,7 @@ import ch.iserver.ace.net.core.NetworkServiceExt;
 import ch.iserver.ace.net.core.NetworkServiceImpl;
 import ch.iserver.ace.net.core.RemoteDocumentProxyExt;
 import ch.iserver.ace.net.core.RemoteUserProxyExt;
-import ch.iserver.ace.net.impl.discovery.DiscoveryManagerFactory;
+import ch.iserver.ace.net.discovery.DiscoveryManagerFactory;
 import ch.iserver.ace.util.ParameterValidator;
 import ch.iserver.ace.util.SingleThreadDomain;
 

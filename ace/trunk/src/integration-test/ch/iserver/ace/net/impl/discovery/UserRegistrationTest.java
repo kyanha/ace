@@ -31,6 +31,11 @@ import ch.iserver.ace.net.core.Discovery;
 import ch.iserver.ace.net.core.DiscoveryCallback;
 import ch.iserver.ace.net.core.DiscoveryCallbackImpl;
 import ch.iserver.ace.net.core.NetworkProperties;
+import ch.iserver.ace.net.discovery.Bonjour;
+import ch.iserver.ace.net.discovery.PeerDiscovery;
+import ch.iserver.ace.net.discovery.TXTRecordProxy;
+import ch.iserver.ace.net.discovery.UserRegistration;
+import ch.iserver.ace.net.discovery.UserRegistrationImpl;
 import ch.iserver.ace.net.impl.protocol.LogFilter;
 import ch.iserver.ace.net.impl.protocol.RequestFilter;
 

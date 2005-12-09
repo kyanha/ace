@@ -33,7 +33,7 @@ import org.beepcore.beep.transport.tcp.TCPSession;
 import ch.iserver.ace.algorithm.TimestampFactory;
 import ch.iserver.ace.net.core.MutableUserDetails;
 import ch.iserver.ace.net.core.RemoteUserProxyExt;
-import ch.iserver.ace.net.impl.discovery.DiscoveryManagerFactory;
+import ch.iserver.ace.net.discovery.DiscoveryManagerFactory;
 
 /**
  *

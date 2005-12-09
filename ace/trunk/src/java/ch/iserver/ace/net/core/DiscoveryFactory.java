@@ -20,9 +20,9 @@
  */
 package ch.iserver.ace.net.core;
 
-import ch.iserver.ace.net.impl.discovery.BonjourFactory;
-import ch.iserver.ace.net.impl.discovery.PeerDiscovery;
-import ch.iserver.ace.net.impl.discovery.UserRegistration;
+import ch.iserver.ace.net.discovery.BonjourFactory;
+import ch.iserver.ace.net.discovery.PeerDiscovery;
+import ch.iserver.ace.net.discovery.UserRegistration;
 
 /**
  * 

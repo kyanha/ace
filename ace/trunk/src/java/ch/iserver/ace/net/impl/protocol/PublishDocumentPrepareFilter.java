@@ -30,8 +30,8 @@ import org.beepcore.beep.core.ReplyListener;
 import ch.iserver.ace.FailureCodes;
 import ch.iserver.ace.net.core.NetworkServiceImpl;
 import ch.iserver.ace.net.core.RemoteUserProxyExt;
-import ch.iserver.ace.net.impl.discovery.DiscoveryManager;
-import ch.iserver.ace.net.impl.discovery.DiscoveryManagerFactory;
+import ch.iserver.ace.net.discovery.DiscoveryManager;
+import ch.iserver.ace.net.discovery.DiscoveryManagerFactory;
 
 /**
  *

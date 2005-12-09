@@ -29,8 +29,8 @@ import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.net.core.Discovery;
 import ch.iserver.ace.net.core.DiscoveryCallback;
 import ch.iserver.ace.net.core.DiscoveryFactory;
-import ch.iserver.ace.net.impl.discovery.PeerDiscovery;
-import ch.iserver.ace.net.impl.discovery.UserRegistration;
+import ch.iserver.ace.net.discovery.PeerDiscovery;
+import ch.iserver.ace.net.discovery.UserRegistration;
 import ch.iserver.ace.util.UUID;
 
 /**

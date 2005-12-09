@@ -39,8 +39,8 @@ import ch.iserver.ace.net.core.NetworkServiceImpl;
 import ch.iserver.ace.net.core.PortableDocumentExt;
 import ch.iserver.ace.net.core.RemoteDocumentProxyExt;
 import ch.iserver.ace.net.core.RemoteUserProxyExt;
-import ch.iserver.ace.net.impl.discovery.DiscoveryManager;
-import ch.iserver.ace.net.impl.discovery.DiscoveryManagerFactory;
+import ch.iserver.ace.net.discovery.DiscoveryManager;
+import ch.iserver.ace.net.discovery.DiscoveryManagerFactory;
 import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
 import ch.iserver.ace.util.ParameterValidator;
 
