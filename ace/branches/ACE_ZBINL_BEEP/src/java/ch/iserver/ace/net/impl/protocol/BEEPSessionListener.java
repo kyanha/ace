@@ -55,7 +55,8 @@ public class BEEPSessionListener extends Thread {
 		try {
 			int port = Integer.parseInt(NetworkProperties.get(NetworkProperties.KEY_PROTOCOL_PORT));
 			while (!terminate) {
-				//TODO: error handling, e.g. when port is already in use -> retry strategy
+				//could use a retry strategy when port is already in use -> e.g. increment port by one, 
+				//but problems with firewall configuration could arise, so this issue is left as is
 				LOG.debug("start listening at port "+port+" again");
 				try { 
 					TCPSession session = TCPSessionCreator.listen(port, registry);

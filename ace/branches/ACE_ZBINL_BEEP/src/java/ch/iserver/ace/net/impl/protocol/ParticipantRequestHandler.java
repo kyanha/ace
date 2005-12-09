@@ -25,6 +25,7 @@ import org.apache.log4j.Logger;
 import org.beepcore.beep.core.InputDataStream;
 import org.beepcore.beep.core.MessageMSG;
 import org.beepcore.beep.core.OutputDataStream;
+import org.beepcore.beep.core.RequestHandler;
 
 import ch.iserver.ace.FailureCodes;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
@@ -39,7 +40,7 @@ import ch.iserver.ace.util.ParameterValidator;
 /**
  * Server side request handler for a collaborative session.
  */
-public class ParticipantRequestHandler extends AbstractRequestHandler {
+public class ParticipantRequestHandler implements RequestHandler {
 
 	private static Logger LOG = Logger.getLogger(ParticipantRequestHandler.class);
 	
@@ -134,10 +135,6 @@ public class ParticipantRequestHandler extends AbstractRequestHandler {
 		}
 		LOG.debug("<-- receiveMSG");
 		
-	}
-	
-	protected Logger getLogger() {
-		return LOG;
 	}
 
 }

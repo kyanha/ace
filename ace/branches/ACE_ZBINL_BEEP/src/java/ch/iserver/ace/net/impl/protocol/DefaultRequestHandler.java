@@ -39,7 +39,7 @@ import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
  * Determines the correct RequestHandler a Channel, i.e. it sets
  * the correct request handler to a newly initiated channel.
  */
-public class DefaultRequestHandler extends AbstractRequestHandler {
+public class DefaultRequestHandler implements RequestHandler {
 
 	private static Logger LOG = Logger.getLogger(DefaultRequestHandler.class);
 	
@@ -129,7 +129,7 @@ public class DefaultRequestHandler extends AbstractRequestHandler {
 		OutputDataStream output = DataStreamHelper.prepare(data);
 		message.sendRPY(output);
 		proxy.setDNSSDdiscovered(false);
-		DiscoveryManagerFactory.getDiscoveryManager(null).addUser(proxy);
+		DiscoveryManagerFactory.getDiscoveryManager().addUser(proxy);
 		SessionManager.getInstance().createSession(proxy, (TCPSession) channel.getSession(), channel);
 	}
 
@@ -139,10 +139,4 @@ public class DefaultRequestHandler extends AbstractRequestHandler {
 		deserializer = null;
 		handler = null;
 	}
-
-
-	protected Logger getLogger() {
-		return LOG;
-	}
-
 }
