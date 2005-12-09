@@ -1,4 +1,4 @@
-package ch.iserver.ace.net.impl.protocol;
+package ch.iserver.ace.net.protocol;
 
 import java.net.InetAddress;
 import java.util.ArrayList;
@@ -7,7 +7,6 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.beepcore.beep.core.MessageMSG;
-import org.beepcore.beep.core.OutputDataStream;
 import org.easymock.AbstractMatcher;
 import org.easymock.MockControl;
 
@@ -20,7 +19,6 @@ import ch.iserver.ace.net.core.NetworkServiceImpl;
 import ch.iserver.ace.net.core.RemoteDocumentProxyImpl;
 import ch.iserver.ace.net.core.RemoteUserProxyExt;
 import ch.iserver.ace.net.core.RemoteUserProxyFactory;
-import ch.iserver.ace.net.core.RemoteUserProxyImpl;
 import ch.iserver.ace.net.discovery.DiscoveryManagerFactory;
 import ch.iserver.ace.net.protocol.LogFilter;
 import ch.iserver.ace.net.protocol.ProtocolConstants;
@@ -29,7 +27,6 @@ import ch.iserver.ace.net.protocol.RequestFilter;
 import ch.iserver.ace.net.protocol.RequestImpl;
 import ch.iserver.ace.net.protocol.SendDocumentsReceiveFilter;
 import ch.iserver.ace.net.protocol.SessionManager;
-import ch.iserver.ace.net.protocol.RequestImpl.DocumentInfo;
 
 public class SendDocumentsReceiveFilterTest extends TestCase {
 

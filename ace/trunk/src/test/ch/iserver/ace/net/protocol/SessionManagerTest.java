@@ -1,19 +1,11 @@
-package ch.iserver.ace.net.impl.protocol;
+package ch.iserver.ace.net.protocol;
 
 import java.net.InetAddress;
 
 import junit.framework.TestCase;
-
-import org.easymock.MockControl;
-
-import ch.iserver.ace.net.NetworkServiceCallback;
-import ch.iserver.ace.net.core.DiscoveryCallback;
-import ch.iserver.ace.net.core.DiscoveryCallbackImpl;
 import ch.iserver.ace.net.core.MutableUserDetails;
 import ch.iserver.ace.net.core.RemoteUserProxyExt;
 import ch.iserver.ace.net.core.RemoteUserProxyFactory;
-import ch.iserver.ace.net.core.RemoteUserProxyImpl;
-import ch.iserver.ace.net.discovery.DiscoveryManagerFactory;
 import ch.iserver.ace.net.protocol.LogFilter;
 import ch.iserver.ace.net.protocol.SessionManager;
 

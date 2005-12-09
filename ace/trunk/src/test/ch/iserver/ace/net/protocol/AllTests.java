@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.net.impl;
+package ch.iserver.ace.net.protocol;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -30,11 +30,22 @@ import junit.framework.TestSuite;
 public class AllTests {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for ch.iserver.ace.net.impl");
+		TestSuite suite = new TestSuite(
+						"Test for ch.iserver.ace.net.impl.protocol");
 		//$JUnit-BEGIN$
-		suite.addTestSuite(NetworkServiceImplTest.class);
-		suite.addTestSuite(NetworkPropertiesTest.class);
-		suite.addTestSuite(DiscoveryCallbackImplTest.class);
+		suite.addTestSuite(RequestParserHandlerTest.class);
+		suite.addTestSuite(CollaborationSerializerTest.class);
+		suite.addTestSuite(ConcealDocumentPrepareFilterTest.class);
+		suite.addTestSuite(DeserializerImplTest.class);
+		suite.addTestSuite(TLVHandlerTest.class);
+		suite.addTestSuite(SendDocumentsReceiveFilterTest.class);
+		suite.addTestSuite(RequestParserHandlerTest.class);
+		suite.addTestSuite(ResponseParserHandlerTest.class);
+		suite.addTestSuite(SessionManagerTest.class);
+		suite.addTestSuite(CollaborationParserHandlerTest.class);
+		suite.addTestSuite(ConcealDocumentReceiveFilterTest.class);
+		suite.addTestSuite(SerializerImplTest.class);
+		suite.addTestSuite(StartChannelListenerImplTest.class);
 		//$JUnit-END$
 		return suite;
 	}

@@ -1,4 +1,4 @@
-package ch.iserver.ace.net.impl;
+package ch.iserver.ace.net.core;
 
 import ch.iserver.ace.net.core.NetworkProperties;
 import junit.framework.TestCase;

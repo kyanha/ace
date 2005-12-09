@@ -1,4 +1,4 @@
-package ch.iserver.ace.net.impl.discovery;
+package ch.iserver.ace.net.discovery;
 
 import junit.framework.TestCase;
 

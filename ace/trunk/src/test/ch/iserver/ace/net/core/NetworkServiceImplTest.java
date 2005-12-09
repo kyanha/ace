@@ -1,4 +1,4 @@
-package ch.iserver.ace.net.impl;
+package ch.iserver.ace.net.core;
 
 import junit.framework.TestCase;
 

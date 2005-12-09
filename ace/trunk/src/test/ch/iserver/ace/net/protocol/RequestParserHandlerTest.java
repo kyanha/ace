@@ -1,4 +1,4 @@
-package ch.iserver.ace.net.impl.protocol;
+package ch.iserver.ace.net.protocol;
 
 import java.util.List;
 
@@ -9,7 +9,6 @@ import ch.iserver.ace.net.protocol.DeserializerImpl;
 import ch.iserver.ace.net.protocol.ProtocolConstants;
 import ch.iserver.ace.net.protocol.Request;
 import ch.iserver.ace.net.protocol.RequestParserHandler;
-import ch.iserver.ace.net.protocol.RequestImpl.DocumentInfo;
 
 public class RequestParserHandlerTest extends TestCase {
 	

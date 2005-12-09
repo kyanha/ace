@@ -1,4 +1,4 @@
-package ch.iserver.ace.net.impl.protocol;
+package ch.iserver.ace.net.protocol;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

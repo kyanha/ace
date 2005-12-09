@@ -33,9 +33,9 @@ public class AllTests {
 		suite.addTest(ch.iserver.ace.application.AllTests.suite());
 		suite.addTest(ch.iserver.ace.collaboration.jupiter.AllTests.suite());
 		suite.addTest(ch.iserver.ace.collaboration.jupiter.server.AllTests.suite());
-		suite.addTest(ch.iserver.ace.net.impl.AllTests.suite());
-		suite.addTest(ch.iserver.ace.net.impl.discovery.AllTests.suite());
-		suite.addTest(ch.iserver.ace.net.impl.protocol.AllTests.suite());
+		suite.addTest(ch.iserver.ace.net.core.AllTests.suite());
+		suite.addTest(ch.iserver.ace.net.discovery.AllTests.suite());
+		suite.addTest(ch.iserver.ace.net.protocol.AllTests.suite());
 		suite.addTest(ch.iserver.ace.test.AllTests.suite());
 		suite.addTest(ch.iserver.ace.test.jupiter.AllTests.suite());
 		suite.addTest(ch.iserver.ace.text.AllTests.suite());

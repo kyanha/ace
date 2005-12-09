@@ -1,4 +1,4 @@
-package ch.iserver.ace.net.impl.protocol;
+package ch.iserver.ace.net.protocol;
 
 import java.net.InetAddress;
 
@@ -25,7 +25,6 @@ import ch.iserver.ace.net.protocol.DeserializerImpl;
 import ch.iserver.ace.net.protocol.ProtocolConstants;
 import ch.iserver.ace.net.protocol.Request;
 import ch.iserver.ace.net.protocol.Serializer;
-import ch.iserver.ace.net.protocol.RequestImpl.DocumentInfo;
 import ch.iserver.ace.text.DeleteOperation;
 import ch.iserver.ace.text.InsertOperation;
 import ch.iserver.ace.text.NoOperation;
