@@ -21,7 +21,7 @@
 
 package ch.iserver.ace.net.core;
 
-import ch.iserver.ace.net.impl.protocol.RequestFilter;
+import ch.iserver.ace.net.protocol.RequestFilter;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**

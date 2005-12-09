@@ -28,11 +28,11 @@ import ch.iserver.ace.net.JoinNetworkCallback;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.net.SessionConnection;
 import ch.iserver.ace.net.SessionConnectionCallback;
-import ch.iserver.ace.net.impl.protocol.ProtocolConstants;
-import ch.iserver.ace.net.impl.protocol.Request;
-import ch.iserver.ace.net.impl.protocol.RequestFilter;
-import ch.iserver.ace.net.impl.protocol.RequestImpl;
-import ch.iserver.ace.net.impl.protocol.JoinRequestSenderFilter.JoinNetworkCallbackWrapper;
+import ch.iserver.ace.net.protocol.ProtocolConstants;
+import ch.iserver.ace.net.protocol.Request;
+import ch.iserver.ace.net.protocol.RequestFilter;
+import ch.iserver.ace.net.protocol.RequestImpl;
+import ch.iserver.ace.net.protocol.JoinRequestSenderFilter.JoinNetworkCallbackWrapper;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**

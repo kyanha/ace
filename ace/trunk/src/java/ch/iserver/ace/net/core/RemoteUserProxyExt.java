@@ -23,7 +23,7 @@ package ch.iserver.ace.net.core;
 import java.util.Map;
 
 import ch.iserver.ace.net.RemoteUserProxy;
-import ch.iserver.ace.net.impl.protocol.DiscoveryException;
+import ch.iserver.ace.net.protocol.DiscoveryException;
 
 /**
  * Interface extension of <code>RemoteUserProxy</code>

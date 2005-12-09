@@ -23,8 +23,8 @@ package ch.iserver.ace.net.core;
 
 import ch.iserver.ace.net.InvitationProxy;
 import ch.iserver.ace.net.RemoteDocumentProxy;
-import ch.iserver.ace.net.impl.protocol.RemoteUserSession;
-import ch.iserver.ace.net.impl.protocol.RequestFilter;
+import ch.iserver.ace.net.protocol.RemoteUserSession;
+import ch.iserver.ace.net.protocol.RequestFilter;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**

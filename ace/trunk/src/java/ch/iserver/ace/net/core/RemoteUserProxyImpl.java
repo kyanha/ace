@@ -37,15 +37,15 @@ import org.beepcore.beep.transport.tcp.TCPSessionCreator;
 
 import ch.iserver.ace.ServerInfo;
 import ch.iserver.ace.UserDetails;
-import ch.iserver.ace.net.impl.protocol.DataStreamHelper;
-import ch.iserver.ace.net.impl.protocol.DeserializerImpl;
-import ch.iserver.ace.net.impl.protocol.DiscoveryException;
-import ch.iserver.ace.net.impl.protocol.ProfileRegistryFactory;
-import ch.iserver.ace.net.impl.protocol.ProtocolConstants;
-import ch.iserver.ace.net.impl.protocol.RemoteUserSession;
-import ch.iserver.ace.net.impl.protocol.Request;
-import ch.iserver.ace.net.impl.protocol.ResponseParserHandler;
-import ch.iserver.ace.net.impl.protocol.SessionManager;
+import ch.iserver.ace.net.protocol.DataStreamHelper;
+import ch.iserver.ace.net.protocol.DeserializerImpl;
+import ch.iserver.ace.net.protocol.DiscoveryException;
+import ch.iserver.ace.net.protocol.ProfileRegistryFactory;
+import ch.iserver.ace.net.protocol.ProtocolConstants;
+import ch.iserver.ace.net.protocol.RemoteUserSession;
+import ch.iserver.ace.net.protocol.Request;
+import ch.iserver.ace.net.protocol.ResponseParserHandler;
+import ch.iserver.ace.net.protocol.SessionManager;
 import ch.iserver.ace.util.ParameterValidator;
 
 public class RemoteUserProxyImpl implements RemoteUserProxyExt {

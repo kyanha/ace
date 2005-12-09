@@ -27,12 +27,12 @@ import ch.iserver.ace.collaboration.JoinRequest;
 import ch.iserver.ace.net.InvitationProxy;
 import ch.iserver.ace.net.JoinNetworkCallback;
 import ch.iserver.ace.net.RemoteDocumentProxy;
-import ch.iserver.ace.net.impl.protocol.ProtocolConstants;
-import ch.iserver.ace.net.impl.protocol.RemoteUserSession;
-import ch.iserver.ace.net.impl.protocol.Request;
-import ch.iserver.ace.net.impl.protocol.RequestFilter;
-import ch.iserver.ace.net.impl.protocol.RequestImpl;
-import ch.iserver.ace.net.impl.protocol.JoinRequestSenderFilter.JoinNetworkCallbackWrapper;
+import ch.iserver.ace.net.protocol.ProtocolConstants;
+import ch.iserver.ace.net.protocol.RemoteUserSession;
+import ch.iserver.ace.net.protocol.Request;
+import ch.iserver.ace.net.protocol.RequestFilter;
+import ch.iserver.ace.net.protocol.RequestImpl;
+import ch.iserver.ace.net.protocol.JoinRequestSenderFilter.JoinNetworkCallbackWrapper;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**

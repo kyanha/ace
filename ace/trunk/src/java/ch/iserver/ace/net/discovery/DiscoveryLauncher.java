@@ -29,7 +29,7 @@ import ch.iserver.ace.net.core.DiscoveryCallback;
 import ch.iserver.ace.net.core.DiscoveryCallbackImpl;
 import ch.iserver.ace.net.core.DiscoveryFactory;
 import ch.iserver.ace.net.core.NetworkServiceImpl;
-import ch.iserver.ace.net.impl.protocol.RequestFilter;
+import ch.iserver.ace.net.protocol.RequestFilter;
 
 /**
  *

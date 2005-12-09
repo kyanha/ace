@@ -13,6 +13,7 @@ import ch.iserver.ace.net.core.NetworkServiceImpl;
 import ch.iserver.ace.net.core.PortableDocumentExt;
 import ch.iserver.ace.net.core.PortableDocumentImpl;
 import ch.iserver.ace.net.core.RemoteUserProxyFactory;
+import ch.iserver.ace.net.protocol.TLVHandler;
 
 public class TLVHandlerTest extends TestCase {
 

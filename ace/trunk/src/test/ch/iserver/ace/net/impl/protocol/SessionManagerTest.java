@@ -14,6 +14,8 @@ import ch.iserver.ace.net.core.RemoteUserProxyExt;
 import ch.iserver.ace.net.core.RemoteUserProxyFactory;
 import ch.iserver.ace.net.core.RemoteUserProxyImpl;
 import ch.iserver.ace.net.discovery.DiscoveryManagerFactory;
+import ch.iserver.ace.net.protocol.LogFilter;
+import ch.iserver.ace.net.protocol.SessionManager;
 
 public class SessionManagerTest extends TestCase {
 	

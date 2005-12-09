@@ -22,7 +22,14 @@ import ch.iserver.ace.net.core.RemoteUserProxyExt;
 import ch.iserver.ace.net.core.RemoteUserProxyFactory;
 import ch.iserver.ace.net.core.RemoteUserProxyImpl;
 import ch.iserver.ace.net.discovery.DiscoveryManagerFactory;
-import ch.iserver.ace.net.impl.protocol.RequestImpl.DocumentInfo;
+import ch.iserver.ace.net.protocol.LogFilter;
+import ch.iserver.ace.net.protocol.ProtocolConstants;
+import ch.iserver.ace.net.protocol.Request;
+import ch.iserver.ace.net.protocol.RequestFilter;
+import ch.iserver.ace.net.protocol.RequestImpl;
+import ch.iserver.ace.net.protocol.SendDocumentsReceiveFilter;
+import ch.iserver.ace.net.protocol.SessionManager;
+import ch.iserver.ace.net.protocol.RequestImpl.DocumentInfo;
 
 public class SendDocumentsReceiveFilterTest extends TestCase {
 

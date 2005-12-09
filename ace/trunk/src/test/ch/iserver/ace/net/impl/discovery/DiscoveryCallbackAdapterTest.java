@@ -16,7 +16,7 @@ import ch.iserver.ace.net.core.RemoteUserProxyFactory;
 import ch.iserver.ace.net.core.RemoteUserProxyImpl;
 import ch.iserver.ace.net.discovery.DiscoveryCallbackAdapter;
 import ch.iserver.ace.net.discovery.DiscoveryManagerImpl;
-import ch.iserver.ace.net.impl.protocol.LogFilter;
+import ch.iserver.ace.net.protocol.LogFilter;
 
 /**
  * 

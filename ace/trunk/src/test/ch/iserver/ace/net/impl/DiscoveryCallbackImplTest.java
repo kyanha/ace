@@ -13,9 +13,9 @@ import ch.iserver.ace.net.core.NetworkServiceExt;
 import ch.iserver.ace.net.core.RemoteUserProxyExt;
 import ch.iserver.ace.net.core.RemoteUserProxyFactory;
 import ch.iserver.ace.net.discovery.DiscoveryManagerFactory;
-import ch.iserver.ace.net.impl.protocol.LogFilter;
-import ch.iserver.ace.net.impl.protocol.RequestFilter;
-import ch.iserver.ace.net.impl.protocol.SessionManager;
+import ch.iserver.ace.net.protocol.LogFilter;
+import ch.iserver.ace.net.protocol.RequestFilter;
+import ch.iserver.ace.net.protocol.SessionManager;
 
 public class DiscoveryCallbackImplTest extends TestCase {
 	

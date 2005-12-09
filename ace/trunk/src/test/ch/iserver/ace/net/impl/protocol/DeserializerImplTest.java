@@ -3,6 +3,12 @@ package ch.iserver.ace.net.impl.protocol;
 import junit.framework.TestCase;
 import ch.iserver.ace.net.core.NetworkProperties;
 import ch.iserver.ace.net.core.RemoteUserProxyFactory;
+import ch.iserver.ace.net.protocol.CollaborationParserHandler;
+import ch.iserver.ace.net.protocol.Deserializer;
+import ch.iserver.ace.net.protocol.DeserializerImpl;
+import ch.iserver.ace.net.protocol.LogFilter;
+import ch.iserver.ace.net.protocol.ProtocolConstants;
+import ch.iserver.ace.net.protocol.Request;
 import ch.iserver.ace.util.Base64;
 
 public class DeserializerImplTest extends TestCase {

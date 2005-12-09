@@ -47,7 +47,7 @@ import ch.iserver.ace.net.discovery.ResolveListenerImpl;
 import ch.iserver.ace.net.discovery.TXTQueryListener;
 import ch.iserver.ace.net.discovery.UserRegistration;
 import ch.iserver.ace.net.discovery.UserRegistrationImpl;
-import ch.iserver.ace.net.impl.protocol.LogFilter;
+import ch.iserver.ace.net.protocol.LogFilter;
 
 import com.apple.dnssd.BrowseListener;
 import com.apple.dnssd.ResolveListener;

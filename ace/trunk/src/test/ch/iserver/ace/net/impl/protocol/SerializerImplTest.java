@@ -13,6 +13,9 @@ import ch.iserver.ace.net.DocumentServerLogic;
 import ch.iserver.ace.net.core.NetworkProperties;
 import ch.iserver.ace.net.core.NetworkServiceImpl;
 import ch.iserver.ace.net.core.PublishedDocument;
+import ch.iserver.ace.net.protocol.ProtocolConstants;
+import ch.iserver.ace.net.protocol.Serializer;
+import ch.iserver.ace.net.protocol.SerializerImpl;
 
 public class SerializerImplTest extends TestCase {
 	

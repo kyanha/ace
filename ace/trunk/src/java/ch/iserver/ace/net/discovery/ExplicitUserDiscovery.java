@@ -30,7 +30,7 @@ import ch.iserver.ace.net.DiscoveryNetworkCallback;
 import ch.iserver.ace.net.core.MutableUserDetails;
 import ch.iserver.ace.net.core.RemoteUserProxyExt;
 import ch.iserver.ace.net.core.RemoteUserProxyFactory;
-import ch.iserver.ace.net.impl.protocol.DiscoveryException;
+import ch.iserver.ace.net.protocol.DiscoveryException;
 import ch.iserver.ace.util.ParameterValidator;
 import ch.iserver.ace.util.UUID;
 

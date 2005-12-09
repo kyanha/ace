@@ -36,8 +36,8 @@ import ch.iserver.ace.net.discovery.PeerDiscovery;
 import ch.iserver.ace.net.discovery.TXTRecordProxy;
 import ch.iserver.ace.net.discovery.UserRegistration;
 import ch.iserver.ace.net.discovery.UserRegistrationImpl;
-import ch.iserver.ace.net.impl.protocol.LogFilter;
-import ch.iserver.ace.net.impl.protocol.RequestFilter;
+import ch.iserver.ace.net.protocol.LogFilter;
+import ch.iserver.ace.net.protocol.RequestFilter;
 
 import com.apple.dnssd.TXTRecord;
 
