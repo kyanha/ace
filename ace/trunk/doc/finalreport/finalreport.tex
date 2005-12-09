@@ -1,4 +1,4 @@
-\documentclass[11pt,a4paper]{report}
+\documentclass[11pt,a4paper]{book}
 \usepackage[T1]{fontenc}
 \usepackage[latin1]{inputenc}
 \usepackage{a4wide}
@@ -12,7 +12,7 @@ pdftitle={Final Report},
 pdfcreator={pdftex},
 ]{hyperref}
 
-%\includeonly{ace,chapters/goal_attainment,chapters/pp_differences,chapters/lessionslearned}
+\includeonly{ace,chapters/preface}
 
 \include{ace}
 
@@ -21,8 +21,9 @@ pdfcreator={pdftex},
 \newtheorem{defn}{Definition}
 
 \setlength{\parindent}{0pt}
-
 \bibliographystyle{plain}
+
+\frontmatter
 
 \include{titlepage}
 
@@ -32,7 +33,10 @@ pdfcreator={pdftex},
 
 \include{abstract}
 
+\include{chapters/preface}
 
+
+\mainmatter
 \part{Introduction}
 
 \include{chapters/introduction}
