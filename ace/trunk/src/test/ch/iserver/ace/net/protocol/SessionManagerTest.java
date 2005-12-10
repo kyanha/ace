@@ -14,7 +14,6 @@ public class SessionManagerTest extends TestCase {
 		InetAddress address = InetAddress.getLocalHost();
 		int port = 45123;
 		MutableUserDetails details = new MutableUserDetails("test-username", address, port);
-		RemoteUserProxyFactory.init(new LogFilter(null, false));
 		RemoteUserProxyExt proxy = RemoteUserProxyFactory.getInstance().createProxy(id, details);
 		
 		SessionManager manager = SessionManager.getInstance();

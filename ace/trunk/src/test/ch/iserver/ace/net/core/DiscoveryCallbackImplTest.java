@@ -24,9 +24,7 @@ public class DiscoveryCallbackImplTest extends TestCase {
 		DiscoveryCallbackImpl discoveryCallback = new DiscoveryCallbackImpl(callback, service, filter);
 		DiscoveryManagerFactory.init(discoveryCallback);
 		DiscoveryManagerFactory.getDiscoveryManager();
-		RemoteUserProxyFactory.init(new LogFilter(null, false));
-		RemoteUserProxyExt proxy = RemoteUserProxyFactory.getInstance().
-					createProxy("testid", new MutableUserDetails("testuser", InetAddress.getLocalHost(), 4123));
+		RemoteUserProxyExt proxy = RemoteUserProxyFactory.getInstance().createProxy("testid", new MutableUserDetails("testuser", InetAddress.getLocalHost(), 4123));
 		SessionManager.getInstance().createSession(proxy);
 		
 		//define mock behavior

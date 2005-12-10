@@ -43,7 +43,6 @@ public class DiscoveryCallbackAdapterTest extends TestCase {
 		MutableUserDetails details = new MutableUserDetails("testuser");
 		int port = 8888;
 		details.setPort(port);
-		RemoteUserProxyFactory.init(new LogFilter(null, false));
 		RemoteUserProxyExt proxy = RemoteUserProxyFactory.getInstance().createProxy("test-id", details);
 		
 		testUserDiscovered(port, proxy);

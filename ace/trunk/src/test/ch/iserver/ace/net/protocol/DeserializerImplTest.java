@@ -12,7 +12,6 @@ public class DeserializerImplTest extends TestCase {
 		CollaborationParserHandler handler = new CollaborationParserHandler();
 		Deserializer deserializer = DeserializerImpl.getInstance();
 		
-		RemoteUserProxyFactory.init(new LogFilter(null, false));
 		String joinDocument = CollaborationParserHandlerTest.XML_JOIN_DOCUMENT_1;
 		String payload = "0 11 Los gehts:  1 15 ich habe durst. 2 18  das sagst du mir? 1 20  dir sage ich alles!";
 		joinDocument += Base64.encodeBytes(payload.getBytes(NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING)), Base64.GZIP);
