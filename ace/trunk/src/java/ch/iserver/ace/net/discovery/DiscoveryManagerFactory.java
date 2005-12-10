@@ -25,12 +25,25 @@ import ch.iserver.ace.net.core.DiscoveryCallback;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
- *
+ * Factory class for DiscoveryManager objects.
+ * 
+ * @see ch.iserver.ace.net.discovery.DiscoveryManager
+ * @see ch.iserver.ace.net.discovery.DiscoveryCallbackAdapter
  */
 public class DiscoveryManagerFactory {
 
+	/**
+	 * Singleton instance of DiscoveryManagerImpl.
+	 */
 	private static DiscoveryManagerImpl instance;
 	
+	/**
+	 * Initializes this factory. Actually creates a new instance
+	 * of a DiscoveryManager and DiscoveryCallbackAdapter implementation.
+	 * This method must be called prior to method {@link #getInstance()}.
+	 * 
+	 * @param callback		the discovery callback
+	 */
 	public static void init(DiscoveryCallback callback) {
 		if (instance == null) {
 			ParameterValidator.notNull("callback", callback);
@@ -38,6 +51,14 @@ public class DiscoveryManagerFactory {
 		}
 	}
 	
+	/**
+	 * Gets the DiscoveryManager object.
+	 * If the DiscoveryManager was not initialized properly, 
+	 * an <code>IllegalStateException</code> is thrown.
+	 *  
+	 * @return the DiscoveryManagerFactory instance
+	 * @throws IllegalStateException 	if the factory was not initialized properly
+	 */
 	public static DiscoveryManager getDiscoveryManager() {
 		if (instance == null) {
 			throw new IllegalStateException("init(callback) must be called first");
@@ -45,6 +66,13 @@ public class DiscoveryManagerFactory {
 		return instance;
 	}
 	
+	/**
+	 * Gets the DiscoveryCallbackAdapter object.
+	 * If the DiscoveryCallbackAdapter was not initialized properly, 
+	 * an <code>IllegalStateException</code> is thrown.
+	 * 
+	 * @return	the DiscoveryCallbackAdapter instance
+	 */
 	public static DiscoveryCallbackAdapter getDiscoveryCallbackAdapter() {
 		if (instance == null) {
 			throw new IllegalStateException("init(callback) must be called first");

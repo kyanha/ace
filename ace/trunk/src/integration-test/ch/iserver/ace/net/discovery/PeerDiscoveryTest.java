@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:PeerDiscoveryTest.java 2414 2005-12-09 13:24:53Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -35,6 +35,7 @@ import ch.iserver.ace.net.core.DiscoveryCallback;
 import ch.iserver.ace.net.core.MutableUserDetails;
 import ch.iserver.ace.net.core.RemoteUserProxyExt;
 import ch.iserver.ace.net.core.RemoteUserProxyFactory;
+import ch.iserver.ace.net.core.RemoteUserProxyImpl;
 import ch.iserver.ace.net.discovery.AbstractQueryListener;
 import ch.iserver.ace.net.discovery.Bonjour;
 import ch.iserver.ace.net.discovery.IPQueryListener;
@@ -84,7 +85,6 @@ public class PeerDiscoveryTest extends TestCase {
 		discovery.setUserId("user-id");
 		
 		//problem: ordering of userDiscovered calls not predictable
-		RemoteUserProxyFactory.init(new LogFilter(null, false));
 		RemoteUserProxyExt rem1 = RemoteUserProxyFactory.getInstance().createProxy("peer1"+ports[0], new MutableUserDetails("peer1", null, ports[0]));
 		callback.userDiscovered(rem1);
 		//note: InetAddress will not be compared in comparison, c.f. RemoteUserProxyMatcher

@@ -25,51 +25,60 @@ import java.net.InetAddress;
 import ch.iserver.ace.net.core.DiscoveryCallback;
 
 /**
- * Interface between Bonjour related class and the network layer.
- *
+ * Interface between Bonjour related classes and the network layer.
+ * All callback events received from the DNSSD are passed via this
+ * interface. Therefore the events can be channelized and collected
+ * in a central class.
  */
 interface DiscoveryCallbackAdapter {
 
 	/**
+	 * Sets the discovery callback for this adapter. All events
+	 * are forwarded to the discovery callback.
 	 * 
-	 * @param forward
+	 * @param forward 	the discovery callback to set
 	 */
 	public void setDiscoveryCallback(DiscoveryCallback forward);
 
 	/**
+	 * Notifies the adapter that a new user was discovered by DNSSD.
 	 * 
-	 * @param serviceName
-	 * @param username
-	 * @param userId
-	 * @param port
+	 * @param serviceName		the name of the discovered service
+	 * @param username		the name of the discovered user
+	 * @param userId			the user id
+	 * @param port			the port of the discovered service
 	 */
 	public void userDiscovered(String serviceName, String username,
 			String userId, int port);
 
 	/**
+	 * Notifies the adapter that a user was discarded.
 	 * 
-	 * @param serviceName
+	 * @param serviceName 	the service name of the discovered user
 	 */
 	public void userDiscarded(String serviceName);
 
 	/**
+	 * Notifies the adapter that a user name changed.
 	 * 
-	 * @param serviceName
-	 * @param userName
+	 * @param serviceName		the service name of the user
+	 * @param userName		the new name of the user
 	 */
 	public void userNameChanged(String serviceName, String userName);
 
 	/**
+	 * Notifies the callback that the address of a user was resolved.
 	 * 
-	 * @param serviceName
-	 * @param address
+	 * @param serviceName		the service name of the user
+	 * @param address		the address of the user
 	 */
 	public void userAddressResolved(String serviceName, InetAddress address);
 
 	/**
+	 * Checks whether a service name is known.
 	 * 
-	 * @param serviceName
-	 * @return boolean true iff 
+	 * @param serviceName		the service name to check
+	 * @return boolean true iff the service name is known by the local user
 	 */
 	public boolean isServiceKnown(String serviceName);
 

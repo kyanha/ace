@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $$Id$$
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -26,7 +26,7 @@ import java.util.Map;
 import ch.iserver.ace.net.core.RemoteUserProxyExt;
 
 /**
- * Handles the managment of RemoteUserProxy and RemoteUserSession.
+ * Handles the management of RemoteUserProxy and RemoteUserSession objects.
  */
 public interface DiscoveryManager {
 

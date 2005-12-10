@@ -20,8 +20,6 @@
  */
 package ch.iserver.ace.net.discovery;
 
-import org.apache.log4j.Logger;
-
 import ch.iserver.ace.net.core.NetworkProperties;
 import ch.iserver.ace.net.discovery.dnssd.Browse;
 import ch.iserver.ace.net.discovery.dnssd.DNSSDUnavailable;
@@ -31,26 +29,44 @@ import com.apple.dnssd.BrowseListener;
 import com.apple.dnssd.DNSSDService;
 
 /**
+ * Default implementation of {@link ch.iserver.ace.net.discovery.PeerDiscovery}. 
+ * The peer discovery process is implemented by means of the Bonjour technology.
  * 
- *
+ * <p>For Bonjour related classes refer to 
+ *  {@link http://developer.apple.com/documentation/Java/Reference/DNSServiceDiscovery_JavaRef/index.html}	
+ * </p>
  */
 class PeerDiscoveryImpl implements PeerDiscovery {
 	
-	private static Logger LOG = Logger.getLogger(PeerDiscoveryImpl.class);
-	
+	/**
+	 * The DNSSDService object for the browsing activity.
+	 */
 	private DNSSDService browser;
+	
+	/**
+	 * The BrowseListener object.
+	 */
 	private BrowseListener listener;
 	
 	/**
+	 * Creates a new PeerDiscoveryImpl.
 	 * 
+	 * @param listener	the browse listener to be used
 	 */
 	public PeerDiscoveryImpl(BrowseListener listener) {
 		ParameterValidator.notNull("listener", listener);
 		this.listener = listener;
 	}
+	
+	/******************************************/
+	/** methods from interface PeerDiscovery **/
+	/******************************************/
 
 	/**
-	 * @inheritDoc
+	 * Browses the local network for other services of the same type, i.e.
+	 * other users.
+	 * 
+	 * @see Browse
 	 */
 	public void browse() {
 		String regType = NetworkProperties.get(NetworkProperties.KEY_REGISTRATION_TYPE);

@@ -28,15 +28,26 @@ import org.apache.log4j.Logger;
 import com.apple.dnssd.DNSSDService;
 
 /**
- *
+ * Extension listener of {@link ch.iserver.ace.net.discovery.AbstractQueryListener} 
+ * for IP address query results. All results are forwarded to 
+ * {@link ch.iserver.ace.net.discovery.DiscoveryCallbackAdapter#userAddressResolved(String, InetAddress)}.
+ * Since no user specific information (except the IP address, but it is not imperatively unique) is delivered 
+ * in the event, the IP address must be matched with the corresponding user by a call to 
+ * {@link ch.iserver.ace.net.discovery.AbstractQueryListener#getNextService()} that returns the correct service
+ * name and user name, respectively. 
+ * 
+ * <p> All IP address resolve results are forwarded to the 
+ * {@link ch.iserver.ace.net.discovery.DiscoveryCallbackAdapter}.
+ * </p>
  */
 public class IPQueryListener extends AbstractQueryListener {
 
 	private static Logger LOG = Logger.getLogger(IPQueryListener.class);
 	
 	/**
+	 * Creates a new IPQueryListener instance.
 	 * 
-	 * @param adapter
+	 * @param adapter 	the discovery callback adapter
 	 */
 	public IPQueryListener(DiscoveryCallbackAdapter adapter) {
 		super(adapter);
@@ -45,7 +56,7 @@ public class IPQueryListener extends AbstractQueryListener {
 	/**
 	 * @inherit
 	 */
-	protected void processQuery(DNSSDService query, int flags, int ifIndex,
+	protected void processQueryResult(DNSSDService query, int flags, int ifIndex,
 			String fullName, int rrtype, int rrclass, byte[] rdata, int ttl) {
 		InetAddress address = null;
 		try {

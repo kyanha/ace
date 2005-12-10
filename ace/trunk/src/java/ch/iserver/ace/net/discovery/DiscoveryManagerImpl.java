@@ -37,31 +37,65 @@ import ch.iserver.ace.net.core.RemoteUserProxyFactory;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
+ * Default implementation of {@link ch.iserver.ace.net.discovery.DiscoveryManager} and
+ * {@link ch.iserver.ace.net.discovery.DiscoveryCallbackAdapter}.
  * 
+ * <p><code>DiscoveryManagerImpl</code> handles the accounting of remote users by being a mediator
+ * between the DNSSD listener and the {@link ch.iserver.ace.net.core.DiscoveryCallback}. All discovery events
+ * are passed to the <code>DiscoveryManagerImpl</code>, processed and forwarded to the <code>DiscoveryCallback</code>
+ * which finally notifies the upper layer of the events. 
+ * The network layer collaborates with the <code>DiscoveryManagerImpl</code> in the way that all user events received 
+ * via the protocol and not the automatic discovery are handed to it. Also session management (the users who have a session
+ * established with the local user) is done by the <code>DiscoveryManagerImpl</code>. Therefore the <code>DiscoveryManagerImpl</code> 
+ * is the central component that handles the remote user accounting.
+ * </p>   
  */
 class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager {
 	
 	private static Logger LOG = Logger.getLogger(DiscoveryManagerImpl.class);
 
+	/**
+	 * The DiscoveryCallback instance 
+	 */
 	private DiscoveryCallback forward;
+	
+	/**
+	 * A map with all the remote user proxies.
+	 */
 	private Map remoteUserProxies; 	//id to proxy
+	
+	/**
+	 * A map with all service names. The service names are received from DNSSD events
+	 * and must be mapped to the user id's. This mapping is necessary because there
+	 * are calls where only the service name is delivered as an information that allows for
+	 * a correct assignment of the received data to the respective user.
+	 * The service name is unique too.
+	 */
 	private Map services;				//service name to id
+	
+	/**
+	 * A map that contains all remote user proxies with whom the local user has 
+	 * a RemoteUserSession established.
+	 */
 	private Map peersWithEstablishedSession; //id to proxy
 	
 	/**
+	 * Creates a new DiscoveryManagerImpl.
+	 * Note that the argument may not be null.
 	 * 
+	 * @param forward	the discovery callback
+	 * @throws IllegalArgumentException if the argument is null 
 	 */
 	public DiscoveryManagerImpl(DiscoveryCallback forward) {
-		this();
+		init();
 		ParameterValidator.notNull("forward", forward);
 		this.forward = forward;
 	}
 	
 	/**
-	 * 
-	 *
+	 * Initializes the discovery manager.
 	 */
-	public DiscoveryManagerImpl() {
+	private void init() {
 		remoteUserProxies = Collections.synchronizedMap(new LinkedHashMap());
 		services = Collections.synchronizedMap(new LinkedHashMap());
 		peersWithEstablishedSession = Collections.synchronizedMap(new LinkedHashMap());
@@ -157,6 +191,9 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 		LOG.debug("<-- addUser()");
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public void discardUser(String userid) {
 		ParameterValidator.notNull("userid", userid);
 		RemoteUserProxyExt user = (RemoteUserProxyExt)remoteUserProxies.remove(userid);

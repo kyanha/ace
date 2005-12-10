@@ -29,21 +29,55 @@ import ch.iserver.ace.util.ParameterValidator;
 
 import com.apple.dnssd.TXTRecord;
 
+/**
+ * TXTRecordProxy is used to construct the data that is stored in the TXT record
+ * for each user. TXTRecordProxy therefore writes and reads the TXT record.
+ * This currently includes the following information:
+ * <ul>
+ * 	<li>user name
+ * 	<li>user id
+ *  <li>TXT protocol version
+ *  <li>ACE communication protocol version
+ * </ul>
+ * 
+ * The protocol version information is necessary for the case when the 
+ * protocol changes. Errors from incompatible protocols could then be
+ * avoided or appropriately handled. Therefore if the TXT or communication protocol
+ * changes, the respective version number should also be changed.
+ *
+ */
 class TXTRecordProxy {
 
 	//TXT record keys
+	
+	/**
+	 * TXT record key for the TXT version
+	 */
 	static final String TXT_VERSION = "txtvers";
+	
+	/**
+	 * TXT record key for user name
+	 */
 	static final String TXT_USER = "name";
+	
+	/**
+	 * TXT record key for user id
+	 */
 	static final String TXT_USERID = "userid";
+	
+	/**
+	 * TXT record key for protocol version
+	 */
 	static final String TXT_PROTOCOL_VERSION = "version";
 	
 	private static Logger LOG = Logger.getLogger(TXTRecordProxy.class);
 	
 	/**
-	 * Properties must contain USER_NAME and USER_ID.
+	 * Creates a new TXT record for the given user.
 	 * 
-	 * @param props
-	 * @return
+	 * @param username	the user name
+	 * @param userid		the user id
+	 * @return the user specific TXTRecord
 	 */
 	public static TXTRecord create(String username, String userid) {
 		LOG.debug("create("+username+", "+userid+")");
@@ -55,6 +89,13 @@ class TXTRecordProxy {
 		return r;
 	}
 	
+	/**
+	 * Gets the value of the <code>key</code> in the <code>txt</code> TXTRecord.
+	 * 
+	 * @param key	the key in the TXT record
+	 * @param txt	the TXT record to get the value from
+	 * @return	the value or null if no value was found
+	 */
 	public static String get(final String key, final TXTRecord txt) {
 		ParameterValidator.notNull("key", key);
 		ParameterValidator.notNull("txtrecord", txt);
@@ -74,6 +115,13 @@ class TXTRecordProxy {
 		return result;
 	}
 	
+	/**
+	 * Sets the <code>key-value</code> pair in the passed in TXT record. 
+	 * 
+	 * @param key		the key
+	 * @param value		the value
+	 * @param txt		the TXT record to add the key-value pair to
+	 */
 	public static void set(final String key, final String value, TXTRecord txt) {
 		ParameterValidator.notNull("key", key);
 		ParameterValidator.notNull("value", value);

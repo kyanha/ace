@@ -27,8 +27,9 @@ import com.apple.dnssd.RegisterListener;
 import com.apple.dnssd.ResolveListener;
 
 /**
- * 
- *
+ * This interface declares the functionality that needs to be used in order to register
+ * the local user with DNSSD. It extends several callback interfaces from DNSSD in order
+ * to register the user properly.
  */
 public interface UserRegistration extends RegisterListener, ResolveListener, QueryListener {
 	

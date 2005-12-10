@@ -27,12 +27,28 @@ import com.apple.dnssd.DNSSDService;
 import com.apple.dnssd.TXTRecord;
 
 /**
- *
+ * Extension listener of {@link ch.iserver.ace.net.discovery.AbstractQueryListener} 
+ * for TXT query results. There are two cases when TXT events are received and must be 
+ * processed:
+ * <pre>
+ * 	1. User discovery: 	the TXT record contains the user's name and id.
+ * 	2. User name change: 	the TXT record contains the new user name.
+ * </pre>
+ * Other TXT query results (such as TXT record discarded) are ignored.
+ * 
+ * <p> All TXT query results are forwarded to the 
+ * {@link ch.iserver.ace.net.discovery.DiscoveryCallbackAdapter}.
+ * </p>
  */
 public class TXTQueryListener extends AbstractQueryListener {
 
 	private static Logger LOG = Logger.getLogger(TXTQueryListener.class);
 	
+	/**
+	 * Creates a new TXTQueryListener instance.
+	 * 
+	 * @param adapter	the discovery callback adapter
+	 */
 	public TXTQueryListener(DiscoveryCallbackAdapter adapter) {
 		super(adapter);
 	}
@@ -40,7 +56,7 @@ public class TXTQueryListener extends AbstractQueryListener {
 	/**
 	 * @inheritDoc
 	 */
-	protected void processQuery(DNSSDService query, int flags, int ifIndex,
+	protected void processQueryResult(DNSSDService query, int flags, int ifIndex,
 			String fullName, int rrtype, int rrclass, byte[] rdata, int ttl) {
 		if (ttl > 0) {
 			String serviceName = Bonjour.getServiceName(fullName);

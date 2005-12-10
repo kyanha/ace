@@ -35,16 +35,42 @@ import ch.iserver.ace.util.ParameterValidator;
 import ch.iserver.ace.util.UUID;
 
 /**
- *
+ * ExplicitUserDiscovery takes over the task of explicitly discovering a user given
+ * an IP address and a port. It notifies the <code>DiscoveryNetworkCallback</code>
+ * about the result.
+ * The task mainly consists of creating a dummy <code>RemoteUserProxy</code> and calling 
+ * {@link ch.iserver.ace.net.core.RemoteUserProxyExt#discover()</code>} on it.
+ * 
+ * @see ch.iserver.ace.net.DiscoveryNetworkCallback
+ * @see ch.iserver.ace.net.core.RemoteUserProxyExt
  */
 public class ExplicitUserDiscovery extends Thread {
 
 	private Logger LOG = Logger.getLogger(ExplicitUserDiscovery.class);
 	
+	/**
+	 * The address of the discovery
+	 */
 	private InetAddress address;
+	
+	/**
+	 * The port of the discovery
+	 */
 	private int port;
+	
+	/**
+	 * The discovery callback to be notified about the result 
+	 * of the discovery.
+	 */
 	private DiscoveryNetworkCallback callback;
 	
+	/**
+	 * Creates a new ExplicitUserDiscovery instance.
+	 * 
+	 * @param callback 	the discovery callback
+	 * @param address	the address where the discovery shall take place
+	 * @param port		the port at the discovery address
+	 */
 	public ExplicitUserDiscovery(DiscoveryNetworkCallback callback, InetAddress address, int port) {
 		ParameterValidator.notNull("callback", callback);
 		ParameterValidator.notNull("address", address);
@@ -53,6 +79,9 @@ public class ExplicitUserDiscovery extends Thread {
 		this.port = port;
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public void run() {
 		LOG.debug("--> run()");
 		MutableUserDetails details = new MutableUserDetails("discovering...", address, port);

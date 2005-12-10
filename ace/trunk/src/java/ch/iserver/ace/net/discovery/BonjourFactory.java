@@ -27,15 +27,34 @@ import ch.iserver.ace.net.core.DiscoveryFactory;
 import com.apple.dnssd.BrowseListener;
 import com.apple.dnssd.ResolveListener;
 
+/**
+ * Implementation of DiscoveryFactory for the Bonjour discovery implementation.
+ * Create an instance of class Bonjour with this factory.
+ *
+ */
 public class BonjourFactory extends DiscoveryFactory {
 	
+	/**
+	 * The UserRegistration implementation
+	 */
 	private UserRegistration registration;
+	
+	/**
+	 * The PeerDiscovery implementation
+	 */
 	private PeerDiscovery discovery;
 	
+	/**
+	 * @inheritDoc
+	 */
 	public void init(UserRegistration registration, PeerDiscovery discovery) {
 		this.registration = registration;
 		this.discovery = discovery;
 	}
+	
+	/**
+	 * @inheritDoc
+	 */
 	public Discovery createDiscovery(DiscoveryCallback callback) {
 		UserRegistration actualRegistration = (registration != null) ? registration : new UserRegistrationImpl();
 		PeerDiscovery actualDiscovery = (discovery != null) ? discovery : createPeerDiscovery(callback);
@@ -44,10 +63,18 @@ public class BonjourFactory extends DiscoveryFactory {
 		return b;
 	}
 	
+	/**
+	 * Creates the PeerDiscovery instance with all dependencies. 
+	 * The PeerDiscovery is used by the Bonjour class.
+	 * 
+	 * @param callback 	the DiscoveryCallback object
+	 * @return	a new PeerDiscovery object
+	 */
 	private PeerDiscovery createPeerDiscovery(DiscoveryCallback callback) {
 		//TODO: load classes via spring framework?
 		DiscoveryManagerFactory.init(callback);
 		DiscoveryCallbackAdapter adapter = DiscoveryManagerFactory.getDiscoveryCallbackAdapter();
+		//TODO: use SingleThreadDomain for DiscoveryCallbackAdapter?
 		AbstractQueryListener ipListener = new IPQueryListener(adapter);
 		AbstractQueryListener txtListener = new TXTQueryListener(adapter);
 		ResolveListener resolveListener = new ResolveListenerImpl(adapter, ipListener, txtListener);

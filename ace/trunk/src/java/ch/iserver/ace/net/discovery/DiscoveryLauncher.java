@@ -32,20 +32,42 @@ import ch.iserver.ace.net.core.NetworkServiceImpl;
 import ch.iserver.ace.net.protocol.RequestFilter;
 
 /**
- *
+ * The DiscoveryLauncher initializes and starts the automatic and dynamic discovery process
+ * in a separate thread. It terminates as soon as the discovery is up and
+ * running.
+ * 
+ * @see ch.iserver.ace.net.core.Discovery
+ * @see ch.iserver.ace.net.discovery.DiscoveryCallbackAdapter
  */
 public class DiscoveryLauncher extends Thread {
 
 	private static Logger LOG = Logger.getLogger(DiscoveryLauncher.class);
 	
+	/**
+	 * The network service object. Used to properly initialize the
+	 * discovery components.
+	 */
 	private NetworkServiceImpl service;
+	
+	/**
+	 * The request filter chain.
+	 */
 	private RequestFilter filter;
 	
+	/**
+	 * Creates a new DiscoveryLauncher.
+	 * 
+	 * @param service	the network service
+	 * @param filter		the request filter chain
+	 */
 	public DiscoveryLauncher(NetworkServiceImpl service, RequestFilter filter) {
 		this.service = service;
 		this.filter = filter;
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public void run() {
 		LOG.info("--> run()");
 		DiscoveryFactory factory = DiscoveryFactory.getInstance();

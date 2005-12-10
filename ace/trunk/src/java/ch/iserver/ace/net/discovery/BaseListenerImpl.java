@@ -21,17 +21,15 @@
 
 package ch.iserver.ace.net.discovery;
 
-import org.apache.log4j.Logger;
-
 import com.apple.dnssd.BaseListener;
 import com.apple.dnssd.DNSSDService;
 
 /**
- *
+ * The BaseListenerImpl is default implementation of {@link com.apple.dnssd.BaseListener}.
+ * It implements the general {@link #operationFailed(DNSSDService, int)} method which must
+ * be available for all types of listeners.
  */
 abstract class BaseListenerImpl implements BaseListener {
-
-	private static Logger LOG = Logger.getLogger(BaseListenerImpl.class);
 	
 	protected DiscoveryCallbackAdapter adapter;
 	

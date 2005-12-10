@@ -22,8 +22,12 @@ package ch.iserver.ace.net.discovery;
 
 
 /**
- * 
- *
+ * The PeerDiscovery interface enables to start and stop the peer
+ * discovery process by means of Bonjour technology. 
+ * This includes the dynamic discovery of user's who join the local 
+ * area network with a running instance of ACE.
+ * <p>For a proper shutdown at the end of the application lifetime, {@link #stop()}
+ * should be called.</p>
  */
 public interface PeerDiscovery {
 

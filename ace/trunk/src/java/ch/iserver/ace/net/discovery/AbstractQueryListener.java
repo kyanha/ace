@@ -30,15 +30,23 @@ import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
 import edu.emory.mathcs.backport.java.util.concurrent.LinkedBlockingQueue;
 
 /**
- *
+ * AbstractQueryListener gathers functionality used by all DNSSD query listeners.
+ * A query can include the IP address of a specific service or the TXT record content
+ * of a service. The query listeners receive the response events to these query record calls. 
+ * 
+ * @see com.apple.dnssd.QueryListener
  */
 public abstract class AbstractQueryListener extends BaseListenerImpl implements QueryListener {
 	
+	/**
+	 * A queue to match results of received events to the corresponding services and users, respectively.
+	 */
 	private BlockingQueue serviceQueue;
 	
 	/**
+	 * Creates a new AbstractQueryListener instance. 
 	 * 
-	 * @param adapter
+	 * @param adapter	the discovery callback adapter
 	 */
 	public AbstractQueryListener(DiscoveryCallbackAdapter adapter) {
 		super(adapter);
@@ -51,13 +59,15 @@ public abstract class AbstractQueryListener extends BaseListenerImpl implements 
 	public void queryAnswered(DNSSDService query, int flags, int ifIndex,
 			String fullName, int rrtype, int rrclass, byte[] rdata, int ttl) {
 
-		processQuery(query, flags, ifIndex, fullName, rrtype, rrclass, rdata, ttl);
+		processQueryResult(query, flags, ifIndex, fullName, rrtype, rrclass, rdata, ttl);
 
 	}
 	
 	/**
+	 * Adds a service name to this listener. Events and service names
+	 * are matched according to the FIFO principle.
 	 * 
-	 * @param servicename
+	 * @param servicename		the service name to be added
 	 */
 	public void addNextService(String servicename) {
 		ParameterValidator.notNull("servicename", servicename);
@@ -65,8 +75,10 @@ public abstract class AbstractQueryListener extends BaseListenerImpl implements 
 	}
 	
 	/**
+	 * Gets the next service name.
+	 * Note: this method is blocking if no service name is currently available.
 	 * 
-	 * @return
+	 * @return	the next service name
 	 */
 	protected String getNextService() {
 		String result = null;
@@ -79,17 +91,19 @@ public abstract class AbstractQueryListener extends BaseListenerImpl implements 
 	}
 	
 	/**
+	 * This method is called when a query result was received. To be implemented by
+	 * concrete query listeners.
 	 * 
-	 * @param query
-	 * @param flags
-	 * @param ifIndex
-	 * @param fullName
-	 * @param rrtype
-	 * @param rrclass
-	 * @param rdata
-	 * @param ttl
+	 * @param query			The active query object.
+	 * @param flags			Possible values are DNSSD.MORE_COMING.
+	 * @param ifIndex		The interface on which the query was resolved.
+	 * @param fullName		The resource record's full domain name.
+	 * @param rrtype			The resource record's type (e.g. PTR, SRV, etc) as defined by RFC 1035 and its updates.
+	 * @param rrclass		The class of the resource record, as defined by RFC 1035 and its updates.
+	 * @param rdata			The raw rdata of the resource record.
+	 * @param ttl			The resource record's time to live, in seconds
 	 */
-	protected abstract void processQuery(DNSSDService query, int flags, int ifIndex,
+	protected abstract void processQueryResult(DNSSDService query, int flags, int ifIndex,
 			String fullName, int rrtype, int rrclass, byte[] rdata, int ttl);
 
 }

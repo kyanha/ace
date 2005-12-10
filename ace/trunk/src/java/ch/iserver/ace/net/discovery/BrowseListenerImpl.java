@@ -31,14 +31,28 @@ import com.apple.dnssd.DNSSDService;
 import com.apple.dnssd.ResolveListener;
 
 /**
- *
+ * Default implementation of {@link com.apple.dnssd.BrowseListener}.
+ * A DNSSD listener that receives browse events, e.g. when a new service 
+ * was found. All events are interpreted either that a new user was discovered or discarded. 
+ * Therefore, each event is processed to a 
+ * {@link ch.iserver.ace.net.discovery.dnssd.Resolve#makeCall()} to DNSSD, which in reply 
+ * will deliver further information about the discovered service and user, respectively.
  */
 class BrowseListenerImpl extends BaseListenerImpl implements BrowseListener {
 
 	private static Logger LOG = Logger.getLogger(BrowseListenerImpl.class);
 	
+	/**
+	 * The resolve listener to be passed on each resolve call to DNSSD.
+	 */
 	private ResolveListener resolver;
 	
+	/**
+	 * Creates a new BrowseListenerImpl.
+	 * 
+	 * @param adapter		the discovery callback adapter
+	 * @param resolver		the resolve listener
+	 */
 	public BrowseListenerImpl(DiscoveryCallbackAdapter adapter, ResolveListener resolver) {
 		super(adapter);
 		this.resolver = resolver;

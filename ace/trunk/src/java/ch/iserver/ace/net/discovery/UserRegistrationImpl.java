@@ -21,31 +21,52 @@ import com.apple.dnssd.DNSSDService;
 import com.apple.dnssd.TXTRecord;
 
 /**
- * 	
- *
+ * Default implementation of {@link ch.iserver.ace.net.discovery.UserRegistration}.
+ * 
+ *  <p>For Bonjour related classes refer to 
+ *  {@link http://developer.apple.com/documentation/Java/Reference/DNSServiceDiscovery_JavaRef/index.html}	
+ *	</p>
  */
 class UserRegistrationImpl implements UserRegistration {
 	
 	private static Logger LOG = Logger.getLogger(UserRegistrationImpl.class);
 
+	/**
+	 * The DNSSDRegistration instance.
+	 */
 	private DNSSDRegistration registration;
+	
+	/**
+	 * The actual name of the local service. This name is returned
+	 * by the DNSSD. Per default, it is the same name as the one passed 
+	 * to DNSSD.
+	 */
 	private String actualServiceName;
+	
+	/**
+	 * Flag to indicate whether the local user is actually registered 
+	 * with DNSSD.
+	 */
 	private boolean isRegistered;
 	
+	/**
+	 * The reference to the TXT record of the local user.
+	 */
 	private TXTRecord txtRecord;
 		
 	/**
-	 * Creates a UserRegistrationImpl.
+	 * Creates a new UserRegistrationImpl.
 	 */
 	public UserRegistrationImpl() {
 		isRegistered = false;
 	}
 	
+	/*********************************************/
+	/** methods from interface UserRegistration **/
+	/*********************************************/
 	
 	/**
-	 * Properties must include USER_NAME and USER_ID.
-	 * 
-	 * @param props the properties to register
+	 * @inheritDoc
 	 */
 	public void register(String username, String userid) {
 		String serviceName = System.getProperty("user.name");
@@ -65,6 +86,79 @@ class UserRegistrationImpl implements UserRegistration {
 		}
 	}	
 	
+	/**
+	 * @inheritDoc
+	 */
+	public boolean isRegistered() {
+		return isRegistered;
+	}
+	
+	/**
+	 * @inheritDoc
+	 */
+	public void updateUserDetails(UserDetails details) {
+		TXTRecordProxy.set(TXTRecordProxy.TXT_USER, details.getUsername(), txtRecord);
+		
+		TXTUpdate call = new TXTUpdate(registration, txtRecord.getRawBytes());
+		try {
+			call.execute();
+		} catch (DNSSDUnavailable du) {
+			Bonjour.writeErrorLog(du);
+		}
+	}
+	
+	/**
+	 * @inheritDoc
+	 */
+	public void stop() {
+		registration.stop();
+		isRegistered = false;
+	}
+	
+	/*************************************************/
+	/** methods from interface UserRegistrationImpl **/
+	/*************************************************/
+	
+	/**
+	 * Gets the actual service name of the local user.
+	 * 
+	 * @return the actual service name
+	 */
+	public String getServiceName() {
+		return actualServiceName;
+	}
+	
+	/**
+	 * Gets the TXT record object for the local user.
+	 * 
+	 * @return the TXTRecord object
+	 */
+	public TXTRecord getTXTRecord() {
+		return txtRecord;
+	}
+	
+	/**
+	 * Resolves the IP address for the local user.
+	 * 
+	 * @param flags		Possible values are DNSSD.MORE_COMING.
+	 * @param ifIndex	The interface on which the query was resolved. 
+	 * @param hostName  	The target hostname of the machine providing the service.
+	 * @see QueryRecord
+	 */
+	private void resolveIP(int flags, int ifIndex, String hostName, String serviceName) {
+		QueryRecord call = new QueryRecord(ifIndex, hostName, Bonjour.T_HOST_ADDRESS, this);
+		try {
+			call.execute();
+		} catch (DNSSDUnavailable du) {
+			Bonjour.writeErrorLog(du);
+		}
+	}
+	
+	/**
+	 * Gets the protocol port this user listens at.
+	 * 
+	 * @return the protocol port 
+	 */
 	private int getPort() {
 		String portStr = NetworkProperties.get(NetworkProperties.KEY_PROTOCOL_PORT);
 		int port = 0;
@@ -75,7 +169,11 @@ class UserRegistrationImpl implements UserRegistration {
 		}
 		return port;
 	}
-
+	
+	/********************************************/
+	/** method from interface RegisterListener **/
+	/********************************************/
+	
 	/**
 	 * @inheritDoc
 	 */
@@ -94,6 +192,11 @@ class UserRegistrationImpl implements UserRegistration {
 		}
 	}
 	
+	
+	/*******************************************/
+	/** method from interface ResolveListener **/
+	/*******************************************/
+	
 	/**
 	 * @inheritDoc
 	 */
@@ -107,61 +210,10 @@ class UserRegistrationImpl implements UserRegistration {
 		resolveIP(flags, ifIndex, hostName, serviceName);
 	}
 	
-	/**
-	 * 
-	 * @param flags
-	 * @param ifIndex
-	 * @param hostName
-	 */
-	private void resolveIP(int flags, int ifIndex, String hostName, String serviceName) {
-		QueryRecord call = new QueryRecord(ifIndex, hostName, Bonjour.T_HOST_ADDRESS, this);
-		try {
-			call.execute();
-		} catch (DNSSDUnavailable du) {
-			Bonjour.writeErrorLog(du);
-		}
-	}
 	
-	/**
-	 * @inheritDoc
-	 */
-	public void operationFailed(DNSSDService service, int errorCode) {
-		Bonjour.writeErrorLog(new Exception("operationFailed("+service+", "+errorCode+")"));
-	}
-	
-	public String getServiceName() {
-		return actualServiceName;
-	}
-	
-	public TXTRecord getTXTRecord() {
-		return txtRecord;
-	}
-	
-	public boolean isRegistered() {
-		return isRegistered;
-	}
-	
-	/**
-	 * Updates the user's details in the TXT record of this service.
-	 * 
-	 * @param details
-	 */
-	public void updateUserDetails(UserDetails details) {
-		TXTRecordProxy.set(TXTRecordProxy.TXT_USER, details.getUsername(), txtRecord);
-		
-		TXTUpdate call = new TXTUpdate(registration, txtRecord.getRawBytes());
-		try {
-			call.execute();
-		} catch (DNSSDUnavailable du) {
-			Bonjour.writeErrorLog(du);
-		}
-	}
-	
-	public void stop() {
-		registration.stop();
-		isRegistered = false;
-	}
-
+	/*****************************************/
+	/** method from interface QueryListener **/
+	/*****************************************/
 
 	/**
 	 * @see com.apple.dnssd.QueryListener#queryAnswered(com.apple.dnssd.DNSSDService, int, int, java.lang.String, int, int, byte[], int)
@@ -180,6 +232,17 @@ class UserRegistrationImpl implements UserRegistration {
 		int port = Integer.parseInt(NetworkProperties.get(NetworkProperties.KEY_PROTOCOL_PORT));
 		ServerInfo info = new ServerInfo(address, port);
 		NetworkServiceImpl.getInstance().setServerInfo(info);
+	}
+	
+	/*****************************************/
+	/** method from interface BaseListener **/
+	/*****************************************/
+	
+	/**
+	 * @inheritDoc
+	 */
+	public void operationFailed(DNSSDService service, int errorCode) {
+		Bonjour.writeErrorLog(new Exception("operationFailed("+service+", "+errorCode+")"));
 	}
 
 }
