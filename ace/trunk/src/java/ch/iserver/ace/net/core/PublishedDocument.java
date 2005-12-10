@@ -44,7 +44,7 @@ import ch.iserver.ace.util.ParameterValidator;
  * PublishedDocument represents a published document of the local user and is responsible
  * for processing invitations as well as accepted join requests from other users. 
  * 
- * This class represents the server view of a published, shared document by the local user.
+ * <p>This class represents the server view of a published, shared document by the local user.</p>
  * 
  * @see ch.iserver.ace.net.DocumentServer
  */

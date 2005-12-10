@@ -36,20 +36,65 @@ import ch.iserver.ace.net.protocol.JoinRequestSenderFilter.JoinNetworkCallbackWr
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
- *
+ * Default implementation of type {@link ch.iserver.ace.net.RemoteDocumentProxy}. 
+ * 
+ * <p>This class represents the client view of a published, shared document from another user.</p>
+ * 
+ * @see ch.iserver.ace.net.core.RemoteDocumentProxyExt
  */
 public class RemoteDocumentProxyImpl implements RemoteDocumentProxyExt {
 
 	private static Logger LOG = Logger.getLogger(RemoteDocumentProxyImpl.class);
 	
+	/**
+	 * The document id
+	 */
 	private String id;
+	
+	/**
+	 * The document details, basically the document name
+	 */
 	private DocumentDetails details;
+	
+	/**
+	 * The publisher object
+	 */
 	private RemoteUserProxy publisher;
+	
+	/**
+	 * The callback for join related actions.
+	 */
 	private JoinNetworkCallback callback;
+	
+	/**
+	 * The request filter chain for outgoing request processing.
+	 */
 	private RequestFilter filterChain;
-	private boolean isJoined, hasInvitationAccepted;
+	
+	/**
+	 * Flag to indicate whether this document is joined.
+	 */
+	private boolean isJoined;
+	
+	/**
+	 * Flag to indicate whether an invitation for this document was 
+	 * accepted by the local user.
+	 */
+	private boolean hasInvitationAccepted;
+	
+	/**
+	 * The session connection callback.
+	 */
 	private SessionConnectionCallback sessionCallback;
 	
+	/**
+	 * Creates a new RemoteDocumentProxyImpl. Note that none of the arguments may be null.
+	 * 
+	 * @param id			the document id
+	 * @param details	the document details containing the document title
+	 * @param publisher	the RemoteUserProxy of the publisher	
+	 * @param filter		the request filter chain
+	 */
 	public RemoteDocumentProxyImpl(String id, DocumentDetails details, RemoteUserProxy publisher, RequestFilter filter) {
 		ParameterValidator.notNull("id", id);
 		ParameterValidator.notNull("details", details);
@@ -67,6 +112,10 @@ public class RemoteDocumentProxyImpl implements RemoteDocumentProxyExt {
 	/***************************************************/
 	/** methods from interface RemoteDocumentProxyExt **/
 	/***************************************************/
+	
+	/**
+	 * @inheritDoc
+	 */
 	public SessionConnectionCallback getSessionConnectionCallback() {
 		return sessionCallback;
 	}
@@ -78,6 +127,9 @@ public class RemoteDocumentProxyImpl implements RemoteDocumentProxyExt {
 		this.details = details;
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public SessionConnectionCallback joinAccepted(SessionConnection connection) {
 		LOG.debug("--> joinAccepted()");
 		isJoined = true;
@@ -88,22 +140,37 @@ public class RemoteDocumentProxyImpl implements RemoteDocumentProxyExt {
 		return sessionCallback;
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public void joinRejected(int code) {
 		LOG.debug("--> joinRejected("+code+")");
 		callback.rejected(code);
 		LOG.debug("<-- joinRejected()");
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public boolean isJoined() {
 		return isJoined;
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public void cleanupAfterLeave() {
 		isJoined = false;
 		hasInvitationAccepted = false;
 		callback = null;
 	}
 	
+	/**
+	 * Called when the local user accepted an invitation for this
+	 * document.
+	 * 
+	 * @param callback 	the JoinNetworkCallback object
+	 */
 	public void invitationAccepted(JoinNetworkCallback callback) {
 		this.callback = callback;
 		hasInvitationAccepted = true;
@@ -126,8 +193,6 @@ public class RemoteDocumentProxyImpl implements RemoteDocumentProxyExt {
 	public DocumentDetails getDocumentDetails() {
 		return details;
 	}
-	
-
 
 	/**
 	 * @see ch.iserver.ace.net.RemoteDocumentProxy#getPublisher()

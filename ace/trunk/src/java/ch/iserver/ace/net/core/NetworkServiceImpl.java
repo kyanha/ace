@@ -125,7 +125,6 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 		publishedDocs = Collections.synchronizedMap(new LinkedHashMap());
 		requestChain = RequestFilterFactory.createClientChain();
 		RemoteDocumentProxyFactory.init(requestChain);
-		RemoteUserProxyFactory.init(requestChain);
 		InvitationProxyFactory.init(requestChain);
 		ParticipantConnectionImplFactory.init(requestChain);
 	}

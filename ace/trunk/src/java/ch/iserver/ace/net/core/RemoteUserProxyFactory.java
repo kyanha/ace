@@ -21,36 +21,46 @@
 
 package ch.iserver.ace.net.core;
 
-import ch.iserver.ace.net.protocol.RequestFilter;
-import ch.iserver.ace.util.ParameterValidator;
 
 /**
- *
+ * Singleton factory class to create instances of type <code>RemoteUserProxy</code>.
+ * Create RemoteUserProxy objects only with this factory.
+ * 
+ * @see ch.iserver.ace.net.core.RemoteUserProxyExt
  */
 public class RemoteUserProxyFactory {
-
-	private RequestFilter filter;
 	
+	/**
+	 * The singleton RemoteUserProxyFactory
+	 */
 	private static RemoteUserProxyFactory instance;
 	
-	private RemoteUserProxyFactory(RequestFilter filter) {
-		this.filter = filter;
+	/**
+	 * Private default constructor.
+	 */
+	private RemoteUserProxyFactory() {
 	}
 	
-	//TODO: since we no longer need the filter chain in RemoteUserProxyImpl,
-	//the RemoteUserProxyFactory could be considered as obsolete i.e. could be removed
-	public static void init(RequestFilter filter) {
-		ParameterValidator.notNull("filter", filter);
-		instance = new RemoteUserProxyFactory(filter);
-	}
-	
+	/**
+	 * Gets the instance of RemoteUserProxyFactory.
+	 * 
+	 * @return the RemoteUserProxyFactory object
+	 */
 	public static RemoteUserProxyFactory getInstance() {
 		if (instance == null) {
-			throw new IllegalStateException("instance has not been initialized");
+			instance = new RemoteUserProxyFactory();
 		}
 		return instance;
 	}
 	
+	/**
+	 * Creates a new RemoteUserProxy instance.
+	 * 
+	 * @param id			the user id
+	 * @param details	the user details
+	 * @return	the created RemoteUserProxyExt instance
+	 * @see RemoteUserProxyExt
+	 */
 	public RemoteUserProxyExt createProxy(String id, MutableUserDetails details) {
 		return new RemoteUserProxyImpl(id, details);
 	}

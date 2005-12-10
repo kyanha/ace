@@ -48,16 +48,48 @@ import ch.iserver.ace.net.protocol.ResponseParserHandler;
 import ch.iserver.ace.net.protocol.SessionManager;
 import ch.iserver.ace.util.ParameterValidator;
 
+/**
+ * Default implementation of type {@link ch.iserver.ace.net.core.RemoteDocumentProxyExt}.
+ * <p>This class embodies a remote user. </p>
+ * 
+ * @see RemoteUserProxyImpl
+ */
 public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 	
 	private static Logger LOG = Logger.getLogger(RemoteUserProxyImpl.class);
 	
+	/**
+	 * The remote user id.
+	 */
 	private String id;
+	
+	/**
+	 * The remote user details.
+	 */
 	private MutableUserDetails details;
+	
+	/**
+	 * A map with all shared documents by this remote user.
+	 */
 	private Map documents; //docId to RemoteDocumentProxy
+	
+	/**
+	 * Flag to indicate whether a session with this remote user is established,
+	 * i.e. a physical connection exists (see RemoteUserSession).
+	 */
 	private boolean isSessionEstablished;
+	
+	/**
+	 * Flag to indicate  whether this user is DNSSD discovered.
+	 */
 	private boolean isDNSSDdiscovered;
 	
+	/**
+	 * Creates a new RemoteUserProxyImpl instance.
+	 * 
+	 * @param id			the user id
+	 * @param details	the user details
+	 */
 	public RemoteUserProxyImpl(String id, MutableUserDetails details) {
 		ParameterValidator.notNull("id", id);
 		ParameterValidator.notNull("details", details);
@@ -71,14 +103,24 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 	/********************************************/
 	/** methods from interface RemoteUserProxy **/
 	/********************************************/
+	
+	/**
+	 * @inheritDoc
+	 */
 	public String getId() {
 		return id;
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public UserDetails getUserDetails() {
 		return details;
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public Collection getSharedDocuments() {
 		return documents.values();
 	}
@@ -88,53 +130,89 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 	/** methods from interface RemoteUserProxyExt **/
 	/***********************************************/
 	
+	/**
+	 * @inheritDoc
+	 */
 	public boolean hasDocumentShared(String id) {
 		return documents.containsKey(id);
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public Map getDocuments() { 
 		return documents;
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public MutableUserDetails getMutableUserDetails() {
 		return details;
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public void setMutableUserDetails(MutableUserDetails details) {
 		ParameterValidator.notNull("details", details);
 		this.details = details;
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public void addSharedDocument(RemoteDocumentProxyExt doc) {
 		documents.put(doc.getId(), doc);
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public RemoteDocumentProxyExt removeSharedDocument(String id) {
 		RemoteDocumentProxyExt doc = (RemoteDocumentProxyExt) documents.remove(id);
 		LOG.debug("remove shared document ["+doc+"]");
 		return doc;
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public RemoteDocumentProxyExt getSharedDocument(String id) {
 		return (RemoteDocumentProxyExt) documents.get(id);
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public void setSessionEstablished(boolean value) {
 		isSessionEstablished = value;
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public boolean isSessionEstablished() {
 		return isSessionEstablished;
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public void setDNSSDdiscovered(boolean value) {
 		this.isDNSSDdiscovered = value;
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public boolean isDNSSDdiscovered() {
 		return isDNSSDdiscovered;
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public void discover() throws DiscoveryException {
 		LOG.debug("--> discover()");
 		if (!isDNSSDdiscovered() && !isSessionEstablished()) {
