@@ -39,15 +39,15 @@ import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 
 import ch.iserver.ace.CaretUpdate;
-import ch.iserver.ace.Operation;
+import ch.iserver.ace.algorithm.Operation;
+import ch.iserver.ace.algorithm.text.DeleteOperation;
+import ch.iserver.ace.algorithm.text.InsertOperation;
 import ch.iserver.ace.application.PropertyChangeCaretHandlerImpl;
 import ch.iserver.ace.application.PropertyChangeHashMap;
 import ch.iserver.ace.application.PropertyChangeHashMapImpl;
 import ch.iserver.ace.collaboration.Session;
 import ch.iserver.ace.collaboration.util.SessionTemplate;
 import ch.iserver.ace.collaboration.util.SessionTemplateCallback;
-import ch.iserver.ace.text.DeleteOperation;
-import ch.iserver.ace.text.InsertOperation;
 import ch.iserver.ace.util.CaretHandler;
 
 

@@ -21,7 +21,7 @@
 
 package ch.iserver.ace.algorithm.jupiter;
 
-import ch.iserver.ace.test.jupiter.TwoWayTestCase;
+import ch.iserver.ace.algorithm.test.jupiter.TwoWayTestCase;
 
 
 /**

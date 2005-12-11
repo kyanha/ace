@@ -23,7 +23,6 @@ package ch.iserver.ace.algorithm;
 
 import java.io.Serializable;
 
-import ch.iserver.ace.Operation;
 
 /**
  * This interface represents a request. Requests are typically sent over the
@@ -31,7 +30,7 @@ import ch.iserver.ace.Operation;
  * sending site, an operation and a timestamp that specifies the definition
  * context of the operation.
  * 
- * @see ch.iserver.ace.Operation
+ * @see ch.iserver.ace.algorithm.Operation
  * @see ch.iserver.ace.algorithm.Timestamp
  */
 public interface Request extends Serializable {

@@ -20,7 +20,6 @@
  */
 package ch.iserver.ace.algorithm;
 
-import ch.iserver.ace.Operation;
 
 /**
  * Interface for inclusion transformation functions.

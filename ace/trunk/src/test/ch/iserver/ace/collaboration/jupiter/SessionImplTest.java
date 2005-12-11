@@ -26,16 +26,16 @@ import junit.framework.TestCase;
 import org.easymock.MockControl;
 
 import ch.iserver.ace.CaretUpdate;
-import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
+import ch.iserver.ace.algorithm.Operation;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.RequestImpl;
+import ch.iserver.ace.algorithm.text.InsertOperation;
 import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.collaboration.ParticipantSessionCallback;
 import ch.iserver.ace.collaboration.RemoteUserStub;
 import ch.iserver.ace.net.RemoteUserProxyStub;
 import ch.iserver.ace.net.SessionConnection;
-import ch.iserver.ace.text.InsertOperation;
 import ch.iserver.ace.util.CallerThreadDomain;
 import ch.iserver.ace.util.Lock;
 

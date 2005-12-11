@@ -30,7 +30,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import ch.iserver.ace.CaretUpdate;
-import ch.iserver.ace.Operation;
+import ch.iserver.ace.algorithm.Operation;
 import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.util.ParameterValidator;
@@ -145,7 +145,7 @@ class CompositeForwarderImpl implements CompositeForwarder {
 	}
 	
 	/**
-	 * @see ch.iserver.ace.collaboration.jupiter.server.Forwarder#sendOperation(int, ch.iserver.ace.Operation)
+	 * @see ch.iserver.ace.collaboration.jupiter.server.Forwarder#sendOperation(int, ch.iserver.ace.algorithm.Operation)
 	 */
 	public void sendOperation(int participantId, Operation op) {
 		if (!acceptParticipant(participantId)) {

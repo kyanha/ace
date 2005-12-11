@@ -31,15 +31,15 @@ import javax.swing.text.StyleConstants;
 import ca.odell.glazedlists.BasicEventList;
 import ca.odell.glazedlists.EventList;
 import ch.iserver.ace.CaretUpdate;
-import ch.iserver.ace.Operation;
+import ch.iserver.ace.algorithm.Operation;
+import ch.iserver.ace.algorithm.text.DeleteOperation;
+import ch.iserver.ace.algorithm.text.InsertOperation;
+import ch.iserver.ace.algorithm.text.NoOperation;
+import ch.iserver.ace.algorithm.text.SplitOperation;
 import ch.iserver.ace.application.editor.CollaborativeDocument;
 import ch.iserver.ace.application.editor.DocumentLock;
 import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.collaboration.SessionCallback;
-import ch.iserver.ace.text.DeleteOperation;
-import ch.iserver.ace.text.InsertOperation;
-import ch.iserver.ace.text.NoOperation;
-import ch.iserver.ace.text.SplitOperation;
 import ch.iserver.ace.util.Lock;
 
 

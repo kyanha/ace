@@ -29,6 +29,7 @@ import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.DocumentModel;
 import ch.iserver.ace.algorithm.RequestImpl;
 import ch.iserver.ace.algorithm.jupiter.JupiterVectorTime;
+import ch.iserver.ace.algorithm.text.InsertOperation;
 import ch.iserver.ace.collaboration.AcceptingAccessControlStrategy;
 import ch.iserver.ace.collaboration.jupiter.PublisherConnection;
 import ch.iserver.ace.collaboration.jupiter.UserRegistry;
@@ -36,7 +37,6 @@ import ch.iserver.ace.collaboration.jupiter.UserRegistryImpl;
 import ch.iserver.ace.collaboration.jupiter.server.ServerLogicImpl;
 import ch.iserver.ace.net.ParticipantPort;
 import ch.iserver.ace.net.RemoteUserProxyStub;
-import ch.iserver.ace.text.InsertOperation;
 import ch.iserver.ace.util.CallerThreadDomain;
 
 /**

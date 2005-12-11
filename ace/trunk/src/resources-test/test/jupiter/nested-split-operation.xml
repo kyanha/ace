@@ -10,7 +10,7 @@
     
     <site id="1">
         <generate id="1">
-            <operation type="ch.iserver.ace.text.DeleteOperation">
+            <operation type="ch.iserver.ace.algorithm.text.DeleteOperation">
                 <property name="position" value="2"/>
                 <property name="text" value="3456"/>
             </operation>
@@ -22,14 +22,14 @@
     
     <site id="2">
         <generate id="2">
-            <operation type="ch.iserver.ace.text.InsertOperation">
+            <operation type="ch.iserver.ace.algorithm.text.InsertOperation">
                 <property name="position" value="4"/>
                 <property name="text" value="AB"/>
             </operation>
         </generate>
 		<receive ref="20"/>
 		<generate id="4">
-            <operation type="ch.iserver.ace.text.InsertOperation">
+            <operation type="ch.iserver.ace.algorithm.text.InsertOperation">
                 <property name="position" value="3"/>
                 <property name="text" value="EF"/>
             </operation>
@@ -39,7 +39,7 @@
 	
 	<site id="3">
         <generate id="3">
-            <operation type="ch.iserver.ace.text.InsertOperation">
+            <operation type="ch.iserver.ace.algorithm.text.InsertOperation">
                 <property name="position" value="5"/>
                 <property name="text" value="CD"/>
             </operation>

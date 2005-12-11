@@ -29,15 +29,15 @@ import javax.swing.undo.CannotUndoException;
 
 import org.apache.log4j.Logger;
 
-import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.InclusionTransformation;
+import ch.iserver.ace.algorithm.Operation;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.RequestImpl;
 import ch.iserver.ace.algorithm.Timestamp;
 import ch.iserver.ace.algorithm.TransformationException;
-import ch.iserver.ace.text.GOTOInclusionTransformation;
-import ch.iserver.ace.text.SplitOperation;
+import ch.iserver.ace.algorithm.text.GOTOInclusionTransformation;
+import ch.iserver.ace.algorithm.text.SplitOperation;
 
 /**
  * This class implements the client-side core of the Jupiter control algorithm.
@@ -88,7 +88,7 @@ public class Jupiter implements Algorithm {
 	}
 	
 	/**
-	 * @see ch.iserver.ace.algorithm.Algorithm#generateRequest(ch.iserver.ace.Operation)
+	 * @see ch.iserver.ace.algorithm.Algorithm#generateRequest(ch.iserver.ace.algorithm.Operation)
 	 */
 	public Request generateRequest(Operation op) {
 		// send(op, myMsgs, otherMsgs);

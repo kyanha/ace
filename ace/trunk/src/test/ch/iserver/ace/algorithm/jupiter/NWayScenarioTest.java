@@ -20,7 +20,7 @@
  */
 package ch.iserver.ace.algorithm.jupiter;
 
-import ch.iserver.ace.test.jupiter.NWayTestCase;
+import ch.iserver.ace.algorithm.test.jupiter.NWayTestCase;
 
 /**
  * Test case for all different types of jupiter scenarios. It

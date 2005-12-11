@@ -9,7 +9,7 @@
     
     <site id="1">
         <generate id="1">
-            <operation type="ch.iserver.ace.text.DeleteOperation">
+            <operation type="ch.iserver.ace.algorithm.text.DeleteOperation">
                 <property name="position" value="0"/>
                 <property name="text" value="a"/>
             </operation>
@@ -20,13 +20,13 @@
     
     <site id="2">
         <generate id="2">
-            <operation type="ch.iserver.ace.text.DeleteOperation">
+            <operation type="ch.iserver.ace.algorithm.text.DeleteOperation">
                 <property name="position" value="0"/>
                 <property name="text" value="a"/>
             </operation>
         </generate>
         <generate id="3">
-            <operation type="ch.iserver.ace.text.DeleteOperation">
+            <operation type="ch.iserver.ace.algorithm.text.DeleteOperation">
                 <property name="position" value="3"/>
                 <property name="text" value="e"/>
             </operation>

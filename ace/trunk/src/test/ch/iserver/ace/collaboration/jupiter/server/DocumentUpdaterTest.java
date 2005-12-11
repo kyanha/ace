@@ -26,10 +26,10 @@ import junit.framework.TestCase;
 import org.easymock.MockControl;
 
 import ch.iserver.ace.CaretUpdate;
-import ch.iserver.ace.text.DeleteOperation;
-import ch.iserver.ace.text.InsertOperation;
-import ch.iserver.ace.text.NoOperation;
-import ch.iserver.ace.text.SplitOperation;
+import ch.iserver.ace.algorithm.text.DeleteOperation;
+import ch.iserver.ace.algorithm.text.InsertOperation;
+import ch.iserver.ace.algorithm.text.NoOperation;
+import ch.iserver.ace.algorithm.text.SplitOperation;
 
 public class DocumentUpdaterTest extends TestCase {
 	

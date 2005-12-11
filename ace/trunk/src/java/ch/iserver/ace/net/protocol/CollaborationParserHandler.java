@@ -30,10 +30,14 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import ch.iserver.ace.CaretUpdate;
-import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
+import ch.iserver.ace.algorithm.Operation;
 import ch.iserver.ace.algorithm.Timestamp;
 import ch.iserver.ace.algorithm.TimestampFactory;
+import ch.iserver.ace.algorithm.text.DeleteOperation;
+import ch.iserver.ace.algorithm.text.InsertOperation;
+import ch.iserver.ace.algorithm.text.NoOperation;
+import ch.iserver.ace.algorithm.text.SplitOperation;
 import ch.iserver.ace.net.core.MutableUserDetails;
 import ch.iserver.ace.net.core.NetworkProperties;
 import ch.iserver.ace.net.core.PortableDocumentExt;
@@ -41,10 +45,6 @@ import ch.iserver.ace.net.core.PortableDocumentImpl;
 import ch.iserver.ace.net.core.RemoteUserProxyExt;
 import ch.iserver.ace.net.core.RemoteUserProxyFactory;
 import ch.iserver.ace.net.protocol.RequestImpl.DocumentInfo;
-import ch.iserver.ace.text.DeleteOperation;
-import ch.iserver.ace.text.InsertOperation;
-import ch.iserver.ace.text.NoOperation;
-import ch.iserver.ace.text.SplitOperation;
 import ch.iserver.ace.util.Base64;
 
 /**

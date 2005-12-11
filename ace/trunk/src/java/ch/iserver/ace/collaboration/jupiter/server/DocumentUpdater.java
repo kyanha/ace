@@ -24,12 +24,12 @@ package ch.iserver.ace.collaboration.jupiter.server;
 import org.apache.log4j.Logger;
 
 import ch.iserver.ace.CaretUpdate;
-import ch.iserver.ace.Operation;
+import ch.iserver.ace.algorithm.Operation;
+import ch.iserver.ace.algorithm.text.DeleteOperation;
+import ch.iserver.ace.algorithm.text.InsertOperation;
+import ch.iserver.ace.algorithm.text.NoOperation;
+import ch.iserver.ace.algorithm.text.SplitOperation;
 import ch.iserver.ace.net.RemoteUserProxy;
-import ch.iserver.ace.text.DeleteOperation;
-import ch.iserver.ace.text.InsertOperation;
-import ch.iserver.ace.text.NoOperation;
-import ch.iserver.ace.text.SplitOperation;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
@@ -74,7 +74,7 @@ class DocumentUpdater implements Forwarder {
 	}
 	
 	/**
-	 * @see ch.iserver.ace.collaboration.jupiter.server.Forwarder#sendOperation(int, ch.iserver.ace.Operation)
+	 * @see ch.iserver.ace.collaboration.jupiter.server.Forwarder#sendOperation(int, ch.iserver.ace.algorithm.Operation)
 	 */
 	public void sendOperation(int participantId, Operation operation) {
 		ParameterValidator.notNull("operation", operation);

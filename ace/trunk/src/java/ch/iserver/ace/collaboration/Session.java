@@ -24,7 +24,7 @@ package ch.iserver.ace.collaboration;
 import java.util.Set;
 
 import ch.iserver.ace.CaretUpdate;
-import ch.iserver.ace.Operation;
+import ch.iserver.ace.algorithm.Operation;
 import ch.iserver.ace.util.InterruptedRuntimeException;
 
 /**

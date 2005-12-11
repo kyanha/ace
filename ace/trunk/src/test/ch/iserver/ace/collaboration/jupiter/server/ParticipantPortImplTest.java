@@ -26,17 +26,17 @@ import junit.framework.TestCase;
 import org.easymock.MockControl;
 
 import ch.iserver.ace.CaretUpdate;
-import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
+import ch.iserver.ace.algorithm.Operation;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.RequestImpl;
 import ch.iserver.ace.algorithm.Timestamp;
 import ch.iserver.ace.algorithm.TransformationException;
 import ch.iserver.ace.algorithm.jupiter.JupiterVectorTime;
+import ch.iserver.ace.algorithm.text.InsertOperation;
 import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.collaboration.jupiter.AlgorithmWrapper;
 import ch.iserver.ace.net.ParticipantPort;
-import ch.iserver.ace.text.InsertOperation;
 
 public class ParticipantPortImplTest extends TestCase {
 			

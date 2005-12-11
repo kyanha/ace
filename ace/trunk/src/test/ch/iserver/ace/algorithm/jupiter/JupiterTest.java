@@ -22,8 +22,8 @@ package ch.iserver.ace.algorithm.jupiter;
 
 import junit.framework.TestCase;
 import ch.iserver.ace.algorithm.TransformationException;
-import ch.iserver.ace.text.DeleteOperation;
-import ch.iserver.ace.text.InsertOperation;
+import ch.iserver.ace.algorithm.text.DeleteOperation;
+import ch.iserver.ace.algorithm.text.InsertOperation;
 
 public class JupiterTest extends TestCase {
 

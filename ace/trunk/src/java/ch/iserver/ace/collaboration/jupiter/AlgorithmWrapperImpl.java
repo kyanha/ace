@@ -25,9 +25,9 @@ import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 
 import ch.iserver.ace.CaretUpdate;
-import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
+import ch.iserver.ace.algorithm.Operation;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.Timestamp;
 import ch.iserver.ace.algorithm.TransformationException;
@@ -132,7 +132,7 @@ public class AlgorithmWrapperImpl implements AlgorithmWrapper {
 	}
 
 	/**
-	 * @see ch.iserver.ace.collaboration.jupiter.AlgorithmWrapper#generateRequest(ch.iserver.ace.Operation)
+	 * @see ch.iserver.ace.collaboration.jupiter.AlgorithmWrapper#generateRequest(ch.iserver.ace.algorithm.Operation)
 	 */
 	public Request generateRequest(Operation operation) {
 		return getAlgorithm().generateRequest(operation);

@@ -26,8 +26,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ch.iserver.ace.CaretUpdate;
-import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
+import ch.iserver.ace.algorithm.Operation;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.Timestamp;
 import ch.iserver.ace.algorithm.TransformationException;
@@ -172,7 +172,7 @@ public class SessionImpl extends AbstractSession
 	}
 
 	/**
-	 * @see ch.iserver.ace.collaboration.Session#sendOperation(ch.iserver.ace.Operation)
+	 * @see ch.iserver.ace.collaboration.Session#sendOperation(ch.iserver.ace.algorithm.Operation)
 	 */
 	public void sendOperation(Operation operation) {
 		checkSessionState();

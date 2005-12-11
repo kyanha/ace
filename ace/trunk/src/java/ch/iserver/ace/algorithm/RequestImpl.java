@@ -21,7 +21,6 @@
 
 package ch.iserver.ace.algorithm;
 
-import ch.iserver.ace.Operation;
 import ch.iserver.ace.util.CompareUtil;
 
 /**

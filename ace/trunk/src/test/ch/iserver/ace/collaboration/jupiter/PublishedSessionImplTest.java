@@ -28,17 +28,17 @@ import org.easymock.MockControl;
 
 import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.DocumentDetails;
-import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
+import ch.iserver.ace.algorithm.Operation;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.RequestImpl;
+import ch.iserver.ace.algorithm.text.InsertOperation;
 import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.collaboration.PublishedSessionCallback;
 import ch.iserver.ace.collaboration.RemoteUserStub;
 import ch.iserver.ace.collaboration.jupiter.server.PublisherPort;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.net.RemoteUserProxyStub;
-import ch.iserver.ace.text.InsertOperation;
 
 /**
  *

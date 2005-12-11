@@ -9,7 +9,7 @@
     
     <site id="1">
         <generate id="1">
-            <operation type="ch.iserver.ace.text.InsertOperation">
+            <operation type="ch.iserver.ace.algorithm.text.InsertOperation">
                 <property name="position" value="1"/>
                 <property name="text" value="S"/>
             </operation>
@@ -21,7 +21,7 @@
     <site id="2">
         <receive ref="10"/>
         <generate id="3">
-            <operation type="ch.iserver.ace.text.InsertOperation">
+            <operation type="ch.iserver.ace.algorithm.text.InsertOperation">
                 <property name="position" value="1"/>
                 <property name="text" value="A"/>
             </operation>

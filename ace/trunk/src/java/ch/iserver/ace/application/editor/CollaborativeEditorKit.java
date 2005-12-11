@@ -34,11 +34,11 @@ import javax.swing.text.JTextComponent;
 import javax.swing.text.StyledEditorKit;
 import javax.swing.text.TextAction;
 
-import ch.iserver.ace.Operation;
+import ch.iserver.ace.algorithm.Operation;
+import ch.iserver.ace.algorithm.text.DeleteOperation;
 import ch.iserver.ace.collaboration.Session;
 import ch.iserver.ace.collaboration.util.SessionTemplate;
 import ch.iserver.ace.collaboration.util.SessionTemplateCallback;
-import ch.iserver.ace.text.DeleteOperation;
 
 
 

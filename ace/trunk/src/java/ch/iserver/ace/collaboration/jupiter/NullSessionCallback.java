@@ -24,7 +24,7 @@ package ch.iserver.ace.collaboration.jupiter;
 import org.apache.log4j.Logger;
 
 import ch.iserver.ace.CaretUpdate;
-import ch.iserver.ace.Operation;
+import ch.iserver.ace.algorithm.Operation;
 import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.collaboration.ParticipantSessionCallback;
 import ch.iserver.ace.collaboration.PortableDocument;
@@ -112,7 +112,7 @@ final class NullSessionCallback implements ParticipantSessionCallback {
 	}
 
 	/**
-	 * @see ch.iserver.ace.collaboration.SessionCallback#receiveOperation(ch.iserver.ace.collaboration.Participant, ch.iserver.ace.Operation)
+	 * @see ch.iserver.ace.collaboration.SessionCallback#receiveOperation(ch.iserver.ace.collaboration.Participant, ch.iserver.ace.algorithm.Operation)
 	 */
 	public void receiveOperation(Participant participant, Operation operation) {
 		LOG.warn("SessionCallback not set on Session (receiveOperation called)");

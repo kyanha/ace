@@ -24,7 +24,6 @@ package ch.iserver.ace.algorithm;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 
-import ch.iserver.ace.Operation;
 
 /**
  * This interface is the basic interface every OT algorithm implementation must

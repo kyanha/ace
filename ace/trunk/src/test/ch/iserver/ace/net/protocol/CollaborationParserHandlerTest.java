@@ -7,10 +7,14 @@ import junit.framework.TestCase;
 import org.apache.log4j.Logger;
 
 import ch.iserver.ace.CaretUpdate;
-import ch.iserver.ace.Operation;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
+import ch.iserver.ace.algorithm.Operation;
 import ch.iserver.ace.algorithm.Timestamp;
 import ch.iserver.ace.algorithm.jupiter.JupiterTimestampFactory;
+import ch.iserver.ace.algorithm.text.DeleteOperation;
+import ch.iserver.ace.algorithm.text.InsertOperation;
+import ch.iserver.ace.algorithm.text.NoOperation;
+import ch.iserver.ace.algorithm.text.SplitOperation;
 import ch.iserver.ace.net.core.MutableUserDetails;
 import ch.iserver.ace.net.core.NetworkProperties;
 import ch.iserver.ace.net.core.NetworkServiceImpl;
@@ -18,10 +22,6 @@ import ch.iserver.ace.net.core.PortableDocumentExt;
 import ch.iserver.ace.net.core.RemoteUserProxyExt;
 import ch.iserver.ace.net.core.RemoteUserProxyImpl;
 import ch.iserver.ace.net.protocol.RequestImpl.DocumentInfo;
-import ch.iserver.ace.text.DeleteOperation;
-import ch.iserver.ace.text.InsertOperation;
-import ch.iserver.ace.text.NoOperation;
-import ch.iserver.ace.text.SplitOperation;
 import ch.iserver.ace.util.Base64;
 
 public class CollaborationParserHandlerTest extends TestCase {

@@ -12,6 +12,10 @@ import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.RequestImpl;
 import ch.iserver.ace.algorithm.Timestamp;
 import ch.iserver.ace.algorithm.jupiter.JupiterTimestampFactory;
+import ch.iserver.ace.algorithm.text.DeleteOperation;
+import ch.iserver.ace.algorithm.text.InsertOperation;
+import ch.iserver.ace.algorithm.text.NoOperation;
+import ch.iserver.ace.algorithm.text.SplitOperation;
 import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.net.core.FragmentImpl;
 import ch.iserver.ace.net.core.MutableUserDetails;
@@ -23,10 +27,6 @@ import ch.iserver.ace.net.core.RemoteUserProxyExt;
 import ch.iserver.ace.net.core.RemoteUserProxyFactory;
 import ch.iserver.ace.net.core.RemoteUserProxyImpl;
 import ch.iserver.ace.net.protocol.RequestImpl.DocumentInfo;
-import ch.iserver.ace.text.DeleteOperation;
-import ch.iserver.ace.text.InsertOperation;
-import ch.iserver.ace.text.NoOperation;
-import ch.iserver.ace.text.SplitOperation;
 
 public class CollaborationSerializerTest extends TestCase {
 
