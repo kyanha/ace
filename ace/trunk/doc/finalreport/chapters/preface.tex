@@ -1,56 +1,79 @@
 \chapter{Preface}
 \label{chapter:preface}
 
-ACE is a collaborative text editor. This document contains the documentation
-of the ACE diploma project and is split into several chapters.
+This document contains the documentation
+of the ACE diploma project and is split into several parts. Each part has
+several chapters. The following lists all parts and their chapters and
+describes what can be found where.
 
-\begin{itemize}
- \item Part 1: Introduction
- \begin{description}
-  \item[Chapter 1] gives an overview of collaborative editing
-  \item[Chapter 2] describes the functionality of ACE
-  \item[Chapter 3] describes the concurrency control used by ACE as well as
-                   its implementation
- \end{description}
+
+% TODO: move project documentation description from project manual?
+
+
+\section{Part 1: Introduction}
+The first part of the book gives a general introduction to the diploma
+project as well as to the concepts on which ACE is built.
+
+\begin{description}
+ \item[Chapter 1: Overview] This chapter describes first what collaborative editing is and it describes some common use cases of collaborative editing. Further it lists the requirements for a real-time collaborative application. In the last section of the overview the previous work is listed.
+ \item[Chapter 2: Functionality] The second chapter describes the functionality of the application. The terminology used throughout this report is described.
+ \item[Chapter 3: Algorithm] The last chapter in the introduction part introcues the reader into the concepts of operational transformation. It also lists the selection criteria we used to select the algorithm. Then it goes on to describe the chose algorithm and its implementation. 
+\end{description}
+
+
+\section{Part 2: Decisions and Justifications}
+In the semester project we have evaluated different technologies for the
+implementation of the application as well as the network layer. Here we 
+describe our decisions and we justify these decisions.
+
+\begin{description}
+ \item[Chapter 4: Decisions for Network Implementation] In this chapter we describe the decisions we made to implement the network layer. The decisions are justified based on a set of selection criteria.
+ \item[Chapter 5: Decisions for Application Implementation] Similarly to the last chapter, we describe here which decisions we made before implementing the application layer and justify these decisions.
+\end{description}
+
  
- \item Part 2: Decisions and Justifications
- \begin{description}
-  \item[Chapter 4] describes the decisions made for the implementation of the
-                   network layer as well as the justification of these decisions
-  \item[Chapter 5] describes the decisions made for the implementation of the
-                   application layer as well as the justification of these
-                   decisisions
- \end{description}
- 
- \item Part 3: Implemented Solution
- \begin{description}
-  \item[Chapter 6] describes the general architecture of ACE as well as the
+\section{Part 3: Implemented Solution}
+The third part contains a detailed description of the implemented solution.
+These descriptions are separated into a general chapter as well as a
+chapter for each layer.
+
+\begin{description}
+ \item[Chapter 6] describes the general architecture of ACE as well as the
                    interface between the three layers of ACE
-  \item[Chapter 7] describes the application layer implementation of ACE
-  \item[Chapter 8] describes the collaboration layer implementation of ACE
-  \item[Chapter 9] describes the network layer implementation of ACE
- \end{description}
+ \item[Chapter 7] describes the application layer implementation of ACE
+ \item[Chapter 8] describes the collaboration layer implementation of ACE
+ \item[Chapter 9] describes the network layer implementation of ACE
+\end{description}
+
  
- \item Part 4: Analysis
- \begin{description}
-  \item[Chapter 10] describes which goals have been reached and which goals
-                    were not achieved
-  \item[Chapter 11] describes the differences between the project plan and
-                    the reality
-  \item[Chapter 12] lists the most important open issues of the project
-  \item[Chapter 13] contains information about the lessons we have learned
-  \item[Chapter 14] makes an outlook of possible features that could be
-                    implemented in the future
-  \item[Chapter 15] the conclusion of the diploma project
- \end{description}
+\section{Part 4: Analysis}
+The fourth part of this document analyzes the diploma project. First, we
+show which goals have been achieved and which not. Second, we highlight
+the differences between the planned amount of time and the actual used
+amount of time for each work packages. Further, the most important open
+issues are listed and we describe what we have learned during the project.
+The last two chapters of this section are dedicated to make an outlook
+of potential additional features and a conclusion.
+
+\begin{description}
+ \item[Chapter 10: Achievement of the Goals] In this chapter we describe which goals we have achieved and which we have not.
+ \item[Chapter 11: Differences to Project Plan] Here, the differences between the project plan and the reality are highlighted and discussed.
+ \item[Chapter 12: Open Issues] In every project, there are always some open issues. This chapter lists the most important issues and shows how these issues could be resolved.
+ \item[Chapter 13: Lessons Learned] We have learned a lot from a project like ACE. The lessons we have learned in this project are documented in this chapter.
+ \item[Chapter 14: Outlook] The time available in the diploma project was short. There are still a lot of features that would be worth being implemented. Some ideas of the features we could implement in the future are described in this chapter.
+ \item[Chapter 15: Conclusion] The final chapter of the part contains the conclusion of the whole project.
+\end{description}
  
- \item Part 5: Appendix
- \begin{description}
-  \item[Appendix A] lists all the used references
-  \item[Appendix B] lists all the used frameworks as libraries as well as 
-                   giving a short description about some of them
-  \item[Appendix C] a detailed description of thread domains
-  \item[Appendix D] explains the most important abbreviations and terms
-  \item[Appendix E] who did what?
- \end{description}
-\end{itemize}
+ 
+\section{Part 5: Appendix}
+The appendices contain a list used references, frameworks and libraries, 
+and abbreviations and terms. Further some selected frameworks and libraries
+are described.
+
+\begin{description}
+ \item[Appendix A: References] This appendix contains a list of used references. This includes technical articles, documentation from the semester project, and websites.
+ \item[Appendix B: Used Technologies] The appendix B lists all the dependencies of ACE and their versions. A short introduction is given for some selected and important frameworks used by ACE.
+ \item[Appendix C: Thread Domains] In this appendix we describe the concept, idea, and implementation of thread domains. Thread domains were implented as part of the diploma project and are documented here as reference for interested readers.
+ \item[Appendix D: Glossary] This appendix explains the used abbreviations and terms.
+ \item[Appendix E: Accountability] The last appendix shows who did which part of the documentation and of the source code.
+\end{description}
