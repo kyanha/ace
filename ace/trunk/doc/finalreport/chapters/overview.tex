@@ -12,15 +12,16 @@
 
 
 \section{Requirements of a Collaborative Application}
-The following requirements have been identified for a synchronous collaborative
-editing system by \cite{sun98a}.
+A synchronous collaborative editor has some quite unique requirements.
+The following requirements have been identified for such an editor
+by Sun et al. (\cite{sun98a}).
 
 \subsection{Real-time} 
 The response to local user actions must be quick, ideally
-as quick as a single-user editor. Imposing a global total order is not
-an option because of the distributed nature of the system (i.e. network
-latency). Thus, generally these systems replicate the document at each
-user's site.
+as quick as with a single-user editor. Imposing a global total order on
+message transmission is not
+an option because of the distributed nature of the system. Thus, generally 
+these systems replicate the document at each user's site.
 
 \subsection{Distributed} 
 Cooperating users reside on different machines 
@@ -36,8 +37,14 @@ facilitate free and natural information flow among multiple users.
 \section{Previous Work}
 \label{sect:overview.previouswork}
 
+The diploma project is based on the work done in the semester project. Some
+additional work has been done from from the end of the semester
+project to the start of the diploma project. In this section we show which
+results are not part of the diploma project, but have been implemented
+before.
+
 \subsection{Semester Project}
-In the semester project we have implemented the following things:
+In the semester project we have implemented the following features:
 \begin{itemize}
  \item consistency control algorithm (\emph{Jupiter})
  \item test framework for algorithm
@@ -51,7 +58,7 @@ test framework is documented in \emph{Report Testframework}.
 
 Futher, we did some research to find out how we want to implement the
 network as well as the application layer. The results of this research
-is documented in \emph{Report Evaluation Network} and 
+can be found in the \emph{Report Evaluation Network} and 
 \emph{Report Evaluation GUI} respectively.
 
 
@@ -62,7 +69,7 @@ be resolved in reasonable time. Read section \ref{sect:algorithm.undoredo} for
 a detailed description of the problem.
 
 We also investigated how difficult it would be to create a collaborative 
-editing plugin for jEdit (see \href{http://jedit.org/}{http://jedit.org/}.
-More about this investigation can be read in section 
-\ref{sect:decisions.gui}.
+editing plugin for jEdit (see \href{http://jedit.org/}{http://jedit.org/}).
+More about this investigation can be read in chapter 
+\ref{chapter:decisionsapplication}.
 

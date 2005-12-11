@@ -21,8 +21,8 @@ problems present in these systems.
 
 \subsection{Document Model}
 In the following we assume a (conceptual) shared document model that consists 
-of a sequence of characters, indexed from 0 up to the number of characters in
-the document minus 1. The document state (i.e. the text) can only be 
+of a sequence of characters, indexed from zero up to the number of characters in
+the document minus one. The document state (i.e. the text) can only be 
 modified by executing one of the following two primitive editing operations:
 
 \begin{itemize}
@@ -60,17 +60,17 @@ Dependent and independent operations
 Given any two operations $O_{a}$ and $O_{b}$:
 \begin{enumerate}
  \item $O_{b}$ is \emph{dependent} on $O_{a}$ iff $O_{a} \rightarrow O_{b}$
- \item $O_{a}$ and $O_{b}$ are \emph{independent} (or \emph{concurrent}), 
+ \item $O_{a}$ and $O_{b}$ are \emph{independent} (also \emph{concurrent}), 
        expressed as $O_{a} \Arrowvert O_{b}$ iff neither 
        $O_{a}\rightarrow O_{b}$ nor $O_{b}\rightarrow O_{a}$
 \end{enumerate}
 
-Intuitively we can say that two operations are dependant if there exists a path from the generation of one message to the generation of another message. So for example in figure \ref{fig:example1} operation $O_{1}$ and $O_{3}$ are dependent, that is $O_{1}\rightarrow O_{3}$. Operation $O_{1}$ and $O_{2}$ are \emph{independent}. 
+Intuitively we can say that two operations are dependant if there exists a path from the generation of one message to the generation of another message. So for example in figure \ref{fig:example1} operation $O_{1}$ and $O_{3}$ are dependent, that is $O_{1}\rightarrow O_{3}$. Operation $O_{1}$ and $O_{2}$ are independent ($O_1 \Arrowvert O_2$). 
 
 \begin{figure}
  \centering
  \includegraphics[width=2.5in,height=2.88in]{../images/finalreport/example1.eps}
- \caption{A scenarion of a real-time cooperative editing session}
+ \caption{A scenario of a real-time cooperative editing session}
  \label{fig:example1}
 \end{figure}
 
@@ -124,7 +124,7 @@ Algorithms based on OT transform operations to include/exclude the effects of ot
 Intuitively, transformation shifts the position parameter of an
 operation before execution to include/exclude the effects of previously executed
 operations that it was not \emph{aware} of (or that are concurrent) at the
-time of its generation. Operation transformation also helps to solve the
+time of its generation. Operational transformation also helps to solve the
 problem of intention violation.
 
 An operational transformation algorithm is typically split into two parts. 
@@ -142,28 +142,32 @@ So for a text editor with the two primitive operations \emph{insert} and
 functions for IT and another four for ET. That is, given a transformation
 function T the following four transformation functions have to be defined:
 T(\emph{insert,insert}), T(\emph{insert,delete}), T(\emph{delete,insert}), 
-and T(\emph{delete,delete}).
+and T(\emph{delete,delete}). This makes it also hard create collaborative
+editing applications with a greater set of operations, as the number of
+transformation functions increases exponentially.
+
 
 \subsubsection{Inclusion Transformation}
 Inclusion transformation includes the effect of another operation into an
 operation. The precondition of IT is that both operations are defined on the
 same document state (i.e. have the same vector time). If we have an operation
 $O_1 = Ins(0,'a')$, an operation $O_2 = Del(1,1)$ (both defined on the same
-document state) and the document state \emph{123}, we can either first
+document state) and the document state "123", we can either first
 execute $O_1$ or $O_2$. If we execute $O_1$ first, we cannot execute $O_2$
 as it is. That is where IT comes into play:
 
 $$ IT(O_1,O_2) = O'_2 = Del(2,1) $$
 
 The transformed operation can be applied to the document resulting in the
-correct document state \emph{b13}.
+correct document state "a13". For a more complete definition of exclusion
+transformation see the \emph{Report Evaluation Algorithm}.
 
 \subsubsection{Exclusion Transformation}
 Exclusion transformation transforms an operation $O_1$ against another operation
 $O_2$ in such a way that the impact of $O_2$ is effectively excluded from
 $O_1$. As exclusion transformation is not used by the selected algorithm, we
 refer the interested reader to the \emph{Report Evaluation Algorithm} for
-a more complete definition of exclusion transformation.
+a more complete definition of exclusion transformation. 
 
 
 \subsection{Transformation Properties}
@@ -181,35 +185,44 @@ Transformation Property 1 (TP1):
 $ O_1 O'_2 \equiv O_2 O'_1 $
 \end{defn}
 
+\paragraph{Transformation Property 2:}
+The transformation property 1 is a necessary and sufficient condition to
+ensure that the groupware system with two users works correct. The
+transformation property 2 is needed for a system with more than two users.
+As the algorithm used by ACE uses two-way connections exlusively, the
+transformation functions do not have to hold transformation property 2.
+For a description of this transformation property check the 
+\emph{Report Evaluation Algorithm}.
+
+
 
 
 \section{Selection of Algorithm}
 In the semester project we made an extensive evaluation of existing algorithms
 (see \emph{Report Evaluation Algorithm}). Based on the following selection
-criteria we selected on algorithm.
+criteria we selected an algorithm for the implementation.
 
 
 \subsection{Selection Criteria}
 
-\subsubsection{Correctness} 
+\begin{description}
+\item[Correctness]
 Some algorithms proved to be incorrect in certain
 cases. This is of course the most important selection criteria.
-
-\subsubsection{Availability of Information} 
+\item[Availability of Information]
 Some papers did not provide enough
 information for an implementation of the described algorithm.
-
-\subsubsection{Availability of User Undo} 
+\item[Availability of User Undo]
 Users of collaborative applications
 expect the same commands as in a single user application. 
-
-\subsubsection{Algorithmic Complexity} 
+\item[Algorithmic Complexity]
 Some algorithms are strikingly simple,
 others are complex, and some are even too complex to be implemented.
+\end{description}
 
 
 \subsection{Selection of Algorithm}
-The two only algorithms that satisfied the above criteria were 
+Only two algorithms satisfied the above criteria: 
 \emph{adOPTed}~\cite{ressel96} and \emph{Jupiter}~\cite{jupiter95}. The 
 following list shows why we have decided to implement \emph{Jupiter}:
 
@@ -229,7 +242,7 @@ number of clients. It only rises linearly with the number of clients in
 The \emph{Jupiter} algorithm makes use of a set of transformation functions.
 However, no such functions are proposed in the paper. Therefore, we had to 
 choose a set of transformation functions which would meet the needs of 
-\emph{Jupiter}. The following list identifies the three preconditions for the 
+\emph{Jupiter}. The following list identifies the three requirements for the 
 transformation functions:
 
 \begin{itemize}
@@ -249,17 +262,18 @@ documents, shared tools, and, optionally, live audio/video communication. It was
 developed by \emph{Xerox}. It is conceptually a collaborative windowing toolkit. 
 The low-level communication facilities make use of operational transformation.
 
-The operational transformation algorithm employed in the \emph{Jupiter} system is derived from \emph{dOPT}. A centralized architecture and thus the reduction to point-to-point connections makes the algorithm significantly simpler than other operational transformation algorithms. The basic \emph{Jupiter} algorithm is only suitable for two sites. However, it was shown in \cite{jupiter95} and in greater detail in \cite{netedit:thesis} how to use several point-to-point connections to build a tree-structured $n$-site algorithm (see figure \ref{fig:concepts.nway}).
+The operational transformation algorithm employed in the \emph{Jupiter} system is derived from \emph{dOPT} (see {Ellis and Gibbs}~\cite{ellis}). A centralized architecture and thus the reduction to point-to-point connections makes the algorithm significantly simpler than other operational transformation algorithms. The basic \emph{Jupiter} algorithm is only suitable for two sites. However, it was shown in \cite{jupiter95} and in greater detail in \cite{netedit:thesis} how to use several point-to-point connections to build a tree-structured $n$-site algorithm (see figure \ref{fig:algorithm.nway}).
 
 \begin{figure}[htb]
  \centering
- \includegraphics[width=7cm,height=4.89cm]{../images/finalreport/concepts_nway.eps}
+ \includegraphics[width=7cm,height=4.72cm]{../images/finalreport/algorithm_nway.eps}
  \caption{multiple 2-way sync to achieve n-way sync}
- \label{fig:concepts.nway}
+ \label{fig:algorithm.nway}
 \end{figure}
 
 \subsection{Jupiter Algorithm}
-A collaborative editing application requires that local operations are immediately applied to the local document and then sent inside a request to all
+As we have seen,
+a collaborative editing application requires that local operations are immediately applied to the local document and then sent inside a request to all
 the other sites. Additionally to the operation, a request contains the vector
 time of the sender. The vector time specifies the state the sender was in
 (i.e. how many operations it has processed from itself and the receiver) just
@@ -276,34 +290,41 @@ $O_2$ from the server, and returns two transformed operations $O'_1$ and $O'_2$.
 The operations $O'_1$ and $O'_2$ have the property that if the client applies 
 $O_1$ followed by $O'_2$, and the server applies $O_2$ followed by $O_1'$, both 
 client and server wind up in the same final state (see figure 
-\ref{fig:concepts.basic}). This property is also known as transformation property 1 (TP1):
+\ref{fig:algorithm.basic}). This property is, as we know, the transformation property 1 (TP1):
 
 $$ O_1 O'_2 \equiv O_2 O'_1 $$
 
 Conceptually, the $xform$ function is a combined inclusion transformation (IT) 
 that returns $\{IT(O_1,O_2),IT(O_2,O_1)\}$. The parameters $O_1$ and $O_2$ must 
-originate from the same document state. This is a necessary precondition of 
+originate from the same document state
+(i.e. their timestamps are equal). This is a necessary precondition of 
 inclusion transformation. If this precondition is violated, the result of the 
 transformation is not guaranteed to be correct.
 
 \begin{figure}[htb]
  \centering
- \includegraphics[width=6.85cm,height=2.5cm]{../images/finalreport/concepts_jupiter1.eps}
+ \includegraphics[width=6.85cm,height=2.5cm]{../images/finalreport/algorithm_jupiter1.eps}
  \caption{basic transformation situation in jupiter}
- \label{fig:concepts.basic}
+ \label{fig:algorithm.basic}
 \end{figure}
 
 \subsubsection{Point to Point}
-As we have seen, it is helpful to show the two dimensional state space that both client and server pass through as they process requests (see figure \ref{fig:concepts.statespace}). Each state is labelled with the number of processed requests from both client and server to that point. For instance if the client is in the state $(2,3)$, it has generated and processed two requests of its own, and has received and processed three from the server. The client and server requests are displayed on different axis in the state space graph.
+It is helpful to show the two dimensional state space that both client and server pass through as they process requests (see figure \ref{fig:algorithm.statespace}). Each state is labelled with the number of processed requests from both client and server to that point. For instance if the client is in the state $(2,3)$, it has generated and processed two requests of its own, and has received and processed three from the server. The client and server requests are displayed on different axis in the state space graph.
 
 \begin{figure}[htb]
  \centering
- \includegraphics[width=6.63cm,height=4.5cm]{../images/finalreport/concepts_statespace.eps}
+ \includegraphics[width=6.63cm,height=4.5cm]{../images/finalreport/algorithm_statespace.eps}
  \caption{two dimensional state space example}
- \label{fig:concepts.statespace}
+ \label{fig:algorithm.statespace}
 \end{figure}
 
-If there is a conflict, the paths will diverge, as shown in figure \ref{fig:concepts.statespace}. The client and server moved to the state $(1,1)$ together by first processing a client request, and then a server request. At that point, the client and server processed different requests (concurrently), moving to state $(2,1)$ and $(1,2)$ respectively. They each received and processed the other's message using the transformation function to move to state $(2,2)$.
+If there is a conflict, the paths will diverge, as shown in figure 
+\ref{fig:algorithm.statespace}. The client and server moved to the state $(1,1)$ 
+together by first processing a client request, and then a server request. At 
+that point, the client and server processed different requests (concurrently), 
+moving to state $(2,1)$ and $(1,2)$ respectively. They each received and 
+processed the other's message using the transformation function to move to state 
+$(2,2)$.
 
 As mentioned before, the algorithm labels each request with the state vector the
 sender was in just before the message was generated (state vector). The 
@@ -313,13 +334,21 @@ recipient, there is a conflict (concurrent request). Two concurrent requests
 have to be transformed, but they can only be transformed directly when they were 
 generated from the same document state.
 
-If client and server diverge by more than one step in the state space graph, the transformation function cannot be applied directly. Let us consider the state space in figure \ref{fig:concepts.statespace2}. The client has executed $c$ and receives the conflicting request $s_1$ from the server. It uses the transformation function to compute $s'_1$ to get to the state $(1,1)$. The server then generates $s_2$ from the state $(0,1)$, indicating that it still has not processed $c$. What should the client do now? It cannot use the transformation function directly because $c$ and $s_2$ were not generated from the same document state.
+Thus, if client and server diverge by more than one step in the state space 
+graph, the transformation function cannot be applied directly. Let us consider 
+the state space in figure \ref{fig:algorithm.statespace2}. The client has 
+executed $c$ and receives the conflicting request $s_1$ from the server. It uses 
+the transformation function to compute $s'_1$ to get to the state $(1,1)$. The 
+server then generates $s_2$ from the state $(0,1)$, indicating that it still has 
+not processed $c$. What should the client do now? It cannot use the 
+transformation function directly because $c$ and $s_2$ were not generated from 
+the same document state.
 
 \begin{figure}[htb]
  \centering
- \includegraphics[width=6.71cm,height=4.5cm]{../images/finalreport/concepts_statespace2.eps}
+ \includegraphics[width=6.71cm,height=4.5cm]{../images/finalreport/algorithm_statespace2.eps}
  \caption{client and server diverging by more than one path step}
- \label{fig:concepts.statespace2}
+ \label{fig:algorithm.statespace2}
 \end{figure}
 
 The solution to this situation is as follows. When the client computes $s'_1$ it 
@@ -330,19 +359,23 @@ the state $(1,2)$. If the server has processed the client's message, it will be
 in the state $(1,2)$ as well. If not, its next request will originate from 
 $(0,3)$, so the client saves $c''$ just in case.
 
-The algorithm guarantees that if the transformation function satisfies TP1, then no matter how far the client and server diverge in state space, when they do reach the same state (and they do, unless requests get lost), they will have equivalent states (so convergence is achieved).
+The algorithm guarantees that if the transformation function satisfies TP1, then 
+no matter how far the client and server diverge in the state space, when they do 
+reach the same state (and they do, unless requests get lost), they will have 
+equivalent states (so convergence is achieved).
 
 \subsubsection{Extending Jupiter to N-Way Communication}
-We have discussed how a single two-way connection works in \emph{Jupiter}. We will now extend this systems to support $n$ clients using multiple two-way connections. The figure \ref{fig:concepts.nway-details} shows the basic setup for three clients. Each client talks only to the server over a standard previously discussed two-way connection. These standard two-way connections
-are depicted in the figure. For each connection there are two algorithms:
+We have discussed how a single two-way connection works in \emph{Jupiter}. We will now extend this systems to support $n$ clients using multiple two-way connections. The figure \ref{fig:algorithm.nway-details} shows the basic setup for three clients. Each client talks only to the server over a standard previously discussed two-way connection. These standard two-way connections
+are depicted in the figure. For each connection there are two algorithms,
+a client-side and a server-side algorithm:
 $A_1$ and $A'_1$ for client 1, $A_2$ and $A'_2$ for client 2, and $A_3$ and
-$A'_3$ for client 3.  
+$A'_3$ for client 3. 
 
 \begin{figure}[htb]
  \centering
- \includegraphics[width=6.31cm,height=3.56cm]{../images/finalreport/concepts_nway-details.eps}
- \caption{n-way synchronization using central server}
- \label{fig:concepts.nway-details}
+ \includegraphics[width=6.31cm,height=3.56cm]{../images/finalreport/algorithm_nway-details.eps}
+ \caption{Concept of n-way synchronization using a central server}
+ \label{fig:algorithm.nway-details}
 \end{figure}
 
 Let us say client 1 generates a local operation, for which the algorithm
@@ -352,9 +385,9 @@ requests (i.e. requests sent from the server that crossed that particular
 request in transit).
 
 $A'_1$ extracts a (potentially) transformed operation from the received 
-request. This operation is then given to the other server-side algorithms. 
-In our example these are $A'_2$ and $A'_3$. These other algorithms create
-requests for that operation and send these to $A_2$ and $A_3$ respectively.
+request. This operation is then given to the other server-side algorithms,
+in our example $A'_2$ and $A'_3$. These algorithms create
+requests for that operation and send them to $A_2$ and $A_3$ respectively.
 
 \textbf{Note:} If \emph{Jupiter} is used in this setup, it is crucial that
 only one request is processed at a time by the server. Processing of
@@ -377,16 +410,18 @@ of the n-way setup.
 
 
 \section{Implementation}
-
+The implementation of the algorithm and the related classes can be found
+in the package \texttt{ch.\-iserver.\-ace.\-algorithm} and its subpackages
+in the folder \texttt{src/java}.
 
 \subsection{Operation}
-Operations are used to decribe changes made in a document. For this purpose they 
-must contain the information what has been changed.
+Operations are used to decribe changes made in a document. They must contain
+enough information to reapply the operation at a later time.
 
 In case of simple text editing only two operations are required. An insert 
 operation (e.g. \texttt{Ins(1,'hello')}) inserts the string 'hello' at position 
-1 and an delete operation (e.g. \texttt{Del(10, 'world')}) deletes the string 
-'world' at position 10.
+1 and a delete operation (e.g. \texttt{Del(10,5}) deletes 5 characters
+starting at offset 10.
 
 \begin{figure}[H]
 \centering
@@ -398,21 +433,32 @@ operation (e.g. \texttt{Ins(1,'hello')}) inserts the string 'hello' at position
 \label{Split_Operation}
 As depicted in figure \ref{Operation Hierarchy} there exists a third operation besides the \texttt{InsertOperation} and \texttt{DeleteOperation}. The so-called \texttt{SplitOperation} is a helper object used to encapsulate two operations (usually two delete operations). This special operation is required when transforming an insert operation which occurs in the range of a delete operation. 
 
-For instance if the document state is 'abcdefg' and the two operations
-\texttt{Ins(3,'X')} and \texttt{Del(1,'bcdef')} are to be transformed. If
+For instance if the document state is "abcdefg" and the two operations
+\texttt{Ins(3,'X')} and \texttt{Del(1,5)} are to be transformed. If
 the delete operation is applied first, this is easy. The index of the insert
 operation is then shifted to the beginning of the delete operation. Otherwise,
 the delete operation must be split into two operations. Once the insert
 operation is applied, we have the document state 'abcXdefg'. The transformed
-delete operation must thus be: \texttt{Del(1,'bc')} and \texttt{Del(4,'def')}.
-Note that the second delete operation must be applied first.
+delete operation must thus be: \texttt{Del(1,2)} and \texttt{Del(4,3)},
+which is a split operation. Note that the second delete operation must be
+applied first, because otherwise the second operation would have to be
+transformed against the first operation to achieve the desired intention.
+
+An additional operation is used when two delete operations are transformed
+against each other when the one operations includes the effect of the other
+operation. So if we have $O_1 = O_2 = $ \texttt{Del(1,1)} then transforming
+$O_2$ to include the effect of $O_1$ we get a no-operation operation, because
+the effect of the operation has already been achieved.
 
 
 \subsection{Request}
 A request is used to distribute changes of a document over the network. It 
-contains all important information such as an operation, a timestamp (document 
-state on which the operation is based) and the site id of the generating site. 
-(see figure \ref{Request Class Diagram})
+contains an operation, a timestamp (document 
+state on which the operation is based) and the site id of the generating site
+(the direction of the state vector in the state space). The convention is
+that the server-side algorithm has the site id 0 and the client-side
+algorithm has the site id 1. This has the effect that operations
+from the server have in some cases a higher priority in the transformation.
 
 \begin{figure}[H]
 \centering
@@ -421,14 +467,12 @@ state on which the operation is based) and the site id of the generating site.
 \label{Request Class Diagram}
 \end{figure}
 
-How a request will be sent to a server or another client is not part of this chapter and depends on the network technology (see \emph{Report Evaluation Network}) used.
-
 
 \subsection{Algorithm}
 
 \begin{figure}[H]
 \centering
-\includegraphics[height=12.09cm,width=6.87cm]{../images/finalreport/algorithm.eps}
+\includegraphics[width=6cm,height=8.78cm]{../images/finalreport/algorithm.eps}
 \caption{Algorithm Class Diagram}
 \label{fig:algorithm.uml}
 \end{figure}
@@ -438,7 +482,14 @@ It gives the flexibility to switch the implementation without affecting the
 rest of the system. The currently only implementation of the \texttt{Algorithm} 
 interface is the \texttt{Jupiter} class. \texttt{Jupiter} processes 
 all requests with the collaboration of an \texttt{InclusionTransformation}
-implementation. The only implementation is \texttt{GOTOInclusionTransformation}.
+implementation. The only implementation is \texttt{GOTOInclusionTransformation}. (see figure \ref{fig:algorithm.transformation.uml})
+
+\begin{figure}
+\centering
+\includegraphics[width=9cm,height=3.49cm]{../images/finalreport/algorithm_transformation.eps}
+\caption{InclusionTransformation Interface}
+\label{fig:algorithm.transformation.uml}
+\end{figure}
 
 Each algorithm has a local timestamp, which can be retrieved with the
 \texttt{getTimestamp():Timestamp} method. In the 
@@ -457,8 +508,9 @@ is not shifted.
 is received by the algorithm, the timestamp of the request is checked to
 see how many requests the other site has already processed. All the requests
 in the outgoing queue that have been processed by the other site are discarded.
-The incoming request is then transformed against the the remaining requests
-in the queue. The transformed operation is then ready to be applied to the
+The incoming request is then transformed against the the remaining 
+requests in the queue, which are concurrent to the incoming request. 
+The transformed operation is then ready to be applied to the
 local document.
 
 The figure \ref{fig:algorithm.outqueue} shows on the left side an outgoing
@@ -470,7 +522,7 @@ transformed against these two (concurrent) requests.
 
 \begin{figure}[H]
 \centering
-\includegraphics[height=3.03cm,width=9.67cm]{../images/finalreport/algorithm_outqueue.eps}
+\includegraphics[width=9.31cm,height=2.58cm]{../images/finalreport/algorithm_outqueue.eps}
 \caption{Outgoing queue before and after receiving a request}
 \label{fig:algorithm.outqueue}
 \end{figure}
@@ -478,41 +530,204 @@ transformed against these two (concurrent) requests.
 \subsubsection{Generating Requests}
 Whenever a local operation is generated it has to be sent to the other sites.
 These operations must be encapsulated in a request. The
-\texttt{generateRequest(op:Operation):Request} is used to create a request
+\texttt{+generate\-Request(op:Operation):Request} is used to create a request
 for the operation. That request can be sent to the other sites.
 
 \subsubsection{Receiving Requests}
 When a request is received, it must be passed to the
-\texttt{receiveRequest(r:Request):Operation} method. This method returns
+\texttt{+receive\-Request(r:Request):Operation} method. This method returns
 the potentially transformed operation, which is to be applied to the
 local document.
 
 \subsubsection{Undo/Redo}
 The \texttt{Algorithm} interface also has methods to support undo and redo.
-The corresponding methods are \texttt{undo():Request}, \texttt{redo():Request},
-\texttt{canUndo():boolean}, and \texttt{canRedo():boolean}. Unfortunately
+The corresponding methods are 
+\texttt{+undo():Request}, \texttt{+redo():Request},
+\texttt{+canUndo():boolean}, and \texttt{+canRedo():boolean}. 
+Unfortunately
 \emph{Jupiter} does not support these operations. For more information why
 \emph{Jupiter} does not support undo/redo read \ref{sect:algorithm.undoredo}.
 
 \subsubsection{Index Transformations}
 Beside the transformation of operations against other operations, the
 \texttt{Algorithm} also supports transformation of an index against an
-operation. 
+operation.
 
 The \texttt{transformIndices(t:Timestamp,indices:int[]):int[]} method transforms
 an array of integers against all concurrent operations. The indices itself
-do not modify the operations in the transformation.
+do not modify the operations inside the outgoing queue in the transformation.
+
+\textbf{Note:} This is a feature added during the diploma project to support
+the transformation of awareness information.
 
 \subsubsection{Acknowledge}
 A potential problem arises if one site is idle while the other is generating
 requests. In that case, the outgoing queue of the site that generates requests
 grows indefinitely, because no acknowledge messages are ever received and thus
-no requests in the outgoing queue are discarded.
+no requests in the outgoing queue can be discarded.
 
 Thus we extended the standard \emph{Jupiter} algorithm to support acknowledge
 messages. An acknowledge message is simply the local timestamp and the site
 id. An acknowledge message is passed to the algorithm with the
-\texttt{acknowledge(siteId:int,t:Timestamp)} method.
+\texttt{+acknowledge(siteId:int,t:Timestamp)} method.
+
+\textbf{Note:} This is a feature added during the diploma project to
+avoid the problem described above.
 
 
 
+
+\subsection{Transformation Functions}
+The GOTO (generic operation transformation optimized) transformation functions 
+are designed to work with strings as well as characters. The advantage is that 
+less transformations have to be done when a string is inserted into a text. 
+
+The transformation function has to be defined for all possible combinations
+of operations. In the case of insert and delete operations, there are four
+transformation functions to be defined.
+
+In the following pseudo code of the transformation function, the following
+functions are used:
+\begin{itemize}
+ \item \texttt{p(x)} denotes the position of operation $x$
+ \item \texttt{o(x)} denotes the original (untransformed) position of operation $x$
+ \item \texttt{id(x)} denotes the site id of the site that generated the operation $x$
+ \item \texttt{len(x)} denotes the length of the operation $x$
+ \item \texttt{text(x)} denotes the text deleted or inserted by operation $x$
+ \item \texttt{ins(p,txt,o)} creates a construction of a insert operation with index $p$, text $txt$, and origin position $o$
+ \item \texttt{del(p,txt)} creates a delete operation with index $p$ and text $txt$
+ \item \texttt{split(x,y)} creates a new split operation whose first operation is $x$ and whose second operation is $y$
+ \item \texttt{clone(x)} clones operation $x$
+\end{itemize}
+
+
+\subsubsection{Origin Position}
+The origin position is the original position of an operation. It is set by
+the creator of the operation and then never modified although the operation
+itself (and therfore its position) are transformed. The origin position 
+helps to ensure that the user's intention are not violated in some rare
+cases.
+
+% TODO: ref to Report Implementation Algorithm for a detailed description
+
+
+\subsubsection{Insert/Insert}
+
+\small{\begin{verbatim}
+  def transform(a,b)
+    if p(a) < p(b) 
+        or p(a) == p(b) and o(a) < o(b) 
+        or p(a) == p(b) and o(a) == o(b) and id(a) < id(b)
+      return clone(a)
+    else
+      return ins(p(a) + len(b), text(a), o(a))
+    end
+  end
+\end{verbatim}}
+
+\begin{description}
+ \item[Case 1] If either of the following conditions is true, the operation $a$ is returned unmodified.
+ \begin{itemize}
+  \item Operation $a$ starts before operation $b$.
+  \item Operation $a$ starts at the same index as operation $b$ and the origin position of $a$ is before the origin position of $b$.
+  \item Operation $a$ starts at the same index as operation $b$ and the origin positions of $a$ and $b$ are equal and the site id of $a$ is lower than the site id of $b$.
+ \end{itemize}
+ \item[Case 2] Operation $a$ starts inside or after operation $b$. The index of the transformed operation $a$ must be increased by the length of the text of operation $b$.
+\end{description}
+
+
+\subsubsection{Insert/Delete}
+
+\small{\begin{verbatim}
+  def transform(a,b)
+    if p(a) <= p(b)
+      return clone(a)
+    else if p(a) > (p(b) + len(b))
+      o = ins(p(a) - len(b), text(a), o(a))
+      o.original = o1
+      return o
+    else 
+      o = ins(p(b), text(a), o(a))
+      o.original = o1
+      return o
+    end
+  end
+\end{verbatim}}
+
+\begin{description}
+ \item[Case 3] Operation $a$ starts before or at the same position as operation $b$. Nothing has to be transformed.
+ \item[Case 4] Operation $a$ starts after operation $b$. The index of the transformed operation $a$ must be reduced by the length of the text of operation $b$.
+ \item[Case 5] Operation $a$ starts inside operation $b$. The index of the transformed operation $a$ must be the index of operation $b$.
+\end{description}
+
+
+\subsubsection{Delete/Insert}
+
+\small{\begin{verbatim}
+  def transform(a,b)
+    if p(b) >= p(a) + len(a)))
+      return clone(o1)
+    else if p(a) >= p(b)
+      o = del(p(a) + len(b), text(a))
+      o.original = a
+      return o
+    else
+      o1 = del(p(a), text(a).substring(0, p(b) - p(a)))
+      o2 = del(p(a) + len(b) + p(b) - p(a), 
+                text(a).substring(p(b) - p(a), len(a)))
+      o = split(o1, o2)
+      o.original = a;
+      return o
+    end
+  end
+\end{verbatim}}
+
+\begin{description}
+ \item[Case 6] Operation $a$ is completly before operation $b$. Nothing has to be transformed.
+ \item[Case 7] Operation $a$ starts before or at the same position as operation $b$. The index of the transformed operation $a$ must be increased by the length of the text of operation $b$.
+ \item[Case 8] Operation $b$ is in the range of operation $a$. The transformed operation $a$ must be split into two delete operations.
+\end{description}
+
+
+\subsubsection{Delete/Delete}
+
+\small{\begin{verbatim}
+  def transform(a,b)
+    if p(b) >= p(a) + len(a))
+      return clone(o1)
+    else if p(a) >= p(b) + len(b))
+      o = del(p(a) - len(b), text(a))
+      o.original = a
+      return o
+    else
+      if p(b) <= p(a) && p(a) + len(a) <= p(b) + len(b))
+        o = noop()
+        o.original = a
+        return o
+      else if p(b) <= p(a) && p(a) + len(a) > p(b) + len(b)
+        o = del(p(b), text(a).substring(p(b) + len(b) - p(a), len(a)))
+        o.original = a
+        return o
+      else if p(b) > p(a) && p(b) + len(b) >= p(a) + len(a)
+        o = del(p(a), text(a).substring(0, p(b) - p(a)))
+        o.original = a
+        return o
+      else
+        o = del(p(a), 
+                text(a).substring(0, p(b) - p(a)) 
+                + text(a).substring(p(b) + len(b) - p(a), length(a)))
+        o.original = a
+        return o
+      end
+    end
+  end
+\end{verbatim}}
+
+\begin{description}
+ \item[Case 9] Operation $a$ is completely before operation $b$. Nothing has to be transformed. 
+ \item[Case 10] Operation $a$ starts at the end or after operation $b$. The index of the transformed operation $a$ must be reduced by the length of the text of operation $b$.
+ \item[Case 11] Operation $a$ and operation $b$ are overlapping. Operation $b$ starts before or at the same position as operation $a$ and ends after or at the same position as operation $a$. The content of operation $a$ has already been deleted by operation $b$. Therefore, nothing has to be deleted by the transformed operation $a$ (a so called noop (no-operation) is returned).
+ \item[Case 12] Operation $a$ and operation $b$ are overlapping. Operation $b$ starts before or at the same position as operation $a$ and ends before operation $b$. The overlapping part of the two operations has been deleted by operation $b$. The transformed operation $a$ has to delete only the remaining text (the text after the overlapping text of the two operations).
+ \item[Case 13] Operation $a$ and operation $b$ are overlapping. Operation $b$ starts after operation $a$ and ends after or at the same position as operation $a$. The overlapping part of the two operations has been deleted by operation $b$. The transformed operation $a$ has to delete the remaining text (text before the overlapping text of the two operations).
+ \item[Case 14] Operation $a$ and operation $b$ are overlapping. Operation $b$ is fully inside operation $a$. The overlapping part of the two operations has been deleted by operation $b$. The transformed operation $a$ has to delete the remaining text (text before and after the overlapping text of the two operations).
+\end{description}
