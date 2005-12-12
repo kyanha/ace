@@ -74,3 +74,17 @@ editing plugin for jEdit (see \href{http://jedit.org/}{http://jedit.org/}).
 More about this investigation can be read in chapter 
 \ref{chapter:decisionsapplication}.
 
+The test framework of the algorithm has also been extended. The following 
+new features have been added:
+\begin{itemize}
+ \item support to specify scenarios as used by \emph{Jupiter} (client-server model)
+ \item support to specify scenarios with undo/redo events (unfortunately, undo/redo is not used by our algorithm).
+\end{itemize}
+
+Further, we tried to implement the \emph{adOPTed} algorithm (see 
+\cite{ressel96}) with the scripting language \emph{Ruby} (see
+\href{http://www.ruby-lang.org/en/}{http://www.ruby-lang.org/en/}). The
+implementation of the basic algorithm succeeded. However, the description
+of undo/redo proved to be too inaccurate to implement. We therefore 
+decided to stick with \emph{Jupiter}, as using \emph{adOPTed} posed to many
+risks.

@@ -18,7 +18,10 @@ The following software was used to develop ACE.
 
 \section{Used Frameworks and Libraries}
 The dependencies of the project are specified in the Ant build file.
-Here is a list of all the frameworks and libraries used by ACE.
+Here is a list of all the frameworks and libraries used directly by ACE. 
+Some dependencies have additional dependencies on their own, which are 
+fetched by Maven - a feature called transitive dependency handling. These
+additional dependencies are not listed here.
 
 \begin{table}[H]
  \centering
@@ -133,6 +136,13 @@ Here is a list of all the frameworks and libraries used by ACE.
  \caption{Used frameworks and libraries}
 \end{table}
 
+\emph{JDOM} is used by the test framework only. The \emph{concurrent} library
+is only used by the \emph{beepcore} implementation. 
+\emph{backport-util-concurrent} is an implementation of most of the features
+in \texttt{java.util.concurrent} for earlier Java versions. It is used 
+because we do not use Java 1.5 and still want to use some of the advanced
+features available in \texttt{java.util.concurrent}.
+
 Further for testing we used the following frameworks:
 
 \begin{table}[H]
@@ -164,8 +174,9 @@ Further for testing we used the following frameworks:
  \caption{Used test frameworks}
 \end{table}
 
-Additionally we used a modified version (in subversion repository) of the
-beepcore-java framework. The modifications are based on version 0.9.08.
+Additionally we used a modified version (in the subversion repository) of the
+beepcore-java framework. The modifications are based on version 0.9.08. We
+had to apply some patches to fix some critical bugs in the library.
 
 
 \section{The Spring Framework}

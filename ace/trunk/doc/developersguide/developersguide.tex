@@ -166,6 +166,21 @@ The \texttt{doc} folder contains the sources of the project:
 \end{itemize}
 
 
+\section{Package Structure}
+ACE has the following package structure:
+
+\begin{itemize}
+ \item \texttt{ch.iserver.ace} - top level package
+ \item \texttt{ch.iserver.ace.algorithm} and its subpackages - all algorithm related classes and interfaces
+ \item \texttt{ch.iserver.ace.application} and its subpackages - the implementation of the application layer
+ \item \texttt{ch.iserver.ace.collaboration} - the interfaces of the API between the application and the collaboration layer
+ \item \texttt{ch.iserver.ace.collaboration.jupiter} and its subpackages - implementation of the collaboration layer using \emph{Jupiter}
+ \item \texttt{ch.iserver.ace.net} - the interfaces of the API between the collaboration and the network layer
+ \item \texttt{ch.iserver.ace.net.*} and its subpackages - implementation of the network layer
+ \item \texttt{ch.iserver.ace.util} and its subpackages - utility classes used by several packages (includes the implementation of the thread domain concept)
+\end{itemize}
+
+
 \section{Build File}
 
 The Ant build file contains the all the relevant targets.
@@ -235,7 +250,12 @@ there are installers for OS X and Windows.
 
 \subsection{OS X}
 The OS X installer is built by the target \texttt{dist-osx}, which is 
-called by the standard \texttt{dist} target. The OS X installer can only
+called by the standard \texttt{dist} target. The \texttt{dist-osx} target
+does not have all the necessary dependencies declared. Normally, you should
+just invoke \texttt{dist} to build the whole distribution (including
+the OS X installer). 
+
+The OS X installer can only
 be built on OS X for two reasons. First, the targets use a command line
 utility only available on OS X and second, the customization Java code
 for OS X relies on Apple Java extensions, which are not available on
@@ -269,7 +289,15 @@ happens by double-clicking the application bundle.
 
 \subsubsection{Ant Targets}
 The Ant targets ending with \texttt{osx} are used to build the Mac OS X
-application bundle. To do this, a special Ant task is required. The Ant
+application bundle. Before calling them you should first call the following
+targets:
+
+\begin{itemize}
+ \item \texttt{jar}
+ \item \texttt{copy-dependencies}
+\end{itemize}
+
+To do this, a special Ant task is required. The Ant
 task is called \texttt{EnhancerTask}. This task determines all the needed
 dependency libraries from a fileset. It allows to further exclude some
 unwanted dependencies, for instance JUnit libraries by specifying excludes.
