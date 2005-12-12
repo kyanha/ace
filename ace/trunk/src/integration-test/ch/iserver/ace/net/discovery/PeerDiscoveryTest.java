@@ -42,7 +42,7 @@ import ch.iserver.ace.net.discovery.IPQueryListener;
 import ch.iserver.ace.net.discovery.PeerDiscovery;
 import ch.iserver.ace.net.discovery.TXTQueryListener;
 import ch.iserver.ace.net.discovery.UserRegistration;
-import ch.iserver.ace.net.protocol.LogFilter;
+import ch.iserver.ace.net.protocol.filter.LogFilter;
 
 import com.apple.dnssd.BrowseListener;
 import com.apple.dnssd.ResolveListener;

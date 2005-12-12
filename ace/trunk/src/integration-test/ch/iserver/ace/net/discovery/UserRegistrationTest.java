@@ -33,8 +33,8 @@ import ch.iserver.ace.net.core.NetworkProperties;
 import ch.iserver.ace.net.discovery.Bonjour;
 import ch.iserver.ace.net.discovery.PeerDiscovery;
 import ch.iserver.ace.net.discovery.UserRegistration;
-import ch.iserver.ace.net.protocol.LogFilter;
-import ch.iserver.ace.net.protocol.RequestFilter;
+import ch.iserver.ace.net.protocol.filter.LogFilter;
+import ch.iserver.ace.net.protocol.filter.RequestFilter;
 
 import com.apple.dnssd.TXTRecord;
 

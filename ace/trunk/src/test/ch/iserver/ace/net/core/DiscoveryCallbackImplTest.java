@@ -8,9 +8,9 @@ import org.easymock.MockControl;
 
 import ch.iserver.ace.net.NetworkServiceCallback;
 import ch.iserver.ace.net.discovery.DiscoveryManagerFactory;
-import ch.iserver.ace.net.protocol.LogFilter;
-import ch.iserver.ace.net.protocol.RequestFilter;
 import ch.iserver.ace.net.protocol.SessionManager;
+import ch.iserver.ace.net.protocol.filter.LogFilter;
+import ch.iserver.ace.net.protocol.filter.RequestFilter;
 
 public class DiscoveryCallbackImplTest extends TestCase {
 	
