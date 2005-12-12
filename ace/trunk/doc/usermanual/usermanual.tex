@@ -328,10 +328,9 @@ This dialog appears when you want to quit the application while you have unsaved
 \item Save Selected: Save's only the selected files and quits the application. If a file hasnt allready a name you will be asked to enter a document name.
 \end{itemize}
 
-
 \begin{figure}[H]
 \begin{center}
-  \includegraphics[height=4.26in, width=6.96in]{../images/usermanual/ace_savedialog.eps}
+  \includegraphics[height=3.20in, width=5.22in]{../images/usermanual/ace_savedialog.eps}
 \caption{Save Dialog}
 \label{dialog_quit_save}
 \end{center}
@@ -346,43 +345,55 @@ This dialog appears when you want to quit the application while you have unsaved
 \label{sect_networking}
 
 % 5.1 PUBLISH / CONCEAL
-\subsection{Publish / Conceal Documents}
+\subsection{Publish Documents}
 \label{publish_conceal_documents}
+Publishing documents is one of the features making ACE to a collaborative editor. This is allways the first step to edit documents with other users. Eighter you publish a document and invite other users or you publish a document and others users are joining it themself. \\
+\\
+NOTE: only published documents can be viewed by other users!\\
+
 \begin{figure}[H]
 \begin{center}
   \includegraphics[height=1.32in, width=3.16in]{../images/usermanual/g_editor_view_publish.eps}
 \caption{Publish Document}
-\label{default}
+\label{editor_view_publish}
 \end{center}
 \end{figure}
+
+To publish a document you first need to select the document in the document view. After you selected the document, eighter click the button on the top of the editor or document view. Advanced users can use the short cut \textit{CTRL+SHIFT+P}.
 
 \begin{figure}[H]
 \begin{center}
   \includegraphics[height=1.78in, width=2.28in]{../images/usermanual/menu_collab_publish.eps}
 \caption{Publish Document (Menu)}
-\label{default}
+\label{menu_publish}
 \end{center}
 \end{figure}
+
+\subsection{Conceal Documents}
+To conceal (unpublish) a document, select it and click on the conceal-button (red marked in the figure below). After a document is conceal, all participants that have been writing in the document receiving a notification that the session is over. They have a local copy of the document in their editor.
 
 \begin{figure}[H]
 \begin{center}
   \includegraphics[height=1.32in, width=3.16in]{../images/usermanual/g_editor_view_conceal.eps}
 \caption{Conceal Document}
-\label{default}
+\label{editor_view_conceal}
 \end{center}
 \end{figure}
+
+You can use the action in the \textit{collaboration menu} to conceal the document or advanced users can use the short cut \textit{CTRL+SHIFT+C}.
 
 \begin{figure}[H]
 \begin{center}
   \includegraphics[height=1.78in, width=2.28in]{../images/usermanual/menu_collab_conceal.eps}
 \caption{Conceal Document (Menu)}
-\label{default}
+\label{menu_conceal}
 \end{center}
 \end{figure}
 
 % 5.2 INVITE / KICK
-\subsection{Invite / Kick Users}
+\subsection{Invite Users}
 \label{invite_kick_users}
+After you published a document (see section \ref{publish_conceal_documents}) you can invite users. Select the document from the \textit{document view} and the user you want to invite from the \textit{user view}. Eighter click the invite-button on the top border of the user view:
 
 \begin{figure}[H]
 \begin{center}
@@ -392,6 +403,8 @@ This dialog appears when you want to quit the application while you have unsaved
 \end{center}
 \end{figure}
 
+or use the action from the \textit{collaboration menu}:
+
 \begin{figure}[H]
 \begin{center}
   \includegraphics[height=1.78in, width=2.28in]{../images/usermanual/menu_collab_invite.eps}
@@ -400,6 +413,9 @@ This dialog appears when you want to quit the application while you have unsaved
 \end{center}
 \end{figure}
 
+\subsection{Kick Users}
+The converse operation of inviting is kicking. This function has been added to "remove" bothering participants. Only the publisher of a document can kick users. NOTE: after you kicked a participant, ACE automatically puts him to a blacklist what means that he cant join (see section \ref{join_leave_documents} for more details about joining) the same document again.
+
 \begin{figure}[H]
 \begin{center}
   \includegraphics[height=0.78in, width=1.28in]{../images/usermanual/g_pview_kick.eps}
@@ -407,6 +423,8 @@ This dialog appears when you want to quit the application while you have unsaved
 \label{default}
 \end{center}
 \end{figure}
+
+Select the published document, the users you want to kick and press the \textit{kick-button} on the top of the \textit{participant view} or use the "Kick Participant" entry from the \textit{collaboration menu}.
 
 \begin{figure}[H]
 \begin{center}
@@ -417,8 +435,10 @@ This dialog appears when you want to quit the application while you have unsaved
 \end{figure}
 
 % 5.3 JOIN / LEAVE
-\subsection{Join / Leave Network Documents}
+\subsection{Join Network Documents}
 \label{join_leave_documents}
+To participate editing in other users documents you need to join such a document. Basically you can join all the documents that are listed in the \textit{browse view}. Select the corresponding document and press the join-button, click on the "Join Session" in the menu or simple double click on it.
+
 \begin{figure}[H]
 \begin{center}
   \includegraphics[height=1.56in, width=2.56in]{../images/usermanual/g_bview_join.eps}
@@ -435,6 +455,10 @@ This dialog appears when you want to quit the application while you have unsaved
 \end{center}
 \end{figure}
 
+After you started this joining process the publisher (owner) receives a notification and he can "accept" or "deny" your join request. If he accept's your join request you become a participant and you can start writing your text into the document. See section \ref{collaborative_editing} for more details about collaborative editing.
+
+\subsection{Leave Network Documents}
+If you dont want to participate longer do a document, you can leave it. Select the document in the \textit{document view} and press the leave button or use the menu entry "Leave Session". You can also close the document which automatically leaves the session too.
 \begin{figure}[H]
 \begin{center}
   \includegraphics[height=1.56in, width=2.56in]{../images/usermanual/g_dview_leave.eps}
@@ -454,43 +478,62 @@ This dialog appears when you want to quit the application while you have unsaved
 
 % 5.4 DISCOVER
 \subsection{Discover Users}
+ACE automatically detects all other users in the same network (subnet). If you want to invite peoples from other networks (e.g. from another company or over the internet) you must explicit discover them. Click in the "Discover User" entry in the collaboration menu. This will open you the dialog shown in figure \ref{discover_dialog}.
 
 \begin{figure}[H]
 \begin{center}
   \includegraphics[height=1.78in, width=2.28in]{../images/usermanual/menu_collab_discover.eps}
 \caption{Discover User Menu}
-\label{default}
 \end{center}
 \end{figure}
+
+Enter the IP address of the user you want to discover and press ok. Your actual IP address is shown at the bottom of ACE all the time. The other user needs to give you his IP and you can discover him then.
 
 \begin{figure}[H]
 \begin{center}
   \includegraphics[height=1.08in, width=2.98in]{../images/usermanual/ace_discover.eps}
 \caption{Discover User Dialog}
-\label{default}
+\label{discover_dialog}
 \end{center}
 \end{figure}
+
+If you enter an invalid IP address the following dialog informs you:
 
 \begin{figure}[H]
 \begin{center}
   \includegraphics[height=1.08in, width=3.38in]{../images/usermanual/discover_failed_inv_ip.eps}
 \caption{Discover Failed Dialog}
-\label{default}
 \end{center}
 \end{figure}
+
+When the IP you entered was valid but there was no ACE running then you receive the following error message:
 
 \begin{figure}[H]
 \begin{center}
   \includegraphics[height= 1.08in, width=2.68in]{../images/usermanual/discover_failed_no_ace.eps}
 \caption{Discover Failed Dialog}
-\label{default}
 \end{center}
 \end{figure}
 
+If the discovering was successful the discovered user will be added to the \textit{user view} and you can handle with him.
 
+% COLLAB_EDITING
+\subsection{Collaborative Editing}
+\label{collaborative_editing}
 
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[height=1.25in, width=2.56in]{../images/usermanual/editor_collab_3users.eps}
+\caption{Three users in the same document}
+\end{center}
+\end{figure}
 
-
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[height=1.29in, width=2.57in]{../images/usermanual/editor_collab_user_left.eps}
+\caption{AFter one user left the document}
+\end{center}
+\end{figure}
 
 
 \end{document}
