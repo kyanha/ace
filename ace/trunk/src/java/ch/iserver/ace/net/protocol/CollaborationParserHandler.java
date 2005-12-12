@@ -204,8 +204,6 @@ public class CollaborationParserHandler extends ParserHandler {
 				isTextEncoded = true; 
 			}
 			buffer = new StringBuffer();
-		} else if (qName.equals(TAG_ORIGINAL)) {
-			operationStack.push(currOperation);
 		} else if (qName.equals(TAG_TIMESTAMP)) {
 			buffer = new StringBuffer();
 		} else if (qName.equals(CARET)) {
@@ -266,18 +264,6 @@ public class CollaborationParserHandler extends ParserHandler {
 				((DeleteOperation)currOperation).setText(data);
 			}
 			isTextEncoded = false;
-		
-		// TODO: still needed?
-		} else if (qName.equals(TAG_ORIGINAL)) {
-			if (!operationStack.isEmpty()) { //obsolete: && totalOriginalCount > 1
-				Operation operation = (Operation) operationStack.pop();
-				//totalOriginalCount > 0 means that original operations are available for the currOperation
-				if (totalOriginalCount > 0) {
-//					operation.setOriginalOperation(currOperation);
-					currOperation = operation;
-				}
-				totalOriginalCount++;
-			}
 		} else if (qName.equals(TAG_TIMESTAMP)) {
 			StringTokenizer tokens = new StringTokenizer(buffer.toString());
 			int[] components = new int[tokens.countTokens()];

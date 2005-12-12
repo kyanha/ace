@@ -90,7 +90,6 @@ public interface ProtocolConstants {
 	public static final String TAG_DELETE = "delete";
 	public static final String TAG_SPLIT = "split";
 	public static final String TAG_NOOP = "noop";
-	public static final String TAG_ORIGINAL = "original";
 	public static final String TAG_TIMESTAMP = "timestamp";
 	public static final String TAG_CARETUPDATE = "caretUpdate";
 	public static final String TAG_PARTICIPANT_JOINED = "pJoined";
