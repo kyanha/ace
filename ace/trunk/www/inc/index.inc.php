@@ -9,7 +9,14 @@ as a page that talks about the technical <a href="index.php?page=3">Background</
 
 <h3>News</h3>
 
-<p><b>Milestone 2 Released</b> <span class="date">08.12.2005</span><p>
+<p><b>Milestone 3 Released</b> <span class="date">12.12.2005</span></p>
+<p>Today is the release of ACE Milestone 3. This is the last release
+before the end of our diploma project. Check it out and report any
+errors you find. You can download it from the
+<a href="index.php?page=8">download page</a>.
+</p>
+
+<p><b>Milestone 2 Released</b> <span class="date">08.12.2005</span></p>
 <p>Finally, Milestone 2 is released. It can be downloaded from the
 <a href="index.php?page=8">download page</a>. Milestone 2 has some open
 issues in the network layer, most notably sessions fail from time to

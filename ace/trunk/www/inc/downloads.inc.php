@@ -10,14 +10,14 @@ local machine:</p>
 
 <h3>Mac OS X</h3>
 <p>Mac OS X users do not have to install any other software beside ACE itself. To download the current
-version of ACE for Mac OS X click <a href="download.php?id=4">here</a>.</p>
+version of ACE for Mac OS X click <a href="download.php?id=7">here</a>.</p>
 
 <h3>Windows</h3>
 <p>Windows users have to install a <a href="http://java.sun.com/j2se/1.5.0/download.jsp">Java Runtime Environment (JRE) - 1.4.2 or higher</a>. Further, 
 <a href="http://www.apple.com/downloads/macosx/apple/bonjourforwindows.html">Bonjour for Windows</a> has to
 be downloaded. If you have iTunes on your computer, Bonjour is already installed. The ACE installer
 warns you, if Bonjour is not installed.</p>
-<p>The current version of ACE for Windows can be downloaded <a href="download.php?id=3">here</a>.</p>
+<p>The current version of ACE for Windows can be downloaded <a href="download.php?id=6">here</a>.</p>
 
 <h3>Other Operating Systems</h3>
 <p>Chances are high that if there is a <a href="http://java.sun.com/j2se/1.5.0/download.jsp">Java Runtime Environment</a> for your operating system, ACE will work. Unfortunately, there is no installer for
@@ -41,13 +41,27 @@ with your operating system. Check the Makefile in <code>mDNSPosix/Makefile</code
  <li>as root, copy the file <code>libjdns_sd.so</code> from <code>build/prod</code> to somewhere into the Java library path (system property java.library.path)</li>
 </ul>
 
-<p>Next you can download the <a href="download.php?id=5">current version of ACE</a> for other platforms. To run ACE, type 
+<p>Next you can download the <a href="download.php?id=8">current version of ACE</a> for other platforms. To run ACE, type 
 <code>ant run</code> in the top-level directory. Note: you need <a href="http://ant.apache.org/">Apache Ant</a> installed in that case.</p>
 
 
 <h3>Milestone 2</h3>
+<p>The release notes can be found <a href="http://ace.iserver.ch:81/repos/ace/ace/tags/ACE_M3/release-notes.txt">here</a>.</p>
+<p>Milestone 3 fixed some of the network related issues mentioned in
+Milestone 2. However, you may still encounter some session failures. They
+are related to the networking library we are using.</p>
+
+<ul>
+ <li><a href="download.php?id=6">Windows Installer</a></li>
+ <li><a href="download.php?id=7">OS X Disk Image</a></li>
+ <li><a href="download.php?id=8">Other Platforms</a></li>
+</ul>
+
+
+
+<h3>Milestone 2</h3>
 <p>The release notes can be found <a href="http://ace.iserver.ch:81/repos/ace/ace/tags/ACE_M2/release-notes.txt">here</a>.</p>
-<p>Mileston 2 has some known issues related to network communication. It
+<p>Milestone 2 has some known issues related to network communication. It
 can happen that a session fails in some cases. We are trying to fix these
 issues as soon as possible.</p>
 

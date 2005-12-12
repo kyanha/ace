@@ -1,14 +1,21 @@
+Milestone 3 (12.12.2005)
+
+[Bug Fixes]
+
+ * improved overall stability
+
+
 Milestone 2 (08.12.2005)
 
 [New Features]
 
-* join published documents
-* leave joined sessions
-* kick participant
-* invitations
-* collaborative editing
-* awareness information (caret and selection)
-* explicit user discovery
+ * join published documents
+ * leave joined sessions
+ * kick participant
+ * invitations
+ * collaborative editing
+ * awareness information (caret and selection)
+ * explicit user discovery
 
 
 Milestone 1 (21.11.2005)
