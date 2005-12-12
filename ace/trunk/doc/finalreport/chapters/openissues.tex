@@ -1,14 +1,14 @@
 \chapter{Open Issues}
 \label{chapter:openissues}
 
-In this chapter we list some open issues that are should be improved.
-
+In this chapter we list some open issues and improvements.
 
 
 \section{Locking Transformation Engine}
 The current implementation of the application layer uses the write lock
-of the \texttt{Abstract\-Document} of Swing text package to implement
-the session lock. Although this works flawlessly, it has some performance
+provided by the \texttt{Abstract\-Document} of the Swing 
+text package to implement the session lock (see section \ref{}). 
+Although this works flawlessly, it has some performance
 implications. Receiving requests from the network layer passes through
 the following steps:
 
@@ -37,11 +37,11 @@ beginning.
 However, this has the disadvantage that while transforming
 the request (which could take some significant time), the AWT thread is
 not allowed to render the document. Rendering the document is a 
-frequently executed operation, because whenever the caret blinks, a
+frequently executed operation. For example whenever the caret blinks, a
 repaint has to occur to repaint the damaged region.
 
-Unfortunately, it is not possible to simply subclass a \texttt{Document}
-implementation and overwrite the lock related methods, because these
+It is not possible to simply subclass a \texttt{Document}
+implementation and overwrite the lock related methods because these
 methods (\texttt{read\-Lock}, \texttt{read\-Unlock}, \texttt{write\-Lock},
 and \texttt{write\-Unlock}) are all declared final.
 
@@ -50,8 +50,8 @@ and \texttt{write\-Unlock}) are all declared final.
 The only viable solution seems to be to completely reimplement the 
 \texttt{Document} interface. But the problem is not solved alone with
 reimplementing the \texttt{Document} interface. In lots of places in
-the Swing text package, the source code makes instanceof checks for the
-\texttt{Abstract\-Document} class (especially to support locking and
+the Swing text package instanceof checks for the
+\texttt{Abstract\-Document} class are made (especially to support locking and
 the \texttt{replace} method). So quite a lot of other Swing classes would
 have to be partially reimplemented. Definitely not a small task.
 
@@ -63,24 +63,30 @@ the performance could be improved.
 
 \section{Dependency of Collaboration Layer on Swing}
 The collaboration layer makes use of an \texttt{AbstractDocument} subclass to
-keep the server copy of the document up-to-date. This makes the collaboration
+keep the server copy of the document up-to-date, which introduces a
+dependency of the collaboration
 layer dependent on Swing. This may not seem a big issue. However, if 
 somebody would want to write an application layer based on SWT (windowing
 toolkit used by Eclipse), for instance an Eclipse plugin, this would
 cause problems. On some platforms it is not possible to have both Swing (AWT)
 and SWT alongside in the same application. Therefore it is not desirable
-to have a dependency to Swing in the collaboration layer, because it limits
+to have a dependency on Swing in the collaboration layer, because it limits
 the applicability of it.
 
 
 \subsection{Solution}
 Implementing a custom document model for the server copy of the document
-would be a fairly involved task. The efficient implementation of the
+would be a fairly involved task. An efficient implementation of the
 document storage would have to be implemented, similar to the implementation
-of the \texttt{Content} interface of the Swing package. However, it would
-broaden the applicability of the collaboration layer.
+of the \texttt{Content} interface of the Swing package. The implementation
+must also support keeping track of the document structure. 
+This implementation effort would be more than compensated by the 
+increased applicability of the collaboration layer.
 
 
 
-\section{Sporadic Crashes Caused by Bonjour for Java}
+\section{Crashes Caused by Bonjour for Java}
 ...
+
+
+

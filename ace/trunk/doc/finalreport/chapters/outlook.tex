@@ -8,37 +8,34 @@ what could be improved.
 
 \section{Hosting Documents on a Server}
 Currently, if a user publishes a document, the server logic is hosted
-in the same Java Virtual Machine as the client application. We considered
+in the same Java Virtual Machine (JVM) as the client application. We considered
 this the most natural architecture. However, in some cases it might be
 desirable to have a dedicated server machine that can host the server
 logic instead of the publisher.
 
 The server logic itself does not make any assumptions about the location
-of the publisher. The publisher may be inside the same JVM or he may be
+of the publisher. The publisher code may run inside the same JVM or it may run
 on a different computer. It does not make any difference to the server logic.
 Therefore, it would be relatively straightforward to create a standalone
 document hoster, a server application that hosts published documents.
 
-This would require some changes to different APIs. The following high-level
+This would require some changes to the APIs. The following high-level
 changes would be needed:
 
 \begin{itemize}
- \item make \texttt{PublisherPort} and \texttt{PublisherConnection} part of
-       the public API between the network and the collaboration layer
- \item add interfaces that allow the network layer to publish a document
-       on a host
- \item enhance the \texttt{publish} method of the \texttt{CollaborationService}
-       to allow the application to specify a target document host (defaults to
-       the local machine)
+ \item make \texttt{PublisherPort} and \texttt{PublisherConnection} part of the public API between the network and the collaboration layer
+ \item add interfaces that allow the network layer to publish a document on a host (interface between collaboration and network layer)
+ \item provide the application layer a way to specify where to publish the document (interface between application and collaboration layer)
 \end{itemize}
 
 
 
 \section{Network Simulator}
-A simulated network layer would simplify testing both the collaboration as 
+A simulated network layer would simplify testing of both the collaboration as 
 well as the network layer. Therefore, creating a simulated network layer
-will be one of the first things we will do. Possible features for such
-a simulation include:
+will be one of the first things we will do. A simulated network layer
+consists of a custom implementation of the network layer interfaces. Possible 
+features for such a simulated network layer include:
 
 \begin{itemize}
  \item simulate connection failures
@@ -47,8 +44,8 @@ a simulation include:
 
 The idea is to have the possibility to start several instances of the
 application inside the same JVM. These instances represent distinct users.
-By switching between these users, the application could be tested to
-some extent.
+By switching between these users, the application and collaboration layer
+could be tested without accessing the network.
 
 
 
