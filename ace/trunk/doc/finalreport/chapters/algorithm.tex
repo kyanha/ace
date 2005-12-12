@@ -606,9 +606,8 @@ The origin position is the original position of an operation. It is set by
 the creator of the operation and then never modified although the operation
 itself (and therfore its position) are transformed. The origin position 
 helps to ensure that the user's intention are not violated in some rare
-cases.
-
-% TODO: ref to Report Implementation Algorithm for a detailed description
+cases. (see \emph{Report Implementation Algorithm} section 2.4.2 for 
+examples where the use of the original position is an improvement)
 
 
 \subsubsection{Insert/Insert}
@@ -643,13 +642,9 @@ cases.
     if p(a) <= p(b)
       return clone(a)
     else if p(a) > (p(b) + len(b))
-      o = ins(p(a) - len(b), text(a), o(a))
-      o.original = o1
-      return o
+      return ins(p(a) - len(b), text(a), o(a))
     else 
-      o = ins(p(b), text(a), o(a))
-      o.original = o1
-      return o
+      return ins(p(b), text(a), o(a))
     end
   end
 \end{verbatim}}
@@ -668,16 +663,12 @@ cases.
     if p(b) >= p(a) + len(a)))
       return clone(o1)
     else if p(a) >= p(b)
-      o = del(p(a) + len(b), text(a))
-      o.original = a
-      return o
+      return del(p(a) + len(b), text(a))
     else
       o1 = del(p(a), text(a).substring(0, p(b) - p(a)))
       o2 = del(p(a) + len(b) + p(b) - p(a), 
                 text(a).substring(p(b) - p(a), len(a)))
-      o = split(o1, o2)
-      o.original = a;
-      return o
+      return split(o1, o2)
     end
   end
 \end{verbatim}}
@@ -696,28 +687,18 @@ cases.
     if p(b) >= p(a) + len(a))
       return clone(o1)
     else if p(a) >= p(b) + len(b))
-      o = del(p(a) - len(b), text(a))
-      o.original = a
-      return o
+      return del(p(a) - len(b), text(a))
     else
       if p(b) <= p(a) && p(a) + len(a) <= p(b) + len(b))
-        o = noop()
-        o.original = a
-        return o
+        return noop()
       else if p(b) <= p(a) && p(a) + len(a) > p(b) + len(b)
-        o = del(p(b), text(a).substring(p(b) + len(b) - p(a), len(a)))
-        o.original = a
-        return o
+        return del(p(b), text(a).substring(p(b) + len(b) - p(a), len(a)))
       else if p(b) > p(a) && p(b) + len(b) >= p(a) + len(a)
-        o = del(p(a), text(a).substring(0, p(b) - p(a)))
-        o.original = a
-        return o
+        return del(p(a), text(a).substring(0, p(b) - p(a)))
       else
-        o = del(p(a), 
+        return del(p(a), 
                 text(a).substring(0, p(b) - p(a)) 
                 + text(a).substring(p(b) + len(b) - p(a), length(a)))
-        o.original = a
-        return o
       end
     end
   end
