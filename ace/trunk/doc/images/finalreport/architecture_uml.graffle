@@ -19,7 +19,7 @@
 	<key>MagnetsVisible</key>
 	<string>NO</string>
 	<key>ModificationDate</key>
-	<string>2005-12-12 11:08:19 +0100</string>
+	<string>2005-12-12 13:07:50 +0100</string>
 	<key>Modifier</key>
 	<string>Simon</string>
 	<key>PageBreaks</key>
@@ -104,7 +104,7 @@
 	CQkJCTwvYXJyYXk+CgkJCQkJPGtleT5jb20uYXBwbGUucHJpbnQudGlja2V0LmNsaWVu
 	dDwva2V5PgoJCQkJCTxzdHJpbmc+Y29tLmFwcGxlLnByaW50aW5nbWFuYWdlcjwvc3Ry
 	aW5nPgoJCQkJCTxrZXk+Y29tLmFwcGxlLnByaW50LnRpY2tldC5tb2REYXRlPC9rZXk+
-	CgkJCQkJPGRhdGU+MjAwNS0xMi0xMlQwOTo0MTo0OFo8L2RhdGU+CgkJCQkJPGtleT5j
+	CgkJCQkJPGRhdGU+MjAwNS0xMi0xMlQxMTo1NToyN1o8L2RhdGU+CgkJCQkJPGtleT5j
 	b20uYXBwbGUucHJpbnQudGlja2V0LnN0YXRlRmxhZzwva2V5PgoJCQkJCTxpbnRlZ2Vy
 	PjA8L2ludGVnZXI+CgkJCQk8L2RpY3Q+CgkJCTwvYXJyYXk+CgkJPC9kaWN0PgoJCTxr
 	ZXk+Y29tLmFwcGxlLnByaW50LlBhZ2VGb3JtYXQuUE1BZGp1c3RlZFBhcGVyUmVjdDwv
@@ -118,7 +118,7 @@
 	CQkJCTxrZXk+Y29tLmFwcGxlLnByaW50LnRpY2tldC5jbGllbnQ8L2tleT4KCQkJCQk8
 	c3RyaW5nPmNvbS5hcHBsZS5wcmludGluZ21hbmFnZXI8L3N0cmluZz4KCQkJCQk8a2V5
 	PmNvbS5hcHBsZS5wcmludC50aWNrZXQubW9kRGF0ZTwva2V5PgoJCQkJCTxkYXRlPjIw
-	MDUtMTItMTJUMDk6NDE6NDhaPC9kYXRlPgoJCQkJCTxrZXk+Y29tLmFwcGxlLnByaW50
+	MDUtMTItMTJUMTE6NTU6MjdaPC9kYXRlPgoJCQkJCTxrZXk+Y29tLmFwcGxlLnByaW50
 	LnRpY2tldC5zdGF0ZUZsYWc8L2tleT4KCQkJCQk8aW50ZWdlcj4wPC9pbnRlZ2VyPgoJ
 	CQkJPC9kaWN0PgoJCQk8L2FycmF5PgoJCTwvZGljdD4KCQk8a2V5PmNvbS5hcHBsZS5w
 	cmludC5QYXBlckluZm8uUE1QYXBlck5hbWU8L2tleT4KCQk8ZGljdD4KCQkJPGtleT5j
@@ -209,7 +209,7 @@
 			<array>
 				<dict>
 					<key>Bounds</key>
-					<string>{{258, 567.5}, {281, 76}}</string>
+					<string>{{258, 567.5}, {197, 76}}</string>
 					<key>Class</key>
 					<string>MultiTextGraphic</string>
 					<key>FitText</key>
@@ -217,7 +217,7 @@
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>20</integer>
+					<integer>8</integer>
 					<key>ListOrientation</key>
 					<string>Vertical</string>
 					<key>Style</key>
@@ -278,7 +278,7 @@ PortableDocument}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>19</integer>
+					<integer>7</integer>
 					<key>ListOrientation</key>
 					<string>Vertical</string>
 					<key>Style</key>
@@ -336,7 +336,7 @@ ServiceFailureHandler}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>18</integer>
+					<integer>6</integer>
 					<key>ListOrientation</key>
 					<string>Vertical</string>
 					<key>Style</key>
@@ -395,7 +395,7 @@ Participant}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>17</integer>
+					<integer>5</integer>
 					<key>ListOrientation</key>
 					<string>Vertical</string>
 					<key>Style</key>
@@ -455,7 +455,7 @@ JoinRequest}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>16</integer>
+					<integer>4</integer>
 					<key>ListOrientation</key>
 					<string>Vertical</string>
 					<key>Style</key>
@@ -516,7 +516,7 @@ Invitation}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>15</integer>
+					<integer>3</integer>
 					<key>ListOrientation</key>
 					<string>Vertical</string>
 					<key>Style</key>
@@ -574,7 +574,7 @@ InvitationCallback}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>14</integer>
+					<integer>2</integer>
 					<key>ListOrientation</key>
 					<string>Vertical</string>
 					<key>Style</key>
@@ -633,7 +633,7 @@ JoinCallback}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>13</integer>
+					<integer>1</integer>
 					<key>ListOrientation</key>
 					<string>Vertical</string>
 					<key>Style</key>
@@ -752,7 +752,7 @@ JoinCallback}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>10</integer>
+					<integer>6</integer>
 					<key>ListOrientation</key>
 					<string>Vertical</string>
 					<key>Style</key>
@@ -814,7 +814,7 @@ RemoteDocument}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>9</integer>
+					<integer>5</integer>
 					<key>ListOrientation</key>
 					<string>Vertical</string>
 					<key>Style</key>
@@ -875,7 +875,7 @@ RemoteUser}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>8</integer>
+					<integer>4</integer>
 					<key>ListOrientation</key>
 					<string>Vertical</string>
 					<key>Style</key>
@@ -933,7 +933,7 @@ RemoteUser}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>7</integer>
+					<integer>3</integer>
 					<key>ListOrientation</key>
 					<string>Vertical</string>
 					<key>Style</key>
@@ -991,7 +991,7 @@ DiscoveryCallback}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>6</integer>
+					<integer>2</integer>
 					<key>ListOrientation</key>
 					<string>Vertical</string>
 					<key>Style</key>
@@ -1050,7 +1050,7 @@ DocumentListener}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>5</integer>
+					<integer>1</integer>
 					<key>ListOrientation</key>
 					<string>Vertical</string>
 					<key>Style</key>
@@ -1153,10 +1153,10 @@ UserListener}</string>
 					<key>Head</key>
 					<dict>
 						<key>ID</key>
-						<integer>13</integer>
+						<integer>5</integer>
 					</dict>
 					<key>ID</key>
-					<integer>16</integer>
+					<integer>8</integer>
 					<key>Points</key>
 					<array>
 						<string>{327.869, 197}</string>
@@ -1177,7 +1177,7 @@ UserListener}</string>
 					<key>Tail</key>
 					<dict>
 						<key>ID</key>
-						<integer>14</integer>
+						<integer>6</integer>
 					</dict>
 				</dict>
 				<dict>
@@ -1186,10 +1186,10 @@ UserListener}</string>
 					<key>Head</key>
 					<dict>
 						<key>ID</key>
-						<integer>13</integer>
+						<integer>5</integer>
 					</dict>
 					<key>ID</key>
-					<integer>15</integer>
+					<integer>7</integer>
 					<key>Points</key>
 					<array>
 						<string>{161.646, 197}</string>
@@ -1210,7 +1210,7 @@ UserListener}</string>
 					<key>Tail</key>
 					<dict>
 						<key>ID</key>
-						<integer>12</integer>
+						<integer>4</integer>
 					</dict>
 				</dict>
 				<dict>
@@ -1219,7 +1219,7 @@ UserListener}</string>
 					<key>Class</key>
 					<string>MultiTextGraphic</string>
 					<key>ID</key>
-					<integer>14</integer>
+					<integer>6</integer>
 					<key>ListOrientation</key>
 					<string>Vertical</string>
 					<key>Style</key>
@@ -1279,7 +1279,7 @@ ParticipantSessionCallback}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>13</integer>
+					<integer>5</integer>
 					<key>ListOrientation</key>
 					<string>Vertical</string>
 					<key>Style</key>
@@ -1339,7 +1339,7 @@ SessionCallback}</string>
 					<key>Class</key>
 					<string>MultiTextGraphic</string>
 					<key>ID</key>
-					<integer>12</integer>
+					<integer>4</integer>
 					<key>ListOrientation</key>
 					<string>Vertical</string>
 					<key>Style</key>
@@ -1393,10 +1393,10 @@ PublishedSessionCallback}</string>
 					<key>Head</key>
 					<dict>
 						<key>ID</key>
-						<integer>9</integer>
+						<integer>1</integer>
 					</dict>
 					<key>ID</key>
-					<integer>11</integer>
+					<integer>3</integer>
 					<key>Points</key>
 					<array>
 						<string>{253.75, 498}</string>
@@ -1417,7 +1417,7 @@ PublishedSessionCallback}</string>
 					<key>Tail</key>
 					<dict>
 						<key>ID</key>
-						<integer>10</integer>
+						<integer>2</integer>
 					</dict>
 				</dict>
 				<dict>
@@ -1430,7 +1430,7 @@ PublishedSessionCallback}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>10</integer>
+					<integer>2</integer>
 					<key>ListOrientation</key>
 					<string>Vertical</string>
 					<key>Style</key>
@@ -1490,7 +1490,7 @@ PublishedSessionCallback}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>9</integer>
+					<integer>1</integer>
 					<key>ListOrientation</key>
 					<string>Vertical</string>
 					<key>Style</key>
@@ -1591,7 +1591,7 @@ PublishedSessionCallback}</string>
 	<key>WindowInfo</key>
 	<dict>
 		<key>CurrentSheet</key>
-		<string>1</string>
+		<string>0</string>
 		<key>Frame</key>
 		<string>{{220, 4}, {591, 742}}</string>
 		<key>ShowRuler</key>
@@ -1599,7 +1599,7 @@ PublishedSessionCallback}</string>
 		<key>ShowStatusBar</key>
 		<true/>
 		<key>VisibleRegion</key>
-		<string>{{0, 0}, {576, 644}}</string>
+		<string>{{0, 90}, {576, 644}}</string>
 		<key>Zoom</key>
 		<string>1</string>
 	</dict>

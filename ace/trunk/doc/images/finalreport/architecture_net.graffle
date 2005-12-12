@@ -19,7 +19,7 @@
 	<key>MagnetsVisible</key>
 	<string>NO</string>
 	<key>ModificationDate</key>
-	<string>2005-12-06 15:58:34 +0100</string>
+	<string>2005-12-12 14:11:09 +0100</string>
 	<key>Modifier</key>
 	<string>Simon</string>
 	<key>PageBreaks</key>
@@ -104,7 +104,7 @@
 	CQkJCTwvYXJyYXk+CgkJCQkJPGtleT5jb20uYXBwbGUucHJpbnQudGlja2V0LmNsaWVu
 	dDwva2V5PgoJCQkJCTxzdHJpbmc+Y29tLmFwcGxlLnByaW50aW5nbWFuYWdlcjwvc3Ry
 	aW5nPgoJCQkJCTxrZXk+Y29tLmFwcGxlLnByaW50LnRpY2tldC5tb2REYXRlPC9rZXk+
-	CgkJCQkJPGRhdGU+MjAwNS0xMi0wNlQxNDowMjoyM1o8L2RhdGU+CgkJCQkJPGtleT5j
+	CgkJCQkJPGRhdGU+MjAwNS0xMi0xMlQxMjowODowMFo8L2RhdGU+CgkJCQkJPGtleT5j
 	b20uYXBwbGUucHJpbnQudGlja2V0LnN0YXRlRmxhZzwva2V5PgoJCQkJCTxpbnRlZ2Vy
 	PjA8L2ludGVnZXI+CgkJCQk8L2RpY3Q+CgkJCTwvYXJyYXk+CgkJPC9kaWN0PgoJCTxr
 	ZXk+Y29tLmFwcGxlLnByaW50LlBhZ2VGb3JtYXQuUE1BZGp1c3RlZFBhcGVyUmVjdDwv
@@ -118,7 +118,7 @@
 	CQkJCTxrZXk+Y29tLmFwcGxlLnByaW50LnRpY2tldC5jbGllbnQ8L2tleT4KCQkJCQk8
 	c3RyaW5nPmNvbS5hcHBsZS5wcmludGluZ21hbmFnZXI8L3N0cmluZz4KCQkJCQk8a2V5
 	PmNvbS5hcHBsZS5wcmludC50aWNrZXQubW9kRGF0ZTwva2V5PgoJCQkJCTxkYXRlPjIw
-	MDUtMTItMDZUMTQ6MDI6MjNaPC9kYXRlPgoJCQkJCTxrZXk+Y29tLmFwcGxlLnByaW50
+	MDUtMTItMTJUMTI6MDg6MDBaPC9kYXRlPgoJCQkJCTxrZXk+Y29tLmFwcGxlLnByaW50
 	LnRpY2tldC5zdGF0ZUZsYWc8L2tleT4KCQkJCQk8aW50ZWdlcj4wPC9pbnRlZ2VyPgoJ
 	CQkJPC9kaWN0PgoJCQk8L2FycmF5PgoJCTwvZGljdD4KCQk8a2V5PmNvbS5hcHBsZS5w
 	cmludC5QYXBlckluZm8uUE1QYXBlck5hbWU8L2tleT4KCQk8ZGljdD4KCQkJPGtleT5j
@@ -217,7 +217,7 @@
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>35</integer>
+					<integer>18</integer>
 					<key>ListOrientation</key>
 					<string>Vertical</string>
 					<key>Style</key>
@@ -228,6 +228,11 @@
 							<real>304</real>
 							<key>GradientCenter</key>
 							<string>{-0.294118, -0.264706}</string>
+						</dict>
+						<key>shadow</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
 						</dict>
 					</dict>
 					<key>TextList</key>
@@ -272,7 +277,7 @@ JoinNetworkCallback}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>34</integer>
+					<integer>17</integer>
 					<key>ListOrientation</key>
 					<string>Vertical</string>
 					<key>Style</key>
@@ -283,6 +288,11 @@ JoinNetworkCallback}</string>
 							<real>304</real>
 							<key>GradientCenter</key>
 							<string>{-0.294118, -0.264706}</string>
+						</dict>
+						<key>shadow</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
 						</dict>
 					</dict>
 					<key>TextList</key>
@@ -324,7 +334,7 @@ InvitationProxy}</string>
 					<key>Class</key>
 					<string>MultiTextGraphic</string>
 					<key>ID</key>
-					<integer>33</integer>
+					<integer>16</integer>
 					<key>ListOrientation</key>
 					<string>Vertical</string>
 					<key>Style</key>
@@ -335,6 +345,11 @@ InvitationProxy}</string>
 							<real>304</real>
 							<key>GradientCenter</key>
 							<string>{-0.294118, -0.264706}</string>
+						</dict>
+						<key>shadow</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
 						</dict>
 					</dict>
 					<key>TextList</key>
@@ -371,11 +386,15 @@ InvitationPort}</string>
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{117.5, 234}, {194.5, 46}}</string>
+					<string>{{117.5, 234}, {194.5, 40}}</string>
 					<key>Class</key>
 					<string>MultiTextGraphic</string>
+					<key>FitText</key>
+					<string>Vertical</string>
+					<key>Flow</key>
+					<string>Resize</string>
 					<key>ID</key>
-					<integer>32</integer>
+					<integer>15</integer>
 					<key>ListOrientation</key>
 					<string>Vertical</string>
 					<key>Style</key>
@@ -386,6 +405,11 @@ InvitationPort}</string>
 							<real>304</real>
 							<key>GradientCenter</key>
 							<string>{-0.294118, -0.264706}</string>
+						</dict>
+						<key>shadow</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
 						</dict>
 					</dict>
 					<key>TextList</key>
@@ -420,11 +444,15 @@ DocumentServerLogic}</string>
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{105, 131}, {225, 68}}</string>
+					<string>{{105, 131}, {225, 64}}</string>
 					<key>Class</key>
 					<string>MultiTextGraphic</string>
+					<key>FitText</key>
+					<string>Vertical</string>
+					<key>Flow</key>
+					<string>Resize</string>
 					<key>ID</key>
-					<integer>31</integer>
+					<integer>14</integer>
 					<key>ListOrientation</key>
 					<string>Vertical</string>
 					<key>Style</key>
@@ -435,6 +463,11 @@ DocumentServerLogic}</string>
 							<real>304</real>
 							<key>GradientCenter</key>
 							<string>{-0.294118, -0.264706}</string>
+						</dict>
+						<key>shadow</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
 						</dict>
 					</dict>
 					<key>TextList</key>
@@ -471,11 +504,15 @@ DocumentServer}</string>
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{105, 60}, {212, 59}}</string>
+					<string>{{105, 60}, {212, 52}}</string>
 					<key>Class</key>
 					<string>MultiTextGraphic</string>
+					<key>FitText</key>
+					<string>Vertical</string>
+					<key>Flow</key>
+					<string>Resize</string>
 					<key>ID</key>
-					<integer>30</integer>
+					<integer>13</integer>
 					<key>ListOrientation</key>
 					<string>Vertical</string>
 					<key>Style</key>
@@ -486,6 +523,11 @@ DocumentServer}</string>
 							<real>304</real>
 							<key>GradientCenter</key>
 							<string>{-0.294118, -0.264706}</string>
+						</dict>
+						<key>shadow</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
 						</dict>
 					</dict>
 					<key>TextList</key>
@@ -540,7 +582,10 @@ DiscoveryNetworkCallback}</string>
 				</dict>
 			</array>
 			<key>LayoutInfo</key>
-			<dict/>
+			<dict>
+				<key>ChildOrdering</key>
+				<integer>0</integer>
+			</dict>
 			<key>Orientation</key>
 			<integer>2</integer>
 			<key>RowAlign</key>
@@ -574,7 +619,7 @@ DiscoveryNetworkCallback}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>24</integer>
+					<integer>12</integer>
 					<key>ListOrientation</key>
 					<string>Vertical</string>
 					<key>Style</key>
@@ -585,6 +630,11 @@ DiscoveryNetworkCallback}</string>
 							<real>304</real>
 							<key>GradientCenter</key>
 							<string>{-0.294118, -0.264706}</string>
+						</dict>
+						<key>shadow</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
 						</dict>
 					</dict>
 					<key>TextList</key>
@@ -632,7 +682,7 @@ ParticipantPort}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>23</integer>
+					<integer>11</integer>
 					<key>ListOrientation</key>
 					<string>Vertical</string>
 					<key>Style</key>
@@ -643,6 +693,11 @@ ParticipantPort}</string>
 							<real>304</real>
 							<key>GradientCenter</key>
 							<string>{-0.294118, -0.264706}</string>
+						</dict>
+						<key>shadow</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
 						</dict>
 					</dict>
 					<key>TextList</key>
@@ -697,7 +752,7 @@ ParticipantConnection}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>22</integer>
+					<integer>10</integer>
 					<key>ListOrientation</key>
 					<string>Vertical</string>
 					<key>Style</key>
@@ -708,6 +763,11 @@ ParticipantConnection}</string>
 							<real>304</real>
 							<key>GradientCenter</key>
 							<string>{-0.294118, -0.264706}</string>
+						</dict>
+						<key>shadow</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
 						</dict>
 					</dict>
 					<key>TextList</key>
@@ -759,7 +819,7 @@ NetworkService}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>21</integer>
+					<integer>9</integer>
 					<key>ListOrientation</key>
 					<string>Vertical</string>
 					<key>Style</key>
@@ -770,6 +830,11 @@ NetworkService}</string>
 							<real>304</real>
 							<key>GradientCenter</key>
 							<string>{-0.294118, -0.264706}</string>
+						</dict>
+						<key>shadow</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
 						</dict>
 					</dict>
 					<key>TextList</key>
@@ -868,7 +933,7 @@ NetworkServiceCallback}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>21</integer>
+					<integer>12</integer>
 					<key>ListOrientation</key>
 					<string>Vertical</string>
 					<key>Style</key>
@@ -879,6 +944,11 @@ NetworkServiceCallback}</string>
 							<real>304</real>
 							<key>GradientCenter</key>
 							<string>{-0.294118, -0.264706}</string>
+						</dict>
+						<key>shadow</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
 						</dict>
 					</dict>
 					<key>TextList</key>
@@ -930,7 +1000,7 @@ SessionConnectionCallback}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>20</integer>
+					<integer>11</integer>
 					<key>ListOrientation</key>
 					<string>Vertical</string>
 					<key>Style</key>
@@ -941,6 +1011,11 @@ SessionConnectionCallback}</string>
 							<real>304</real>
 							<key>GradientCenter</key>
 							<string>{-0.294118, -0.264706}</string>
+						</dict>
+						<key>shadow</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
 						</dict>
 					</dict>
 					<key>TextList</key>
@@ -989,7 +1064,7 @@ SessionConnection}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>19</integer>
+					<integer>10</integer>
 					<key>ListOrientation</key>
 					<string>Vertical</string>
 					<key>Style</key>
@@ -1000,6 +1075,11 @@ SessionConnection}</string>
 							<real>304</real>
 							<key>GradientCenter</key>
 							<string>{-0.294118, -0.264706}</string>
+						</dict>
+						<key>shadow</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
 						</dict>
 					</dict>
 					<key>TextList</key>
@@ -1045,7 +1125,7 @@ RemoteUserProxy}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>18</integer>
+					<integer>9</integer>
 					<key>ListOrientation</key>
 					<string>Vertical</string>
 					<key>Style</key>
@@ -1056,6 +1136,11 @@ RemoteUserProxy}</string>
 							<real>304</real>
 							<key>GradientCenter</key>
 							<string>{-0.294118, -0.264706}</string>
+						</dict>
+						<key>shadow</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
 						</dict>
 					</dict>
 					<key>TextList</key>
@@ -1162,6 +1247,11 @@ RemoteDocumentProxy}</string>
 							<key>GradientCenter</key>
 							<string>{-0.294118, -0.264706}</string>
 						</dict>
+						<key>shadow</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
+						</dict>
 					</dict>
 					<key>TextList</key>
 					<array>
@@ -1243,7 +1333,7 @@ PortableDocument (Network)}</string>
 	<key>WindowInfo</key>
 	<dict>
 		<key>CurrentSheet</key>
-		<string>1</string>
+		<string>0</string>
 		<key>Frame</key>
 		<string>{{227, 4}, {591, 742}}</string>
 		<key>ShowRuler</key>
@@ -1251,7 +1341,7 @@ PortableDocument (Network)}</string>
 		<key>ShowStatusBar</key>
 		<true/>
 		<key>VisibleRegion</key>
-		<string>{{0, 10}, {576, 644}}</string>
+		<string>{{0, 0}, {576, 644}}</string>
 		<key>Zoom</key>
 		<string>1</string>
 	</dict>
