@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:DNSSDCallException.java 2412 2005-12-09 13:15:29Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -25,34 +25,47 @@ import com.apple.dnssd.DNSSDException;
 
 
 /**
- *
+ * Application exception. It wraps a DNSSD specific exception <code>DNSSDException</code>.
+ * This exception is thrown if a DNSSD call failed.
+ * 
+ * @see com.apple.dnssd.DNSSDException
  */
 public class DNSSDCallException extends Exception {
 
+	/**
+	 * The actual exception (wrapped by this exception).
+	 */
 	private DNSSDException exception;
 	
 	/**
+	 * Creates a new DNSSDCallException given the original cause.
 	 * 
-	 * @param exception
+	 * @param exception the exception that caused the creation
 	 */
 	public DNSSDCallException(DNSSDException exception) {
 		this.exception = exception;
 	}
 	
 	/**
+	 * Creates a new DNSSDCallException object with a 
+	 * message.
 	 * 
-	 * @param message
+	 * @param message the message for this exception
 	 */
 	public DNSSDCallException(String message) {
 		super(message);
 	}
 	
 	/**
-	 * 
-	 *
+	 * Default Constructor.
 	 */
 	public DNSSDCallException() {}
 	
+	/**
+	 * Gets the DNSSDException that this object wraps.
+	 * 
+	 * @return DNSSDException the cause
+	 */
 	public DNSSDException getDNSSDException() {
 		return exception; 
 	}

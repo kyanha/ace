@@ -80,7 +80,7 @@ public class DiscoveryCallbackImpl implements DiscoveryCallback {
 	/**********************************************/
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void userDiscovered(RemoteUserProxyExt proxy) {
 		LOG.debug("--> userDiscovered("+proxy+")");
@@ -89,7 +89,7 @@ public class DiscoveryCallbackImpl implements DiscoveryCallback {
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void userDiscoveryCompleted(RemoteUserProxyExt user) {
 		LOG.debug("--> userDiscoveryCompleted("+user+")");
@@ -103,7 +103,7 @@ public class DiscoveryCallbackImpl implements DiscoveryCallback {
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	private void sendDocuments(RemoteUserProxyExt user) {
 		LOG.info("--> sendDocuments() to ["+user.getUserDetails().getUsername()+"]");
@@ -113,7 +113,7 @@ public class DiscoveryCallbackImpl implements DiscoveryCallback {
 	}
 
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void userDetailsChanged(RemoteUserProxyExt proxy) {
 		LOG.debug("--> userDetailsChanged("+proxy+")");
@@ -122,7 +122,7 @@ public class DiscoveryCallbackImpl implements DiscoveryCallback {
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void userDiscarded(RemoteUserProxyExt proxy) {
 		LOG.debug("--> userDiscarded("+proxy+")");

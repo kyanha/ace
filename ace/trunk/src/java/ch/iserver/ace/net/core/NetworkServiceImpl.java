@@ -184,21 +184,21 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	/*******************************************/
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public ServerInfo getServerInfo() {
 		return info;
 	} 
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void setUserId(String id) {
 		this.userId = id;
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void start() { 
 		SessionManager.getInstance().setTimestampFactory(getTimestampFactory());
@@ -211,7 +211,7 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void stop() {
 		LOG.debug("--> stop()");
@@ -277,7 +277,7 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void setUserDetails(UserDetails details) {
 		this.details = details;
@@ -287,7 +287,7 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	}
 
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void setTimestampFactory(TimestampFactory factory) {
 		this.timestampFactory = factory;
@@ -299,7 +299,7 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	}
 
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void discoverUser(DiscoveryNetworkCallback callback, InetAddress addr, int port) {
 		LOG.debug("--> discoverUser(" + addr + ")");
@@ -310,7 +310,7 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	}
 
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public synchronized DocumentServer publish(DocumentServerLogic logic, DocumentDetails details) {
 		LOG.info("--> publish("+details+")");
@@ -327,21 +327,21 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	/**********************************************/
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public boolean isStopped() {
 		return isStopped;
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public TimestampFactory getTimestampFactory() {
 		return timestampFactory;
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void conceal(String docId) {
 		LOG.debug("conceal(" + docId + ")");
@@ -349,21 +349,21 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void setDiscovery(Discovery discovery) {
 		this.discovery = discovery;
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void setServerInfo(ServerInfo info) {
 		this.info = info;
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public boolean hasPublishedDocuments() {
 		return !publishedDocs.isEmpty();

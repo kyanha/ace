@@ -28,20 +28,31 @@ import com.apple.dnssd.DNSSD;
 import com.apple.dnssd.DNSSDException;
 
 /**
- *
+ * <code>DNSSDCall</code> implementation for a DNSSD browse call. This call
+ * registers the local user with DNSSD to receive browse events from the local area 
+ * network, e.g. discovery of a new service or the loss of a service.
+ * 
+ * @see ch.iserver.ace.net.discovery.dnssd.DNSSDCall
  */
 public class Browse extends DNSSDCall {
 
 	private Logger LOG = Logger.getLogger(Browse.class);
 	
+	/**
+	 * The registration type for DNSSD
+	 */
 	private String registrationType;
+	
+	/**
+	 * The browse listener
+	 */
 	private BrowseListener listener;
 	
 	/**
 	 * Constructor.
 	 * 
-	 * @param registrationType
-	 * @param listener
+	 * @param registrationType 	the registration type
+	 * @param listener			the browse listener
 	 */
 	public Browse(String registrationType, BrowseListener listener) {
 		this.registrationType = registrationType;
@@ -59,6 +70,9 @@ public class Browse extends DNSSDCall {
 		}
 	}
 
+	/**
+	 * @see DNSSDCall#getLogger()
+	 */
 	protected Logger getLogger() {
 		return LOG;
 	}

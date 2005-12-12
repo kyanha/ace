@@ -80,7 +80,7 @@ public class ExplicitUserDiscovery extends Thread {
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void run() {
 		LOG.debug("--> run()");

@@ -87,63 +87,63 @@ public class PortableDocumentImpl implements PortableDocumentExt {
 	/************************************************/
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void addFragment(Fragment fragment) {
 		fragments.add(fragment);
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void addParticipant(int id, RemoteUserProxyExt proxy) {
 		proxies.put(new Integer(id), proxy);
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void setSelection(int participantId, CaretUpdate selection) {
 		selections.put(new Integer(participantId), selection);
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void setDocumentId(String id) {
 		this.docId = id;
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public String getDocumentId() {
 		return docId;
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void setPublisherId(String publisherId) {
 		this.publisherId = publisherId;
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public String getPublisherId() {
 		return publisherId;
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public int getParticipantId() {
 		return participantId;
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void setParticpantId(int id) {
 		LOG.debug("setParticipantId(" + id + ")");
@@ -151,7 +151,7 @@ public class PortableDocumentImpl implements PortableDocumentExt {
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public List getUsers() {
 		return new ArrayList(proxies.values());
@@ -197,7 +197,7 @@ public class PortableDocumentImpl implements PortableDocumentExt {
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public String toString() {
 		return "PortableDocumentImpl("+docId+", "+publisherId+", "+proxies.keySet()+" participants, "+fragments.size()+" fragments, "+selections.keySet()+" selections)";

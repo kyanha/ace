@@ -66,7 +66,7 @@ public class DiscoveryLauncher extends Thread {
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void run() {
 		LOG.info("--> run()");

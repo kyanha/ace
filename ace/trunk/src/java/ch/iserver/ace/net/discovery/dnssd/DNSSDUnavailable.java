@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:DNSSDUnavailable.java 2412 2005-12-09 13:15:29Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -22,19 +22,22 @@
 package ch.iserver.ace.net.discovery.dnssd;
 
 /**
- * Exception thrown if a DNNSD call.
+ * Exception thrown if a DNNSD call failed after 
+ * the service recovery strategy ({@link ch.iserver.ace.net.discovery.dnssd.RetryStrategy}
+ * failed. If this exception is thrown, the DNSSD discovery service is considered not installed
+ * or currently unavailable. Hence the client application should be stopped. 
  * 
  * @see ch.iserver.ace.net.discovery.dnssd.DNSSDCall
  */
 public class DNSSDUnavailable extends Exception {
 
 	/**
-	 * Constructor.
+	 * Default Constructor.
 	 */
 	public DNSSDUnavailable() { }
 	
 	/**
-	 * Constructor.
+	 * Constructor with an error message.
 	 * 
 	 * @param message an error message
 	 */

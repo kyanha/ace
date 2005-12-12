@@ -54,7 +54,7 @@ public class TXTQueryListener extends AbstractQueryListener {
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	protected void processQueryResult(DNSSDService query, int flags, int ifIndex,
 			String fullName, int rrtype, int rrclass, byte[] rdata, int ttl) {

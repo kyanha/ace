@@ -106,7 +106,7 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 	/*********************************************/
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public RemoteUserProxyExt[] getPeersWithNoSession() {
 		Set ids = remoteUserProxies.keySet();
@@ -128,7 +128,7 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 	}
 
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void setSessionEstablished(String userId) {
 		Object proxy = remoteUserProxies.get(userId);
@@ -139,7 +139,7 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 	}
 
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void setSessionTerminated(String userId) {
 		if (userId != null) {
@@ -150,14 +150,14 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public boolean hasSessionEstablished(String userid) {
 		return peersWithEstablishedSession.containsKey(userid);
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public RemoteUserProxyExt getUser(String userid) {
 		RemoteUserProxyExt user =  (RemoteUserProxyExt) remoteUserProxies.get(userid);
@@ -192,7 +192,7 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void discardUser(String userid) {
 		ParameterValidator.notNull("userid", userid);
@@ -205,7 +205,7 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public int getSize() {
 		return remoteUserProxies.size();

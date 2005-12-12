@@ -79,7 +79,7 @@ class PeerDiscoveryImpl implements PeerDiscovery {
 	}
 
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void stop() {
 		browser.stop();

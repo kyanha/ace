@@ -45,7 +45,7 @@ public class BonjourFactory extends DiscoveryFactory {
 	private PeerDiscovery discovery;
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void init(UserRegistration registration, PeerDiscovery discovery) {
 		this.registration = registration;
@@ -53,7 +53,7 @@ public class BonjourFactory extends DiscoveryFactory {
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public Discovery createDiscovery(DiscoveryCallback callback) {
 		UserRegistration actualRegistration = (registration != null) ? registration : new UserRegistrationImpl();

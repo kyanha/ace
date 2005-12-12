@@ -28,23 +28,42 @@ import com.apple.dnssd.DNSSDException;
 import com.apple.dnssd.QueryListener;
 
 /**
- *
+ * <code>DNSSDCall</code> implementation for a DNSSD query record call. This call
+ * queries for an arbitrary DNS record, e.g. IP address or TXT record.
+ * 
+ * @see ch.iserver.ace.net.discovery.dnssd.DNSSDCall
  */
 public class QueryRecord extends DNSSDCall {
 
 	private Logger LOG = Logger.getLogger(QueryRecord.class);
 	
-	private int ifIndex, rrtype;
+	/**
+	 * The interface type
+	 */
+	private int ifIndex;
+	
+	/**
+	 * The resource record type
+	 */
+	private int rrtype;
+	
+	/**
+	 * The host name
+	 */
 	private String hostName;
+	
+	/**
+	 * The query listener
+	 */
 	private QueryListener listener;
 	
 	/**
-	 * Constructor. 
+	 * Creates a new QueryRecord. 
 	 * 
-	 * @param ifIndex
-	 * @param hostName
-	 * @param rrtype
-	 * @param listener
+	 * @param ifIndex	the interface index 
+	 * @param hostName	the host name
+	 * @param rrtype		The numerical type of the resource record to be queried for (e.g. PTR, SRV, etc)  as defined in nameser.h.
+	 * @param listener	This object will get called when the query completes.
 	 */
 	public QueryRecord(int ifIndex, String hostName, int rrtype, QueryListener listener) {
 		this.ifIndex = ifIndex;

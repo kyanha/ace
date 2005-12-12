@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:TXTUpdate.java 2412 2005-12-09 13:15:29Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -28,15 +28,37 @@ import com.apple.dnssd.DNSSDException;
 import com.apple.dnssd.DNSSDRegistration;
 
 /**
- *
+ * <code>DNSSDCall</code> implementation for a DNSSD TXT update call. This call updates the
+ * TXT record contents for the local user. Other users browsing in the local area network will
+ * receive a notification of the updated TXT record. 
+ * The <code>TXTUpdate</code> call is currently used for user name changes only.
+ * 
+ * <p>Note: executing <code>TXTUpdate</code> many times may result in inconsistent TXT record
+ * contents at the peer users because the mDNSResponder service uses a cache which will not update
+ * very frequently and the service also implements a DOS like security-algorithm for TXT update flooding.</p>
+ * 
+ * @see ch.iserver.ace.net.discovery.dnssd.DNSSDCall
  */
 public class TXTUpdate extends DNSSDCall {
 
 	private Logger LOG = Logger.getLogger(TXTUpdate.class);
 	
+	/**
+	 * The DNSSDRegistration reference
+	 */
 	private DNSSDRegistration registration;
+	
+	/**
+	 * The raw TXT record data
+	 */
 	private byte[] rawTXT;
 	
+	/**
+	 * Creates a new TXTUpdate DNSSD call.
+	 * 
+	 * @param registration	the registration object to get the TXT record reference from
+	 * @param rawTXT			the raw TXT record data 
+	 */
 	public TXTUpdate(DNSSDRegistration registration, byte[] rawTXT) {
 		this.registration = registration;
 		this.rawTXT = rawTXT;
@@ -56,6 +78,9 @@ public class TXTUpdate extends DNSSDCall {
 		}
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	protected Logger getLogger() {
 		return LOG;
 	}

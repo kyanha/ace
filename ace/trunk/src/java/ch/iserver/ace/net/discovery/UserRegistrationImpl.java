@@ -66,7 +66,7 @@ class UserRegistrationImpl implements UserRegistration {
 	/*********************************************/
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void register(String username, String userid) {
 		String serviceName = System.getProperty("user.name");
@@ -87,14 +87,14 @@ class UserRegistrationImpl implements UserRegistration {
 	}	
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public boolean isRegistered() {
 		return isRegistered;
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void updateUserDetails(UserDetails details) {
 		TXTRecordProxy.set(TXTRecordProxy.TXT_USER, details.getUsername(), txtRecord);
@@ -108,7 +108,7 @@ class UserRegistrationImpl implements UserRegistration {
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void stop() {
 		registration.stop();
@@ -175,7 +175,7 @@ class UserRegistrationImpl implements UserRegistration {
 	/********************************************/
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void serviceRegistered(DNSSDRegistration registration, int flags,
 			String serviceName, String regType, String domain) {
@@ -198,7 +198,7 @@ class UserRegistrationImpl implements UserRegistration {
 	/*******************************************/
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void serviceResolved(DNSSDService resolver, int flags, int ifIndex,
 			String fullName, String hostName, int port, TXTRecord txtRecord) {
@@ -239,7 +239,7 @@ class UserRegistrationImpl implements UserRegistration {
 	/*****************************************/
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void operationFailed(DNSSDService service, int errorCode) {
 		Bonjour.writeErrorLog(new Exception("operationFailed("+service+", "+errorCode+")"));

@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:RetryException.java 2412 2005-12-09 13:15:29Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -29,12 +29,12 @@ package ch.iserver.ace.net.discovery.dnssd;
 public class RetryException extends Exception {
 
 	/**
-	 * Constructor.
+	 * Default Constructor.
 	 */
 	public RetryException() { }
 	
 	/**
-	 * Constructor.
+	 * Constructor with an error message.
 	 * 
 	 * @param message an error message
 	 */

@@ -31,7 +31,8 @@ import ch.iserver.ace.util.ParameterValidator;
 /**
  * Bonjour is the default implementation for interface {@link ch.iserver.ace.net.core.Discovery}.
  * Class Bonjour itself is an application level class that uses the Bonjour library, also known 
- * as zero-configuration networking {@link http://developer.apple.com/networking/bonjour/index.html}.
+ * as zero-configuration networking (cf. <a href="http://developer.apple.com/networking/bonjour/index.html">
+ * http://developer.apple.com/networking/bonjour/index.html</a>).
  * <p>Bonjour, formerly known as Rendezvous, allows for three main technologies:
  * 	<ul>
  * 		<li>	Allocate IP addresses without a DHCP server.
@@ -155,7 +156,7 @@ public class Bonjour implements Discovery {
 	/**************************************/
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void execute() {
 		LOG.debug("--> execute()");
@@ -165,7 +166,7 @@ public class Bonjour implements Discovery {
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void abort() {
 		registration.stop();
@@ -173,7 +174,7 @@ public class Bonjour implements Discovery {
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void setUserId(String uuid) {
 		ParameterValidator.notNull("uuid", uuid);
@@ -181,7 +182,7 @@ public class Bonjour implements Discovery {
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void setUserDetails(UserDetails details) {
 		ParameterValidator.notNull("details", details);

@@ -192,7 +192,7 @@ public class PublishedDocument implements DocumentServer {
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public String toString() {
 		return "PublishedDocument("+docId+", '"+details.getTitle()+"')";
@@ -203,7 +203,7 @@ public class PublishedDocument implements DocumentServer {
 	/********************************************/
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void invite(InvitationPort invitation) {
 		LOG.debug("--> invite("+invitation.getUser()+")");
@@ -215,7 +215,7 @@ public class PublishedDocument implements DocumentServer {
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void setDocumentDetails(DocumentDetails details) {
 		if (isShutdown()) { 
@@ -227,7 +227,7 @@ public class PublishedDocument implements DocumentServer {
 	}
 
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public synchronized void shutdown() {
 		LOG.debug("--> shutdown()");

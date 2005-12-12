@@ -105,21 +105,21 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 	/********************************************/
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public String getId() {
 		return id;
 	}
 
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public UserDetails getUserDetails() {
 		return details;
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public Collection getSharedDocuments() {
 		return documents.values();
@@ -131,28 +131,28 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 	/***********************************************/
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public boolean hasDocumentShared(String id) {
 		return documents.containsKey(id);
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public Map getDocuments() { 
 		return documents;
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public MutableUserDetails getMutableUserDetails() {
 		return details;
 	}
 
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void setMutableUserDetails(MutableUserDetails details) {
 		ParameterValidator.notNull("details", details);
@@ -160,14 +160,14 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void addSharedDocument(RemoteDocumentProxyExt doc) {
 		documents.put(doc.getId(), doc);
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public RemoteDocumentProxyExt removeSharedDocument(String id) {
 		RemoteDocumentProxyExt doc = (RemoteDocumentProxyExt) documents.remove(id);
@@ -176,42 +176,42 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public RemoteDocumentProxyExt getSharedDocument(String id) {
 		return (RemoteDocumentProxyExt) documents.get(id);
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void setSessionEstablished(boolean value) {
 		isSessionEstablished = value;
 	}
 
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public boolean isSessionEstablished() {
 		return isSessionEstablished;
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void setDNSSDdiscovered(boolean value) {
 		this.isDNSSDdiscovered = value;
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public boolean isDNSSDdiscovered() {
 		return isDNSSDdiscovered;
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void discover() throws DiscoveryException {
 		LOG.debug("--> discover()");
@@ -271,14 +271,14 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public String toString() {
 		return "RemoteUserProxyImpl( "+id+", "+details+", "+documents+" )";
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public boolean equals(Object obj) {
 		if (obj == null) {
@@ -293,7 +293,7 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public int hashCode() {
 		int hash = 13;

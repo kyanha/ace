@@ -114,7 +114,7 @@ public class RemoteDocumentProxyImpl implements RemoteDocumentProxyExt {
 	/***************************************************/
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public SessionConnectionCallback getSessionConnectionCallback() {
 		return sessionCallback;
@@ -128,7 +128,7 @@ public class RemoteDocumentProxyImpl implements RemoteDocumentProxyExt {
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public SessionConnectionCallback joinAccepted(SessionConnection connection) {
 		LOG.debug("--> joinAccepted()");
@@ -141,7 +141,7 @@ public class RemoteDocumentProxyImpl implements RemoteDocumentProxyExt {
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void joinRejected(int code) {
 		LOG.debug("--> joinRejected("+code+")");
@@ -150,14 +150,14 @@ public class RemoteDocumentProxyImpl implements RemoteDocumentProxyExt {
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public boolean isJoined() {
 		return isJoined;
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void cleanupAfterLeave() {
 		isJoined = false;
@@ -219,7 +219,7 @@ public class RemoteDocumentProxyImpl implements RemoteDocumentProxyExt {
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public String toString() {
 		return "RemoteDocumentProxyImpl("+getId()+", "+getDocumentDetails()+", "+publisher.getId()+")";
@@ -227,7 +227,7 @@ public class RemoteDocumentProxyImpl implements RemoteDocumentProxyExt {
 	
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public boolean equals(Object obj) {
 		if (obj == null) {
@@ -242,7 +242,7 @@ public class RemoteDocumentProxyImpl implements RemoteDocumentProxyExt {
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public int hashCode() {
 		int hash = 13;

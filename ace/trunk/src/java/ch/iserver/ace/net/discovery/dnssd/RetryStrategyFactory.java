@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:RetryStrategyFactory.java 2412 2005-12-09 13:15:29Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -24,12 +24,14 @@ package ch.iserver.ace.net.discovery.dnssd;
 import ch.iserver.ace.net.core.NetworkProperties;
 
 /**
- *
+ * Factory to create instances of a <code>RetryStrategy</code> implementation.
+ * 
+ * @see ch.iserver.ace.net.discovery.dnssd.RetryStrategy 
  */
 public class RetryStrategyFactory {
 
 	/**
-	 * Creates a {@link RetryStrategy}.
+	 * Creates a new instance of type {@link RetryStrategy}.
 	 * 
 	 * @return a retry strategy
 	 */

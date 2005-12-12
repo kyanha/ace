@@ -59,7 +59,7 @@ class BrowseListenerImpl extends BaseListenerImpl implements BrowseListener {
 	}
 	
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void serviceFound(DNSSDService browser, int flags, int ifIndex, String serviceName, String regType, String domain) {
 		LOG.debug("DNSSD.serviceFound("+serviceName+", "+regType+", "+domain+")");
@@ -75,7 +75,7 @@ class BrowseListenerImpl extends BaseListenerImpl implements BrowseListener {
 	}
 
 	/**
-	 * @inheritDoc
+	 * {@inheritDoc}
 	 */
 	public void serviceLost(DNSSDService browser, int flags, int ifIndex,
 			String serviceName, String regType, String domain) {

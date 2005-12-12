@@ -29,25 +29,51 @@ import com.apple.dnssd.RegisterListener;
 import com.apple.dnssd.TXTRecord;
 
 /**
- *
+ * <code>DNSSDCall</code> implementation for a DNSSD register call. This call registers
+ * a service (i.e.user) with DNSSD to be discovered by other users and to receive discovery
+ * events such as <code>userDiscovered</code> or <code>userDiscarded</code>.
+ * 
+ * <p><code>Register</code> is used by the user registration process.</p>
+ * 
+ * @see ch.iserver.ace.net.discovery.dnssd.DNSSDCall
  */
 public class Register extends DNSSDCall {
 
 	private Logger LOG = Logger.getLogger(Register.class);
 	
-	private String serviceName, registrationType;
+	/**
+	 * The service name, usually the user's account name on the local host
+	 */
+	private String serviceName;
+	
+	/**
+	 * The registration type
+	 */
+	private String registrationType;
+	
+	/**
+	 * The local user's service port 
+	 */
 	private int port;
+	
+	/**
+	 * The TXT record to be added to the DNS record for the local user
+	 */
 	private TXTRecord txt;
+	
+	/**
+	 * The register listener
+	 */
 	private RegisterListener listener;
 	
 	/**
-	 * Constructor.
+	 * Creates a new Register DNSSD call.
 	 * 
-	 * @param serviceName
-	 * @param registrationType
-	 * @param port
-	 * @param txt
-	 * @param listener
+	 * @param serviceName			the service name to be registered
+	 * @param registrationType	the registration type being registered
+	 * @param port				the port on which the service accepts connections
+	 * @param txt				the txt record rdata
+	 * @param listener			this object will get called when the service is registered
 	 */
 	public Register(String serviceName, String registrationType, int port, TXTRecord txt, RegisterListener listener) {
 		this.serviceName = serviceName;
@@ -69,6 +95,9 @@ public class Register extends DNSSDCall {
 		}
 	}
 	
+	/**
+	 * @see DNSSDCall#getLogger()
+	 */
 	protected Logger getLogger() {
 		return LOG;
 	}

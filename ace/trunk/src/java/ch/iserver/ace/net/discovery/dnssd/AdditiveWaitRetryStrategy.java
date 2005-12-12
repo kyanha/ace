@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:AdditiveWaitRetryStrategy.java 2412 2005-12-09 13:15:29Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -22,17 +22,35 @@
 package ch.iserver.ace.net.discovery.dnssd;
 
 /**
- *
+ * The <code>AdditiveWaitRetryStrategy</code> implements a strategy that
+ * starts with an initial wait time and then increments it by a constant
+ * amount of time.
+ * 
+ * @see ch.iserver.ace.net.discovery.dnssd.RetryStrategy
  */
-public class AdditiveWaitRetryStrategy extends RetryStrategy {
+class AdditiveWaitRetryStrategy extends RetryStrategy {
 	
+	/**
+	 * Default wait time to start. 
+	 */
 	public static final long STARTING_WAIT_TIME = 3000;
+	
+	/**
+	 * Default amount to increment the current wait time.
+	 */
 	public static final long WAIT_TIME_INCREMENT = 4000;
 
+	/**
+	 * Current time to wait.
+	 */
 	private long currentTimeToWait;
 
+	/**
+	 * Amount of wait time to increment each time.
+	 */
 	private long waitTimeIncrement;
 
+	
 	/**
 	 * Default constructor. 
 	 */
@@ -41,10 +59,11 @@ public class AdditiveWaitRetryStrategy extends RetryStrategy {
 	}
 
 	/**
+	 * Creates a new AdditiveWaitRetryStrategy with the given configuration.
 	 * 
-	 * @param numberOfRetries
-	 * @param startingWaitTime
-	 * @param waitTimeIncrement
+	 * @param numberOfRetries		the maximum number of retries 
+	 * @param startingWaitTime	the wait time to start with
+	 * @param waitTimeIncrement	the amount of time to increment each time
 	 */
 	public AdditiveWaitRetryStrategy(int numberOfRetries,
 			long startingWaitTime, long waitTimeIncrement) {

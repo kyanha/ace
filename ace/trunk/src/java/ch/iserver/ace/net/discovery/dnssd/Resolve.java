@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:Resolve.java 2412 2005-12-09 13:15:29Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -28,7 +28,9 @@ import com.apple.dnssd.DNSSDException;
 import com.apple.dnssd.ResolveListener;
 
 /**
- *
+ * <code>DNSSDCall</code> implementation for a DNSSD resolve call. This call resolves
+ * a service name discovered to a target host name, port number, and txt record. 
+ * This is necessary in order to connect to a discovered user.
  */
 public class Resolve extends DNSSDCall {
 
