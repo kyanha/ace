@@ -105,7 +105,7 @@ This section gives you an overview of the ACE Graphical User Interface (GUI).
 
 \begin{figure}[H]
 \begin{center}
-  \includegraphics[height=4.03in, width=6.19in]{../images/usermanual/ace_overview.eps}
+  \includegraphics[height=4.18in, width=6.68in]{../images/usermanual/g_ace_overview.eps}
 \caption{ACE Overview}
 \label{default}
 \end{center}
@@ -115,27 +115,50 @@ This section gives you an overview of the ACE Graphical User Interface (GUI).
 \subsection{Menu}
 \begin{itemize}
 \item File Menu: Use this menu entry to do the basic editor functions like create new, open and save documents, change your preferences and quit the application. See section \ref{first_steps} for a more detailed description of those functions.
-\item Edit Menu
+\item Edit Menu: Use this menu for the 
 \item Collaboration Menu
 \item Help Menu
 \end{itemize}
 
-% 3.2 EDITOR
+% 3.2 TOOLBAR
+\subsection{Toolbar}
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[height=1.74in, width=1.96in]{../images/usermanual/g_toolbar.eps}
+\caption{ACE Toolbar}
+\label{default}
+\end{center}
+\end{figure}
+
+% 3.3 EDITOR
 \subsection{Editor}
 - Switch to FullScreen
-- (Bild: %editor_overview)
-- (Bild: %editor_collab_01)
-- (Bild: %editor_collab_02)
 
-% 3.3 VIEWS
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[height=4.18in, width=6.68in]{../images/usermanual/g_editor_normalscreen.eps}
+\caption{ACE in normal editing view}
+\label{default}
+\end{center}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[height=4.18in, width=6.68in]{../images/usermanual/g_editor_fullscreen.eps}
+\caption{ACE in fullscreen editing view}
+\label{default}
+\end{center}
+\end{figure}
+
+% 3.4 VIEWS
 \subsection{Views}
 - alle views haben toolbars
 
-% 3.3.1 DOCUMENT VIEW
+% 3.4.1 DOCUMENT VIEW
 \subsubsection{Document View}
 \begin{figure}[H]
 \begin{center}
-  \includegraphics[height=30pt, width=30pt]{../images/usermanual/dview_overview.bmp.eps}
+  \includegraphics[height=1.78in, width=2.61in]{../images/usermanual/dview_overview.eps}
 \caption{Document View}
 \label{default}
 \end{center}
@@ -147,21 +170,21 @@ Different images for each document type makes them well distinguishable (from le
 
 \begin{figure}[H]
 \begin{center}
-  \includegraphics[height=30pt, width=30pt]{../images/usermanual/icon_local.bmp.eps}
-\vspace{9pt}
-  \includegraphics[height=30pt, width=30pt]{../images/usermanual/icon_published.bmp.eps}
-\vspace{9pt}
-  \includegraphics[height=30pt, width=30pt]{../images/usermanual/icon_remote.bmp.eps}
+  \includegraphics[height=32pt, width=30pt]{../images/usermanual/icon_local.eps}
+\vspace{24pt}
+  \includegraphics[height=32pt, width=30pt]{../images/usermanual/icon_published.eps}
+\vspace{24pt}
+  \includegraphics[height=32pt, width=30pt]{../images/usermanual/icon_remote.eps}
 \caption{Document Icons}
 \label{default}
 \end{center}
 \end{figure}
 
-% 3.3.2 USER VIEW
+% 3.4.2 USER VIEW
 \subsubsection{User View}
 \begin{figure}[H]
 \begin{center}
-  \includegraphics[height=30pt, width=30pt]{../images/usermanual/uview_overview.bmp.eps}
+  \includegraphics[height=1.82in, width=2.57in]{../images/usermanual/uview_overview.eps}
 \caption{User View}
 \label{default}
 \end{center}
@@ -173,18 +196,18 @@ To avoid a complex list with usernames you can use the user view filter. Typing 
 
 \begin{figure}[H]
 \begin{center}
-  \includegraphics[height=30pt, width=30pt]{../images/usermanual/uview_filtering.bmp.eps}
+  \includegraphics[height=1.81in, width=2.56in]{../images/usermanual/uview_filtering.eps}
 \caption{User View Filtering}
 \label{default}
 \end{center}
 \end{figure}
 
-% 3.3.3 BROWSE VIEW
+% 3.4.3 BROWSE VIEW
 \subsubsection{Browse View}
 
 \begin{figure}[H]
 \begin{center}
-  \includegraphics[height=30pt, width=30pt]{../images/usermanual/bview_overview.bmp.eps}
+  \includegraphics[height=2.12in, width=2.51in]{../images/usermanual/bview_overview.eps}
 \caption{Browse View}
 \label{default}
 \end{center}
@@ -194,18 +217,18 @@ The \textit{Browse View} contains a list with all published documents that can b
 
 \begin{figure}[H]
 \begin{center}
-  \includegraphics[height=30pt, width=30pt]{../images/usermanual/bview_filtering.bmp.eps}
+  \includegraphics[height=2.14in, width=2.51in]{../images/usermanual/bview_filtering.eps}
 \caption{Browse View Filtering}
 \label{default}
 \end{center}
 \end{figure}
 
-% 3.3.4 PARTICIPANT VIEW
+% 3.4.4 PARTICIPANT VIEW
 \subsubsection{Participant View}
 
 \begin{figure}[H]
 \begin{center}
-  \includegraphics[height=1.56in, width=2.56in]{../images/usermanual/pview_overview.bmp.eps}
+  \includegraphics[height=1.56in, width=2.56in]{../images/usermanual/pview_overview.eps}
 \caption{Participant View}
 \label{default}
 \end{center}
@@ -213,16 +236,41 @@ The \textit{Browse View} contains a list with all published documents that can b
 
 When you publish or join a network document you can see a list of all participants in the \textit{Participant View}. Each participant has his own color which is showed on the right side of his username. This colors are used to highlight the text and to draw the cursor or selection from the corresponding participant. If you are the owner of the document you can select a participant and kick (see \ref{Invite / Kick Users}) him from the current document.
 
-% 3.5 PREFERENCES
+% 3.6 PREFERENCES
 \subsection{Preferences}
 \begin{figure}[H]
 \begin{center}
-  \includegraphics[height=1.56in, width=2.56in]{../images/usermanual/nmenu_file_preferences.bmp.eps}
-\caption{Preferences}
+  \includegraphics[height=3.56in, width=4.56in]{../images/usermanual/menu_file_preferences.eps}
+\caption{Preferences Menu}
 \label{default}
 \end{center}
 \end{figure}
 
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[height=3.9in, width=5.43in]{../images/usermanual/ace_preferences.eps}
+\caption{Preferences Dialog}
+\label{default}
+\end{center}
+\end{figure}
+
+% 3.7 ABOUT
+\subsection{About}
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[height=3.56in, width=4.56in]{../images/usermanual/menu_help.eps}
+\caption{About Menu}
+\label{default}
+\end{center}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[height=3.48in, width=4.87in]{../images/usermanual/ace_about.eps}
+\caption{About Dialog}
+\label{default}
+\end{center}
+\end{figure}
 
 
 
@@ -267,6 +315,14 @@ To open a existing document you have three posibilites:
 \subsection{Quit}
 - save dialogs
 
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[height=4.26in, width=6.96in]{../images/usermanual/ace_savedialog.eps}
+\caption{Save Dialog}
+\label{default}
+\end{center}
+\end{figure}
+
 
 
 
@@ -278,29 +334,32 @@ To open a existing document you have three posibilites:
 \subsection{Publish / Conceal Documents}
 \begin{figure}[H]
 \begin{center}
-  \includegraphics[height=1.56in, width=2.56in]{../images/usermanual/editor_view_publish.bmp.eps}
-\caption{Preferences}
+  \includegraphics[height=2.64in, width=6.32in]{../images/usermanual/g_editor_view_publish.eps}
+\caption{Publish Document}
 \label{default}
 \end{center}
 \end{figure}
+
 \begin{figure}[H]
 \begin{center}
-  \includegraphics[height=1.56in, width=2.56in]{../images/usermanual/editor_view_conceal.bmp.eps}
-\caption{Preferences}
+  \includegraphics[height=2.62in, width=6.31in]{../images/usermanual/menu_collab_publish.eps}
+\caption{Publish Document (Menu)}
 \label{default}
 \end{center}
 \end{figure}
+
 \begin{figure}[H]
 \begin{center}
-  \includegraphics[height=1.56in, width=2.56in]{../images/usermanual/nmenu_collaboration_publish.bmp.eps}
-\caption{Preferences}
+  \includegraphics[height=3.56in, width=4.56in]{../images/usermanual/g_editor_view_conceal.eps}
+\caption{Conceal Document}
 \label{default}
 \end{center}
 \end{figure}
+
 \begin{figure}[H]
 \begin{center}
-  \includegraphics[height=1.56in, width=2.56in]{../images/usermanual/nmenu_collaboration_conceal.bmp.eps}
-\caption{Preferences}
+  \includegraphics[height=2.62in, width=6.31in]{../images/usermanual/menu_collab_conceal.eps}
+\caption{Conceal Document (Menu)}
 \label{default}
 \end{center}
 \end{figure}
@@ -309,29 +368,32 @@ To open a existing document you have three posibilites:
 \subsection{Invite / Kick Users}
 \begin{figure}[H]
 \begin{center}
-  \includegraphics[height=1.56in, width=2.56in]{../images/usermanual/uview_invite.bmp.eps}
-\caption{Preferences}
+  \includegraphics[height=1.56in, width=2.56in]{../images/usermanual/g_uview_invite.eps}
+\caption{Invite User}
 \label{default}
 \end{center}
 \end{figure}
+
 \begin{figure}[H]
 \begin{center}
-  \includegraphics[height=1.56in, width=2.56in]{../images/usermanual/nmenu_collaboration_invite.bmp.eps}
-\caption{Preferences}
+  \includegraphics[height=2.62in, width=6.31in]{../images/usermanual/menu_collab_invite.eps}
+\caption{Invite User (Menu)}
 \label{default}
 \end{center}
 \end{figure}
+
 \begin{figure}[H]
 \begin{center}
-  \includegraphics[height=1.56in, width=2.56in]{../images/usermanual/pview_kick.bmp.eps}
-\caption{Preferences}
+  \includegraphics[height=1.56in, width=2.56in]{../images/usermanual/g_pview_kick.eps}
+\caption{Kick User}
 \label{default}
 \end{center}
 \end{figure}
+
 \begin{figure}[H]
 \begin{center}
-  \includegraphics[height=1.56in, width=2.56in]{../images/usermanual/nmenu_collaboration_kick.bmp.eps}
-\caption{Preferences}
+  \includegraphics[height=2.62in, width=6.31in]{../images/usermanual/menu_collab_kick.eps}
+\caption{Kick User (Menu)}
 \label{default}
 \end{center}
 \end{figure}
@@ -339,16 +401,70 @@ To open a existing document you have three posibilites:
 % 5.3 JOIN / LEAVE
 \subsection{Join / Leave Network Documents}
 
-- (Bild: %bview_join.eps)
-- (Bild: %dview_joined.eps)
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[height=1.56in, width=2.56in]{../images/usermanual/g_bview_join.eps}
+\caption{Join Document}
+\label{default}
+\end{center}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[height=2.62in, width=6.31in]{../images/usermanual/menu_collab_join.eps}
+\caption{Join Document (Menu)}
+\label{default}
+\end{center}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[height=1.56in, width=2.56in]{../images/usermanual/g_dview_leave.eps}
+\caption{Leave Document}
+\label{default}
+\end{center}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[height=2.62in, width=6.31in]{../images/usermanual/menu_collab_leave.eps}
+\caption{Leave Document (Menu)}
+\label{default}
+\end{center}
+\end{figure}
+
 
 % 5.4 DISCOVER
 \subsection{Discover Users}
 
 \begin{figure}[H]
 \begin{center}
-  \includegraphics[height=1.56in, width=2.56in]{../images/usermanual/nmenu_collaboration_discover.bmp.eps}
-\caption{Preferences}
+  \includegraphics[height=3.56in, width=4.56in]{../images/usermanual/menu_collab_discover.eps}
+\caption{Discover User Menu}
+\label{default}
+\end{center}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[height=2.17in, width=5.96in]{../images/usermanual/ace_discover.eps}
+\caption{Discover User Dialog}
+\label{default}
+\end{center}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[height=2.17in, width=6.67in]{../images/usermanual/discover_failed_inv_ip.eps}
+\caption{Discover User Dialog}
+\label{default}
+\end{center}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[height=2.17in, width=5.36in]{../images/usermanual/discover_failed_no_ace.eps}
+\caption{Discover User Dialog}
 \label{default}
 \end{center}
 \end{figure}
