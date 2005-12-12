@@ -28,7 +28,6 @@ import ch.iserver.ace.net.protocol.MainConnection;
 import ch.iserver.ace.net.protocol.ProtocolConstants;
 import ch.iserver.ace.net.protocol.RemoteUserSession;
 import ch.iserver.ace.net.protocol.Request;
-import ch.iserver.ace.net.protocol.RequestImpl;
 import ch.iserver.ace.net.protocol.Serializer;
 import ch.iserver.ace.net.protocol.SessionManager;
 import ch.iserver.ace.net.protocol.RequestImpl.DocumentInfo;

@@ -31,12 +31,10 @@ import ch.iserver.ace.net.RemoteDocumentProxy;
 import ch.iserver.ace.net.core.NetworkServiceImpl;
 import ch.iserver.ace.net.core.RemoteDocumentProxyExt;
 import ch.iserver.ace.net.core.RemoteDocumentProxyFactory;
-import ch.iserver.ace.net.core.RemoteDocumentProxyImpl;
 import ch.iserver.ace.net.core.RemoteUserProxyExt;
 import ch.iserver.ace.net.protocol.ProtocolConstants;
 import ch.iserver.ace.net.protocol.RemoteUserSession;
 import ch.iserver.ace.net.protocol.Request;
-import ch.iserver.ace.net.protocol.RequestImpl;
 import ch.iserver.ace.net.protocol.SessionManager;
 import ch.iserver.ace.net.protocol.RequestImpl.DocumentInfo;
 

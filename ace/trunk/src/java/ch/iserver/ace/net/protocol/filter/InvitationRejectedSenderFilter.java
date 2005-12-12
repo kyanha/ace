@@ -31,7 +31,7 @@ import ch.iserver.ace.net.protocol.Request;
 import ch.iserver.ace.net.protocol.Serializer;
 
 /**
- * Currently not used. Could be used later for an invitation-rejected notification 
+ * Used for an invitation-rejected notification 
  * to the inviting user.
  */
 public class InvitationRejectedSenderFilter extends AbstractRequestFilter {

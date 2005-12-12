@@ -70,7 +70,7 @@ public class RequestImpl implements Request {
 	 *
 	 * @see Request
 	 */
-	static class DocumentInfo {
+	public static class DocumentInfo {
 		//TODO: user id can be removed, since we have it in the Request
 		private String docId, name, userId;
 		private int participantId;
