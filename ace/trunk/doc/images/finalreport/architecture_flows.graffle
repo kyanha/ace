@@ -19,7 +19,7 @@
 	<key>MagnetsVisible</key>
 	<string>NO</string>
 	<key>ModificationDate</key>
-	<string>2005-12-07 18:37:00 +0100</string>
+	<string>2005-12-12 15:34:48 +0100</string>
 	<key>Modifier</key>
 	<string>Simon</string>
 	<key>PageBreaks</key>
@@ -104,7 +104,7 @@
 	CQkJCTwvYXJyYXk+CgkJCQkJPGtleT5jb20uYXBwbGUucHJpbnQudGlja2V0LmNsaWVu
 	dDwva2V5PgoJCQkJCTxzdHJpbmc+Y29tLmFwcGxlLnByaW50aW5nbWFuYWdlcjwvc3Ry
 	aW5nPgoJCQkJCTxrZXk+Y29tLmFwcGxlLnByaW50LnRpY2tldC5tb2REYXRlPC9rZXk+
-	CgkJCQkJPGRhdGU+MjAwNS0xMi0wN1QwNjo0MjozNVo8L2RhdGU+CgkJCQkJPGtleT5j
+	CgkJCQkJPGRhdGU+MjAwNS0xMi0xMlQxNDoxMjowNFo8L2RhdGU+CgkJCQkJPGtleT5j
 	b20uYXBwbGUucHJpbnQudGlja2V0LnN0YXRlRmxhZzwva2V5PgoJCQkJCTxpbnRlZ2Vy
 	PjA8L2ludGVnZXI+CgkJCQk8L2RpY3Q+CgkJCTwvYXJyYXk+CgkJPC9kaWN0PgoJCTxr
 	ZXk+Y29tLmFwcGxlLnByaW50LlBhZ2VGb3JtYXQuUE1BZGp1c3RlZFBhcGVyUmVjdDwv
@@ -118,7 +118,7 @@
 	CQkJCTxrZXk+Y29tLmFwcGxlLnByaW50LnRpY2tldC5jbGllbnQ8L2tleT4KCQkJCQk8
 	c3RyaW5nPmNvbS5hcHBsZS5wcmludGluZ21hbmFnZXI8L3N0cmluZz4KCQkJCQk8a2V5
 	PmNvbS5hcHBsZS5wcmludC50aWNrZXQubW9kRGF0ZTwva2V5PgoJCQkJCTxkYXRlPjIw
-	MDUtMTItMDdUMDY6NDI6MzVaPC9kYXRlPgoJCQkJCTxrZXk+Y29tLmFwcGxlLnByaW50
+	MDUtMTItMTJUMTQ6MTI6MDRaPC9kYXRlPgoJCQkJCTxrZXk+Y29tLmFwcGxlLnByaW50
 	LnRpY2tldC5zdGF0ZUZsYWc8L2tleT4KCQkJCQk8aW50ZWdlcj4wPC9pbnRlZ2VyPgoJ
 	CQkJPC9kaWN0PgoJCQk8L2FycmF5PgoJCTwvZGljdD4KCQk8a2V5PmNvbS5hcHBsZS5w
 	cmludC5QYXBlckluZm8uUE1QYXBlck5hbWU8L2tleT4KCQk8ZGljdD4KCQkJPGtleT5j
@@ -211,7 +211,7 @@
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>703</integer>
+					<integer>132</integer>
 					<key>Points</key>
 					<array>
 						<string>{116.501, 569.039}</string>
@@ -236,7 +236,7 @@
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>702</integer>
+					<integer>131</integer>
 					<key>Points</key>
 					<array>
 						<string>{116.501, 620.039}</string>
@@ -261,7 +261,7 @@
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>701</integer>
+					<integer>130</integer>
 					<key>Points</key>
 					<array>
 						<string>{116.504, 689.965}</string>
@@ -284,15 +284,22 @@
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{125.5, 669.5}, {324, 14}}</string>
+					<string>{{125.5, 669.5}, {272, 12}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>FitText</key>
 					<string>YES</string>
 					<key>Flow</key>
 					<string>Resize</string>
+					<key>FontInfo</key>
+					<dict>
+						<key>Font</key>
+						<string>Helvetica</string>
+						<key>Size</key>
+						<real>11</real>
+					</dict>
 					<key>ID</key>
-					<integer>700</integer>
+					<integer>129</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -321,7 +328,7 @@
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc\pardirnatural
 
-\f0\fs24 \cf0 accepted(SessionConnection):SessionConnectionCallback}</string>
+\f0\fs20 \cf0 accepted(SessionConnection):SessionConnectionCallback}</string>
 					</dict>
 					<key>Wrap</key>
 					<string>NO</string>
@@ -336,7 +343,7 @@
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>699</integer>
+					<integer>128</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -374,11 +381,11 @@
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>698</integer>
+					<integer>127</integer>
 					<key>Points</key>
 					<array>
 						<string>{71.5001, 651}</string>
-						<string>{450, 651}</string>
+						<string>{408, 651}</string>
 					</array>
 					<key>Style</key>
 					<dict>
@@ -405,7 +412,7 @@
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>697</integer>
+					<integer>126</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -443,11 +450,11 @@
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>696</integer>
+					<integer>125</integer>
 					<key>Points</key>
 					<array>
 						<string>{71.5001, 589}</string>
-						<string>{450, 589}</string>
+						<string>{408, 589}</string>
 					</array>
 					<key>Style</key>
 					<dict>
@@ -466,15 +473,22 @@
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{126.5, 601}, {260, 14}}</string>
+					<string>{{126.5, 601}, {218, 12}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>FitText</key>
 					<string>YES</string>
 					<key>Flow</key>
 					<string>Resize</string>
+					<key>FontInfo</key>
+					<dict>
+						<key>Font</key>
+						<string>Helvetica</string>
+						<key>Size</key>
+						<real>11</real>
+					</dict>
 					<key>ID</key>
-					<integer>695</integer>
+					<integer>124</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -503,7 +517,7 @@
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc\pardirnatural
 
-\f0\fs24 \cf0 accepted(Session):ParticipantSessionCallback}</string>
+\f0\fs20 \cf0 accepted(Session):ParticipantSessionCallback}</string>
 					</dict>
 					<key>Wrap</key>
 					<string>NO</string>
@@ -525,7 +539,7 @@
 						<real>17</real>
 					</dict>
 					<key>ID</key>
-					<integer>694</integer>
+					<integer>123</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -563,7 +577,7 @@
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>693</integer>
+					<integer>122</integer>
 					<key>Points</key>
 					<array>
 						<string>{352, 439}</string>
@@ -584,15 +598,22 @@
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{360, 373}, {163, 42}}</string>
+					<string>{{360, 373}, {138, 36}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>FitText</key>
 					<string>YES</string>
 					<key>Flow</key>
 					<string>Resize</string>
+					<key>FontInfo</key>
+					<dict>
+						<key>Font</key>
+						<string>Helvetica</string>
+						<key>Size</key>
+						<real>11</real>
+					</dict>
 					<key>ID</key>
-					<integer>692</integer>
+					<integer>121</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -621,9 +642,9 @@
 						<string>{\rtf1\mac\ansicpg10000\cocoartf824\cocoasubrtf230
 {\fonttbl\f0\fswiss\fcharset77 Helvetica;}
 {\colortbl;\red255\green255\blue255;}
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
 
-\f0\fs24 \cf0 setParticipantId(...)\
+\f0\fs20 \cf0 setParticipantId(...)\
 joinAccepted(ParticipantPort\
 sendDocument(...)}</string>
 					</dict>
@@ -640,7 +661,7 @@ sendDocument(...)}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>691</integer>
+					<integer>120</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -678,11 +699,11 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>690</integer>
+					<integer>119</integer>
 					<key>Points</key>
 					<array>
 						<string>{307, 417}</string>
-						<string>{524, 417}</string>
+						<string>{499, 417}</string>
 					</array>
 					<key>Style</key>
 					<dict>
@@ -705,12 +726,12 @@ sendDocument(...)}</string>
 					<key>Head</key>
 					<dict>
 						<key>ID</key>
-						<integer>690</integer>
+						<integer>119</integer>
 						<key>Position</key>
-						<real>0.20737327635288239</real>
+						<real>0.234375</real>
 					</dict>
 					<key>ID</key>
-					<integer>689</integer>
+					<integer>118</integer>
 					<key>Points</key>
 					<array>
 						<string>{352, 386}</string>
@@ -739,7 +760,7 @@ sendDocument(...)}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>688</integer>
+					<integer>117</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -777,11 +798,11 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>687</integer>
+					<integer>116</integer>
 					<key>Points</key>
 					<array>
 						<string>{307, 355}</string>
-						<string>{524, 355}</string>
+						<string>{499, 355}</string>
 					</array>
 					<key>Style</key>
 					<dict>
@@ -800,15 +821,22 @@ sendDocument(...)}</string>
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{360, 323}, {55, 14}}</string>
+					<string>{{360, 323}, {48, 12}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>FitText</key>
 					<string>YES</string>
 					<key>Flow</key>
 					<string>Resize</string>
+					<key>FontInfo</key>
+					<dict>
+						<key>Font</key>
+						<string>Helvetica</string>
+						<key>Size</key>
+						<real>11</real>
+					</dict>
 					<key>ID</key>
-					<integer>686</integer>
+					<integer>115</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -837,7 +865,7 @@ sendDocument(...)}</string>
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc\pardirnatural
 
-\f0\fs24 \cf0 accept()}</string>
+\f0\fs20 \cf0 accept()}</string>
 					</dict>
 					<key>Wrap</key>
 					<string>NO</string>
@@ -848,12 +876,12 @@ sendDocument(...)}</string>
 					<key>Head</key>
 					<dict>
 						<key>ID</key>
-						<integer>687</integer>
+						<integer>116</integer>
 						<key>Position</key>
-						<real>0.20737327635288239</real>
+						<real>0.234375</real>
 					</dict>
 					<key>ID</key>
-					<integer>685</integer>
+					<integer>114</integer>
 					<key>Points</key>
 					<array>
 						<string>{352, 312}</string>
@@ -876,7 +904,7 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>684</integer>
+					<integer>113</integer>
 					<key>Points</key>
 					<array>
 						<string>{116.501, 335.039}</string>
@@ -901,7 +929,7 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>683</integer>
+					<integer>112</integer>
 					<key>Points</key>
 					<array>
 						<string>{116.501, 386.039}</string>
@@ -939,7 +967,7 @@ sendDocument(...)}</string>
 						<real>17</real>
 					</dict>
 					<key>ID</key>
-					<integer>682</integer>
+					<integer>111</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -977,7 +1005,7 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>681</integer>
+					<integer>110</integer>
 					<key>Points</key>
 					<array>
 						<string>{116.504, 455.965}</string>
@@ -1000,15 +1028,22 @@ sendDocument(...)}</string>
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{125.5, 435.5}, {156, 14}}</string>
+					<string>{{125.5, 435.5}, {132, 12}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>FitText</key>
 					<string>YES</string>
 					<key>Flow</key>
 					<string>Resize</string>
+					<key>FontInfo</key>
+					<dict>
+						<key>Font</key>
+						<string>Helvetica</string>
+						<key>Size</key>
+						<real>11</real>
+					</dict>
 					<key>ID</key>
-					<integer>680</integer>
+					<integer>109</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -1037,7 +1072,7 @@ sendDocument(...)}</string>
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc\pardirnatural
 
-\f0\fs24 \cf0 join(ParticipantConnection)}</string>
+\f0\fs20 \cf0 join(ParticipantConnection)}</string>
 					</dict>
 					<key>Wrap</key>
 					<string>NO</string>
@@ -1052,7 +1087,7 @@ sendDocument(...)}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>679</integer>
+					<integer>108</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -1090,11 +1125,11 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>678</integer>
+					<integer>107</integer>
 					<key>Points</key>
 					<array>
 						<string>{71.5, 417}</string>
-						<string>{288.5, 417}</string>
+						<string>{262, 417}</string>
 					</array>
 					<key>Style</key>
 					<dict>
@@ -1121,7 +1156,7 @@ sendDocument(...)}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>677</integer>
+					<integer>106</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -1159,11 +1194,11 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>676</integer>
+					<integer>105</integer>
 					<key>Points</key>
 					<array>
 						<string>{71.5, 355}</string>
-						<string>{288.5, 355}</string>
+						<string>{262, 355}</string>
 					</array>
 					<key>Style</key>
 					<dict>
@@ -1182,15 +1217,22 @@ sendDocument(...)}</string>
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{126.5, 367}, {150, 14}}</string>
+					<string>{{126.5, 367}, {127, 12}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>FitText</key>
 					<string>YES</string>
 					<key>Flow</key>
 					<string>Resize</string>
+					<key>FontInfo</key>
+					<dict>
+						<key>Font</key>
+						<string>Helvetica</string>
+						<key>Size</key>
+						<real>11</real>
+					</dict>
 					<key>ID</key>
-					<integer>675</integer>
+					<integer>104</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -1219,7 +1261,7 @@ sendDocument(...)}</string>
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc\pardirnatural
 
-\f0\fs24 \cf0 joinRequest(JoinRequest)}</string>
+\f0\fs20 \cf0 joinRequest(JoinRequest)}</string>
 					</dict>
 					<key>Wrap</key>
 					<string>NO</string>
@@ -1241,7 +1283,7 @@ sendDocument(...)}</string>
 						<real>17</real>
 					</dict>
 					<key>ID</key>
-					<integer>674</integer>
+					<integer>103</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -1292,7 +1334,7 @@ sendDocument(...)}</string>
 						<real>12</real>
 					</dict>
 					<key>ID</key>
-					<integer>673</integer>
+					<integer>102</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -1343,7 +1385,7 @@ sendDocument(...)}</string>
 						<real>12</real>
 					</dict>
 					<key>ID</key>
-					<integer>672</integer>
+					<integer>101</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -1394,7 +1436,7 @@ sendDocument(...)}</string>
 						<real>12</real>
 					</dict>
 					<key>ID</key>
-					<integer>671</integer>
+					<integer>100</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -1432,7 +1474,7 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>670</integer>
+					<integer>99</integer>
 					<key>Points</key>
 					<array>
 						<string>{302, 166}</string>
@@ -1457,7 +1499,7 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>669</integer>
+					<integer>98</integer>
 					<key>Points</key>
 					<array>
 						<string>{302, 104}</string>
@@ -1482,7 +1524,7 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>668</integer>
+					<integer>97</integer>
 					<key>Points</key>
 					<array>
 						<string>{106, 188}</string>
@@ -1503,15 +1545,22 @@ sendDocument(...)}</string>
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{114, 139}, {150, 14}}</string>
+					<string>{{114, 139}, {127, 12}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>FitText</key>
 					<string>YES</string>
 					<key>Flow</key>
 					<string>Resize</string>
+					<key>FontInfo</key>
+					<dict>
+						<key>Font</key>
+						<string>Helvetica</string>
+						<key>Size</key>
+						<real>11</real>
+					</dict>
 					<key>ID</key>
-					<integer>667</integer>
+					<integer>96</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -1540,7 +1589,7 @@ sendDocument(...)}</string>
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc\pardirnatural
 
-\f0\fs24 \cf0 join(JoinNetworkCallback)}</string>
+\f0\fs20 \cf0 join(JoinNetworkCallback)}</string>
 					</dict>
 					<key>Wrap</key>
 					<string>NO</string>
@@ -1555,7 +1604,7 @@ sendDocument(...)}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>666</integer>
+					<integer>95</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -1593,11 +1642,11 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>665</integer>
+					<integer>94</integer>
 					<key>Points</key>
 					<array>
 						<string>{61, 166}</string>
-						<string>{278, 166}</string>
+						<string>{246, 166}</string>
 					</array>
 					<key>Style</key>
 					<dict>
@@ -1620,12 +1669,12 @@ sendDocument(...)}</string>
 					<key>Head</key>
 					<dict>
 						<key>ID</key>
-						<integer>665</integer>
+						<integer>94</integer>
 						<key>Position</key>
-						<real>0.20737327635288239</real>
+						<real>0.24324324727058411</real>
 					</dict>
 					<key>ID</key>
-					<integer>664</integer>
+					<integer>93</integer>
 					<key>Points</key>
 					<array>
 						<string>{106, 135}</string>
@@ -1654,7 +1703,7 @@ sendDocument(...)}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>663</integer>
+					<integer>92</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -1692,11 +1741,11 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>662</integer>
+					<integer>91</integer>
 					<key>Points</key>
 					<array>
 						<string>{61, 104}</string>
-						<string>{278, 104}</string>
+						<string>{246, 104}</string>
 					</array>
 					<key>Style</key>
 					<dict>
@@ -1715,15 +1764,22 @@ sendDocument(...)}</string>
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{114, 72}, {106, 14}}</string>
+					<string>{{114, 72}, {90, 12}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>FitText</key>
 					<string>YES</string>
 					<key>Flow</key>
 					<string>Resize</string>
+					<key>FontInfo</key>
+					<dict>
+						<key>Font</key>
+						<string>Helvetica</string>
+						<key>Size</key>
+						<real>11</real>
+					</dict>
 					<key>ID</key>
-					<integer>661</integer>
+					<integer>90</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -1752,7 +1808,7 @@ sendDocument(...)}</string>
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc\pardirnatural
 
-\f0\fs24 \cf0 join(JoinCallback)}</string>
+\f0\fs20 \cf0 join(JoinCallback)}</string>
 					</dict>
 					<key>Wrap</key>
 					<string>NO</string>
@@ -1763,12 +1819,12 @@ sendDocument(...)}</string>
 					<key>Head</key>
 					<dict>
 						<key>ID</key>
-						<integer>662</integer>
+						<integer>91</integer>
 						<key>Position</key>
-						<real>0.20737327635288239</real>
+						<real>0.24324324727058411</real>
 					</dict>
 					<key>ID</key>
-					<integer>660</integer>
+					<integer>89</integer>
 					<key>Points</key>
 					<array>
 						<string>{106, 61}</string>
@@ -1808,7 +1864,10 @@ sendDocument(...)}</string>
 				</dict>
 			</array>
 			<key>LayoutInfo</key>
-			<dict/>
+			<dict>
+				<key>ChildOrdering</key>
+				<integer>0</integer>
+			</dict>
 			<key>Orientation</key>
 			<integer>2</integer>
 			<key>RowAlign</key>
@@ -1849,7 +1908,7 @@ sendDocument(...)}</string>
 						<real>17</real>
 					</dict>
 					<key>ID</key>
-					<integer>280</integer>
+					<integer>60</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -1900,7 +1959,7 @@ sendDocument(...)}</string>
 						<real>17</real>
 					</dict>
 					<key>ID</key>
-					<integer>279</integer>
+					<integer>59</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -1938,7 +1997,7 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>278</integer>
+					<integer>58</integer>
 					<key>Points</key>
 					<array>
 						<string>{110, 215}</string>
@@ -1959,15 +2018,22 @@ sendDocument(...)}</string>
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{118, 166}, {271, 14}}</string>
+					<string>{{118, 166}, {228, 12}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>FitText</key>
 					<string>YES</string>
 					<key>Flow</key>
 					<string>Resize</string>
+					<key>FontInfo</key>
+					<dict>
+						<key>Font</key>
+						<string>Helvetica</string>
+						<key>Size</key>
+						<real>11</real>
+					</dict>
 					<key>ID</key>
-					<integer>277</integer>
+					<integer>57</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -1996,7 +2062,7 @@ sendDocument(...)}</string>
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc\pardirnatural
 
-\f0\fs24 \cf0 publish(DocumentServerLogic,DocumentDetails)}</string>
+\f0\fs20 \cf0 publish(DocumentServerLogic,DocumentDetails)}</string>
 					</dict>
 					<key>Wrap</key>
 					<string>NO</string>
@@ -2011,7 +2077,7 @@ sendDocument(...)}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>276</integer>
+					<integer>56</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -2049,11 +2115,11 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>275</integer>
+					<integer>55</integer>
 					<key>Points</key>
 					<array>
 						<string>{65, 193}</string>
-						<string>{506, 193}</string>
+						<string>{449, 193}</string>
 					</array>
 					<key>Style</key>
 					<dict>
@@ -2074,7 +2140,7 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>274</integer>
+					<integer>54</integer>
 					<key>Points</key>
 					<array>
 						<string>{110, 162}</string>
@@ -2103,7 +2169,7 @@ sendDocument(...)}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>273</integer>
+					<integer>53</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -2141,11 +2207,11 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>272</integer>
+					<integer>52</integer>
 					<key>Points</key>
 					<array>
 						<string>{65, 131}</string>
-						<string>{506, 131}</string>
+						<string>{449, 131}</string>
 					</array>
 					<key>Style</key>
 					<dict>
@@ -2164,15 +2230,22 @@ sendDocument(...)}</string>
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{118, 99}, {388, 14}}</string>
+					<string>{{118, 99}, {326, 12}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>FitText</key>
 					<string>YES</string>
 					<key>Flow</key>
 					<string>Resize</string>
+					<key>FontInfo</key>
+					<dict>
+						<key>Font</key>
+						<string>Helvetica</string>
+						<key>Size</key>
+						<real>11</real>
+					</dict>
 					<key>ID</key>
-					<integer>271</integer>
+					<integer>51</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -2201,7 +2274,7 @@ sendDocument(...)}</string>
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc\pardirnatural
 
-\f0\fs24 \cf0 publish(PublishedSessionCallback,DocumentModel):PublishedSession}</string>
+\f0\fs20 \cf0 publish(PublishedSessionCallback,DocumentModel):PublishedSession}</string>
 					</dict>
 					<key>Wrap</key>
 					<string>NO</string>
@@ -2210,7 +2283,7 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>270</integer>
+					<integer>50</integer>
 					<key>Points</key>
 					<array>
 						<string>{110, 88}</string>
@@ -2233,7 +2306,7 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>269</integer>
+					<integer>49</integer>
 					<key>Points</key>
 					<array>
 						<string>{116.501, 335.039}</string>
@@ -2258,7 +2331,7 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>268</integer>
+					<integer>48</integer>
 					<key>Points</key>
 					<array>
 						<string>{116.501, 386.039}</string>
@@ -2283,7 +2356,7 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>267</integer>
+					<integer>47</integer>
 					<key>Points</key>
 					<array>
 						<string>{116.504, 455.965}</string>
@@ -2306,15 +2379,22 @@ sendDocument(...)}</string>
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{125.5, 435.5}, {266, 14}}</string>
+					<string>{{125.5, 435.5}, {224, 12}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>FitText</key>
 					<string>YES</string>
 					<key>Flow</key>
 					<string>Resize</string>
+					<key>FontInfo</key>
+					<dict>
+						<key>Font</key>
+						<string>Helvetica</string>
+						<key>Size</key>
+						<real>11</real>
+					</dict>
 					<key>ID</key>
-					<integer>266</integer>
+					<integer>46</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -2343,7 +2423,7 @@ sendDocument(...)}</string>
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc\pardirnatural
 
-\f0\fs24 \cf0 documentDiscovered(RemoteDocumentProxy[])}</string>
+\f0\fs20 \cf0 documentDiscovered(RemoteDocumentProxy[])}</string>
 					</dict>
 					<key>Wrap</key>
 					<string>NO</string>
@@ -2358,7 +2438,7 @@ sendDocument(...)}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>265</integer>
+					<integer>45</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -2396,11 +2476,11 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>264</integer>
+					<integer>44</integer>
 					<key>Points</key>
 					<array>
 						<string>{71.5, 417}</string>
-						<string>{397, 417}</string>
+						<string>{352, 417}</string>
 					</array>
 					<key>Style</key>
 					<dict>
@@ -2427,7 +2507,7 @@ sendDocument(...)}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>263</integer>
+					<integer>43</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -2465,11 +2545,11 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>262</integer>
+					<integer>42</integer>
 					<key>Points</key>
 					<array>
 						<string>{71.5, 355}</string>
-						<string>{397, 355}</string>
+						<string>{352, 355}</string>
 					</array>
 					<key>Style</key>
 					<dict>
@@ -2488,15 +2568,22 @@ sendDocument(...)}</string>
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{126.5, 367}, {236, 14}}</string>
+					<string>{{126.5, 367}, {198, 12}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>FitText</key>
 					<string>YES</string>
 					<key>Flow</key>
 					<string>Resize</string>
+					<key>FontInfo</key>
+					<dict>
+						<key>Font</key>
+						<string>Helvetica</string>
+						<key>Size</key>
+						<real>11</real>
+					</dict>
 					<key>ID</key>
-					<integer>261</integer>
+					<integer>41</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -2525,7 +2612,7 @@ sendDocument(...)}</string>
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc\pardirnatural
 
-\f0\fs24 \cf0 documentDiscovered(RemoteDocument[])}</string>
+\f0\fs20 \cf0 documentDiscovered(RemoteDocument[])}</string>
 					</dict>
 					<key>Wrap</key>
 					<string>NO</string>
@@ -2595,7 +2682,7 @@ sendDocument(...)}</string>
 						<real>17</real>
 					</dict>
 					<key>ID</key>
-					<integer>388</integer>
+					<integer>108</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -2633,7 +2720,7 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>387</integer>
+					<integer>107</integer>
 					<key>Points</key>
 					<array>
 						<string>{332.504, 230.965}</string>
@@ -2656,15 +2743,22 @@ sendDocument(...)}</string>
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{341.5, 210.5}, {172, 14}}</string>
+					<string>{{341.5, 210.5}, {145, 12}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>FitText</key>
 					<string>YES</string>
 					<key>Flow</key>
 					<string>Resize</string>
+					<key>FontInfo</key>
+					<dict>
+						<key>Font</key>
+						<string>Helvetica</string>
+						<key>Size</key>
+						<real>11</real>
+					</dict>
 					<key>ID</key>
-					<integer>386</integer>
+					<integer>106</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -2693,7 +2787,7 @@ sendDocument(...)}</string>
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc\pardirnatural
 
-\f0\fs24 \cf0 accept(ParticipantConnection)}</string>
+\f0\fs20 \cf0 accept(ParticipantConnection)}</string>
 					</dict>
 					<key>Wrap</key>
 					<string>NO</string>
@@ -2708,7 +2802,7 @@ sendDocument(...)}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>385</integer>
+					<integer>105</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -2746,11 +2840,11 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>384</integer>
+					<integer>104</integer>
 					<key>Points</key>
 					<array>
 						<string>{287.5, 192}</string>
-						<string>{517, 192}</string>
+						<string>{486, 192}</string>
 					</array>
 					<key>Style</key>
 					<dict>
@@ -2771,11 +2865,11 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>383</integer>
+					<integer>103</integer>
 					<key>Points</key>
 					<array>
 						<string>{287.5, 130}</string>
-						<string>{517, 130}</string>
+						<string>{486, 130}</string>
 					</array>
 					<key>Style</key>
 					<dict>
@@ -2809,7 +2903,7 @@ sendDocument(...)}</string>
 						<real>17</real>
 					</dict>
 					<key>ID</key>
-					<integer>382</integer>
+					<integer>102</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -2847,7 +2941,7 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>381</integer>
+					<integer>101</integer>
 					<key>Points</key>
 					<array>
 						<string>{110, 665}</string>
@@ -2868,15 +2962,22 @@ sendDocument(...)}</string>
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{118, 616}, {167, 14}}</string>
+					<string>{{118, 616}, {141, 12}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>FitText</key>
 					<string>YES</string>
 					<key>Flow</key>
 					<string>Resize</string>
+					<key>FontInfo</key>
+					<dict>
+						<key>Font</key>
+						<string>Helvetica</string>
+						<key>Size</key>
+						<real>11</real>
+					</dict>
 					<key>ID</key>
-					<integer>380</integer>
+					<integer>100</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -2905,7 +3006,7 @@ sendDocument(...)}</string>
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc\pardirnatural
 
-\f0\fs24 \cf0 accept(JoinNetworkCallback)}</string>
+\f0\fs20 \cf0 accept(JoinNetworkCallback)}</string>
 					</dict>
 					<key>Wrap</key>
 					<string>NO</string>
@@ -2920,7 +3021,7 @@ sendDocument(...)}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>379</integer>
+					<integer>99</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -2958,11 +3059,11 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>378</integer>
+					<integer>98</integer>
 					<key>Points</key>
 					<array>
 						<string>{65, 643}</string>
-						<string>{294, 643}</string>
+						<string>{263, 643}</string>
 					</array>
 					<key>Style</key>
 					<dict>
@@ -2983,7 +3084,7 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>377</integer>
+					<integer>97</integer>
 					<key>Points</key>
 					<array>
 						<string>{110, 612}</string>
@@ -3012,7 +3113,7 @@ sendDocument(...)}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>376</integer>
+					<integer>96</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -3050,11 +3151,11 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>375</integer>
+					<integer>95</integer>
 					<key>Points</key>
 					<array>
 						<string>{65, 581}</string>
-						<string>{294, 581}</string>
+						<string>{263, 581}</string>
 					</array>
 					<key>Style</key>
 					<dict>
@@ -3073,15 +3174,22 @@ sendDocument(...)}</string>
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{118, 549}, {123, 14}}</string>
+					<string>{{118, 549}, {104, 12}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>FitText</key>
 					<string>YES</string>
 					<key>Flow</key>
 					<string>Resize</string>
+					<key>FontInfo</key>
+					<dict>
+						<key>Font</key>
+						<string>Helvetica</string>
+						<key>Size</key>
+						<real>11</real>
+					</dict>
 					<key>ID</key>
-					<integer>374</integer>
+					<integer>94</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -3110,7 +3218,7 @@ sendDocument(...)}</string>
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc\pardirnatural
 
-\f0\fs24 \cf0 accept(JoinCallback)}</string>
+\f0\fs20 \cf0 accept(JoinCallback)}</string>
 					</dict>
 					<key>Wrap</key>
 					<string>NO</string>
@@ -3119,7 +3227,7 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>373</integer>
+					<integer>93</integer>
 					<key>Points</key>
 					<array>
 						<string>{110, 538}</string>
@@ -3155,7 +3263,7 @@ sendDocument(...)}</string>
 						<real>17</real>
 					</dict>
 					<key>ID</key>
-					<integer>372</integer>
+					<integer>92</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -3206,7 +3314,7 @@ sendDocument(...)}</string>
 						<real>17</real>
 					</dict>
 					<key>ID</key>
-					<integer>371</integer>
+					<integer>91</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -3244,7 +3352,7 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>370</integer>
+					<integer>90</integer>
 					<key>Points</key>
 					<array>
 						<string>{110, 215}</string>
@@ -3265,15 +3373,22 @@ sendDocument(...)}</string>
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{118, 166}, {118, 14}}</string>
+					<string>{{118, 166}, {100, 12}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>FitText</key>
 					<string>YES</string>
 					<key>Flow</key>
 					<string>Resize</string>
+					<key>FontInfo</key>
+					<dict>
+						<key>Font</key>
+						<string>Helvetica</string>
+						<key>Size</key>
+						<real>11</real>
+					</dict>
 					<key>ID</key>
-					<integer>369</integer>
+					<integer>89</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -3302,7 +3417,7 @@ sendDocument(...)}</string>
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc\pardirnatural
 
-\f0\fs24 \cf0 invite(InvitationPort)}</string>
+\f0\fs20 \cf0 invite(InvitationPort)}</string>
 					</dict>
 					<key>Wrap</key>
 					<string>NO</string>
@@ -3317,7 +3432,7 @@ sendDocument(...)}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>368</integer>
+					<integer>88</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -3355,11 +3470,11 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>367</integer>
+					<integer>87</integer>
 					<key>Points</key>
 					<array>
 						<string>{65, 193}</string>
-						<string>{269, 193}</string>
+						<string>{226, 193}</string>
 					</array>
 					<key>Style</key>
 					<dict>
@@ -3380,7 +3495,7 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>366</integer>
+					<integer>86</integer>
 					<key>Points</key>
 					<array>
 						<string>{110, 162}</string>
@@ -3409,7 +3524,7 @@ sendDocument(...)}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>365</integer>
+					<integer>85</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -3447,11 +3562,11 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>364</integer>
+					<integer>84</integer>
 					<key>Points</key>
 					<array>
 						<string>{65, 131}</string>
-						<string>{269, 131}</string>
+						<string>{226, 131}</string>
 					</array>
 					<key>Style</key>
 					<dict>
@@ -3470,15 +3585,22 @@ sendDocument(...)}</string>
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{118, 99}, {115, 14}}</string>
+					<string>{{118, 99}, {98, 12}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>FitText</key>
 					<string>YES</string>
 					<key>Flow</key>
 					<string>Resize</string>
+					<key>FontInfo</key>
+					<dict>
+						<key>Font</key>
+						<string>Helvetica</string>
+						<key>Size</key>
+						<real>11</real>
+					</dict>
 					<key>ID</key>
-					<integer>363</integer>
+					<integer>83</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -3507,7 +3629,7 @@ sendDocument(...)}</string>
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc\pardirnatural
 
-\f0\fs24 \cf0 invite(RemoteUser)}</string>
+\f0\fs20 \cf0 invite(RemoteUser)}</string>
 					</dict>
 					<key>Wrap</key>
 					<string>NO</string>
@@ -3516,7 +3638,7 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>362</integer>
+					<integer>82</integer>
 					<key>Points</key>
 					<array>
 						<string>{110, 88}</string>
@@ -3539,7 +3661,7 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>361</integer>
+					<integer>81</integer>
 					<key>Points</key>
 					<array>
 						<string>{116.501, 335.039}</string>
@@ -3564,7 +3686,7 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>360</integer>
+					<integer>80</integer>
 					<key>Points</key>
 					<array>
 						<string>{116.501, 386.039}</string>
@@ -3589,7 +3711,7 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>359</integer>
+					<integer>79</integer>
 					<key>Points</key>
 					<array>
 						<string>{116.504, 455.965}</string>
@@ -3612,15 +3734,22 @@ sendDocument(...)}</string>
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{125.5, 435.5}, {196, 14}}</string>
+					<string>{{125.5, 435.5}, {165, 12}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>FitText</key>
 					<string>YES</string>
 					<key>Flow</key>
 					<string>Resize</string>
+					<key>FontInfo</key>
+					<dict>
+						<key>Font</key>
+						<string>Helvetica</string>
+						<key>Size</key>
+						<real>11</real>
+					</dict>
 					<key>ID</key>
-					<integer>358</integer>
+					<integer>78</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -3649,7 +3778,7 @@ sendDocument(...)}</string>
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc\pardirnatural
 
-\f0\fs24 \cf0 invitationReceived(InvitationProxy)}</string>
+\f0\fs20 \cf0 invitationReceived(InvitationProxy)}</string>
 					</dict>
 					<key>Wrap</key>
 					<string>NO</string>
@@ -3664,7 +3793,7 @@ sendDocument(...)}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>357</integer>
+					<integer>77</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -3702,11 +3831,11 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>356</integer>
+					<integer>76</integer>
 					<key>Points</key>
 					<array>
 						<string>{71.5, 417}</string>
-						<string>{321, 417}</string>
+						<string>{293, 417}</string>
 					</array>
 					<key>Style</key>
 					<dict>
@@ -3733,7 +3862,7 @@ sendDocument(...)}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>355</integer>
+					<integer>75</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -3771,11 +3900,11 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>354</integer>
+					<integer>74</integer>
 					<key>Points</key>
 					<array>
 						<string>{71.5, 355}</string>
-						<string>{321, 355}</string>
+						<string>{293, 355}</string>
 					</array>
 					<key>Style</key>
 					<dict>
@@ -3794,15 +3923,22 @@ sendDocument(...)}</string>
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{126.5, 367}, {165, 14}}</string>
+					<string>{{126.5, 367}, {139, 12}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>FitText</key>
 					<string>YES</string>
 					<key>Flow</key>
 					<string>Resize</string>
+					<key>FontInfo</key>
+					<dict>
+						<key>Font</key>
+						<string>Helvetica</string>
+						<key>Size</key>
+						<real>11</real>
+					</dict>
 					<key>ID</key>
-					<integer>353</integer>
+					<integer>73</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -3831,7 +3967,7 @@ sendDocument(...)}</string>
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc\pardirnatural
 
-\f0\fs24 \cf0 invitationReceived(Invitation)}</string>
+\f0\fs20 \cf0 invitationReceived(Invitation)}</string>
 					</dict>
 					<key>Wrap</key>
 					<string>NO</string>
@@ -3888,7 +4024,7 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>179</integer>
+					<integer>81</integer>
 					<key>Points</key>
 					<array>
 						<string>{287.501, 335.039}</string>
@@ -3913,7 +4049,7 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>178</integer>
+					<integer>80</integer>
 					<key>Points</key>
 					<array>
 						<string>{287.501, 386.039}</string>
@@ -3936,15 +4072,22 @@ sendDocument(...)}</string>
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{297.5, 367}, {177, 14}}</string>
+					<string>{{297.5, 367}, {149, 12}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>FitText</key>
 					<string>YES</string>
 					<key>Flow</key>
 					<string>Resize</string>
+					<key>FontInfo</key>
+					<dict>
+						<key>Font</key>
+						<string>Helvetica</string>
+						<key>Size</key>
+						<real>11</real>
+					</dict>
 					<key>ID</key>
-					<integer>177</integer>
+					<integer>79</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -3973,7 +4116,7 @@ sendDocument(...)}</string>
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc\pardirnatural
 
-\f0\fs24 \cf0 userDiscovered(RemoteUser[])}</string>
+\f0\fs20 \cf0 userDiscovered(RemoteUser[])}</string>
 					</dict>
 					<key>Wrap</key>
 					<string>NO</string>
@@ -3988,7 +4131,7 @@ sendDocument(...)}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>176</integer>
+					<integer>78</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -4032,7 +4175,7 @@ sendDocument(...)}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>175</integer>
+					<integer>77</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -4070,7 +4213,7 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>174</integer>
+					<integer>76</integer>
 					<key>Points</key>
 					<array>
 						<string>{287.504, 455.965}</string>
@@ -4093,15 +4236,22 @@ sendDocument(...)}</string>
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{296.5, 435.5}, {208, 14}}</string>
+					<string>{{296.5, 435.5}, {175, 12}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>FitText</key>
 					<string>YES</string>
 					<key>Flow</key>
 					<string>Resize</string>
+					<key>FontInfo</key>
+					<dict>
+						<key>Font</key>
+						<string>Helvetica</string>
+						<key>Size</key>
+						<real>11</real>
+					</dict>
 					<key>ID</key>
-					<integer>173</integer>
+					<integer>75</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -4130,7 +4280,7 @@ sendDocument(...)}</string>
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc\pardirnatural
 
-\f0\fs24 \cf0 userDiscovered(RemoteUserProxy[])}</string>
+\f0\fs20 \cf0 userDiscovered(RemoteUserProxy[])}</string>
 					</dict>
 					<key>Wrap</key>
 					<string>NO</string>
@@ -4152,7 +4302,7 @@ sendDocument(...)}</string>
 						<real>17</real>
 					</dict>
 					<key>ID</key>
-					<integer>172</integer>
+					<integer>74</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -4190,7 +4340,7 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>171</integer>
+					<integer>73</integer>
 					<key>Points</key>
 					<array>
 						<string>{116.501, 335.039}</string>
@@ -4215,7 +4365,7 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>170</integer>
+					<integer>72</integer>
 					<key>Points</key>
 					<array>
 						<string>{116.501, 386.039}</string>
@@ -4240,7 +4390,7 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>169</integer>
+					<integer>71</integer>
 					<key>Points</key>
 					<array>
 						<string>{116.504, 455.965}</string>
@@ -4263,15 +4413,22 @@ sendDocument(...)}</string>
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{125.5, 435.5}, {156, 14}}</string>
+					<string>{{125.5, 435.5}, {132, 12}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>FitText</key>
 					<string>YES</string>
 					<key>Flow</key>
 					<string>Resize</string>
+					<key>FontInfo</key>
+					<dict>
+						<key>Font</key>
+						<string>Helvetica</string>
+						<key>Size</key>
+						<real>11</real>
+					</dict>
 					<key>ID</key>
-					<integer>168</integer>
+					<integer>70</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -4300,7 +4457,7 @@ sendDocument(...)}</string>
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc\pardirnatural
 
-\f0\fs24 \cf0 userDiscoverySucceeded()}</string>
+\f0\fs20 \cf0 userDiscoverySucceeded()}</string>
 					</dict>
 					<key>Wrap</key>
 					<string>NO</string>
@@ -4315,7 +4472,7 @@ sendDocument(...)}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>167</integer>
+					<integer>69</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -4353,11 +4510,11 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>166</integer>
+					<integer>68</integer>
 					<key>Points</key>
 					<array>
 						<string>{71.5, 417}</string>
-						<string>{510, 417}</string>
+						<string>{479, 417}</string>
 					</array>
 					<key>Style</key>
 					<dict>
@@ -4384,7 +4541,7 @@ sendDocument(...)}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>165</integer>
+					<integer>67</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -4422,11 +4579,11 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>164</integer>
+					<integer>66</integer>
 					<key>Points</key>
 					<array>
 						<string>{71.5, 355}</string>
-						<string>{510, 355}</string>
+						<string>{479, 355}</string>
 					</array>
 					<key>Style</key>
 					<dict>
@@ -4445,15 +4602,22 @@ sendDocument(...)}</string>
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{126.5, 367}, {88, 14}}</string>
+					<string>{{126.5, 367}, {75, 12}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>FitText</key>
 					<string>YES</string>
 					<key>Flow</key>
 					<string>Resize</string>
+					<key>FontInfo</key>
+					<dict>
+						<key>Font</key>
+						<string>Helvetica</string>
+						<key>Size</key>
+						<real>11</real>
+					</dict>
 					<key>ID</key>
-					<integer>163</integer>
+					<integer>65</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -4482,7 +4646,7 @@ sendDocument(...)}</string>
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc\pardirnatural
 
-\f0\fs24 \cf0 discovered(...)}</string>
+\f0\fs20 \cf0 discovered(...)}</string>
 					</dict>
 					<key>Wrap</key>
 					<string>NO</string>
@@ -4504,7 +4668,7 @@ sendDocument(...)}</string>
 						<real>17</real>
 					</dict>
 					<key>ID</key>
-					<integer>162</integer>
+					<integer>64</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -4542,7 +4706,7 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>161</integer>
+					<integer>63</integer>
 					<key>Points</key>
 					<array>
 						<string>{110, 215}</string>
@@ -4563,15 +4727,22 @@ sendDocument(...)}</string>
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{118, 166}, {246, 14}}</string>
+					<string>{{118, 166}, {207, 12}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>FitText</key>
 					<string>YES</string>
 					<key>Flow</key>
 					<string>Resize</string>
+					<key>FontInfo</key>
+					<dict>
+						<key>Font</key>
+						<string>Helvetica</string>
+						<key>Size</key>
+						<real>11</real>
+					</dict>
 					<key>ID</key>
-					<integer>160</integer>
+					<integer>62</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -4600,7 +4771,7 @@ sendDocument(...)}</string>
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc\pardirnatural
 
-\f0\fs24 \cf0 discoverUser(DiscoveryNetworkCallback,...)}</string>
+\f0\fs20 \cf0 discoverUser(DiscoveryNetworkCallback,...)}</string>
 					</dict>
 					<key>Wrap</key>
 					<string>NO</string>
@@ -4615,7 +4786,7 @@ sendDocument(...)}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>159</integer>
+					<integer>61</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -4653,11 +4824,11 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>158</integer>
+					<integer>60</integer>
 					<key>Points</key>
 					<array>
 						<string>{65, 193}</string>
-						<string>{366, 193}</string>
+						<string>{330, 193}</string>
 					</array>
 					<key>Style</key>
 					<dict>
@@ -4678,7 +4849,7 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>157</integer>
+					<integer>59</integer>
 					<key>Points</key>
 					<array>
 						<string>{110, 162}</string>
@@ -4707,7 +4878,7 @@ sendDocument(...)}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>156</integer>
+					<integer>58</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -4745,11 +4916,11 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>155</integer>
+					<integer>57</integer>
 					<key>Points</key>
 					<array>
 						<string>{65, 131}</string>
-						<string>{366, 131}</string>
+						<string>{330, 131}</string>
 					</array>
 					<key>Style</key>
 					<dict>
@@ -4768,15 +4939,22 @@ sendDocument(...)}</string>
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{118, 99}, {202, 14}}</string>
+					<string>{{118, 99}, {170, 12}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>FitText</key>
 					<string>YES</string>
 					<key>Flow</key>
 					<string>Resize</string>
+					<key>FontInfo</key>
+					<dict>
+						<key>Font</key>
+						<string>Helvetica</string>
+						<key>Size</key>
+						<real>11</real>
+					</dict>
 					<key>ID</key>
-					<integer>154</integer>
+					<integer>56</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -4805,7 +4983,7 @@ sendDocument(...)}</string>
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc\pardirnatural
 
-\f0\fs24 \cf0 discoverUser(DiscoveryCallback,...)}</string>
+\f0\fs20 \cf0 discoverUser(DiscoveryCallback,...)}</string>
 					</dict>
 					<key>Wrap</key>
 					<string>NO</string>
@@ -4814,7 +4992,7 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>153</integer>
+					<integer>55</integer>
 					<key>Points</key>
 					<array>
 						<string>{110, 88}</string>
@@ -4885,7 +5063,7 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>112</integer>
+					<integer>63</integer>
 					<key>Labels</key>
 					<array>
 						<dict>
@@ -4939,14 +5117,14 @@ sendDocument(...)}</string>
 					<key>Tail</key>
 					<dict>
 						<key>ID</key>
-						<integer>95</integer>
+						<integer>46</integer>
 					</dict>
 				</dict>
 				<dict>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>111</integer>
+					<integer>62</integer>
 					<key>Points</key>
 					<array>
 						<string>{260.501, 411.026}</string>
@@ -4969,7 +5147,7 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>110</integer>
+					<integer>61</integer>
 					<key>Points</key>
 					<array>
 						<string>{257.504, 240.965}</string>
@@ -4994,7 +5172,7 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>109</integer>
+					<integer>60</integer>
 					<key>Points</key>
 					<array>
 						<string>{257.501, 170.039}</string>
@@ -5019,7 +5197,7 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>108</integer>
+					<integer>59</integer>
 					<key>Points</key>
 					<array>
 						<string>{257.501, 111.039}</string>
@@ -5050,7 +5228,7 @@ sendDocument(...)}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>107</integer>
+					<integer>58</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -5094,7 +5272,7 @@ sendDocument(...)}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>106</integer>
+					<integer>57</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -5145,7 +5323,7 @@ sendDocument(...)}</string>
 						<real>17</real>
 					</dict>
 					<key>ID</key>
-					<integer>105</integer>
+					<integer>56</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -5196,7 +5374,7 @@ sendDocument(...)}</string>
 						<real>17</real>
 					</dict>
 					<key>ID</key>
-					<integer>104</integer>
+					<integer>55</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -5234,7 +5412,7 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>103</integer>
+					<integer>54</integer>
 					<key>Points</key>
 					<array>
 						<string>{110, 215}</string>
@@ -5263,7 +5441,7 @@ sendDocument(...)}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>102</integer>
+					<integer>53</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -5301,7 +5479,7 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>101</integer>
+					<integer>52</integer>
 					<key>Points</key>
 					<array>
 						<string>{65, 193}</string>
@@ -5326,7 +5504,7 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>100</integer>
+					<integer>51</integer>
 					<key>Points</key>
 					<array>
 						<string>{110, 162}</string>
@@ -5355,7 +5533,7 @@ sendDocument(...)}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>99</integer>
+					<integer>50</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -5393,7 +5571,7 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>98</integer>
+					<integer>49</integer>
 					<key>Points</key>
 					<array>
 						<string>{65, 131}</string>
@@ -5418,7 +5596,7 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>97</integer>
+					<integer>48</integer>
 					<key>Points</key>
 					<array>
 						<string>{110, 98}</string>
@@ -5441,7 +5619,7 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>96</integer>
+					<integer>47</integer>
 					<key>Points</key>
 					<array>
 						<string>{124.501, 424.039}</string>
@@ -5472,7 +5650,7 @@ sendDocument(...)}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>95</integer>
+					<integer>46</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -5510,7 +5688,7 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>94</integer>
+					<integer>45</integer>
 					<key>Points</key>
 					<array>
 						<string>{71.5001, 392}</string>
@@ -5541,7 +5719,7 @@ sendDocument(...)}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>93</integer>
+					<integer>44</integer>
 					<key>Shape</key>
 					<string>Rectangle</string>
 					<key>Style</key>
@@ -5579,7 +5757,7 @@ sendDocument(...)}</string>
 					<key>Class</key>
 					<string>LineGraphic</string>
 					<key>ID</key>
-					<integer>92</integer>
+					<integer>43</integer>
 					<key>Points</key>
 					<array>
 						<string>{71.5001, 331}</string>
@@ -5646,7 +5824,7 @@ sendDocument(...)}</string>
 	<key>WindowInfo</key>
 	<dict>
 		<key>CurrentSheet</key>
-		<string>2</string>
+		<string>4</string>
 		<key>Frame</key>
 		<string>{{214, 4}, {591, 742}}</string>
 		<key>ShowRuler</key>

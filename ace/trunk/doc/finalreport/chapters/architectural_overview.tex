@@ -837,22 +837,20 @@ in connection.
 
 
 \section{Fitting the Layers Together}
-In the previous two sections we have discussed the API between two adjacent
-layers separately. In this section we show how the whole fits together,
-as discussing the layers separately is a bit abstract.
-Because the design is based on 
-interfaces it is hard to say how exactly the implementation works. However,
-the figures represent conceptually how the layers fit together. We will
-describe the messages being sent based on use cases.
+In the previous two sections we have discussed the two APIs between adjacent
+layers separately. In this section we show how the whole fits together.
+The design is based on 
+interfaces. So it is impossible to say how exactly the implementation works. 
+The figures represent conceptually how the layers fit together. 
 
 
 \subsection{Explanations}
 In figure \ref{fig:archoverview.flow.skeleton} the basic skeleton of the
 figures used in the following sections is depicted. The figure shows the
 three layers of ACE: application, collaboration, and network layer. In 
-the following figures, these three layers are also visible. Class names
-printed inside a layer (i.e. inside an area separated by dashed lines), it
-belongs to that layer. Messages sent back and forth are shown with arrows. The
+the following figures, these three layers are always visible. Class names
+printed inside a layer (i.e. inside an area separated by dashed lines)
+belong to that layer. Messages sent back and forth are shown with arrows. The
 arrows have labels that correspond to the method beeing called on the target
 object.
 
@@ -867,21 +865,21 @@ object.
 \subsection{Publishing a Document}
 The figure \ref{fig:archoverview.flow.publish} shows how a document 
 is published.
-First, the \texttt{publish} method of the \texttt{CollaborationService} is 
+First, the \texttt{publish} method of the \texttt{Collaboration\-Service} is 
 called. The collabation layer in turn calls \texttt{publish} on the
-\texttt{NetworkService}. However, the call is not simply passed through the
+\texttt{Network\-Service}. However, the call is not simply passed through the
 collaboration layer. The collaboration layer creates an object implementing
-the \texttt{DocumentServerLogic}, which handles all the server logic of a
+the \texttt{Document\-Server\-Logic}, which handles all the server logic of a
 published document. This server logic hosts the server part of the
 operational transformation algorithm. It receives requests from users, 
 transforms them and forwards them to all other participants in the session.
-The \texttt{DocumentServerLogic} represents the interface seen by the
-network layer. For a description of that interface see 
-\ref{sect:archoverview.net.documentserverlogic}.
+The \texttt{Document\-Server\-Logic} represents the interface seen by the
+network layer for a published document. For a description of that interface 
+see section \ref{sect:archoverview.net.documentserverlogic}.
 
 \begin{figure}[H]
  \centering
- \includegraphics[width=15.70cm,height=5.72cm]{../images/finalreport/architecture_flows/publish.eps}
+ \includegraphics[width=13.69cm,height=5.72cm]{../images/finalreport/architecture_flows/publish.eps}
  \caption{Publishing a document}
  \label{fig:archoverview.flow.publish}
 \end{figure}
@@ -891,84 +889,90 @@ network layer. For a description of that interface see
 \label{sect:archoverview.flow.discovery}
 A document published by one user is discovered by the other users. These
 clients get notified about discovered documents through the method calls
-depicted in the figure \ref{fig:archoverview.flow.discovery}.
+depicted in figure \ref{fig:archoverview.flow.discovery}.
 
 \begin{figure}[H]
  \centering
- \includegraphics[width=11.84cm,height=5.50cm]{../images/finalreport/architecture_flows/discovery.eps}
+ \includegraphics[width=10.05cm,height=5.50cm]{../images/finalreport/architecture_flows/discovery.eps}
  \caption{Discovery of published documents}
  \label{fig:archoverview.flow.discovery}
 \end{figure}
 
 The network layer passes discovery events to the 
-\texttt{NetworkServiceCallback}. That callback object is then responsible
-to notify all registered \texttt{DocumentListener}s. The callback receives
-objects of type \texttt{RemoteDocumentProxy}. It passes objects of type
-\texttt{RemoteDocument} to the \texttt{DocumentListener}s. The reason
-for that separation into \texttt{RemoteDocument} and 
-\texttt{RemoteDocumentProxy} stems from the join procedure, which is
+\texttt{Network\-Service\-Callback}. That callback object is then responsible
+to notify all registered \texttt{Document\-Listener}s. The callback receives
+objects of type \texttt{Remote\-Documen\-tProxy}. It passes objects of type
+\texttt{Remote\-Document} to the \texttt{Document\-Listener}s. The reason
+for that separation into \texttt{Remote\-Document} and 
+\texttt{Remote\-Document\-Proxy} is caused by the join procedure, which is
 discussed next.
 
 
 \subsection{Joining}
+Joining a document consists of the following four steps:
+\begin{enumerate}
+ \item initiatiating join on a discovered document
+ \item receiving join request by publisher
+ \item accepting join request by publisher
+ \item receiving join callback
+\end{enumerate}
 
 \subsubsection{Initiate Join}
 \label{sect:archoverview.flow.initiatejoin}
-Once a user has hold of a \texttt{RemoteDocument} he can opt to join the
-published document represented by that \texttt{RemoteDocument}. In figure
+Once a user has hold of a \texttt{Remote\-Document} he can opt to join the
+published document represented by that \texttt{Remote\-Document}. In figure
 \ref{fig:archoverview.flow.joininitiate} the initiating of a join
 is depicted.
 
 \begin{figure}[H]
  \centering
- \includegraphics[width=7.80cm,height=5.72cm]{../images/finalreport/architecture_flows/join_initiate.eps}
+ \includegraphics[width=6.67cm,height=5.72cm]{../images/finalreport/architecture_flows/join_initiate.eps}
  \caption{Initiate a join request on the joiners site}
  \label{fig:archoverview.flow.joininitiate}
 \end{figure}
 
-The \texttt{join} method on the \texttt{RemoteDocument} takes an object of
-type \texttt{JoinCallback}. This callback is used later to notify the
+The \texttt{join} method on the \texttt{Remote\-Document} takes an object of
+type \texttt{Join\-Callback}. This callback is used later to notify the
 user that tries to join about the outcome of the join request (accepted or
-rejected). The \texttt{join} method on the \texttt{RemoteDocument} has
-a single parameter of type \texttt{JoinNetworkCallback}. The separation
+rejected). The \texttt{join} method on the \texttt{Remote\-Document\-Proxy} has
+a single parameter of type \texttt{Join\-Network\-Callback}. The separation
 into two different callback interfaces is caused by the fact that the
 collaboration layer needs to add some processing when the join callback
 is invoked.
 
 \subsubsection{Receive Join Request}
-The publisher is notified about a user that wants to join. This happens
-through the method calls depicted in figure 
+The publisher of a document is notified about a user that wants to join. 
+This happens through the method calls depicted in figure 
 \ref{fig:archoverview.flow.joinrequest}.
 
 \begin{figure}[H]
  \centering
- \includegraphics[width=7.83cm,height=5.50cm]{../images/finalreport/architecture_flows/join_request.eps}
+ \includegraphics[width=6.88cm,height=5.50cm]{../images/finalreport/architecture_flows/join_request.eps}
  \caption{Publisher receives a JoinRequest}
  \label{fig:archoverview.flow.joinrequest}
 \end{figure}
 
 When the request is received from the network layer, the method
-\texttt{join} is called on the \texttt{DocumentServerLogic} corresponding
+\texttt{join} is called on the \texttt{Document\-Server\-Logic} corresponding
 to the document the user wants to join. The parameter of type 
-\texttt{ParticipantConnection} is used later to communicate with the user
-once the join request has been accepted. A user that is part of the session
-is called a participant.
+\texttt{Participant\-Connection} is used later to communicate with the user
+once the join request has been accepted.
 
-The collaboration layer then invokes the \texttt{joinRequest} method on
-the \texttt{PublishedSessionCallback}. The publisher can then either accept or 
+The collaboration layer then invokes the \texttt{join\-Request} method on
+the \texttt{Published\-Session\-Callback} passing in a \texttt{Join\-Request}
+object. The publisher can then either accept or 
 reject the request. In the following section, we have a look at the
-situation where the publisher accepts the request (the other situation is
-even simpler and should be understandable with the JavaDoc).
+situation where the publisher accepts the request (rejecting a join
+request is even simpler).
 
 \subsubsection{Accepting Join Request}
-The \texttt{JoinRequest} object is passed to the \texttt{joinRequest} method
-of the \texttt{PublishedSessionCallback}. In our case, the publisher decides
+Now, let us say that the publisher decides
 to accept the join request. This happens by calling \texttt{accept} on the
-\texttt{JoinRequest} object.
+\texttt{Join\-Request} object.
 
 \begin{figure}[H]
  \centering
- \includegraphics[width=7.80cm,height=5.72cm]{../images/finalreport/architecture_flows/join_request_accept.eps}
+ \includegraphics[width=6.91cm,height=5.72cm]{../images/finalreport/architecture_flows/join_request_accept.eps}
  \caption{Publisher accepts the join request}
  \label{fig:archoverview.flow.joinrequestaccept}
 \end{figure}
@@ -980,7 +984,7 @@ The collaboration layer then invokes the following methods in succession:
  \item \texttt{sendDocument} - sends the initial document
 \end{enumerate}
 
-The \texttt{ParticipantPort} is used later by the network service to
+The \texttt{Participant\-Port} is used later by the network service to
 pass requests from that particular participant (the one that just joined)
 to the collaboration layer.
 
@@ -992,28 +996,28 @@ are called.
 
 \begin{figure}[H]
  \centering
- \includegraphics[width=13.51cm,height=5.50cm]{../images/finalreport/architecture_flows/join_response.eps}
+ \includegraphics[width=12.03cm,height=5.50cm]{../images/finalreport/architecture_flows/join_response.eps}
  \caption{Joining user receives session}
  \label{fig:archoverview.flow.joinresponse}
 \end{figure}
 
-In the section \ref{sect:archoverview.flow.initiatejoin} an object of type
-\texttt{JoinCallback} has been passed to the collaboration layer, who in
-turn has passed an object of type \texttt{JoinNetworkCallback} to the
+In section \ref{sect:archoverview.flow.initiatejoin} an object of type
+\texttt{Join\-Callback} has been passed to the collaboration layer, which in
+turn has passed an object of type \texttt{Join\-Network\-Callback} to the
 network layer. These callback objects are now used to return the response
 of the join.
 
 First, the \texttt{accepted} method is called on the 
-\texttt{JoinNetworkCallback} passing in a \texttt{SessionConnection}. The
-\texttt{SessionConnection} is used by the collaboration layer to send messages 
+\texttt{Join\-Network\-Callback} passing in a \texttt{Session\-Connection},
+which is used by the collaboration layer to send messages 
 to the session. The \texttt{accepted} method returns an object of type
-\texttt{SessionConnectionCallback}, which is used by the network layer to
+\texttt{Session\-Connection\-Callback}, which is used by the network layer to
 pass received messages from the session to the collaboration layer.
 
 The collaboration layer gives the \texttt{accepted} message to the
-\texttt{JoinCallback} passing along an object of type \texttt{Session}. That
+\texttt{Join\-Callback} passing along an object of type \texttt{Session}. That
 object is used by the application layer to send messages to the session. The
-\texttt{JoinCallback} returns a \texttt{ParticipantSessionCallback}, which
+\texttt{Join\-Callback} returns a \texttt{Participant\-Session\-Callback}, which
 is used by the collaboration layer to pass received requests to the 
 application layer.
 
@@ -1023,10 +1027,10 @@ The figure \ref{fig:archoverview.flow.session} shows how the messages flow
 through the layers. The interface between the network and the collaboration
 layer as depicted in the figure is only accurate for a participant. The
 situation for a publisher is a bit different. The publisher gets a
-session (more precisely a \texttt{PublishedSession}) through the
-\texttt{publish} method of the \texttt{CollaborationService}. In ACE, both
+session (more precisely a \texttt{Published\-Session}) through the
+\texttt{publish} method of the \texttt{Collaboration\-Service}. In ACE, both
 the publisher and the server part of the session reside on the same
-computer. Thus, there is no need for a \texttt{SessionConnection}. How the
+computer. Thus, there is no need for a \texttt{Session\-Connection}. How the
 connection between the publisher and the server part is achieved is completely
 implementation specific and can thus not be described here.
 
@@ -1040,7 +1044,8 @@ implementation specific and can thus not be described here.
 
 \subsection{Server-Side Communication with Participants}
 In the last section we have shown how everything fits together for 
-communicating in a Session. On the side of the publisher (or more specifically
+communicating with a session used on the participant side. 
+On the side of the publisher (or more specifically
 on the host where the published document is hosted) the picture looks 
 a bit different. The figure \ref{fig:archoverview.flow.portconnection}
 shows the situation on the server.
@@ -1052,40 +1057,53 @@ shows the situation on the server.
  \label{fig:archoverview.flow.portconnection}
 \end{figure}
 
-The \texttt{ParticipantConnection} is used by the server-side to communicate
+The \texttt{Participant\-Connection} is used by the server-side to communicate
 with a particular participant. There is such a connection for each
 participant in the session. In the other direction, that is from the
 network layer to the collaboration layer, there is a 
-\texttt{ParticipantPort} for each participant. The server logic is
+\texttt{Participant\-Port} for each participant. The server logic is
 responsible to forward messages from one participant (received over the
-\texttt{ParticipantPort}) to all other participants (sending over the
-\texttt{ParticipantConnection} objects). In between happens the transformation
+\texttt{Participant\-Port}) to all other participants (sending over the
+\texttt{Participant\-Connection} objects). In between happens the transformation
 of requests.
+
+Compare this with the concept of n-way communication introduced in the
+introduction chapter about the algorithm 
+(see section \ref{sect:algorithm.jupiter.nway}). The 
+\texttt{Participant\-Port} and \texttt{Participant\-Connection} represent the
+incoming, respectively the outgoing connection of the server-side.
 
 
 \subsection{Invitations}
-In this section, we have a look at how invitations pass through the system.
+When inviting a user into a session, the following steps take place:
+\begin{enumerate}
+ \item send an invitation to a user (inviter)
+ \item receive an invitation (invited user)
+ \item accept/reject invitation (invited user)
+ \item invitation response at the server 
+ \item response to join callback (invited user)
+\end{enumerate}
 
 \subsubsection{Sending an Invitation}
 The publisher of a document can invite other users to an editing session.
-The \texttt{PublishedSession} has a \texttt{invite} method, which serves
+The \texttt{Published\-Session} has a \texttt{invite} method, which serves
 exactly that purpose.
 
 \begin{figure}[H]
  \centering
- \includegraphics[width=7.34cm,height=5.72cm]{../images/finalreport/architecture_flows/invite_initiate.eps}
+ \includegraphics[width=5.82cm,height=5.72cm]{../images/finalreport/architecture_flows/invite_initiate.eps}
  \caption{Invite a user to a session}
  \label{fig:archoverview.flow.inviteinitiate}
 \end{figure}
 
 The collaboration layer passes the call to the \texttt{invite} method down
-to the \texttt{DocumentServer}. The only parameter is of type 
-\texttt{InvitationPort}, which serves as a callback to the collaboration layer
+to the \texttt{Document\-Server}. The parameter is of type 
+\texttt{Invitation\-Port}, which serves as a callback to the collaboration layer
 once the response to the invitation is received.
 
 \subsubsection{Receiving Invitations}
-The application layer can register an \texttt{InvitationCallback} with
-the \texttt{CollaborationService} (\texttt{setInvitationCallback} method).
+The application layer can register an \texttt{Invitation\-Callback} with
+the \texttt{Collaboration\-Service} (\texttt{set\-Invitation\-Callback} method).
 This callback object is notified about received invitations.
 
 \begin{figure}[H]
@@ -1095,11 +1113,12 @@ This callback object is notified about received invitations.
  \label{fig:archoverview.flow.invitereceive}
 \end{figure}
 
-An invitation from another user is passed to the \texttt{invitationReceived}
-method of the \texttt{NetworkServiceCallback} represented by a
-\texttt{InvitationProxy} object. This invitation is passed to the
-\texttt{InvitationCallback}. The \texttt{InvitationCallback} has a single method 
-\texttt{invitation\-Received} with a parameter of type \texttt{Invitation}
+An invitation from another user is passed to the \texttt{invitation\-Received}
+method of the \texttt{Network\-Service\-Callback} represented by a
+\texttt{Invitation\-Proxy} object. This invitation is passed to the
+\texttt{Invitation\-Callback}. 
+The \texttt{Invitation\-Callback} has a single method 
+\texttt{invitation\-Received} with a parameter of type \texttt{Invitation}.
 The \texttt{Invitation} object provides methods to accept or reject
 an invitation.
 
@@ -1110,27 +1129,27 @@ where the invitation is accepted.
 
 \begin{figure}[H]
  \centering
- \includegraphics[width=8.26cm,height=5.72cm]{../images/finalreport/architecture_flows/invite_accept.eps}
+ \includegraphics[width=7.13cm,height=5.72cm]{../images/finalreport/architecture_flows/invite_accept.eps}
  \caption{Accepting an inviation}
  \label{fig:archoverview.flow.inviteaccept}
 \end{figure}
 
-The \texttt{accept} method takes a \texttt{JoinCallback} as parameter. The
-collaboration layer calls \texttt{accept} on the \texttt{InvitationProxy}
-in turn, passing in a \texttt{JoinNetworkCallback} instance. This is
-exactly the same as a join request on a \texttt{RemoteDocument} (see
-section \ref{{sect:archoverview.flow.initiatejoin}}). The session for the
+The \texttt{accept} method takes a \texttt{Join\-Callback} as parameter. The
+collaboration layer calls \texttt{accept} on the \texttt{Invitation\-Proxy}
+in turn, passing in a \texttt{Join\-Network\-Callback} instance. This is
+exactly the same as a join request on a \texttt{Remote\-Document} (see
+section \ref{sect:archoverview.flow.initiatejoin}). The session for the
 document will be passed to the join callbacks (see section 
 \ref{sect:archoverview.flow.joinresponse}).
 
 \subsubsection{Invitation Response on the Server}
 Once an invitation has been accepted or rejected by the invited user, a
-message is sent back to the publisher. There, the \texttt{InvitationPort}
+message is sent back to the publisher. There, the \texttt{Invitation\-Port}
 is used to report the server logic about the response.
 
 \begin{figure}[H]
  \centering
- \includegraphics[width=8.26cm,height=3.70cm]{../images/finalreport/architecture_flows/invite_response.eps}
+ \includegraphics[width=7.16cm,height=3.70cm]{../images/finalreport/architecture_flows/invite_response.eps}
  \caption{Response to invitation on the server}
  \label{fig:archoverview.flow.inviteresponse}
 \end{figure}
@@ -1140,10 +1159,12 @@ If the invitation is accepted by the invited user, the \texttt{InvitationPort}'s
 This \texttt{accept} method is similar to the \texttt{join} method
 of the \texttt{DocumentServerLogic}. The only difference is, that an
 \texttt{accept} on an \texttt{InvitationPort} lets the invited user into
-the session immediately (unless the session has been shutdown in the meantime).
+the session immediately (unless the session has been shutdown in the meantime
+in which case the join request is rejected).
 
-The result of the invitation is not passed to the application layer. Future
-versions of the API might introduce a way to notify the publisher about
+The result of the invitation (i.e. rejected or accepted) is not passed to the 
+publisher's application layer. 
+Future versions of the API might introduce a way to notify the publisher about
 accepted/rejected invitations.
 
 
@@ -1156,30 +1177,30 @@ mechanism exists.
 \subsubsection{Initiating Explicit User Discovery}
 \begin{figure}[H]
  \centering
- \includegraphics[width=10.80cm,height=5.72cm]{../images/finalreport/architecture_flows/explicitdiscovery.eps}
+ \includegraphics[width=9.49cm,height=5.72cm]{../images/finalreport/architecture_flows/explicitdiscovery.eps}
  \caption{Initiating an explicit user discovery}
  \label{fig:archoverview.flow.explicitdiscovery}
 \end{figure}
 
-A \texttt{DiscoveryCallback} as well as an \texttt{InetAddress}/port pair 
-is passed to the \texttt{CollaborationService}. This request is forwarded
-to the \texttt{NetworkService}.
+A \texttt{Discovery\-Callback} as well as an \texttt{Inet\-Address}/port pair 
+is passed to the \texttt{Collaboration\-Service}. This request is forwarded
+to the \texttt{Network\-Service}.
 
 \subsubsection{Discovery Result}
 The result of the explicit user discovery is passed through two different
 channels. First, the result (success/failure) is passed to the
-\texttt{DiscoveryCallback} (\texttt{DiscoveryNetworkCallback}
+\texttt{Discovery\-Callback} (\texttt{Discovery\-Network\-Callback}
 respectively).
 
 \begin{figure}[H]
  \centering
- \includegraphics[width=15.63cm,height=5.50cm]{../images/finalreport/architecture_flows/explicitdiscovery_response.eps}
+ \includegraphics[width=14.53cm,height=5.50cm]{../images/finalreport/architecture_flows/explicitdiscovery_response.eps}
  \caption{The response of explicit user discovery}
  \label{fig:archoverview.flow.explicitdiscoveryresponse}
 \end{figure}
 
 If the discovery succeeds, the discovered user is passed through the
-\texttt{UserListener}s to the application layer (see the section
+\texttt{User\-Listener}s to the application layer (see the section
 \ref{sect:archoverview.flow.discovery}).
 
 

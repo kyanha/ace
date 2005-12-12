@@ -365,6 +365,7 @@ reach the same state (and they do, unless requests get lost), they will have
 equivalent states (so convergence is achieved).
 
 \subsubsection{Extending Jupiter to N-Way Communication}
+\label{sect:algorithm.jupiter.nway}
 We have discussed how a single two-way connection works in \emph{Jupiter}. We will now extend this systems to support $n$ clients using multiple two-way connections. The figure \ref{fig:algorithm.nway-details} shows the basic setup for three clients. Each client talks only to the server over a standard previously discussed two-way connection. These standard two-way connections
 are depicted in the figure. For each connection there are two algorithms,
 a client-side and a server-side algorithm:
