@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:InviteRequestRecipientFilter.java 2413 2005-12-09 13:20:12Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -19,49 +19,44 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.net.protocol;
+package ch.iserver.ace.net.protocol.filter;
 
 import org.apache.log4j.Logger;
 import org.beepcore.beep.core.OutputDataStream;
 
-import ch.iserver.ace.DocumentDetails;
+import ch.iserver.ace.net.InvitationProxy;
 import ch.iserver.ace.net.NetworkServiceCallback;
+import ch.iserver.ace.net.core.InvitationProxyFactory;
 import ch.iserver.ace.net.core.NetworkServiceImpl;
 import ch.iserver.ace.net.core.RemoteDocumentProxyExt;
+import ch.iserver.ace.net.protocol.ProtocolConstants;
+import ch.iserver.ace.net.protocol.RemoteUserSession;
+import ch.iserver.ace.net.protocol.Request;
+import ch.iserver.ace.net.protocol.RequestImpl;
+import ch.iserver.ace.net.protocol.SessionManager;
 import ch.iserver.ace.net.protocol.RequestImpl.DocumentInfo;
 
 /**
  *
  */
-public class DocumentDetailsChangedReceiveFilter extends AbstractRequestFilter {
+public class InviteRequestRecipientFilter extends AbstractRequestFilter {
 
-	private Logger LOG = Logger.getLogger(DocumentDetailsChangedReceiveFilter.class);
+	private static Logger LOG = Logger.getLogger(InviteRequestRecipientFilter.class);
 	
-	public DocumentDetailsChangedReceiveFilter(RequestFilter successor) {
+	public InviteRequestRecipientFilter(RequestFilter successor) {
 		super(successor);
 	}
-	
+
 	public void process(Request request) {
 		try {
-			if (request.getType() == ProtocolConstants.DOCUMENT_DETAILS_CHANGED) {
-				LOG.info("--> process()");
+			if (request.getType() == ProtocolConstants.INVITE) {
+				LOG.info("--> process()");		
+				NetworkServiceCallback callback = NetworkServiceImpl.getInstance().getCallback();
 				DocumentInfo info = (DocumentInfo) request.getPayload();
-				String userId = info.getUserId();
-				RemoteUserSession session = SessionManager.getInstance().getSession(userId);
-				if (session != null) {
-					RemoteDocumentProxyExt proxy = session.getUser().getSharedDocument(info.getDocId());
-					if (proxy != null) {
-						DocumentDetails details = new DocumentDetails(info.getName());
-						proxy.setDocumentDetails(details);
-						NetworkServiceCallback callback = NetworkServiceImpl.getInstance().getCallback();
-						callback.documentDetailsChanged(proxy);
-					} else {
-						LOG.warn("RemoteUserProxy for [" + userId + "] not found");
-					}
-				} else {
-					LOG.warn("RemoteUserSession for [" + userId + "] not found");
-				}
-				
+				RemoteUserSession session = SessionManager.getInstance().getSession(info.getUserId());
+				RemoteDocumentProxyExt proxy = session.getUser().getSharedDocument(info.getDocId());
+				InvitationProxy invitation = InvitationProxyFactory.getInstance().createProxy(proxy, session);
+				callback.invitationReceived(invitation);
 				try {
 					//confirm reception of msg	
 					OutputDataStream os = new OutputDataStream();
@@ -69,12 +64,12 @@ public class DocumentDetailsChangedReceiveFilter extends AbstractRequestFilter {
 					request.getMessage().sendRPY(os);
 //					request.getMessage().sendNUL();
 				} catch (Exception e) {
-					LOG.error("could not send Nul confirmation ["+e.getMessage()+"]");
+					LOG.error("could not send confirmation ["+e+", "+e.getMessage()+"]");
 				}
 				LOG.info("<-- process()");
-			} else { //Forward
+			} else {
 				super.process(request);
-			} 
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			LOG.error("exception processing request ["+e+", "+e.getMessage()+"]");

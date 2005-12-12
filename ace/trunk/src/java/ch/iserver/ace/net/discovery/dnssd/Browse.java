@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:Browse.java 2412 2005-12-09 13:15:29Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -26,7 +26,6 @@ import org.apache.log4j.Logger;
 import com.apple.dnssd.BrowseListener;
 import com.apple.dnssd.DNSSD;
 import com.apple.dnssd.DNSSDException;
-import com.apple.dnssd.DNSSDService;
 
 /**
  *

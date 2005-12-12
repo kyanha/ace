@@ -30,9 +30,9 @@ import ch.iserver.ace.net.RemoteDocumentProxy;
 import ch.iserver.ace.net.protocol.ProtocolConstants;
 import ch.iserver.ace.net.protocol.RemoteUserSession;
 import ch.iserver.ace.net.protocol.Request;
-import ch.iserver.ace.net.protocol.RequestFilter;
 import ch.iserver.ace.net.protocol.RequestImpl;
-import ch.iserver.ace.net.protocol.JoinRequestSenderFilter.JoinNetworkCallbackWrapper;
+import ch.iserver.ace.net.protocol.filter.RequestFilter;
+import ch.iserver.ace.net.protocol.filter.JoinRequestSenderFilter.JoinNetworkCallbackWrapper;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**

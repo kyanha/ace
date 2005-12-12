@@ -29,6 +29,9 @@ import ch.iserver.ace.net.core.DiscoveryCallback;
  * All callback events received from the DNSSD are passed via this
  * interface. Therefore the events can be channelized and collected
  * in a central class.
+ * 
+ * <p>Note: The implementation of this interface is responsible for proper
+ * synchronization.</p>
  */
 interface DiscoveryCallbackAdapter {
 

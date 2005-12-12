@@ -34,6 +34,7 @@ import ch.iserver.ace.net.core.RemoteUserProxyExt;
 import ch.iserver.ace.net.core.RemoteUserProxyFactory;
 import ch.iserver.ace.net.discovery.DiscoveryManager;
 import ch.iserver.ace.net.discovery.DiscoveryManagerFactory;
+import ch.iserver.ace.net.protocol.filter.RequestFilter;
 
 /**
  *

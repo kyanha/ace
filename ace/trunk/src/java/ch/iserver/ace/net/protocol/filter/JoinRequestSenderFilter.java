@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:JoinRequestSenderFilter.java 2413 2005-12-09 13:20:12Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -19,13 +19,19 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.net.protocol;
+package ch.iserver.ace.net.protocol.filter;
 
 import org.apache.log4j.Logger;
 import org.beepcore.beep.core.ReplyListener;
 
 import ch.iserver.ace.collaboration.JoinRequest;
 import ch.iserver.ace.net.JoinNetworkCallback;
+import ch.iserver.ace.net.protocol.MainConnection;
+import ch.iserver.ace.net.protocol.ProtocolConstants;
+import ch.iserver.ace.net.protocol.RemoteUserSession;
+import ch.iserver.ace.net.protocol.Request;
+import ch.iserver.ace.net.protocol.Serializer;
+import ch.iserver.ace.net.protocol.SessionManager;
 
 /**
  *

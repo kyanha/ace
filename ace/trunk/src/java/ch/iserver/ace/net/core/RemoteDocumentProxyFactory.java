@@ -23,7 +23,7 @@ package ch.iserver.ace.net.core;
 
 import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.net.RemoteUserProxy;
-import ch.iserver.ace.net.protocol.RequestFilter;
+import ch.iserver.ace.net.protocol.filter.RequestFilter;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**

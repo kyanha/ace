@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:SendDocumentsPrepareFilter.java 2413 2005-12-09 13:20:12Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.net.protocol;
+package ch.iserver.ace.net.protocol.filter;
 
 import java.util.Map;
 
@@ -29,6 +29,13 @@ import org.beepcore.beep.core.ReplyListener;
 import ch.iserver.ace.FailureCodes;
 import ch.iserver.ace.net.core.NetworkServiceImpl;
 import ch.iserver.ace.net.core.RemoteUserProxyExt;
+import ch.iserver.ace.net.protocol.ConnectionException;
+import ch.iserver.ace.net.protocol.MainConnection;
+import ch.iserver.ace.net.protocol.ProtocolConstants;
+import ch.iserver.ace.net.protocol.RemoteUserSession;
+import ch.iserver.ace.net.protocol.Request;
+import ch.iserver.ace.net.protocol.Serializer;
+import ch.iserver.ace.net.protocol.SessionManager;
 
 /**
  *

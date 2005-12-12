@@ -28,6 +28,7 @@ import org.beepcore.beep.core.Message;
 import org.beepcore.beep.core.ReplyListener;
 import org.beepcore.beep.transport.tcp.TCPSession;
 
+import ch.iserver.ace.net.protocol.filter.RequestFilter;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**

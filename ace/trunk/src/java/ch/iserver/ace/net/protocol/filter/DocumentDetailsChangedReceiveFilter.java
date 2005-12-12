@@ -1,5 +1,5 @@
 /*
- * $Id:PublishDocumentReceiveFilter.java 1205 2005-11-14 07:57:10Z zbinl $
+ * $Id:DocumentDetailsChangedReceiveFilter.java 2413 2005-12-09 13:20:12Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -19,66 +19,70 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.net.protocol;
+package ch.iserver.ace.net.protocol.filter;
 
 import org.apache.log4j.Logger;
-import org.beepcore.beep.core.BEEPError;
 import org.beepcore.beep.core.OutputDataStream;
 
 import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.net.NetworkServiceCallback;
-import ch.iserver.ace.net.RemoteDocumentProxy;
 import ch.iserver.ace.net.core.NetworkServiceImpl;
 import ch.iserver.ace.net.core.RemoteDocumentProxyExt;
-import ch.iserver.ace.net.core.RemoteDocumentProxyFactory;
-import ch.iserver.ace.net.core.RemoteDocumentProxyImpl;
-import ch.iserver.ace.net.core.RemoteUserProxyExt;
+import ch.iserver.ace.net.protocol.ProtocolConstants;
+import ch.iserver.ace.net.protocol.RemoteUserSession;
+import ch.iserver.ace.net.protocol.Request;
+import ch.iserver.ace.net.protocol.RequestImpl;
+import ch.iserver.ace.net.protocol.SessionManager;
 import ch.iserver.ace.net.protocol.RequestImpl.DocumentInfo;
 
 /**
  *
  */
-public class PublishDocumentReceiveFilter extends AbstractRequestFilter {
+public class DocumentDetailsChangedReceiveFilter extends AbstractRequestFilter {
 
-	private Logger LOG = Logger.getLogger(PublishDocumentReceiveFilter.class);
+	private Logger LOG = Logger.getLogger(DocumentDetailsChangedReceiveFilter.class);
 	
-	public PublishDocumentReceiveFilter(RequestFilter successor) {
+	public DocumentDetailsChangedReceiveFilter(RequestFilter successor) {
 		super(successor);
 	}
-
+	
 	public void process(Request request) {
 		try {
-			if (request.getType() == ProtocolConstants.PUBLISH) {
+			if (request.getType() == ProtocolConstants.DOCUMENT_DETAILS_CHANGED) {
 				LOG.info("--> process()");
 				DocumentInfo info = (DocumentInfo) request.getPayload();
 				String userId = info.getUserId();
 				RemoteUserSession session = SessionManager.getInstance().getSession(userId);
 				if (session != null) {
-					LOG.info("found session ["+session.getUser().getUserDetails().getUsername()+"] for request");
-					RemoteUserProxyExt publisher = session.getUser();
-					RemoteDocumentProxyFactory factory = RemoteDocumentProxyFactory.getInstance();
-					RemoteDocumentProxyExt doc = factory.createProxy(info.getDocId(), new DocumentDetails(info.getName()), publisher); 
-					publisher.addSharedDocument(doc);
-					NetworkServiceCallback callback = NetworkServiceImpl.getInstance().getCallback();
-					RemoteDocumentProxy[] docs = new RemoteDocumentProxy[]{ doc };
-					callback.documentDiscovered(docs);
+					RemoteDocumentProxyExt proxy = session.getUser().getSharedDocument(info.getDocId());
+					if (proxy != null) {
+						DocumentDetails details = new DocumentDetails(info.getName());
+						proxy.setDocumentDetails(details);
+						NetworkServiceCallback callback = NetworkServiceImpl.getInstance().getCallback();
+						callback.documentDetailsChanged(proxy);
+					} else {
+						LOG.warn("RemoteUserProxy for [" + userId + "] not found");
+					}
+				} else {
+					LOG.warn("RemoteUserSession for [" + userId + "] not found");
+				}
+				
+				try {
 					//confirm reception of msg	
 					OutputDataStream os = new OutputDataStream();
 					os.setComplete();
 					request.getMessage().sendRPY(os);
 //					request.getMessage().sendNUL();
-				} else {
-					LOG.error("session not found for id ["+userId+"]");
-					request.getMessage().sendERR(BEEPError.CODE_PARAMETER_INVALID, "userId unknown");
+				} catch (Exception e) {
+					LOG.error("could not send Nul confirmation ["+e.getMessage()+"]");
 				}
 				LOG.info("<-- process()");
-			} else {
+			} else { //Forward
 				super.process(request);
-			}
+			} 
 		} catch (Exception e) {
 			e.printStackTrace();
 			LOG.error("exception processing request ["+e+", "+e.getMessage()+"]");
 		}
 	}
-	
 }

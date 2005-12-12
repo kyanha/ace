@@ -19,7 +19,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.net.protocol;
+package ch.iserver.ace.net.protocol.filter;
+
+import ch.iserver.ace.net.protocol.Deserializer;
+import ch.iserver.ace.net.protocol.DeserializerImpl;
+import ch.iserver.ace.net.protocol.ResponseListener;
+import ch.iserver.ace.net.protocol.Serializer;
+import ch.iserver.ace.net.protocol.SerializerImpl;
 
 
 /**

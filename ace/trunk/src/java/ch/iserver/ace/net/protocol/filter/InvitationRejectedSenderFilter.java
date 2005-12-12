@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:InvitationRejectedSenderFilter.java 2413 2005-12-09 13:20:12Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -19,24 +19,29 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.net.protocol;
+package ch.iserver.ace.net.protocol.filter;
 
 import org.apache.log4j.Logger;
 import org.beepcore.beep.core.ReplyListener;
 
-import ch.iserver.ace.net.protocol.RequestImpl.DocumentInfo;
+import ch.iserver.ace.net.protocol.MainConnection;
+import ch.iserver.ace.net.protocol.ProtocolConstants;
+import ch.iserver.ace.net.protocol.RemoteUserSession;
+import ch.iserver.ace.net.protocol.Request;
+import ch.iserver.ace.net.protocol.Serializer;
 
 /**
- *
+ * Currently not used. Could be used later for an invitation-rejected notification 
+ * to the inviting user.
  */
-public class JoinRejectedSenderFilter extends AbstractRequestFilter {
+public class InvitationRejectedSenderFilter extends AbstractRequestFilter {
 
-	private Logger LOG = Logger.getLogger(JoinRejectedSenderFilter.class);
+	private static Logger LOG = Logger.getLogger(InvitationRejectedSenderFilter.class);
 	
 	private Serializer serializer;
 	private ReplyListener listener;
 	
-	public JoinRejectedSenderFilter(RequestFilter successor, Serializer serializer, ReplyListener listener) {
+	public InvitationRejectedSenderFilter(RequestFilter successor, Serializer serializer, ReplyListener listener) {
 		super(successor);
 		this.serializer = serializer;
 		this.listener = listener;
@@ -44,14 +49,13 @@ public class JoinRejectedSenderFilter extends AbstractRequestFilter {
 	
 	public void process(Request request) {
 		try {
-			if (request.getType() == ProtocolConstants.JOIN_REJECTED) {
+			if (request.getType() == ProtocolConstants.INVITE_REJECTED) {
 				LOG.info("--> process()");		
-				DocumentInfo info = (DocumentInfo) request.getPayload();
-				String code = info.getData();
-				byte[] data = serializer.createResponse(ProtocolConstants.JOIN_REJECTED, 
-												info.getDocId() , code);
-				RemoteUserSession session = SessionManager.getInstance().getSession(request.getUserId());
+				String docId = request.getUserId();
+				byte[] data = serializer.createResponse(ProtocolConstants.INVITE_REJECTED, docId, null);
+				RemoteUserSession session = (RemoteUserSession) request.getPayload();
 				MainConnection connection = session.getMainConnection();
+				LOG.debug("send data to ["+session.getUser().getUserDetails().getUsername()+"] ["+(new String(data))+"]");
 				connection.send(data, session.getUser().getUserDetails().getUsername(), listener);
 				LOG.info("<-- process()");
 			} else {

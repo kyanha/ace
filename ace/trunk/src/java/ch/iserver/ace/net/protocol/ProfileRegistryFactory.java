@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:ProfileRegistryFactory.java 2413 2005-12-09 13:20:12Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -30,6 +30,8 @@ import ch.iserver.ace.algorithm.TimestampFactory;
 import ch.iserver.ace.net.core.NetworkProperties;
 import ch.iserver.ace.net.core.NetworkServiceExt;
 import ch.iserver.ace.net.core.NetworkServiceImpl;
+import ch.iserver.ace.net.protocol.filter.RequestFilter;
+import ch.iserver.ace.net.protocol.filter.RequestFilterFactory;
 import ch.iserver.ace.util.SingleThreadDomain;
 
 /**

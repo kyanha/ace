@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:RequestFilter.java 2413 2005-12-09 13:20:12Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -19,32 +19,25 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.net.protocol;
+package ch.iserver.ace.net.protocol.filter;
 
-import org.apache.log4j.Logger;
+import ch.iserver.ace.net.protocol.Request;
 
 /**
  *
  */
-public class NullRequestFilter extends AbstractRequestFilter {
+public interface RequestFilter {
 
-	private static Logger LOG = Logger.getLogger(NullRequestFilter.class);
-	
-	private static NullRequestFilter instance;
-	
-	public static NullRequestFilter getInstance() {
-		if (instance == null) {
-			instance = new NullRequestFilter(null); 
-		}
-		return instance;
-	}
-	
-	private NullRequestFilter(RequestFilter successor) {
-		super(successor);
-	}
-	
-	public void process(Request request) {
-		LOG.debug("process("+request+")");
-	}
+	/**
+	 * 
+	 * @param request
+	 */
+	public void process(Request request);
 
+	/**
+	 * 
+	 * @return
+	 */
+	public RequestFilter getSuccessor();
+	
 }

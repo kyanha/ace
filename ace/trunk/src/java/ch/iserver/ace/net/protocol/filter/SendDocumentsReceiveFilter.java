@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:SendDocumentsReceiveFilter.java 2413 2005-12-09 13:20:12Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.net.protocol;
+package ch.iserver.ace.net.protocol.filter;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -36,6 +36,10 @@ import ch.iserver.ace.net.core.RemoteDocumentProxyExt;
 import ch.iserver.ace.net.core.RemoteDocumentProxyFactory;
 import ch.iserver.ace.net.core.RemoteDocumentProxyImpl;
 import ch.iserver.ace.net.core.RemoteUserProxyExt;
+import ch.iserver.ace.net.protocol.ProtocolConstants;
+import ch.iserver.ace.net.protocol.Request;
+import ch.iserver.ace.net.protocol.RequestImpl;
+import ch.iserver.ace.net.protocol.SessionManager;
 import ch.iserver.ace.net.protocol.RequestImpl.DocumentInfo;
 
 /**

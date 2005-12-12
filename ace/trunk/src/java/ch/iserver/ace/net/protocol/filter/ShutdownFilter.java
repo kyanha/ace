@@ -1,5 +1,5 @@
 /*
- * $Id:FailureFilter.java 1205 2005-11-14 07:57:10Z zbinl $
+ * $Id:ShutdownFilter.java 2413 2005-12-09 13:20:12Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -18,38 +18,43 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-
-package ch.iserver.ace.net.protocol;
+package ch.iserver.ace.net.protocol.filter;
 
 import org.apache.log4j.Logger;
-import org.beepcore.beep.core.BEEPError;
-import org.beepcore.beep.core.BEEPException;
 import org.beepcore.beep.core.MessageMSG;
+import org.beepcore.beep.core.OutputDataStream;
+
+import ch.iserver.ace.net.protocol.ProtocolConstants;
+import ch.iserver.ace.net.protocol.Request;
 
 /**
- * Catches all requests which could not be filtered.
- * This class is used at the end of the request filter chain.
+ *
  */
-public class FailureFilter extends AbstractRequestFilter {
+public class ShutdownFilter extends AbstractRequestFilter {
 
-	private static Logger LOG = Logger.getLogger(FailureFilter.class);
+	private Logger LOG = Logger.getLogger(ShutdownFilter.class);
 	
-	public FailureFilter(AbstractRequestFilter successor) {
+	public ShutdownFilter(RequestFilter successor) {
 		super(successor);
 	}
-	
+
 	public void process(Request request) {
-		LOG.debug(request+" could not be processed, reply with error code.");
-		MessageMSG message = request.getMessage();
-		if (message != null) {
-			try {
-				message.sendERR(BEEPError.CODE_SERVICE_NOT_AVAILABLE, "could not process request.");
-			} catch (BEEPException be) {			
-				LOG.error("could not send BEEPError ["+be.getMessage()+"]");
+		if (request.getType() == ProtocolConstants.SHUTDOWN) {
+			LOG.warn("Network layer terminated, stop forwarding request [" + request + "]");
+			MessageMSG message = request.getMessage();
+			if (message != null) {
+				try {				
+					OutputDataStream os = new OutputDataStream();
+					os.setComplete();
+					request.getMessage().sendRPY(os);
+//					request.getMessage().sendNUL();
+				} catch (Exception e) {
+					LOG.error("could not send confirmation ["+e+", "+e.getMessage()+"]");
+				}
 			}
 		} else {
-			LOG.error("unknown request could not be serialized ["+request.getType()+"]");
+			super.process(request);
 		}
-		
 	}
+	
 }

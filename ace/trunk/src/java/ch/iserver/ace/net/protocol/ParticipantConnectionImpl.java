@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:ParticipantConnectionImpl.java 2413 2005-12-09 13:20:12Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -36,6 +36,7 @@ import ch.iserver.ace.net.PortableDocument;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.net.core.NetworkServiceImpl;
 import ch.iserver.ace.net.protocol.RequestImpl.DocumentInfo;
+import ch.iserver.ace.net.protocol.filter.RequestFilter;
 
 /**
  * This connection does not establish its channel until <code>joinAccepted(ParticipantPort)</code> is 

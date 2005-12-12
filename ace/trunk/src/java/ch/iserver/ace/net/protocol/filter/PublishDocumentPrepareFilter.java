@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.net.protocol;
+package ch.iserver.ace.net.protocol.filter;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -32,6 +32,13 @@ import ch.iserver.ace.net.core.NetworkServiceImpl;
 import ch.iserver.ace.net.core.RemoteUserProxyExt;
 import ch.iserver.ace.net.discovery.DiscoveryManager;
 import ch.iserver.ace.net.discovery.DiscoveryManagerFactory;
+import ch.iserver.ace.net.protocol.ConnectionException;
+import ch.iserver.ace.net.protocol.MainConnection;
+import ch.iserver.ace.net.protocol.ProtocolConstants;
+import ch.iserver.ace.net.protocol.RemoteUserSession;
+import ch.iserver.ace.net.protocol.Request;
+import ch.iserver.ace.net.protocol.Serializer;
+import ch.iserver.ace.net.protocol.SessionManager;
 
 /**
  *
@@ -51,7 +58,7 @@ public class PublishDocumentPrepareFilter extends AbstractRequestFilter {
 	
 	
 	/**
-	 * @see ch.iserver.ace.net.protocol.RequestFilter#process(ch.iserver.ace.net.protocol.Request)
+	 * @see ch.iserver.ace.net.protocol.filter.RequestFilter#process(ch.iserver.ace.net.protocol.Request)
 	 */
 	public void process(Request request) {
 		if (request.getType() == ProtocolConstants.PUBLISH) {
