@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:TestuserRegistrar.java 2414 2005-12-09 13:24:53Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
