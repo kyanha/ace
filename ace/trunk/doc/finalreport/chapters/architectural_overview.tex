@@ -1,13 +1,21 @@
 \chapter{Architectural Overview}
 \label{chapter:archoverview}
 
-ACE is split into three independent layers. Each layer has a well-defined 
-interface between the adjoining layers and well-defined responsibilities. 
-A layer implementation can be replaced easily.
+The design of ACE is split into three independent layers. 
+Each layer has a well-defined interface between the adjacent layers and 
+well-defined responsibilities. A layer accesses only its adjacent layers.
+The layered design has several distinct advantages:
+
+\begin{itemize} 
+ \item a layer implementation could easily be replaced
+ \item clear separation makes working independently much easier
+ \item ACE could be used as framework for other collaborative applications, for instance a shared whiteboard
+\end{itemize}
+
 
 \begin{figure}[H]
  \centering
- \includegraphics[width=6.6cm,height=3.42cm]{../images/layers.eps}
+ \includegraphics[width=5.96cm,height=2.79cm]{../images/finalreport/architecture_layers.eps}
  \caption{The Layers of ACE}
 \end{figure}
 
@@ -31,13 +39,18 @@ different network technology and/or a different protocol.
 
 
 \section{Interface Application/Collaboration Layer}
-The main class in the collaboration layer is the \texttt{CollaborationService}.
-It is the entry point for an application layer. The main functionality 
-exposed by the collaboration service are:
+The interfaces between the application and the collaboration layer are in
+the package \texttt{ch.\-iserver.\-ace.\-collboration}. In the following,
+the package name is omitted for space reasons. The main interface in
+the collaboration layer is the \texttt{Collaboration\-Service}.
+It is the entry point for an application layer implementation. The main 
+functionality exposed by the collaboration service is:
 \begin{itemize}
  \item discovery of users and documents
  \item publishing of local documents
- \item registering invitation callback
+ \item registering invitation callback for receiving invitations
+ \item service failure reporting
+ \item changing of local user's information
 \end{itemize}
 
 
@@ -45,177 +58,182 @@ exposed by the collaboration service are:
 
 \begin{figure}[H]
  \centering
- \includegraphics[width=13.83cm,height=7.27cm]{../images/finalreport/architecture_collaborationservice_uml.eps}
+ \includegraphics[width=13.19cm,height=6.63cm]{../images/finalreport/architecture_collaborationservice_uml.eps}
  \caption{CollaborationService Interface}
 \end{figure}
 
-The \texttt{CollaborationService} has to be initialized before it can
-be used. This includes typically the following:
+The \texttt{Collaboration\-Service} has to be initialized before it can
+be used. This includes typically the following steps:
 
-\begin{itemize}
+\begin{enumerate}
  \item setting local user id
  \item setting local user details
  \item adding listeners
  \item setting callbacks
-\end{itemize}
+\end{enumerate}
 
 Each running instance of ACE needs a unique user id. This id is used to uniquely
-identify users. The user id is set with the \texttt{setUserId} method. The
-user details (at the moment just the nickname of the user) are set with
-\texttt{setUserDetails}.
+identify users. The user id is set with the \texttt{set\-User\-Id} method. The
+user details (at the moment just the display name of the user) are set with
+\texttt{set\-User\-Details} method.
 
-Further, the \texttt{CollaborationService} provides the possibility to set a
-\texttt{ServiceFailureHandler} 
+Further, the \texttt{Collaboration\-Service} provides the possibility to set a
+\texttt{Service\-Failure\-Handler} 
 (see figure \ref{fig:archoverview.servicefailurehandler}). 
 This failure handler is notified about 
-service failures and is set with the \texttt{setFailureHandler} method. 
+service failures and is set with the \texttt{set\-Failure\-Handler} method. 
 A typical service failure occurs if the port used by
-ACE is already in use by another application. The failures passed to that
-handler are really intended to be on the service level. Session level failures
+ACE is already in use by another application. The failure handler is used
+to pass service level failures to the application. Session level failures
 are handled differently (see \ref{sect:archoverview.sessionfailure}). 
 
 \begin{figure}[H]
  \centering
- \includegraphics[width=8.71cm,height=2.15cm]{../images/finalreport/architecture_servicefailurehandler_uml.eps}
+ \includegraphics[width=8.08cm,height=1.52cm]{../images/finalreport/architecture_servicefailurehandler_uml.eps}
  \caption{ServiceFailureHandler Interface}
  \label{fig:archoverview.servicefailurehandler}
 \end{figure}
 
 
 The registration of listeners as well as the setting of the invitation 
-callback are discussed in the following.
+callback are discussed in the next section.
 
 Once all the necessary setup steps have been performed, the
-\texttt{CollaborationService} can be started with a call to the
+\texttt{Collaboration\-Service} can be started with a call to the
 \texttt{start} method. At the end of the lifecycle of the
 service, the \texttt{stop} method should be called.
 
-The \texttt{getServerInfo} method can be used to get the local 
-\texttt{ServerInfo} object, which specifies the IP and port of the
+The \texttt{get\-Server\-Info} method can be used to get the local 
+\texttt{Server\-Info} object, which specifies the IP and port of the
 local server. Note that this information may not be available right
 from the beginning, as it could be dynamically be determined when the
 service is started. The application should therefore poll for that information
-until it is available (e.g. with a timer).
+until it is available (e.g. with a timer). This situation could be improved
+by use of a callback object.
 
 
 \subsection{Discovery}
+\label{sect:archoverview.discovery}
 The collaboration service provides a listener registration mechanism for
-users and documents. The corresponding methods are \texttt{addUserListener}
-and \texttt{addDocumentListener}. These listeners are notified whenever a
+users and documents. The corresponding methods are \texttt{add\-User\-Listener}
+and \texttt{add\-Document\-Listener}. These listeners are notified whenever a
 new user or document is discovered by the underlying network layer. The two 
 listener interfaces are pretty similar. 
 
 \begin{figure}[H]
  \centering
- \includegraphics[width=8.47cm,height=4.97cm]{../images/finalreport/architecture_listener_uml.eps}
+ \includegraphics[width=8.04cm,height=4.34cm]{../images/finalreport/architecture_listener_uml.eps}
  \caption{DocumentListener and UserListener Interfaces}
 \end{figure}
 
-The passed in objects are instances of \texttt{RemoteUser} and
-\texttt{RemoteDocument} respectively. The user objects have a \texttt{name}
+The parameters are instances of type \texttt{Remote\-User} and
+\texttt{Remote\-Document} respectively. The user objects have a \texttt{name}
 property and documents have a \texttt{title} property. Further, they support
 property change events that are used to notify registered 
-\texttt{PropertyChangeListener} instances about property value changes. 
+\texttt{Property\-Change\-Listener} instances about property value changes. 
 The collaboration layer guarantees that for each unique user and document
-there is only one \texttt{RemoteUser} and \texttt{RemoteDocument}. This makes
-it possible to register \texttt{PropertyChangeListener}s to be notified about
-changes to the user name and document title. 
+there is only one \texttt{Remote\-User} and \texttt{Remote\-Document}. 
+This makes
+it possible to register \texttt{Property\-Change\-Listener}s to be 
+notified about changes to the user name and document title. 
+
+Both, users and documents, have a unique id. This id is mainly used by the
+network layer to uniquely identify users and documents in protocol messages.
 
 \begin{figure}[H]
  \centering
- \includegraphics[width=10.69cm,height=6.56cm]{../images/finalreport/architecture_userdocument_uml.eps}
+ \includegraphics[width=10.05cm,height=6.35cm]{../images/finalreport/architecture_userdocument_uml.eps}
  \caption{RemoteUser and RemoteDocument Interface}
 \end{figure}
 
-
-The
-\texttt{RemoteDocument} objects have also a property that returns the
-\texttt{RemoteUser} for the publisher of the document.
+The \texttt{Remote\-Document} objects have also a property of type
+\texttt{Remote\-User} for the publisher of the document.
 
 
 \subsection{Explicit User Discovery}
 The described discovery mechanism relies on the services of the network layer.
 It usually relies on IP multicast, which is most likely not available outside
-of the local subnet. ACE provides therefore an explicit way to discover users.
-The \texttt{CollaborationService} has a method \texttt{discoverUser} with
-three parameters. A \texttt{DiscoveryCallback} is used to report the result
-of the discovery, a \texttt{InetAddress} specifying the host, and a port.
+of the local subnet. ACE therefore provides an explicit way to discover users.
+The \texttt{Collaboration\-Service} has a method \texttt{discover\-User} with
+three parameters: a \texttt{Discovery\-Callback} to report the result
+of the discovery, an \texttt{Inet\-Address} specifying the host, and a port.
 
 \begin{figure}[H]
  \centering
- \includegraphics[width=8.47cm,height=2.19cm]{../images/finalreport/architecture_discoverycallback_uml.eps}
+ \includegraphics[width=6.28cm,height=1.55cm]{../images/finalreport/architecture_discoverycallback_uml.eps}
  \caption{DiscoveryCallback Interface}
 \end{figure}
 
 The callback is notified about the result of the discovery. The passed in
-\texttt{DiscoveryResult} has a status and a status message. If the status
-is equal to \texttt{DiscoveryResult.SUCCESS} the discovery succeeded. The
+\texttt{Discovery\-Result} has a status and a status message. If the status
+is equal to \texttt{Discovery\-Result.\-SUCCESS} the discovery succeeded. The
 discovered user is returned through the normal code path, i.e. the
-registered \texttt{UserListener} objects receive a notification.
+registered \texttt{User\-Listener} objects receive a notification. (see
+section \ref{sect:archoverview.discovery})
 
 \begin{figure}[H]
  \centering
- \includegraphics[width=5.57cm,height=2.54cm]{../images/finalreport/architecture_discoveryresult_uml.eps}
+ \includegraphics[width=4.94cm,height=1.91cm]{../images/finalreport/architecture_discoveryresult_uml.eps}
  \caption{DiscoveryResult}
 \end{figure}
 
 
 \subsection{Joining Documents}
 \label{sect:archoverview.join}
-\texttt{RemoteDocument} instances have a method \texttt{join}. This join
-method can be used to join a remote document. All that is needed to
-join a document is to register a \texttt{DocumentListener} with the 
-\texttt{CollaborationListener} and call join on a discovered document.
+\texttt{Remote\-Document} instances have a \texttt{join} method. It
+can be used to join a published document. All that is needed to
+join a document is to register a \texttt{Document\-Listener} with the 
+\texttt{Collaboration\-Service} and call \texttt{join} on a discovered document.
 
 The \texttt{join} method is designed to return immediately. Join is a 
 potentially long running operation. First, the join request has to be sent
 to the publisher. Second, it might take some time to transfer the document
 content over the network. And last but not least, joining might need the 
-approval of the publisher, which might take even longer. Thus, it is a sensible 
-design decision to make this method non-blocking.
+approval of the publisher, which might take even longer. Thus, it is a 
+necessary design decision to make this method asynchronous.
 
 The result of join request is communicated to an object passed to the
-\texttt{join} method implementing the \texttt{JoinCallback} interface.
+\texttt{join} method implementing the \texttt{Join\-Callback} interface.
 
 \begin{figure}[H]
  \centering
- \includegraphics[width=9.07cm,height=2.58cm]{../images/finalreport/architecture_joincallback_uml.eps}
+ \includegraphics[width=8.43cm,height=1.94cm]{../images/finalreport/architecture_joincallback_uml.eps}
  \caption{JoinCallback Interface}
 \end{figure}
 
 Depending on the outcome of the join request, either \texttt{accepted} or
 \texttt{rejected} is called. The \texttt{accepted} method takes an argument
-of type \texttt{Session} and returns a \texttt{ParticipantSessionCallback}. 
+of type \texttt{Session} and returns a \texttt{Participant\-Session\-Callback}. 
 The session
 is the object that represents a collaborative editing session. It is
 implemented by the collaboration layer and passed to the application layer.
-The \texttt{ParticipantSessionCallback} in turn is returned by the application 
-layer to the collaboration layer and is used by it to return received operations
-and caret updates from other participants in the session.
+The \texttt{Participant\-Session\-Callback} in turn is returned by the 
+application layer to the collaboration layer and is used by it to return 
+received operations and caret updates from other participants in the session.
 
 
 \subsection{Publishing Documents}
-To publish a document, the \texttt{CollaborationService} method \texttt{publish}
-is used. The method has two parameters. The first is the session callback
-for a published session (\texttt{PublishedSessionCallback}). The second method 
-is the \texttt{DocumentModel}
-of the document to be published. The \texttt{DocumentModel} contains the
+To publish a document, the \texttt{Collaboration\-Service} \texttt{publish}
+method is used. The method has two parameters. The first is the session callback
+for a published session (\texttt{Published\-Session\-Callback}). 
+The second method is the \texttt{Document\-Model}
+of the document to be published. The \texttt{Document\-Model} contains the
 document content, the title, as well as the current caret position of the
 publisher. The collaboration service in turn returns an object of type
-\texttt{PublishedSession}, which is used both to control the session as well
-as sending operations and updates to the caret position.
+\texttt{Published\-Session}, which is used both to control the session as well
+as sending operations and updates of the caret position.
 
 
 \subsection{Inviting Users}
 \label{sect:archoverview.invitingusers}
-The \texttt{PublishedSession} has a method \texttt{invite} to invite users.
-The invite method has as single parameter of type \texttt{RemoteUser}. 
+The \texttt{Published\-Session} has a method \texttt{invite} to invite users.
+The invite method has as single parameter of type \texttt{Remote\-User}. 
 The invite method is non-blocking, i.e. it
 returns immediately. If the user accepts the invitation, he is added to the
 list of participants of the session. The API does not provide a way to return
 a feedback to the application layer whether the invitation is accepted.
-Future versions may improve in that area and add a callback interface for
-the invitation result.
+Future versions may improve in that area and add a callback interface 
+to notify the publisher about the action taken on the invitation.
 
 
 \subsection{Receiving Invitations}
@@ -225,24 +243,24 @@ tries to invite the local user.
 
 \begin{figure}[H]
  \centering
- \includegraphics[width=7.48cm,height=2.15cm]{../images/finalreport/architecture_invitationcallback_uml.eps}
+ \includegraphics[width=6.84cm,height=1.52cm]{../images/finalreport/architecture_invitationcallback_uml.eps}
  \caption{InvitationCallback Interface}
 \end{figure}
 
 The passed in \texttt{Invitation} allows to retrieve the document for which
-the user is invited as well as the publisher of the document. The
+the user is invited as well as inviter. The
 methods are \texttt{accept} and \texttt{reject}. They represent
 the user actions of accepting or rejecting an invitation. 
 
 \begin{figure}[H]
  \centering
- \includegraphics[width=6.60cm,height=3.76cm]{../images/finalreport/architecture_invitation_uml.eps}
+ \includegraphics[width=5.96cm,height=2.82cm]{../images/finalreport/architecture_invitation_uml.eps}
  \caption{Invitation Interface}
 \end{figure}
 
-The \texttt{accept} method has as parameter a \texttt{JoinCallback}. This
-callback is used exactly in the same way as the \texttt{JoinCallback} passed
-to the \texttt{join} method of the \texttt{RemoteDocument} 
+The \texttt{accept} method has as parameter a \texttt{Join\-Callback}. This
+callback is used exactly in the same way as the \texttt{Join\-Callback} passed
+to the \texttt{join} method of the \texttt{Remote\-Document} 
 (see \ref{sect:archoverview.join}).
 
 
@@ -258,19 +276,19 @@ We have shown several ways to get a \texttt{Session} object:
 \end{itemize}
 
 All those ways have one thing in common: the application layer has to pass a 
-\texttt{SessionCallback}
-(in case of publish a \texttt{PublishedSessionCallback} and in every
-other case a \texttt{ParticipantSessionCallback}) to the collaboration
+\texttt{Session\-Callback}
+(in case of publish a \texttt{Published\-Session\-Callback} and in every
+other case a \texttt{Participant\-Session\-Callback}) to the collaboration
 layer. There are always these two objects, a \texttt{Session} and
-a \texttt{SessionCallback}. The \texttt{Session} is used by the application
-layer to send events to collaboration layer and a \texttt{SessionCallback}
+a \texttt{Session\-Callback}. The \texttt{Session} is used by the application
+layer to send events to the collaboration layer and a \texttt{Session\-Callback}
 is used to notify the application layer about session related events from the 
 collaboration layer. Figure \ref{fig:archoverview.sessionandcallback} depicts 
 this situation.
 
 \begin{figure}[H]
  \centering
- \includegraphics[width=10.37cm,height=7.02cm]{../images/finalreport/architecture_session_sessioncallback.eps}
+ \includegraphics[width=10.37cm,height=4.48cm]{../images/finalreport/architecture_session_sessioncallback.eps}
  \caption{Session and SessionCallback}
  \label{fig:archoverview.sessionandcallback}
 \end{figure}
@@ -280,7 +298,7 @@ hierarchy.
 
 \begin{figure}[H]
  \centering
- \includegraphics[width=7.69cm,height=8.75cm]{../images/finalreport/architecture_session_uml.eps}
+ \includegraphics[width=7.06cm,height=8.11cm]{../images/finalreport/architecture_session_uml.eps}
  \caption{Session and PublishedSession Interface}
  \label{fig:archoverview.session}
 \end{figure}
@@ -289,37 +307,39 @@ hierarchy.
 \subsubsection{Locking}
 In order that the system can guarantee the consistency of the replicas, we
 must employ a locking scheme in the session and the document model of
-the application layer implementation. While transforming messages, nobody
-can be allowed to modify the document. 
+the application layer implementation. The locking has to ensure that:
+
+\begin{itemize}
+ \item the local document does not change while a remote request is 
+transformed
+ \item the local document does not change while generating a local request (as a result of the user typing text)
+\end{itemize}
 
 Before determining the index and the text of a local operation, the session must
-be locked. This ensures that from the point where the operation is determined
-to the point where a request is created for the operation no other text is
-inserted. Failing to do that would potentially result in an invalid index for
-the local operation, as a processed remote operation could shift the text.
+be locked. This ensures that from the point where the operation's parameters
+are determined
+to the point where a request is created for the operation the document does
+not change. Failing to properly lock would potentially result in an invalid index of the local operation, because a processed remote operation could 
+shift the text.
 
-On the other hand for the same reasons, the session should also ensure with a 
-lock that the local document model does not change while a remote request is 
-processed.
-
-The \texttt{SessionCallback} has a method \texttt{getLock}, from which
+The \texttt{Session\-Callback} has a method \texttt{get\-Lock}, from which
 the collaboration layer gets a lock from the application layer. This
 lock is used inside the session as well as it is available through the
-\texttt{lock} and \texttt{unlock} methods. Make sure that for each call to
+\texttt{lock} and \texttt{unlock} methods of the \texttt{Session} interface.
+Make sure that for each call to
 \texttt{lock} there is a matching \texttt{unlock} call. To be sure that unlock
 is called, it must be placed inside a finally block.
 
 \begin{figure}[H]
- \centering
  \small{\begin{verbatim}
- Session session = ...;
- session.lock();
- try {
-   Operation op = ...;
-   session.sendOperation(op);
- } finally {
-   session.unlock();
- }
+    Session session = ...;
+    session.lock();
+    try {
+      Operation op = ...;
+      session.sendOperation(op);
+    } finally {
+      session.unlock();
+    }
  \end{verbatim}}
  \caption{Proper locking of a Session}
 \end{figure}
@@ -330,42 +350,43 @@ shows how the lock is implemented in our application layer implementation.
 
 
 \subsubsection{Sending Operations}
-The \texttt{sendOperation} and \texttt{sendCaretUpdate} methods are used to send 
-locally generated operations or
-caret updates to the other participants in the session. The \texttt{leave}
-method allows to leave the session, i.e. stop participating. The participant
+The \texttt{send\-Operation} and \texttt{send\-Caret\-Update} 
+methods are used to send locally generated operations or
+caret updates to the other participants in the session. 
+
+\subsubsection{Leaving the Session}
+The \texttt{leave} method allows to leave the session, i.e. stop participating. 
+
+\subsubsection{Participant related methods}
+The participant
 related methods allow to access the currently participating users. These
 methods return objects implementing the \texttt{Participant} interface. This
-interface has
-two methods, one to get the \texttt{RemoteUser} and one to get the participant
-id.
+interface has two methods, one to get the \texttt{Remote\-User} and one to get 
+the participant id.
 
 \begin{figure}[H]
  \centering
- \includegraphics[width=4.97cm,height=2.1cm]{../images/finalreport/architecture_participant_uml.eps}
+ \includegraphics[width=4.34cm,height=1.98cm]{../images/finalreport/architecture_participant_uml.eps}
  \caption{Participant Interface}
 \end{figure}
 
 A participant id is a session-wide unique identifier for a user. They are given
 to a user when he joins a session by the publisher of the session. The local
-participant id can be retrieved by the \texttt{getParticipantId} method.
-
-The interface used by the collaboration layer to notify the client of the
-session about events is the \texttt{SessionCallback} interface.
+participant id can be retrieved by the \texttt{get\-Participant\-Id} method.
 
 
 \subsubsection{PublishedSession}
-The \texttt{PublishedSession} has some additional methods that correspond
+The \texttt{Published\-Session} has some additional methods that correspond
 to the additional actions available to the publisher of a document. The
 publisher can change the name of the document through the
-\texttt{setDocumentDetails} method. This happens most likely because the
-publisher saves the document under a different name.
+\texttt{set\-Document\-Details} method. This can be used by the application
+to change the title when the document is saved as a different file.
 The \texttt{invite} method we have already seen in action in the section
 \ref{sect:archoverview.invitingusers}.
 
 Last but not least, the \texttt{kick} method can be used to kick a
-participant from the session. This gives the publisher the possibility to
-ban a user from the session.
+participant from the session. This gives the publisher the power to
+ban a misbehaving user from the session.
 
 
 \subsection{Session Callbacks}

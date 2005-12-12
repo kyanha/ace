@@ -19,7 +19,7 @@
 	<key>MagnetsVisible</key>
 	<string>NO</string>
 	<key>ModificationDate</key>
-	<string>2005-12-06 11:38:16 +0100</string>
+	<string>2005-12-12 11:08:19 +0100</string>
 	<key>Modifier</key>
 	<string>Simon</string>
 	<key>PageBreaks</key>
@@ -104,7 +104,7 @@
 	CQkJCTwvYXJyYXk+CgkJCQkJPGtleT5jb20uYXBwbGUucHJpbnQudGlja2V0LmNsaWVu
 	dDwva2V5PgoJCQkJCTxzdHJpbmc+Y29tLmFwcGxlLnByaW50aW5nbWFuYWdlcjwvc3Ry
 	aW5nPgoJCQkJCTxrZXk+Y29tLmFwcGxlLnByaW50LnRpY2tldC5tb2REYXRlPC9rZXk+
-	CgkJCQkJPGRhdGU+MjAwNS0xMi0wNlQxMDoxMDo0NVo8L2RhdGU+CgkJCQkJPGtleT5j
+	CgkJCQkJPGRhdGU+MjAwNS0xMi0xMlQwOTo0MTo0OFo8L2RhdGU+CgkJCQkJPGtleT5j
 	b20uYXBwbGUucHJpbnQudGlja2V0LnN0YXRlRmxhZzwva2V5PgoJCQkJCTxpbnRlZ2Vy
 	PjA8L2ludGVnZXI+CgkJCQk8L2RpY3Q+CgkJCTwvYXJyYXk+CgkJPC9kaWN0PgoJCTxr
 	ZXk+Y29tLmFwcGxlLnByaW50LlBhZ2VGb3JtYXQuUE1BZGp1c3RlZFBhcGVyUmVjdDwv
@@ -118,7 +118,7 @@
 	CQkJCTxrZXk+Y29tLmFwcGxlLnByaW50LnRpY2tldC5jbGllbnQ8L2tleT4KCQkJCQk8
 	c3RyaW5nPmNvbS5hcHBsZS5wcmludGluZ21hbmFnZXI8L3N0cmluZz4KCQkJCQk8a2V5
 	PmNvbS5hcHBsZS5wcmludC50aWNrZXQubW9kRGF0ZTwva2V5PgoJCQkJCTxkYXRlPjIw
-	MDUtMTItMDZUMTA6MTA6NDVaPC9kYXRlPgoJCQkJCTxrZXk+Y29tLmFwcGxlLnByaW50
+	MDUtMTItMTJUMDk6NDE6NDhaPC9kYXRlPgoJCQkJCTxrZXk+Y29tLmFwcGxlLnByaW50
 	LnRpY2tldC5zdGF0ZUZsYWc8L2tleT4KCQkJCQk8aW50ZWdlcj4wPC9pbnRlZ2VyPgoJ
 	CQkJPC9kaWN0PgoJCQk8L2FycmF5PgoJCTwvZGljdD4KCQk8a2V5PmNvbS5hcHBsZS5w
 	cmludC5QYXBlckluZm8uUE1QYXBlck5hbWU8L2tleT4KCQk8ZGljdD4KCQkJPGtleT5j
@@ -217,7 +217,7 @@
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>53</integer>
+					<integer>20</integer>
 					<key>ListOrientation</key>
 					<string>Vertical</string>
 					<key>Style</key>
@@ -228,6 +228,11 @@
 							<real>304</real>
 							<key>GradientCenter</key>
 							<string>{-0.294118, -0.264706}</string>
+						</dict>
+						<key>shadow</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
 						</dict>
 					</dict>
 					<key>TextList</key>
@@ -265,118 +270,6 @@ PortableDocument}</string>
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{286, 416.5}, {281, 76}}</string>
-					<key>Class</key>
-					<string>MultiTextGraphic</string>
-					<key>FitText</key>
-					<string>Vertical</string>
-					<key>Flow</key>
-					<string>Resize</string>
-					<key>ID</key>
-					<integer>52</integer>
-					<key>ListOrientation</key>
-					<string>Vertical</string>
-					<key>Style</key>
-					<dict>
-						<key>fill</key>
-						<dict>
-							<key>GradientAngle</key>
-							<real>304</real>
-							<key>GradientCenter</key>
-							<string>{-0.294118, -0.264706}</string>
-						</dict>
-					</dict>
-					<key>TextList</key>
-					<array>
-						<dict>
-							<key>Align</key>
-							<integer>0</integer>
-							<key>Text</key>
-							<string>{\rtf1\mac\ansicpg10000\cocoartf824\cocoasubrtf230
-{\fonttbl\f0\fswiss\fcharset77 Helvetica;\f1\fswiss\fcharset77 Helvetica-Bold;}
-{\colortbl;\red255\green255\blue255;}
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
-
-\f0\fs24 \cf0 &lt;&lt;interface&gt;&gt;
-\f1\b \
-RemoteDocument}</string>
-						</dict>
-						<dict>
-							<key>Align</key>
-							<integer>0</integer>
-							<key>Text</key>
-							<string>{\rtf1\mac\ansicpg10000\cocoartf824\cocoasubrtf230
-{\fonttbl\f0\fswiss\fcharset77 Helvetica;}
-{\colortbl;\red255\green255\blue255;}
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
-
-\f0\fs20 \cf0 +addPropertyChangeListener(l:PropertyChangeListener)\
-+removePropertyChangeListener(l:PropertyChangeListener)\
-+getId():String\
-+getTitle():String}</string>
-						</dict>
-					</array>
-					<key>TextPlacement</key>
-					<integer>0</integer>
-				</dict>
-				<dict>
-					<key>Bounds</key>
-					<string>{{286, 328.25}, {281, 76}}</string>
-					<key>Class</key>
-					<string>MultiTextGraphic</string>
-					<key>FitText</key>
-					<string>Vertical</string>
-					<key>Flow</key>
-					<string>Resize</string>
-					<key>ID</key>
-					<integer>51</integer>
-					<key>ListOrientation</key>
-					<string>Vertical</string>
-					<key>Style</key>
-					<dict>
-						<key>fill</key>
-						<dict>
-							<key>GradientAngle</key>
-							<real>304</real>
-							<key>GradientCenter</key>
-							<string>{-0.294118, -0.264706}</string>
-						</dict>
-					</dict>
-					<key>TextList</key>
-					<array>
-						<dict>
-							<key>Align</key>
-							<integer>0</integer>
-							<key>Text</key>
-							<string>{\rtf1\mac\ansicpg10000\cocoartf824\cocoasubrtf230
-{\fonttbl\f0\fswiss\fcharset77 Helvetica;\f1\fswiss\fcharset77 Helvetica-Bold;}
-{\colortbl;\red255\green255\blue255;}
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
-
-\f0\fs24 \cf0 &lt;&lt;interface&gt;&gt;
-\f1\b \
-RemoteUser}</string>
-						</dict>
-						<dict>
-							<key>Align</key>
-							<integer>0</integer>
-							<key>Text</key>
-							<string>{\rtf1\mac\ansicpg10000\cocoartf824\cocoasubrtf230
-{\fonttbl\f0\fswiss\fcharset77 Helvetica;}
-{\colortbl;\red255\green255\blue255;}
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
-
-\f0\fs20 \cf0 +addPropertyChangeListener(l:PropertyChangeListener)\
-+removePropertyChangeListener(l:PropertyChangeListener)\
-+getId():String\
-+getName():String}</string>
-						</dict>
-					</array>
-					<key>TextPlacement</key>
-					<integer>0</integer>
-				</dict>
-				<dict>
-					<key>Bounds</key>
 					<string>{{286, 265.5}, {225, 40}}</string>
 					<key>Class</key>
 					<string>MultiTextGraphic</string>
@@ -385,7 +278,7 @@ RemoteUser}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>50</integer>
+					<integer>19</integer>
 					<key>ListOrientation</key>
 					<string>Vertical</string>
 					<key>Style</key>
@@ -396,6 +289,11 @@ RemoteUser}</string>
 							<real>304</real>
 							<key>GradientCenter</key>
 							<string>{-0.294118, -0.264706}</string>
+						</dict>
+						<key>shadow</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
 						</dict>
 					</dict>
 					<key>TextList</key>
@@ -438,7 +336,7 @@ ServiceFailureHandler}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>49</integer>
+					<integer>18</integer>
 					<key>ListOrientation</key>
 					<string>Vertical</string>
 					<key>Style</key>
@@ -449,6 +347,11 @@ ServiceFailureHandler}</string>
 							<real>304</real>
 							<key>GradientCenter</key>
 							<string>{-0.294118, -0.264706}</string>
+						</dict>
+						<key>shadow</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
 						</dict>
 					</dict>
 					<key>TextList</key>
@@ -492,7 +395,7 @@ Participant}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>48</integer>
+					<integer>17</integer>
 					<key>ListOrientation</key>
 					<string>Vertical</string>
 					<key>Style</key>
@@ -503,6 +406,11 @@ Participant}</string>
 							<real>304</real>
 							<key>GradientCenter</key>
 							<string>{-0.294118, -0.264706}</string>
+						</dict>
+						<key>shadow</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
 						</dict>
 					</dict>
 					<key>TextList</key>
@@ -547,7 +455,7 @@ JoinRequest}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>47</integer>
+					<integer>16</integer>
 					<key>ListOrientation</key>
 					<string>Vertical</string>
 					<key>Style</key>
@@ -558,6 +466,11 @@ JoinRequest}</string>
 							<real>304</real>
 							<key>GradientCenter</key>
 							<string>{-0.294118, -0.264706}</string>
+						</dict>
+						<key>shadow</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
 						</dict>
 					</dict>
 					<key>TextList</key>
@@ -603,7 +516,7 @@ Invitation}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>46</integer>
+					<integer>15</integer>
 					<key>ListOrientation</key>
 					<string>Vertical</string>
 					<key>Style</key>
@@ -614,6 +527,11 @@ Invitation}</string>
 							<real>304</real>
 							<key>GradientCenter</key>
 							<string>{-0.294118, -0.264706}</string>
+						</dict>
+						<key>shadow</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
 						</dict>
 					</dict>
 					<key>TextList</key>
@@ -656,7 +574,7 @@ InvitationCallback}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>45</integer>
+					<integer>14</integer>
 					<key>ListOrientation</key>
 					<string>Vertical</string>
 					<key>Style</key>
@@ -667,6 +585,11 @@ InvitationCallback}</string>
 							<real>304</real>
 							<key>GradientCenter</key>
 							<string>{-0.294118, -0.264706}</string>
+						</dict>
+						<key>shadow</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
 						</dict>
 					</dict>
 					<key>TextList</key>
@@ -710,7 +633,7 @@ JoinCallback}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>44</integer>
+					<integer>13</integer>
 					<key>ListOrientation</key>
 					<string>Vertical</string>
 					<key>Style</key>
@@ -721,6 +644,11 @@ JoinCallback}</string>
 							<real>304</real>
 							<key>GradientCenter</key>
 							<string>{-0.294118, -0.264706}</string>
+						</dict>
+						<key>shadow</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
 						</dict>
 					</dict>
 					<key>TextList</key>
@@ -787,7 +715,10 @@ JoinCallback}</string>
 				</dict>
 			</array>
 			<key>LayoutInfo</key>
-			<dict/>
+			<dict>
+				<key>ChildOrdering</key>
+				<integer>0</integer>
+			</dict>
 			<key>Orientation</key>
 			<integer>2</integer>
 			<key>RowAlign</key>
@@ -813,7 +744,7 @@ JoinCallback}</string>
 			<array>
 				<dict>
 					<key>Bounds</key>
-					<string>{{95, 331}, {136, 50}}</string>
+					<string>{{268, 434.5}, {281, 88}}</string>
 					<key>Class</key>
 					<string>MultiTextGraphic</string>
 					<key>FitText</key>
@@ -821,7 +752,7 @@ JoinCallback}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>21</integer>
+					<integer>10</integer>
 					<key>ListOrientation</key>
 					<string>Vertical</string>
 					<key>Style</key>
@@ -832,6 +763,134 @@ JoinCallback}</string>
 							<real>304</real>
 							<key>GradientCenter</key>
 							<string>{-0.294118, -0.264706}</string>
+						</dict>
+						<key>shadow</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
+						</dict>
+					</dict>
+					<key>TextList</key>
+					<array>
+						<dict>
+							<key>Align</key>
+							<integer>0</integer>
+							<key>Text</key>
+							<string>{\rtf1\mac\ansicpg10000\cocoartf824\cocoasubrtf230
+{\fonttbl\f0\fswiss\fcharset77 Helvetica;\f1\fswiss\fcharset77 Helvetica-Bold;}
+{\colortbl;\red255\green255\blue255;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
+
+\f0\fs24 \cf0 &lt;&lt;interface&gt;&gt;
+\f1\b \
+RemoteDocument}</string>
+						</dict>
+						<dict>
+							<key>Align</key>
+							<integer>0</integer>
+							<key>Text</key>
+							<string>{\rtf1\mac\ansicpg10000\cocoartf824\cocoasubrtf230
+{\fonttbl\f0\fswiss\fcharset77 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\f0\fs20 \cf0 +addPropertyChangeListener(l:PropertyChangeListener)\
++removePropertyChangeListener(l:PropertyChangeListener)\
++getId():String\
++getTitle():String\
++getPublisher():RemoteUser}</string>
+						</dict>
+					</array>
+					<key>TextPlacement</key>
+					<integer>0</integer>
+				</dict>
+				<dict>
+					<key>Bounds</key>
+					<string>{{268, 346.25}, {281, 76}}</string>
+					<key>Class</key>
+					<string>MultiTextGraphic</string>
+					<key>FitText</key>
+					<string>Vertical</string>
+					<key>Flow</key>
+					<string>Resize</string>
+					<key>ID</key>
+					<integer>9</integer>
+					<key>ListOrientation</key>
+					<string>Vertical</string>
+					<key>Style</key>
+					<dict>
+						<key>fill</key>
+						<dict>
+							<key>GradientAngle</key>
+							<real>304</real>
+							<key>GradientCenter</key>
+							<string>{-0.294118, -0.264706}</string>
+						</dict>
+						<key>shadow</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
+						</dict>
+					</dict>
+					<key>TextList</key>
+					<array>
+						<dict>
+							<key>Align</key>
+							<integer>0</integer>
+							<key>Text</key>
+							<string>{\rtf1\mac\ansicpg10000\cocoartf824\cocoasubrtf230
+{\fonttbl\f0\fswiss\fcharset77 Helvetica;\f1\fswiss\fcharset77 Helvetica-Bold;}
+{\colortbl;\red255\green255\blue255;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
+
+\f0\fs24 \cf0 &lt;&lt;interface&gt;&gt;
+\f1\b \
+RemoteUser}</string>
+						</dict>
+						<dict>
+							<key>Align</key>
+							<integer>0</integer>
+							<key>Text</key>
+							<string>{\rtf1\mac\ansicpg10000\cocoartf824\cocoasubrtf230
+{\fonttbl\f0\fswiss\fcharset77 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\f0\fs20 \cf0 +addPropertyChangeListener(l:PropertyChangeListener)\
++removePropertyChangeListener(l:PropertyChangeListener)\
++getId():String\
++getName():String}</string>
+						</dict>
+					</array>
+					<key>TextPlacement</key>
+					<integer>0</integer>
+				</dict>
+				<dict>
+					<key>Bounds</key>
+					<string>{{95, 331}, {136, 50}}</string>
+					<key>Class</key>
+					<string>MultiTextGraphic</string>
+					<key>FitText</key>
+					<string>Vertical</string>
+					<key>Flow</key>
+					<string>Resize</string>
+					<key>ID</key>
+					<integer>8</integer>
+					<key>ListOrientation</key>
+					<string>Vertical</string>
+					<key>Style</key>
+					<dict>
+						<key>fill</key>
+						<dict>
+							<key>GradientAngle</key>
+							<real>304</real>
+							<key>GradientCenter</key>
+							<string>{-0.294118, -0.264706}</string>
+						</dict>
+						<key>shadow</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
 						</dict>
 					</dict>
 					<key>TextList</key>
@@ -866,7 +925,7 @@ JoinCallback}</string>
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{62, 254}, {218, 40}}</string>
+					<string>{{62, 254}, {174, 40}}</string>
 					<key>Class</key>
 					<string>MultiTextGraphic</string>
 					<key>FitText</key>
@@ -874,7 +933,7 @@ JoinCallback}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>20</integer>
+					<integer>7</integer>
 					<key>ListOrientation</key>
 					<string>Vertical</string>
 					<key>Style</key>
@@ -885,6 +944,11 @@ JoinCallback}</string>
 							<real>304</real>
 							<key>GradientCenter</key>
 							<string>{-0.294118, -0.264706}</string>
+						</dict>
+						<key>shadow</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
 						</dict>
 					</dict>
 					<key>TextList</key>
@@ -919,7 +983,7 @@ DiscoveryCallback}</string>
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{62, 145}, {218, 52}}</string>
+					<string>{{62, 145}, {224, 52}}</string>
 					<key>Class</key>
 					<string>MultiTextGraphic</string>
 					<key>FitText</key>
@@ -927,7 +991,7 @@ DiscoveryCallback}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>19</integer>
+					<integer>6</integer>
 					<key>ListOrientation</key>
 					<string>Vertical</string>
 					<key>Style</key>
@@ -938,6 +1002,11 @@ DiscoveryCallback}</string>
 							<real>304</real>
 							<key>GradientCenter</key>
 							<string>{-0.294118, -0.264706}</string>
+						</dict>
+						<key>shadow</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
 						</dict>
 					</dict>
 					<key>TextList</key>
@@ -964,8 +1033,8 @@ DocumentListener}</string>
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
 
-\f0\fs20 \cf0 +documentDiscarded(doc:RemoteDocument)\
-+documentDiscovered(doc:RemoteDocument)}</string>
+\f0\fs20 \cf0 +documentDiscarded(doc:RemoteDocument[])\
++documentDiscovered(doc:RemoteDocument[])}</string>
 						</dict>
 					</array>
 					<key>TextPlacement</key>
@@ -973,7 +1042,7 @@ DocumentListener}</string>
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{62, 78}, {218, 52}}</string>
+					<string>{{62, 78}, {224, 52}}</string>
 					<key>Class</key>
 					<string>MultiTextGraphic</string>
 					<key>FitText</key>
@@ -981,7 +1050,7 @@ DocumentListener}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>18</integer>
+					<integer>5</integer>
 					<key>ListOrientation</key>
 					<string>Vertical</string>
 					<key>Style</key>
@@ -992,6 +1061,11 @@ DocumentListener}</string>
 							<real>304</real>
 							<key>GradientCenter</key>
 							<string>{-0.294118, -0.264706}</string>
+						</dict>
+						<key>shadow</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
 						</dict>
 					</dict>
 					<key>TextList</key>
@@ -1018,8 +1092,8 @@ UserListener}</string>
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
 
-\f0\fs20 \cf0 +userDiscarded(user:RemoteUser)\
-+userDiscovered(user:RemoteUser)}</string>
+\f0\fs20 \cf0 +userDiscarded(user:RemoteUser[])\
++userDiscovered(user:RemoteUser[])}</string>
 						</dict>
 					</array>
 					<key>TextPlacement</key>
@@ -1079,10 +1153,10 @@ UserListener}</string>
 					<key>Head</key>
 					<dict>
 						<key>ID</key>
-						<integer>8</integer>
+						<integer>13</integer>
 					</dict>
 					<key>ID</key>
-					<integer>11</integer>
+					<integer>16</integer>
 					<key>Points</key>
 					<array>
 						<string>{327.869, 197}</string>
@@ -1103,7 +1177,7 @@ UserListener}</string>
 					<key>Tail</key>
 					<dict>
 						<key>ID</key>
-						<integer>9</integer>
+						<integer>14</integer>
 					</dict>
 				</dict>
 				<dict>
@@ -1112,10 +1186,10 @@ UserListener}</string>
 					<key>Head</key>
 					<dict>
 						<key>ID</key>
-						<integer>8</integer>
+						<integer>13</integer>
 					</dict>
 					<key>ID</key>
-					<integer>10</integer>
+					<integer>15</integer>
 					<key>Points</key>
 					<array>
 						<string>{161.646, 197}</string>
@@ -1136,7 +1210,7 @@ UserListener}</string>
 					<key>Tail</key>
 					<dict>
 						<key>ID</key>
-						<integer>7</integer>
+						<integer>12</integer>
 					</dict>
 				</dict>
 				<dict>
@@ -1145,7 +1219,7 @@ UserListener}</string>
 					<key>Class</key>
 					<string>MultiTextGraphic</string>
 					<key>ID</key>
-					<integer>9</integer>
+					<integer>14</integer>
 					<key>ListOrientation</key>
 					<string>Vertical</string>
 					<key>Style</key>
@@ -1156,6 +1230,11 @@ UserListener}</string>
 							<real>304</real>
 							<key>GradientCenter</key>
 							<string>{-0.294118, -0.264706}</string>
+						</dict>
+						<key>shadow</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
 						</dict>
 					</dict>
 					<key>TextList</key>
@@ -1200,7 +1279,7 @@ ParticipantSessionCallback}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>8</integer>
+					<integer>13</integer>
 					<key>ListOrientation</key>
 					<string>Vertical</string>
 					<key>Style</key>
@@ -1211,6 +1290,11 @@ ParticipantSessionCallback}</string>
 							<real>304</real>
 							<key>GradientCenter</key>
 							<string>{-0.294118, -0.264706}</string>
+						</dict>
+						<key>shadow</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
 						</dict>
 					</dict>
 					<key>TextList</key>
@@ -1255,7 +1339,7 @@ SessionCallback}</string>
 					<key>Class</key>
 					<string>MultiTextGraphic</string>
 					<key>ID</key>
-					<integer>7</integer>
+					<integer>12</integer>
 					<key>ListOrientation</key>
 					<string>Vertical</string>
 					<key>Style</key>
@@ -1266,6 +1350,11 @@ SessionCallback}</string>
 							<real>304</real>
 							<key>GradientCenter</key>
 							<string>{-0.294118, -0.264706}</string>
+						</dict>
+						<key>shadow</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
 						</dict>
 					</dict>
 					<key>TextList</key>
@@ -1304,10 +1393,10 @@ PublishedSessionCallback}</string>
 					<key>Head</key>
 					<dict>
 						<key>ID</key>
-						<integer>4</integer>
+						<integer>9</integer>
 					</dict>
 					<key>ID</key>
-					<integer>6</integer>
+					<integer>11</integer>
 					<key>Points</key>
 					<array>
 						<string>{253.75, 498}</string>
@@ -1328,7 +1417,7 @@ PublishedSessionCallback}</string>
 					<key>Tail</key>
 					<dict>
 						<key>ID</key>
-						<integer>5</integer>
+						<integer>10</integer>
 					</dict>
 				</dict>
 				<dict>
@@ -1341,7 +1430,7 @@ PublishedSessionCallback}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>5</integer>
+					<integer>10</integer>
 					<key>ListOrientation</key>
 					<string>Vertical</string>
 					<key>Style</key>
@@ -1352,6 +1441,11 @@ PublishedSessionCallback}</string>
 							<real>304</real>
 							<key>GradientCenter</key>
 							<string>{-0.294118, -0.264706}</string>
+						</dict>
+						<key>shadow</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
 						</dict>
 					</dict>
 					<key>TextList</key>
@@ -1366,9 +1460,8 @@ PublishedSessionCallback}</string>
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
 
 \f0\fs24 \cf0 &lt;&lt;interface&gt;&gt;\
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
 
-\f1\b \cf0 PublishedSession}</string>
+\f1\b PublishedSession}</string>
 						</dict>
 						<dict>
 							<key>Align</key>
@@ -1397,7 +1490,7 @@ PublishedSessionCallback}</string>
 					<key>Flow</key>
 					<string>Resize</string>
 					<key>ID</key>
-					<integer>4</integer>
+					<integer>9</integer>
 					<key>ListOrientation</key>
 					<string>Vertical</string>
 					<key>Style</key>
@@ -1408,6 +1501,11 @@ PublishedSessionCallback}</string>
 							<real>304</real>
 							<key>GradientCenter</key>
 							<string>{-0.294118, -0.264706}</string>
+						</dict>
+						<key>shadow</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
 						</dict>
 					</dict>
 					<key>TextList</key>
@@ -1422,9 +1520,8 @@ PublishedSessionCallback}</string>
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
 
 \f0\fs24 \cf0 &lt;&lt;interface&gt;&gt;\
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
 
-\f1\b \cf0 Session}</string>
+\f1\b Session}</string>
 						</dict>
 						<dict>
 							<key>Align</key>
@@ -1494,7 +1591,7 @@ PublishedSessionCallback}</string>
 	<key>WindowInfo</key>
 	<dict>
 		<key>CurrentSheet</key>
-		<string>2</string>
+		<string>1</string>
 		<key>Frame</key>
 		<string>{{220, 4}, {591, 742}}</string>
 		<key>ShowRuler</key>
