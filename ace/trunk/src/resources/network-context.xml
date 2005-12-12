@@ -2,6 +2,6 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
   
-  <bean id="networkService" class="ch.iserver.ace.net.impl.NetworkServiceImpl" factory-method="getInstance"/>
+  <bean id="networkService" class="ch.iserver.ace.net.core.NetworkServiceImpl" factory-method="getInstance"/>
   
 </beans>

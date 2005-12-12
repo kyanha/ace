@@ -357,11 +357,8 @@ public class CollaborationSerializer implements Serializer, ProtocolConstants {
 			handler.characters(text.toCharArray(), 0, text.length());
 			handler.endElement("", "", TEXT);
 			attrs = new AttributesImpl();
+			// TODO: remove TAG_ORIGINAL?
 			handler.startElement("", "", TAG_ORIGINAL, attrs);
-			Operation original = insert.getOriginalOperation();
-			if (original != null) {
-				addOperation(handler, original);
-			}
 			handler.endElement("", "", TAG_ORIGINAL);
 			handler.endElement("", "", TAG_INSERT);
 		} else if (operation instanceof DeleteOperation) {
@@ -378,11 +375,8 @@ public class CollaborationSerializer implements Serializer, ProtocolConstants {
 			handler.characters(text.toCharArray(), 0, text.length());
 			handler.endElement("", "", TEXT);
 			attrs = new AttributesImpl();
+			// TODO: remove TAG_ORIGINAL?
 			handler.startElement("", "", TAG_ORIGINAL, attrs);
-			Operation original = delete.getOriginalOperation();
-			if (original != null) {
-				addOperation(handler, original);
-			}
 			handler.endElement("", "", TAG_ORIGINAL);
 			handler.endElement("", "", TAG_DELETE);
 		} else if (operation instanceof SplitOperation) {
@@ -394,21 +388,14 @@ public class CollaborationSerializer implements Serializer, ProtocolConstants {
 			handler.startElement("", "", "second", attrs);
 			addOperation(handler, split.getSecond());
 			handler.endElement("", "", "second");
+			// TODO: remove TAG_ORIGINAL?
 			handler.startElement("", "", TAG_ORIGINAL, attrs);
-			Operation original = split.getOriginalOperation();
-			if (original != null) {
-				addOperation(handler, original);
-			}
 			handler.endElement("", "", TAG_ORIGINAL);
 			handler.endElement("", "", TAG_SPLIT);
 		} else if (operation instanceof NoOperation) {
-			NoOperation noop = (NoOperation) operation;
 			handler.startElement("", "", TAG_NOOP, attrs);
+			// TODO: remove TAG_ORIGINAL?
 			handler.startElement("", "", TAG_ORIGINAL, attrs);
-			Operation original = noop.getOriginalOperation();
-			if (original != null) {
-				addOperation(handler, original);
-			}
 			handler.endElement("", "", TAG_ORIGINAL);
 			handler.endElement("", "", TAG_NOOP);
 		} else {

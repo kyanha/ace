@@ -93,7 +93,7 @@ public class CollaborationParserHandlerTest extends TestCase {
 		Timestamp timestamp = (new JupiterTimestampFactory()).createTimestamp(new int[] {2,3});
 		InsertOperation insert = new InsertOperation(23, "test-text.", 12);
 		InsertOperation original = new InsertOperation(17, "original text", 10);
-		insert.setOriginalOperation(original);
+//		insert.setOriginalOperation(original);
 		ch.iserver.ace.algorithm.Request request = new ch.iserver.ace.algorithm.RequestImpl(1, timestamp, insert);
 		String participantId = "7";
 		byte[] data = serializer.createSessionMessage(ProtocolConstants.REQUEST, request, participantId);
@@ -111,7 +111,7 @@ public class CollaborationParserHandlerTest extends TestCase {
 			assertEquals(1, algoRequest.getSiteId());
 			Operation operation = algoRequest.getOperation();
 			assertTrue(operation instanceof InsertOperation);
-			assertTrue(operation.getOriginalOperation() instanceof InsertOperation);
+//			assertTrue(operation.getOriginalOperation() instanceof InsertOperation);
 			int[] com = algoRequest.getTimestamp().getComponents();
 			assertEquals(2, com[0]);
 			assertEquals(3, com[1]);
@@ -148,7 +148,7 @@ public class CollaborationParserHandlerTest extends TestCase {
 			assertEquals(1, algoRequest.getSiteId());
 			Operation operation = algoRequest.getOperation();
 			assertTrue(operation instanceof DeleteOperation);
-			assertNull(operation.getOriginalOperation());
+//			assertNull(operation.getOriginalOperation());
 			int[] com = algoRequest.getTimestamp().getComponents();
 			assertEquals(2, com[0]);
 			assertEquals(3, com[1]);
@@ -274,10 +274,10 @@ public class CollaborationParserHandlerTest extends TestCase {
 		InsertOperation first = new InsertOperation(172, "first text", 56);
 		DeleteOperation second = new DeleteOperation(123, "test-text.");
 		InsertOperation original = new InsertOperation(17, "original text", 10);
-		original.setOriginalOperation(new InsertOperation(56, "ancient operation.", 18));
-		second.setOriginalOperation(original);
+//		original.setOriginalOperation(new InsertOperation(56, "ancient operation.", 18));
+//		second.setOriginalOperation(original);
 		SplitOperation split = new SplitOperation(first, second);
-		split.setOriginalOperation(new InsertOperation(345, "actual blabla", 90));
+//		split.setOriginalOperation(new InsertOperation(345, "actual blabla", 90));
 		ch.iserver.ace.algorithm.Request request = new ch.iserver.ace.algorithm.RequestImpl(0, timestamp, split);
 		String participantId = "4";
 		byte[] data = serializer.createSessionMessage(ProtocolConstants.REQUEST, request, participantId);
@@ -300,8 +300,8 @@ public class CollaborationParserHandlerTest extends TestCase {
 			SplitOperation finalSplit = (SplitOperation) operation;
 			assertTrue(finalSplit.getFirst() instanceof InsertOperation);
 			assertTrue(finalSplit.getSecond() instanceof DeleteOperation);
-			assertTrue(finalSplit.getOriginalOperation() instanceof InsertOperation);
-			assertNotNull(operation.getOriginalOperation());
+//			assertTrue(finalSplit.getOriginalOperation() instanceof InsertOperation);
+//			assertNotNull(operation.getOriginalOperation());
 			int[] com = algoRequest.getTimestamp().getComponents();
 			assertEquals(4, com[0]);
 			assertEquals(5, com[1]);
@@ -339,7 +339,7 @@ public class CollaborationParserHandlerTest extends TestCase {
 			assertEquals(3, com[1]);
 			assertTrue(algoRequest.getOperation() instanceof NoOperation);
 			NoOperation finalNoop = (NoOperation) algoRequest.getOperation();
-			assertNull(finalNoop.getOriginalOperation());
+//			assertNull(finalNoop.getOriginalOperation());
 		}
 	}
 	
@@ -352,14 +352,14 @@ public class CollaborationParserHandlerTest extends TestCase {
 		
 		InsertOperation first = new InsertOperation(172, "first text", 56);
 		DeleteOperation second = new DeleteOperation(123, "test-text.");
-		InsertOperation original = new InsertOperation(17, "original text", 10);
-		original.setOriginalOperation(new InsertOperation(56, "ancient operation.", 18));
-		second.setOriginalOperation(original);
+//		InsertOperation original = new InsertOperation(17, "original text", 10);
+//		original.setOriginalOperation(new InsertOperation(56, "ancient operation.", 18));
+//		second.setOriginalOperation(original);
 		SplitOperation split = new SplitOperation(first, second);
-		split.setOriginalOperation(new InsertOperation(345, "actual blabla", 90));
+//		split.setOriginalOperation(new InsertOperation(345, "actual blabla", 90));
 		
 		NoOperation noop = new NoOperation();
-		noop.setOriginalOperation(split);
+//		noop.setOriginalOperation(split);
 		ch.iserver.ace.algorithm.Request request = new ch.iserver.ace.algorithm.RequestImpl(1, timestamp, noop);
 		String participantId = "4";
 		byte[] data = serializer.createSessionMessage(ProtocolConstants.REQUEST, request, participantId);
@@ -383,11 +383,11 @@ public class CollaborationParserHandlerTest extends TestCase {
 			assertEquals(3, com[1]);
 			assertTrue(algoRequest.getOperation() instanceof NoOperation);
 			NoOperation finalNoop = (NoOperation) algoRequest.getOperation();
-			assertTrue(finalNoop.getOriginalOperation() instanceof SplitOperation);
-			SplitOperation finalSplit = (SplitOperation) finalNoop.getOriginalOperation();
-			assertTrue(finalSplit.getFirst() instanceof InsertOperation);
-			assertTrue(finalSplit.getSecond() instanceof DeleteOperation);
-			assertTrue(finalSplit.getOriginalOperation() instanceof InsertOperation);
+//			assertTrue(finalNoop.getOriginalOperation() instanceof SplitOperation);
+//			SplitOperation finalSplit = (SplitOperation) finalNoop.getOriginalOperation();
+//			assertTrue(finalSplit.getFirst() instanceof InsertOperation);
+//			assertTrue(finalSplit.getSecond() instanceof DeleteOperation);
+//			assertTrue(finalSplit.getOriginalOperation() instanceof InsertOperation);
 		}
 	}
 	
@@ -414,26 +414,26 @@ public class CollaborationParserHandlerTest extends TestCase {
 	"<operation>" +
 	"<noop>" +
 	"<original>" +
-		"<split>" +
-		"<first>" +
-			"<insert position=\"172\" origin=\"56\"><text>first text</text><original/></insert>" +
-		"</first>" +
-		"<second>" +
-		  "<delete position=\"123\">" +
-			"<text>test-text.</text>" +
-			"<original>" +
-				"<insert position=\"17\" origin=\"10\"><text>original text</text>" +
-					"<original>" +
-						"<insert position=\"56\" origin=\"18\"><text>ancient operation.</text><original/></insert>" +
-					"</original>" +
-		         "</insert>" +
-            "</original>" +
-	      "</delete>" +
-	     "</second>" +
-	     "<original>" +
-	     	"<insert position=\"345\" origin=\"90\"><text>actual blabla</text><original/></insert>" +
-	     "</original>" +
-	     "</split>" +
+//		"<split>" +
+//		"<first>" +
+//			"<insert position=\"172\" origin=\"56\"><text>first text</text><original/></insert>" +
+//		"</first>" +
+//		"<second>" +
+//		  "<delete position=\"123\">" +
+//			"<text>test-text.</text>" +
+//			"<original>" +
+//				"<insert position=\"17\" origin=\"10\"><text>original text</text>" +
+//					"<original>" +
+//						"<insert position=\"56\" origin=\"18\"><text>ancient operation.</text><original/></insert>" +
+//					"</original>" +
+//		         "</insert>" +
+//            "</original>" +
+//	      "</delete>" +
+//	     "</second>" +
+//	     "<original>" +
+//	     	"<insert position=\"345\" origin=\"90\"><text>actual blabla</text><original/></insert>" +
+//	     "</original>" +
+//	     "</split>" +
 	"</original>" +
 	"</noop>" +
 	"</operation>" +

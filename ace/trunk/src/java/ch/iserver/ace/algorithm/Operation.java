@@ -29,21 +29,5 @@ import java.io.Serializable;
  * does not contain any specific methods at all.
  */
 public interface Operation extends Serializable {
-	
-	/**
-	 * Sets the original operation if this operation was
-	 * transformed.
-	 * 
-	 * @param op the origional operation
-	 */
-	public void setOriginalOperation(Operation op);
-	
-	/**
-	 * Returns the original operation if this operation
-	 * was transformed. Otherwise null is returned.
-	 * 
-	 * @return the original operation
-	 */
-	public Operation getOriginalOperation();
-	
+		
 }

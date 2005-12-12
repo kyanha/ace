@@ -21,8 +21,6 @@
 
 package ch.iserver.ace.algorithm.text;
 
-import org.apache.log4j.Logger;
-
 import ch.iserver.ace.algorithm.Operation;
 
 /**
@@ -30,9 +28,7 @@ import ch.iserver.ace.algorithm.Operation;
  * to be deleted in the document model.
  */
 public class DeleteOperation implements Operation {
-
-	private static final Logger LOG = Logger.getLogger(DeleteOperation.class);
-
+	
 	/**
 	 * the text to be deleted.
 	 */
@@ -42,13 +38,6 @@ public class DeleteOperation implements Operation {
 	 * the position in the document where the text is to be deleted.
 	 */
 	private int position;
-
-	/**
-	 * this operation's original operation, i.e if an operation is transformed,
-	 * a new operation is created and the old one passed to it as the original
-	 * operation.
-	 */
-	private Operation original;
 
 	/**
 	 * Class constructor.
@@ -139,22 +128,8 @@ public class DeleteOperation implements Operation {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setOriginalOperation(Operation op) {
-		original = op;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public Operation getOriginalOperation() {
-		return original;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public String toString() {
-		return "Delete(" + position + ",'" + text + "'," + original + ")";
+		return "Delete(" + position + ",'" + text + "')";
 	}
 
 	/**
@@ -167,8 +142,7 @@ public class DeleteOperation implements Operation {
 			return false;
 		} else if (obj.getClass().equals(getClass())) {
 			DeleteOperation op = (DeleteOperation) obj;
-			return op.position == position && op.text.equals(text)
-					&& op.original.equals(original);
+			return op.position == position && op.text.equals(text);
 		} else {
 			return false;
 		}
@@ -180,9 +154,6 @@ public class DeleteOperation implements Operation {
 	public int hashCode() {
 		int hashcode = position;
 		hashcode += 13 * text.hashCode();
-		if (original != null) {
-			hashcode += 13 * original.hashCode();
-		}
 		return hashcode;
 	}
 }

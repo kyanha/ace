@@ -266,12 +266,14 @@ public class CollaborationParserHandler extends ParserHandler {
 				((DeleteOperation)currOperation).setText(data);
 			}
 			isTextEncoded = false;
+		
+		// TODO: still needed?
 		} else if (qName.equals(TAG_ORIGINAL)) {
 			if (!operationStack.isEmpty()) { //obsolete: && totalOriginalCount > 1
 				Operation operation = (Operation) operationStack.pop();
 				//totalOriginalCount > 0 means that original operations are available for the currOperation
 				if (totalOriginalCount > 0) {
-					operation.setOriginalOperation(currOperation);
+//					operation.setOriginalOperation(currOperation);
 					currOperation = operation;
 				}
 				totalOriginalCount++;

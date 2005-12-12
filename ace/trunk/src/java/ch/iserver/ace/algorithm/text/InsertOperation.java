@@ -47,14 +47,7 @@ public class InsertOperation implements Operation {
 	 * context, a least synchronization point (LSP) would have to be determined.
 	 */
 	private int origin;
-
-	/**
-	 * this operation's original operation, i.e if an operation is transformed,
-	 * a new operation is created and the old one passed to it as the original
-	 * operation.
-	 */
-	private Operation original;
-
+	
 	/**
 	 * Class constructor.
 	 * 
@@ -195,21 +188,7 @@ public class InsertOperation implements Operation {
 		}
 		this.text = text;
 	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setOriginalOperation(Operation op) {
-		original = op;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public Operation getOriginalOperation() {
-		return original;
-	}
-
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -228,20 +207,9 @@ public class InsertOperation implements Operation {
 		} else if (obj.getClass().equals(getClass())) {
 			InsertOperation op = (InsertOperation) obj;
 			return op.position == position && op.text.equals(text)
-					&& op.origin == origin
-					&& nullSafeEquals(op.original, original);
+					&& op.origin == origin;
 		} else {
 			return false;
-		}
-	}
-	
-	private boolean nullSafeEquals(Object a, Object b) {
-		if (a == b) {
-			return true;
-		} else if (a == null || b == null) {
-			return false;
-		} else {
-			return a.equals(b);
 		}
 	}
 
@@ -252,9 +220,6 @@ public class InsertOperation implements Operation {
 		int hashcode = position;
 		hashcode += 13 * origin;
 		hashcode += 13 * text.hashCode();
-		if (original != null) { 
-			hashcode += 13 * original.hashCode();
-		}
 		return hashcode;
 	}
 

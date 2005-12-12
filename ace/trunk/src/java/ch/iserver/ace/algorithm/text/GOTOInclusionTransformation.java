@@ -138,7 +138,6 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 			 */
 			transformedOperation = new InsertOperation(posA + lenB, insA
 					.getText(), insA.getOrigin());
-			transformedOperation.setOriginalOperation(insA);
 		}
 		return transformedOperation;
 	}
@@ -167,7 +166,6 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 			 */
 			transformedOperation = new InsertOperation(posA - lenB, insA
 					.getText(), insA.getOrigin());
-			transformedOperation.setOriginalOperation(insA);
 		} else {
 			/*
 			 * Operation A starts in operation B. Index of A' must be the index of
@@ -178,7 +176,6 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 			 */
 			transformedOperation = new InsertOperation(posB, insA.getText(),
 					insA.getOrigin());
-			transformedOperation.setOriginalOperation(insA);
 		}
 		return transformedOperation;
 	}
@@ -207,7 +204,6 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 			 */
 			transformedOperation = new DeleteOperation(posA + lenB, delA
 					.getText());
-			transformedOperation.setOriginalOperation(delA);
 		} else {
 			/*
 			 * Operation B (insert) is in the range of operation A (delete). Operation A'
@@ -222,7 +218,6 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 					+ (posB - posA), delA.getText()
 					.substring(posB - posA, lenA));
 			transformedOperation = new SplitOperation(del1, del2);
-			transformedOperation.setOriginalOperation(delA);
 		}
 		return transformedOperation;
 	}
@@ -252,7 +247,6 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 			 */
 			transformedOperation = new DeleteOperation(posA - lenB, delA
 					.getText());
-			transformedOperation.setOriginalOperation(delA);
 		} else {
 			/*
 			 * Operation A and operation B are overlapping.
@@ -266,7 +260,6 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 				 * (A'):     ""         |     ""
 				 */
 				NoOperation noop = new NoOperation();
-				noop.setOriginalOperation(delA);
 				transformedOperation = noop;
 			} else if ((posB <= posA) && ((posA + lenA) > (posB + lenB))) {
 				/*
@@ -278,7 +271,6 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 				 */
 				transformedOperation = new DeleteOperation(posB, delA.getText()
 						.substring(posB + lenB - posA, lenA));
-				transformedOperation.setOriginalOperation(delA);
 			} else if ((posB > posA) && ((posB + lenB) >= (posA + lenA))) {
 				/*
 				 * Operation B starts after operation A and ends after or at the
@@ -289,7 +281,6 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 				 */
 				transformedOperation = new DeleteOperation(posA, delA.getText()
 						.substring(0, posB - posA));
-				transformedOperation.setOriginalOperation(delA);
 			} else {
 				/*
 				 * Operation B is fully in operation A.
@@ -300,7 +291,6 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 				transformedOperation = new DeleteOperation(posA, delA.getText()
 						.substring(0, posB - posA)
 						+ delA.getText().substring(posB + lenB - posA, lenA));
-				transformedOperation.setOriginalOperation(delA);
 			}
 		}
 		return transformedOperation;
@@ -315,7 +305,6 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 	private InsertOperation clone(InsertOperation insA) {
 		InsertOperation cloneOp = new InsertOperation(insA.getPosition(), insA.getText(),
 				insA.getOrigin());
-		cloneOp.setOriginalOperation(insA);
 		return cloneOp;
 	}
 	
@@ -327,7 +316,6 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 	 */
 	private DeleteOperation clone(DeleteOperation delA) {
 		DeleteOperation cloneOp = new DeleteOperation(delA.getPosition(), delA.getText());
-		cloneOp.setOriginalOperation(delA);
 		return cloneOp;
 	}
 	
@@ -339,7 +327,6 @@ public class GOTOInclusionTransformation implements InclusionTransformation {
 	 */
 	private NoOperation clone(NoOperation noop) {
 		NoOperation cloneOp = new NoOperation();
-		cloneOp.setOriginalOperation(noop);
 		return cloneOp;
 	}
 }

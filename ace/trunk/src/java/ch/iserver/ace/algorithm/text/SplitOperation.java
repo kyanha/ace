@@ -21,8 +21,6 @@
 package ch.iserver.ace.algorithm.text;
 
 
-import org.apache.log4j.Logger;
-
 import ch.iserver.ace.algorithm.Operation;
 
 /**
@@ -34,8 +32,6 @@ import ch.iserver.ace.algorithm.Operation;
  */
 public class SplitOperation implements Operation {
 
-	private static final Logger LOG = Logger.getLogger(SplitOperation.class);
-	
 	/**
 	 * The first operation.
 	 */
@@ -46,13 +42,6 @@ public class SplitOperation implements Operation {
 	 */
 	private Operation op2;
 	
-	/**
-	 * this operation's original operation, i.e if an operation is transformed,
-	 * a new operation is created and the old one passed to it as the original
-	 * operation.
-	 */
-	private Operation original;
-
 	/**
 	 * Class constructor.
 	 */
@@ -103,20 +92,6 @@ public class SplitOperation implements Operation {
 	 */
 	public void setSecond(Operation op2) {
 		this.op2 = op2;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setOriginalOperation(Operation op) {
-		original = op;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public Operation getOriginalOperation() {
-		return original;
 	}
 	
 	/**

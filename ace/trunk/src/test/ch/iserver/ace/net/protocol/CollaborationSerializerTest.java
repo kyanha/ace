@@ -102,8 +102,8 @@ public class CollaborationSerializerTest extends TestCase {
 		
 		Timestamp timestamp = (new JupiterTimestampFactory()).createTimestamp(new int[] {2,3});
 		InsertOperation insert = new InsertOperation(23, "test-text.", 12);
-		InsertOperation original = new InsertOperation(17, "original text", 10);
-		insert.setOriginalOperation(original);
+//		InsertOperation original = new InsertOperation(17, "original text", 10);
+//		insert.setOriginalOperation(original);
 		Request request = new RequestImpl(1, timestamp, insert);
 		String participantId = "7";
 		byte[] data = serializer.createSessionMessage(ProtocolConstants.REQUEST, request, participantId);
@@ -119,9 +119,9 @@ public class CollaborationSerializerTest extends TestCase {
 		
 		Timestamp timestamp = (new JupiterTimestampFactory()).createTimestamp(new int[] {2,3});
 		DeleteOperation delete = new DeleteOperation(123, "test-text.");
-		InsertOperation original = new InsertOperation(17, "original text", 10);
-		original.setOriginalOperation(new InsertOperation(56, "ancient operation.", 18));
-		delete.setOriginalOperation(original);
+//		InsertOperation original = new InsertOperation(17, "original text", 10);
+//		original.setOriginalOperation(new InsertOperation(56, "ancient operation.", 18));
+//		delete.setOriginalOperation(original);
 		Request request = new RequestImpl(1, timestamp, delete);
 		String participantId = "4";
 		byte[] data = serializer.createSessionMessage(ProtocolConstants.REQUEST, request, participantId);
@@ -139,11 +139,11 @@ public class CollaborationSerializerTest extends TestCase {
 		
 		InsertOperation first = new InsertOperation(172, "first text", 56);
 		DeleteOperation second = new DeleteOperation(123, "test-text.");
-		InsertOperation original = new InsertOperation(17, "original text", 10);
-		original.setOriginalOperation(new InsertOperation(56, "ancient operation.", 18));
-		second.setOriginalOperation(original);
+//		InsertOperation original = new InsertOperation(17, "original text", 10);
+//		original.setOriginalOperation(new InsertOperation(56, "ancient operation.", 18));
+//		second.setOriginalOperation(original);
 		SplitOperation split = new SplitOperation(first, second);
-		split.setOriginalOperation(new InsertOperation(345, "actual blabla", 90));
+//		split.setOriginalOperation(new InsertOperation(345, "actual blabla", 90));
 		Request request = new RequestImpl(1, timestamp, split);
 		String participantId = "4";
 		byte[] data = serializer.createSessionMessage(ProtocolConstants.REQUEST, request, participantId);
@@ -179,14 +179,14 @@ public class CollaborationSerializerTest extends TestCase {
 		
 		InsertOperation first = new InsertOperation(172, "first text", 56);
 		DeleteOperation second = new DeleteOperation(123, "test-text.");
-		InsertOperation original = new InsertOperation(17, "original text", 10);
-		original.setOriginalOperation(new InsertOperation(56, "ancient operation.", 18));
-		second.setOriginalOperation(original);
-		SplitOperation split = new SplitOperation(first, second);
-		split.setOriginalOperation(new InsertOperation(345, "actual blabla", 90));
+//		InsertOperation original = new InsertOperation(17, "original text", 10);
+//		original.setOriginalOperation(new InsertOperation(56, "ancient operation.", 18));
+//		second.setOriginalOperation(original);
+//		SplitOperation split = new SplitOperation(first, second);
+//		split.setOriginalOperation(new InsertOperation(345, "actual blabla", 90));
 		
 		NoOperation noop = new NoOperation();
-		noop.setOriginalOperation(split);
+//		noop.setOriginalOperation(split);
 		Request request = new RequestImpl(1, timestamp, noop);
 		String participantId = "4";
 		byte[] data = serializer.createSessionMessage(ProtocolConstants.REQUEST, request, participantId);

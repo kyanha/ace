@@ -21,24 +21,13 @@
 
 package ch.iserver.ace.algorithm.text;
 
-import org.apache.log4j.Logger;
-
 import ch.iserver.ace.algorithm.Operation;
 
 /**
  * The NoOperation is used to hold a empty text together with the position zero.
  */
 public class NoOperation implements Operation {
-
-	private static final Logger LOG = Logger.getLogger(NoOperation.class);
-
-	/**
-	 * this operation's original operation, i.e if an operation is transformed,
-	 * a new operation is created and the old one passed to it as the original
-	 * operation.
-	 */
-	private Operation original;
-
+	
 	/**
 	 * Class constructor.
 	 */
@@ -90,26 +79,12 @@ public class NoOperation implements Operation {
 	public void setText(String text) {
 		throw new UnsupportedOperationException();
 	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setOriginalOperation(Operation op) {
-		original = op;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public Operation getOriginalOperation() {
-		return original;
-	}
-
+	
 	/**
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return "Noop(0,''," + original + ")";
+		return "Noop(0,'')";
 	}
 
 	/**
@@ -121,8 +96,7 @@ public class NoOperation implements Operation {
 		} else if (obj == null) {
 			return false;
 		} else if (obj.getClass().equals(getClass())) {
-			NoOperation op = (NoOperation) obj;
-			return op.original.equals(original);
+			return true;
 		} else {
 			return false;
 		}
@@ -133,9 +107,6 @@ public class NoOperation implements Operation {
 	 */
 	public int hashCode() {
 		int hashcode = 37;
-		if (original != null) {
-			hashcode += 13 * original.hashCode();
-		}
 		return hashcode;
 	}
 }
