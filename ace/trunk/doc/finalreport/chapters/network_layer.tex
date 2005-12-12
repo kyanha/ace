@@ -105,7 +105,7 @@ All events that the discovery receives are first processed in collaboration with
 
 
 \subsubsection{DNSSD calls}
-\texttt{DNSSDCall} is an abstract base class for all DNSSD API calls. A subclass defines what API call is executed. \texttt{DNSSDCall} determines how a call is executed. Besides, it incorporates advanced \texttt{Exception} and \texttt{Error} handling. That is, in case of failure, it uses a \texttt{RetryStrategy} to determine how many times and in what intervals a call is repeated. If the retry strategy fails, the exception is reported to the upper layer and the discovery process aborted (See section Exception Handling for further details???????). The \texttt{DNSSDCall} design follows the command pattern (see [Design Patterns]) in that each call is wrapped by a command object and can uniformly be executed.
+\texttt{DNSSDCall} is an abstract base class for all DNSSD API calls. A subclass defines what API call is executed. \texttt{DNSSDCall} incorporates advanced \texttt{Exception} and \texttt{Error} handling. That is, in case of failure, it uses a \texttt{RetryStrategy} to determine how many times and in what intervals a call is repeated. If the retry strategy fails, the exception is reported to the upper layer and the discovery process aborted (See section Exception Handling for further details???????). The \texttt{DNSSDCall} design follows the command pattern (see [Design Patterns]) in that each call is wrapped by a command object and can uniformly be executed.
 
 \begin{figure}[H]
  \centering
@@ -194,7 +194,7 @@ The following sequence diagram shows how the client uses the discovery and what 
 \begin{figure}[H]
  \centering
   \frame{
- \includegraphics[width=5.90in,height=5.76in]{/Users/lukaszbinden/eclipse-workspace/ACE-Trunk/doc/images/finalreport/network_discovery_sequence.eps}
+ \includegraphics[width=5.90in,height=5.76in]{../images/finalreport/network_discovery_sequence.eps}
  }
  \caption{Launch of the Discovery Process}
  \label{fig:network.discovery.launch}
