@@ -27,7 +27,9 @@ The figure depicts the rough architecture of the network layer. The collaboratio
 
 \begin{figure}[H]
  \centering
+ \frame{
  \includegraphics[width=4.18in,height=5.64in]{../images/finalreport/network_architecture_view.eps}
+ }
  \caption{Network Layer Architecture}
  \label{fig:network.architecture}
 \end{figure}
@@ -41,9 +43,11 @@ The \texttt{discovery} package contains the relevant functionality for dynamic u
 
 The \texttt{protocol} package implements all communication related functionality and directly interacts with the BEEP component. The subpackage \texttt{filter} contains classes for the processing of outgoing and incoming requests and messages, respectively.
 
-\begin{figure}[H]
+\begin{figure}[htb]
  \centering
- \includegraphics[width=6.79in,height=6.18in]{../images/finalreport/network_package_view.eps}
+  \frame{
+ \includegraphics[width=5.94in,height=5.93in]{../images/finalreport/network_package_view.eps}
+ }
  \caption{Network Layer Package Structure}
  \label{fig:network.architecture}
 \end{figure}
@@ -73,7 +77,9 @@ The first step on the design was to find a way to use the discovery component in
 
 \begin{figure}[H]
  \centering
- \includegraphics[width=6.81in,height=4.51in]{../images/finalreport/network_discovery_uml.eps}
+  \frame{
+ \includegraphics[width=5.72in,height=4.39in]{../images/finalreport/network_discovery_uml.eps}
+ }
  \caption{Discovery usage design}
  \label{fig:network.discovery.usage}
 \end{figure}
@@ -90,7 +96,9 @@ All events that the discovery receives are first processed in collaboration with
 
 \begin{figure}[H]
  \centering
+  \frame{
  \includegraphics[width=4.22in,height=2.19in]{../images/finalreport/network_discoveryManager_uml.eps}
+ }
  \caption{Discovery Manager}
  \label{fig:network.discovery.manager}
 \end{figure}
@@ -101,7 +109,9 @@ All events that the discovery receives are first processed in collaboration with
 
 \begin{figure}[H]
  \centering
+  \frame{
  \includegraphics[width=2.97in,height=1.08in]{../images/finalreport/network_dnssdCall_uml.eps}
+ }
  \caption{DNSSDCall abstract super class}
  \label{fig:network.discovery.manager}
 \end{figure}
@@ -113,20 +123,24 @@ This section outlines how the concrete discovery implementation with Bonjour was
 \subsubsection{Bonjour discovery}
 The concrete \texttt{Discovery} implementation is called \texttt{Bonjour} and is created by the \texttt{BonjourFactory} factory. Class \texttt{Bonjour} starts and stops the discovery process with Bonjour zero-conf networking technology. For this purpose,  \texttt{Bonjour} makes use of two further types:  \texttt{UserRegistration} and \texttt{PeerDiscovery}.
 
-\begin{figure}[H]
+\begin{figure}[htb]
  \centering
- \includegraphics[width=6.32in,height=4.85in]{../images/finalreport/network_bonjour_uml.eps}
+  \frame{
+ \includegraphics[width=5.28in,height=4.67in]{../images/finalreport/network_bonjour_uml.eps}
+ }
  \caption{Discovery Implementation}
  \label{fig:network.discovery.implementation}
 \end{figure}
 
 \paragraph{User Registration}
  \texttt{UserRegistration} allows to register the local user for discovery as well as to update the user's details. It extends 
- various listener interfaces specified by the DNSSD API, namely  \texttt{RegisterListener},  \texttt{ResolveListener} and  \texttt{QueryListener}. This allows to have the user registration process separate from the peer discovery process, which uses the same listener interfaces.
+ various listener interfaces specified by the DNSSD API, namely  \texttt{RegisterListener},  \texttt{ResolveListener} and  \texttt{QueryListener}. This allows to have the user registration process separate from the peer discovery process, which uses the same listener interfaces. Consider figure \ref{fig:network.discovery.userregistration}.
 
 \begin{figure}[H]
  \centering
- \includegraphics[width=6.62in,height=2.86in]{../images/finalreport/network_bonjour_uml.eps}
+  \frame{
+ \includegraphics[width=5.85in,height=2.86in]{../images/finalreport/network_userRegistration_uml.eps}
+ }
  \caption{User Registration and extended interfaces}
  \label{fig:network.discovery.userregistration}
 \end{figure}
@@ -135,7 +149,9 @@ The concrete \texttt{Discovery} implementation is called \texttt{Bonjour} and is
 \paragraph{Peer Discovery}
 \begin{figure}[H]
  \centering
- \includegraphics[width=6.54in,height=9.24in]{../images/finalreport/network_peerDiscovery_uml.eps}
+  \frame{
+ \includegraphics[width=5.89in,height=8.43in]{../images/finalreport/network_peerDiscovery_uml.eps}
+ }
  \caption{Peer Discovery Design and Implementation}
  \label{fig:network.discovery.peerdiscovery}
 \end{figure}
@@ -150,7 +166,9 @@ The \texttt{DiscoveryCallbackAdapter}, as its name suggets, is an adapter for al
 
 \begin{figure}[H]
  \centering
+  \frame{
  \includegraphics[width=5.38in,height=2.51in]{../images/finalreport/network_discoveryManagerImpl_uml.eps}
+ }
  \caption{Discovery Callback Adapter and Discovery Manager Implementation}
  \label{fig:network.discovery.managerandadapter}
 \end{figure}
@@ -161,7 +179,9 @@ There are various implementations for the abstract super class \texttt{DNSSDCall
 
 \begin{figure}[H]
  \centering
- \includegraphics[width=6.26in,height=4.76in]{../images/finalreport/network_dnssdCall_impl_uml.eps}
+  \frame{
+ \includegraphics[width=5.94in,height=4.78in]{../images/finalreport/network_dnssdCall_impl_uml.eps}
+ }
  \caption{DNSSDCall implementations}
  \label{fig:network.discovery.manager}
 \end{figure}
@@ -169,11 +189,13 @@ There are various implementations for the abstract super class \texttt{DNSSDCall
 
 \subsection{Use cases}
 \subsubsection{Start of discovery process}
-The following sequence diagram shows how the client uses the discovery and what happens behind an \texttt{execute()} call.
+The following sequence diagram shows how the client uses the discovery and what happens behind the \texttt{execute()} call.
 
 \begin{figure}[H]
  \centering
- \includegraphics[width=7.71in,height=7.53in]{/Users/lukaszbinden/eclipse-workspace/ACE-Trunk/doc/images/finalreport/network_discovery_sequence.eps}
+  \frame{
+ \includegraphics[width=5.90in,height=5.76in]{/Users/lukaszbinden/eclipse-workspace/ACE-Trunk/doc/images/finalreport/network_discovery_sequence.eps}
+ }
  \caption{Launch of the Discovery Process}
  \label{fig:network.discovery.launch}
 \end{figure}
@@ -192,7 +214,9 @@ The retry strategy design shall give an advanced exception handling and some way
 
 \begin{figure}[H]
  \centering
+  \frame{
  \includegraphics[width=5.31in,height=3.60in]{../images/finalreport/network_retryStrategy_uml.eps}
+ }
  \caption{Retry Strategy Design and Implementation}
  \label{fig:network.discovery.retrystrategy}
 \end{figure}
