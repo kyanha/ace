@@ -3,16 +3,23 @@
 
 % OVERVIEW
 \section{Overview}
+This section gives an overview over the components of the applacation layer (GUI) of ACE. Figure \ref{applicationlayer_ace_overview} shows the graphical user interface (GUI) with all components. Each component is explained detailed in section \ref{applicationlayer_components}.
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[height=3.135in, width=5.01in]{../images/finalreport/application_ace_overview.eps}
+\caption{ACE Overview}
+\label{applicationlayer_ace_overview}
+\end{center}
+\end{figure}
+On the top of the application are the menubar and the toolbar. The menubar is splitted into four menus which are containing functions associated to their category. Below the menubar is the toolbar that contains the most used functions out of the menu.
 
+In the middle of the GUI are the four views and the editor component. The document view shows the current opened documents, the browse view contains all documents that can be found over the network (published by other users), the user view shows all users running ACE in the same network and the participant view contains a list of all users that are currently editing in the selected document.
 
+At the bottom of the application is the status bar that simple contains a label which dispays the current IP address.
 
-
-
-\newpage
 % COMPONENTS
 \section{Components}
-This section gives you an overview of the different components used for the application layer.
-
+\label{applicationlayer_components}
 % FRAME
 \subsection{Frame}
 
@@ -228,5 +235,8 @@ When inserting text into a text component and setting the caret position asynchr
 % STARTUP
 \subsection{Startup}
 
+
 % ACTION ENABLING
 \subsection{Enabling of Actions}
+
+
