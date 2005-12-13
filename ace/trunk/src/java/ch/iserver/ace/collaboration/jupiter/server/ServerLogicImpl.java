@@ -485,21 +485,20 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 		if (!participants.isInvited(user.getId())) {
 			participants.userInvited(user.getId());
 			final RemoteUserProxy proxy = ((RemoteUserImpl) user).getProxy();
-			getDocumentServer().invite(new InvitationPort() {
-				
+			InvitationPort target = new InvitationPort() {
 				public void reject() {
 					invitationRejected(proxy);			
 				}
-			
 				public void accept(ParticipantConnection connection) {
 					ParameterValidator.notNull("connection", connection);
 					invitationAccepted(connection);
 				}
-			
 				public RemoteUserProxy getUser() {
 					return proxy;
 				}
-			});
+			};
+			InvitationPort port = (InvitationPort) incomingDomain.wrap(target, InvitationPort.class, true);
+			getDocumentServer().invite(port);
 		}
 	}
 	
