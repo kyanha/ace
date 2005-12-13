@@ -82,6 +82,51 @@ To use the standard text component actions for the menu \textit{edit}, we need g
 
 
 \subsubsection{Collaborative TextPane}
+The collaboration text pane implements all functionality defined by the \texttt{Editor} interface. This component overrides the \texttt{replaceSelection} method from its superclass \texttt{JTextPane}. This is needed to use a lock while inserting content into the document. Locking has to be done to avoid asynchronous text insertions while creating and sending operations that are based on the document content.
+\begin{verbatim}
+  public void replaceSelection(String content) {
+    SessionTemplate template = new SessionTemplate(session);
+    template.execute(new SessionTemplateCallback() {
+      public void execute(Session session) {
+
+        // create and send operation
+        Operation op  = new Delete/InsertOperation(...);
+        session.sendOperation(op);
+
+        // call superclass method
+        CollaborativeTextPane.super.replaceSelection(content);
+      }
+    }
+  }
+\end{verbatim}
+Furthermore there is a method \texttt{setCaretHandlerMap(PropertyChangeHashMap caretHandlerMap)} which is responsible to set the map with the carets (cursor positions) from all participants of the current document. The \texttt{PropertyChangeHashMap} is a map that adds a \texttt{PropertyChangeListener} on all inserted elements (carets from other users) and forwards their \texttt{PropertyChangeEvents} to all registered components. The following code fragment makes the editor able to receive updates if the carets of other users have changed:
+\begin{verbatim}
+  public void setCaretHandlerMap(PropertyChangeHashMap caretHandlerMap) {
+    // unregister old map
+    this.caretHandlerMap.removePropertyChangeListener(this);
+    this.caretHandlerMap = caretHandlerMap;
+
+    // register new map
+    this.caretHandlerMap.addPropertyChangeListener(this);
+  }
+\end{verbatim}
+To handle the own caret changes its necessary to register a \texttt{CaretListener}. The invoked method \texttt{caretUpdate(...)} checks if the current user really changed his cursor position and needs to send the new caret position to the session.
+
+Each time a caret of another user changes the method \texttt{propertyChange(PropertyChangeEvent evt)} will be invoked. The \texttt{PropertyChangeEvent} contains the old and the new caret position from the users that moved his caret and forces a repaint. The implementation looks like:
+\begin{verbatim}
+  public void propertyChange(PropertyChangeEvent evt) {
+    // old caret
+    CaretUpdate oldCU = (CaretUpdate)evt.getOldValue();
+    Rectangle oldRect = modelToView(oldCU.getDot());
+    repaint(oldRect);
+
+    // new caret
+    CaretUpdate newCU = (CaretUpdate)evt.getNewValue();
+    Rectangle newRect = modelToView(newCU.getDot());
+    repaint(newRect);
+  }
+\end{verbatim}
+The \texttt{repaint(...)} is eighter called by swing or explicit by the \texttt{propertyChange} method when one of the participant changed his cursor position. It iterates through the \texttt{caretHandlerMap} and paints the caret for each map entry.
 
 \subsubsection{Collaborative EditoKit}
 \label{collaborative_editor_kit}
@@ -125,9 +170,6 @@ Unfortunately its not possible to subclass the actions defined in the \texttt{De
     }
   }
 \end{verbatim}
-
-
-
 
 
 \subsubsection{Editor Controller}
