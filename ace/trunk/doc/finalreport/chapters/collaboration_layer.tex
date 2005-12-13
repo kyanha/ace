@@ -192,6 +192,17 @@ The \texttt{Session\-Impl} uses a \texttt{Acknowledge\-Strategy} to determine
 when to send acknowledge messages. For details about acknowledge strategies
 see the section \ref{sect:archoverview.acknowledgestrategies}.
 
+\small{\begin{verbatim}
+  Timestamp timestamp = getAlgorithm().getTimestamp();
+  int siteId = getAlgorithm().getSiteId();
+  getConnection().sendAcknowledge(siteId, timestamp);
+\end{verbatim}}
+
+The preceding code snippet shows the implementation of the 
+\texttt{Acknowledge\-Action}. The code is rather straightforward. It just
+invokes the \texttt{send\-Acknowledge} method on the 
+\texttt{Session\-Connection}.
+
 
 
 \section{Server} 

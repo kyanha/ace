@@ -38,6 +38,23 @@ different network technology and/or a different protocol.
 
 
 
+\section{Preliminaries}
+
+\subsection{Identifiers}
+ACE knows different types of identifiers. The algorithm works with so-called
+site ids. They are used on the level of the algorithm to break priority
+ties when transforming operations. As \emph{Jupiter} works only with two
+sites, the site id is always either zero (server-side) or one (client-side).
+
+Further, there is a session-wide unique identifier that uniquely identifies
+a user in the session. A user in the session is called a participant, thus
+this id is the participant id.
+
+Lastly, both users and published documents have a globally unique identifer
+primarily used by the network layer to identify users and documents.
+
+
+
 \section{Interface Application/Collaboration Layer}
 The interfaces between the application and the collaboration layer are in
 the package \texttt{ch.\-iserver.\-ace.\-collboration}. In the following,
