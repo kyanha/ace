@@ -132,7 +132,7 @@ provide methods to set the \texttt{Session\-Connection} as well as the
 \end{figure}
 
 
-\subsection{Session Implementation}
+\subsection{Participant Session}
 The default implementation of the \texttt{Session} interface is the
 \texttt{Session\-Impl} class. It implements the \texttt{Configurable\-Session}
 interface, which also implements the \texttt{Session\-Connection\-Callback}
@@ -171,7 +171,7 @@ shows exactly the described setup.
 
 \begin{figure}[H]
  \centering
- \includegraphics[width=10.87cm,height=9.28cm]{../images/finalreport/collaboration_sessionconnectionwrapper.eps}
+ \includegraphics[width=9.77cm,height=7.58cm]{../images/finalreport/collaboration_sessionconnectionwrapper.eps}
  \caption{Wrapped session connection with ThreadDomains}
  \label{fig:collaboration.sessionconnectionwrapper}
 \end{figure}
@@ -204,18 +204,44 @@ invokes the \texttt{send\-Acknowledge} method on the
 \texttt{Session\-Connection}.
 
 
+\subsection{Published Session}
+The publisher of a document gets a \texttt{Published\-Session} object from
+the \texttt{publish} method of the \texttt{Collaboration\-Service}. The
+implementation of this interface is the \texttt{Published\-Session\-Impl}
+class, which, as we have seen, implements the \texttt{Publisher\-Connection}
+interface too.
 
-\section{Server} 
+The published session hosts the client-side algorithm of the publisher.
+It also has a reference to a \texttt{Acknowledge\-Strategy}, which is
+used to send acknowledge strategies (see section 
+\ref{sect:archoverview.acknowledgestrategies}).
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=12.67cm,height=4.59cm]{../images/finalreport/collaboration_publishedsession_uml.eps}
+ \caption{PublishedSession implementation}
+ \label{fig:collaboration.publishedsession}
+\end{figure}
+
+The implementation of the \texttt{Published\-Session} uses a
+\texttt{Participant\-Port} to send events to the server-side of the session.
+
+
+
+\section{Session Server} 
 First of all, to avoid any confusion. The server part in the collaboration
 layer has nothing to do with a network layer server, for instance a Java
 application listening on a \texttt{Server\-Socket}. The collaboration layer
 server is a purely logical construct. In this chapter we refer to
 this collaboration layer server simply as server.
 
-The server hosts the server part of the concurrency control algorithm. Further
+For each session, there must be one (logical) session server. It
+hosts the server part of the concurrency control algorithm
+(see chapter \ref{chapter:algorithm}). Further
 it controls who joins the session and ensures that the session's list of
 participants is kept up-to-date. The server itself does not have a graphical
-user interface.
+user interface. At the moment, the session server runs inside the same JVM
+as the publisher's application layer.
 
 
 \subsection{Overview}
@@ -236,7 +262,7 @@ there is such a pair of objects.
 
 \begin{figure}[H]
  \centering
- \includegraphics[width=16.9cm,height=9.67cm]{../images/finalreport/collaboration_serverflow.eps}
+ \includegraphics[width=15.56cm,height=7.9cm]{../images/finalreport/collaboration_serverflow.eps}
  \caption{Collaboration Layer Server}
  \label{fig:collaboration.serverflow}
 \end{figure}
@@ -247,23 +273,20 @@ Incoming requests are transformed by the corresponding
 The resulting operation is passed to the \texttt{Composite\-Forwarder}, which in 
 turn gives the request to all its child \texttt{Forwarders} (2 and 3). One child
 forwarder is responsible to keep an up-to-date version of the document, whose
-is named \texttt{Document\-Updater} (3). The \texttt{Document\-Updater} updates
+name is \texttt{Document\-Updater} (3). The \texttt{Document\-Updater} updates
 a \texttt{Server\-Document} (4).
 
 The other forwarders are \texttt{Participant\-Forwarder}s (2). They generate
 requests, by using the server-side \texttt{Algorithm} for the corresponding
 participant. The generated request is passed to a 
-\texttt{Participant\-Connection\-Wrapper}, which forwards the request to
-a target \texttt{Participant\-Connection}. The wrapper catches any exceptions
-thrown by the target connection and notifies a \texttt{Failure\-Handler}
-(not depicted in the figure \ref{fig:collaboration.serverflow}). The
-\texttt{Failure\-Handler} is responsible to take the necessary actions in
-case of a failure.
+\texttt{Participant\-Connection}.
 
 Objects assigned to the same participant are aligned vertically. So the
-objects 1, 2, 5, and 6 that are aligned vertically belong all to the
-same participant. One participant is the publisher of the document. In the 
-figure it is the participant on the left.
+objects 1, 2, and 5 that are aligned vertically belong all to the
+same participant. One participant is the publisher of the document. 
+\texttt{Participant\-Port} and \texttt{Participant\-Forwarder} for a
+particular participant have a reference to the server-side algorithm for
+that participant.
 
 The processing in the server from the point where a request crosses the
 dashed line at the top to the point where all resulting requests have passed
@@ -277,16 +300,17 @@ it is received by the second \texttt{Participant\-Port} from the left. Then it
 is passed
 to the \texttt{Composite\-Forwarder}, which forwards the request to all
 its children. The \texttt{Participant\-Forwarder} (2) for the same 
-participant filters the message. All the other \texttt{Forwarder}s pass the
-message on to the \texttt{Participant\-Connection\-Wrapper} (5) (or to the
+participant filters the message (the sender does not want
+to receive his own messages).
+All the other \texttt{Forwarder}s pass the
+message on to the \texttt{Participant\-Connection} (5) (or to the
 \texttt{Server\-Document} (4) in case of the \texttt{Document\-Updater} (3)).
 
 
 \subsection{Server Logic}
 The \texttt{Server\-Logic} provides methods that allows users to join,
-participants leave, setting the document details, inviting users as well
-as shutting down the server logic. So it provides the core methods
-to manage the participants of a session. The interface is depicted in figure 
+participants to leave, setting the document details, inviting users as well
+as shutting down the server logic. The interface is depicted in figure 
 \ref{fig:collaboration.serverlogic}. 
 
 \begin{figure}[H]
@@ -303,10 +327,10 @@ join requests. The \texttt{join\-Accepted} and \texttt{join\-Rejected} methods
 notify the logic that a join request was accepted or rejected. 
 
 The \texttt{kick} method allows to kick the participant with the given
-id to be kicked from the session. A kicked user is blacklisted, he
+id from the session. A kicked user is blacklisted, he
 can no longer join the session. 
 
-The \texttt{leave} notifies the
+The \texttt{leave} method notifies the
 server logic that the participant identified by the given id left the
 session. 
 
@@ -327,6 +351,11 @@ session (\texttt{is\-Participant}), whether a user is blacklisted
 request which was not answered yet (\texttt{is\-Joining}), and whether a
 user has been invited (\texttt{is\-Invited}).
 
+Blacklisted users are no longer allowed to join the session unless they
+are invited by the publisher. A join request from a user that 
+issued already an unanswered join request is rejected too. This is needed
+to prevent the same user joining the session twice.
+
 \begin{figure}[H]
  \centering
  \includegraphics[width=10.16cm,height=7.48cm]{../images/finalreport/collaboration_participantmanager_uml.eps}
@@ -346,18 +375,53 @@ participant related events. An implementation of this interface can use
 these methods to keep the internal data structures up-to-date. The
 default implementation is \texttt{Participant\-Manager\-Impl}.
 
-
-\subsection{Join Requests}
+\subsubsection{Join Requests}
 When a user tries to join, the request is encapsulated in an object
 implementing the \texttt{Join\-Request} interface. The \texttt{Join\-Request}
-is then passed to the publisher through the \texttt{Publisher\-Connection}.
+is then passed to the publisher through the \texttt{Publisher\-Connection}
+(see section \ref{sect:archoverview.publisherconnection}).
 
 The \texttt{Join\-Request} interface is
 implemented by the \texttt{Join\-Request\-Impl} class. The implementation
 is rather straightforward. The \texttt{accept} method is passed to
 the \texttt{join\-Accepted} method of the \texttt{Server\-Logic} interface.
-The \texttt{reject} method is passed to the \texttt{join\-Requested}
+The \texttt{reject} method is passed to the \texttt{join\-Rejected}
 method of the \texttt{Server\-Logic} interface.
+
+\subsubsection{Failure Handling}
+\label{sect:collaboration.failurehandling}
+The \texttt{Server\-Logic} needs a solid failure handling, otherwise it can
+easily happen that the replicas start to diverge. The interface
+\texttt{Failure\-Handler} is used to handle failures in the server logic. 
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=7.16cm,height=1.55cm]{../images/finalreport/collaboration_failurehandler_uml.eps}
+ \caption{FailureHandler Interface}
+ \label{fig:collaboration.failurehandler}
+\end{figure}
+
+It is passed to all objects where errors can potentially occur. The failure
+handler is passed to the following places.
+
+\begin{itemize}
+ \item participant ports
+ \item \texttt{ParticipantConnectionWrapper}
+ \item \texttt{CompositeForwarderImpl}
+\end{itemize}
+
+The \texttt{Server\-Logic\-Impl} implements that interface. The 
+\texttt{handle\-Failure} method has a participant id parameter. That parameter
+is used to determine to which participant the failure is related. If
+it is a normal participant, that participant is removed from the session
+and all other participants are notified about the participant that left.
+
+However, if the failing participant is the publisher, the session is
+terminated. In the current implementation of ACE, the publisher is always
+in the same Java Virtual Machine as the server logic. Thus, there should
+never really be a failure. If there is, it is most likely a bug in the
+implementation, from which we cannot recover.
+
 
 
 \subsection{Participant Port}
@@ -367,13 +431,49 @@ server logic (see figure \ref{fig:archoverview.participantport}).
 The implementation of that interface is 
 \texttt{Participant\-Port\-Impl}. The participant port has a reference to
 the server-side algorithm for the participant. Received requests are
-transformed and then forwarded to a \texttt{Forwarder}.
+transformed by use of the server-side algorithm and the resulting
+operation is forwarded to a \texttt{Forwarder}.
 
 The \texttt{leave} method of the \texttt{Participant\-Port} interface is
 forwarded to the \texttt{leave} method on the \texttt{Server\-Logic}. 
 
-The port for a publisher is described later (see 
-\ref{sect:archoverview.publisherport}).
+
+\subsubsection{Publisher Port}
+\label{sect:archoverview.publisherport}
+The interface \texttt{Publisher\-Port} extends the \texttt{Participant\-Port}
+with methods only available to the publisher of the document. 
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=7.16cm,height=4.83cm]{../images/finalreport/collaboration_publisherport_uml.eps}
+ \caption{PublisherPort Interface}
+ \label{fig:collaboration.publisherport}
+\end{figure}
+
+The \texttt{kick} method provides the publisher of the session a way to kick
+one particular participant from the session. A kicked user is blacklisted
+and no longer allowed to join the session (unless the publisher invites
+him again).
+
+The \texttt{invite} method is used to invite a user to the session and finally,
+the \texttt{set\-Document\-Details} method makes it possible to change the 
+document title (for instance if the document is renamed).
+
+The default implementation of the \texttt{Publisher\-Port} interface is
+the \texttt{Publisher\-Port\-Impl} class. The implementation has a direct
+reference to the \texttt{Server\-Logic} as well as to the \texttt{Forwarder}
+of the session.
+
+\subsubsection{Failure Handling}
+The participant ports transform incoming requests. If a request cannot
+be transformed because it is invalid, the algorithm throws an exception.
+This exception is caught by the participant ports and the participant
+is expelled from the session. First, a participant that sends invalid requests
+is not an acceptable participant, and second that particular participant
+has an invalid document state. The operation has been applied locally but
+the server rejected the corresponding request. Thus, the document state of
+that particular participant starts to diverge from the correct document
+content and so can no longer be part of the session.
 
 
 \subsection{Forwarders}
@@ -388,7 +488,8 @@ interface.
  \label{fig:collaboration.forwarder}
 \end{figure}
 
-A \texttt{Forwarder} is notified about certain events in the server. For
+A \texttt{Forwarder} receives messages processed by a 
+\texttt{Participant\-Port}. For
 instance if a request from a participant is received, the transformed
 operation is passed to the \texttt{send\-Operation} method. Similar, there
 is a \texttt{send\-Caret\-Update} method for \texttt{Caret\-Update}s. 
@@ -430,18 +531,23 @@ a \texttt{Caret\-Update}.
  \label{fig:collaboration.participantforwarder}
 \end{figure}
 
-The \texttt{Participant\-Forwarder} gets a \texttt{Acknowledge\-Strategy},
-which is used to send acknowledge messages. See the section 
-\ref{archoverview.acknowledgestrategies} for more information about
+The \texttt{Participant\-Forwarder} gets an \texttt{Acknowledge\-Strategy},
+which is used to send acknowledge messages by invoking 
+\texttt{send\-Acknowledge} on the \texttt{Participant\-Connection}. 
+See section 
+\ref{sect:archoverview.acknowledgestrategies} for more information about
 \texttt{Acknowledge\-Strategy} objects.
+
 
 \subsubsection{DocumentUpdater}
 \label{sect:archoverview.documentupdater}
-The last kind of \texttt{Forwarder} is a bit special. It is the
-\texttt{Document\-Updater}, which updates an object implementing the
+The last kind of \texttt{Forwarder} is a bit special: it is named
+\texttt{Document\-Updater} and is responsible to update an object 
+implementing the
 \texttt{Server\-Document} interface. This is the server copy of the document,
-which is sent to users that join the session. For more information see
-the section \ref{sect:archoverview.serverdocument}.
+which is sent to users that join the session. For more information about
+the \texttt{Server\-Document} see
+section \ref{sect:archoverview.serverdocument}.
 
 \begin{figure}[H]
  \centering
@@ -470,8 +576,9 @@ in the section about the \texttt{Document\-Updater} (see figure
 
 The \texttt{to\-Portable\-Document} method creates a snapshot of the document
 that can be sent to the \texttt{send\-Document} method of the 
-\texttt{Participant\-Connection}. The other methods are used to update the
-document.
+\texttt{Participant\-Connection}. The \texttt{get\-Text} method allows to
+retrieve the plain text of the document. The other methods are used to update 
+the document.
 
 The default implementation extends the \texttt{Abstract\-Document} of Swing.
 It uses the \texttt{Element} interface from Swing to model the fragments
@@ -482,152 +589,65 @@ fragment is kept as an attribute in the \texttt{Element}'s
 \texttt{Attribute\-Set}.
 
 
-\subsection{Failure Handling}
-The \texttt{Server\-Logic} needs a solid failure handling, otherwise it can
-easily happen that the replicas start to diverge. The interface
-\texttt{Failure\-Handler} is used to handle failures in the server logic. 
+\subsection{Participant Connections}
+In figure \ref{fig:collaboration.serverflow} we have shown the basic flow
+of messages in the session server from \texttt{Participant\-Port} to
+\texttt{Composite\-Forwarder} to \texttt{Participant\-Forwarder} to
+\texttt{Participant\-Connection}. However, that figure does not contain
+all the details. The part with the \texttt{Participant\-Connection} is
+a bit more complex as figure \ref{fig:collaboration.participantconnection}
+shows:
 
 \begin{figure}[H]
  \centering
- \includegraphics[width=7.16cm,height=1.55cm]{../images/finalreport/collaboration_failurehandler_uml.eps}
- \caption{FailureHandler Interface}
- \label{fig:collaboration.failurehandler}
+ \includegraphics[width=11.29cm,height=6.28cm]{../images/finalreport/collaboration_participantconnectiondetails.eps}
+ \caption{Detailed view of ParticipantConnection handling}
+ \label{fig:collaboration.participantconnection}
 \end{figure}
 
-It is passed to all objects where errors can potentially occur. The failure
-handler is passed to the following places.
+\texttt{Participant\-Connection}s passed to the collaboration layer
+(either when joining or accepting an invitation) are wrapped with a
+dedicated thread domain (see appendix \ref{chapter:threaddomain}). This
+thread domain is called \emph{outgoing} thread domain.
 
-\begin{itemize}
- \item participant ports
- \item \texttt{ParticipantConnectionWrapper}
- \item \texttt{CompositeForwarderImpl}
-\end{itemize}
+As we have shown in the chapter about the algorithm (see chapter 
+\ref{chapter:algorithm}), the processing of requests must be serialized
+at the server. However, sending the transformed request back to the
+other participants can happen concurrently. The session server can process
+the next request. If we would not take care that the transformed requests
+are sent concurrently, then a possibly slow network connection could slow
+down the processing of requests at the server and thus the whole session.
 
-The \texttt{Server\-Logic\-Impl} implements that interface. The 
-\texttt{handle\-Failure} method has a participant id parameter. That parameter
-is used to determine to which participant the failure is related. If
-it is a normal participant, that participant is removed from the session
-and all other participants are notified about the participant that left.
+In figure \ref{fig:collaboration.participantconnection} the first object
+is the dynamic proxy created by the thread domain.
+The invocation on the immediately following 
+\texttt{Participant\-Connection\-Wrapper} is executed by the worker thread
+of the thread domain. The wrapper passes the invocation to the target
+connection. If the target connection throws an exception, it is caught
+by the wrapper and an object implementing the \texttt{Failure\-Handler}
+interface is invoked (see section \ref{sect:collaboration.failurehandling}).
 
-However, if the failing participant is the publisher, the session is
-terminated. In the current implementation of ACE, the publisher is always
-in the same Java Virtual Machine as the server logic. Thus, there should
-never really be a failure. If there is, it is most likely a bug in the
-implementation, from which we cannot recover.
+Besides notifying the failure handler, the wrapper replaces the target
+connection with a null object, an object implementing the
+\texttt{Participant\-Connection} interface that simply ignores all the 
+method invocations. This is done because it could be that in the
+queue of the thread domain, there are still some method invocations for
+that target connection. Instead of invoking methods on the target again
+that result most likely in another exception, the target is replaced
+and remaining invocations are simply discarded. We consider a
+connection that has thrown an exception as dead, i.e. it can not be used
+any longer.
 
-\subsubsection{Participant Port Failures}
-The participant ports transform incoming requests. If a request cannot
-be transformed because it is invalid, the algorithm throws an exception.
-This exception is caught by the participant ports and the participant
-is expelled from the session. First, a participant that sends invalid requests
-is not an acceptable participant, and second that particular participant
-has an invalid document state. The operation has been applied locally but
-the server rejected the corresponding request. Thus, the document state of
-that particular participant starts to diverge from the correct document
-content and so can no longer be part of the session.
-
-\subsubsection{ParticipantConnectionWrapper}
-The \texttt{Participant\-Connection\-Wrapper} wraps a 
-\texttt{Participant\-Connection}
-and catches exceptions thrown by the target connection. If the target throws
-an exception, the \texttt{Failure\-Handler} is called.
-
-A failing \texttt{Participant\-Connection} expells the concerned participant
-from the session. More about the wrapper class can be read in the section
-\ref{sect:collaboration.outgoingthreaddomain}.
-
-\subsubsection{CompositeForwarderImpl}
-The failure handling of the \texttt{Composite\-Forwarder\-Impl} is described
-in detail in the section about composite forwarders (see section
-\ref{sect:collaboration.compositeforwarder}).
+There is also a \texttt{Publisher\-Connection\-Wrapper} that serves the
+same purpose for \texttt{Publisher\-Connection}s as the
+\texttt{Participant\-Connection\-Wrapper} does for 
+\texttt{Participant\-Connection}s. For details about 
+\texttt{Publisher\-Connection}s check the section 
+\ref{sect:collaboration.publisherconnection}.
 
 
-\subsection{Usage of ThreadDomains}
-\label{sect:collaboration.threaddomain}
-The server logic uses \texttt{Thread\-Domain}s extensively. To learn about
-\texttt{Thread\-Domain}s read the chapter \ref{chapter:threaddomains}.
-
-\subsubsection{Outgoing ThreadDomain}
-\label{sect:collaboration.outgoingthreaddomain}
-The algorithm requires that the transformation of requests at the server
-occurs sequentially. However, the sending of the resulting transformed
-requests should occur in parallel. If the sending does not occur in parallel
-then a slow connection could slow down the transformation throughput at
-the server.
-
-That is the reason why all the \texttt{Participant\-Connection}s are wrapped 
-with a \texttt{Thread\-Domain}. This has the disadvantage that exceptions
-thrown by the target connection are not thrown back at the server logic.
-In a similar way to the \texttt{Session\-Connection\-Wrapper} the
-\texttt{Participant\-Connection\-Wrapper} is used together with a
-\texttt{Failure\-Handler} to handle failing connections. If a
-\texttt{Participant\-Connection\-Wrapper} catches an exception thrown by the
-target connection, the \texttt{Failure\-Handler} is notified and the
-target connection is replaced with a null connection. The null connection
-is a simple \texttt{Participant\-Connection\-Wrapper} that simple ignores
-all method calls.
-
-\begin{figure}[H]
- \centering
- \includegraphics[width=11.47cm,height=6.35cm]{../images/finalreport/collaboration_participantconnectionwrapper.eps}
- \caption{Wrapped participant connection with ThreadDomains}
- \label{fig:collaboration.participantconnectionwrapper}
-\end{figure}
-
-The reason why we use these null connections is because the queues employed
-by the thread domains might still contain method calls for that particular
-connection. Instead of trying to remove those method invocations from the
-queue, we simply ignore further calls.
-
-There is also a \texttt{Publisher\-Connection\-Wrapper} that serves the same
-purpose for \texttt{Publisher\-Connection} as the 
-\texttt{Participant\-Connection\-Wrapper} serves for the
-\texttt{Participant\-Connection}.
-
-\subsubsection{Incoming ThreadDomain}
-As noted above, only one thread may access the server logic transformation
-section at any time. Now, instead of using synchronized statements or
-locks, we use thread domains to ensure that only one thread accesses the
-server logic at any given moment. How can this be achieved? By wrapping
-all incoming references with a \texttt{Single\-Thread\-Domain}. The possible
-incoming references are:
-\begin{itemize}
- \item all \texttt{Participant\-Port} instances
- \item \texttt{Server\-Logic}
- \item \texttt{Failure\-Handler}
- \item \texttt{Invitation\-Port}
-\end{itemize}
-
-This technique allows to solve two problems: first, the transformation must
-be serialized and second, the caller does not have to wait for the
-transformation to be completed.
-
-\subsubsection{Thread Domain in Server Logic}
-
-% TODO: image with thread domains
-
-
-\subsection{Hosting ServerLogic}
-Nothing in the design of the whole server logic prevents it to be used outside
-of ACE. All incoming requests pass through a \texttt{Participant\-Port}, all
-outgoing through a \texttt{Participant\-Connection}. So the server logic
-is totally agnostic about the fact that the publisher is running inside
-the same Java Virtual Machine. So, through the introduction of few additional
-interfaces it would be possible to host the server logic on a different
-computer. This is not supported at the moment by ACE but it would be
-a minor feature to implement the server part.
-
-
-
-\section{Publisher}
-The \texttt{Server\-Logic\-Impl} class has a method 
-\texttt{init\-Publisher\-Connection}. The parameter type of that method
-is \texttt{Publisher\-Connection} and it returns an object implementing
-\texttt{Publisher\-Port}.
-
-
-\subsection{Publisher Connection}
-
+\subsubsection{Publisher Connection}
+\label{sect:collaboration.publisherconnection}
 \begin{figure}[H]
  \centering
  \includegraphics[width=6.74cm,height=4.41cm]{../images/finalreport/collaboration_publisherconnection_uml.eps}
@@ -648,44 +668,39 @@ The default implementation of the \texttt{Publisher\-Connection} interface
 is the class \texttt{Published\-Session\-Impl}. 
 
 
-\subsection{Publisher Port}
-\label{sect:archoverview.publisherport}
-The interface \texttt{Publisher\-Port} extends the \texttt{Participant\-Port}
-with methods only available to the publisher of the document. 
+\subsubsection{Failure Handling}
+The \texttt{Participant\-Connection\-Wrapper} wraps a 
+\texttt{Participant\-Connection}
+and catches exceptions thrown by the target connection. If the target throws
+an exception, the \texttt{Failure\-Handler} is called.
 
-\begin{figure}[H]
- \centering
- \includegraphics[width=7.16cm,height=4.83cm]{../images/finalreport/collaboration_publisherport_uml.eps}
- \caption{PublisherPort Interface}
- \label{fig:collaboration.publisherport}
-\end{figure}
-
-The \texttt{kick} method provides the publisher of the session a way to kick
-one particular participant from the session. A kicked user is blacklisted
-and no longer allowed to join the session (unless the publisher invites
-him again).
-
-The \texttt{invite} method is used to invite a user to the session and finally,
-the \texttt{set\-Document\-Details} method makes it possible to change the 
-document title (for instance if the document is renamed).
-
-The default implementation of the \texttt{Publisher\-Port} interface is
-the \texttt{Publisher\-Port\-Impl} class.
+A failing \texttt{Participant\-Connection} expells the concerned participant
+from the session.
 
 
-\subsection{Published Session}
-The publisher of a document gets a \texttt{Published\-Session} object from
-the \texttt{publish} method of the \texttt{Collaboration\-Service}. The
-implementation of this interface is the \texttt{Published\-Session\-Impl}
-class, which, as we have seen, implements the \texttt{Publisher\-Connection}
-interface too.
 
-% TODO: PublishedSession, PublisherPort, Impl
+\subsection{Usage of ThreadDomains}
+\label{sect:collaboration.threaddomains}
+The server logic uses \texttt{Thread\-Domain}s extensively. To learn about
+\texttt{Thread\-Domain}s read the chapter \ref{chapter:threaddomains}.
 
-The published session hosts the client-side algorithm of the publisher.
-It also has a reference to a \texttt{Acknowledge\-Strategy}, which is
-used to send acknowledge strategies (see section 
-\ref{sect:archoverview.acknowledgestrategies}).
+\subsubsection{Incoming ThreadDomain}
+As noted above, only one thread may access the server logic transformation
+section at any time. Now, instead of using synchronized statements or
+locks, we use thread domains to ensure that only one thread accesses the
+server logic at any given moment. How can this be achieved? By wrapping
+all incoming references with a \texttt{Single\-Thread\-Domain}. The possible
+incoming references are:
+\begin{itemize}
+ \item all \texttt{Participant\-Port} instances
+ \item \texttt{Server\-Logic}
+ \item \texttt{Failure\-Handler}
+ \item \texttt{Invitation\-Port}
+\end{itemize}
+
+This technique allows to solve two problems: first, the transformation must
+be serialized and second, the caller does not have to wait for the
+transformation to be completed.
 
 
 
@@ -779,3 +794,14 @@ timestamp at the sender's site, and a \texttt{Caret\-Update} object. The
 \texttt{dot} specifies the position of the insertion point, \texttt{mark} 
 specifies the end of the selection. If both \texttt{dot} and \texttt{mark} are 
 equal, nothing is selected. 
+
+
+\subsection{Hosting ServerLogic}
+Nothing in the design of the whole server logic prevents it to be used outside
+of ACE. All incoming requests pass through a \texttt{Participant\-Port}, all
+outgoing through a \texttt{Participant\-Connection}. So the server logic
+is totally agnostic about the fact that the publisher is running inside
+the same Java Virtual Machine. So, through the introduction of few additional
+interfaces it would be possible to host the server logic on a different
+computer. This is not supported at the moment by ACE but it would be
+a minor feature to implement the server part.
