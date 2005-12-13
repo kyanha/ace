@@ -183,15 +183,12 @@ had to apply some patches to fix some critical bugs in the library.
 
 The \emph{Spring Framework} is part of the movement in the \emph{Java}
 community away from heavy-weigth solution based on heavy component models
-back to light-weight solutions based on plain old \emph{Java} objects. It
+back to light-weight solutions based on plain old \emph{Java} objects
+(so called POJOs). It
 is mainly used as a light-weight replacement for EJB containers, but it
 proves to be useful outside of the Java Enterprise Edition world. The 
-web page of the \emph{Spring Framework} can be found at the following
-URL.
-
-\begin{itemize}
- \item \href{http://www.springframework.org/}{http://www.springframework.org/}
-\end{itemize}
+web page of the \emph{Spring Framework} can be found on the Spring website
+(\href{http://www.springframework.org/}{http://www.springframework.org/}).
 
 The \emph{Spring Framework} contains lots of functionality, which is grouped
 into modules shown in the diagram below.
@@ -202,44 +199,57 @@ into modules shown in the diagram below.
  \caption{Spring Framework Modules}
 \end{figure}
 
-ACE uses the \emph{Core}, \emph{Context}, and \emph{AOP} modules. The
-\emph{Core} module provides the most fundamental part of \emph{Spring}, which
-is the \emph{Dependency Injection} feature. The basic concept is the
-BeanFactory, which removes the need for programmatic singletons. Further, it
-allows to remove the tedious \emph{wiring} of the whole application, which
-is usually found in applications. For in depth information about
-the concept of dependency injection visit the following URL:
-
+ACE uses the following modules:
 \begin{itemize}
- \item \href{http://martinfowler.com/articles/injection.html}{http://martinfowler.com/articles/injection.html}
+ \item \emph{Core}
+ \item \emph{Context}
+ \item \emph{AOP}
 \end{itemize}
 
+The
+\emph{Core} module provides the most fundamental part of \emph{Spring}, which
+is the \emph{Dependency Injection} feature. With dependency injection,
+not the bean itself grabs its dependencies with a service locator or
+JNDI lookup but instead the dependencies are \emph{injected} by an
+assembler into the bean. The assembler is called \emph{BeanFactory} in
+Spring. This assembler also removes the need for programmatic singletons,
+as Spring can ensure that the beans it manages are created only once. Further, 
+it allows to remove the tedious \emph{wiring} of the whole application, which
+is usually found in applications. For in depth information about
+the concept of dependency injection visit 
+\href{http://martinfowler.com/articles/injection.html}{http://martinfowler.com/\-articles/\-injection.html}.
+
 The \emph{Context} module extends the \emph{Core} module by providing access
-to internationalization features and application event propagation.
+to internationalization features, application event propagation, and some
+other additional features.
 
 The Spring \emph{AOP} module provides an aspect-oriented programming 
 implementation, which is compliant with interfaces defined by the 
-\emph{AOP Alliance}. For instance it allows to transparently add method
+\emph{AOP Alliance} 
+(\href{http://aopalliance.sourceforge.net/}{http://aopalliance.\-.sourceforge\-.net/}). 
+For instance it allows to transparently add method
 interceptors to any object defined in the \emph{Spring} context. This allows
 to implement so-called cross-cutting concerns, which tend to clutter the
-core business logic.
+core business logic. The Spring documentation contains a good introduction
+about AOP concepts and it shows some very good usage examples.
 
 
 \subsection{Simple Examples}
 
-The \emph{BeanFactory} is one of the core interfaces in \emph{Spring}. It
-implements the dependency injection feature. Further, it is the actual
-\emph{container} which instantiates, configures, and manages a number of
-objects. These objects, called beans in Spring terminology, typcially have
-dependencies to other objects also defined in the container. Bean factories
+The \emph{BeanFactory} is one of the core interfaces in \emph{Spring}. 
+Further, it is the actual \emph{container} which instantiates, configures, and 
+manages a number of objects (factory service). 
+These objects, called beans in Spring terminology, typcially have
+dependencies to other objects also defined in the context. Bean factories
 are represented by the \texttt{org.springframework.beans.factory.BeanFactory}
-interface. There are several implementations for that interface. However,
-usually most applications rely on the \emph{ApplicationContext} interface, which
-extends the \texttt{BeanFactory} interface.
+interface. There are several implementations of that interface. 
+Usually most applications rely on the \emph{ApplicationContext} interface, which
+extends the \texttt{BeanFactory} interface. 
 
-\begin{verbatim}
-ApplicationContext context = new ClassPathXmlApplicationContext("context.xml");
-\end{verbatim}
+Creating an application context is as simple as the following line of code:
+\small{\begin{verbatim}
+  ApplicationContext context = new ClassPathXmlApplicationContext("context.xml");
+\end{verbatim}}
 
 The passed in \emph{String} points to a resource on the classpath (in this 
 case). The \texttt{context.xml} file is an XML file with the following
@@ -264,11 +274,11 @@ structure:
 
 The top-level \emph{beans} element contains an arbitrary number of \emph{bean}
 sub-elements which represent objects managed by the \emph{Spring} container.
-In the most common case, the beans are created through constructors. The
-\texttt{id} of a bean is a unique identifier of a managed bean in the 
-\emph{Spring} container. The \texttt{class} argument specifies the class
+The \texttt{id} of a bean is a unique identifier of a managed bean in the 
+\emph{Spring} container, which is used to reference that bean. 
+The \texttt{class} argument specifies the class
 of the object to be created. So the following creates a managed bean
-with the id \emph{exampleBean} of type \texttt{ExampleBeanClass}:
+with the id \texttt{exampleBean} of type \texttt{ExampleBeanClass}:
 
 \small{\begin{verbatim}
   <bean id="exampleBean" class="ExampleBeanClass"/>  
@@ -276,7 +286,7 @@ with the id \emph{exampleBean} of type \texttt{ExampleBeanClass}:
 
 \emph{Spring} can inject dependencies either through
 constructor arguments or through Java Beans properties. Constructor arguments
-are specified with the \emph{constructor-arg} child element.
+are specified with the \texttt{constructor-arg} child element.
 
 \small{\begin{verbatim}
   <bean id="exampleBean" class="ExampleBeanClass">
@@ -286,7 +296,8 @@ are specified with the \emph{constructor-arg} child element.
   <bean id="otherBean" class="OtherBeanClass"/>
 \end{verbatim}}
 
-Properties of a bean are set through standard Java Beans property set methods.
+Properties of a bean are set through standard Java Beans property setter
+methods.
 
 \small{\begin{verbatim}
   <bean id="exampleBean" class="ExampleBeanClass">
@@ -296,13 +307,9 @@ Properties of a bean are set through standard Java Beans property set methods.
   <bean id="otherBean" class="OtherBeanClass"/>
 \end{verbatim}}
 
-This is just a very coarse-grained overview over \emph{Spring}. For more
-details check the excellent documentation available at the following
-URL.
-
-\begin{itemize}
- \item \href{http://static.springframework.org/spring/docs/1.2.x/reference/index.html}{http://static.springframework.org/spring/docs/1.2.x/reference/index.html}
-\end{itemize}
+These are the basic features provided by \emph{Spring}. For more
+details check the excellent documentation available at  
+\href{http://static.springframework.org/spring/docs/1.2.x/reference/index.html}{http://static\-.springframework\-.org/\-spring/\-docs/\-1.2.x/\-reference/\-index.html}
 
 
 \subsection{Advantages of Spring}
@@ -311,24 +318,22 @@ Using \emph{Spring} in an application has several advantages. We have a look
 at some of these in the following sections.
 
 \begin{itemize}
- \item design to interfaces
+ \item encourages design to interfaces
  \item improved testability
- \item less wiring code
+ \item less tedious wiring code
 \end{itemize}
 
 \subsubsection{Design to Interfaces}
 Spring encourages to split objects into an interface and an implementation.
 This helps to clearly specify the methods that are needed to be exposed to
 other objects. Further, interfaces provide the possibility to use completely
-different implementations of the interface, which is especially useful in
-case of testing.
+different implementations of the interface, which is also useful in testing.
 
 \subsubsection{Improved Testability}
-In a typical application, the \emph{Service Locator} pattern is used, which
-consists of a singleton \emph{Service Locator}. This service locator provides
-access to all the services needed in the application. The use of the singleton
-pattern makes it close to impossible to unit test certain parts of the
-application.
+In a typical application, either the \emph{Service Locator} pattern 
+or singletons are used to locate the dependencies. The use of the singleton
+pattern makes it hard to unit test certain parts of the
+application, because it is impossible to inject a custom object,
 
 The availability of interfaces for most business objects as well as the
 managed singletons of the \emph{Spring} container give us the possibility
@@ -345,7 +350,9 @@ using it, it becomes evident how much time can be saved.
 It must be noted, that all the \emph{magic} done by \emph{Spring} could be
 done by hand in the main method of the application. With \emph{Spring} all
 this dirty hand-coded wiring of dependencies can be replaced by a 
-declaration of all the dependencies in a clean XML file.
+declaration of all the dependencies in an XML file, which is easier to
+analyze because of its declarative nature.
+
 
 
 \section{BEEP Core}
@@ -353,4 +360,7 @@ declaration of all the dependencies in a clean XML file.
 
 \section{Bonjour}
 -> explain the user listener interfaces and their purpose...
+
+
+\section{Glazed Lists}
 
