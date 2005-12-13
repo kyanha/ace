@@ -1,2 +1,190 @@
 \chapter{Application Layer}
 \label{chapter:applicationlayer}
+
+% OVERVIEW
+\section{Overview}
+
+
+
+
+
+\newpage
+% COMPONENTS
+\section{Components}
+This section gives you an overview of the different components used for the application layer.
+
+% FRAME
+\subsection{Frame}
+
+
+% MENU
+\subsection{Menu}
+
+% TOOLBAR
+\subsection{Toolbar}
+
+% VIEWS
+\subsection{Views \& View Controllers}
+\subsubsection{Overview}
+\subsubsection{Document View}
+\subsubsection{Browse View}
+\subsubsection{User View}
+\subsubsection{Participant View}
+
+% ACTIONS
+\subsection{Actions}
+
+% EDITOR
+\subsection{Editor}
+This section gives an overview of all components needed for the collaborative editor. The following figure shows the class diagram:
+\begin{figure}[H]
+\begin{center} \frame{
+  \includegraphics[height=5.25in, width=5.55in]{../images/finalreport/application_editor.eps}
+  }
+\caption{Collaborative Editor Class Diagram}
+\label{default}
+\end{center}
+\end{figure}
+
+\subsubsection{Collaborative Editor}
+The collaborative editor is a JFrame which support all functionality defined in the \textit{Editor} interface. The constructor looks like:
+\begin{verbatim}
+  public CollaborativeEditor(...) {
+    // create editor pane & kit
+    cTextPane = new CollaborativeTextPane();
+    cEditorKit = new CollaborativeEditorKit();
+    cTextPane.setEditorKit(cEditorKit);
+
+    // create editor pane
+    JScrollPane scrollPane = new JScrollPane(cTextPane);
+    editorPane = new SimpleInternalFrame(null, " ", editorToolBar, scrollPane);
+
+    // add components		
+    setLayout(new BorderLayout());
+    add(editorPane);    
+  }
+\end{verbatim}
+
+All setter methods (except \texttt{setTitle(...)} that sets directly the tilte of the frame) are directly forwarded to the collaborative text pane (\texttt{cTextPane}) like:
+\begin{verbatim}
+  public void setXYZ(...) {
+    cTextPane.setXYZ(...);
+  }
+\end{verbatim}
+
+To use the standard text component actions for the menu \textit{edit}, we need getter methods that returns them. All text component actions are handled in the editor kit (see section \ref{collaborative_editor_kit}), thus we forward the getter methods to the collaborative editor kit (\texttt{cEditorKit}):
+\begin{verbatim}
+  public Action getXYZAction() {
+    return cEditorKit.getXYZAction();
+  }
+\end{verbatim}
+
+
+
+\subsubsection{Collaborative TextPane}
+
+\subsubsection{Collaborative EditoKit}
+\label{collaborative_editor_kit}
+The collaborative editor kit extends the styled editor kit and is needed for synchronisation purposes. To ensure the correct content of the text component its necessary to use lockings before sending operation for the following situations:
+\begin{itemize}
+\item \texttt{DeletePrevCharAction} which is called when the users presses the backspace key.
+\item \texttt{DeleteNextCharAction} which is called when the users presses the delete key.
+\item \texttt{CutAction} which is called when the user cuts some text out of the document.
+\item Inserting Content: this issue is handled in the \textit{collaborative text pane}.
+\end{itemize}
+
+All editor actions are defined in an array that can be get by using the \texttt{getActions()} method from the superclass. The three delete actions listed above need to replaced by actions that are able to use locks. A simple solution would be:
+\begin{verbatim}
+  public class CollaborativeDeletePrevCharAction extends
+    DefaultEditorKit.DeletePrevCharAction {
+    
+    public void actionPerformed(...) {
+      // lock here
+      super.actionPerformed(...);
+      
+      session.sendOperation(...)
+      // unlock here
+    }
+  }
+\end{verbatim}
+Unfortunately its not possible to subclass the actions defined in the \texttt{DefaultEditorKit}. This leads to the solution to copy their implementation into the \texttt{CollaborativeEditorKit} and manipulate them. For example the \texttt{actionPerformed} method from \texttt{DeletePrevCharAction} looks like:
+\begin{verbatim}
+  public void actionPerformed(...) {
+    SessionTemplate template = new SessionTemplate(session);
+    template.execute(new SessionTemplateCallback() {
+      public void execute(Session session) {
+
+        // check whatever needed here and manipulate text component document
+        document.remove(...);
+        
+        // create and send operation
+        Operation op  = new DeleteOperation(...);
+        session.sendOperation(op);
+
+      }
+    }
+  }
+\end{verbatim}
+
+
+
+
+
+\subsubsection{Editor Controller}
+The editor controller is registered for item selection change events from the \textit{DocumentViewController} and is used to enabled, disable and set editor values. Each time the selection is changed or the current document item changes properties, the following procedure is made:
+\begin{itemize}
+\item \textit{disable} the editor if no document is selected.
+\item \textit{set} the \textit{document} of the selected item.
+\item \textit{set} the editor \textit{title}.
+\end{itemize}
+Furthermore if the selected document is a published or a joined (remote) document the \textit{session} and the \textit{participant list} are set too.
+
+\subsubsection{Collaborative Document}
+The collaborative document extends the \textif{DefaultStyledDocument}. It is used for getting write locks and applying text styles. Each time a style added to the document changes the method \texttt{reapplyStyles(...)} is called.
+\begin{verbatim}
+  protected void styleChanged(Style style) {
+    if(!style.getName().equals("default")) {
+      reapplyStyles(style);
+    }
+  }
+\end{verbatim}
+
+The method \texttt{reapplyStyles(...)} iterates through all the text elements from the document and checks if they are using the changed style. All elements using this style will be notified and updated. The following scenario will work now and all text elements will have the new background color:
+\begin{verbatim}
+  // add style
+  Style myStyle = document.addStyle("myStyle", null);
+  StyleConstants.setBackground(myStyle, Color.BLUE);
+  
+  // insert some text here
+  doc.insertString(...);
+  
+  // change style
+  StyleConstants.setBackground(myStyle, Color.RED);
+\end{verbatim}
+
+\subsubsection{AsyncCaret}
+When inserting text into a text component and setting the caret position asynchronous, its possible that the caret isnt set to the correct position. Asynchronous caret update is implemented in Java 1.4 but there is no posibility to enable it (this problem is solved in Java 1.5). \texttt{AsyncCaret} is a simple copy of the standard caret class with the following constructor details:
+\begin{verbatim}
+  public AsyncCaret() {
+    async = true;
+  }
+\end{verbatim}
+
+% OTHER
+\subsection{Other}
+\subsubsection{Application Controller}
+\subsubsection{Application Factory}
+\subsubsection{Dialog Controller}
+\subsubsection{Persistent Content Pane}
+
+
+
+\newpage
+% WORKFLOWS
+\section{Workflows}
+
+% STARTUP
+\subsection{Startup}
+
+% ACTION ENABLING
+\subsection{Enabling of Actions}
