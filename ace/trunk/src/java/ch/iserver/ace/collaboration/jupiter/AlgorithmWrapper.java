@@ -24,7 +24,6 @@ package ch.iserver.ace.collaboration.jupiter;
 import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
-import ch.iserver.ace.algorithm.Timestamp;
 import ch.iserver.ace.algorithm.TransformationException;
 
 /**
@@ -41,16 +40,7 @@ public interface AlgorithmWrapper extends Algorithm {
 	 * @throws TransformationException
 	 */
 	CaretUpdate receiveCaretUpdateMessage(CaretUpdateMessage message) throws TransformationException;
-	
-	/**
-	 * Receives an acknowledge from another site.
-	 * 
-	 * @param siteId the site id of the sender
-	 * @param timestamp the timestamp at the sender's site
-	 * @throws TransformationException
-	 */
-	void acknowledge(int siteId, Timestamp timestamp) throws TransformationException;
-		
+			
 	/**
 	 * Generates a CaretUpdateMessage for a locally generated CaretUpdate.
 	 * 
