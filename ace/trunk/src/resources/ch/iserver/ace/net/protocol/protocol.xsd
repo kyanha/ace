@@ -7,7 +7,8 @@
             version="0.9">
   
     <!-- This schema contains the message definitions of the public communcation protocol of ACE. -->
-    
+	<!-- Most of the messages are self-explanatory. -->
+	
     <!-- ACE protocol top level elements -->
     <xsd:element name="ace">
         <xsd:complexType>
