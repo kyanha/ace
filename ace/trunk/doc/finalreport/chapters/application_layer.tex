@@ -189,7 +189,7 @@ The editor controller is registered for item selection change events from the \t
 Furthermore if the selected document is a published or a joined (remote) document the \textit{session} and the \textit{participant list} are set too.
 
 \subsubsection{Collaborative Document}
-The collaborative document extends the \textif{DefaultStyledDocument}. It is used for getting write locks and applying text styles. Each time a style added to the document changes the method \texttt{reapplyStyles(...)} is called.
+The collaborative document extends the \textit{DefaultStyledDocument}. It is used for getting write locks and applying text styles. Each time a style added to the document changes the method \texttt{reapplyStyles(...)} is called.
 \begin{verbatim}
   protected void styleChanged(Style style) {
     if(!style.getName().equals("default")) {
@@ -234,6 +234,21 @@ When inserting text into a text component and setting the caret position asynchr
 
 % STARTUP
 \subsection{Startup}
+All the startup processes for ACE are defined in the main method from the class \textit{Main.java}:
+\begin{description}
+\item[1. Load Customizer ] The first step is to get the customizers. Customizers are used to create operating system based stuff like setting the look \& feel of the application.
+\item[2. Load ApplicationContext ] After the customizer has been loaded, the spring application context (see \ref{} for more details about spring) needs to be loaded.
+\item[3. Get ApplicationFactory ] The application factory is used to create all GUI components.
+\item[4. Get ApplicationController ]  
+\item[5. Get CollaborationService ] 
+\item[6. Load PreferencesStore ]
+\item[7. Create Main Frame ]
+\item[8. Init PreferencesStore ]
+\item[9. Init CollaborationService ]
+\item[10. Create Empty Document ]
+\end{description}
+
+
 
 
 % ACTION ENABLING
