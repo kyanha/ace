@@ -17,19 +17,19 @@
                 <xsd:element name="response" type="ace:Response" />
                 <xsd:element name="notification" type="ace:Notification" /> 
                 <xsd:element name="session" type="ace:Session"/>
-            </xsd:choice>>
+            </xsd:choice>
         </xsd:complexType>
     </xsd:element>
     
     
     <!--************* messages of type Channel *************-->
-    <xsd:complexType name="Channel">
+    <xsd:complexType name="Channel">   
         <xsd:sequence>
             <xsd:element name="user" type="ace:User" minOccurs="0"/>
         </xsd:sequence>
         <xsd:attribute name="type" use="required">
             <xsd:simpleType>
-                <xsd:restriction>
+                <xsd:restriction base="xsd:string">
                     <xsd:enumeration value="main"/>
                     <xsd:enumeration value="session"/>
                 </xsd:restriction>
@@ -71,11 +71,13 @@
         </xsd:choice>
     </xsd:complexType>
     
+	<!-- invite rejected message -->
     <xsd:complexType name="InviteRejected">
         <xsd:attribute name="docId" type="xsd:string" use="required"/>
         <xsd:attribute name="userid" type="xsd:string" use="required"/>
     </xsd:complexType>
     
+	<!-- join rejected message -->
     <xsd:complexType name="JoinRejected">
         <xsd:sequence>
             <xsd:element name="reason" type="ace:Reason"/>
@@ -84,7 +86,7 @@
         <xsd:attribute name="userid" type="xsd:string" use="required"/>
     </xsd:complexType>
     
-    <!-- message Document -->
+    <!-- message for the transmission of a document -->
     <xsd:complexType name="Document">
         <xsd:sequence>
             <xsd:element name="participants" type="ace:Participants"/>
@@ -230,14 +232,18 @@
             <xsd:element name="delete" type="ace:DeleteOperation"/>
             <xsd:element name="split" type="ace:SplitOperation"/>
             <xsd:element name="noop"/>
-        </xsd:choice>>
+        </xsd:choice>
     </xsd:complexType>
     
     <xsd:complexType name="InsertOperation">
         <xsd:sequence>
-            <xsd:element name="text" type="xsd:string">
+            <xsd:element name="text">
                 <xsd:complexType>
-                    <xsd:attribute name="encoded" fixed="Base64" use="optional"/>
+                    <xsd:simpleContent>    
+                        <xsd:extension base="xsd:string">
+                            <xsd:attribute name="encoded" fixed="Base64" use="optional"/>
+                        </xsd:extension>
+                    </xsd:simpleContent>
                 </xsd:complexType>
             </xsd:element>
         </xsd:sequence>
