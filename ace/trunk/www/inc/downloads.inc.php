@@ -45,7 +45,7 @@ with your operating system. Check the Makefile in <code>mDNSPosix/Makefile</code
 <code>ant run</code> in the top-level directory. Note: you need <a href="http://ant.apache.org/">Apache Ant</a> installed in that case.</p>
 
 
-<h3>Milestone 2</h3>
+<h3>Milestone 3</h3>
 <p>The release notes can be found <a href="http://ace.iserver.ch:81/repos/ace/ace/tags/ACE_M3/release-notes.txt">here</a>.</p>
 <p>Milestone 3 fixed some of the network related issues mentioned in
 Milestone 2. However, you may still encounter some session failures. They
