@@ -56,19 +56,21 @@ to that user's name. It takes also care that there is only one
 
 The \texttt{User\-Registry} manages the currently known set of users. The
 objects registered in the registry are of type \texttt{Mutable\-Remote\-User},
-which adds a single method \texttt{set\-Name} to the \texttt{Remote\-User}
-interface. This method allows the collaboration layer to change the
+an interface that adds a single method \texttt{set\-Name} to the 
+\texttt{Remote\-User} interface. 
+This method allows the collaboration layer to change the
 name of a user, if such a change is reported from the network layer.
 The \texttt{get\-User} method with an argument of type
 \texttt{Remote\-User\-Proxy} creates a new \texttt{Mutable\-Remote\-User}, if 
-a user with the same id does not already exist. This makes sure that
+a user with the same id does not already exist. Otherwise, the existing
+user is returned. This makes sure that
 there is only one \texttt{Remote\-User} object for a unique user. The
 other \texttt{get\-User} method returns null if there is no user in the
 registry with the given id.
 
 \begin{figure}[H]
  \centering
- \includegraphics[width=16.37cm,height=4.62cm]{../images/finalreport/collaboration_userregistry_uml.eps}
+ \includegraphics[width=15cm,height=4.23cm]{../images/finalreport/collaboration_userregistry_uml.eps}
  \caption{UserRegistry Interface}
  \label{fig:collaboration.userregistry}
 \end{figure}
@@ -79,14 +81,15 @@ adds the \texttt{set\-Title} method to the \texttt{Remote\-Document}.
 
 \begin{figure}[H]
  \centering
- \includegraphics[width=16.72cm,height=4.59cm]{../images/finalreport/collaboration_documentregistry_uml.eps}
+ \includegraphics[width=15cm,height=4.12cm]{../images/finalreport/collaboration_documentregistry_uml.eps}
  \caption{DocumentRegistry Interface}
  \label{fig:collaboration.documentregistry}
 \end{figure}
 
 The mutable subinterfaces of \texttt{Remote\-User} 
 and \texttt{Remote\-Document}
-are passed to the application layer, because the user is never allowed to
+are never passed to the application layer, because the application layer
+is never allowed to
 change the name of other users or the title of documents published by other
 users.
 
@@ -102,7 +105,7 @@ The collaboration layer has to implement the \texttt{Invitation} interface.
 It is implemented by the \texttt{Invitation\-Impl} class. The implementation
 is straightforward. The calls to \texttt{reject} and \texttt{accept} are
 directly forwarded to the referenced \texttt{Invitation\-Proxy} from the
-network layer. The only thing the collaboration layer does is to wrap the
+network layer. The only thing the collaboration layer does is wrap the
 passed in \texttt{Join\-Callback} with an implementation of 
 \texttt{Join\-Network\-Callback}.
 
@@ -112,7 +115,7 @@ To forward a join request to the network layer, the collaboration layer has
 to implement the \texttt{Join\-Network\-Callback} interface. The
 \texttt{accepted} method of the interface must create a \texttt{Session}
 and pass that to the \texttt{Join\-Callback} of the application layer.
-The callback must also return a \texttt{Session\-Connection\-Callback} to the
+The callback returns a \texttt{Session\-Connection\-Callback} to the
 network layer.
 
 
@@ -122,9 +125,15 @@ network layer.
 provide methods to set the \texttt{Session\-Connection} as well as the
 \texttt{Participant\-Session\-Callback}.
 
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=8.89cm,height=4.73cm]{../images/finalreport/collaboration_uml.eps}
+ \caption{Session factory and configurable session}
+\end{figure}
+
 
 \subsection{Session Implementation}
-The default implementation for the \texttt{Session} interface is the
+The default implementation of the \texttt{Session} interface is the
 \texttt{Session\-Impl} class. It implements the \texttt{Configurable\-Session}
 interface, which also implements the \texttt{Session\-Connection\-Callback}
 interface. So the implementation acts as both the \texttt{Session} to
@@ -137,17 +146,18 @@ Every received request is transformed with that algorithm. Before a
 received request can be transformed, the session has to be locked (locking
 the lock passed from the application layer by the \texttt{get\-Lock} method
 of the \texttt{Session\-Callback}). When sending operations, the algorithm
-creates a request that can then be sent to the \texttt{Session\-Connection}.
+is used to create a request that can be sent to the 
+\texttt{Session\-Connection}.
 
-\subsubsection{Session Connection}
+\subsubsection{Session Connection Handling}
 The \texttt{Configurable\-Session} has a method called \texttt{set\-Connection},
 which passes the \texttt{Session\-Connection} to the \texttt{Session}. The
 \texttt{Session\-Impl} makes use of a \texttt{Thread\-Domain} (see
-chapter \ref{chapter:threaddomains}) to execute calls on the 
+appendix \ref{chapter:threaddomains}) to execute calls on that 
 \texttt{Session\-Connection} asynchronously. The main reason for doing this
 is that the caller thread (most likely the AWT event dispatch thread)
-is by a potentially slow network connection. The caller thread can go
-on and execute other tasks.
+is not slowed down by a potentially slow network connection. The caller thread 
+can go on and execute other tasks.
 
 However, using asynchronous calls has one significant
 disadvantage. Exceptions thrown by the method invocation cannot be
@@ -168,9 +178,11 @@ shows exactly the described setup.
 
 The call from the dynamic proxy to the \texttt{Session\-Connection\-Wrapper}
 is asynchronous. The methods of the \texttt{Session\-Connection\-Wrapper}
-are executed by a designated worker thread. If the target 
-\texttt{Session\-Connection} throws an exception, the method 
-\texttt{handle\-Failure} is invoked on the \texttt{Failure\-Handler}. The
+are executed by a designated worker thread (see the little circle in the
+figure \ref{fig:collaboration.sessionconnectionwrapper}). If the target 
+\texttt{Session\-Connection} throws an exception, the wrapper catches
+it and invokes the method 
+\texttt{handle\-Failure} on the \texttt{Failure\-Handler}. The
 \texttt{Session\-Impl} implements the \texttt{Failure\-Handler} interface and
 passes the failure to the \texttt{Session\-Callback}. A session that failed
 once cannot be used any longer. 
@@ -670,14 +682,16 @@ used to send acknowledge strategies (see section
 
 \subsection{Acknowledge Strategies}
 \label{sect:archoverview.acknowledgestrategies}
-In the discussion of the algorithm (see section {sect:algorithm.outgoingqueue})
-we have noted that
-in some cases the outgoing queues of the \emph{Jupiter} algorithm can 
+In the discussion of the algorithm 
+(see section \ref{sect:algorithm.outgoingqueue}) we have noted that
+in some situations the outgoing queues of the \emph{Jupiter} algorithm can 
 grow indefinitely. To avoid this situation, a site that does not generate
 requests on its own but receives requests from the other site should acknowledge
 from time to time the messages processed from the other site in order to 
 avoid that the queues grow too much. Acknowledge messages are rather simple.
-They must consist of the local site id as well as the local timestamp.
+They consist of the local site id as well as the local timestamp, which is
+used by the other site to discard acknowledged messages from the outgoing
+queue.
 
 The collaboration layer uses objects implementing the 
 \texttt{Acknowledge\-Strategy} interface to determine when to send 
@@ -685,7 +699,7 @@ acknowledge messages. This is a classical implementation of the
 \emph{Strategy} pattern. The strategy itself does not know how exactly to 
 send an acknowledge message. This is left to an object implementing the
 \texttt{Acknowledge\-Action} interface, which has a single \texttt{execute}
-method. That method is invoked by the strategy whenever it thinks it is
+method that is invoked by the strategy whenever it thinks it is
 time to send an acknowledge message.
 
 \begin{figure}[H]
@@ -708,18 +722,49 @@ site whenever a certain number of messages have been received (this is
 the strategy used by the \texttt{Counting\-Acknowledge\-Strategy}). In that
 case, the \texttt{reset} method resets the message counter to zero.
 
-Another strategy could be based on a timer that fires after 60 seconds of
-not sending any messages to the other site. The \texttt{reset} method in that
+Another strategy could be based on a timer that fires after 60 seconds during
+which no messages have been sent. The \texttt{reset} method in that
 case would simple restart the timer.
 
 The \texttt{Acknowledge\-Strategy\-Impl} combines both strategies described
 above. The timer is just started when there has been a received message.
 
-ACE currently uses the simple message counting based implementation and not
+At the moment, ACE uses the simple message counting based implementation and not
 the more complex and precise combined strategy. The timer based strategy
 alone did not prove to be good enough, because potentially many messages
 can be received in the timeout period.
 
-\texttt{Acknowledge\-Strategy} objects are creates by corresponding factories.
-The factory interface is \texttt{Acknowledge\-Strategy\-Factory}.
+\texttt{Acknowledge\-Strategy} objects are created by corresponding factories.
+The interface implemented by this factories is named
+\texttt{Acknowledge\-Strategy\-Factory}.
 
+
+\subsection{Algorithm Wrapper}
+The collaboration layer uses an extended \texttt{Algorithm} interface to support
+handling of awareness information. This extended interface is called
+\texttt{Algorithm\-Wrapper}.
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=11.85cm,height=4.34cm]{../images/finalreport/collaboration_algorithmwrapper_uml.eps}
+ \caption{AlgorithmWrapper Interface}
+\end{figure}
+
+The two additional methods, \texttt{generate\-Caret\-Update\-Message} and \texttt{receive\-Caret\-Update\-Message}, are used to generate messages
+to send updates of the local caret to the session and to receive such updates
+from the session. The two additional objects used are \texttt{Caret\-Update}
+and \texttt{Caret\-Update\-Message}. They correspond to the \texttt{Operation}
+and to the \texttt{Request} interface.
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=8.89cm,height=4.73cm]{../images/finalreport/collaboration_caretupdate_uml.eps}
+ \caption{CaretUpdate and CaretUpdateMessage}
+\end{figure}
+
+A \texttt{Caret\-Update\-Message} consists of the site id of the sender, the
+timestamp at the sender's site, and a \texttt{Caret\-Update} object. The
+\texttt{Caret\-Update} has a \texttt{dot} and a \texttt{mark} property. The
+\texttt{dot} specifies the position of the insertion point, \texttt{mark} 
+specifies the end of the selection. If both \texttt{dot} and \texttt{mark} are 
+equal, nothing is selected. 
