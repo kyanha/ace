@@ -4,7 +4,7 @@
 ;You want to change the next four lines
 Name "ACE - a collaborative editor"
 Caption "ACE - a collaborative editor"
-;Icon "icon_ace.ico"
+Icon "logo.ico"
 OutFile "ace.exe"
  
 SilentInstall silent
