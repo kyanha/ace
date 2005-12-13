@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:ace="http://ace.iserver.ch/protocol/XMLSchema"
+            targetNamespace="http://ace.iserver.ch/protocol/XMLSchema"
+            elementFormDefault="qualified"
+            attributeFormDefault="unqualified"
+            version="0.9">
+  
+    <!-- This schema contains the message definitions of the public communcation protocol of ACE. -->
+    
+    <!-- ACE protocol top level elements -->
+    <xsd:element name="ace">
+        <xsd:complexType>
+            <xsd:choice>
+                <xsd:element name="channel" type="ace:Channel" />
+                <xsd:element name="request" type="ace:Request"/>                
+                <xsd:element name="response" type="ace:Response" />
+                <xsd:element name="notification" type="ace:Notification" /> 
+                <xsd:element name="session" type="ace:Session"/>
+            </xsd:choice>>
+        </xsd:complexType>
+    </xsd:element>
+    
+    
+    <!--************* messages of type Channel *************-->
+    <xsd:complexType name="Channel">
+        <xsd:sequence>
+            <xsd:element name="user" type="ace:User" minOccurs="0"/>
+        </xsd:sequence>
+        <xsd:attribute name="type" use="required">
+            <xsd:simpleType>
+                <xsd:restriction>
+                    <xsd:enumeration value="main"/>
+                    <xsd:enumeration value="session"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="docId" type="xsd:string"/>
+        <xsd:attribute name="userId" type="xsd:string"/>
+    </xsd:complexType>
+    
+    
+    <!--************* messages of type Request *************-->
+    <xsd:complexType name="Request">
+        <xsd:choice>
+            <xsd:element name="join" type="ace:RequestContent" />
+            <xsd:element name="invite" type="ace:RequestContent" />
+        </xsd:choice>
+    </xsd:complexType>
+    
+    <!-- Join and Invite request -->
+    <xsd:complexType name="RequestContent">
+        <xsd:sequence>
+            <xsd:element name="doc">
+                <xsd:complexType>
+                    <xsd:attribute name="id" type="xsd:string" use="required"/>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="userid" type="xsd:string" use="required"/>
+    </xsd:complexType>
+    
+    
+    <!--************* messages of type Response *************-->
+    <xsd:complexType name="Response">
+        <xsd:choice>
+            <xsd:element name="user" type="ace:User" />
+            <xsd:element name="inviteRejected" type="ace:InviteRejected"/>
+            <xsd:element name="joinRejected" type="ace:JoinRejected"/>
+            <xsd:element name="document" type="ace:Document"/>
+        </xsd:choice>
+    </xsd:complexType>
+    
+    <xsd:complexType name="InviteRejected">
+        <xsd:attribute name="docId" type="xsd:string" use="required"/>
+        <xsd:attribute name="userid" type="xsd:string" use="required"/>
+    </xsd:complexType>
+    
+    <xsd:complexType name="JoinRejected">
+        <xsd:sequence>
+            <xsd:element name="reason" type="ace:Reason"/>
+        </xsd:sequence>
+        <xsd:attribute name="docid" type="xsd:string" use="required"/>
+        <xsd:attribute name="userid" type="xsd:string" use="required"/>
+    </xsd:complexType>
+    
+    <!-- message Document -->
+    <xsd:complexType name="Document">
+        <xsd:sequence>
+            <xsd:element name="participants" type="ace:Participants"/>
+            <xsd:element name="data" type="xsd:base64Binary"/>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:string" use="required"/>
+        <xsd:attribute name="userid" type="xsd:string" use="required"/>
+        <xsd:attribute name="participantId" type="xsd:nonNegativeInteger"/>
+    </xsd:complexType>
+    
+    <xsd:complexType name="Participants">
+        <xsd:sequence>
+            <xsd:element name="participant" type="ace:Participant" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="Participant">
+        <xsd:sequence>
+            <xsd:element name="user" type="ace:User"/>
+            <xsd:element name="selection" type="ace:Selection"/>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:nonNegativeInteger" use="required"/>
+    </xsd:complexType>
+    
+    <xsd:complexType name="Selection">
+        <xsd:attribute name="dot" type="xsd:nonNegativeInteger" use="required"/>
+        <xsd:attribute name="mark" type="xsd:nonNegativeInteger" use="required"/>
+    </xsd:complexType>    
+    <!-- end message Document -->
+
+    
+    <!--************* messages of type Notification *************-->
+    <xsd:complexType name="Notification">
+        <xsd:choice>
+            <xsd:element name="userDiscarded">
+                <xsd:complexType>
+                    <xsd:attribute name="id" type="xsd:string" use="required"/>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="publishDocs">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="doc" type="ace:Doc"/>
+                    </xsd:sequence>
+                    <xsd:attribute name="userid" type="xsd:string" use="required"/>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="concealDocs">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="doc" maxOccurs="unbounded">
+                            <xsd:complexType>
+                                <xsd:attribute name="id" type="xsd:string" use="required"/>
+                            </xsd:complexType>
+                        </xsd:element>
+                    </xsd:sequence>
+                    <xsd:attribute name="userid" type="xsd:string" use="required"/>
+                </xsd:complexType>            
+            </xsd:element>
+            <xsd:element name="publishedDocs" type="ace:PublishedDocs"/>
+            <xsd:element name="docDetailsChanged">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="doc" type="ace:Doc"/>
+                    </xsd:sequence>
+                    <xsd:attribute name="userid" type="xsd:string"/>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="leave">
+                <xsd:complexType>
+                    <xsd:attribute name="docId" type="xsd:string"/>
+                    <xsd:attribute name="participantId" type="xsd:nonNegativeInteger"/>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="kicked">
+                <xsd:complexType>
+                    <xsd:attribute name="docId" type="xsd:string"/>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:choice>
+    </xsd:complexType>
+    
+    
+    <!--************* messages of type Session *************-->
+    <xsd:complexType name="Session">
+        <xsd:choice>
+            <xsd:element name="request" type="ace:SessionRequest"/>
+            <xsd:element name="sessionTerminated"/>
+            <xsd:element name="ack">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="timestamp" type="xsd:string"/>
+                    </xsd:sequence>
+                    <xsd:attribute name="siteId" type="xsd:nonNegativeInteger"/>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="pJoined">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="user" type="ace:User"/>
+                    </xsd:sequence>
+                    <xsd:attribute name="id" type="xsd:short"/>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="pLeft">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="reason" type="ace:Reason"></xsd:element>
+                    </xsd:sequence>
+                    <xsd:attribute name="id" type="xsd:string"/>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="caretUpdate" type="ace:CaretUpdate"/>
+        </xsd:choice>
+    </xsd:complexType>
+    
+    <xsd:complexType name="CaretUpdate">
+        <xsd:sequence>
+            <xsd:element name="timestamp" type="xsd:string"/>
+            <xsd:element name="caret">
+                <xsd:complexType>
+                    <xsd:attribute name="dot" type="xsd:nonNegativeInteger" use="required"/>
+                    <xsd:attribute name="mark" type="xsd:nonNegativeInteger" use="required"/>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="siteId" type="xsd:nonNegativeInteger" use="required"/>
+        <xsd:attribute name="participantId" type="xsd:nonNegativeInteger" use="required"/>
+    </xsd:complexType>
+    
+    <xsd:complexType name="SessionRequest">
+        <xsd:sequence>
+            <xsd:element name="operation" type="ace:Operation"/>
+            <xsd:element name="timestamp" type="xsd:string"/>
+        </xsd:sequence>
+        <xsd:attribute name="siteId" type="xsd:nonNegativeInteger" use="required"/>
+        <xsd:attribute name="participantId" type="xsd:nonNegativeInteger" use="required"/>
+    </xsd:complexType>
+    
+    <xsd:complexType name="Operation">
+        <xsd:choice>
+            <xsd:element name="insert" type="ace:InsertOperation"/>
+            <xsd:element name="delete" type="ace:DeleteOperation"/>
+            <xsd:element name="split" type="ace:SplitOperation"/>
+            <xsd:element name="noop"/>
+        </xsd:choice>>
+    </xsd:complexType>
+    
+    <xsd:complexType name="InsertOperation">
+        <xsd:sequence>
+            <xsd:element name="text" type="xsd:string">
+                <xsd:complexType>
+                    <xsd:attribute name="encoded" fixed="Base64" use="optional"/>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="position" type="xsd:nonNegativeInteger" use="required"/>
+        <xsd:attribute name="origin" type="xsd:nonNegativeInteger" use="required"/>
+    </xsd:complexType>
+    
+    <xsd:complexType name="DeleteOperation">
+        <xsd:sequence>
+            <xsd:element name="text" type="xsd:string">
+            </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="position" type="xsd:nonNegativeInteger" use="required"/>
+    </xsd:complexType>
+    
+    <xsd:complexType name="SplitOperation">
+        <xsd:sequence>
+            <xsd:element name="first" type="ace:Operation"/>
+            <xsd:element name="second" type="ace:Operation"/>
+        </xsd:sequence>
+    </xsd:complexType>
+   
+    
+    <!--************* miscallenous tags *************-->    
+    <xsd:complexType name="User">
+        <xsd:sequence>
+            <xsd:element name="publishedDocs" type="ace:PublishedDocs" minOccurs="0"/>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:string" use="required"/>
+        <xsd:attribute name="name" type="xsd:string" use="required"/>
+        <xsd:attribute name="address" type="xsd:string" use="required"/>
+        <xsd:attribute name="port" type="xsd:nonNegativeInteger" use="required"/>
+        <xsd:attribute name="dnssdDiscovered" type="xsd:boolean" use="optional"/>
+    </xsd:complexType>
+    
+    <xsd:complexType name="Reason">
+        <xsd:attribute name="code" type="xsd:integer" use="required"/>
+    </xsd:complexType>
+    
+    <xsd:complexType name="PublishedDocs">
+        <xsd:sequence>
+            <xsd:element name="doc" type="ace:Doc" maxOccurs="unbounded"/>
+        </xsd:sequence>
+        <xsd:attribute name="userid" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+    
+    <xsd:complexType name="Doc">
+        <xsd:attribute name="id" type="xsd:string" use="required"/>
+        <xsd:attribute name="name" type="xsd:string" use="required"/>
+    </xsd:complexType>
+    
+</xsd:schema>
