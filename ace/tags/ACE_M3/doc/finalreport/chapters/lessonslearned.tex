@@ -1,0 +1,74 @@
+\chapter{Lessons Learned}
+\label{chapter:lessonslearned}
+
+
+
+\section{General}
+When we decided which technology to use to implement the network layer, we did
+not have a complex prototype based on the chosen technology. \emph{Bonjour}
+itself proved to be a good choice, however the \emph{Beepcore} Java library had 
+some bugs that caused serious problems in the implementation. We could have
+avoided that situation by implementing a prototype that would have used
+the framework in a similar manner as ACE. Thus, we learned that it is
+always a good idea to make some thorough tests before using a framework
+in a project.
+
+
+
+\section{Mark Bigler}
+First of all, it was a great time with a really cool and efficient team. I have got to know new frameworks like \textit{GlazedLists} and \textit{Springframework} which are very usefull for GUI programming.
+
+Writing all documents in English was a good practise to improve my english skills which are a bit more fluent now.
+
+Too bad, we did not have twice as much time to realize even more features to make ACE a more powerful tool.
+\subsection{Positive Points}
+\begin{itemize}
+\item great time and experience
+\item new frameworks useful for GUI programming
+\end{itemize}
+
+\subsection{Negative Points}
+\begin{itemize}
+\item Not enough time to make a ".." project.
+\end{itemize}
+
+
+
+\section{Simon Raess}
+The whole project ACE was a great success. We started from basically knowing
+nothing about the topic to a working application. Although there are still
+some open issues, we achieved the goals set at the beginning. 
+
+When I look back I see one thing we should have done from the beginning:
+writing a simulated implementation of the network layer. This would have
+simplified testing of the two upper layers greatly. Testing network code is inherently non-deterministic. With the clear layering of the application 
+we could have easily written an alternative (simulated) implementation of
+the network layer to simplify testing inside a sandbox-like environment (i.e.
+without access to the real network).
+
+\subsection{Positive Points}
+\begin{itemize}
+ \item we achieved all mandatory and some optional goals we defined at the beginning of the diploma project in the amount of time we had
+ \item through a clear separation of the layers we could work efficiently and independently
+\end{itemize}
+
+\subsection{Negative Points}
+\begin{itemize}
+ \item we did not implement a network simulator, which would have simplified testing greatly
+ \item we did not investigate the used network technologies thoroughly enough
+\end{itemize}
+
+
+
+\section{Lukas Zbinden}
+Intro...
+\subsection{Positive Points}
+\begin{itemize}
+\item ...
+\end{itemize}
+
+\subsection{Negative Points}
+\begin{itemize}
+\item ...
+\end{itemize}
+
