@@ -346,10 +346,10 @@ There are tree different connection types which are explained below.
 All basic communication except the document editing messages are sent with the \texttt{MainConnection}. It wraps a BEEP channel which represents the physical connection to the peer. Each user has only one instance of \texttt{MainConnection} and therefore only one channel for the main communication. Both peers use that same physical channel bidirectionally to communicate with each other (this property is provided by the BEEP framework). The main connection allows to send document management messages such as 'publish a document', 'invite user', 'join document' etc.
 
 \subparagraph{SessionConnection}
-The \texttt{SessionConnection} represents a physical connection starting from the local user to the session owner (publisher of document) in a collaborative editing session. Thus, \textt{SessionConnection}'s are only used by participants and not by the owner of a session. It allows a particpant to send session relevant messages to the session owner.
+The \texttt{SessionConnection} represents a physical connection starting from the local user to the session owner (publisher of document) in a collaborative editing session. Thus, \texttt{SessionConnection}'s are only used by participants and not by the owner of a session. It allows a particpant to send session relevant messages to the session owner.
 
 \subparagraph{ParticipantConnection}
-The \textt{ParticipantConnection} represents a physical connection starting from the document session owner to a participant. Therefore, \textt{ParticipantConnection}'s are used only by session owners and not particpants. It allows a session owner to send relevant messages to the participants. 
+The \texttt{ParticipantConnection} represents a physical connection starting from the document session owner to a participant. Therefore, \texttt{ParticipantConnection}'s are used only by session owners and not particpants. It allows a session owner to send relevant messages to the participants. 
 
 
 
