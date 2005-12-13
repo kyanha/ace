@@ -69,6 +69,10 @@ public class MainConnection extends AbstractConnection {
 		LOG.debug("not used yet.");
 	}
 	
+	public void recover() throws RecoveryException {
+		throw new RecoveryException();
+	}
+	
 	public String toString() {
 		return "MainConnection( "+((TCPSession)getChannel().getSession()).getSocket()+" )";
 	}

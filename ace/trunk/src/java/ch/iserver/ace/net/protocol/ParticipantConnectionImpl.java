@@ -118,6 +118,10 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 		LOG.debug("<-- cleanup()");
 	}
 	
+	public void recover() throws RecoveryException {
+		throw new RecoveryException();
+	}
+	
 	/***************************************************/
 	/** methods from interface ParticipantConnection  **/
 	/***************************************************/

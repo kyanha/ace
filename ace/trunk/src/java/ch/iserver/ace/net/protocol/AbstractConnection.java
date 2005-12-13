@@ -1,5 +1,5 @@
 /*
- * $$Id$$
+ * $$Id:AbstractConnection.java 2413 2005-12-09 13:20:12Z zbinl $$
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -27,7 +27,6 @@ import org.apache.log4j.Logger;
 import org.beepcore.beep.core.Channel;
 import org.beepcore.beep.core.OutputDataStream;
 import org.beepcore.beep.core.ReplyListener;
-import org.beepcore.beep.lib.NullReplyListener;
 import org.beepcore.beep.lib.Reply;
 
 /**
@@ -175,6 +174,12 @@ public abstract class AbstractConnection {
 	 *
 	 */
 	public abstract void cleanup();
+	
+	/**
+	 * 
+	 *
+	 */
+	public abstract void recover() throws RecoveryException;
 	
 	/**
 	 * 

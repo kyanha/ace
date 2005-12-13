@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:SessionConnectionImpl.java 2413 2005-12-09 13:20:12Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -70,6 +70,10 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 		setChannel(null);
 		setState(STATE_CLOSED);
 		LOG.debug("<-- cleanup()");
+	}
+	
+	public void recover() throws RecoveryException {
+		throw new RecoveryException();
 	}
 	
 	/***********************************************/
