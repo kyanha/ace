@@ -1,5 +1,7 @@
 <h2>ACE - a collaborative editor</h2>
 
+<img src="images/ace-logo.gif" width="128" height="128" align="right" style="margin-left: 30px"/>
+
 <p>ACE is a platform-independent, collaborative text editor. It is a real-time cooperative editing system that allows multiple dispersed users to view and edit a shared text document at the same time.</p>
 
 <p>To find out more about ACE, read the <a href="index.php?page=1">Introduction</a>. There is also a page describing our <a href="index.php?page=2">Vision</a> of collaborative applications as well
