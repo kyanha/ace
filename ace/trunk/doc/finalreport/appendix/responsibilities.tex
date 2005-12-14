@@ -1,0 +1,122 @@
+\chapter{Responsibilities}
+\label{chapter:responsibilities}
+
+In this appendix we list which team member is responsible for a certain part
+of the source code and who is responsible for parts of the documentation.
+
+
+
+\section{Documentation}
+The following table shows the responsible team member for each of the
+five documents:
+\begin{table}[H]
+ \centering
+ \begin{tabular}{|l|l|}
+  \hline
+   \multicolumn{1}{|p{2.0in}|}{\bfseries{\textsf{Document}}} &
+   \multicolumn{1}{|p{1.0in}|}{\bfseries{\textsf{Responsible}}} \\
+  \hline
+   \multicolumn{1}{|p{2.0in}|}{Project Manual} &
+   \multicolumn{1}{|p{1.0in}|}{Team} \\
+  \hline
+   \multicolumn{1}{|p{2.0in}|}{System Requirements} &
+   \multicolumn{1}{|p{1.0in}|}{Simon Raess} \\
+  \hline
+   \multicolumn{1}{|p{2.0in}|}{Developers Guide} &
+   \multicolumn{1}{|p{1.0in}|}{Simon Raess} \\
+  \hline
+   \multicolumn{1}{|p{2.0in}|}{User Manual} &
+   \multicolumn{1}{|p{1.0in}|}{Mark Bigler} \\
+  \hline
+   \multicolumn{1}{|p{2.0in}|}{Final Report} &
+   \multicolumn{1}{|p{1.0in}|}{Team} \\
+  \hline
+ \end{tabular}
+ \caption{Responsible team member for documents}
+\end{table}
+
+
+\subsection{Final Report}
+The final report contains contributions from all team members. In the following
+we show which chapters were writte by which team member.
+
+\begin{itemize}
+ \item Abstract: \emph{Lukas Zbinden}
+ \item Preface: \emph{Simon Raess}
+ \item Part 1: Introduction
+ \begin{itemize}
+  \item Overview 
+  \begin{itemize}
+   \item What is Collaborative Editing?: \emph{Lukas Zbinden}
+   \item Use Cases of Collaborative Editing: \emph{Lukas Zbinden}
+   \item Requirements of a Collaborative Application: \emph{Simon Raess}
+   \item Previous Work: \emph{Simon Raess}
+  \end{itemize}
+  \item Functionality: \emph{Mark Bigler}
+  \item Algorithm: \emph{Simon Raess} except section 3.3.2 by \emph{Lukas Zbinden}
+ \end{itemize}
+ \item Part 2: Decisions and Justifications
+ \begin{itemize}
+  \item Decisions for Network Implementation: \emph{Lukas Zbinden}
+  \item Decisions for Application Implementation: \emph{Mark Bigler}
+ \end{itemize}
+ \item Part 3: Implemented Solution
+ \begin{itemize}
+  \item Architectural Overview: \emph{Simon Raess}
+  \item Application Layer: \emph{Mark Bigler}
+  \item Collaboration Layer: \emph{Simon Raess}
+  \item Network Layer: \emph{Lukas Zbinden}
+ \end{itemize}
+ \item Part 4: Quality Assurance: \emph{Simon Raess}
+ \item Part 5: Analysis
+ \begin{itemize}
+  \item Attainment of the Goals: \emph{Mark Bigler}
+  \item Differences to Project Plan: \emph{Mark Bigler}
+  \item Open Issues
+  \begin{itemize}
+   \item Locking Transformation Engine: \emph{Simon Raess}
+   \item Dependency of Collaboration Layer on Swing: \emph{Simon Raess}
+   \item Crashes Caused by Bonjour for Java: \emph{Lukas Zbinden}
+   \item Service failure handling and recovery: \emph{Lukas Zbinden}
+  \end{itemize}
+  \item Lessons Learned: \emph{Project Team}, general section by \emph{Simon Raess}
+  \item Outlook: \emph{Project Team}
+  \item Conclusion: \emph{Lukas Zbinden}
+ \end{itemize}
+ \item Part 6: Appendix
+ \begin{itemize}
+  \item References: \emph{Project Team}
+  \item Used Technologies
+  \begin{itemize}
+   \item Used Software: \emph{Simon Raess}
+   \item Used Frameworks and Libraries: \emph{Simon Raess}
+   \item The Spring Framework: \emph{Simon Raess}
+   \item BEEP Core: \emph{Lukas Zbinden}
+   \item Bonjour: \emph{Bonjour}
+   \item Glazed Lists: \emph{Glazed Lists}
+  \end{itemize}
+  \item Thread Domains: \emph{Simon Raess}
+ \end{itemize}
+\end{itemize}
+
+
+
+\section{Source Code}
+The architecture of ACE consists of three distinct layer. The 
+API between the layers has been defined by \emph{Simon Raess} with some 
+minor changes during the project. Every layer
+was assigned to one team member, who was responsible to design and implement
+the layer implementation. In some rare cases one of use helped another
+person implement a minor part of his layer. The assignment is as follows:
+
+\begin{itemize}
+ \item Application Layer: \emph{Mark Bigler}
+ \item Collaboration Layer: \emph{Simon Raess}
+ \item Network Layer: \emph{Lukas Zbinden}
+\end{itemize}
+
+The package \texttt{ch.iserver.ace.algorithm} was mainly implemented during
+the semester project. Additions needed to support the transformation of
+awareness information and acknowledge messages were added by \emph{Simon Raess}.
+
+Thread domains have been designed and implemented by \emph{Simon Raess}.
