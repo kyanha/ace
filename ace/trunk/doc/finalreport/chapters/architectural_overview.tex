@@ -54,6 +54,26 @@ Lastly, both users and published documents have a globally unique identifer
 primarily used by the network layer to identify users and documents.
 
 
+\subsection{Awareness Information}
+ACE supports sending updates to the text insertion caret and the selection
+to the session. This information is displayed in the GUI to make users
+aware of the actions of other users. The two classes \texttt{Caret\-Update}
+and \texttt{Caret\-Update\-Message} are used to encapsulate that information.
+
+A \texttt{Caret\-Update\-Message} consists of the site id of the sender, the
+timestamp at the sender's site, and a \texttt{Caret\-Update} object. The
+\texttt{Caret\-Update} has a \texttt{dot} and a \texttt{mark} property. The
+\texttt{dot} specifies the position of the insertion point, \texttt{mark} 
+specifies the end of the selection. If both \texttt{dot} and \texttt{mark} are 
+equal, nothing is selected. 
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=9.7cm,height=1.9cm]{../images/finalreport/collaboration_caretupdate_uml.eps}
+ \caption{CaretUpdate and CaretUpdateMessage}
+\end{figure}
+
+
 
 \section{Interface Application/Collaboration Layer}
 The interfaces between the application and the collaboration layer are in
