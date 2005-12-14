@@ -32,20 +32,20 @@ sections:
 
 
 
+\newpage
 \section{Collaboration Service}
 The core entry point into the collaboration layer is an object implementing the
 \texttt{Collaboration\-Service} interface. It is implemented by the
 \texttt{Collaboration\-Service\-Impl} class, which also implements the
 \texttt{Network\-Service\-Callback} interface. These interfaces and their
-functionality have been thorougly explained elsewhere (see chapter 
-\ref{chapter:archoverview}). 
+functionality have been thorougly explained in chapter 
+\ref{chapter:archoverview}.
 
 The implementation of the collaboration service passes calls on 
 the \texttt{Network\-Service\-Callback} methods to the corresponding
 objects from the application
 layer, namely the \texttt{User\-Listener}s, \texttt{Document\-Listener}s,
-\texttt{Invitation\-Callback}, and \texttt{Service\-Failure\-Handler}. See
-figure \ref{fig:collaboration.collaborationserviceimpl} depicts this
+\texttt{Invitation\-Callback}, and \texttt{Service\-Failure\-Handler}. Figure \ref{fig:collaboration.collaborationserviceimpl} depicts this
 situation.
 
 \begin{figure}[H]
@@ -65,10 +65,10 @@ The collaboration layer makes sure that for each unique user id there is
 only one \texttt{Remote\-User}. Thus the application layer can register a 
 \texttt{Property\-Change\-Listener} on the 
 \texttt{Remote\-User} to receive changes
-to that user's name. It takes also care that there is only one 
+to that user's name. It also takes care that there is only one 
 \texttt{Remote\-Document} for a unique document id.
 
-The \texttt{User\-Registry} manages the set of currently known set. The
+The \texttt{User\-Registry} manages the set of currently known users. The
 objects registered in the registry are of type \texttt{Mutable\-Remote\-User},
 an interface that adds a single method \texttt{set\-Name} to the 
 \texttt{Remote\-User} interface. 
@@ -111,13 +111,6 @@ users.
 
 
 \section{Client Side}
-The client side of the collaboration layer provides the following functionality:
-\begin{itemize}
- \item receiving invitations
- \item joining
- \item creating 
-\end{itemize}
-
 
 \subsection{Receiving Invitations}
 The collaboration layer has to implement the \texttt{Invitation} interface.
@@ -126,7 +119,8 @@ is straightforward. The calls to \texttt{reject} and \texttt{accept} are
 directly forwarded to the referenced \texttt{Invitation\-Proxy} from the
 network layer. The only thing the collaboration layer does is wrap the
 passed in \texttt{Join\-Callback} with an implementation of 
-\texttt{Join\-Network\-Callback}.
+\texttt{Join\-Network\-Callback}. The name of the implementation class
+is \texttt{Join\-Network\-Callback\-Impl}.
 
 
 \subsection{Join Callback}
@@ -146,10 +140,28 @@ interface. So the implementation acts as both the \texttt{Session} to
 the application layer as well as \texttt{Session\-Connection\-Callback} to the
 network layer.
 
+\subsubsection{Session Event Flow}
+Figure \ref{fig:collaboration.sessionflow} depicts the basic event flow 
+through the session. The application passes operations to the \texttt{Session}.
+The \texttt{Session} generates a request and passes the request to the
+\texttt{Session\-Connection}. In the other direction, the network layer
+passes requests to the \texttt{Session\-Connection\-Callback} implemented
+by the \texttt{Session\-Impl} class. The session implementation transforms
+the requests and passes the transformed operations to the
+\texttt{Participant\-Session\-Callback}.
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=6.77cm,height=4.76cm]{../images/finalreport/collaboration_session.eps}
+ \caption{Session event flow}
+ \label{fig:collaboration.sessionflow}
+\end{figure}
+
 \subsubsection{Creating Sessions}
 \texttt{Session} objects are created by a \texttt{Session\-Factory}. The
-\texttt{Session\-Factory} creates \texttt{Configurable\-Session} objects, which
-provide methods to set the \texttt{Session\-Connection} as well as the
+\texttt{Session\-Factory} creates objects implementing the 
+\texttt{Configurable\-Session} interface. This interface has a methods to
+set the \texttt{Session\-Connection} as well as the
 \texttt{Participant\-Session\-Callback}.
 
 \begin{figure}[H]
@@ -167,24 +179,6 @@ of the \texttt{Session\-Callback}). When sending operations, the algorithm
 is used to create a request that can be sent to the 
 \texttt{Session\-Connection}.
 
-\subsubsection{Session Event Flow}
-Figure \ref{fig:collaboration.sessionflow} depicts the basic event flow 
-through the session. The application passes operations to the \texttt{Session}.
-The \texttt{Session} generates a request and passes the request to the
-\texttt{Session\-Connection}. In the other direction, the network layer
-passes requests to the \texttt{Session\-Connection\-Callback} implemented
-by the \texttt{Session\-Impl} class. The session implementation transforms
-the request and passes the transformed operation to the
-\texttt{Participant\-Session\-Callback}.
-
-\begin{figure}[H]
- \centering
- \includegraphics[width=6.77cm,height=4.76cm]{../images/finalreport/collaboration_session.eps}
- \caption{Session event flow}
- \label{fig:collaboration.sessionflow}
-\end{figure}
-
-
 \subsubsection{Session Connection Handling}
 The network layer passes a \texttt{Session\-Connection} to
 the collaboration layer when invoking the \texttt{accepted} method on the
@@ -195,7 +189,7 @@ has a method called \texttt{set\-Connection},
 which is used by the join callback to pass the \texttt{Session\-Connection} to 
 the \texttt{Session}.
 
-The \texttt{Session\-Impl} wraps the passed in reference to the
+The \texttt{Session\-Impl} then wraps the passed in reference to the
 \texttt{Session\-Connection} with use of a \texttt{Thread\-Domain} (see
 appendix \ref{chapter:threaddomains}). Therefore calls calls on that 
 \texttt{Session\-Connection} are executed asynchronously. 
@@ -221,13 +215,14 @@ shows exactly the described setup.
  \label{fig:collaboration.sessionconnectionwrapper}
 \end{figure}
 
-The call from the dynamic proxy to the \texttt{Session\-Connection\-Wrapper}
-is asynchronous. The methods of the \texttt{Session\-Connection\-Wrapper}
+The calls from the dynamic proxy to the \texttt{Session\-Connection\-Wrapper}
+are asynchronous. The methods of the \texttt{Session\-Connection\-Wrapper}
 are executed by a designated worker thread. If the target 
 \texttt{Session\-Connection} throws an exception, the wrapper catches
 it and invokes the method 
-\texttt{handle\-Failure} on the \texttt{Failure\-Handler}. The
-\texttt{Session\-Impl} implements the \texttt{Failure\-Handler} interface and
+\texttt{handle\-Failure} on the failure handler. The
+\texttt{Session\-Impl} implements the 
+\texttt{Session\-Connection.Failure\-Handler} interface and
 passes the failure to the \texttt{session\-Failed} method of the
 \texttt{Session\-Callback}. A session that failed
 once cannot be used any longer. 
@@ -235,7 +230,9 @@ once cannot be used any longer.
 \subsubsection{Acknowledge Messages}
 The \texttt{Session\-Impl} uses an \texttt{Acknowledge\-Strategy} to determine
 when to send acknowledge messages. For details about acknowledge strategies
-see the section \ref{sect:archoverview.acknowledgestrategies}.
+see section \ref{sect:archoverview.acknowledgestrategies}.
+The following code snippet shows the implementation of the 
+\texttt{Acknowledge\-Action} used by the \texttt{Session\-Impl}
 
 \small{\begin{verbatim}
   Timestamp timestamp = getAlgorithm().getTimestamp();
@@ -243,22 +240,17 @@ see the section \ref{sect:archoverview.acknowledgestrategies}.
   getConnection().sendAcknowledge(siteId, timestamp);
 \end{verbatim}}
 
-The preceding code snippet shows the implementation of the 
-\texttt{Acknowledge\-Action}. The code is rather straightforward. It just
-invokes the \texttt{send\-Acknowledge} method on the 
-\texttt{Session\-Connection}.
-
 
 \subsection{Published Session}
 The publisher of a document gets a \texttt{Published\-Session} object from
 the \texttt{publish} method of the \texttt{Collaboration\-Service}. The
 implementation of this interface is the \texttt{Published\-Session\-Impl}
-class, which, as we have seen, implements the \texttt{Publisher\-Connection}
-interface too.
+class, which implements the \texttt{Publisher\-Connection}
+interface too (see figure \ref{fig:collaboration.publishedsession}).
 
 The published session hosts the client-side algorithm of the publisher.
 It also has a reference to a \texttt{Acknowledge\-Strategy}, which is
-used to send acknowledge strategies (see section 
+used to send acknowledge messages (see section 
 \ref{sect:archoverview.acknowledgestrategies}).
 
 \begin{figure}[H]
@@ -274,7 +266,7 @@ Figure \ref{fig:collaboration.publishedsessionflow} depicts how events
 flow from the application layer to the \texttt{Published\-Session} and from
 there the generated requests are passed to the \texttt{Publisher\-Port}. 
 In the other direction the events pass to the 
-\texttt{Publisher\-Connection} (the implementation is the 
+\texttt{Publisher\-Connection} (implemented by 
 \texttt{Published\-Session\-Impl} class) and from there the transformed
 operations are passed to the \texttt{Published\-Session\-Callback}.
 
@@ -284,6 +276,7 @@ operations are passed to the \texttt{Published\-Session\-Callback}.
  \caption{PublishedSession event flow}
  \label{fig:collaboration.publishedsessionflow}
 \end{figure}
+
 
 
 \section{Session Server} 
@@ -309,14 +302,15 @@ For each published document there is an object implementing the
 collaboration layer itself. The only implementation of it is
 \texttt{Server\-Logic\-Impl}.
 
-Incoming communication from a particular participant is coming through an
+Incoming messages from a particular participant are coming through an
 implementation of the \texttt{Participant\-Port} interface. The 
 \texttt{Participant\-Port} represents the entry point for messages from
 one particular participant into the server. Outgoing communication happens 
 through an implementation of \texttt{Participant\-Connection}, which is provided 
 by the network layer. This interface is used by the collaboration
 layer to send messages to one particular participant. For every participant, 
-there is such a pair of objects.
+there is a pair of \texttt{Participant\-Port} and 
+\texttt{Participant\-Connection} objects.
 
 \begin{figure}[H]
  \centering
@@ -337,12 +331,12 @@ a \texttt{Server\-Document} (4).
 
 The other forwarders are \texttt{Participant\-Forwarder}s (2). They generate
 requests, by using the server-side \texttt{Algorithm} for the corresponding
-participant. The generated request is passed to a 
+participant. The generated request is then passed to a 
 \texttt{Participant\-Connection}.
 
 In figure \ref{fig:collaboration.serverflow} objects processing messages 
 from and to the same participant are aligned vertically. So the
-objects 1, 2, and 5 that are aligned vertically all process messages for
+objects 1, 2, and 5 that are aligned vertically all process messages for/from
 the same participant. One participant is the publisher of the document. 
 \texttt{Participant\-Port} and \texttt{Participant\-Forwarder} assigned to
 process messages from a
@@ -423,8 +417,8 @@ to prevent that the same user joins the session twice.
  \label{fig:collaboration.participantmanager}
 \end{figure}
 
-The method \texttt{get\-Participant\-Id} is used to assign a user a participant
-id. An implementation can assign a user that joins and then leaves the session 
+The method \texttt{get\-Participant\-Id} is used to assign participant
+ids. The implementation assigns a user that joins and then leaves the session 
 the same participant id when he rejoins. The
 \texttt{add\-Participant} method is used to add a participant to the
 session. The \texttt{get\-Participant\-Connection} allows to get the 
@@ -458,9 +452,9 @@ join request is depicted in figure \ref{fig:collaboration.acceptjoinrequest}.
 
 \subsubsection{Failure Handling}
 \label{sect:collaboration.failurehandling}
-The \texttt{Server\-Logic} needs a solid failure handling, otherwise it can
-easily happen that the replicas start to diverge. The interface
-\texttt{Failure\-Handler} is used to handle failures in the server logic. 
+The session server needs a solid failure handling, otherwise it can
+easily happen that the document replicas start to diverge. The interface
+\texttt{Failure\-Handler} is used to handle failures in the session server. 
 
 \begin{figure}[H]
  \centering
@@ -469,16 +463,15 @@ easily happen that the replicas start to diverge. The interface
  \label{fig:collaboration.failurehandler}
 \end{figure}
 
-It is passed to all objects where errors can potentially occur. The failure
-handler is passed to the following places.
-
+The failure handler is passed to the following objects:
 \begin{itemize}
  \item participant ports
  \item \texttt{ParticipantConnectionWrapper}
  \item \texttt{CompositeForwarderImpl}
 \end{itemize}
 
-The \texttt{Server\-Logic\-Impl} implements that interface. The 
+The \texttt{Server\-Logic\-Impl} implements the \texttt{Failure\-Handler}
+ interface. The 
 \texttt{handle\-Failure} method has a participant id parameter. That parameter
 is used to determine to which participant the failure is related. If
 it is a normal participant, that participant is removed from the session
@@ -543,10 +536,11 @@ the event flow around the \texttt{Publisher\-Port\-Impl}.
 
 
 \subsubsection{Failure Handling}
-The participant ports transform incoming requests. If a request cannot
+If a request cannot
 be transformed because it is invalid, the algorithm throws an exception.
-This exception is caught by the participant ports and the participant
-is expelled from the session. First, a participant that sends invalid requests
+This exception is caught by the participant ports and the failure
+handler is notified. This expels the participant from the session. 
+First, a participant that sends invalid requests
 is not an acceptable participant, and second that particular participant
 has an invalid document state. The operation has been applied locally but
 the server rejected the corresponding request. Thus, the document state of
@@ -605,7 +599,7 @@ participant in the session. This type of forwarder generates requests for
 the operations obtained through the \texttt{send\-Operation} method and 
 forwards them to the \texttt{Participant\-Connection} of that particular
 participant. Similarly it generates a \texttt{Caret\-Update\-Message} for
-a \texttt{Caret\-Update}.
+a \texttt{Caret\-Update} passed to the \texttt{send\-Caret\-Update} method.
 
 \begin{figure}[H]
  \centering
@@ -614,7 +608,7 @@ a \texttt{Caret\-Update}.
  \label{fig:collaboration.participantforwarder}
 \end{figure}
 
-The \texttt{Participant\-Forwarder} gets an \texttt{Acknowledge\-Strategy},
+The \texttt{Participant\-Forwarder} also gets an \texttt{Acknowledge\-Strategy},
 which is used to send acknowledge messages by invoking 
 \texttt{send\-Acknowledge} on the \texttt{Participant\-Connection}. 
 See section 
@@ -701,7 +695,7 @@ thread domain is called \emph{outgoing} thread domain.
 As we have shown in the chapter about the algorithm (see chapter 
 \ref{chapter:algorithm}), the processing of requests must be serialized
 at the server. However, sending the transformed requests back to the
-other participants can happen concurrently. The session server can process
+other participants can happen concurrently to processing
 the next request. If we would not ensure that the transformed requests
 are sent concurrently, then a possibly slow network connection could slow
 down the processing of requests at the server and thus the whole session.
@@ -756,13 +750,7 @@ The default implementation of the \texttt{Publisher\-Connection} interface
 is the class \texttt{Published\-Session\-Impl}. 
 
 
-
-\subsection{Usage of ThreadDomains}
-\label{sect:collaboration.threaddomains}
-The server logic uses \texttt{Thread\-Domain}s extensively. To learn about
-\texttt{Thread\-Domain}s read the chapter \ref{chapter:threaddomains}.
-
-\subsubsection{Incoming ThreadDomain}
+\subsection{Incoming Thread Domain}
 As noted above, only one thread may access the server logic transformation
 section at any time. Now, instead of using synchronized statements or
 locks, we use thread domains to ensure that only one thread accesses the
@@ -791,11 +779,12 @@ transformation to be completed.
 In the discussion of the algorithm 
 we have noted that
 the outgoing queues of the \emph{Jupiter} algorithm can 
-grow endless (see section \ref{sect:algorithm.outgoingqueue}). 
+grow endlessly (see section \ref{sect:algorithm.outgoingqueue}). 
 To avoid this situation, a site that does not generate
 requests on its own but receives requests from the other site should acknowledge
 from time to time the messages processed from the other site in order to 
-avoid that the queues get too big. Acknowledge messages are rather simple.
+avoid that the sender's outgoing queue do not get too full. 
+Acknowledge messages are rather simple.
 They consist of the local site id as well as the local timestamp, which is
 used by the other site to discard acknowledged messages from the outgoing
 queue.
@@ -830,7 +819,8 @@ case, the \texttt{reset} method resets the message counter to zero in order
 that the counting starts again from zero once a normal message has been
 sent to the other site.
 
-Another strategy could be based on a timer that fires after 60 seconds during
+Another strategy could be based on a timer that for instance 
+fires after 60 seconds during
 which no messages have been sent. The \texttt{reset} method in that
 case would simple restart the timer.
 
@@ -841,10 +831,10 @@ above. The timer is started as soon as the first message after a
 At the moment, ACE uses the simple message counting based implementation and not
 the more complex and precise combined strategy. The timer based strategy
 alone did not prove to be good enough, because potentially many messages
-can be received in the timeout period.
+can be received within the timeout period.
 
 \texttt{Acknowledge\-Strategy} objects are created by corresponding factories.
-The interface implemented by this factories is named
+The interface implemented by these factories is
 \texttt{Acknowledge\-Strategy\-Factory}.
 
 
@@ -860,8 +850,9 @@ handling of awareness information. This extended interface is called
 \end{figure}
 
 The two additional methods, \texttt{generate\-Caret\-Update\-Message} and \texttt{receive\-Caret\-Update\-Message}, are used to generate messages
-to send updates of the local caret to the session and to receive such updates
-from the session. The two additional objects used are \texttt{Caret\-Update}
+that are used to notify others about the change of the local caret 
+and to receive such changes from other users.
+The two additional objects used are \texttt{Caret\-Update}
 and \texttt{Caret\-Update\-Message}. They correspond to the \texttt{Operation}
 and to the \texttt{Request} interface.
 
@@ -872,6 +863,7 @@ creates a \texttt{Caret\-Update\-Message} object. Receiving a
 following code snippet:
 
 \small{\begin{verbatim}
+  CaretUpdateMessage message = ...;
   int[] indices = algorithm.transformIndices(
                 message.getTimestamp(), 
                 message.getUpdate().getIndices());
@@ -883,7 +875,8 @@ following code snippet:
 
 \subsection{Hosting Session Server}
 Nothing in the design of the whole session server prevents it to be used outside
-of ACE. All incoming requests pass through a \texttt{Participant\-Port}, all
+of the publisher's JVM. 
+All incoming requests pass through a \texttt{Participant\-Port}, all
 outgoing through a \texttt{Participant\-Connection}. So the server logic
 is totally agnostic about the fact that the publisher is running inside
 the same Java Virtual Machine. Through the introduction of few additional
