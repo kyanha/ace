@@ -402,12 +402,72 @@ of the n-way setup.
 
 \subsection{Undo/Redo}
 \label{sect:algorithm.undoredo}
-% TODO: Undo/Redo
-% 
-% responsible: lukas zbinden
-% describe why we could not implement undo/redo with Jupiter
-%
+During the summer break we tried to complete the implementation of undo/redo
+in our \emph{Jupiter} implementation. However, we have stumbled across
+a puzzle we could not solve. In this section, we explain why it was
+not possible to adapt the undo/redo from \emph{adOPTed} to \emph{Jupiter}.
 
+\subsubsection{Order Puzzle 2}
+In the paper about undo for \emph{adOPTed} (\cite{ressel99}) defined
+the so-called order puzzle (example 2). They showed how their proposed
+extension for \emph{adOPTed} can solved that puzzle. Now, we define
+a new order puzzle that can only occur in the n-way setup of \emph{Jupiter}
+when there are more than 2 participants.
+
+Suppose we start with a document state "abc". Now user A deletes
+character a from the document resulting in the document state "bc" at all sites.
+Next, user B deletes character b from the document and last, the user C
+delete character. This leaves us with an empty document state at all sites.
+
+Now, all three users concurrently undo their last operation and send the
+request to the server. The server serializes the processing of requests.
+Let us say that first the undo operation from user A is processed, next
+the undo from user B and last the undo from user C.
+
+Figure \ref{fig:algorithm.undoredopuzzle} shows the server side
+algorithm of user C after processing the undo requests from A and B and just
+before processing the undo request from user C.
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=5.79cm,height=4.10cm]{../images/finalreport/algorithm_undopuzzle.eps}
+ \caption{Order puzzle with three participants}
+ \label{fig:algorithm.undoredopuzzle}
+\end{figure}
+
+The insert operation \texttt{Ins(0,c)} must be transformed from the state
+vector \texttt{(2,1)} to the current state vector of the algorithm
+\texttt{(4,1)} to get the transformed operation \texttt{Ox} that can
+be applied to the current document state. 
+Normally in situations where there are concurrent undo
+requests, we would apply the mirror and fold operators as described
+in the \emph{Implementation Report Algorithm} section 2.3.2.
+However, in the given situation we have two intertwined undo requests. A
+situation in which we cannot apply mirror and fold. This can happen only
+if there are more than two concurrent undo requests.
+
+The root of the problem stems from the fact that on the server, the
+n-way setup of \emph{Jupiter} reduces the dimension of the system from
+n (the number of participants) to two for 
+each algorithm (as a basic \emph{Jupiter}
+algorithm can only handle two sites). However, this reduction results in
+an information loss. Namely, we no longer know which requests are from
+which participant. This hinders the application of the mirror and fold
+operators.
+
+\subsubsection{Possible Solution}
+The only simple and clean way to solve that problem that we found with our
+limited research of the problem is to avoid that reduction altogether and
+work with n-dimensions in the state space. The \emph{Jupiter} algorithm
+extended to use an n-dimensional state space is the algorithm
+known as \emph{adOPTed}.
+
+\subsubsection{Decision}
+Short of implementing \emph{adOPTed} we did not see any way to solve
+this order puzzle. Implementing \emph{adOPTed} with undo/redo proved to
+be poorly documented, so an implementation would be a high risk for the
+overall success of the project. Thus, we decided to drop undo/redo support in 
+ACE.
 
 
 \section{Implementation}
