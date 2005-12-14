@@ -20,21 +20,83 @@ At the bottom of the application is the status bar that simple contains a label 
 % COMPONENTS
 \section{Components}
 \label{applicationlayer_components}
+
 % FRAME
 \subsection{Frame}
-
+The main frame of the application layer is based in a \texttt{PersistentFrame} (not yet full implemented). A persistent frame is a simple \texttt{JFrame} that saves the last position and size. Each time an application is started, the frame has the same position like last time before the application has terminated. Its possible to set a \textit{JMenuBar}, a \textit{JToolBar}, a status bar \textit{JPanel} and the content (\textit{JPanel}). Further, the \texttt{PersistentFrame} has a \textit{windows listener} to catch the windows closing event and forward it to an \textit{exit action}.
 
 % MENU
 \subsection{Menu}
+The menu of the application layer is basically a \textit{JMenuBar} containing \textit{JMenu} entries. Each \textit{JMenu} has one or more \textit{AbstractAction} and \textit{JSeparator}. The following figure illustrates how it is built up:
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[height= 2.08in, width= 4.85in]{../images/finalreport/application_menu.eps}
+\caption{Collaborative Editor Class Diagram}
+\label{application_menu}
+\end{center}
+\end{figure}
+This menu is created by the method \texttt{createMenuBar()} in the \textit{ApplicationFactory} (see section \ref{applicationlayer_applicationfactory}):
+\begin{verbatim}
+  public JMenuBar createMenuBar() {
+    JMenuBar menuBar = new JMenuBar();
+
+    JMenu m1 = new JMenu("Menu 1");
+    m1.add(...);        // add actions for menu 1
+    menuBar.add(m1);    // add menu 1 to the menubar
+    
+    JMenu m2 = new JMenu("Menu 2");
+    m2.add(...);        // add actions for menu 2
+    menuBar.add(m2);    // add menu 2 to the menubar
+    
+    return menuBar;
+  }
+\end{verbatim}
 
 % TOOLBAR
 \subsection{Toolbar}
+Toolbars are used to make the most used functions (actions) comfortably operated. The application layer uses a \textit{JToolBar} for this purpose. Its created by the \textit{ApplicationFactory} in the method \textit{createToolBar()}:
+\begin{verbatim}
+  public JToolBar createToolBar() {
+    JToolBar toolBar = new JToolBar();
+    toolBar.setFloatable(false);   // make it impossible to drag the toolbar
+    toolBar.setRollover(true);
+
+    toolBar.add(...);   // add actions to toolbar
+
+    return toolBar;
+  }
+\end{verbatim}
 
 % VIEWS
 \subsection{Views \& View Controllers}
+This section gives an overview of all the used \textit{views} and how they are managed by the \textit{view controllers}. The figure \ref{application_views_controllers} show the class diagram from the view's and the controller's. NOTE: the shortcut \textit{ISC} stands for \textit{ItemSelectionChange}.
 \subsubsection{Overview}
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[height=5.62in, width=7.19in]{../images/finalreport/application_views_controllers.eps}
+\caption{Collaborative Editor Class Diagram}
+\label{application_views_controllers}
+\end{center}
+\end{figure}
+Each view has its own controller (e.g. a \textit{BrowseView} has a \textit{BrowseViewController}). View controllers are managing the data source of the views and are needed to insert, remove or replace elements. The view only displays the elements from the data source. Moreover, a view returns the current selected element to the view controller. The construction of the view and the corresponding controller needs the following steps:
+\begin{enumerate}
+\item create the view controller
+\item create the view (code fragment from the contructor of \texttt{ViewImpl}):
+  \begin{verbatim}
+    public ViewImpl(ViewController controller, ...) {
+      controller.setView(this);
+      addItemSelectionChangeListener(controller);
+    }
+  \end{verbatim}
+  After the view has been created, the the view is registered by its controller (\texttt{controller.setView(this)}) and the controller receives the \texttt{ItemSelectionChangeEvent} if the selection has changed on the view.
+\end{enumerate}
+The next sections gives an overview of details each of the four different views.
+
+
 \subsubsection{Document View}
 \subsubsection{Browse View}
+
+
 \subsubsection{User View}
 \subsubsection{Participant View}
 
@@ -45,11 +107,10 @@ At the bottom of the application is the status bar that simple contains a label 
 \subsection{Editor}
 This section gives an overview of all components needed for the collaborative editor. The following figure shows the class diagram:
 \begin{figure}[H]
-\begin{center} \frame{
+\begin{center}
   \includegraphics[height=5.25in, width=5.55in]{../images/finalreport/application_editor.eps}
-  }
 \caption{Collaborative Editor Class Diagram}
-\label{default}
+\label{application_editor}
 \end{center}
 \end{figure}
 
@@ -223,6 +284,7 @@ When inserting text into a text component and setting the caret position asynchr
 \subsection{Other}
 \subsubsection{Application Controller}
 \subsubsection{Application Factory}
+\label{applicationlayer_applicationfactory}
 \subsubsection{Dialog Controller}
 \subsubsection{Persistent Content Pane}
 
