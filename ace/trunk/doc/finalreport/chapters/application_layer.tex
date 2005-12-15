@@ -90,7 +90,7 @@ Each view has its own controller (e.g. a \textit{BrowseView} has a \textit{Brows
   \end{verbatim}
   After the view has been created, the the view is registered by its controller (\texttt{controller.setView(this)}) and the controller receives the \texttt{ItemSelectionChangeEvent} if the selection has changed on the view.
 \end{enumerate}
-To keep the displayed list elements up to date \textit{Glazed Lists} (see \ref{...} for more details) are used. \textit{Glazed Lists} providing \textit{EventLists} which are observing their elements. If such an element changes a property (and fires a \texttt{firePropertyChange(...)}) the list will automatically be updated and you dont have to care about that yourself.
+To keep the displayed list elements up to date \textit{Glazed Lists} (see section \ref{appendix_frameworks_glazedlists} for more details) are used. \textit{Glazed Lists} providing \textit{EventLists} which are observing their elements. If such an element changes a property (and fires a \texttt{firePropertyChange(...)}) the list will automatically be updated and you dont have to care about that yourself.
 
 The next sections are giving an overview of details from the four different views.
 
@@ -98,7 +98,7 @@ The next sections are giving an overview of details from the four different view
 The document view is used to display the current open documents. A current open document can either be a local document (new or existing document on the local machine), a published document (a local document that has been published) or a joined document published by another user. All needed information for documents are nested into \textit{DocumentItems}. The most important attributes of document items are:
 \begin{itemize}
 \item Type: the type decides for what kind of document the document item is needed (e.g. local, published, remote, joined document).
-\item Editor Document: the styled document (\ref{applicationlayer_collabdocument}) that is displayed in the text component.
+\item Editor Document: the styled document (see section \ref{applicationlayer_collabdocument}) that is displayed in the text component.
 \item If the type is remote or shared: the \textit{Session} and \textit{SessionCallback} are referenced to send and receive \textit{Operations}.
 \end{itemize}
 \begin{figure}[H]
@@ -152,14 +152,8 @@ In case that there are a lot of users with a lot of published documents in a net
   };
 \end{verbatim}
 
-
-
-
-
-
-
 \subsubsection{User View \& Controller}
-The user view displays all other users running ACE in the same network. The user controller ...
+The user view displays all other users running ACE in the same local area network. The user controller receives a notification from the \textit{UserListener} whenever a user has been discovered or discarded. On this way he manages the list of users the \textit{User View} is displaying.
 \begin{figure}[H]
 \begin{center}
   \includegraphics[height=3.33in, width=5.62in]{../images/finalreport/application_userview.eps}
@@ -167,8 +161,19 @@ The user view displays all other users running ACE in the same network. The user
 \label{application_userview}
 \end{center}
 \end{figure}
+For finding fast a single user out of the rest the \textit{User View} has a filter. The filter is based on the text entered into a textfield and compares that to the usernames:
+\begin{verbatim}
+  JTextField userFilterField = new JTextField();
+  TextFilterator userFilterator = new TextFilterator() {
+    public void getFilterStrings(List baseList, Object element) {
+      UserItem item = (UserItem)element;
+      baseList.add(item.getName());
+    }
+  };
+\end{verbatim}
 
 \subsubsection{Participant View \& Controller}
+At the moment a document is published, a list of participants i created. At the beginning only the publisher himself is in this list.  For each user joining the document, a new \textit{ParticipantItem} is created and added to the list. The \textit{ParticipantItem} contains the name of the participant and the color needed to highlight his text. The \textit{Participant View} displays all these \textit{ParticipantItems} of a session.
 \begin{figure}[H]
 \begin{center}
   \includegraphics[height=2.15in, width=5.62in]{../images/finalreport/application_participantview.eps}
@@ -176,11 +181,54 @@ The user view displays all other users running ACE in the same network. The user
 \label{application_participantview}
 \end{center}
 \end{figure}
+Each published document has its own list of participants which needs to be set in the \textit{Participant View Controller} when the current displayed document changes.
+\begin{verbatim}
+  public void setParticipantList(EventList participantList) {
+    // remove old participant list if there is one
+    if (memberList != null) {
+      participantSourceList.removeMemberList(memberList);
+    }
 
-
+    // add new participant list    
+    this.memberList = participantList;
+    participantSourceList.addMemberList(participantList);
+  }
+\end{verbatim}
 
 % ACTIONS
 \subsection{Actions}
+All actions used by the application layer are subclasses of the java \textit{AbstractAction}. They have a \textit{name}, an \textit{icon} and optional a \textit{shortcut} and a \textit{tooltip}. The \textit{name} and the \textit{icon} can be forwarded to the superclass, how to set the \textit{shortcut} and the \textit{tooltip} is shown in the following code fragment:
+\begin{verbatim}
+  // somewhere in costructor (shortcut = CTRL + X)
+  putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke('X',
+    Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+
+  putValue(SHORT_DESCRIPTION, "Tooltip text here...");
+\end{verbatim}
+Most of the actions are depending on the selection of the \textit{Document View}. This leads to the \textit{DocumentItemSelectionChangeAction} class:
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[height=3.97in, width=3.85in]{../images/finalreport/application_action.eps}
+\caption{DocumentItemSelectionChangeAction Class Diagramm}
+\label{application_ application_action}
+\end{center}
+\end{figure}
+This class handles the registration of the action to the \textit{ItemSelectionChangeListener} of  the \textit{Document View Controller}.
+\begin{verbatim}
+  public abstract class DocumentItemSelectionChangeAction
+    extends AbstractAction implements ItemSelectionChangeListener {
+  
+    public DocumentItemSelectionChangeAction(String name, Icon icon,
+          DocumentViewController viewController) {
+      super(name, icon);
+      viewController.addItemSelectionChangeListener(this);
+    }
+    
+    public abstract void itemSelectionChanged(ItemSelectionChangeEvent e);
+  }
+\end{verbatim}
+
+
 
 % EDITOR
 \subsection{Editor}
@@ -379,7 +427,7 @@ When inserting text into a text component and setting the caret position asynchr
 All the startup processes for ACE are defined in the main method from the class \textit{Main.java}:
 \begin{description}
 \item[1. Load Customizer ] The first step is to get the customizers. Customizers are used to create operating system based stuff like setting the look \& feel of the application.
-\item[2. Load ApplicationContext ] After the customizer has been loaded, the spring application context (see \ref{} for more details about spring) needs to be loaded.
+\item[2. Load ApplicationContext ] After the customizer has been loaded, the spring application context (see \ref{appendix_frameworks_spring} for more details about spring) needs to be loaded.
 \item[3. Get ApplicationFactory ] The application factory is used to create all GUI components.
 \item[4. Get ApplicationController ]  
 \item[5. Get CollaborationService ] 
@@ -392,5 +440,19 @@ All the startup processes for ACE are defined in the main method from the class 
 
 % ACTION ENABLING
 \subsection{Enabling of Actions}
-It is important for the user-friendliness to enabled or disable actions in the GUI. The enabling of most of the actions depends on selection criteria of the views. For example the \textit{close document} action should be only enabled if a document is selected in the \textit{Document View}.
+It is important for the user-friendliness to enabled or disable actions in the GUI. The enabling of most of the actions depends on selection criteria of the views. For this pupose actions can add themself to the \textit{ItemSelectionChangeListener} of a view and receiving \textit{ItemSelectionChangedEvents}.  For example the \textit{close document} action should be only enabled if a document is selected in the \textit{Document View}:
+\begin{verbatim}
+  // somewhere in the constructor
+  documentView.addItemSelectionChangeListener(this);
+
+  public void itemSelectionChanged(ItemSelectionChangeEvent e) {
+    if(e.getItem() == null) {
+      // no document is selected
+      setEnabled(false);
+    } else {
+      // a document is selected
+      setEnabled(true);
+    }
+  }
+\end{verbatim}
 
