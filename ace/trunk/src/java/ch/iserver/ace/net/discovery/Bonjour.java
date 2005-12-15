@@ -169,8 +169,10 @@ public class Bonjour implements Discovery {
 	 * {@inheritDoc}
 	 */
 	public void abort() {
+		LOG.debug("--> abort()");
 		registration.stop();
 		peerDiscovery.stop();
+		LOG.debug("<-- abort()");
 	}
 	
 	/**

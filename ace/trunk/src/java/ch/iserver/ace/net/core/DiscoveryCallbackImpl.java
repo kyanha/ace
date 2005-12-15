@@ -128,15 +128,18 @@ public class DiscoveryCallbackImpl implements DiscoveryCallback {
 		LOG.debug("--> userDiscarded("+proxy+")");
 		
 		Map documents = proxy.getDocuments();
-		RemoteDocumentProxy[] docs = null;
-		synchronized(documents) {
-			docs = (RemoteDocumentProxy[]) documents.values().toArray(new RemoteDocumentProxy[0]);
+		if (documents.size() > 0) {
+			RemoteDocumentProxy[] docs = null;
+			synchronized(documents) {
+				docs = (RemoteDocumentProxy[]) documents.values().toArray(new RemoteDocumentProxy[0]);
+			}
+			if (docs != null && docs.length > 0) {
+				callback.documentDiscarded(docs);
+			}
 		}
-		
-		if (docs != null && docs.length > 0) {
-			callback.documentDiscarded(docs);
-		}
+		LOG.debug("--> notifiy upper layer about user");
 		callback.userDiscarded(proxy);
+		LOG.debug("<-- ok.");
 		
 		DiscoveryManager manager = DiscoveryManagerFactory.getDiscoveryManager();
 		String userId = proxy.getId();
