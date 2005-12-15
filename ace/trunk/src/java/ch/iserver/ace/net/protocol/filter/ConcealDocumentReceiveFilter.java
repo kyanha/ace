@@ -54,7 +54,9 @@ public class ConcealDocumentReceiveFilter extends AbstractRequestFilter {
 			if (doc != null) {
 				NetworkServiceCallback callback = NetworkServiceImpl.getInstance().getCallback();
 				RemoteDocumentProxy[] docs = new RemoteDocumentProxy[] { doc };
+				LOG.debug("--> notifiy upper layer");
 				callback.documentDiscarded(docs);
+				LOG.debug("<-- ok.");
 			} else {
 				LOG.warn("document to be concealed not found [" + info.getDocId() + "]");
 			}

@@ -30,8 +30,6 @@ import org.beepcore.beep.core.Session;
 import org.beepcore.beep.core.StartChannelException;
 import org.beepcore.beep.core.StartChannelListener;
 
-import ch.iserver.ace.util.ParameterValidator;
-
 /**
  *
  */
