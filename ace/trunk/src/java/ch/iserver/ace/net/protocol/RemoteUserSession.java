@@ -34,6 +34,7 @@ import org.beepcore.beep.core.Channel;
 import org.beepcore.beep.core.OutputDataStream;
 import org.beepcore.beep.core.ProfileRegistry;
 import org.beepcore.beep.core.RequestHandler;
+import org.beepcore.beep.core.Session;
 import org.beepcore.beep.lib.Reply;
 import org.beepcore.beep.transport.tcp.TCPSession;
 import org.beepcore.beep.transport.tcp.TCPSessionCreator;
@@ -304,7 +305,7 @@ public class RemoteUserSession {
 	 */
 	public synchronized void close() {
 		LOG.debug("--> close()");
-		if (session != null) {
+		if (session != null && session.getState() == Session.SESSION_STATE_ACTIVE) {
 			try {
 				mainConnection.close();
 				session.close();
