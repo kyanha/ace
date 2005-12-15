@@ -210,7 +210,7 @@ Most of the actions are depending on the selection of the \textit{Document View}
 \begin{center}
   \includegraphics[height=3.97in, width=3.85in]{../images/finalreport/application_action.eps}
 \caption{DocumentItemSelectionChangeAction Class Diagramm}
-\label{application_ application_action}
+\label{application_application_action}
 \end{center}
 \end{figure}
 This class handles the registration of the action to the \textit{ItemSelectionChangeListener} of  the \textit{Document View Controller}.
@@ -410,11 +410,30 @@ When inserting text into a text component and setting the caret position asynchr
 
 % OTHER
 \subsection{Other}
-\subsubsection{Application Controller}
+% APPLICATION FACTORY
 \subsubsection{Application Factory}
 \label{applicationlayer_applicationfactory}
+To build the GUI (see section \ref{applicationlayer_wf_startup}) the \textit{Application Factory} is needed besides of \textit{Spring} (see section \ref{appendix_frameworks_spring}). It provides methods to create the \textit{Menu Bar}, the \textit{Tool Bar}, the \textit{Persistant Component Pane} and the \textit{Status Bar}.
+
+% APPLICATION CONTROLLER
+\subsubsection{Application Controller}
+All functions that may need to show a dialog for user inputs or for error displaying are handled within the \textit{Application Controller}. Some functions like for example \texttt{closeDocument()} need to do some checks before they open a dialog and other functions like \textit{showAbout()} directly popup the required dialog. To show dialogs the \textit{Dialog Controller} (\ref{applicationlayer_dialogcontroller}) is used.
+
+% DIALOG CONTROLLER
 \subsubsection{Dialog Controller}
+\label{applicationlayer_dialogcontroller}
+
+% PERSISTENT CONTENT PANE
 \subsubsection{Persistent Content Pane}
+The \textit{Persistent Content Pane} is the container for all \textit{Views} and the \textit{Editor} component. It is a \textit{JPanel} containing several \textit{split panes} to make the GUI components resizable (see figure \ref{application_splitpane}).
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[height=4.19in, width=6.69in]{../images/finalreport/application_splitpane.eps}
+\caption{Persistent SplitPane}
+\label{application_splitpane}
+\end{center}
+\end{figure}
+The special method \texttt{switchFullScreenEditing()} maximizes the \textit{Editor} and minimizes all other components. For the usage of this feature see \textit{User Manual, Section Editor}.
 
 
 
@@ -424,6 +443,7 @@ When inserting text into a text component and setting the caret position asynchr
 
 % STARTUP
 \subsection{Startup}
+\label{applicationlayer_wf_startup}
 All the startup processes for ACE are defined in the main method from the class \textit{Main.java}:
 \begin{description}
 \item[1. Load Customizer ] The first step is to get the customizers. Customizers are used to create operating system based stuff like setting the look \& feel of the application.
