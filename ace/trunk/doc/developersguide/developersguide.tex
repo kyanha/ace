@@ -108,10 +108,10 @@ any version greater or equal than 1.4.2 should be fine.
 \subsection{Apache Ant}
 ACE uses Apache Ant (see \href{http://ant.apache.org/}{http://ant.apache.org/})
 to build the application. If you have not installed Ant, download and install
-it from the above URL. We recomment that you download the latest stable
-version of Ant. At the time of writing this is \texttt{1.6.5}.
+it from the above URL. We recommend that you download the latest stable
+version of Ant. At the time of writing this is version \texttt{1.6.5}.
 Further, we use a special Ant task to download the
-dependency jar files used by ACE. 
+dependency jar files used by ACE (see next section). 
 These libraries are not stored in the Subversion repository.
 
 
@@ -119,8 +119,7 @@ These libraries are not stored in the Subversion repository.
 Maven 2.0 now comes with a set of Ant tasks that can be used to use Maven's
 artifact handling features from within Ant. This includes most notably the
 \emph{transitive dependency management} of Maven 2.0. You can
-download these Ant tasks from \\
-\href{http://maven.apache.org/download.html}{http://maven.apache.org/download.html}.
+download these Ant tasks from \href{http://maven.apache.org/download.html}{http://maven.\-apache.\-org/\-download.\-html}.
 
 \subsubsection{Installation}
 To install the Maven Ant tasks you have to do the following:
@@ -263,6 +262,7 @@ The \texttt{src} folder contains the sources of the project.
  \item \texttt{stubs}: stub classes for testing purpose
  \item \texttt{test}: JUnit tests
  \item \texttt{test-app}: test applications
+ \item \texttt{windows}: windows customization and installer
 \end{itemize}
 
 
@@ -271,7 +271,7 @@ The \texttt{doc} folder contains the sources of the project:
 
 \begin{itemize}
  \item \texttt{developersguide}: the \LaTeX{} sources of the developers guide
- \item \texttt{finalreport}: thd \LaTeX{} sources of the final report
+ \item \texttt{finalreport}: the \LaTeX{} sources of the final report
  \item \texttt{images}: images for the documentation
  \item \texttt{latex}: \LaTeX{} templates
  \item \texttt{projectmanual}: the \LaTeX{} sources of the project manual
@@ -362,7 +362,7 @@ directory \texttt{/build/api}.
 \subsection{Creating a Distribution}
 The Ant target \texttt{dist} creates a \texttt{tar.gz} file containing the
 sources, the javadoc, and all the necessary jar files into the directory
-\texttt{/dist}. Further it builds some the Mac OS X application bundle if
+\texttt{/dist}. Further it builds the Mac OS X application bundle if
 you run that target on an OS X machine.
 
 
@@ -385,9 +385,7 @@ utility only available on OS X and second, the customization Java code
 for OS X relies on Apple Java extensions, which are not available on
 other systems.
 
-The resulting disk image is placed in the \texttt{dist} folder. The disk
-image can be mounted on Mac OS X. The disk image contains
-the application bundle.
+The resulting disk image, which can be mounted in Mac OS X, is placed in the \texttt{dist} folder. It contains the application bundle.
 
 \subsubsection{Application Bundles}
 On Mac OS X, an application is basically a folder containing a specialized
@@ -423,8 +421,8 @@ targets:
 
 The OS X build requires a custom Ant task called \texttt{EnhancerTask}. 
 This task determines all the needed
-dependency libraries from a fileset. It allows further to exclude some
-unwanted dependencies, for instance JUnit libraries, by specifying excludes.
+dependency libraries from a fileset. Further, it allows to exclude some
+unwanted entries from the fileset, for instance JUnit libraries.
 This task is needed because we define dependencies as Maven Ant task
 dependencies. A dependency can have additional dependencies, which in turn
 can have dependencies, and so on. The dependency declaration from 
