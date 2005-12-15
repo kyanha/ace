@@ -55,11 +55,6 @@ import ch.iserver.ace.util.ParameterValidator;
 class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager {
 	
 	private static Logger LOG = Logger.getLogger(DiscoveryManagerImpl.class);
-
-	/**
-	 * The encoding to URL-encode the service names
-	 */
-	private static final String URL_ENCODING = "UTF-8";
 	
 	/**
 	 * The DiscoveryCallback instance 
@@ -78,7 +73,7 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 	 * a correct assignment of the received data to the respective user.
 	 * The service name is unique too.
 	 */
-	private Map services;				//service name (URL encoded) to id
+	private Map services;				//service name to id
 	
 	/**
 	 * A map that contains all remote user proxies with whom the local user has 
@@ -241,11 +236,8 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 		
 		MutableUserDetails details = new MutableUserDetails(username);
 		details.setPort(port);
-		try {
-			services.put(URLEncoder.encode(serviceName, URL_ENCODING), userId);
-		} catch (UnsupportedEncodingException uee) {
-			LOG.error(uee);
-		}
+		
+		services.put(serviceName, userId);
 		RemoteUserProxyExt user = getUser(userId);
 		if (user == null) { //add user
 			user = RemoteUserProxyFactory.getInstance().createProxy(userId, details);
@@ -264,11 +256,6 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 	 */
 	public void userDiscarded(String serviceName) {
 		if (serviceName != null) {
-			try { 
-				serviceName = URLEncoder.encode(serviceName, URL_ENCODING);
-			} catch (UnsupportedEncodingException uee) {
-				LOG.error(uee);
-			}
 			String userId = (String)services.remove(serviceName);
 			if (userId != null) {
 				discardUser(userId);
@@ -287,11 +274,6 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 		ParameterValidator.notNull("serviceName", serviceName);
 		ParameterValidator.notNull("userName", userName);
 		
-		try { 
-			serviceName = URLEncoder.encode(serviceName, URL_ENCODING);
-		} catch (UnsupportedEncodingException uee) {
-			LOG.error(uee);
-		}
 		String userId = (String)services.get(serviceName);
 		if (userId != null) {
 			RemoteUserProxyExt proxy = getUser(userId);
@@ -312,11 +294,6 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 		ParameterValidator.notNull("serviceName", serviceName);
 		ParameterValidator.notNull("address", address);
 		
-		try { 
-			serviceName = URLEncoder.encode(serviceName, URL_ENCODING);
-		} catch (UnsupportedEncodingException uee) {
-			LOG.error(uee);
-		}
 		String userId = (String)services.get(serviceName);
 		if (userId != null) {
 			RemoteUserProxyExt proxy = getUser(userId);
@@ -336,11 +313,6 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 	 * @see ch.iserver.ace.net.discovery.DiscoveryCallbackAdapter#isServiceKnown(java.lang.String)
 	 */
 	public boolean isServiceKnown(String serviceName) {
-		try { 
-			serviceName = URLEncoder.encode(serviceName, URL_ENCODING);
-		} catch (UnsupportedEncodingException uee) {
-			LOG.error(uee);
-		}
 		return services.containsKey(serviceName);
 	}
 
