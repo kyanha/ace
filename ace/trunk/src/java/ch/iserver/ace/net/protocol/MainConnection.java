@@ -54,7 +54,8 @@ public class MainConnection extends AbstractConnection {
 	public void close() {
 		LOG.debug("--> close()");
 		try {
-			if (getState() == STATE_ACTIVE) {
+			//request handler != null means that no closeChannel event has been received for that channel
+			if (getState() == STATE_ACTIVE && getChannel().getRequestHandler() != null) {
 				//consider if there could be other states upon which a close() should be done
 				getChannel().close();
 			}
