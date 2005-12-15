@@ -5,13 +5,9 @@
 
 \section{General}
 When we decided which technology to use to implement the network layer, we did
-not have a complex prototype based on the chosen technology. \emph{Bonjour}
-itself proved to be a good choice, however the \emph{Beepcore} Java library had 
-some bugs that caused serious problems in the implementation. We could have
-avoided that situation by implementing a prototype that would have used
-the framework in a similar manner as ACE. Thus, we learned that it is
-always a good idea to make some thorough tests before using a framework
-in a project.
+not have a advanced prototype based on the chosen technology. \emph{Bonjour}
+itself proved to be a good choice since many companies use it for printer discovery, however the \emph{Beepcore} Java library had some bugs that caused serious problems in the implementation. We could have avoided that situation by implementing a prototype that would have used
+the framework in a similar manner as ACE. Thus, we learned that it is always a good idea to make some thorough tests before using a framework in a project.
 
 
 
@@ -61,14 +57,19 @@ without access to the real network).
 
 
 \section{Lukas Zbinden}
-Intro...
+In retrospect, the whole project was a great experience. The complete freedom how to develop such an extended system was highly appreciated. The layering of the application allowed more or less independent working from the other team members and this proved very useful. Even though problems arose with the test runnings of the application where the network implementation was not as far as the GUI implementation and thus errors occured in the network layer. So concentrated development work was sometimes disturbed. We should have decoupled the layers completely for the development (e.g. by use of a network simulator). This means not only for programming (which we actually did through the usage of interfaces) but also for the runtime of the application.
+
+
 \subsection{Positive Points}
 \begin{itemize}
-\item ...
+\item great experience and very interesting stuff
+\item planned goals were achieved
+\item once more programming against clearly defined interfaces to decouple components proved successful
 \end{itemize}
 
 \subsection{Negative Points}
 \begin{itemize}
-\item ...
+\item testing of the application: the network layer was not approved to be used for testing but nevertheless was used due to the close coupling at runtime. This ended up in unnecessary error discussions which mostly only consumed time.
+\item we used a library which turned out to have weaknesses and that resulted in unexepected time consuming workarounds. Learned lesson: be more careful when choosing libraries with a low development version.
 \end{itemize}
 
