@@ -32,7 +32,7 @@ pdfcreator={pdftex},
 % 1. INTRO
 \section{Introduction}
 
-The \emph{User Manual} contains information about how to install and use the application ACE. 
+The \textit{User Manual} contains information about how to install and use the application ACE. 
 
 
 
@@ -73,7 +73,7 @@ Chances are high that if there is a Java Runtime Environment for your operating 
 \item download the source code
 \item unpack the downloaded tar.gz to a location of your choice
 \item go to the subdirectory \texttt{mDNSPosix}
-\item in the Makefile, adjust the variable \emph{JDK} to point to the correct JDK location
+\item in the Makefile, adjust the variable \textit{JDK} to point to the correct JDK location
 \item type make \texttt{os=linux} to build the \texttt{mDNSResponder}
 \item as root user, type \texttt{make os=linux install} to install the \texttt{mDNSResponder} daemon
 \item now, the daemon needs to be started by running the startup script \texttt{/etc/init.d/mdns start} as root
@@ -126,7 +126,7 @@ The menus (see figure \ref{ace_overview}) are needed to operate the editor. Each
 The toolbar (see figure \ref{ace_overview}) contains the most used actions.
 \begin{figure}[H]
 \begin{center}
-  \includegraphics[height=1.74in, width=1.96in]{../images/usermanual/g_toolbar.eps}
+  \includegraphics[height=1.9in, width=2.1in]{../images/usermanual/g_toolbar_new.eps}
 \caption{ACE Toolbar}
 \label{ace_toolbar}
 \end{center}
@@ -134,7 +134,7 @@ The toolbar (see figure \ref{ace_overview}) contains the most used actions.
 
 % 3.3 EDITOR
 \subsection{Editor}
-The editor (see figure \ref{ace_overview}) is the main component of ACE. It displays the text of your documents. There is a simple but very usefull feature to gain more writing space. Press the button (marked red in the figures below) or double click with your mouse on the editor title (top bar of the editor) to toggle between normal and full screen editing mode.
+The editor (see figure \ref{ace_overview}) is the main component of ACE. It displays the text of your documents. There is a simple but very useful feature to gain more writing space. Press the button (marked red in the figures below) or double click with your mouse on the editor title (top bar of the editor) to toggle between normal and full screen editing mode.
 
 \begin{figure}[H]
 \begin{center}
@@ -154,14 +154,14 @@ The editor (see figure \ref{ace_overview}) is the main component of ACE. It disp
 
 % 3.4 VIEWS
 \subsection{Views}
-ACE has four views, which are arranged around the editor. The document view helps you to manage your open documents. The user view displays all other users running ACE in your network. The browse view shows their documents and if you are writing with other users in the same document you see all the participants of the current session in the participant view.
+ACE has four views, which are arranged around the editor. The \textit{Document View} helps you to manage your open documents. The \textit{User View} displays all other users running ACE in your network. The \textit{Browse View} shows their documents and if you are writing with other users in the same document you see all the participants of the current session in the \textit{Participant View}.
 
 Moreover each view has a toolbar which is placed at the right side in the border at the top. This toolbar contains the most used actions corresponding to the view.
 
 
 % 3.4.1 DOCUMENT VIEW
 \subsubsection{Document View}
-The \emph{Document View} shows all your currently open documents. Basically there are two different document types. \emph{Local documents} are documents on your local machine. ACE provides the standard actions to manage the local documents such as create new, open, save and close documents. Further, you can publish (see \ref{publish_conceal_documents}) your local documents to make it accessible to other users. \emph{Joined documents} are documents published by other users which you have joined. See \ref{join_leave_documents} for more informations about joining documents.
+The \textit{Document View} shows all your currently open documents. Basically there are two different document types. \textit{Local documents} are documents on your local machine. ACE provides the standard actions to manage the local documents such as \textit{create new}, \textit{open}, \textit{save} and \textit{close} documents. Further, you can publish (see \ref{publish_conceal_documents}) your local documents to make it accessible to other users. \textit{Joined documents} are documents published by other users which you have joined. See \ref{join_leave_documents} for more informations about joining documents.
 
 \begin{figure}[H]
 \begin{center}
@@ -171,7 +171,7 @@ The \emph{Document View} shows all your currently open documents. Basically ther
 \end{center}
 \end{figure}
 
-Different images for each document type makes them well distinguishable (from left to right: local, published \& remote icon):
+Different images for each document type makes them well distinguishable (from left to right, icon for the document types: local, published \& remote):
 
 \begin{figure}[H]
 \begin{center}
@@ -187,7 +187,7 @@ Different images for each document type makes them well distinguishable (from le
 
 % 3.4.2 USER VIEW
 \subsubsection{User View}
-The \emph{User View} shows all other users currently using ACE on your network. The view has an action to invite (see section \ref{invite_kick_users}) other users to your published documents.
+The \textit{User View} shows all other users currently using ACE on your local area network (LAN). The view has an action to invite (see section \ref{invite_kick_users}) other users to your published documents.
 
 \begin{figure}[H]
 \begin{center}
@@ -197,7 +197,7 @@ The \emph{User View} shows all other users currently using ACE on your network. 
 \end{center}
 \end{figure}
 
-To avoid a complex list with usernames you can use the user view filter. Typing full usernames or parts of it into the textfield below excludes all users that do not match the filter.
+To avoid a crowded list with usernames you can use the \textit{User View} filter. Typing full usernames or parts of it into the textfield below excludes all users that do not match the filter.
 
 \begin{figure}[H]
 \begin{center}
@@ -209,7 +209,7 @@ To avoid a complex list with usernames you can use the user view filter. Typing 
 
 % 3.4.3 BROWSE VIEW
 \subsubsection{Browse View}
-The \emph{Browse View} contains a list with all published documents that can be found on the network. Each list entry contains the document title and the name of the publisher. You need this list to join (see section \ref{join_leave_documents}) published documents.
+The \textit{Browse View} contains a list with all published documents that can be found on the local area network. Each list entry contains the document title and the name of the publisher. You need this list to join (see section \ref{join_leave_documents}) published documents.
 
 \begin{figure}[H]
 \begin{center}
@@ -231,7 +231,7 @@ The filtering function helps you to find documents from a specified user. Simply
 
 % 3.4.4 PARTICIPANT VIEW
 \subsubsection{Participant View}
-When you publish or join a network document you can see a list of all participants in the \emph{Participant View}. Each participant has his own color which is showed on the right side of his username. These colors are used to highlight the text and to draw the cursor or selection of the corresponding participant. If you are the owner of the document you can select a participant and kick (see section \ref{invite_kick_users}) him from the current document.
+When you publish or join a network document you can see a list of all participants in the \textit{Participant View}. Each participant has his own color which is showed on the right side of his username. These colors are used to highlight the text and to draw the cursor or selection of the corresponding participant. If you are the owner of the document you can select a participant and kick (see section \ref{invite_kick_users}) him from the current document.
 
 \begin{figure}[H]
 \begin{center}
@@ -244,7 +244,7 @@ When you publish or join a network document you can see a list of all participan
 
 % 3.6 PREFERENCES
 \subsection{Preferences}
-The preference dialog can be found in the file menu (menu name \emph{Settings}). You need it to change you current settings like user name, the font size or the default encoding. The encoding is only used to load and save documents. The default encoding used is ISO-8859-1.
+The preference dialog can be found in the file menu (menu name \textit{Settings}). You need it to change your current settings like user name, the font size or the default encoding. The encoding is only used to load and save documents. The default encoding is ISO-8859-1.
 
 \begin{figure}[H]
 \begin{center}
@@ -264,7 +264,7 @@ The preference dialog can be found in the file menu (menu name \emph{Settings}).
 
 % 3.7 ABOUT
 \subsection{About}
-The about dialog shows you the version number of your current ACE installation. You can find the about dialog in the menu \emph{help}.
+The about dialog shows the version number of your current ACE installation. You can find the about dialog in the menu \textit{help}.
 \begin{figure}[H]
 \begin{center}
   \includegraphics[height=1.78in, width=2.28in]{../images/usermanual/menu_help.eps}
@@ -292,29 +292,29 @@ The about dialog shows you the version number of your current ACE installation. 
 \subsection{Create a new Document}
 First of all, you need to create a new document to start writing text. There are three different ways to create a new document:
 \begin{itemize}
-\item click on the \emph{new document} button in the \textbf{toolbar}
-\item select the \textbf{menu item} named \emph{New} in the \emph{File} menu
-\item enter the \textbf{shortcut} \emph{CTRL+N}.
+\item click on the \textit{new document} button in the \textbf{toolbar}
+\item select the \textbf{menu item} named \textit{New} in the \textit{File} menu
+\item enter the \textbf{shortcut} \textit{CTRL+N}.
 \end{itemize}
 
-Once you created a new document it appears in the \emph{Document View} in the upper left side of your editor.
+Once you created a new document it appears in the \textit{Document View} in the upper left side of your editor.
 
 % 4.2 OPEN
 \subsection{Open an existing Document}
 To open a existing document you have three posibilites:
 \begin{itemize}
-\item click on the \emph{open document} button in the \textbf{toolbar}
-\item select the \textbf{menu} item \emph{Open} in the \emph{File} menu
-\item enter the \textbf{shortcut} \emph{CTRL+O}.
+\item click on the \textit{open document} button in the \textbf{toolbar}
+\item select the \textbf{menu} item \textit{Open} in the \textit{File} menu
+\item enter the \textbf{shortcut} \textit{CTRL+O}.
 \end{itemize}
 
 % 4.3 SAVE
 \subsection{Save open Documents}
 To save an open document that has been changed you have three posibilites:
 \begin{itemize}
-\item click on the \emph{save document} button in the \textbf{toolbar}
-\item select the \textbf{menu} item \emph{Save} in the \emph{File} menu
-\item enter the \textbf{shortcut} \emph{CTRL+S}.
+\item click on the \textit{save document} button in the \textbf{toolbar}
+\item select the \textbf{menu} item \textit{Save} in the \textit{File} menu
+\item enter the \textbf{shortcut} \textit{CTRL+S}.
 \end{itemize}
 
 If you save a document the first time then a save dialog will be displayed where you can specify the name and location of the file to be saved.
@@ -323,10 +323,10 @@ If you save a document the first time then a save dialog will be displayed where
 \subsection{Quit}
 This dialog appears when you want to quit the application while you have unsaved documents. You can choose between four actions:
 \begin{itemize}
-\item Cancel: Closes the dialog without doing anything. Also stops the terminate process and doesnt exit the application.
-\item Save All: Saves all listed documents. You will be asked for each document to enter a document name if the document has not been saved before.
-\item Save None: Saves none of the listed documents and quits the application.
-\item Save Selected: Saves only the selected files and quits the application. If a file has not been saved before you will be asked to enter a document name.
+\item \textit{Cancel}: Closes the dialog without doing anything. The application does not exit.
+\item \textit{Save All}: Saves all listed documents. You will be asked for each document to enter a document name if the document has not been saved before.
+\item \textit{Save None}: Saves none of the listed documents and quits the application.
+\item \textit{Save Selected}: Saves only the selected files and quits the application. If a file has not been saved before you will be asked to enter a document name.
 \end{itemize}
 
 \begin{figure}[H]
@@ -360,7 +360,7 @@ Publishing documents is one of the features making ACE a collaborative editor. T
 \end{center}
 \end{figure}
 
-To publish a document you first need to select the document in the document view. After you have selected the document, you can click either the button at the top of the editor or the button at the top of the document view. Advanced users can use the shortcut \emph{CTRL+SHIFT+P}.
+To publish a document you first need to select the document in the \textit{Document View}. After you have selected the document, you can click either the button at the top of the editor or the button at the top of the \textit{Document View}. Advanced users can use the shortcut \textit{CTRL+SHIFT+P}.
 
 \begin{figure}[H]
 \begin{center}
@@ -371,7 +371,7 @@ To publish a document you first need to select the document in the document view
 \end{figure}
 
 \subsection{Conceal Documents}
-To conceal (unpublish) a document, select it and click on the conceal-button (marked red in the figure \ref{editor_view_conceal}). After a document is concealed, all participants that have been writing in the document receive a notification that the session is over. ACE maintains a local copy of the document.
+To conceal (unpublish) a document, select it and click on the conceal-button (marked red in the figure \ref{editor_view_conceal}). After a document is concealed, all participants that have been writing in the document receive a notification that the session is over. ACE maintains a local copy of the document for each user.
 
 \begin{figure}[H]
 \begin{center}
@@ -381,7 +381,7 @@ To conceal (unpublish) a document, select it and click on the conceal-button (ma
 \end{center}
 \end{figure}
 
-You can use the action in the \emph{collaboration menu} to conceal the document. Advanced users can use the short cut \emph{CTRL+SHIFT+C}.
+You can use the action in the \textit{collaboration menu} to conceal the document. Advanced users can use the short cut \textit{CTRL+SHIFT+C}.
 
 \begin{figure}[H]
 \begin{center}
@@ -394,7 +394,7 @@ You can use the action in the \emph{collaboration menu} to conceal the document.
 % 5.2 INVITE / KICK
 \subsection{Invite Users}
 \label{invite_kick_users}
-After you have published a document (see section \ref{publish_conceal_documents}) you can invite users. Select the document in the \emph{document view} and then the user you want to invite from the \textit{user view}. Then you can either click the invite button in the view toolbar of the user view:
+After you have published a document (see section \ref{publish_conceal_documents}) you can invite users. Select the document in the \textit{Document View} and then the user you want to invite from the \textit{User View}. Then you can either click the invite button in the view toolbar of the \textit{User View}:
 
 \begin{figure}[H]
 \begin{center}
@@ -415,9 +415,9 @@ or use the action from the \textit{collaboration menu}:
 \end{figure}
 
 \subsection{Kick Users}
-The inverse operation of inviting is kicking. This function has been added to \emph{remove} misbehaving participants from the session. Only the publisher of a document can kick users. 
+The inverse operation of inviting is kicking. This function has been added to \textit{remove} misbehaving participants from the session. Only the publisher of a document can kick users. 
 
-\textbf{Note}: after you have kicked a participant, ACE automatically puts him on a blacklist, which makes it impossible for that user to rejoin the session (see section \ref{join_leave_documents} for more details about joining).
+\textbf{Note}: after you have kicked a participant, ACE automatically puts him on a blacklist, which makes it impossible for that user to rejoin the session (see section \ref{join_leave_documents} for more details about joining). To remove the user from the blacklist the publisher can reinvite the kicked user.
 
 \begin{figure}[H]
 \begin{center}
@@ -427,7 +427,7 @@ The inverse operation of inviting is kicking. This function has been added to \e
 \end{center}
 \end{figure}
 
-To kick a user select the published document in the \emph{document view}, the user you want to kick in the \emph{participant view} and press the \emph{kick button} in the toolbar of the \textit{participant view} or use the \emph{Kick Participant} entry from the \emph{Collaboration} menu.
+To kick a user select the published document in the \textit{Document View}, the user you want to kick in the \textit{Participant View} and press the \textit{kick button} in the toolbar of the \textit{Participant View} or use the \textit{Kick Participant} entry from the \textit{Collaboration} menu.
 
 \begin{figure}[H]
 \begin{center}
@@ -440,7 +440,7 @@ To kick a user select the published document in the \emph{document view}, the us
 % 5.3 JOIN / LEAVE
 \subsection{Join Network Documents}
 \label{join_leave_documents}
-To participate in other user's documents you need to join such a document. Basically you can join all the documents that are listed in the \emph{browse view}. Select the corresponding document and press the join button, click on the \emph{Join Session} in the \emph{Collaboration} menu or simple double click on it.
+To participate in other user's documents you need to join such a document. Basically you can join all the documents that are listed in the \textit{browse view}. Select the corresponding document and press the join button, click on the \textit{Join Session} in the \textit{Collaboration} menu or simple double click on it.
 
 \begin{figure}[H]
 \begin{center}
@@ -458,10 +458,10 @@ To participate in other user's documents you need to join such a document. Basic
 \end{center}
 \end{figure}
 
-This sends a join request to the publisher of the document. The publisher (owner) receives a notification and he can either \emph{accept} or \emph{deny} your join request. If he accepts your join request you become a participant and you can start writing on your own in the joined document. See section \ref{collaborative_editing} for more details about collaborative editing.
+This sends a join request to the publisher of the document. The publisher (owner) receives a notification and he can either \textit{accept} or \textit{deny} your join request. If he accepts your join request you become a participant and you can start writing on your own in the joined document. See section \ref{collaborative_editing} for more details about collaborative editing.
 
 \subsection{Leave Network Documents}
-If you do not want to participate longer in an editing session, you can leave. Select the document in the \emph{document view} and press the leave button or use the menu item \emph{Leave Session} in the \emph{Collaboration} menu. You can also close the document, in which case you also automatically leave the session.
+If you do not want to participate any longer in an editing session, you can leave. Select the document in the \textit{Document View} and press the leave button or use the menu item \textit{Leave Session} in the \textit{Collaboration} menu. You can also close the document, in which case you also automatically leave the session.
 \begin{figure}[H]
 \begin{center}
   \includegraphics[height=1.56in, width=2.56in]{../images/usermanual/g_dview_leave.eps}
@@ -481,7 +481,7 @@ If you do not want to participate longer in an editing session, you can leave. S
 
 % 5.4 DISCOVER
 \subsection{Discover Users}
-ACE automatically detects all other users on the same network (subnet). If you want to invite people from other networks (e.g. from another company or over the internet) you must explicit discover them. Click in the \emph{Discover User} item in the \emph{Collaboration} menu. This will open the dialog shown in figure \ref{discover_dialog}.
+ACE automatically detects all other users on the same local area network. If you want to invite people from other networks (e.g. from another company or over the internet) you must explicit discover them. Click in the \textit{Discover User} item in the \textit{Collaboration} menu. This will open the dialog shown in figure \ref{discover_dialog}.
 
 \begin{figure}[H]
 \begin{center}
@@ -518,12 +518,13 @@ When the IP you entered was valid but the contacted computer has no instance of 
 \end{center}
 \end{figure}
 
-If the discovery was successful the discovered user shows up in the \emph{user view}. It can not be distinguished from an automatically discovered user.
+If the discovery was successful the discovered user is added to the \textit{User View}. It cannot be distinguished from an automatically discovered user.
 
+\newpage
 % COLLAB_EDITING
 \subsection{Collaborative Editing}
 \label{collaborative_editing}
-For each published document there is a participant list. Select the document and the \textit{participant view} will show you the actual list of users participating in this document editing session. Each user (participant) has his own color which is used to highlight the text he wrote:
+For each published document there is a participant list. Select the document and the \textit{Participant View} will show you the actual list of users participating in this document editing session. Each user (participant) has his own color which is used to highlight the text he wrote:
 
 \begin{figure}[H]
 \begin{center}
@@ -532,7 +533,7 @@ For each published document there is a participant list. Select the document and
 \end{center}
 \end{figure}
 
-After a participant left (himself or get kicked by the owner), his text will be highlighted in gray. In case he joins the document again they grayed-out text he wrote will be colored again in his old color.
+After a participant left (either he explicitly left or he was kicked by the owner), his text will be highlighted in gray color. In case he joins the document again they grayed-out text he wrote will be colored again in his former color.
 
 \begin{figure}[H]
 \begin{center}
