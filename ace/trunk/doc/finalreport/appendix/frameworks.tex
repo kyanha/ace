@@ -484,21 +484,23 @@ BEEP puts no limits on the kind of data a channel can carry. It uses the MIME st
 \section{Glazed Lists}
 \label{appendix_frameworks_glazedlists}
 \subsection{Introduction}
-\textit{Glazed Lists} (see http://www.publicobject.com/glazedlists/) is a framework written in \textit{Java} that makes building applications based on tabular data very easy to produce. \textit{Glazed Lists} contains the following features that are interessting for our application development:
+\textit{Glazed Lists} (see \href{http://www.publicobject.com/glazedlists/}{http://www.publicobject.com/glazedlists/}) is a framework written in \textit{Java} that makes building applications based on tabular data very easy to produce. \textit{Glazed Lists} contains the following features that are interessting for our application development:
 \begin{itemize}
 \item EventList
 \item SortedList
 \item FilterList
 \end{itemize}
-The following sections explaining the basics of these features, why they are interessting for our application development and some simple code fragments of the usage.
+The following sections explaining the basics of these features, why they are interessting for our application development and some simple code fragments of their usage.
 
 \subsection{EventList}
 \label{frameworks_glazed_eventlist}
-An \textit{EventList} is an interface that extends \texttt{java.util.List}. It represents an observable list which makes it possible to add and remove \textit{ListEventListeners}. Further, there is a possibility to get a read/write lock to control concurrency access to the list. \\
+An \textit{EventList} is an interface that extends \texttt{java.util.List}. It represents an observable list which makes it possible to add and remove \textit{List\-Event\-Listeners}. Further, there is a possibility to get a read/write lock to control concurrency access to the list.
 
-An \textit{ObservableList} is a list that fires update event whenever elements are modified in place. Changes to list elements are detected by registering an appropriate listener on every list element. \textit{ListEventListeners} are registered as elements are added to this list and unregistered as elements are removed from this list. A \textit{BeanConnector} needs to be specified in the constructor which contains the necessary logic for registering and unregistering an appropriate listener for detecting modifications to an observable list element.
+% TODO: make more precise
+An \textit{Observable\-Element\-List} is a list that fires update events whenever elements are modified in place. Changes to list elements are detected by registering an appropriate listener on every list element. \textit{List\-Event\-Listeners} are registered as elements are added to this list and unregistered as elements are removed from this list. A \textit{Observable\-Element\-List.Connector} needs to be specified in the constructor which contains the necessary logic for registering and unregistering an appropriate listener for detecting modifications to list elements.
 
-The following example shows the use of a \textit{BasicEventList} (the most basic implementation of the \textit{EventList}) for a GUI component. The class \textit{User} is a very simple class that has a username as attribute. It uses a \textit{PropertyChangeSupport} to manage and notify all registered \textit{PropertyChangeListeners} whenever a new name has been set through the method \texttt{setName(...)}.
+The following example shows the use of a \textit{Basic\-Event\-List} (the most basic implementation of the \textit{Event\-List}) for a GUI component. The class \textit{User} is a very simple class that has a username property. It uses a \textit{Property\-Change\-Support} instance to manage and notify all registered \textit{Property\-Change\-Listeners} whenever a new name has been set through the method \texttt{setName(...)}.
+
 \begin{verbatim}
   public class User {
     private String name;
@@ -527,7 +529,7 @@ The following example shows the use of a \textit{BasicEventList} (the most basic
   }
 \end{verbatim}
 
-Assume a simple GUI component that displays the list of users in a \textit{JList}. By wrapping an \textit{ObservableElementList} and an \textit{EventListModel} around the list of users, the \textit{JList} diplaying the users will be automatically notified whenever a user changes his name and will repaint the element with the new username.
+Assume a simple GUI component that displays the list of users in a \textit{JList}. By wrapping an \textit{Observable\-Element\-List} and an \textit{Event\-List\-Model} around the list of users, the \textit{JList} diplaying the users will be automatically notified whenever a user changes his name and will repaint the element with the new username.
 
 \begin{verbatim}
   // create a list of users
@@ -546,7 +548,7 @@ Assume a simple GUI component that displays the list of users in a \textit{JList
  
 
 \subsection{SortedList}
-A \textit{SortedList} is an \textit{EventList} that sorts another \textit{EventList}. The sorting strategy is specified with a \textit{Comparator}. If no \textit{Comparator} is specified, all of the elements of the source \textit{EventList} must implement \textit{Comparable}. The following example adds the \textit{Comparable} interface to the user class from example in section \ref{frameworks_glazed_eventlist} and creates a \textit{SortedList} out of the user list.
+A \textit{Sorted\-List} is an \textit{Event\-List} that sorts another \textit{Event\-List}. The sorting strategy is specified with a \textit{Comparator}. If no \textit{Comparator} is specified, all of the elements of the source \textit{Event\-List} must implement \textit{Comparable}. The following example adds the \textit{Comparable} interface to the user class from the example in section \ref{frameworks_glazed_eventlist} and creates a \textit{Sorted\-List} out of the user list.
 
 \begin{verbatim}
   public class User implements Comparable {
@@ -559,7 +561,7 @@ A \textit{SortedList} is an \textit{EventList} that sorts another \textit{EventL
   }
 \end{verbatim}
 
-This addition makes it possible to compare and sort objects of the type {User}. A \textit{SortedList} is no wrapped around the list of users and the \textit{JList} will display the users sorted by name (as specified in the \texttt{compareTo(...)}).
+This addition makes it possible to compare and sort objects of type {User}. A \textit{Sorted\-List} is now wrapped around the list of users and the \textit{JList} will display the users sorted by name (as specified in the \texttt{compareTo(...)}). Note that wrapping an \textit{Event\-List} with a \texttt{Sorted\-List} does not change the order of elements in the source list.
 
 \begin{verbatim}
   // create list & observable list not shown here
@@ -573,9 +575,9 @@ This addition makes it possible to compare and sort objects of the type {User}. 
 
 
 \subsection{FilterList}
-The \textit{FilterList} filters another EventList. It is an \textit{EventList} that show a subset of  the elements of the source list. This subset is composed of all elements of the source \textit{EventList} that match the filter.
+The \textit{Filter\-List} filters another \textit{Event\-List}. It is an \textit{Event\-List} that shows a subset of the elements of the source list. This subset is composed of all elements of the source \textit{Event\-List} that match the filter.
 
-Filtering can either be static or dynamic. Static filtering can be used for example to filter out  elements with a special type. Assume the class \textit{User} from the example in section \ref{frameworks_glazed_eventlist} has the age of the user in addition. Its is a simple \textit{int} with the corresponding setter and getter methods.
+Filtering can either be static or dynamic. Static filtering can be used for example to filter out  elements with a special type. Assume the class \textit{User} from the example in section \ref{frameworks_glazed_eventlist} has an additional \texttt{age} property. It is a simple \textit{int} with the corresponding setter and getter methods.
 
 
 

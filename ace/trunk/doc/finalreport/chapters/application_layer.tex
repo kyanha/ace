@@ -285,7 +285,7 @@ This section gives an overview of all components needed for the \textit{Collabor
 \end{figure}
 
 \subsubsection{Collaborative Editor}
-The \textit{Collaborative Editor} is a JFrame which support all functionality defined in the \textit{Editor} interface. The constructor looks like:
+The \textit{Collaborative Editor} is a \emph{JPanel} which supports all the functionality defined in the \textit{Editor} interface. The constructor looks like:
 \begin{verbatim}
   public CollaborativeEditor(...) {
     // create editor pane & kit
@@ -303,14 +303,18 @@ The \textit{Collaborative Editor} is a JFrame which support all functionality de
   }
 \end{verbatim}
 
+% REVISE: which frame? the main frame?
 All setter methods (except \texttt{setTitle(...)} that sets directly the tilte of the frame) are forwarded to the \textit{Collaborative Text Pane} (\texttt{cTextPane}) like:
+
+% DECIDE: really necessary?
 \begin{verbatim}
   public void setXYZ(...) {
     cTextPane.setXYZ(...);
   }
 \end{verbatim}
 
-To use the standard \textit{Java Swing} text component actions in the \textit{Edit Menu}, getter methods are needed to return them. All these text component actions are handled in the \textit{Editor Kit} (see section \ref{collaborative_editor_kit}), thus the getter methods are simple forwarded to the \textit{Collaborative Editor Kit} (\texttt{cEditorKit}):
+To use the standard \textit{Java Swing} text component actions in the \textit{Edit Menu}, getter methods are needed to return them. All these text component actions are handled in the \textit{Editor Kit} (see section \ref{collaborative_editor_kit}), thus the getter methods are simply forwarded to the \textit{Collaborative Editor Kit} (\texttt{cEditorKit}):
+
 \begin{verbatim}
   public Action getXYZAction() {
     return cEditorKit.getXYZAction();
@@ -320,6 +324,7 @@ To use the standard \textit{Java Swing} text component actions in the \textit{Ed
 
 \subsubsection{Collaborative TextPane}
 The \textit{Collaborative Text Pane} subclasses the \textit{JTextPane}. It overrides the \texttt{replaceSelection} method from its superclass. This is needed to include a lock while inserting text into the document. Locking has to be done to avoid asynchronous text insertions while creating and sending operations that are based on the document content.
+
 \begin{verbatim}
   public void replaceSelection(String content) {
     SessionTemplate template = new SessionTemplate(session);
@@ -336,7 +341,9 @@ The \textit{Collaborative Text Pane} subclasses the \textit{JTextPane}. It overr
     }
   }
 \end{verbatim}
-Furthermore, there is a method \texttt{setCaretHandlerMap(PropertyChangeHashMap caretHandlerMap)} which is responsible to set the map with the carets (cursor positions) from all participants of the current document. The \texttt{PropertyChangeHashMap} is a map that adds a \texttt{PropertyChangeListener} on all inserted elements (carets from other users) and forwards their \texttt{PropertyChangeEvents} to all registered components. The following code fragment makes the editor able to receive updates if the carets of other users have changed:
+
+Furthermore, there is a method \texttt{setCaretHandlerMap(PropertyChangeHashMap caretHandlerMap)} which sets the map with the carets (cursor positions) from all participants of the current document. The \texttt{PropertyChangeHashMap} is a map that registers a \texttt{PropertyChangeListener} on all inserted elements (carets from other users) and forwards their \texttt{PropertyChangeEvents} to all registered components. The following code fragment makes the editor able to receive updates if the carets of other users have changed:
+
 \begin{verbatim}
   public void setCaretHandlerMap(PropertyChangeHashMap caretHandlerMap) {
     // unregister old map
@@ -347,9 +354,11 @@ Furthermore, there is a method \texttt{setCaretHandlerMap(PropertyChangeHashMap 
     this.caretHandlerMap.addPropertyChangeListener(this);
   }
 \end{verbatim}
-To handle the changes of the own caret it is necessary to register a \texttt{CaretListener}. The invoked method \texttt{caretUpdate(...)} checks if the cursor position has changed and sends the new caret position to the session and consequently to all other users.
+
+To handle the changes of the local caret it is necessary to register a \texttt{CaretListener}. The invoked method \texttt{caretUpdate(...)} checks if the cursor position has changed and sends the new caret position to the session.
 
 Each time a caret of another user changes the method \texttt{propertyChange(PropertyChangeEvent evt)} will be invoked from the \textit{PropertyChangeHashMap}. The \texttt{PropertyChangeEvent} contains the old and the new caret position from the user that moved his caret. A repaint of the old and the new cursor is needed. The implementation looks like:
+
 \begin{verbatim}
   public void propertyChange(PropertyChangeEvent evt) {
     // old caret
@@ -363,11 +372,13 @@ Each time a caret of another user changes the method \texttt{propertyChange(Prop
     repaint(newRect);
   }
 \end{verbatim}
-The \texttt{repaint(...)} is eihter called by swing or explicit by the \texttt{propertyChange} method when one of the participant changed his cursor position. It iterates through the \texttt{caretHandlerMap} and paints cursor for each user.
+
+The \texttt{repaint(...)} is either called by Swing or explicitly by the \texttt{propertyChange} method when one of the participants changed his cursor position. It iterates through the \texttt{caretHandlerMap} and paints the cursor of each user.
 
 \subsubsection{Collaborative EditoKit}
 \label{collaborative_editor_kit}
-The \textit{Collaborative Editor Kit} extends the \textit{Styled Editor Kit} and is needed for synchronisation purposes. To ensure the correct content of the text component its necessary to use lockings before sending operation in the following situations:
+The \textit{Collaborative Editor Kit} extends the \textit{Styled Editor Kit} and is needed for synchronization purposes. To ensure the correct content of the text component it is necessary to lock the session before sending operation to the sesion in the following situations:
+
 \begin{itemize}
 \item \texttt{DeletePrevCharAction} which is called when the users presses the backspace key.
 \item \texttt{DeleteNextCharAction} which is called when the users presses the delete key.
@@ -375,21 +386,24 @@ The \textit{Collaborative Editor Kit} extends the \textit{Styled Editor Kit} and
 \item Inserting Content: this issue is handled in the \textit{Collaborative Text Pane}.
 \end{itemize}
 
-All editor actions are defined in an array that can be get by using the \texttt{getActions()} method from the superclass \texttt{StyledEditorKit}. The three delete actions listed above need to be replaced by actions that are able to use locks. A simple solution would be:
-\begin{verbatim}
-  public class CollaborativeDeletePrevCharAction extends
-    DefaultEditorKit.DeletePrevCharAction {
-    
-    public void actionPerformed(...) {
-      // lock here
-      super.actionPerformed(...);
-      
-      session.sendOperation(...)
-      // unlock here
-    }
-  }
-\end{verbatim}
-Unfortunately its not possible to subclass the actions defined in the \texttt{DefaultEditorKit}. This leads to the solution to copy their implementation into the \textit{Collaborative Editor Kit} and manipulate it. For example the \texttt{actionPerformed} method from \texttt{DeletePrevCharAction} looks like:
+All editor actions are defined in an array that can be retrieved with the \texttt{getActions()} method from the superclass \texttt{StyledEditorKit}. The three delete actions listed above need to be replaced by actions that are able to use locks. A simple solution would be to subclass the action classes,
+for instance \textit{Default\-Editor\-Kit.Delete\-Prev\-Char\-Action}.
+
+%\begin{verbatim}
+%  public class CollaborativeDeletePrevCharAction extends
+%    DefaultEditorKit.DeletePrevCharAction {
+%    
+%    public void actionPerformed(...) {
+%      // lock here
+%      super.actionPerformed(...);
+%      
+%      session.sendOperation(...)
+%      // unlock here
+%    }
+%  }
+%\end{verbatim}
+
+Unfortunately it is not possible to subclass the actions defined in the \texttt{DefaultEditorKit} because they are all package private. This leads to the solution to copy the implementations into the \textit{Collaborative Editor Kit} class and manipulate them. For example the \texttt{actionPerformed} method of \texttt{DeletePrevCharAction} looks like:
 \begin{verbatim}
   public void actionPerformed(...) {
     SessionTemplate template = new SessionTemplate(session);
@@ -410,16 +424,19 @@ Unfortunately its not possible to subclass the actions defined in the \texttt{De
 
 
 \subsubsection{Editor Controller}
-The \textit{Editor Controller} is registered for \textit{Item Selection Change Events} from the \textit{Document View Controller} and is used to enabled, disable and set editor values. Each time the selection is changed or the current \textit{Document Item} changes the properties, the following procedure is made:
+The \textit{Editor Controller} is registered for \textit{Item Selection Change Events} from the \textit{Document View Controller} and is used to enable, disable and set editor values. Each time the selection of the \textit{Document View} or a property of the currently selected \textit{Document\-Item} changes, the following steps are performed:
 \begin{itemize}
 \item \textit{disable} the editor if no document is selected. otherwise:
 \item \textit{set} the \textit{document} of the selected item.
 \item \textit{set} the editor \textit{title}.
 \end{itemize}
 Furthermore if the selected document is a published or a joined (remote) document the \textit{Session} and the \textit{participant list} are set too.
+% TODO: where is the participant list set?
 
 \subsubsection{Collaborative Document}
 \label{applicationlayer_collabdocument}
+
+% TODO: it is used for getting write locks?!?
 The \textit{Collaborative Document} extends the \textit{DefaultStyledDocument}. It is used for getting write locks and applying text styles. Each time a style added to the document changes the method \texttt{reapplyStyles(...)} is called.
 \begin{verbatim}
   protected void styleChanged(Style style) {
@@ -429,7 +446,11 @@ The \textit{Collaborative Document} extends the \textit{DefaultStyledDocument}. 
   }
 \end{verbatim}
 
-The method \texttt{reapplyStyles(...)} iterates through all the text elements from the document and checks if they are using the changed style. All elements using this style will be notified and updated. The following scenario will change the background color of all elements using the style "myStyle" from the color blue to red:
+% TODO: what are styles used for
+
+The method \texttt{reapplyStyles(...)} iterates through all the text elements of the document and checks if they are using the changed style. All elements using
+% TODO: will be notified?!?
+this style will be notified and updated. The following scenario will change the background color of all elements using the style "myStyle" from blue to red:
 \begin{verbatim}
   // add style
   Style myStyle = document.addStyle("myStyle", null);
@@ -443,7 +464,8 @@ The method \texttt{reapplyStyles(...)} iterates through all the text elements fr
 \end{verbatim}
 
 \subsubsection{AsyncCaret}
-When inserting text into a text component and setting the caret position asynchronous, its possible that the caret is not set to the correct position. Asynchronous caret update is implemented in Java 1.4 but there is no posibility to enable it (this problem is solved in Java 1.5). \textit{Async Caret} is a simple copy of the standard caret class with the following constructor changes:
+% TODO: make more precise
+When inserting text into a text component and setting the caret position asynchronously, it is possible that the caret is not set to the correct position. Asynchronous caret updates are implemented in Java 1.4 but there is no posibility to enable the feature (this problem is solved in Java 1.5). \textit{Async\-Caret} is a simple copy of the standard caret class with the following constructor changes:
 \begin{verbatim}
   public AsyncCaret() {
     async = true;
@@ -451,35 +473,46 @@ When inserting text into a text component and setting the caret position asynchr
 \end{verbatim}
 
 % OTHER
-\subsection{Other}
+\subsection{Miscellaneous Information}
 % APPLICATION FACTORY
 \subsubsection{Application Factory}
 \label{applicationlayer_applicationfactory}
+
+% TODO: besides of Spring
 To build the GUI (see section \ref{applicationlayer_wf_startup}) the \textit{Application Factory} is needed besides of \textit{Spring} (see section \ref{appendix_frameworks_spring}). It provides methods to create the \textit{Menu Bar}, the \textit{Tool Bar}, the \textit{Persistent Component Pane} and the \textit{Status Bar}.
 
 % APPLICATION CONTROLLER
 \subsubsection{Application Controller}
-All functions that may need to show a dialog for user inputs or for error displaying are handled within the \textit{Application Controller}. Some functions like for example \texttt{closeDocument()} need to do some checks before they open a dialog and other functions like \textit{showAbout()} directly popup the required dialog. To show dialogs the \textit{Application Controller} uses the \textit{Dialog Controller} (\ref{applicationlayer_dialogcontroller}).
+All functions that may need to show a dialog for user input or for displaying errors are handled within the \textit{Application Controller}. Some functions like for example \texttt{closeDocument()} need to do some checks before they open a dialog and other functions like \textit{showAbout()} directly pop up the required dialog. To show dialogs the \textit{Application Controller} uses the \textit{Dialog Controller} (\ref{applicationlayer_dialogcontroller}).
 
 % DIALOG CONTROLLER
 \subsubsection{Dialog Controller}
 \label{applicationlayer_dialogcontroller}
-The \textit{Dialog Controller} is used to show dialogs to the user. This dialogs are either to get inputs from the user or to notify the user. To make all dialogs \textit{modal}, the \textit{Main Frame} (see \ref{applicationlayer_frame_desc}) is given to the \textit{Dialog Controller}. The following example illustrates how to popup a dialog:
-\begin{verbatim}
-  public void showXYZDialog(String title, String message) {
-    JOptionPane.showMessageDialog(
-        getMainFrame(),
-        title,
-        message,
-        JOptionPane.WARNING_MESSAGE);
-  }
-\end{verbatim}
+The \textit{Dialog Controller} is used to display dialogs. These dialogs are either used to get user input or to notify the user. 
+
+% DECIDE: remove paragraph
+%To make all dialogs \textit{modal}, the \textit{Main Frame} (see \ref{applicationlayer_frame_desc}) is given to the \textit{Dialog Controller}. The following example illustrates how to popup a dialog:
+
+By separating the code that displays dialogs from the logic that decides when
+to show a dialog it was possible to thoroughly unit test the \texttt{Application\-Controller}. The \texttt{Dialog\-Controller} interface can be mocked and thus the possible decisions made by the user can be tested quite easily.
+
+% DECIDE: include code fragment?
+%\begin{verbatim}
+%  public void showXYZDialog(String title, String message) {
+%    JOptionPane.showMessageDialog(
+%        getMainFrame(),
+%        title,
+%        message,
+%        JOptionPane.WARNING_MESSAGE);
+%  }
+%\end{verbatim}
 
 
 
 % PERSISTENT CONTENT PANE
 \subsubsection{Persistent Content Pane}
 The \textit{Persistent Content Pane} is the container for all \textit{Views} and the \textit{Editor} component. It is a \textit{JPanel} containing several \textit{split panes} to make the GUI components resizable (see figure \ref{application_splitpane}).
+
 \begin{figure}[H]
 \begin{center}
   \includegraphics[height=4.19in, width=6.69in]{../images/finalreport/application_splitpane.eps}
@@ -487,7 +520,11 @@ The \textit{Persistent Content Pane} is the container for all \textit{Views} and
 \label{application_splitpane}
 \end{center}
 \end{figure}
+
+% TODO: see User Manual section x.y.z
 The special method \texttt{switchFullScreenEditing()} maximizes the \textit{Editor} and minimizes all other components. For the usage of this feature see \textit{User Manual, Section Editor}.
+
+
 
 % WORKFLOWS
 \section{Workflows}
@@ -495,19 +532,21 @@ The special method \texttt{switchFullScreenEditing()} maximizes the \textit{Edit
 % STARTUP
 \subsection{Startup}
 \label{applicationlayer_wf_startup}
-All the startup processes for ACE are defined in the main method from the class \textit{Main.java}. The following steps are made:
+The startup process of ACE is defined in the main method of the class \textit{Main}. It consists of the following steps:
 \begin{description}
 \item[1. Load Customizer ] The first step is to get the customizers. Customizers are used to create operating system based stuff like setting the look \& feel of the application. Moreover the 
-\item[2. Load ApplicationContext ] After the customizer has been loaded, the spring application context (see \ref{appendix_frameworks_spring} for more details about spring) needs to be loaded. With the help of this application context the \textit{Application Factory}, the \textit{Application Controller} and the \textit{Collaboration Service} are loaded and initialized.
+% TODO: moreover what?!?
+\item[2. Load ApplicationContext ] After the customizer has been loaded, the Spring application context (see \ref{appendix_frameworks_spring} for more details about spring) is loaded. With the help of the \texttt{Application\-Context} the \textit{Application Factory}, the \textit{Application Controller} and the \textit{Collaboration Service} are created and initialized.
 \item[3. Create Main Frame ] With the help of the \textit{Application Factory} the \textit{Menu}, \textit{Toolbar} and the \textit{Content Pane} (which includes all \textit{Views} and the \textit{Editor}) are loaded and integrated into the GUI.
-\item[4. Load Preferences Store ] The \textit{Preferences Store} needs to be loaded to get the unique user id which is needed to initialize the \textit{Collabortion Service}.
-\item[5. Init Collaboration Service ] The \textit{Collaboration Service} needs to be initialized. This includes setting the own user details, the \textit{InvitationCallback} and \textit{ServiceFailureHandler}. After all necessary values are set, the \textit{Collaboration Service} can be started.
-\item[6. Create Empty Document ] The empty document of a newly started text editor allows the immediate start of writing text except of creating an empty document first.
+\item[4. Load Preferences Store ] The \textit{Preferences Store} needs to be loaded to get the unique user id which is needed to initialize the \textit{Collaboration Service}.
+\item[5. Init Collaboration Service ] The \textit{Collaboration Service} needs to be initialized. This includes setting the local user details, the \textit{InvitationCallback} and \textit{ServiceFailureHandler}. After all necessary properties are set, the \textit{Collaboration Service} can be started.
+\item[6. Create Empty Document ] ACE opens an empty document, which makes it possible for the user to immediately start writing once the application is started.
 \end{description}
 
 % ACTION ENABLING
 \subsection{Enabling of Actions}
-It is important for the user-friendliness to enabled or disable actions in the GUI. The enabling of most of the actions depends on selection criteria in the \textit{Views}. For this pupose actions can add themself to the \textit{ItemSelectionChangeListener} of a view and receiving \textit{ItemSelectionChangedEvents}.  For example the \textit{close document} action should only be enabled if a document is selected in the \textit{Document View}:
+It is important for the user-friendliness to enable or disable actions in the GUI. The enabling of most of the actions depends on the selection of the \textit{Views}. For this pupose actions can register themselves on the view to receive \textit{Item\-Selection\-Change\-Events}.  For example the \textit{close document} action should only be enabled if a document is selected in the \textit{Document View}:
+
 \begin{verbatim}
   // somewhere in the constructor
   documentView.addItemSelectionChangeListener(this);
@@ -523,3 +562,13 @@ It is important for the user-friendliness to enabled or disable actions in the G
   }
 \end{verbatim}
 
+
+
+
+
+% 
+% - customizer
+% - Spring
+% - Document Manager
+% - existing DocumentItem types
+%
