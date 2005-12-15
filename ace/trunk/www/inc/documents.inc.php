@@ -3,6 +3,9 @@
 <ul>
  <li><a href="documentation/projectmanual.pdf">Project Manual</a></li>
  <li><a href="documentation/systemrequirements.pdf">System Requirements</a></li>
+ <li><a href="documentation/usermanual.pdf">User Manual</a></li>
+ <li><a href="documentation/developersguide.pdf">Developers Guide</a></li>
+ <li><a href="documentation/finalreport.pdf">Final Report</a></li>
 </ul>
 
 <h2>Semester Project</h2>

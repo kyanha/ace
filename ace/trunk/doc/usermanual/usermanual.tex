@@ -113,9 +113,9 @@ This section gives you an overview of the ACE Graphical User Interface (GUI).
 
 % 3.1 MENUS
 \subsection{Menu}
-The menus (see figure \ref{ace_overview}) are needed to operate the editor. Each menu entry contains multiple actions. There are four menu entries:
+The menus (see figure \ref{ace_overview}) are needed to operate the editor. Each menu entry contains multiple actions.
 \begin{itemize}
-\item File Menu: This menu contains the basic editor functions like create new, open and save documents, change your preferences and quit the application. See section \ref{first_steps} for a more detailed description of those functions.
+\item File Menu: This menu contains the basic editor functions like create new, open and save documents. Further it provides access to the preferences and has an item to quit the application. See section \ref{first_steps} for a more detailed description of those functions.
 \item Edit Menu: This menu contains edit-related actions like cut, copy, paste \& select all.
 \item Collaboration Menu: This menu contains actions related to the collaboration functionality described in section \ref{sect_networking}.
 \item Help Menu: This menu contains some additional entries. For example you can open the about box which gives you information about the version of ACE you are using.
@@ -161,14 +161,13 @@ Moreover each view has a toolbar which is placed at the right side in the border
 
 % 3.4.1 DOCUMENT VIEW
 \subsubsection{Document View}
-The \textit{Document View} shows all your currently open documents. Basically there are two different document types. \textit{Local documents} are documents on your local machine. ACE provides the standard actions to manage the local documents such as \textit{create new}, \textit{open}, \textit{save} and \textit{close} documents. Further, you can publish (see \ref{publish_conceal_documents}) your local documents to make it accessible to other users. \textit{Joined documents} are documents published by other users which you have joined. See \ref{join_leave_documents} for more informations about joining documents.
+The \textit{Document View} shows all your currently open documents. Basically there are three different document types. \textit{Local documents} are documents on your local machine. ACE provides the standard actions to manage the local documents such as \textit{create new}, \textit{open}, \textit{save} and \textit{close} documents. Further, you can publish (see \ref{publish_conceal_documents}) your local documents to make them accessible to other users (\emph{published documents}). \textit{Joined documents} are documents published by other users which you have joined. See section \ref{join_leave_documents} for more informations about joining documents.
 
 \begin{figure}[H]
-\begin{center}
-  \includegraphics[height=1.78in, width=2.61in]{../images/usermanual/dview_overview.eps}
+ \centering
+ \includegraphics[height=1.78in, width=2.61in]{../images/usermanual/dview_overview.eps}
 \caption{Document View}
 \label{view_document}
-\end{center}
 \end{figure}
 
 Different images for each document type makes them well distinguishable (from left to right, icon for the document types: local, published \& remote):
@@ -176,9 +175,9 @@ Different images for each document type makes them well distinguishable (from le
 \begin{figure}[H]
 \begin{center}
   \includegraphics[height=32pt, width=32pt]{../images/usermanual/icon_local.eps}
-\vspace{24pt}
+\hspace{10pt}
   \includegraphics[height=32pt, width=32pt]{../images/usermanual/icon_published.eps}
-\vspace{24pt}
+\hspace{10pt}
   \includegraphics[height=32pt, width=32pt]{../images/usermanual/icon_remote.eps}
 \caption{Document Icons}
 \label{document_icons}
@@ -187,7 +186,7 @@ Different images for each document type makes them well distinguishable (from le
 
 % 3.4.2 USER VIEW
 \subsubsection{User View}
-The \textit{User View} shows all other users currently using ACE on your local area network (LAN). The view has an action to invite (see section \ref{invite_kick_users}) other users to your published documents.
+The \textit{User View} shows all other users currently using ACE on your local area network (LAN). The view has an action to invite other users to your published documents (see section \ref{invite_kick_users}).
 
 \begin{figure}[H]
 \begin{center}
@@ -197,7 +196,7 @@ The \textit{User View} shows all other users currently using ACE on your local a
 \end{center}
 \end{figure}
 
-To avoid a crowded list with usernames you can use the \textit{User View} filter. Typing full usernames or parts of it into the textfield below excludes all users that do not match the filter.
+To avoid a crowded list with usernames you can use the \textit{User View} filter. Typing a full username or just parts of it into the textfield below excludes all users that do not match the filter.
 
 \begin{figure}[H]
 \begin{center}
@@ -209,7 +208,7 @@ To avoid a crowded list with usernames you can use the \textit{User View} filter
 
 % 3.4.3 BROWSE VIEW
 \subsubsection{Browse View}
-The \textit{Browse View} contains a list with all published documents that can be found on the local area network. Each list entry contains the document title and the name of the publisher. You need this list to join (see section \ref{join_leave_documents}) published documents.
+The \textit{Browse View} contains a list with all published documents that can be found on the local area network. Each list entry contains the document title and the name of the publisher. You need this list to join published documents (see section \ref{join_leave_documents}).
 
 \begin{figure}[H]
 \begin{center}
@@ -231,7 +230,7 @@ The filtering function helps you to find documents from a specified user. Simply
 
 % 3.4.4 PARTICIPANT VIEW
 \subsubsection{Participant View}
-When you publish or join a network document you can see a list of all participants in the \textit{Participant View}. Each participant has his own color which is showed on the right side of his username. These colors are used to highlight the text and to draw the cursor or selection of the corresponding participant. If you are the owner of the document you can select a participant and kick (see section \ref{invite_kick_users}) him from the current document.
+When you publish or join a network document you can see a list of all participants in the \textit{Participant View}. Each participant has his own color which is showed on the right side of his username. These colors are used to highlight the text and to draw the cursor or selection of the corresponding participant. If you are the owner of the document you can select a participant and kick him from the current document (see section \ref{invite_kick_users}).
 
 \begin{figure}[H]
 \begin{center}
@@ -326,7 +325,7 @@ This dialog appears when you want to quit the application while you have unsaved
 \item \textit{Cancel}: Closes the dialog without doing anything. The application does not exit.
 \item \textit{Save All}: Saves all listed documents. You will be asked for each document to enter a document name if the document has not been saved before.
 \item \textit{Save None}: Saves none of the listed documents and quits the application.
-\item \textit{Save Selected}: Saves only the selected files and quits the application. If a file has not been saved before you will be asked to enter a document name.
+\item \textit{Save Selected}: Saves only the selected files and quits the application. If a selected file has not been saved before you will be asked to enter a document name.
 \end{itemize}
 
 \begin{figure}[H]
@@ -348,9 +347,7 @@ This dialog appears when you want to quit the application while you have unsaved
 % 5.1 PUBLISH / CONCEAL
 \subsection{Publish Documents}
 \label{publish_conceal_documents}
-Publishing documents is one of the features making ACE a collaborative editor. This is always the first step to edit documents with other users. To start collaborating, either you publish a document on your own and invite other users or you publish a document and other users request to join it themselves.
-
-\textbf{Note}: only published documents can be viewed by other users!
+Publishing documents is one of the features making ACE a collaborative editor. This is always the first step to edit documents with other users. To start collaborating, either you publish a document on your own and invite other users or you publish a document and other users request to join it themselves. \textbf{Note}: only published documents can be viewed by other users!
 
 \begin{figure}[H]
 \begin{center}
@@ -360,7 +357,7 @@ Publishing documents is one of the features making ACE a collaborative editor. T
 \end{center}
 \end{figure}
 
-To publish a document you first need to select the document in the \textit{Document View}. After you have selected the document, you can click either the button at the top of the editor or the button at the top of the \textit{Document View}. Advanced users can use the shortcut \textit{CTRL+SHIFT+P}.
+To publish a document you first need to select the document in the \textit{Document View}. After you have selected the document, you can click either the publish button at the top of the editor or the publish button at the top of the \textit{Document View}. Advanced users can use the shortcut \textit{CTRL+SHIFT+P}.
 
 \begin{figure}[H]
 \begin{center}
@@ -371,7 +368,7 @@ To publish a document you first need to select the document in the \textit{Docum
 \end{figure}
 
 \subsection{Conceal Documents}
-To conceal (unpublish) a document, select it and click on the conceal-button (marked red in the figure \ref{editor_view_conceal}). After a document is concealed, all participants that have been writing in the document receive a notification that the session is over. ACE maintains a local copy of the document for each user.
+To conceal (unpublish) a document, select it and click on the conceal button (marked red in the figure \ref{editor_view_conceal}). After a document is concealed, all participants that have been writing in the document receive a notification that the session is over. ACE maintains a local copy of the document for each user.
 
 \begin{figure}[H]
 \begin{center}
@@ -381,7 +378,7 @@ To conceal (unpublish) a document, select it and click on the conceal-button (ma
 \end{center}
 \end{figure}
 
-You can use the action in the \textit{collaboration menu} to conceal the document. Advanced users can use the short cut \textit{CTRL+SHIFT+C}.
+You can use the action in the \textit{collaboration menu} to conceal the document. Advanced users can use the shortcut \textit{CTRL+SHIFT+C}.
 
 \begin{figure}[H]
 \begin{center}
@@ -394,17 +391,17 @@ You can use the action in the \textit{collaboration menu} to conceal the documen
 % 5.2 INVITE / KICK
 \subsection{Invite Users}
 \label{invite_kick_users}
-After you have published a document (see section \ref{publish_conceal_documents}) you can invite users. Select the document in the \textit{Document View} and then the user you want to invite from the \textit{User View}. Then you can either click the invite button in the view toolbar of the \textit{User View}:
+After you have published a document (see section \ref{publish_conceal_documents}) you can invite users. Select the document in the \textit{Document View} and then the user you want to invite from the \textit{User View}. Then you can either click the invite button in the view toolbar of the \textit{User View}
 
 \begin{figure}[H]
 \begin{center}
-  \includegraphics[height=1.32in, width=1.75in]{../images/usermanual/g_uview_invite.eps}
+  \includegraphics[height=2.64in, width=3.5in]{../images/usermanual/g_uview_invite.eps}
 \caption{Invite User}
 \label{g_uview_invite}
 \end{center}
 \end{figure}
 
-or use the action from the \textit{collaboration menu}:
+or use the action from the \textit{collaboration menu}.
 
 \begin{figure}[H]
 \begin{center}
@@ -421,7 +418,7 @@ The inverse operation of inviting is kicking. This function has been added to \t
 
 \begin{figure}[H]
 \begin{center}
-  \includegraphics[height=1.21in, width=1.75in]{../images/usermanual/g_pview_kick.eps}
+  \includegraphics[height=2.42in, width=3.5in]{../images/usermanual/g_pview_kick.eps}
 \caption{Kick User}
 \label{g_pview_kick}
 \end{center}
@@ -444,7 +441,7 @@ To participate in other user's documents you need to join such a document. Basic
 
 \begin{figure}[H]
 \begin{center}
-  \includegraphics[height=1.47in, width=1.75in]{../images/usermanual/g_bview_join.eps}
+  \includegraphics[height=2.94in, width=3.5in]{../images/usermanual/g_bview_join.eps}
 \caption{Join Document}
 \label{g_bview_join}
 \end{center}
@@ -464,7 +461,7 @@ This sends a join request to the publisher of the document. The publisher (owner
 If you do not want to participate any longer in an editing session, you can leave. Select the document in the \textit{Document View} and press the leave button or use the menu item \textit{Leave Session} in the \textit{Collaboration} menu. You can also close the document, in which case you also automatically leave the session.
 \begin{figure}[H]
 \begin{center}
-  \includegraphics[height=1.15in, width=1.72in]{../images/usermanual/g_dview_leave.eps}
+  \includegraphics[height=2.3in, width=3.5in]{../images/usermanual/g_dview_leave.eps}
 \caption{Leave Document}
 \label{g_dview_leave}
 \end{center}
@@ -481,7 +478,7 @@ If you do not want to participate any longer in an editing session, you can leav
 
 % 5.4 DISCOVER
 \subsection{Discover Users}
-ACE automatically detects all other users on the same local area network. If you want to invite people from other networks (e.g. from another company or over the internet) you must explicit discover them. Click in the \textit{Discover User} item in the \textit{Collaboration} menu. This will open the dialog shown in figure \ref{discover_dialog}.
+ACE automatically detects all other users on the same local area network. If you want to invite people from other networks (e.g. from another company or over the Internet) you must explicit discover them. Click in the \textit{Discover User} item in the \textit{Collaboration} menu. This will open the dialog shown in figure \ref{discover_dialog}.
 
 \begin{figure}[H]
 \begin{center}
@@ -533,7 +530,7 @@ For each published document there is a participant list. Select the document and
 \end{center}
 \end{figure}
 
-After a participant left (either he explicitly left or he was kicked by the owner), his text will be highlighted in gray color. In case he joins the document again they grayed-out text he wrote will be colored again in his former color.
+After a participant left (either he explicitly left or he was kicked by the owner), his text will be highlighted in gray color. In case he joins the document again the grayed-out text he wrote will be colored again in his former color.
 
 \begin{figure}[H]
 \begin{center}
@@ -542,5 +539,8 @@ After a participant left (either he explicitly left or he was kicked by the owne
 \end{center}
 \end{figure}
 
+
+\newpage
+\listoffigures
 
 \end{document}
