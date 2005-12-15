@@ -303,6 +303,7 @@ public class RemoteUserSession {
 	 * be called when the TCPSession is still active.
 	 */
 	public synchronized void close() {
+		LOG.debug("--> close()");
 		if (session != null) {
 			try {
 				mainConnection.close();
@@ -313,6 +314,7 @@ public class RemoteUserSession {
 		}
 		user = null;
 		isAlive = false;
+		LOG.debug("<-- close()");
 	}
 	
 	public synchronized boolean isAlive() {

@@ -52,6 +52,7 @@ public class MainConnection extends AbstractConnection {
 	 *
 	 */
 	public void close() {
+		LOG.debug("--> close()");
 		try {
 			if (getState() == STATE_ACTIVE) {
 				//consider if there could be other states upon which a close() should be done
@@ -63,6 +64,7 @@ public class MainConnection extends AbstractConnection {
 		setChannel(null);
 		setReplyListener(null);
 		setState(STATE_CLOSED);
+		LOG.debug("<-- close()");
 	}
 	
 	public void cleanup() {
