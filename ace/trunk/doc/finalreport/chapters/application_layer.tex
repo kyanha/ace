@@ -3,7 +3,7 @@
 
 % OVERVIEW
 \section{Overview}
-This section gives an overview over the components of the applacation layer (GUI) of ACE. Figure \ref{applicationlayer_ace_overview} shows the graphical user interface (GUI) with all components. Each component is explained detailed in section \ref{applicationlayer_components}.
+This section gives an overview over the components of the applacation layer (GUI) of ACE. Figure \ref{applicationlayer_ace_overview} shows the graphical user interface (GUI) with all components. Each component is explained detailed in section \ref{applicationlayer_component_desc}.
 \begin{figure}[H]
 \begin{center}
   \includegraphics[height=3.135in, width=5.01in]{../images/finalreport/application_ace_overview.eps}
@@ -19,10 +19,11 @@ At the bottom of the application is the status bar that simple contains a label 
 
 % COMPONENTS
 \section{Components}
-\label{applicationlayer_components}
+\label{applicationlayer_component_desc}
 
 % FRAME
 \subsection{Frame}
+\label{applicationlayer_frame_desc}
 The main frame of the application layer is based in a \texttt{PersistentFrame} (not yet full implemented). A persistent frame is a simple \texttt{JFrame} that saves the last position and size. Each time an application is started, the frame has the same position like last time before the application has terminated. Its possible to set a \textit{JMenuBar}, a \textit{JToolBar}, a status bar \textit{JPanel} and the content (\textit{JPanel}). Further, the \texttt{PersistentFrame} has a \textit{windows listener} to catch the windows closing event and forward it to an \textit{exit action}.
 
 % MENU
@@ -275,7 +276,6 @@ To use the standard text component actions for the menu \textit{edit}, we need g
 \end{verbatim}
 
 
-
 \subsubsection{Collaborative TextPane}
 The collaboration text pane implements all functionality defined by the \texttt{Editor} interface. This component overrides the \texttt{replaceSelection} method from its superclass \texttt{JTextPane}. This is needed to use a lock while inserting content into the document. Locking has to be done to avoid asynchronous text insertions while creating and sending operations that are based on the document content.
 \begin{verbatim}
@@ -422,6 +422,18 @@ All functions that may need to show a dialog for user inputs or for error displa
 % DIALOG CONTROLLER
 \subsubsection{Dialog Controller}
 \label{applicationlayer_dialogcontroller}
+The \textit{Dialog Controller} is used to show dialogs to the user. This dialogs are either to get inputs from the user or to notify the user. To make all dialogs \textit{modal}, the main frame (see \ref{applicationlayer_frame_desc}) is given to the \textit{Dialog Controller}. The following example illustrates ho to popup a dialog:
+\begin{verbatim}
+  public void showXYZDialog(String title, String message) {
+    JOptionPane.showMessageDialog(
+        getMainFrame(),
+        title,
+        message,
+        JOptionPane.WARNING_MESSAGE);
+  }
+\end{verbatim}
+
+
 
 % PERSISTENT CONTENT PANE
 \subsubsection{Persistent Content Pane}
@@ -435,27 +447,20 @@ The \textit{Persistent Content Pane} is the container for all \textit{Views} and
 \end{figure}
 The special method \texttt{switchFullScreenEditing()} maximizes the \textit{Editor} and minimizes all other components. For the usage of this feature see \textit{User Manual, Section Editor}.
 
-
-
-\newpage
 % WORKFLOWS
 \section{Workflows}
 
 % STARTUP
 \subsection{Startup}
 \label{applicationlayer_wf_startup}
-All the startup processes for ACE are defined in the main method from the class \textit{Main.java}:
+All the startup processes for ACE are defined in the main method from the class \textit{Main.java}. The following steps are made:
 \begin{description}
-\item[1. Load Customizer ] The first step is to get the customizers. Customizers are used to create operating system based stuff like setting the look \& feel of the application.
-\item[2. Load ApplicationContext ] After the customizer has been loaded, the spring application context (see \ref{appendix_frameworks_spring} for more details about spring) needs to be loaded.
-\item[3. Get ApplicationFactory ] The application factory is used to create all GUI components.
-\item[4. Get ApplicationController ]  
-\item[5. Get CollaborationService ] 
-\item[6. Load PreferencesStore ]
-\item[7. Create Main Frame ]
-\item[8. Init PreferencesStore ]
-\item[9. Init CollaborationService ]
-\item[10. Create Empty Document ]
+\item[1. Load Customizer ] The first step is to get the customizers. Customizers are used to create operating system based stuff like setting the look \& feel of the application. Moreover the 
+\item[2. Load ApplicationContext ] After the customizer has been loaded, the spring application context (see \ref{appendix_frameworks_spring} for more details about spring) needs to be loaded. With the help of this application context the \textit{Application Factory}, the \textit{Application Controller} and the \textit{Collaboration Service} are loaded and initialized.
+\item[3. Create Main Frame ] With the help of the \textit{Application Factory} the \textit{Menu}, \textit{Toolbar} and the \textit{Content Pane} (which includes all \textit{Views} and the \textit{Editor}) are loaded and integrated into the GUI.
+\item[4. Load Preferences Store ] The \textit{Preferences Store} needs to be loaded to get the unique user id which is used to initialize the \textit{Collabortion Service}.
+\item[5. Init Collaboration Service ] The \textit{Collaboration Service} needs to be initialized. This includes setting the own user details, the \textit{InvitationCallback} and \textit{ServiceFailureHandler}. After all necessary values are set, the \textit{Collaboration Service} can be started.
+\item[6. Create Empty Document ] The empty document of a newly started text editor allows the immediate start of writing text except of creating an empty document first.
 \end{description}
 
 % ACTION ENABLING
