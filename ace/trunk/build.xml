@@ -559,7 +559,7 @@
             <filter name="isolatednode"/>
         </grand>
         <exec executable="dot">
-            <arg line="-Tsvg -Gsize=10,7 -Gcenter=1 -o ${build.dir}/${name}.svg ${build.dir}/${name}.dot"/>
+            <arg line="-Tps -Gsize=10,7 -Gcenter=1 -o ${build.dir}/${name}.ps ${build.dir}/${name}.dot"/>
         </exec>
     </target>
 
