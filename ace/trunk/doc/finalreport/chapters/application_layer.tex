@@ -3,7 +3,7 @@
 
 % OVERVIEW
 \section{Overview}
-This section gives an overview over the components of the applacation layer (GUI) of ACE. Figure \ref{applicationlayer_ace_overview} shows the graphical user interface (GUI) with all components. Each component is explained detailed in section \ref{applicationlayer_component_desc}.
+This section gives an overview over the components of the application layer of ACE. Figure \ref{applicationlayer_ace_overview} shows the graphical user interface (GUI) with all components. Each component is explained in details in section \ref{applicationlayer_component_desc}.
 \begin{figure}[H]
 \begin{center}
   \includegraphics[height=3.135in, width=5.01in]{../images/finalreport/application_ace_overview.eps}
@@ -11,11 +11,11 @@ This section gives an overview over the components of the applacation layer (GUI
 \label{applicationlayer_ace_overview}
 \end{center}
 \end{figure}
-On the top of the application are the menubar and the toolbar. The menubar is splitted into four menus which are containing functions associated to their category. Below the menubar is the toolbar that contains the most used functions out of the menu.
+On the top of the application are the \textit{Menu Bar} and the \textit{Tool Bar}. The \textit{Menu Bar} is splitted into four menus which are containing functions associated to the categories \textit{File}, \textit{Edit}, \textit{Collaboration} and \textit{Help}. Below the \textit{Menu Bar} is the \textit{Tool Bar} that contains the most used functions out of the menu.
 
-In the middle of the GUI are the four views and the editor component. The document view shows the current opened documents, the browse view contains all documents that can be found over the network (published by other users), the user view shows all users running ACE in the same network and the participant view contains a list of all users that are currently editing in the selected document.
+In the middle of the GUI are the four views and the editor component. The \textit{Document View} shows the currently open documents, the \textit{Browse View} contains all documents that can be found over the local area network (shared by other users), the \textit{User View} shows all users running ACE in the same network and the \textit{Participant View} displays a list of all users currently editing a selected document.
 
-At the bottom of the application is the status bar that simple contains a label which dispays the current IP address.
+The \textit{Status Bar} can be found at the bottom of the application. Its a label diplaying the local IP address.
 
 % COMPONENTS
 \section{Components}
@@ -24,15 +24,15 @@ At the bottom of the application is the status bar that simple contains a label 
 % FRAME
 \subsection{Frame}
 \label{applicationlayer_frame_desc}
-The main frame of the application layer is based in a \texttt{PersistentFrame} (not yet full implemented). A persistent frame is a simple \texttt{JFrame} that saves the last position and size. Each time an application is started, the frame has the same position like last time before the application has terminated. Its possible to set a \textit{JMenuBar}, a \textit{JToolBar}, a status bar \textit{JPanel} and the content (\textit{JPanel}). Further, the \texttt{PersistentFrame} has a \textit{windows listener} to catch the windows closing event and forward it to an \textit{exit action}.
+The \textit{Main Frame} of the application layer is based in a \textit{Persistent Frame} (not yet full implemented). A \textit{Persistent Frame} is a \texttt{JFrame} that saves the last position and size of it. Each time the application is started, the frame has the same position like the last time before the application has terminated. Its possible to add GUI components like a \textit{JMenuBar}, a \textit{JToolBar}, a \textit{Status Bar} and the content pane (\textit{JPanel}). Further, the \textit{Persistent Frame} has a \textit{WindowsListener} to catch the window closing event and forward it to a defined \textit{Exit Action}.
 
 % MENU
 \subsection{Menu}
-The menu of the application layer is basically a \textit{JMenuBar} containing \textit{JMenu} entries. Each \textit{JMenu} has one or more \textit{AbstractAction} and \textit{JSeparator}. The following figure illustrates how it is built up:
+The menu of the application layer is basically a \textit{JMenuBar} containing \textit{JMenu} entries. Each \textit{JMenu} has one or multiple \textit{AbstractActions} and \textit{JSeparators}. The following figure illustrates how it is built:
 \begin{figure}[H]
 \begin{center}
   \includegraphics[height= 2.08in, width= 4.85in]{../images/finalreport/application_menu.eps}
-\caption{Collaborative Editor Class Diagram}
+\caption{A Simple Menu}
 \label{application_menu}
 \end{center}
 \end{figure}
@@ -70,37 +70,37 @@ Toolbars are used to make the most used functions (actions) comfortably operated
 
 % VIEWS
 \subsection{Views \& View Controllers}
-This section gives an overview of all the used \textit{views} and how they are managed by the \textit{view controllers}. The figure \ref{application_views_controllers} show the class diagram from the view's and the controller's. NOTE: the shortcut \textit{ISC} stands for \textit{ItemSelectionChange}.
+This section gives an overview of all the used \textit{Views} and how they are managed by their \textit{View Controllers}. The figure \ref{application_views_controllers} shows the class diagram of the \textit{Views} and \textit{ViewControllers}. NOTE: the shortcut \textit{ISC} stands for \textit{ItemSelectionChange}.
 \subsubsection{Overview}
 \begin{figure}[H]
 \begin{center}
   \includegraphics[height=5.62in, width=7.19in]{../images/finalreport/application_views_controllers.eps}
-\caption{Collaborative Editor Class Diagram}
+\caption{View \& ViewController Class Diagram}
 \label{application_views_controllers}
 \end{center}
 \end{figure}
-Each view has its own controller (e.g. a \textit{BrowseView} has a \textit{BrowseViewController}). View controllers are managing the data source of the views and are needed to insert, remove or replace elements. The view only displays the elements from the data source. Moreover, a view returns the current selected element to the view controller. The construction of the view and the corresponding controller needs the following steps:
+Each view has its own controller (e.g. a \textit{BrowseView} has a \textit{BrowseViewController}). \textit{View Controllers} are managing the data source of the \textit{Views} and are needed to insert, remove or replace elements. The \textit{View} herself only displays the elements of the data source. Moreover, a \textit{View} returns the current selected element back to the \textit{View Controller}. The construction of such pairs contains the following steps:
 \begin{enumerate}
-\item create the view controller
-\item create the view (code fragment from the contructor of \texttt{ViewImpl}):
+\item create the \textit{View Controller}
+\item create the \textit{View} (code fragment from the contructor of \texttt{ViewImpl}):
   \begin{verbatim}
     public ViewImpl(ViewController controller, ...) {
       controller.setView(this);
       addItemSelectionChangeListener(controller);
     }
   \end{verbatim}
-  After the view has been created, the the view is registered by its controller (\texttt{controller.setView(this)}) and the controller receives the \texttt{ItemSelectionChangeEvent} if the selection has changed on the view.
+  After the \textit{View} has been created, it registers itself to the given \textit{View Controller} (\texttt{controller.setView(this)}) and adds the controller to the recipient list of \textit{ItemSelectionChangeEvents}. These events are thrown whenever the selection on the \textit{View} has changed.
 \end{enumerate}
-To keep the displayed list elements up to date \textit{Glazed Lists} (see section \ref{appendix_frameworks_glazedlists} for more details) are used. \textit{Glazed Lists} providing \textit{EventLists} which are observing their elements. If such an element changes a property (and fires a \texttt{firePropertyChange(...)}) the list will automatically be updated and you dont have to care about that yourself.
+To keep the displayed list elements up to date \textit{Glazed Lists} are used. \textit{Glazed Lists} providing \textit{EventLists} which are observing their elements. If such an element changes a property (and fires a \texttt{firePropertyChange(...)}) the list will automatically be updated (see section \ref{appendix_frameworks_glazedlists} for more details).
 
-The next sections are giving an overview of details from the four different views.
+The next four sections explaining the usage of the different \textit{Views} used for the GUI.
 
 \subsubsection{Document View \& Controller}
-The document view is used to display the current open documents. A current open document can either be a local document (new or existing document on the local machine), a published document (a local document that has been published) or a joined document published by another user. All needed information for documents are nested into \textit{DocumentItems}. The most important attributes of document items are:
+The \textit{Document View} is used to display the current open documents. A current open document can either be a local document (new or existing document on the local machine), a published document (a local document that has been published) or a joined document published by another user. All needed information for documents are nested into \textit{DocumentItems}. The most important attributes are:
 \begin{itemize}
-\item Type: the type decides for what kind of document the document item is needed (e.g. local, published, remote, joined document).
-\item Editor Document: the styled document (see section \ref{applicationlayer_collabdocument}) that is displayed in the text component.
-\item If the type is remote or shared: the \textit{Session} and \textit{SessionCallback} are referenced to send and receive \textit{Operations}.
+\item Type: the type decides what kind of document the \textit{DocumentItem} is needed for (e.g. local, published, remote or joined).
+\item Editor Document: the styled document (see section \ref{applicationlayer_collabdocument}) that contains the content and is displayed in the text component.
+\item If the type is remote or shared: the \textit{Session} and \textit{SessionCallback} are set to send and receive \textit{Operations}.
 \end{itemize}
 \begin{figure}[H]
 \begin{center}
@@ -109,7 +109,7 @@ The document view is used to display the current open documents. A current open 
 \label{application_documentview}
 \end{center}
 \end{figure}
-The \textit{DocumentItem} class is used for other document types than \textit{local}, \textit{published} or \textit{joined} too. To display only the documents with these types, a so called \textit{Matcher} is needed:
+The \textit{DocumentItem} class is used for other document types than \textit{local}, \textit{published} or \textit{joined} too. To display only the local, published and joined documents, a so called \textit{Matcher} is needed:
 \begin{verbatim}
   Matcher documentViewMatcher = new Matcher() {
     public boolean matches(Object item) {
@@ -120,10 +120,10 @@ The \textit{DocumentItem} class is used for other document types than \textit{lo
     }
   };
 \end{verbatim}
-This matcher is filtering the source list containing all document items and returns only the document items with the corresponding type.
+This matcher is filtering the source list containing all \textit{DocumentItems} and returns only the \textit{DocumentItems} with the corresponding type.
 
 \subsubsection{Browse View \& Controller}
-The browse view displays all documents that are published by other users in the same network. The browse view controller that controls the browse view implements a \textit{DocumentListener} that notifes the controller whenever new documents have been found on the network or existing document have been discarded.
+The \textit{Browse View} displays all documents that are published by other users in the same local area network. The \textit{Browse View Controller} that controls the \textit{Browse View} implements a \textit{DocumentListener} that notifies the controller whenever new documents have been found on the network or existing document have been discarded.
 \begin{figure}[H]
 \begin{center}
   \includegraphics[height=3.5in, width=5.62in]{../images/finalreport/application_browseview.eps}
@@ -132,7 +132,7 @@ The browse view displays all documents that are published by other users in the 
 \end{center}
 \end{figure}
 
-Because the browse view uses the same source list of document items than the document view, another filter (matcher) is needed to separate the documents after their types. The browse view only displays documents of the types remote and waiting. A document item has the type awaiting while joining a remote document.
+Because the \textit{Browse View} uses the same source list of \textit{Document Items} than the \textit{Document View}, another filter (matcher) is needed to separate the documents after their types. The \textit{Browse View} only displays documents of the types remote and awaiting. A \textit{Document Item} has the type awaiting while joining a document published by another user.
 \begin{verbatim}
   Matcher browseViewMatcher = new Matcher() {
     public boolean matches(Object item) {
@@ -142,7 +142,7 @@ Because the browse view uses the same source list of document items than the doc
     }
   };
 \end{verbatim}
-In case that there are a lot of users with a lot of published documents in a network the browse view has a filter. This filter allows the user to type a publisher name into a textfield. All documents that are not from this publisher will be removed from the list:
+In case that there are a lot of users with a lot of published documents in a network the \textit{Browse View} has a filter included. This filter allows the user to type a publisher name into a text field. All documents that are not from this publisher will be filtered out and not displayed.
 \begin{verbatim}
   JTextField browseFilterField = new JTextField();
   TextFilterator browseFilterator = new TextFilterator() {
@@ -154,7 +154,7 @@ In case that there are a lot of users with a lot of published documents in a net
 \end{verbatim}
 
 \subsubsection{User View \& Controller}
-The user view displays all other users running ACE in the same local area network. The user controller receives a notification from the \textit{UserListener} whenever a user has been discovered or discarded. On this way he manages the list of users the \textit{User View} is displaying.
+The \textit{User View} displays all other users running ACE in the same local area network. The \textit{User View Controller} receives a notification from the \textit{UserListener} whenever a new user has been discovered or discarded from the network. On this way he manages the list of users the \textit{User View} is displaying.
 \begin{figure}[H]
 \begin{center}
   \includegraphics[height=3.33in, width=5.62in]{../images/finalreport/application_userview.eps}
@@ -162,7 +162,7 @@ The user view displays all other users running ACE in the same local area networ
 \label{application_userview}
 \end{center}
 \end{figure}
-For finding fast a single user out of the rest the \textit{User View} has a filter. The filter is based on the text entered into a textfield and compares that to the usernames:
+For finding fast a single user out of all users, the \textit{User View} has a filter. The filter is based on the text entered into a textfield and compares that to the usernames. All users not matching to the entered text will be filtered out and are not displayed.
 \begin{verbatim}
   JTextField userFilterField = new JTextField();
   TextFilterator userFilterator = new TextFilterator() {
@@ -174,7 +174,7 @@ For finding fast a single user out of the rest the \textit{User View} has a filt
 \end{verbatim}
 
 \subsubsection{Participant View \& Controller}
-At the moment a document is published, a list of participants i created. At the beginning only the publisher himself is in this list.  For each user joining the document, a new \textit{ParticipantItem} is created and added to the list. The \textit{ParticipantItem} contains the name of the participant and the color needed to highlight his text. The \textit{Participant View} displays all these \textit{ParticipantItems} of a session.
+At the moment a document is published, a list of participants is created. At the beginning only the publisher of the document is in this list.  For each user joining the document, a new \textit{ParticipantItem} is created and added to the list. The \textit{ParticipantItem} contains the name of the participant and the color needed to highlight his text. The \textit{Participant View} displays all these \textit{ParticipantItems} of the selected document.
 \begin{figure}[H]
 \begin{center}
   \includegraphics[height=2.15in, width=5.62in]{../images/finalreport/application_participantview.eps}
@@ -182,6 +182,8 @@ At the moment a document is published, a list of participants i created. At the 
 \label{application_participantview}
 \end{center}
 \end{figure}
+The \textit{SessionCallback} receives notifications from the collaboration layer for every participant joined or left and updates the list with \textit{ParticipantItems}. \\
+
 Each published document has its own list of participants which needs to be set in the \textit{Participant View Controller} when the current displayed document changes.
 \begin{verbatim}
   public void setParticipantList(EventList participantList) {
@@ -206,7 +208,7 @@ All actions used by the application layer are subclasses of the java \textit{Abs
 
   putValue(SHORT_DESCRIPTION, "Tooltip text here...");
 \end{verbatim}
-Most of the actions are depending on the selection of the \textit{Document View}. This leads to the \textit{DocumentItemSelectionChangeAction} class:
+The behaviour of most of the actions is depending on the selection on the \textit{Document View}. This leads to the \textit{DocumentItemSelectionChangeAction} class:
 \begin{figure}[H]
 \begin{center}
   \includegraphics[height=3.97in, width=3.85in]{../images/finalreport/application_action.eps}
@@ -228,12 +230,12 @@ This class handles the registration of the action to the \textit{ItemSelectionCh
     public abstract void itemSelectionChanged(ItemSelectionChangeEvent e);
   }
 \end{verbatim}
-
+Whenever the selection on the \textit{Document View} changes, the method \texttt{itemSelectionChanged(...)} from the action is called.
 
 
 % EDITOR
 \subsection{Editor}
-This section gives an overview of all components needed for the collaborative editor. The following figure shows the class diagram:
+This section gives an overview of all components needed for the \textit{Collaborative Editor}. The following figure shows the class diagram:
 \begin{figure}[H]
 \begin{center}
   \includegraphics[height=5.25in, width=5.55in]{../images/finalreport/application_editor.eps}
@@ -243,7 +245,7 @@ This section gives an overview of all components needed for the collaborative ed
 \end{figure}
 
 \subsubsection{Collaborative Editor}
-The collaborative editor is a JFrame which support all functionality defined in the \textit{Editor} interface. The constructor looks like:
+The \textit{Collaborative Editor} is a JFrame which support all functionality defined in the \textit{Editor} interface. The constructor looks like:
 \begin{verbatim}
   public CollaborativeEditor(...) {
     // create editor pane & kit
@@ -261,14 +263,14 @@ The collaborative editor is a JFrame which support all functionality defined in 
   }
 \end{verbatim}
 
-All setter methods (except \texttt{setTitle(...)} that sets directly the tilte of the frame) are directly forwarded to the collaborative text pane (\texttt{cTextPane}) like:
+All setter methods (except \texttt{setTitle(...)} that sets directly the tilte of the frame) are forwarded to the \textit{Collaborative Text Pane} (\texttt{cTextPane}) like:
 \begin{verbatim}
   public void setXYZ(...) {
     cTextPane.setXYZ(...);
   }
 \end{verbatim}
 
-To use the standard text component actions for the menu \textit{edit}, we need getter methods that returns them. All text component actions are handled in the editor kit (see section \ref{collaborative_editor_kit}), thus we forward the getter methods to the collaborative editor kit (\texttt{cEditorKit}):
+To use the standard \textit{Java Swing} text component actions in the \textit{Edit Menu}, getter methods are needed to return them. All these text component actions are handled in the \textit{Editor Kit} (see section \ref{collaborative_editor_kit}), thus the getter methods are simple forwarded to the \textit{Collaborative Editor Kit} (\texttt{cEditorKit}):
 \begin{verbatim}
   public Action getXYZAction() {
     return cEditorKit.getXYZAction();
@@ -277,7 +279,7 @@ To use the standard text component actions for the menu \textit{edit}, we need g
 
 
 \subsubsection{Collaborative TextPane}
-The collaboration text pane implements all functionality defined by the \texttt{Editor} interface. This component overrides the \texttt{replaceSelection} method from its superclass \texttt{JTextPane}. This is needed to use a lock while inserting content into the document. Locking has to be done to avoid asynchronous text insertions while creating and sending operations that are based on the document content.
+The \textit{Collaborative Text Pane} subclasses the \textit{JTextPane}. It overrides the \texttt{replaceSelection} method from its superclass. This is needed to include a lock while inserting text into the document. Locking has to be done to avoid asynchronous text insertions while creating and sending operations that are based on the document content.
 \begin{verbatim}
   public void replaceSelection(String content) {
     SessionTemplate template = new SessionTemplate(session);
@@ -294,7 +296,7 @@ The collaboration text pane implements all functionality defined by the \texttt{
     }
   }
 \end{verbatim}
-Furthermore there is a method \texttt{setCaretHandlerMap(PropertyChangeHashMap caretHandlerMap)} which is responsible to set the map with the carets (cursor positions) from all participants of the current document. The \texttt{PropertyChangeHashMap} is a map that adds a \texttt{PropertyChangeListener} on all inserted elements (carets from other users) and forwards their \texttt{PropertyChangeEvents} to all registered components. The following code fragment makes the editor able to receive updates if the carets of other users have changed:
+Furthermore, there is a method \texttt{setCaretHandlerMap(PropertyChangeHashMap caretHandlerMap)} which is responsible to set the map with the carets (cursor positions) from all participants of the current document. The \texttt{PropertyChangeHashMap} is a map that adds a \texttt{PropertyChangeListener} on all inserted elements (carets from other users) and forwards their \texttt{PropertyChangeEvents} to all registered components. The following code fragment makes the editor able to receive updates if the carets of other users have changed:
 \begin{verbatim}
   public void setCaretHandlerMap(PropertyChangeHashMap caretHandlerMap) {
     // unregister old map
@@ -305,9 +307,9 @@ Furthermore there is a method \texttt{setCaretHandlerMap(PropertyChangeHashMap c
     this.caretHandlerMap.addPropertyChangeListener(this);
   }
 \end{verbatim}
-To handle the own caret changes its necessary to register a \texttt{CaretListener}. The invoked method \texttt{caretUpdate(...)} checks if the current user really changed his cursor position and needs to send the new caret position to the session.
+To handle the changes of the own caret it is necessary to register a \texttt{CaretListener}. The invoked method \texttt{caretUpdate(...)} checks if the cursor position has changed and sends the new caret position to the session and consequently to all other users.
 
-Each time a caret of another user changes the method \texttt{propertyChange(PropertyChangeEvent evt)} will be invoked. The \texttt{PropertyChangeEvent} contains the old and the new caret position from the users that moved his caret and forces a repaint. The implementation looks like:
+Each time a caret of another user changes the method \texttt{propertyChange(PropertyChangeEvent evt)} will be invoked from the \textit{PropertyChangeHashMap}. The \texttt{PropertyChangeEvent} contains the old and the new caret position from the user that moved his caret. A repaint of the old and the new cursor is needed. The implementation looks like:
 \begin{verbatim}
   public void propertyChange(PropertyChangeEvent evt) {
     // old caret
@@ -321,19 +323,19 @@ Each time a caret of another user changes the method \texttt{propertyChange(Prop
     repaint(newRect);
   }
 \end{verbatim}
-The \texttt{repaint(...)} is eighter called by swing or explicit by the \texttt{propertyChange} method when one of the participant changed his cursor position. It iterates through the \texttt{caretHandlerMap} and paints the caret for each map entry.
+The \texttt{repaint(...)} is eihter called by swing or explicit by the \texttt{propertyChange} method when one of the participant changed his cursor position. It iterates through the \texttt{caretHandlerMap} and paints cursor for each user.
 
 \subsubsection{Collaborative EditoKit}
 \label{collaborative_editor_kit}
-The collaborative editor kit extends the styled editor kit and is needed for synchronisation purposes. To ensure the correct content of the text component its necessary to use lockings before sending operation for the following situations:
+The \textit{Collaborative Editor Kit} extends the \textit{Styled Editor Kit} and is needed for synchronisation purposes. To ensure the correct content of the text component its necessary to use lockings before sending operation in the following situations:
 \begin{itemize}
 \item \texttt{DeletePrevCharAction} which is called when the users presses the backspace key.
 \item \texttt{DeleteNextCharAction} which is called when the users presses the delete key.
 \item \texttt{CutAction} which is called when the user cuts some text out of the document.
-\item Inserting Content: this issue is handled in the \textit{collaborative text pane}.
+\item Inserting Content: this issue is handled in the \textit{Collaborative Text Pane}.
 \end{itemize}
 
-All editor actions are defined in an array that can be get by using the \texttt{getActions()} method from the superclass. The three delete actions listed above need to replaced by actions that are able to use locks. A simple solution would be:
+All editor actions are defined in an array that can be get by using the \texttt{getActions()} method from the superclass \texttt{StyledEditorKit}. The three delete actions listed above need to be replaced by actions that are able to use locks. A simple solution would be:
 \begin{verbatim}
   public class CollaborativeDeletePrevCharAction extends
     DefaultEditorKit.DeletePrevCharAction {
@@ -347,7 +349,7 @@ All editor actions are defined in an array that can be get by using the \texttt{
     }
   }
 \end{verbatim}
-Unfortunately its not possible to subclass the actions defined in the \texttt{DefaultEditorKit}. This leads to the solution to copy their implementation into the \texttt{CollaborativeEditorKit} and manipulate them. For example the \texttt{actionPerformed} method from \texttt{DeletePrevCharAction} looks like:
+Unfortunately its not possible to subclass the actions defined in the \texttt{DefaultEditorKit}. This leads to the solution to copy their implementation into the \textit{Collaborative Editor Kit} and manipulate it. For example the \texttt{actionPerformed} method from \texttt{DeletePrevCharAction} looks like:
 \begin{verbatim}
   public void actionPerformed(...) {
     SessionTemplate template = new SessionTemplate(session);
@@ -368,17 +370,17 @@ Unfortunately its not possible to subclass the actions defined in the \texttt{De
 
 
 \subsubsection{Editor Controller}
-The editor controller is registered for item selection change events from the \textit{DocumentViewController} and is used to enabled, disable and set editor values. Each time the selection is changed or the current document item changes properties, the following procedure is made:
+The \textit{Editor Controller} is registered for \textit{Item Selection Change Events} from the \textit{Document View Controller} and is used to enabled, disable and set editor values. Each time the selection is changed or the current \textit{Document Item} changes the properties, the following procedure is made:
 \begin{itemize}
-\item \textit{disable} the editor if no document is selected.
+\item \textit{disable} the editor if no document is selected. otherwise:
 \item \textit{set} the \textit{document} of the selected item.
 \item \textit{set} the editor \textit{title}.
 \end{itemize}
-Furthermore if the selected document is a published or a joined (remote) document the \textit{session} and the \textit{participant list} are set too.
+Furthermore if the selected document is a published or a joined (remote) document the \textit{Session} and the \textit{participant list} are set too.
 
 \subsubsection{Collaborative Document}
 \label{applicationlayer_collabdocument}
-The collaborative document extends the \textit{DefaultStyledDocument}. It is used for getting write locks and applying text styles. Each time a style added to the document changes the method \texttt{reapplyStyles(...)} is called.
+The \textit{Collaborative Document} extends the \textit{DefaultStyledDocument}. It is used for getting write locks and applying text styles. Each time a style added to the document changes the method \texttt{reapplyStyles(...)} is called.
 \begin{verbatim}
   protected void styleChanged(Style style) {
     if(!style.getName().equals("default")) {
@@ -387,7 +389,7 @@ The collaborative document extends the \textit{DefaultStyledDocument}. It is use
   }
 \end{verbatim}
 
-The method \texttt{reapplyStyles(...)} iterates through all the text elements from the document and checks if they are using the changed style. All elements using this style will be notified and updated. The following scenario will work now and all text elements will have the new background color:
+The method \texttt{reapplyStyles(...)} iterates through all the text elements from the document and checks if they are using the changed style. All elements using this style will be notified and updated. The following scenario will change the background color of all elements using the style "myStyle" from the color blue to red:
 \begin{verbatim}
   // add style
   Style myStyle = document.addStyle("myStyle", null);
@@ -401,7 +403,7 @@ The method \texttt{reapplyStyles(...)} iterates through all the text elements fr
 \end{verbatim}
 
 \subsubsection{AsyncCaret}
-When inserting text into a text component and setting the caret position asynchronous, its possible that the caret isnt set to the correct position. Asynchronous caret update is implemented in Java 1.4 but there is no posibility to enable it (this problem is solved in Java 1.5). \texttt{AsyncCaret} is a simple copy of the standard caret class with the following constructor details:
+When inserting text into a text component and setting the caret position asynchronous, its possible that the caret is not set to the correct position. Asynchronous caret update is implemented in Java 1.4 but there is no posibility to enable it (this problem is solved in Java 1.5). \textit{Async Caret} is a simple copy of the standard caret class with the following constructor changes:
 \begin{verbatim}
   public AsyncCaret() {
     async = true;
@@ -413,16 +415,16 @@ When inserting text into a text component and setting the caret position asynchr
 % APPLICATION FACTORY
 \subsubsection{Application Factory}
 \label{applicationlayer_applicationfactory}
-To build the GUI (see section \ref{applicationlayer_wf_startup}) the \textit{Application Factory} is needed besides of \textit{Spring} (see section \ref{appendix_frameworks_spring}). It provides methods to create the \textit{Menu Bar}, the \textit{Tool Bar}, the \textit{Persistant Component Pane} and the \textit{Status Bar}.
+To build the GUI (see section \ref{applicationlayer_wf_startup}) the \textit{Application Factory} is needed besides of \textit{Spring} (see section \ref{appendix_frameworks_spring}). It provides methods to create the \textit{Menu Bar}, the \textit{Tool Bar}, the \textit{Persistent Component Pane} and the \textit{Status Bar}.
 
 % APPLICATION CONTROLLER
 \subsubsection{Application Controller}
-All functions that may need to show a dialog for user inputs or for error displaying are handled within the \textit{Application Controller}. Some functions like for example \texttt{closeDocument()} need to do some checks before they open a dialog and other functions like \textit{showAbout()} directly popup the required dialog. To show dialogs the \textit{Dialog Controller} (\ref{applicationlayer_dialogcontroller}) is used.
+All functions that may need to show a dialog for user inputs or for error displaying are handled within the \textit{Application Controller}. Some functions like for example \texttt{closeDocument()} need to do some checks before they open a dialog and other functions like \textit{showAbout()} directly popup the required dialog. To show dialogs the \textit{Application Controller} uses the \textit{Dialog Controller} (\ref{applicationlayer_dialogcontroller}).
 
 % DIALOG CONTROLLER
 \subsubsection{Dialog Controller}
 \label{applicationlayer_dialogcontroller}
-The \textit{Dialog Controller} is used to show dialogs to the user. This dialogs are either to get inputs from the user or to notify the user. To make all dialogs \textit{modal}, the main frame (see \ref{applicationlayer_frame_desc}) is given to the \textit{Dialog Controller}. The following example illustrates ho to popup a dialog:
+The \textit{Dialog Controller} is used to show dialogs to the user. This dialogs are either to get inputs from the user or to notify the user. To make all dialogs \textit{modal}, the \textit{Main Frame} (see \ref{applicationlayer_frame_desc}) is given to the \textit{Dialog Controller}. The following example illustrates how to popup a dialog:
 \begin{verbatim}
   public void showXYZDialog(String title, String message) {
     JOptionPane.showMessageDialog(
@@ -458,14 +460,14 @@ All the startup processes for ACE are defined in the main method from the class 
 \item[1. Load Customizer ] The first step is to get the customizers. Customizers are used to create operating system based stuff like setting the look \& feel of the application. Moreover the 
 \item[2. Load ApplicationContext ] After the customizer has been loaded, the spring application context (see \ref{appendix_frameworks_spring} for more details about spring) needs to be loaded. With the help of this application context the \textit{Application Factory}, the \textit{Application Controller} and the \textit{Collaboration Service} are loaded and initialized.
 \item[3. Create Main Frame ] With the help of the \textit{Application Factory} the \textit{Menu}, \textit{Toolbar} and the \textit{Content Pane} (which includes all \textit{Views} and the \textit{Editor}) are loaded and integrated into the GUI.
-\item[4. Load Preferences Store ] The \textit{Preferences Store} needs to be loaded to get the unique user id which is used to initialize the \textit{Collabortion Service}.
+\item[4. Load Preferences Store ] The \textit{Preferences Store} needs to be loaded to get the unique user id which is needed to initialize the \textit{Collabortion Service}.
 \item[5. Init Collaboration Service ] The \textit{Collaboration Service} needs to be initialized. This includes setting the own user details, the \textit{InvitationCallback} and \textit{ServiceFailureHandler}. After all necessary values are set, the \textit{Collaboration Service} can be started.
 \item[6. Create Empty Document ] The empty document of a newly started text editor allows the immediate start of writing text except of creating an empty document first.
 \end{description}
 
 % ACTION ENABLING
 \subsection{Enabling of Actions}
-It is important for the user-friendliness to enabled or disable actions in the GUI. The enabling of most of the actions depends on selection criteria of the views. For this pupose actions can add themself to the \textit{ItemSelectionChangeListener} of a view and receiving \textit{ItemSelectionChangedEvents}.  For example the \textit{close document} action should be only enabled if a document is selected in the \textit{Document View}:
+It is important for the user-friendliness to enabled or disable actions in the GUI. The enabling of most of the actions depends on selection criteria in the \textit{Views}. For this pupose actions can add themself to the \textit{ItemSelectionChangeListener} of a view and receiving \textit{ItemSelectionChangedEvents}.  For example the \textit{close document} action should only be enabled if a document is selected in the \textit{Document View}:
 \begin{verbatim}
   // somewhere in the constructor
   documentView.addItemSelectionChangeListener(this);
