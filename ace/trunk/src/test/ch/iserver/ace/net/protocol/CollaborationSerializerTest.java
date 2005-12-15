@@ -243,38 +243,40 @@ public class CollaborationSerializerTest extends TestCase {
 		assertEquals(XML_SESSION_TERMINATED, actual);
 	}
 	
-	private static final String XML_SESSION_TERMINATED = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+	private static final String NEWLINE = System.getProperty("line.separator");
+	
+	private static final String XML_SESSION_TERMINATED = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +	NEWLINE +
 	"<ace><session>" +
 	"<sessionTerminated/>" +
 	"</session></ace>"; 
 	
-	private static final String XML_ACKNOWLEDGE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+	private static final String XML_ACKNOWLEDGE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + NEWLINE +
 	"<ace><session>" +
 	"<ack siteId=\"23421234123223\">" +
 	"<timestamp>56 23 </timestamp>" +
 	"</ack>" +
 	"</session></ace>";
 	
-	private static final String XML_PARTICIPANT_LEFT = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+	private static final String XML_PARTICIPANT_LEFT = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + NEWLINE +
 	"<ace><session>" +
 	"<pLeft id=\"1234\">" +
 	"<reason code=\"2323\"/>" +
 	"</pLeft>" +
 	"</session></ace>";	
 	
-	private static final String XML_PARTICIPANT_JOINED = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+	private static final String XML_PARTICIPANT_JOINED = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + NEWLINE +
 	"<ace><session>" +
 	"<pJoined id=\"1234\">" +
 	"<user id=\"sadfasd-24\" name=\"Jimmy Ritter\" address=\"123.43.45.21\" port=\"4123\" dnssdDiscovered=\"false\"/>" +
 	"</pJoined>" +
 	"</session></ace>";	
 	
-	private static final String XML_CARETUPDATE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+	private static final String XML_CARETUPDATE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + NEWLINE +
 			"<ace><session>" +
 			"<caretUpdate siteId=\"1\" participantId=\"4\"><timestamp>5 12 </timestamp><caret dot=\"3\" mark=\"9\"/></caretUpdate>" +
 			"</session></ace>";
 	
-	private static final String XML_NOOP_EMPTY = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+	private static final String XML_NOOP_EMPTY = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + NEWLINE +
 	"<ace><session>" +
 	"<request siteId=\"1\" participantId=\"4\">" +
 	"<operation>" +
@@ -284,7 +286,7 @@ public class CollaborationSerializerTest extends TestCase {
 	"</request>" +
 	"</session></ace>";
 	
-	private static final String XML_NOOP = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+	private static final String XML_NOOP = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + NEWLINE +
 	"<ace><session>" +
 	"<request siteId=\"1\" participantId=\"4\">" +
 	"<operation>" +
@@ -294,7 +296,7 @@ public class CollaborationSerializerTest extends TestCase {
 	"</request>" +
 	"</session></ace>";
 	
-	private static final String XML_SESSION_MESSAGE_REQUEST_SPLIT = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+	private static final String XML_SESSION_MESSAGE_REQUEST_SPLIT = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + NEWLINE +
 	"<ace><session>" +
 	"<request siteId=\"1\" participantId=\"4\">" +
 	"<operation>" +
@@ -308,7 +310,7 @@ public class CollaborationSerializerTest extends TestCase {
 	"</request>" +
 	"</session></ace>";
 	
-	private static final String XML_SESSION_MESSAGE_REQUEST_2 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+	private static final String XML_SESSION_MESSAGE_REQUEST_2 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + NEWLINE +
 	"<ace><session>" +
 	"<request siteId=\"1\" participantId=\"4\">" +
 	"<operation>" +
@@ -320,17 +322,17 @@ public class CollaborationSerializerTest extends TestCase {
 	"</request>" +
 	"</session></ace>";
 	
-	private static final String XML_LEAVE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+	private static final String XML_LEAVE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + NEWLINE +
 			"<ace><notification>" +
 			"<leave docId=\"dic-1231\" participantId=\"13\"/>" +
 			"</notification></ace>";
 	
-	private static final String XML_KICKED = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+	private static final String XML_KICKED = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + NEWLINE +
 	"<ace><notification>" +
 	"<kicked docId=\"sdaf-2\"/>" +
 	"</notification></ace>";
 	
-	private static final String XML_JOIN_DOCUMENT_1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+	private static final String XML_JOIN_DOCUMENT_1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + NEWLINE +
 	"<ace><response>" +
 	"<document id=\"ASDF-23\" userid=\"adfasdf-21\" participantId=\"3\">" +
 	"<participants>" +
@@ -353,7 +355,7 @@ public class CollaborationSerializerTest extends TestCase {
 	"</document>" +
 	"</response></ace>";	
 	
-	private static final String XML_SESSION_MESSAGE_REQUEST_1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+	private static final String XML_SESSION_MESSAGE_REQUEST_1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + NEWLINE +
 	"<ace><session>" +
 	"<request siteId=\"1\" participantId=\"7\">" +
 	"<operation>" +

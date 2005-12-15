@@ -148,15 +148,16 @@ public class SerializerImplTest extends TestCase {
 		assertEquals(XML_JOIN_REJECTED, actual);
 	}
 	
+	private static final String NEWLINE = System.getProperty("line.separator");
 	
-	private static final String XML_JOIN_REJECTED = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+	private static final String XML_JOIN_REJECTED = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + NEWLINE +
 	"<ace><response>" +
 	"<joinRejected docId=\"doc-id-234b\" userid=\"vnmv-qqw2345\">" +
 	"<reason code=\"501\"/>" +
 	"</joinRejected>" +
 	"</response></ace>";
 	
-	private static final String EXPECTED_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+	private static final String EXPECTED_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + NEWLINE +
 			"<ace><response>" +
 			"<publishedDocs>" +
 			"<doc id=\"WERS24-RE2\" name=\"testfile.txt\"/>" +
@@ -165,7 +166,7 @@ public class SerializerImplTest extends TestCase {
 			"</publishedDocs>" +
 			"</response></ace>";
 	
-	private static final String XML_PUBLISH_1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+	private static final String XML_PUBLISH_1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + NEWLINE +
 			"<ace><notification>" +
 			"<publishDocs userid=\"";
 	
@@ -173,7 +174,7 @@ public class SerializerImplTest extends TestCase {
 			"</publishDocs>" +
 			"</notification></ace>";
 	
-	private static final String XML_CONCEAL_1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+	private static final String XML_CONCEAL_1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + NEWLINE +
 			"<ace><notification>" +
 			"<concealDocs userid=\"";
 	
@@ -181,7 +182,7 @@ public class SerializerImplTest extends TestCase {
 			"</concealDocs>" +
 			"</notification></ace>";
 	
-	private static final String XML_SEND_DOCUMENTS = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+	private static final String XML_SEND_DOCUMENTS = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + NEWLINE +
 			"<ace><notification>" +
 			"<publishedDocs userid=\"asdfadsf-23\">" +
 			"<doc id=\"WERS24-RE2\" name=\"testfile.txt\"/>" +
@@ -190,21 +191,21 @@ public class SerializerImplTest extends TestCase {
 			"</publishedDocs>" +
 			"</notification></ace>";
 	
-	private static final String XML_JOIN = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+	private static final String XML_JOIN = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + NEWLINE +
 			"<ace><request>" +
 			"<join userid=\"asdfadsf-23\">" +
 			"<doc id=\"doc-id-234b\"/>" +
 			"</join>" +
 			"</request></ace>";
 	
-	private static final String XML_INVITE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+	private static final String XML_INVITE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + NEWLINE +
 	"<ace><request>" +
 	"<invite userid=\"vnmv-qqw2345\">" +
 	"<doc id=\"doc-id-234b\"/>" +
 	"</invite>" +
 	"</request></ace>";	
 	
-	private static final String XML_INVITE_REJECTED = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+	private static final String XML_INVITE_REJECTED = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + NEWLINE +
 	"<ace><response>" +
 	"<inviteRejected docId=\"doc-id-234b\" userid=\"vnmv-qqw2345\"/>" +
 	"</response></ace>";

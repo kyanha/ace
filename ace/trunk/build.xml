@@ -60,8 +60,7 @@
 		            version="1.0.0"/>
 		<dependency groupId="xml-apis" 
 		            artifactId="xml-apis" 
-		            version="2.0.2"
-		            scope="runtime"/>
+		            version="1.0.b2"/>
 		<dependency groupId="xerces" 
 		            artifactId="xercesImpl" 
 		            version="2.6.2"
