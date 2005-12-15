@@ -356,6 +356,7 @@ analyze because of its declarative nature.
 
 
 \section{Bonjour}
+\label{chapter:frameworks.bonjour}
 \subsection{Introduction}
 Bonjour, formerly known as Rendezvous, enables automatic discovery of computers, devices, and services on IP networks. It uses industry standard IP protocols to allow devices to automatically discover each other without the need to enter IP addresses or configure DNS servers. It is a technology developed by Apple that is submitted to the IETF as part of an ongoing standards-creation process. The technology is more generally known as zero-conf networking. 
 
@@ -374,7 +375,7 @@ The Bonjour API is small and provides a main class \texttt{DNSSD} to communicate
  \label{fig:frameworks.dnssd.uml}
 \end{figure}
 
-Following the main functions of the Bonjour API are described. For further information see the references  section ?????????
+Following the main functions of the Bonjour API are described. For further information see the references  section \ref{chapter:references}.
 
 \subsubsection{Register a service}
 To register a service, call \texttt{DNSS.register(...)} and pass an instance of \texttt{RegisterListener} which in turn is called back by Bonjour after the service was succesfully registered.
@@ -388,9 +389,12 @@ The local area network can be browsed for specific service types. The service ty
 \subsubsection{Query DNS record}
 Each registered service can be queried for an arbitrary DNS record, e.g. its IP address or the contents of its TXT record. This is done by a call to \texttt{DNSSD.queryRecord(..)} which is passed an instance of \texttt{QueryListener} which is called back when a query record has been completed.
 
+\subsection{mDNSResponder}
+In order to use Bonjour, a small service for multicast DNS must be installed on the local host. mDNSResponder (also known as mdnsd on some systems) is a daemon to implement Multicast DNS and DNS Service Discovery (the discovery techniques used by Bonjour). mDNSResponder listens at UDP port 5353 for Multicast DNS Query packets. When it receives a query for which it knows an answer, mDNSResponder issues the appropriate Multicast DNS Reply packet. mDNSResponder also performs Multicast DNS Queries on behalf of client  processes, and maintains a cache of the replies (sometimes may arise caching problems in the sense that cached data (e.g. a former TXT record from user) is returned instead of the newest available data).
 
 
 \section{BEEP Core}
+\label{chapter:framework.beepcore}
 \subsection{Introduction}
 BEEP stands for Blocks Extensible Exchange Protocol. BEEP integrates the best practices for common, basic mechanisms that are needed when designing an application protocol over TCP. For example, it handles things like peer-to-peer, client/server, and server/client interactions.
 The initial situation is that many Internet protocols reinvent a set of basic functions. The most common include: 
