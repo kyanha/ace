@@ -20,7 +20,7 @@ In order to select a particular network technology or a combination of several t
 \subsubsection{Open Architecture} 
 Do we want to have an open or a closed protocol. If we decide to have an open, public protocol, other applications could collaborate with our application. We would have to define the protocol and make this information publicly available. An open protocol would greatly benefit if it were not tied to any programming language, that is in our case Java. Jini/RMI for instance would pretty much limit the collaboration with other applications to Java applications. A network layer based on either JXTA or a combination of Bonjour and BEEP would be programming language independent and thus more broadly applicable. 
 
-The tendency was clearly to have an open protocol since the project is going to be open source. Further, the solution should be platform and programming language independent to make ACE accessible to as many developers as possible in the future.
+The tendency was clear to have an open protocol since the project is going to be open source. Further, the solution should be platform and programming language independent to make ACE accessible to as many developers as possible in the future.
 
 \section{Service discovery}
 For the service discovery the decision fell on Bonjour zero-conf networking technology. It is based on open standards and has implementations for several programming languages including Java. An important argument was that Bonjour has been used successfully by many companies especially for printer discovery but also for many other kinds of discovery. It has a small API and is easy to use. 
