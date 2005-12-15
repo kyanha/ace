@@ -59,7 +59,10 @@ public class BonjourFactory extends DiscoveryFactory {
 		UserRegistration actualRegistration = (registration != null) ? registration : new UserRegistrationImpl();
 		PeerDiscovery actualDiscovery = (discovery != null) ? discovery : createPeerDiscovery(callback);
 		Bonjour b = new Bonjour(actualRegistration, actualDiscovery);
-		Bonjour.setLocalServiceName(System.getProperty("user.name"));
+		String serviceName = System.getProperty("user.name");
+		//remove spaces from service name
+		serviceName = serviceName.replaceAll(" ", "");
+		Bonjour.setLocalServiceName(serviceName);
 		return b;
 	}
 	
