@@ -82,6 +82,8 @@ class PeerDiscoveryImpl implements PeerDiscovery {
 	 * {@inheritDoc}
 	 */
 	public void stop() {
-		browser.stop();
+		if (browser != null) {
+			browser.stop();
+		}
 	}
 }

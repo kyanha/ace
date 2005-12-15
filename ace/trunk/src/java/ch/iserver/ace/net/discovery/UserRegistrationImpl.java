@@ -111,7 +111,9 @@ class UserRegistrationImpl implements UserRegistration {
 	 * {@inheritDoc}
 	 */
 	public void stop() {
-		registration.stop();
+		if (registration != null) {
+			registration.stop();
+		}
 		isRegistered = false;
 	}
 	
