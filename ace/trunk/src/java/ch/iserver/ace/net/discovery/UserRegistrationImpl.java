@@ -71,7 +71,7 @@ class UserRegistrationImpl implements UserRegistration {
 	public void register(String username, String userid) {
 		String serviceName = System.getProperty("user.name");
 		//remove spaces from service name
-		serviceName = serviceName.replaceAll(" ", "");
+		serviceName = serviceName.replaceAll(" ", "+");
 		if (username == null) {
 			username = serviceName;
 		}

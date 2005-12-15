@@ -61,7 +61,7 @@ public class BonjourFactory extends DiscoveryFactory {
 		Bonjour b = new Bonjour(actualRegistration, actualDiscovery);
 		String serviceName = System.getProperty("user.name");
 		//remove spaces from service name
-		serviceName = serviceName.replaceAll(" ", "");
+		serviceName = serviceName.replaceAll(" ", "+");
 		Bonjour.setLocalServiceName(serviceName);
 		return b;
 	}
