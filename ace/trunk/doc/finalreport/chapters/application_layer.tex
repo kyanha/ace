@@ -90,15 +90,94 @@ Each view has its own controller (e.g. a \textit{BrowseView} has a \textit{Brows
   \end{verbatim}
   After the view has been created, the the view is registered by its controller (\texttt{controller.setView(this)}) and the controller receives the \texttt{ItemSelectionChangeEvent} if the selection has changed on the view.
 \end{enumerate}
-The next sections gives an overview of details each of the four different views.
+To keep the displayed list elements up to date \textit{Glazed Lists} (see \ref{...} for more details) are used. \textit{Glazed Lists} providing \textit{EventLists} which are observing their elements. If such an element changes a property (and fires a \texttt{firePropertyChange(...)}) the list will automatically be updated and you dont have to care about that yourself.
+
+The next sections are giving an overview of details from the four different views.
+
+\subsubsection{Document View \& Controller}
+The document view is used to display the current open documents. A current open document can either be a local document (new or existing document on the local machine), a published document (a local document that has been published) or a joined document published by another user. All needed information for documents are nested into \textit{DocumentItems}. The most important attributes of document items are:
+\begin{itemize}
+\item Type: the type decides for what kind of document the document item is needed (e.g. local, published, remote, joined document).
+\item Editor Document: the styled document (\ref{applicationlayer_collabdocument}) that is displayed in the text component.
+\item If the type is remote or shared: the \textit{Session} and \textit{SessionCallback} are referenced to send and receive \textit{Operations}.
+\end{itemize}
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[height=2.99in, width=5.62in]{../images/finalreport/application_documentview.eps}
+\caption{Document View Controller}
+\label{application_documentview}
+\end{center}
+\end{figure}
+The \textit{DocumentItem} class is used for other document types than \textit{local}, \textit{published} or \textit{joined} too. To display only the documents with these types, a so called \textit{Matcher} is needed:
+\begin{verbatim}
+  Matcher documentViewMatcher = new Matcher() {
+    public boolean matches(Object item) {
+      DocumentItem dItem = (DocumentItem)item;
+      return (dItem.getType() == DocumentItem.LOCAL ||
+      dItem.getType() == DocumentItem.PUBLISHED ||
+      dItem.getType() == DocumentItem.JOINED);
+    }
+  };
+\end{verbatim}
+This matcher is filtering the source list containing all document items and returns only the document items with the corresponding type.
+
+\subsubsection{Browse View \& Controller}
+The browse view displays all documents that are published by other users in the same network. The browse view controller that controls the browse view implements a \textit{DocumentListener} that notifes the controller whenever new documents have been found on the network or existing document have been discarded.
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[height=3.5in, width=5.62in]{../images/finalreport/application_browseview.eps}
+\caption{Browse View Controller}
+\label{application_browseview}
+\end{center}
+\end{figure}
+
+Because the browse view uses the same source list of document items than the document view, another filter (matcher) is needed to separate the documents after their types. The browse view only displays documents of the types remote and waiting. A document item has the type awaiting while joining a remote document.
+\begin{verbatim}
+  Matcher browseViewMatcher = new Matcher() {
+    public boolean matches(Object item) {
+      DocumentItem dItem = (DocumentItem)item;
+      return (dItem.getType() == DocumentItem.REMOTE ||
+      dItem.getType() == DocumentItem.AWAITING);
+    }
+  };
+\end{verbatim}
+In case that there are a lot of users with a lot of published documents in a network the browse view has a filter. This filter allows the user to type a publisher name into a textfield. All documents that are not from this publisher will be removed from the list:
+\begin{verbatim}
+  JTextField browseFilterField = new JTextField();
+  TextFilterator browseFilterator = new TextFilterator() {
+    public void getFilterStrings(List baseList, Object element) {
+      DocumentItem item = (DocumentItem)element;
+      baseList.add(item.getPublisher());
+    }
+  };
+\end{verbatim}
 
 
-\subsubsection{Document View}
-\subsubsection{Browse View}
 
 
-\subsubsection{User View}
-\subsubsection{Participant View}
+
+
+
+\subsubsection{User View \& Controller}
+The user view displays all other users running ACE in the same network. The user controller ...
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[height=3.33in, width=5.62in]{../images/finalreport/application_userview.eps}
+\caption{User View Controller}
+\label{application_userview}
+\end{center}
+\end{figure}
+
+\subsubsection{Participant View \& Controller}
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[height=2.15in, width=5.62in]{../images/finalreport/application_participantview.eps}
+\caption{Participant View Controller}
+\label{application_participantview}
+\end{center}
+\end{figure}
+
+
 
 % ACTIONS
 \subsection{Actions}
@@ -250,6 +329,7 @@ The editor controller is registered for item selection change events from the \t
 Furthermore if the selected document is a published or a joined (remote) document the \textit{session} and the \textit{participant list} are set too.
 
 \subsubsection{Collaborative Document}
+\label{applicationlayer_collabdocument}
 The collaborative document extends the \textit{DefaultStyledDocument}. It is used for getting write locks and applying text styles. Each time a style added to the document changes the method \texttt{reapplyStyles(...)} is called.
 \begin{verbatim}
   protected void styleChanged(Style style) {
@@ -310,10 +390,7 @@ All the startup processes for ACE are defined in the main method from the class 
 \item[10. Create Empty Document ]
 \end{description}
 
-
-
-
 % ACTION ENABLING
 \subsection{Enabling of Actions}
-
+It is important for the user-friendliness to enabled or disable actions in the GUI. The enabling of most of the actions depends on selection criteria of the views. For example the \textit{close document} action should be only enabled if a document is selected in the \textit{Document View}.
 
