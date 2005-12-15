@@ -34,22 +34,40 @@ import ch.iserver.ace.net.core.NetworkProperties;
 import ch.iserver.ace.net.core.NetworkServiceImpl;
 
 /**
+ * <code>BEEPSessionListener</code> listens repeatedly for sessions 
+ * initiated by other users. After a session has been accepted, 
+ * {@link ch.iserver.ace.net.protocol.StartChannelListenerImpl#startChannel(Channel, String, String)}
+ * will be called.
  *
+ * @see org.beepcore.beep.transport.tcp.TCPSessionCreator
  */
 public class BEEPSessionListener extends Thread {
 
 	private static Logger LOG = Logger.getLogger(BEEPSessionListener.class);
 	
+	/**
+	 * The profile registry
+	 */
 	private ProfileRegistry registry;
 	
+	/**
+	 * flag to indicate if the thread should terminate
+	 */
 	private boolean terminate;
 	
+	/**
+	 * Creates a new BEEPSessionListener.
+	 * 
+	 * @param registry	the profile registry
+	 */
 	public BEEPSessionListener(ProfileRegistry registry) {
 		this.registry = registry;
 		terminate = false;
 	}
 	
-	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void run() {
 		String exitStatus = "normal";
 		try {
@@ -84,8 +102,13 @@ public class BEEPSessionListener extends Thread {
 		LOG.info("terminate ["+exitStatus+"]");
 	}
 	
+	/**
+	 * Terminates this thread.
+	 */
 	public void terminate() {
+		LOG.debug("--> terminate()");
 		terminate = true;
 		interrupt();
+		LOG.debug("<-- terminate()");
 	}
 }
