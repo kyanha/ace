@@ -3,7 +3,7 @@
 
 % OVERVIEW
 \section{Overview}
-This section gives an overview over the components of the application layer of ACE. Figure \ref{applicationlayer_ace_overview} shows the graphical user interface (GUI) with all components. Each component is explained in details in section \ref{applicationlayer_component_desc}.
+This section gives an overview over the components of the application layer of ACE. Figure \ref{applicationlayer_ace_overview} shows the graphical user interface (GUI) with all components. Each component is explained in detail in section \ref{applicationlayer_component_desc}.
 \begin{figure}[H]
 \begin{center}
   \includegraphics[height=3.135in, width=5.01in]{../images/finalreport/application_ace_overview.eps}
@@ -11,11 +11,11 @@ This section gives an overview over the components of the application layer of A
 \label{applicationlayer_ace_overview}
 \end{center}
 \end{figure}
-On the top of the application are the \textit{Menu Bar} and the \textit{Tool Bar}. The \textit{Menu Bar} is splitted into four menus which are containing functions associated to the categories \textit{File}, \textit{Edit}, \textit{Collaboration} and \textit{Help}. Below the \textit{Menu Bar} is the \textit{Tool Bar} that contains the most used functions out of the menu.
+On the top of the window are the \textit{Menu Bar} and the \textit{Tool Bar}. The \textit{Menu Bar} is split into four menus which contain actions associated to the categories \textit{File}, \textit{Edit}, \textit{Collaboration} and \textit{Help}. Below the \textit{Menu Bar} is the \textit{Tool Bar} that contains the most commonly used actions.
 
-In the middle of the GUI are the four views and the editor component. The \textit{Document View} shows the currently open documents, the \textit{Browse View} contains all documents that can be found over the local area network (shared by other users), the \textit{User View} shows all users running ACE in the same network and the \textit{Participant View} displays a list of all users currently editing a selected document.
+Below the \emph{Tool Bar} are the four views and the editor component. The \textit{Document View} shows the currently open documents, the \textit{Browse View} contains all documents that have been discovered (shared by other users), the \textit{User View} shows all users running ACE and the \textit{Participant View} displays a list of users currently editing the selected document.
 
-The \textit{Status Bar} can be found at the bottom of the application. Its a label diplaying the local IP address.
+The \textit{Status Bar} can be found at the bottom of the application. It is a label diplaying the local IP address.
 
 % COMPONENTS
 \section{Components}
@@ -24,19 +24,25 @@ The \textit{Status Bar} can be found at the bottom of the application. Its a lab
 % FRAME
 \subsection{Frame}
 \label{applicationlayer_frame_desc}
-The \textit{Main Frame} of the application layer is based in a \textit{Persistent Frame} (not yet full implemented). A \textit{Persistent Frame} is a \texttt{JFrame} that saves the last position and size of it. Each time the application is started, the frame has the same position like the last time before the application has terminated. Its possible to add GUI components like a \textit{JMenuBar}, a \textit{JToolBar}, a \textit{Status Bar} and the content pane (\textit{JPanel}). Further, the \textit{Persistent Frame} has a \textit{WindowsListener} to catch the window closing event and forward it to a defined \textit{Exit Action}.
+The \textit{Main Frame} of the application layer is a \textit{Persistent Frame} (not yet fully implemented). A \textit{Persistent Frame} is a \texttt{JFrame} that saves the last position and size of it. Each time the application is started, the frame has the same position as the last time the application has been terminated. It is possible to add GUI components like a \textit{JMenuBar}, a \textit{JToolBar}, a \textit{Status Bar} and the content pane (\textit{JPanel}). Further, the \textit{Persistent Frame} has a \textit{WindowListener} to catch the window closing event and forward it to the \textit{Exit Action}.
 
 % MENU
 \subsection{Menu}
-The menu of the application layer is basically a \textit{JMenuBar} containing \textit{JMenu} entries. Each \textit{JMenu} has one or multiple \textit{AbstractActions} and \textit{JSeparators}. The following figure illustrates how it is built:
-\begin{figure}[H]
-\begin{center}
-  \includegraphics[height= 2.08in, width= 4.85in]{../images/finalreport/application_menu.eps}
-\caption{A Simple Menu}
-\label{application_menu}
-\end{center}
-\end{figure}
-This menu is created by the method \texttt{createMenuBar()} in the \textit{ApplicationFactory} (see section \ref{applicationlayer_applicationfactory}):
+
+% DECIDE: remove following part
+%
+%The menu of the application layer is basically a \textit{JMenuBar} containing \textit{JMenu} entries. Each \textit{JMenu} has one or multiple \textit{AbstractActions} and \textit{JSeparators}. The following figure illustrates how it is built:
+%\begin{figure}[H]
+%\begin{center}
+%  \includegraphics[height= 2.08in, width= 4.85in]{../images/finalreport/application_menu.eps}
+%\caption{A Simple Menu}
+%\label{application_menu}
+%\end{center}
+%\end{figure}
+
+The menu bar is created by the method \texttt{createMenuBar()} of the \textit{ApplicationFactory} (see section \ref{applicationlayer_applicationfactory}):
+
+% DECIDE: remove following verbatim environment?
 \begin{verbatim}
   public JMenuBar createMenuBar() {
     JMenuBar menuBar = new JMenuBar();
@@ -55,7 +61,9 @@ This menu is created by the method \texttt{createMenuBar()} in the \textit{Appli
 
 % TOOLBAR
 \subsection{Toolbar}
-Toolbars are used to make the most used functions (actions) comfortably operated. The application layer uses a \textit{JToolBar} for this purpose. Its created by the \textit{ApplicationFactory} in the method \textit{createToolBar()}:
+Toolbars are used to make the most commonly used actions easily accessible. The application layer uses a \textit{JToolBar} for that purpose. It is created by the \textit{ApplicationFactory} in the method \textit{createToolBar()}:
+
+% DECIDE: remove following verbatim environment?
 \begin{verbatim}
   public JToolBar createToolBar() {
     JToolBar toolBar = new JToolBar();
@@ -70,7 +78,8 @@ Toolbars are used to make the most used functions (actions) comfortably operated
 
 % VIEWS
 \subsection{Views \& View Controllers}
-This section gives an overview of all the used \textit{Views} and how they are managed by their \textit{View Controllers}. The figure \ref{application_views_controllers} shows the class diagram of the \textit{Views} and \textit{ViewControllers}. NOTE: the shortcut \textit{ISC} stands for \textit{ItemSelectionChange}.
+This section gives an overview of all the used \textit{Views} and how they are managed by their associated \textit{View Controller}. Figure \ref{application_views_controllers} shows the class diagram of the \textit{Views} and \textit{ViewControllers}. NOTE: the abbreviation \textit{ISC} stands for \textit{ItemSelectionChange}.
+
 \subsubsection{Overview}
 \begin{figure}[H]
 \begin{center}
@@ -79,29 +88,37 @@ This section gives an overview of all the used \textit{Views} and how they are m
 \label{application_views_controllers}
 \end{center}
 \end{figure}
-Each view has its own controller (e.g. a \textit{BrowseView} has a \textit{BrowseViewController}). \textit{View Controllers} are managing the data source of the \textit{Views} and are needed to insert, remove or replace elements. The \textit{View} herself only displays the elements of the data source. Moreover, a \textit{View} returns the current selected element back to the \textit{View Controller}. The construction of such pairs contains the following steps:
+
+Each view has its own controller (e.g. a \textit{BrowseView} has a \textit{BrowseViewController}). \textit{View Controllers} are managing the data source of the \textit{Views} and are needed to insert, remove or replace elements. The \textit{View} itself displays only the elements of the data source. Moreover, a \textit{View} returns the currently selected element to the \textit{View Controller}. The construction of a \emph{View}/\emph{ViewController} pair consists of the following steps:
+
 \begin{enumerate}
 \item create the \textit{View Controller}
 \item create the \textit{View} (code fragment from the contructor of \texttt{ViewImpl}):
+
   \begin{verbatim}
     public ViewImpl(ViewController controller, ...) {
       controller.setView(this);
       addItemSelectionChangeListener(controller);
     }
   \end{verbatim}
-  After the \textit{View} has been created, it registers itself to the given \textit{View Controller} (\texttt{controller.setView(this)}) and adds the controller to the recipient list of \textit{ItemSelectionChangeEvents}. These events are thrown whenever the selection on the \textit{View} has changed.
+  
+After the \textit{View} has been created, it registers itself with the given \textit{View Controller} (\texttt{controller.setView(this)}) and registers the controller as an \emph{Item\-Selection\-Change\-Listener} on the recipient list. The \emph{Item\-Selection\-Change\-Event}s are sent whenever the selection of the \textit{View} has changed.
 \end{enumerate}
+
+% TODO: revise the following section
 To keep the displayed list elements up to date \textit{Glazed Lists} are used. \textit{Glazed Lists} providing \textit{EventLists} which are observing their elements. If such an element changes a property (and fires a \texttt{firePropertyChange(...)}) the list will automatically be updated (see section \ref{appendix_frameworks_glazedlists} for more details).
 
-The next four sections explaining the usage of the different \textit{Views} used for the GUI.
+The next four sections explain the usage of the four different \textit{Views}.
 
 \subsubsection{Document View \& Controller}
-The \textit{Document View} is used to display the current open documents. A current open document can either be a local document (new or existing document on the local machine), a published document (a local document that has been published) or a joined document published by another user. All needed information for documents are nested into \textit{DocumentItems}. The most important attributes are:
+The \textit{Document View} is used to display the currently open documents. An open document can either be a local document (new or an existing document on the local machine), a published document (a local document that has been published) or a joined document published by another user. All needed information for documents are contained in \textit{DocumentItems}. The most important attributes are:
+
 \begin{itemize}
 \item Type: the type decides what kind of document the \textit{DocumentItem} is needed for (e.g. local, published, remote or joined).
 \item Editor Document: the styled document (see section \ref{applicationlayer_collabdocument}) that contains the content and is displayed in the text component.
 \item If the type is remote or shared: the \textit{Session} and \textit{SessionCallback} are set to send and receive \textit{Operations}.
 \end{itemize}
+
 \begin{figure}[H]
 \begin{center}
   \includegraphics[height=2.99in, width=5.62in]{../images/finalreport/application_documentview.eps}
@@ -109,6 +126,8 @@ The \textit{Document View} is used to display the current open documents. A curr
 \label{application_documentview}
 \end{center}
 \end{figure}
+
+% TODO: revise the following text (reader has no idea what a matcher)
 The \textit{DocumentItem} class is used for other document types than \textit{local}, \textit{published} or \textit{joined} too. To display only the local, published and joined documents, a so called \textit{Matcher} is needed:
 \begin{verbatim}
   Matcher documentViewMatcher = new Matcher() {
@@ -123,7 +142,8 @@ The \textit{DocumentItem} class is used for other document types than \textit{lo
 This matcher is filtering the source list containing all \textit{DocumentItems} and returns only the \textit{DocumentItems} with the corresponding type.
 
 \subsubsection{Browse View \& Controller}
-The \textit{Browse View} displays all documents that are published by other users in the same local area network. The \textit{Browse View Controller} that controls the \textit{Browse View} implements a \textit{DocumentListener} that notifies the controller whenever new documents have been found on the network or existing document have been discarded.
+The \textit{Browse View} displays all documents published by other users that have been discovered. The \textit{Browse View Controller}, which controls the \textit{Browse View}, implements the \textit{Document\-Listener} interface and is registered on the \textit{Collaboration\-Service}. Whenever the controller is notified about document discovery events, it updates the source list of the view.
+
 \begin{figure}[H]
 \begin{center}
   \includegraphics[height=3.5in, width=5.62in]{../images/finalreport/application_browseview.eps}
@@ -132,7 +152,9 @@ The \textit{Browse View} displays all documents that are published by other user
 \end{center}
 \end{figure}
 
-Because the \textit{Browse View} uses the same source list of \textit{Document Items} than the \textit{Document View}, another filter (matcher) is needed to separate the documents after their types. The \textit{Browse View} only displays documents of the types remote and awaiting. A \textit{Document Item} has the type awaiting while joining a document published by another user.
+Because the \textit{Browse View} uses the same source list of \textit{Document Items} as the \textit{Document View}, another filter (matcher) is needed to filter the documents based on their types. The \textit{Browse View} only displays documents of type \emph{remote} and \emph{awaiting}. A \textit{Document\-Item} has the type \emph{awaiting} while awaiting the response from the publisher to a join request.
+
+% TODO: do not talk about matchers, filter lists...
 \begin{verbatim}
   Matcher browseViewMatcher = new Matcher() {
     public boolean matches(Object item) {
@@ -142,7 +164,8 @@ Because the \textit{Browse View} uses the same source list of \textit{Document I
     }
   };
 \end{verbatim}
-In case that there are a lot of users with a lot of published documents in a network the \textit{Browse View} has a filter included. This filter allows the user to type a publisher name into a text field. All documents that are not from this publisher will be filtered out and not displayed.
+
+In case that there are a lot of users with a lot of published documents the \textit{Browse View} has a filter included. This filter allows the user to type a publisher name into a text field. All documents that are not from this publisher will be filtered out and therefore not displayed.
 \begin{verbatim}
   JTextField browseFilterField = new JTextField();
   TextFilterator browseFilterator = new TextFilterator() {
@@ -154,7 +177,8 @@ In case that there are a lot of users with a lot of published documents in a net
 \end{verbatim}
 
 \subsubsection{User View \& Controller}
-The \textit{User View} displays all other users running ACE in the same local area network. The \textit{User View Controller} receives a notification from the \textit{UserListener} whenever a new user has been discovered or discarded from the network. On this way he manages the list of users the \textit{User View} is displaying.
+The \textit{User\-View} displays all discovered users running ACE. The \textit{User\-View\-Controller} implements the \textit{User\-Listener} interface and is registered on the \textit{Collaboration\-Service}. It receives a notification whenever a new user has been discovered or discarded from the network. It updates the source list accordingly. 
+
 \begin{figure}[H]
 \begin{center}
   \includegraphics[height=3.33in, width=5.62in]{../images/finalreport/application_userview.eps}
@@ -162,7 +186,10 @@ The \textit{User View} displays all other users running ACE in the same local ar
 \label{application_userview}
 \end{center}
 \end{figure}
-For finding fast a single user out of all users, the \textit{User View} has a filter. The filter is based on the text entered into a textfield and compares that to the usernames. All users not matching to the entered text will be filtered out and are not displayed.
+
+To find a user quickly from among all users, the \textit{User\-View} has a filter. The filter is based on the text entered into a text field and compares that to the user names. All users not matching the entered text will be filtered out and are not displayed.
+
+% TODO: what is a TextFilterator...
 \begin{verbatim}
   JTextField userFilterField = new JTextField();
   TextFilterator userFilterator = new TextFilterator() {
@@ -174,7 +201,8 @@ For finding fast a single user out of all users, the \textit{User View} has a fi
 \end{verbatim}
 
 \subsubsection{Participant View \& Controller}
-At the moment a document is published, a list of participants is created. At the beginning only the publisher of the document is in this list.  For each user joining the document, a new \textit{ParticipantItem} is created and added to the list. The \textit{ParticipantItem} contains the name of the participant and the color needed to highlight his text. The \textit{Participant View} displays all these \textit{ParticipantItems} of the selected document.
+When a document is published a list of participants is created. At the beginning only the publisher of the document is in this list. For each user joining the document, a new \textit{Participant\-Item} is created and added to the source list. The \textit{Participant\-Item} contains the name of the participant and the color needed to highlight his text. The \textit{Participant View} displays all \textit{Participant\-Items} of the currently selected document.
+
 \begin{figure}[H]
 \begin{center}
   \includegraphics[height=2.15in, width=5.62in]{../images/finalreport/application_participantview.eps}
@@ -182,9 +210,13 @@ At the moment a document is published, a list of participants is created. At the
 \label{application_participantview}
 \end{center}
 \end{figure}
-The \textit{SessionCallback} receives notifications from the collaboration layer for every participant joined or left and updates the list with \textit{ParticipantItems}. \\
 
-Each published document has its own list of participants which needs to be set in the \textit{Participant View Controller} when the current displayed document changes.
+The \textit{Session\-Callback} receives notifications from the collaboration layer about every participant joining or leaving the session updates the source list accordingly.
+
+Each published document has its own list of participants which needs to be set in the \textit{Participant View Controller} when the currently selected document changes.
+
+% TODO: composite lists...
+
 \begin{verbatim}
   public void setParticipantList(EventList participantList) {
     // remove old participant list if there is one
@@ -200,7 +232,8 @@ Each published document has its own list of participants which needs to be set i
 
 % ACTIONS
 \subsection{Actions}
-All actions used by the application layer are subclasses of the java \textit{AbstractAction}. They have a \textit{name}, an \textit{icon} and optional a \textit{shortcut} and a \textit{tooltip}. The \textit{name} and the \textit{icon} can be forwarded to the superclass, how to set the \textit{shortcut} and the \textit{tooltip} is shown in the following code fragment:
+All actions used by the application layer are subclasses of the \textit{AbstractAction} class (which is part of \emph{Java Swing}). Actions have a \textit{name}, an \textit{icon} and optionally a \textit{shortcut} and a \textit{tooltip}. The \textit{name} and the \textit{icon} can be forwarded to the superclass. The following code fragment shows how to set the \textit{shortcut} and the \textit{tooltip}:
+
 \begin{verbatim}
   // somewhere in costructor (shortcut = CTRL + X)
   putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke('X',
@@ -208,7 +241,9 @@ All actions used by the application layer are subclasses of the java \textit{Abs
 
   putValue(SHORT_DESCRIPTION, "Tooltip text here...");
 \end{verbatim}
-The behaviour of most of the actions is depending on the selection on the \textit{Document View}. This leads to the \textit{DocumentItemSelectionChangeAction} class:
+
+The behaviour of most of the actions depends on the current selection of the \textit{Document View}. This leads to the \textit{DocumentItemSelectionChangeAction} class:
+
 \begin{figure}[H]
 \begin{center}
   \includegraphics[height=3.97in, width=3.85in]{../images/finalreport/application_action.eps}
@@ -216,7 +251,9 @@ The behaviour of most of the actions is depending on the selection on the \texti
 \label{application_application_action}
 \end{center}
 \end{figure}
+
 This class handles the registration of the action to the \textit{ItemSelectionChangeListener} of  the \textit{Document View Controller}.
+
 \begin{verbatim}
   public abstract class DocumentItemSelectionChangeAction
     extends AbstractAction implements ItemSelectionChangeListener {
@@ -230,7 +267,10 @@ This class handles the registration of the action to the \textit{ItemSelectionCh
     public abstract void itemSelectionChanged(ItemSelectionChangeEvent e);
   }
 \end{verbatim}
+
 Whenever the selection on the \textit{Document View} changes, the method \texttt{itemSelectionChanged(...)} from the action is called.
+
+% TODO: why are you doing that?
 
 
 % EDITOR
