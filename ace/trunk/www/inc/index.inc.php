@@ -11,6 +11,10 @@ as a page that talks about the technical <a href="index.php?page=3">Background</
 
 <h3>News</h3>
 
+<p><b>Diploma Final Release</b> <span class="date">16.12.2005</span></p>
+<p>Today we released the final diploma project release of ACE.
+The release can be downloaded from the <a href="index.php?page=8">download page</a>.</p>
+
 <p><b>Milestone 3 Released</b> <span class="date">12.12.2005</span></p>
 <p>Today is the release of ACE Milestone 3. This is the last release
 before the end of our diploma project. Check it out and report any

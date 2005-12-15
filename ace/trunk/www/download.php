@@ -6,7 +6,7 @@ if (!isset($_GET['id'])) {
 
 $id = $_GET['id'];
 
-if ($id < 0 || $id > 8) {
+if ($id < 0 || $id > 11) {
   header("Location: index.php\n\n");
 } else {
   $link = mysql_connect('localhost', 'ace', 'ace13x');
