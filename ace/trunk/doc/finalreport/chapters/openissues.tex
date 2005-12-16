@@ -7,7 +7,7 @@ In this chapter we list some open issues and improvements.
 \section{Locking Transformation Engine}
 The current implementation of the application layer uses the write lock
 provided by the \texttt{Abstract\-Document} of the Swing 
-text package to implement the session lock (see section \ref{}). 
+text package to implement the session lock. 
 Although this works flawlessly, it has some performance
 implications. Receiving requests from the network layer passes through
 the following steps:
