@@ -450,6 +450,7 @@ For a precise understanding of the execution flow in establishing the session co
 Since the network layer implements a communication protocol, it must process outgoing (to the physical network) and incoming (from the physical network) messages. What could be a good design to fulfill this requirement? A solution is needed that is also flexible (i.e. easy adaptable to change) since an application procotol is often likely to change.
 
 \paragraph{Message Filter Chain}
+\label{chapter:network.protocol.messagefilterchain}
 The concept for the processing of network messages is depicted in the following figure:
 
 \begin{figure}[H]
@@ -650,20 +651,19 @@ Figure \ref{fig:network.protocol.requesthandler.uml} depicts the \texttt{Request
  \label{fig:network.protocol.requesthandler.uml}
 \end{figure}
 
-Each implementation uses a \texttt{Deserializer} to parse the message and request, respectively (cf. \ref{chapter:network.communication.protocol}). Afterwards, the request is processed according to its type. The \texttt{MainConnection} simply forwards the request to the request filter chain (see next section). The other two implementations know exactly what to do with a request and notify their recipient as shown in figure \ref{fig:network.protocol.requestcommunication}.
+Each implementation uses a \texttt{Deserializer} to parse the message and request, respectively (cf. section \ref{chapter:network.communication.protocol}). Afterwards, the request is processed according to its type. The \texttt{MainConnection} simply forwards the request to the request filter chain (see next section). The two other implementations know exactly what to do with a request and notify their recipient as shown in figure \ref{fig:network.protocol.requestcommunication}.
 
-
-Thread domains....
+The \texttt{ParticipantRequestHandler} and the \texttt{SessionRequestHandler} are wrapped with a \texttt{SingleThreadDomain} to ensure proper synchronization, i.e. to have only one thread executing the \texttt{receiveMSG} method at a time.
 
 
 \paragraph{Request Filter Chains}
 \label{chapter:networkfilterchains}
 
-The request filter chain is put together according to the possible protocol messages. There exist two different request filter chains: 
+The \texttt{RequestFilter} chain applies the message filter chain concept explained in section \ref{chapter:network.protocol.messagefilterchain}. The chain is put together according to the possible protocol messages. There exist two different request filter chains: 
 
 \begin{itemize}
- \item A client chain for the processing of outgoing requests, ie. requests to be sent to other peers
- \item A server chain for the processing of incoming requests, i.e. requests received other peers
+ \item A client chain for the processing of outgoing requests, ie. requests to be sent to peers
+ \item A server chain for the processing of incoming requests, i.e. requests received from peers
 \end{itemize}
 
 These two constructs are shown in the following diagram:
@@ -677,28 +677,27 @@ These two constructs are shown in the following diagram:
  \label{fig:network.protocol.requestfilterchain}
 \end{figure}
 
-It would be possible to create a filter chain for response messages too (for a classical request-response communication), but this is currently not needed due to the protocol definition (cf. section 'Protocol'). The protocol currently defines only messages for asynchronous communication, i.e. a message is sent as a request but the response not immediately expected. Thus the response is sent back asynchronously, not in direct reply to the request but more as a notification meaning that the request has been processed and delivering its results.
+The picture shows a situation with four users A, B, C and D, respectively, in the same local area network. User A has three \texttt{MainConnection} established, one to each user B, C, and D.  Each outgoing message is processed through the client request filter chain. Depending on the receiver of the request, the \texttt{MainConnection} object for user B, C, or D is used to send the request. User A also has three \texttt{MainRequestHandler} to receive messages, one for each \texttt{MainConnection} i.e. for user B, C, and D. When a message is received at user A, let's say from user B, it is deserialized by the \texttt{MainRequestHandler} B and then passed to the server request filter chain for further processing. Though there are multiple main connections and request handlers, respectively, there is always only one client reqeust filter chain and only one request filter chain.
 
-Usually each message type has its own filter implementation. One filter for the creation of the message (added to the client chain) and one filter for the processing of the message (added to the server chain). For example, \texttt{JoinRequestSenderFilter} and \texttt{JoinRequestRecipientFilter} (compare class \texttt{RequestFilterFactory}).
+It would be possible to create a filter chain for response messages too (for a classical request-response communication), but this is currently not needed due to the protocol definition (cf. section 'Protocol'). The protocol currently defines only messages for asynchronous communication, i.e. a message is sent as a request but the response not immediately expected. Thus the response is sent back asynchronously, not in direct reply to the request. Thus it is considered a notification message meaning that the request has been processed and delivering its results.
 
+Usually each message type has its own filter implementation. One filter for the creation of the message (added to the client chain) and one filter for the processing of the message (added to the server chain). For example, \texttt{JoinRequestSenderFilter} to send a join request and \texttt{JoinRequestRecipientFilter} to process a received join request (compare class \texttt{RequestFilterFactory}).
 
-\subsubsection{Session Management}
-???
 
 \subsubsection{Explicit User Discovery}
 \label{chapter:network.protocol.explicituserdiscovery}
-TODO
+If an explicit user discovery needs to be executed, the method \texttt{discover()} on the respective \texttt{RemoteUserProxyExt} must be called. This method tries to establish a \texttt{RemoteUserSession} and \texttt{TCPSession}, respectively, with the given IP address and port. If this succeeds, a \texttt{MainConnection} is opened to that user and his metadata fetched. However, the upper layer is finally notified about the results of the discovery.
 
 
 
 \subsection{Protocol}
 \label{chapter:network.communication.protocol}
-\subsubsection{Decision on data description langauge}
-The first decision to be made was the kind of data description language to use. Two options were considered: XML or ASN.1/TLV. We considered that ASN.1 (Abstract Syntax Notation number One) in combination with TLV (Tag-Length-Value encoding) would be a reliable and high performance solution for the definition, encoding and decoding of the ACE protocol. Compared to XML, TLV needs few metata too to describe the messages and we considered that decoding with TLV would be faster than parsing XML. However, this considerations were abruptly abandonned by the fact that no mature open-source and free Java implementation for ASN.1/TLV exists to date. Nevertheless we found a library (see references) called the Apache ASN.1 Subproject. Its development version is 0.3 and currently undergoes a major refactoring. Also, its has few (Java) documentation and yet no Java parser for ASN.1 protocol definitions. So we decided that the risk for failure would be too high to actually try implementing the protocol with the Apache ASN.1 Subproject library and agreed on using XML for the protocol. Note: with XML we also have a platform and programming language independent data description language.
+\subsubsection{Decision on data description language}
+The first decision to be made was the kind of data description language to use. Two options were considered: XML or ASN.1/TLV. We considered that ASN.1 (Abstract Syntax Notation number One) in combination with TLV (Tag-Length-Value encoding) would be a reliable and high performance solution for the definition, encoding and decoding of the ACE protocol. Compared to XML, TLV needs few metata too to describe the messages and we considered that decoding with TLV would be faster than parsing XML. However, this considerations were abruptly abandonned by the fact that no mature open-source and free Java implementation for ASN.1/TLV exists to date. Nevertheless we found a library (see references) called the Apache ASN.1 Subproject. Its development version is 0.3 and currently undergoes a major refactoring. Also, it has few (Java) documentation and yet no Java parser for ASN.1 protocol definitions. So we decided that the risk for failure would be too high to actually try implementing the protocol with the Apache ASN.1 Subproject library and agreed on using XML for the protocol. Note: with XML we also have a platform and programming language independent data description language.
 
 For the parsing of XML, we decided to use JAXP with SAX. Though the protocol defines many small messages, parsing is still faster with SAX than using JDom for example. Thus SAX is not only sufficient for our purpose but also considered more performant in parsing the messages.
 
-Nevertheless, we used TLV beside XML for the document content encoding/decoding as explained below.
+Nevertheless, TLV is used beside XML for the document content encoding/decoding as explained below.
 
 \subsubsection{Design}
 There are five types of messages:
@@ -712,7 +711,7 @@ There are five types of messages:
 \end{itemize}
 
 \paragraph{Channel message}
-The channel message is the first message that gets sent over the wire. The channel message contains the channel type, either 'main' or 'session'. With this information, the request handler for the channel can be correctly determined.
+The channel message is the first message that gets sent over the wire to initialize the channel. The channel message contains the channel type, either 'main' or 'session'. With this information, the request handler for the channel can be correctly determined.
 
 \paragraph{Request message}
 Only two types of messages are considered as requests in the sense that one user requests something from another user. And these two types are the 'join request' (a user wants to join another user's document) and the 'invite request' (a user invites another user to join his document).
@@ -721,24 +720,24 @@ Only two types of messages are considered as requests in the sense that one user
 Response messages are sent upon requests. This is at an explicit user discovery where the response contains the userid and the name of the discovered user. Further, there are response messages 'joinRejected' and 'inviteRejected', i.e. when a user rejects to let another user join his document and rejects an invitation, respectively. Another response message is created when a user lets another user join his document and a document response message containing all document information is created and sent to the joining user.
 
 \paragraph{Notification message}
-Notification messages are sent upon events where other users 'might be interested to get to know it'. This includes messages for events 'userDiscarded', 'publish a document', 'conceal a document', 'send my published documents to discovered user', 'user kicked', 'user left' and 'document details changed'.
+Notification messages are sent on events where other users 'might be interested to get to know it'. This includes messages for events 'userDiscarded', 'publish a document', 'conceal a document', 'send my published documents to discovered user', 'user kicked', 'user left' and 'document details changed'.
 
 \paragraph{Session message}
 The type session message includes all messages that are sent between users in a document editing session. This includes messages of kind 'operation', 'caret update', 'participant joined', 'participant left', 'acknowledgement' and 'session terminated'.
 
 
 \subsubsection{Implementation}
-The protocol is defined with an XML schema so that messages can be validated. This could be useful also for third party developers that might communicate with ACE.
+The protocol is defined with an XML schema so that messages can be validated. This could be useful in particular for third party developers that might communicate with ACE.
 
-The XML schema can be found in the subdirectory \texttt{src/resources/ch/iserver/ace/net/protocol/protocol.xsd} of the project.
+The XML schema can be found in the subdirectory \texttt{src/\-resources/\-ch/\-iserver/\-ace/\-net/\-protocol/\-protocol.xsd} of the project.
 
 To serialize the XML messages, an interface \texttt{Serializer} with two implementations \texttt{SerializerImpl} and \texttt{CollaborationSerializer} is used. The \texttt{SerializerImpl} is for document administration messages whereas \texttt{CollaborationSerializer} is for document session messages.
 
-For deserialization, \texttt{ParserHandler} implementations together with a \texttt{SAXParser} are used. \texttt{RequestParserHandler} for messages on the \texttt{MainConnection} (i.e. document administration) and \texttt{CollaborationParserHandler} for messages in a document session (used in classes \texttt{ParticipantRequestHandler} and \texttt{SessionRequestHandler}.
+For deserialization, \texttt{ParserHandler} implementations together with a \texttt{SAXParser} (wrapped in an implementation of interface \texttt{Deserializer}) are used. The implementations are \texttt{RequestParserHandler} for messages on the \texttt{MainConnection} (i.e. document administration) and \texttt{CollaborationParserHandler} for messages in a document session (used in classes \texttt{ParticipantRequestHandler} and \texttt{SessionRequestHandler}.
 
 
 \paragraph{TLV encoding/decoding}
-When a published document has to be sent to a peer, it needs to be encoded. Considering the structure of a \texttt{PortableDocument}, many information must be encoded if a user joins a document after 4 other users collaboratively edited it for half an hour. Therefore TLV is used to encode and decode this information (cf. \texttt{TLVHelper}). Each fragment is encoded as follows: the participant id is used as the tag. The length is the length of the fragment's text and the value is the text itself. 
+When a published document has to be sent to a peer, it needs to be encoded. Considering the structure of a \texttt{PortableDocument}, many information must be encoded if a user joins a document after four other users have been collaboratively editing it for half an hour. Therefore TLV is used to encode and decode this information (cf. \texttt{TLVHandler}). Each fragment is encoded as follows: the participant id is used as the tag. The length is the length of the fragment's text and the value is the text itself. 
 
 After encoding the document to TLV, the data is Base64 encoded and gzip-compressed. The final data is then sent to the peer.
 
@@ -749,20 +748,44 @@ The following classes are BEEP specific and are needed for a running BEEP infras
 \begin{itemize}
 \item \texttt{BEEPSessionListener}		- 	Listens for new (TCP-) sessions initiated by peers
 \item \texttt{StartChannelListenerImpl} 	-	Called when a channel starts or closed 
-\item \texttt{DefaultProfile}				-	The default profile used by BEEP
+\item \texttt{DefaultProfile}				-	The default profile used to register with BEEP
 \end{itemize}
 
 
-\subsubsection{Client and Server Specifics}
-???
-
-\subsection{Exception handling}
+\subsubsection{Exception handling}
 \label{chapter:network.exceptionhandling}
-The \texttt{NetworkServiceCallback} provides a method \texttt{serviceFailure} to report errors to the upper layer. If the network layer is unable to recover from an exception (e.g. connection broken), it reports the error via the \texttt{serviceFailure} method to the upper layer. Yet there is no recovery algorithm implemented for network failures. Usually the connection must be explicitly reestablished by the end user, e.g. join the document again.
+The \texttt{NetworkServiceCallback} provides a method \texttt{serviceFailure} to report errors to the upper layer. If the network layer is unable to recover from an exception (e.g. connection broken), resources are released and the error reported via the \texttt{serviceFailure} method to the upper layer. It was considered that no reasonable recovery algorithm could be implemented for network failures related to BEEP Core. However, the connection must be explicitly reestablished in this case by the end user, e.g. join the document again.
 
 
 \subsection{Use Cases}
 \label{chaper:protocol.usecases}
+
+\subsubsection{Join a document}
+The following sequence diagram shows the execution flow in the network layer when a join request for a published document arrives. The deserialization is left out for simplicity.
+
+\begin{figure}[H]
+ \centering
+  \frame{
+ \includegraphics[width=4.93in,height=11.14in,angle=270]{../images/finalreport/network_joinRequest_sequence.eps}
+ }
+ \caption{The processing of a join request at the publisher site}
+ \label{fig:network.protocol.joinrequest}
+\end{figure}
+
+After calling \texttt{join} on the \texttt{PublishedDocument}, the local user will have to respond to the request. After the join request is granted, the collaboration layer invokes \texttt{joinAccepted} on the \texttt{ParticipantConnectionImpl}:
+
+
+\begin{figure}[H]
+ \centering
+  \frame{
+ \includegraphics[width=7.71in,height=8.14in,angle=90]{../images/finalreport/network_joinRequest_sequence2.eps}
+ }
+ \caption{The processing of a join request at publisher site after granting it}
+ \label{fig:network.protocol.joinrequest2}
+\end{figure}
+
+
+Afterwards, the session connection between publisher and participant is established and ready to send the document content.
 
 
 
