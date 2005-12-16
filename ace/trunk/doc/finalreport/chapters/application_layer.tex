@@ -28,41 +28,11 @@ The \emph{Main Frame} of the application layer is a \texttt{Persistent\-Frame} (
 
 % MENU
 \subsection{Menu}
-The menu bar is created by the method \texttt{createMenuBar()} of the \texttt{Application\-Factory} (see section \ref{applicationlayer_applicationfactory}):
-
-% DECIDE: remove following verbatim environment?
-\begin{verbatim}
-  public JMenuBar createMenuBar() {
-    JMenuBar menuBar = new JMenuBar();
-
-    JMenu m1 = new JMenu("Menu 1");
-    m1.add(...);        // add actions for menu 1
-    menuBar.add(m1);    // add menu 1 to the menubar
-    
-    JMenu m2 = new JMenu("Menu 2");
-    m2.add(...);        // add actions for menu 2
-    menuBar.add(m2);    // add menu 2 to the menubar
-    
-    return menuBar;
-  }
-\end{verbatim}
+The menu bar is created by the method \texttt{createMenuBar()} of the \texttt{Application\-Factory} (see section \ref{applicationlayer_applicationfactory}).
 
 % TOOLBAR
 \subsection{Toolbar}
-Toolbars are used to make the most commonly used actions easily accessible. The application layer uses a \texttt{JTool\-Bar} for that purpose. It is created by the \texttt{Application\-Factory} in the method \texttt{create\-Tool\-Bar()}:
-
-% DECIDE: remove following verbatim environment?
-\begin{verbatim}
-  public JToolBar createToolBar() {
-    JToolBar toolBar = new JToolBar();
-    toolBar.setFloatable(false);   // make it impossible to drag the toolbar
-    toolBar.setRollover(true);
-
-    toolBar.add(...);   // add actions to toolbar
-
-    return toolBar;
-  }
-\end{verbatim}
+Toolbars are used to make the most commonly used actions easily accessible. The application layer uses a \texttt{JTool\-Bar} for that purpose. It is created by the \texttt{Application\-Factory} in the method \texttt{create\-Tool\-Bar()}.
 
 % VIEWS
 \subsection{Views \& View Controllers}
@@ -102,9 +72,9 @@ The next four sections explain the usage of the four different \texttt{Views}.
 The \texttt{Document\-View} is used to display the currently open documents. An open document can either be a local document (new or an existing document on the local machine), a published document (a local document that has been published) or a joined document published by another user. All needed information for documents are contained in \texttt{Document\-Items}. The most important attributes are:
 
 \begin{itemize}
-\item Type: the type decides what kind of document the \texttt{Document\-Item} is needed for (e.g. local, published, remote or joined).
+\item Type: the type decides what kind of document the \texttt{Document\-Item} is needed for. Possible document types are: \emph{local} (private documents), \emph{published} (private documents that have been published), \emph{joined} (documents from other users that have been joined), \emph{remote} (documents from other users that have been discovered) and \emph{awaiting} (remote documents the joining process is running).
 \item Editor Document: the styled document (see section \ref{applicationlayer_collabdocument}) that contains the content and is displayed in the text component.
-\item If the type is remote or shared: the \texttt{Session} and \texttt{Session\-Callback} are set to send and receive \texttt{Operations}.
+\item If the type is \emph{remote} or \emph{published}: the \texttt{Session} and \texttt{Session\-Callback} are set to send and receive \texttt{Operations}.
 \end{itemize}
 
 \begin{figure}[H]
@@ -115,8 +85,15 @@ The \texttt{Document\-View} is used to display the currently open documents. An 
 \end{center}
 \end{figure}
 
-% TODO: revise the following text (reader has no idea what a matcher)
-The \texttt{DocumentItem} class is used for other document types than \emph{local}, \emph{published} or \emph{joined} too. To display only the local, published and joined documents, a so called \texttt{Matcher} is needed:
+The \texttt{DocumentItem} class is used for other document types than \emph{local}, \emph{published} or \emph{joined} too. To display only the local, published and joined documents, a so called \texttt{FilterList} is needed (see figure \ref{application_list_usage}).
+
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[height=3.24in, width=5.77in]{../images/finalreport/application_listusage.eps}
+\caption{List construction used by Document- \& Browse-View}
+\end{center}
+\label{application_list_usage}
+\end{figure} 
 
 %\begin{verbatim}
 %  Matcher documentViewMatcher = new Matcher() {
@@ -129,7 +106,7 @@ The \texttt{DocumentItem} class is used for other document types than \emph{loca
 %  };
 %\end{verbatim}
 
-This matcher is filtering the source list containing all \texttt{Document\-Items} and returns only the \texttt{Document\-Items} with the corresponding type.
+
 
 \subsubsection{Browse View \& Controller}
 The \texttt{Browse\-View} displays all documents published by other users that have been discovered. The \texttt{Browse\-View\-Controller}, which controls the \texttt{Browse\-View}, implements the \texttt{Document\-Listener} interface and is registered on the \texttt{Collaboration\-Service}. Whenever the controller is notified about document discovery events, it updates the source list of the view.
@@ -459,9 +436,38 @@ When inserting text into a text component and setting the caret position asynchr
 % APPLICATION FACTORY
 \subsubsection{Application Factory}
 \label{applicationlayer_applicationfactory}
-
-% TODO: besides of Spring
 To build the GUI (see section \ref{applicationlayer_wf_startup}) the \texttt{Application\-Factory} is used. It provides methods to create the \emph{Menu Bar}, the \emph{Tool Bar}, the \texttt{Persistent\-Component\-Pane} and the \emph{Status Bar}. Further, some parts of the GUI are created and wired by \emph{Spring} (see section \ref{appendix_frameworks_spring}). 
+
+% DECIDE: remove following verbatim environment?
+%\begin{verbatim}
+%  public JMenuBar createMenuBar() {
+%    JMenuBar menuBar = new JMenuBar();
+
+%    JMenu m1 = new JMenu("Menu 1");
+%    m1.add(...);        // add actions for menu 1
+%    menuBar.add(m1);    // add menu 1 to the menubar
+%    
+%    JMenu m2 = new JMenu("Menu 2");
+%    m2.add(...);        // add actions for menu 2
+%    menuBar.add(m2);    // add menu 2 to the menubar
+%    
+%    return menuBar;
+%  }
+%\end{verbatim}
+
+% DECIDE: remove following verbatim environment?
+%\begin{verbatim}
+%  public JToolBar createToolBar() {
+%    JToolBar toolBar = new JToolBar();
+%    toolBar.setFloatable(false);   // make it impossible to drag the toolbar
+%    toolBar.setRollover(true);
+
+%    toolBar.add(...);   // add actions to toolbar
+
+%    return toolBar;
+%  }
+%\end{verbatim}
+
 
 % APPLICATION CONTROLLER
 \subsubsection{Application Controller}
