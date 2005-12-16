@@ -42,6 +42,10 @@ public class ResponseListener implements ReplyListener {
 	
 	private static ResponseListener instance;
 	
+	 private Deserializer deserializer;
+     private ResponseParserHandler handler;
+     private RequestFilter filter;
+	
 	private ResponseListener() {
 		handler = new ResponseParserHandler();
 	}
