@@ -4,9 +4,9 @@
 
 
 \section{What is Collaborative Editing?}
-Collaborative editing happens when several users edit a document at the same time. The users are geographically dispersed but connected by communication networks. Every change made by one user is shown immediately to all other users. Thus all users observe the same document content. For example, instead of passing a document from one team member to another for review, all of  them could review it simultaneously through collaborative editing.
+Collaborative editing happens when several users edit a document at the same time. The users may be geographically dispersed but are connected by communication networks. Every change made by one user is shown immediately to all other users. Thus all users observe the same document content. All participants of an editing session are allowed to concurrently and independently edit any part of the document at any time. Thus a free and natural information flow is guaranteed. 
 
-A collaborating editing system always allows people to work together at the same time even though they may not physically reside at the same place.
+For example, instead of passing a document from one team member to another for review, all of  them could review it simultaneously through collaborative editing.
 
 
 
@@ -16,16 +16,15 @@ Following is a list with possible use cases for collaborative editing.
 \begin{itemize}
 \item Five correctors from a publishing company correct simultaneously a novel to be released. They all use their own computer but are connected using a collaborative editing system.
 \item The management of a global technology company is doing a brainstorming simulatenously. Each member, geographically dispersed from the others, writes his ideas on the shared document.
-\item Extreme Programming (XP): An XP practice is to have two team members that collaboratively write software. That is, one writes the code and the other one observes it. Instead of both sitting in front of the same computer, they could use a collaborative editing system that would enable them to work with their own computer. They could program together at the same time.
-\item A lecturer uses a collaborative editing system to demonstrate programming techniques to his students and help students in solving exercises (collaborative solving). Each student as well as the lecturer has an own computer
-\item A group writes a report together. Instead of passing the document from member to member, all work with a collaborative editing system at the same time in one document and thus save a lot of time.
-\item A trainee prepares lessons by writing a detailed plan (in a document). His supervisor supports him using a collaborative editing system in the sense that he can observe the procedure the trainee takes writing the plan and to intervene if necessary.
+\item Extreme Programming (XP): An XP practice is to have two team members that collaboratively write software. That is, one writes the code and the other one observes it. Instead of both sitting in front of the same computer, they could use a collaborative editing system that would enable them to work with their own computer. They could also program together at the same time.
+\item A lecturer uses a collaborative editing system to demonstrate programming techniques to his students and help students in solving exercises (collaborative solving). Each student as well as the lecturer has an own computer.
+\item A group writes a report together. Instead of passing the document from member to member, all work with a collaborative editing system together at the same time in one document and thus save a lot of time.
 \end{itemize}
 
 
 
 \section{Requirements of a Collaborative Application}
-A synchronous collaborative editor has some quite unique requirements.
+A synchronous collaborative editor has some unique requirements.
 The following requirements have been identified for such an editor
 by Sun et al. (\cite{sun98a}).
 
@@ -64,12 +63,12 @@ In the semester project we have implemented the following features:
 \end{itemize}
 
 In the first stage of the semester project we evaluated different
-consistency control algorithm. The \emph{Report Evaluation Algorithm}
+consistency control algorithms. The \emph{Report Evaluation Algorithm}
 documents the evaluation process. The implementation of the
 algorithm is documented in \emph{Report Implementation Algorithm}. The
 test framework is documented in \emph{Report Testframework}.
 
-Futher, we did some research to find out how we want to implement the
+Further, we did some research to find out how we want to implement the
 network as well as the application layer. The results of this research
 can be found in the \emph{Report Evaluation Network} and 
 \emph{Report Evaluation GUI} respectively.
@@ -98,5 +97,5 @@ Further, we tried to implement the \emph{adOPTed} algorithm (see
 \href{http://www.ruby-lang.org/en/}{http://www.ruby-lang.org/en/}). The
 implementation of the basic algorithm succeeded. However, the description
 of undo/redo proved to be too inaccurate to implement. We therefore 
-decided to stick with \emph{Jupiter}, as using \emph{adOPTed} posed to many
+decided to stick with \emph{Jupiter}, as using \emph{adOPTed} posed too many
 risks.
