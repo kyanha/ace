@@ -106,8 +106,6 @@ The \texttt{DocumentItem} class is used for other document types than \emph{loca
 %  };
 %\end{verbatim}
 
-
-
 \subsubsection{Browse View \& Controller}
 The \texttt{Browse\-View} displays all documents published by other users that have been discovered. The \texttt{Browse\-View\-Controller}, which controls the \texttt{Browse\-View}, implements the \texttt{Document\-Listener} interface and is registered on the \texttt{Collaboration\-Service}. Whenever the controller is notified about document discovery events, it updates the source list of the view.
 
@@ -236,10 +234,10 @@ This class handles the registration of the action to the \texttt{Item\-Selection
   }
 \end{verbatim}
 
-Whenever the selection on the \texttt{Document\-View} changes, the method \texttt{itemSelectionChanged(...)} from the action is called.
-
 % ACTION ENABLING
-It is important for the user-friendliness to enable or disable actions in the GUI. The enabling of most of the actions depends on the selection of the \texttt{Views}. For this pupose actions can register themselves on the view to receive \texttt{Item\-Selection\-Change\-Events}.  For example the \emph{close document} action should only be enabled if a document is selected in the \texttt{Document\-View}:
+It is important for the user-friendliness to enable or disable actions in the GUI. The enabling of most of the actions depends on the selection of the \texttt{Views}. For this pupose actions can register themselves on the view to receive \texttt{Item\-Selection\-Change\-Events}. Whenever the selection on the \texttt{View} changes, the method \texttt{itemSelectionChanged(...)} from the action is called.
+
+For example the \emph{close document} action should only be enabled if a document is selected in the \texttt{Document\-View}:
 
 \begin{verbatim}
   // somewhere in the constructor
@@ -256,7 +254,7 @@ It is important for the user-friendliness to enable or disable actions in the GU
   }
 \end{verbatim}
 
-
+\newpage
 % EDITOR
 \subsection{Editor}
 This section gives an overview of all components needed for the \texttt{Collaborative\-Editor}. The following figure shows the class diagram:
