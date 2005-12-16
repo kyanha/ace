@@ -574,8 +574,8 @@ The \texttt{JoinNetworkCallback} object is used to report the result of a reques
 When the result of the join request is  \texttt{accepted}, the \texttt{JoinNetworkCallback} returns a \texttt{Session\-Connection\-Callback} object. This is the main communcation port for a joined session to pass received messages to the upper layer (such as operations, caret updates, etc.).
 
 
-\subsubsection{Network Connection and Session Management}
-All connections for a particular remote user are created, maintained and released in the \texttt{RemoteUserSession} object. Note: the notion of a network message and a network request are used interchangeably except where explicitly defined differently.
+\subsubsection{Session and Network Connection Management}
+All connections for a particular remote user are created, maintained and released in the \texttt{RemoteUserSession} object (compare figure \ref{fig:network.discovery.sessionmanagement}). Note: the notion of a network message and a network request are used interchangeably except where explicitly defined differently.
 
 Following, the lifecycle of each connection type is explained in greater detail.
 
