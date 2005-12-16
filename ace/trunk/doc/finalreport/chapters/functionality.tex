@@ -1,7 +1,7 @@
 \chapter{Functionality}
 \label{chapter:functionality}
 
-The goal of the project ACE is to create a platform independent collaborative text editor. To achieve that goal the editor must satisfy basic text editing functionality as well as collaborative editing functionality.\\
+ACE is a platform independent collaborative text editor. It features basic text editing as well as collaborative editing functionality.
 
 \begin{figure}[H]
 \begin{center}
@@ -10,11 +10,19 @@ The goal of the project ACE is to create a platform independent collaborative te
 \end{center}
 \end{figure}
 
-A basic text editor must provide features like \emph{create new}, \emph{load} and \emph{save} documents. Further it would be user-friendly to have multiple documents open at the same time and switch between them. Operations like cut/copy/paste and undo/redo should not be absent. A more detailed description of the goals can be found in the report \textit{System Requirements: 2.1 Mandatory Goals}. See section \ref{sect:algorithm.undoredo} for a statement why the ACE editor does not support undo/redo.\\
+ACE allows to \emph{create new}, \emph{load} and \emph{save} documents. Further, it allows to have multiple open documents at the same time and to switch between them. Additionaly, the familiar cut/copy/paste actions are implemented. See section \ref{sect:algorithm.undoredo} for an justification why the ACE editor does not support undo/redo.
 
-Beside the basic text editor functions, a collaborative text editor must support the \textit{publication} of documents. The published documents should be discovered automatically by all other users running the same collaborative text editor in the same local area network (LAN). This leads to the situation that every user has a list of documents that have been published by other users in the same network. A user can \textit{join} the editing session for such a published document. This means that he starts participating the collaborative editing of the document and he is able to insert, remove or update the content of the document. He also can be \textit{invited} by the owner (publisher) of the published document. To counteract misbehaviour the publisher can \textit{kick} invited users which results in a blacklist entry until they receive a re-invite.
+All users running ACE are automatically discovered on the same local area network (LAN). Further, it is possible to explicitely discover users that are not on the same LAN. All discovered users are displayed in the graphical user interface of ACE.
 
-The editor should look very simple and the components should be clearly arranged for the user friendliness. To improve the intuitive handling of the editor, buttons with meaningful images should be positioned at the right and logical place. Also, different colors should be used to highlight the written text and to draw the cursor positions (or selections) in order to make the participants well distinguishable. \\
+A user can \emph{share} his documents by \emph{publishing} them. A published document is discovered automatically by all other users running ACE. Every user has a list of documents that have been published by other users. The publisher can \emph{conceal} a published document so that collaborative editing is no longer possible.
+
+A document shared by another user can be \emph{joined}. To join a document the user sends a join request to the \emph{publisher}. The publisher either accepts or rejects a join request (a simple yet effective \emph{access control}). If the join request is accepted, the joining user becomes a \emph{participant} in the editing \emph{session}. He can start participating by editing the shared text document independently. A user that no longer wants to participate \emph{leaves} the session.
+
+The publisher of a document can \emph{invite} other users to join a session. An invitation can be accepted or rejected by the invited user. Misbehaving participants can be \emph{kicked} from the session by the publisher. A kicked user is added to the session's blacklist which prevents that the user can rejoin the session.
+
+In an editing session different participants session are distinguished by use of colors. The text background edited by a particular participant is colored in that user's color. Additionaly, the current cursor position and selection of other participants is also displayed. This so-called \emph{awareness information} helps to avoid unecessary editing conflicts, for instance when two participants try to edit text at the same location.
+
+ACE has an intuitive user interface. Different views represent the current application state, including a list of open documents, the currently discovered users, shared documents, and participants of each editing session. The views can be minimized to show as much as possible of the currently edited document. Further, the application features a simple preferences system, which allows to set the nick name of the local user and to change the font size used by the text editor.
 
 \begin{figure}[H]
 \begin{center}
@@ -23,4 +31,4 @@ The editor should look very simple and the components should be clearly arranged
 \end{center}
 \end{figure}
 
-Based on these facts we defined mandatory, optional and non-goals for our diploma work in \textit{System Requirements: Project Goals}. A description of the previous work can be found in \ref{sect:overview.previouswork}.
+The functionality fulfills the mandatory goals and some optional goals set at the beginning of the semester project as described by the \emph{System Requirements} document. A description of the work done before the diploma project can be found in overview section \ref{sect:overview.previouswork}.
