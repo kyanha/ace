@@ -1,7 +1,7 @@
 \chapter{Decisions for Network Implementation}
 \label{chapter:decisionsnetwork}
 
-In the semester project, we evaluated possible solutions to use for the network implementation (see report \emph{Report Evaluation Network}). Here we only reason the decision and do not repeat the potential solutions.
+In the semester project, we evaluated possible solutions to use for the network implementation (see report \emph{Report Evaluation Network}). Here we only justify the decision and do not repeat the potential solutions.
 
 \section{Requirements}
 We had to choose between technologies for the following requirements:
@@ -27,10 +27,10 @@ For the service discovery the decision fell on Bonjour zero-conf networking tech
 
 The decision did not fall on Jini mainly because it is programming language dependent. JGroups did not match with our requirements since it is a pure peer to peer (P2P) solution and hence not suitable for the client-server \texttt{Jupiter} algorithm.
 
-See section ??????? for an introduction on  Bonjour.
+See section \ref{chapter:frameworks.bonjour} for an introduction on  Bonjour.
 
 \section{Communcation}
 The decision for the communication solution was harder because \emph{RMI}, \emph{JXTA} or \emph{BEEP} were all acceptable solutions. The only drawback about RMI was that it is language dependent. With JXTA this constraint is futile. So we considered on that solution. But as tests showed, the current version of JXTA is not thoroughly stable. This seemed a high risk for choosing that solution. Finally we checked BEEP. The evaluation for that technology were convincing. BEEP is platform and language independent and also available for Java. BEEP also matched our requirement to have a framework for application protocol implementation the most.
 
-Thus, we decided to use the BEEP framework for the implementation of the ACE protocol. See section ??????? for an introduction on BEEP.
+Thus, we decided to use the BEEP framework for the implementation of the ACE protocol. See section \ref{chapter:framework.beepcore} for an introduction on BEEP.
 

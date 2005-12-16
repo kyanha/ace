@@ -39,7 +39,7 @@ The figure \ref{fig:network.architecture} depicts the rough architecture of the 
 
 The top level package \texttt{net} contains all the interfaces through which the collaboration layer and the network layer interact. All other packages in the network layer are subpackages of the \texttt{net} package. The \texttt{core} package provides core classes to the network layer and contains default implementations for several interfaces declared in the \texttt{net} package. It depends on the \texttt{protocol} and the \texttt{discovery} packages.
 
-The \texttt{discovery} package contains the relevant functionality for dynamic user discovery as well as user management. It has a subpackage \texttt{dnssd} which contains DNSSD specific classes. The \texttt{discovery} and the \texttt{dnssd} packages interact with the DNSSD component.
+The \texttt{discovery} package contains the relevant functionality for dynamic user discovery as well as user management. It has a subpackage \texttt{dnssd} which contains DNSSD specific classes (compare appendix \ref{chapter:frameworks.bonjour}). The \texttt{discovery} and the \texttt{dnssd} packages interact with the DNSSD component.
 
 The \texttt{protocol} package implements all communication related functionality and directly interacts with the BEEP component. The subpackage \texttt{filter} contains classes for the processing of outgoing and incoming requests and messages, respectively (see section \ref{chapter:networkfilterchains}).
 
@@ -57,7 +57,7 @@ The \texttt{protocol} package implements all communication related functionality
 This section explains the design and the implemented solution for the dynamic and automatic user discovery in greater detail.
 
 \subsection{Responsabilities}
-The user discovery takes over the task of discovering all possible user events in the local area network. This includes the dynamic discovery of new users, the leaving of users and the notification of metadata changes for a particular user. Currently, the user's metadata subject to change adds up to the user's name only but could be extended easily for more values.
+The user discovery takes over the task of discovering all possible events in the local area network that are interesting for the user. This includes the dynamic discovery of new users, the leaving of users and the notification of metadata changes for a particular user. Currently, a user's changeable metadata is currently only the nickname of a user, i.e. a user can change his nickname and all other peers get notified through the discovery mechanism.
 
 The user discovery component must meet the following core requirements:
 
@@ -73,7 +73,7 @@ These requirements could be met by multiple technologies. We decided that Bonjou
 
 \subsection{Design}
 \subsubsection{Client view of the discovery component}
-The first step on the design was to find a way to use the discovery component independently of its implementation. That is, to have a transparent discovery usage for the client, without him knowing the concrete implementation. This consideration is in line with the general design principle of ACE to have an architecture with interchangeable components.
+The first step in the design of the discovery component was to find a way to use the discovery component independently of its implementation. That is, to have a transparent discovery usage for the client, without him knowing the concrete implementation. This consideration is in line with the general design principle of ACE to have an architecture with interchangeable components.
 
 \begin{figure}[H]
  \centering
@@ -105,6 +105,7 @@ All events that the discovery receives are first processed in collaboration with
 
 
 \subsubsection{DNSSD calls}
+\label{chapter:discovery.dnssdcall.introduction}
 \texttt{DNSSDCall} is an abstract base class for all DNSSD API calls. A subclass defines what API call is executed. \texttt{DNSSDCall} incorporates advanced \texttt{Exception} and \texttt{Error} handling. That is, in case of failure, it uses a \texttt{RetryStrategy} to determine how many times and in what intervals a call is repeated. Consider the design of the \texttt{execute()} method:
 
 \begin{verbatim}
@@ -136,7 +137,7 @@ The \texttt{DNSSDCall} design follows the command pattern (see [Design Patterns]
  \includegraphics[width=2.97in,height=1.08in]{../images/finalreport/network_dnssdCall_uml.eps}
  }
  \caption{DNSSDCall abstract super class}
- \label{fig:network.discovery.manager}
+ \label{fig:network.discovery.dnssdCall}
 \end{figure}
 
 
@@ -207,7 +208,7 @@ There are various implementations for the abstract super class \texttt{DNSSDCall
  \includegraphics[width=5.94in,height=4.78in]{../images/finalreport/network_dnssdCall_impl_uml.eps}
  }
  \caption{DNSSDCall implementations}
- \label{fig:network.discovery.manager}
+ \label{fig:network.discovery.dnssdCall.impl}
 \end{figure}
 
 
@@ -240,15 +241,11 @@ The following sequence diagram shows how the client uses the discovery and what 
  \label{fig:network.discovery.launch}
 \end{figure}
 
-\subsubsection{Discovery of a user}
-TODO...
-
-%if time, add more use cases
 
 \subsection{Exception handling}
-All necessary exception handling is captured in \texttt{DNSSDCall} and in \texttt{BaseListenerImpl}. 
+All necessary exception handling for the discovery component is captured in \texttt{DNSSDCall} and in \texttt{BaseListenerImpl}. See section \ref{chapter:discovery.dnssdcall.introduction} for a description of the exception handling implemented in \texttt{DNSSDCall}.
 
-\texttt{DNSSDCall} catches exceptions and retries the DNSSD call as long as the \texttt{RetryStrategy} determines. If the retry strategy fails, the exception is reported to the upper layer and the discovery process aborted. If the first executed DNSSD call throws an \texttt{Error} (usually \texttt{UnsatisifedLinkError}), then this is interpreted that the DNSSD (Bonjour) is not installed on the local host. The discovery process is aborted and the upper layer notified.
+If the first executed DNSSD call throws an \texttt{Error} (usually \texttt{UnsatisifedLinkError}), then this is interpreted that the DNSSD (Bonjour) is not installed on the local host. The discovery process is aborted and the upper layer notified.
 
 \texttt{BaseListenerImpl} implements an exception method \texttt{operationFailed(...)} which must be available for all DNSSD listeners. If this method is called, it is interpreted as an unrecoverable error. Thus, the upper layer gets reported and the discovery process aborted.
 
@@ -540,15 +537,13 @@ The local user publishes a new document through the \texttt{publish} method of t
 
 The \texttt{PublishedDocument} provides methods so that the local user can invite other users to join that document or to process join requests from other users. The join requests are forwarded to the upper layer (i.e. \texttt{DocumentServerLogic}). 
 
-When the published document is shut down, a conceal document message is sent to all available users and the resources for that published document released. The \texttt{NetworkService} maintains all published documents for the local user and needs thus be notified too.
-
-For an exact understanding of the execution flow when publishing a document, see the use case 'publish a document' in section \ref{chaper:protocol.usecases}.
+When the published document is shut down, a conceal document message is sent to all available users and the resources for that published document released.
 
 Thus far, we have considered the following architecture for publishing documents:
 \begin{figure}[H]
  \centering
   \frame{
- \includegraphics[width=5.07in,height=3.31in]{../images/finalreport/network_architecture1_uml.eps}
+ \includegraphics[width=5.07in,height=2.81in]{../images/finalreport/network_architecture1_uml.eps}
  }
  \caption{Architecture for \texttt{PublishedDocument}}
  \label{fig:network.protocol.architecture1.uml}

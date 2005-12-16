@@ -86,8 +86,6 @@ increased applicability of the collaboration layer.
 
 
 \section{Crashes Caused by Bonjour for Java}
-...
+There occured an undeterminstic JVM behavior in combination with the Bonjour framework. Sometimes the JVM crashed at startup time due to some Bonjour framework exception. The exception might be caused by the mDSNResponder daemon. This behavior was mostly observed on the Linux OS. 
 
-
-\section{Service failure handling and recovery}
-...
+The problem will have to be communicated in detail to the Bonjour developer community.

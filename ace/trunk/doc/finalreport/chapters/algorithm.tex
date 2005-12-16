@@ -2,7 +2,7 @@
 \label{chapter:algorithm}
 
 In this chapter we describe the algorithm used by ACE. We give a general
-overview over the concepts. However, the interested reader is referred to
+overview of the concepts. However, the interested reader is referred to
 the documentation of the semester project for a detailed description (see 
 \emph{Report Evaluation Algorithm}). This chapter is only intended to give
 the reader enough information to understand the basic concepts and the
@@ -405,23 +405,21 @@ of the n-way setup.
 During the summer break we tried to complete the implementation of undo/redo
 in our \emph{Jupiter} implementation. However, we have stumbled across
 a puzzle we could not solve. In this section, we explain why it was
-not possible to adapt the undo/redo from \emph{adOPTed} to \emph{Jupiter}.
+not possible to adapt the undo/redo algorithm from \emph{adOPTed} to \emph{Jupiter}. Note that the basic operational transformation undo mechansim is explained in \emph{Report Implementation Algorithm}. The reader is referred to that document for a basic understanding of undo/redo. This is essential to understand the following description.
 
 \subsubsection{Order Puzzle 2}
-In the paper about undo for \emph{adOPTed} (\cite{ressel99}) defined
+The paper about undo for \emph{adOPTed} (\cite{ressel99}) defined
 the so-called order puzzle (example 2). They showed how their proposed
-extension for \emph{adOPTed} can solved that puzzle. Now, we define
+extension for \emph{adOPTed} could solve that puzzle. Now, we define
 a new order puzzle that can only occur in the n-way setup of \emph{Jupiter}
 when there are more than 2 participants.
 
-Suppose we start with a document state "abc". Now user A deletes
+Suppose we start with a document state "abc". There are three users A, B and C. Now user A deletes
 character a from the document resulting in the document state "bc" at all sites.
-Next, user B deletes character b from the document and last, the user C
-delete character. This leaves us with an empty document state at all sites.
+Next, user B deletes character b from the document resulting in the document state "c" at all sites and last, the user C deletes character c resulting in the document state "" at all sites. Thus, this leaves the system with an empty document state at all sites.
 
-Now, all three users concurrently undo their last operation and send the
-request to the server. The server serializes the processing of requests.
-Let us say that first the undo operation from user A is processed, next
+Now, all three users concurrently undo their last operation. The operation is undone locally without any problems and then sent to the server. The server serializes the processing of requests.
+Let us say that first the undo operation from user A is processed at the server, next
 the undo from user B and last the undo from user C.
 
 Figure \ref{fig:algorithm.undoredopuzzle} shows the server side
@@ -435,16 +433,15 @@ before processing the undo request from user C.
  \label{fig:algorithm.undoredopuzzle}
 \end{figure}
 
-The insert operation \texttt{Ins(0,c)} must be transformed from the state
+The insert operation \texttt{Ins(0,c)} which is the undo operation from user C (\texttt{Del(0,c)}) must be transformed from the state
 vector \texttt{(2,1)} to the current state vector of the algorithm
 \texttt{(4,1)} to get the transformed operation \texttt{Ox} that can
 be applied to the current document state. 
-Normally in situations where there are concurrent undo
+Normally, in situations with only 2 users and concurrent undo
 requests, we would apply the mirror and fold operators as described
-in the \emph{Implementation Report Algorithm} section 2.3.2.
-However, in the given situation we have two intertwined undo requests. A
+in the \emph{Implementation Report Algorithm} section 2.3.2 successfully to transform the undo operation. However, in the given situation we have two intertwined undo requests. A
 situation in which we cannot apply mirror and fold. This can happen only
-if there are more than two concurrent undo requests.
+if there are more than two concurrent undo requests and more than two users, respectively.
 
 The root of the problem stems from the fact that on the server, the
 n-way setup of \emph{Jupiter} reduces the dimension of the system from
@@ -455,8 +452,11 @@ an information loss. Namely, we no longer know which requests are from
 which participant. This hinders the application of the mirror and fold
 operators.
 
+\paragraph{Conclusion}
+Due to the insight we gained from the above problem, we came to the following conclusion: Though we cannot formally prove it, we concluded that it is practically infeasible to implement operational transformation undo/redo support for \emph{Jupiter} with more than two users.
+
 \subsubsection{Possible Solution}
-The only simple and clean way to solve that problem that we found with our
+The only simple and clean way to solve the problem that we found with our
 limited research of the problem is to avoid that reduction altogether and
 work with n-dimensions in the state space. The \emph{Jupiter} algorithm
 extended to use an n-dimensional state space is the algorithm
@@ -569,7 +569,7 @@ is not shifted.
 is received by the algorithm, the timestamp of the request is checked to
 see how many requests the other site has already processed. All the requests
 in the outgoing queue that have been processed by the other site are discarded.
-The incoming request is then transformed against the the remaining 
+The incoming request is then transformed against the remaining 
 requests in the queue, which are concurrent to the incoming request. 
 The transformed operation is then ready to be applied to the
 local document.
