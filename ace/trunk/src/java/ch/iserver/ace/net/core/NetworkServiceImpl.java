@@ -60,6 +60,8 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	
 	private static Logger LOG = Logger.getLogger(NetworkServiceImpl.class);
 	
+	private static boolean DO_SHUTDOWN = false;
+	
 	/**
 	 * The TimestampFactory object used for the creation of timestamps
 	 * when incoming requests are parsed.
@@ -221,6 +223,9 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 			sessionListener.terminate();
 			//end discovery
 			discovery.abort();
+			if (!DO_SHUTDOWN) {
+				return;
+			}
 			/** server site **/
 			//close() on all participantconnections of all documents
 			Map docs = getPublishedDocuments();
