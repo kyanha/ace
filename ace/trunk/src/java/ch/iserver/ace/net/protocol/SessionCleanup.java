@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:SessionCleanup.java 2413 2005-12-09 13:20:12Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -27,7 +27,8 @@ import ch.iserver.ace.net.core.RemoteDocumentProxyExt;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
- *
+ * Command object used to clean up a session and to release its 
+ * resources.
  */
 public class SessionCleanup {
 
@@ -35,6 +36,11 @@ public class SessionCleanup {
 	
 	private String docId, userId;
 	
+	/**
+	 * Constructor.
+	 * @param docId	the document id
+	 * @param userId	the user id
+	 */
 	public SessionCleanup(String docId, String userId) {
 		ParameterValidator.notNull("docId", docId);
 		ParameterValidator.notNull("userId", userId);

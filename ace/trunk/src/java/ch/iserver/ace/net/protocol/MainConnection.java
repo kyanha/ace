@@ -29,8 +29,11 @@ import org.beepcore.beep.transport.tcp.TCPSession;
 /**
  * Wrapper/Decorator class around a <code>Channel</code>. The MainConnection
  * is the main connection between two peers. All basic communication except the
- * document editing goes over the main connection.
+ * document editing session goes over the main connection. Note that all instances
+ * of MainConnection use the same MainRequestHandler instance to handle the received
+ * requests.
  * 
+ * @see ch.iserver.ace.net.protocol.MainRequestHandler
  * @see org.beepcore.beep.core.Channel
  */
 public class MainConnection extends AbstractConnection {
@@ -48,7 +51,8 @@ public class MainConnection extends AbstractConnection {
 	}
 
 	/**
-	 * Closes the main connection.
+	 * Closes the main connection. The state of the channel must be
+	 * STATE_ACTIVE in order to close it. Otherwise it is ignored.
 	 *
 	 */
 	public void close() {
@@ -68,14 +72,23 @@ public class MainConnection extends AbstractConnection {
 		LOG.debug("<-- close()");
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void cleanup() {
 		LOG.debug("not used yet.");
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void recover() throws RecoveryException {
 		throw new RecoveryException();
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public String toString() {
 		return "MainConnection( "+((TCPSession)getChannel().getSession()).getSocket()+" )";
 	}

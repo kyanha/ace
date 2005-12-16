@@ -24,42 +24,81 @@ package ch.iserver.ace.net.protocol;
 import org.beepcore.beep.core.MessageMSG;
 
 /**
- *
+ * Default implementation of interface {@link ch.iserver.ace.net.protocol.Request}.
  */
 public class RequestImpl implements Request {
 
+	/**
+	 * the request type
+	 */
 	private int type;
+	
+	/**
+	 * the payload
+	 */
 	private Object payload;
+	
+	/**
+	 * the userid
+	 */
 	private String userid;
+	
+	/**
+	 * the MessageMSG object
+	 */
 	private MessageMSG message;
 	
+	/**
+	 * Constructor.
+	 * 
+	 * @param type		the type
+	 * @param userid		the userid
+	 * @param payload	the payload
+	 */
 	public RequestImpl(int type, String userid, Object payload) {
 		this.type = type;
 		this.userid = userid;
 		this.payload = payload;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public int getType() {
 		return type;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public Object getPayload() {
 		return payload;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setMessage(MessageMSG message) {
 		this.message = message;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public MessageMSG getMessage() {
 		return message;
 	}
 	
-
+	/**
+	 * {@inheritDoc}
+	 */
 	public String getUserId() {
 		return userid;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public String toString() {
 		return "RequestImpl(" + type + ", " + userid +")";
 	}

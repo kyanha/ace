@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:SerializeException.java 2413 2005-12-09 13:20:12Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -23,7 +23,8 @@ package ch.iserver.ace.net.protocol;
 
 
 /**
- *
+ * SerializeException is thrown if an erro during 
+ * serialization occurs.
  */
 public class SerializeException extends Exception {
 

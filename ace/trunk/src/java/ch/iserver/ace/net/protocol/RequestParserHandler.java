@@ -35,7 +35,9 @@ import ch.iserver.ace.net.core.RemoteUserProxyFactory;
 import ch.iserver.ace.net.protocol.RequestImpl.DocumentInfo;
 
 /**
- *
+ * RequestParserHandler is used by the MainRequestHandler to parse
+ * incoming message. The result from using RequestParserHandler is always
+ * an instance of <code>Request</code> (call to {@link #getType()}.
  */
 public class RequestParserHandler extends ParserHandler {
 	
@@ -182,7 +184,7 @@ public class RequestParserHandler extends ParserHandler {
 		}
 	}
 	
-	/* (non-Javadoc)
+	/**
 	 * @see ch.iserver.ace.net.impl.protocol.ParserHandler#getResult()
 	 */
 	public Request getResult() {
@@ -197,6 +199,9 @@ public class RequestParserHandler extends ParserHandler {
 		return requestType;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setMetaData(Object metadata) {
 		throw new UnsupportedOperationException("setMetaData() to be implemented in RequestParserHandler");
 		

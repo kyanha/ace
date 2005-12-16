@@ -23,11 +23,13 @@ package ch.iserver.ace.net.protocol;
 
 
 /**
- *
+ * Interface for the deserialization of messages using
+ * a <code>ParserHandler</code>.
  */
 public interface Deserializer {
 
 	/**
+	 * Deserializes the <code>data</code> with the <code>handler</code>.
 	 * 
 	 * @param data		the data to be parsed
 	 * @param handler	the handler to process the parsed data

@@ -24,11 +24,18 @@ package ch.iserver.ace.net.protocol;
 import org.beepcore.beep.core.ProfileRegistry;
 
 /**
- *
+ * Factory to create instances of <code>BEEPSessionListener</code>.
+ * 
+ * @see ch.iserver.ace.net.protocol.BEEPSessionListener
  */
 public class BEEPSessionListenerFactory {
 
-	
+	/**
+	 * Creates a new BEEPSessionListener object.
+	 * 
+	 * @return the BEEPSessionListener object
+	 * @see ProfileRegistryFactory
+	 */
 	public static BEEPSessionListener create() {
 		ProfileRegistry registry = ProfileRegistryFactory.getProfileRegistry();
 		BEEPSessionListener server = new BEEPSessionListener(registry);

@@ -22,17 +22,19 @@
 package ch.iserver.ace.net.protocol;
 
 /**
- *
+ * RecoveryException is thrown by the 
+ * {@link ch.iserver.ace.net.protocol.AbstractConnection#recover()} 
+ * method to indicate that the recovery failed.
  */
 public class RecoveryException extends Exception {
 
 	/**
-	 * Constructor.
+	 * Default constructor.
 	 */
 	public RecoveryException() { }
 	
 	/**
-	 * Constructor.
+	 * Constructor with a message argument.
 	 * 
 	 * @param message an error message
 	 */

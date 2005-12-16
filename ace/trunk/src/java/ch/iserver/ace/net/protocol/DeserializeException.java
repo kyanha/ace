@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:DeserializeException.java 2413 2005-12-09 13:20:12Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -22,15 +22,22 @@
 package ch.iserver.ace.net.protocol;
 
 /**
- *
+ * DeserializeException thrown when an error while 
+ * deserialization occurs.
  */
 public class DeserializeException extends Exception {
 
+	/**
+	 * the exception that caused this exception to be created
+	 */
 	private Exception reason;
 	
 	/**
-	 * 
-	 * @param reason
+	 *
+	 * Creates a new DeserializeException with the causing
+	 * reason exception.
+	 *
+	 * @param reason		the causing exception
 	 */
 	public DeserializeException(Exception reason) {
 		this.reason = reason;
@@ -45,6 +52,10 @@ public class DeserializeException extends Exception {
 		super(message);
 	}
 	
+	/**
+	 * Gets the reason.
+	 * @return	the reason exception
+	 */
 	public Exception getReason() {
 		return reason;
 	}

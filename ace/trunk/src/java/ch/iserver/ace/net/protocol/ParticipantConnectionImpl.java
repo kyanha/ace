@@ -39,6 +39,8 @@ import ch.iserver.ace.net.protocol.RequestImpl.DocumentInfo;
 import ch.iserver.ace.net.protocol.filter.RequestFilter;
 
 /**
+ * The <code>ParticipantConnectionImpl</code> represents a connection from the publisher of a document
+ * to a participant.
  * This connection does not establish its channel until <code>joinAccepted(ParticipantPort)</code> is 
  * invoked.
  *
@@ -46,17 +48,65 @@ import ch.iserver.ace.net.protocol.filter.RequestFilter;
 public class ParticipantConnectionImpl extends AbstractConnection implements
 		ParticipantConnection {
 
+	/**
+	 * the remote user sesson
+	 */
 	private RemoteUserSession session;
+	
+	/**
+	 * the request filter chain
+	 */
 	private RequestFilter filter;
+	
+	/**
+	 * joinAccepted flag
+	 */
 	private boolean joinAccepted;
+	
+	/**
+	 * the serializer to serialize messages
+	 */
 	private Serializer serializer;
+	
+	/**
+	 * the participant id
+	 */
 	private int participantId = -1;
+	
+	/**
+	 * the document id
+	 */
 	private String docId;
+	
+	/**
+	 * flags to indicate state
+	 */
 	private boolean isKicked, hasLeft;
+	
+	/**
+	 * the user name
+	 */
 	private String username;
+	
+	/**
+	 * the participant port to communicate to the upper layer
+	 */
 	private ParticipantPort port;
+	
+	/**
+	 * the receive channel (only incoming messages)
+	 */
 	private Channel incoming;
 	
+	/**
+	 * Creates a new ParticipantConnectionImpl.
+	 * 
+	 * @param docId			the document id
+	 * @param session		the remote user session
+	 * @param listener		the reply listener
+	 * @param serializer		the serializer
+	 * @param filter			the request filter chain to process outgoing requests
+	 */
 	public ParticipantConnectionImpl(String docId, RemoteUserSession session, ReplyListener listener, Serializer serializer, RequestFilter filter) {
 		super(null);
 		setState(STATE_INITIALIZED);
@@ -72,23 +122,49 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 		username = session.getUser().getUserDetails().getUsername();
 	}
 	
+	/**
+	 * Gets the document id.
+	 * 
+	 * @return the document id
+	 */
 	public String getDocumentId() {
 		return docId;
 	}
 		
+	/**
+	 * Gets the participant id.
+	 * 
+	 * @return the participant id
+	 */
 	public int getParticipantId() {
 		return participantId;
 	}
 	
+	/**
+	 * Gets the ParticipantPort.
+	 * 
+	 * @return the participant port
+	 */
 	public ParticipantPort getParticipantPort() {
 		return port;
 	}
 	
+	/**
+	 * Sets the hasLeft flag. This is used to prevent the publisher from 
+	 * sending a 'terminatedSession' message.
+	 * 
+	 * @param value	the value to set
+	 */
 	public void setHasLeft(boolean value) {
 		LOG.debug("setHasLeft(" + value + ")");
 		hasLeft = value;
 	}
 	
+	/**
+	 * Returns if the participant has left.
+	 * 
+	 * @return	true iff the participant has left
+	 */
 	public boolean hasLeft() {
 		return hasLeft;
 	}
@@ -96,6 +172,10 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 	/*****************************************************/
 	/** methods from abstract class AbstractConnection  **/
 	/*****************************************************/
+	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void cleanup() {
 		LOG.debug("--> cleanup()");
 		session = null;
@@ -118,6 +198,9 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 		LOG.debug("<-- cleanup()");
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void recover() throws RecoveryException {
 		throw new RecoveryException();
 	}
@@ -125,11 +208,18 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 	/***************************************************/
 	/** methods from interface ParticipantConnection  **/
 	/***************************************************/
+	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setParticipantId(int participantId) {
 		LOG.debug("setParticipantId("+participantId+")");
 		this.participantId = participantId;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void joinAccepted(ParticipantPort port) {
 		LOG.info("--> joinAccepted()");
 		joinAccepted = true;
@@ -153,6 +243,9 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 		LOG.info("<-- joinAccepted()");
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void joinRejected(int code) {
 		LOG.info("--> joinRejected(" + code + ")");
 		DocumentInfo info = new DocumentInfo(docId, null, null);
@@ -164,10 +257,16 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 		LOG.info("<-- joinRejected()");
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public RemoteUserProxy getUser() {
 		return session.getUser();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void sendDocument(PortableDocument document) {
 		if (joinAccepted) {
 			LOG.info("--> sendDocument()");
@@ -197,6 +296,9 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void sendRequest(int participantId, Request request) {
 		LOG.info("--> sendRequest("+participantId+", "+request+")");
 		if (getState() == STATE_ACTIVE) {
@@ -213,6 +315,9 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 		LOG.info("<-- sendRequest()");
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void sendCaretUpdateMessage(int participantId, CaretUpdateMessage message) {
 		LOG.info("--> sendCaretUpdateMessage("+participantId+", "+message+")");
 		if (getState() == STATE_ACTIVE) {
@@ -229,6 +334,9 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 		LOG.info("<-- sendCaretUpdateMessage()");
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void sendAcknowledge(int siteId, Timestamp timestamp) {
 		LOG.info("--> sendAcknowledge("+siteId+", "+timestamp+")");
 		if (getState() == STATE_ACTIVE) {
@@ -245,6 +353,9 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 		LOG.info("<-- sendAcknowledge()");
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void sendParticipantJoined(int participantId, RemoteUserProxy proxy) {
 		LOG.info("--> sendParticipantJoined("+participantId+", "+proxy+")");
 		if (getState() == STATE_ACTIVE) {
@@ -261,6 +372,9 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 		LOG.info("--> sendParticipantJoined()");
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void sendParticipantLeft(int participantId, int reason) {
 		LOG.info("--> sendParticipantLeft("+participantId+", "+reason+")");
 		if (getState() == STATE_ACTIVE) {
@@ -278,6 +392,9 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 		LOG.info("--> sendParticipantLeft()");
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void sendKicked() {
 		LOG.info("--> sendKicked()");
 		isKicked = true;
@@ -295,6 +412,9 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 		LOG.info("<-- sendKicked()");
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void close() {
 		LOG.info("--> close("+getParticipantId()+", "+username+")");
 		if (getState() == STATE_ACTIVE) {
@@ -313,6 +433,10 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 		LOG.info("<-- close()");
 	}
 	
+	/**
+	 * Helper method to send a terminatedSession message.
+	 *
+	 */
 	private void sendSessionTerminated() {
 		byte[] data = null;
 		try {
@@ -323,6 +447,11 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 		sendToPeer(data);
 	}
 	
+	/**
+	 * Private helper method to send data to the peer.
+	 * 
+	 * @param data 	the data to be sent
+	 */
 	private void sendToPeer(byte[] data) {
 		try {
 			send(data, username, getReplyListener());
@@ -344,13 +473,5 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 			LOG.warn("cannot cleanup, docId and/or session null [" + docId + "] [" + session + "]");
 		}
 	}
-	
-//	public boolean equals(Object obj) {
-//		return false;
-//	}
-//	
-//	public int hashCode() {
-//		return -1;
-//	}
 
 }

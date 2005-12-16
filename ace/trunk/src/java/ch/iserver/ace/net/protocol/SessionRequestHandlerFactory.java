@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:SessionRequestHandlerFactory.java 2413 2005-12-09 13:20:12Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -31,7 +31,8 @@ import ch.iserver.ace.util.SingleThreadDomain;
 import ch.iserver.ace.util.ThreadDomain;
 
 /**
- *
+ * Factory class to create instances of 
+ * {@link ch.iserver.ace.net.protocol.SessionRequestHandler}.
  */
 public class SessionRequestHandlerFactory {
 
@@ -45,6 +46,13 @@ public class SessionRequestHandlerFactory {
 	
 	private static SessionRequestHandlerFactory instance;
 	
+	/**
+	 * Initializes this factory.
+	 *  
+	 * @param deserializer
+	 * @param handler
+	 * @param service
+	 */
 	public static void init(Deserializer deserializer, ParserHandler handler, NetworkServiceExt service) {
 		ParameterValidator.notNull("deserializer", deserializer);
 		ParameterValidator.notNull("handler", handler);
@@ -53,12 +61,24 @@ public class SessionRequestHandlerFactory {
 		}
 	}
 	
+	/**
+	 * Private constructor.
+	 * 
+	 * @param deserializer
+	 * @param handler
+	 * @param service
+	 */
 	private SessionRequestHandlerFactory(Deserializer deserializer, ParserHandler handler, NetworkServiceExt service) {
 		this.deserializer = deserializer;
 		this.handler = handler;
 		this.service = service;
 	}
 	
+	/**
+	 * Gets the SessionRequestHandlerFactory instance.
+	 * 
+	 * @return the SessionRequestHandlerFactory instance
+	 */
 	public static SessionRequestHandlerFactory getInstance() {
 		if (instance == null) {
 			throw new IllegalStateException("instance has not been initialized");
@@ -66,6 +86,12 @@ public class SessionRequestHandlerFactory {
 		return instance;
 	}
 	
+	/**
+	 * Creates a new SessionRequestHandler.
+	 * 
+	 * @param info
+	 * @return	the created SessionRequestHandler
+	 */
 	public RequestHandler createHandler(DocumentInfo info) {
 		return (RequestHandler) domain.wrap(new SessionRequestHandler(deserializer, handler, service, info), RequestHandler.class);
 	}

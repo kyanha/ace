@@ -37,21 +37,40 @@ import ch.iserver.ace.net.discovery.DiscoveryManagerFactory;
 import ch.iserver.ace.net.protocol.filter.RequestFilter;
 
 /**
- *
+ * MainRequestHandler is the main request handler for the 
+ * <code>MainConnection</code> connection to a peer.
+ * It forwards the parsed <code>Request</code>'s to the 
+ * given Request filter chain.
+ * 
+ * @see ch.iserver.ace.net.protocol.MainConnection
+ * @see org.beepcore.beep.core.RequestHandler
  */
 public class MainRequestHandler implements RequestHandler {
 	
 	private static Logger LOG = Logger.getLogger(MainRequestHandler.class);
 	
+	/**
+	 * the request filter to send the requests
+	 */
 	private RequestFilter filter;
+	
+	/**
+	 * the deserializer implementation for deserialization
+	 */
 	private Deserializer deserializer;
+	
+	/**
+	 * the request parser handler to parse
+	 * the message and create the Request object
+	 */
 	private RequestParserHandler handler;	
 	
 	/**
+	 * Creates a new MainRequestHandler.
 	 * 
-	 * @param deserializer
-	 * @param filter
-	 * @param handler
+	 * @param deserializer	the deserializer to use
+	 * @param filter			the request filter chain to forward requests
+	 * @param handler		the request parse handler
 	 */
 	public MainRequestHandler(Deserializer deserializer, RequestFilter filter, RequestParserHandler handler) {
 		this.deserializer = deserializer;

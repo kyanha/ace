@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:DiscoveryException.java 2413 2005-12-09 13:20:12Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -22,15 +22,21 @@
 package ch.iserver.ace.net.protocol;
 
 /**
- *
+ * Exception thrown on discovery error.
  */
 public class DiscoveryException extends Exception {
 
+	/**
+	 * the exception that caused this exception to be created
+	 */
 	private Exception reason;
 	
 	/**
-	 * 
-	 * @param reason
+	 *
+	 * Creates a new DiscoveryException with the causing
+	 * reason exception.
+	 *
+	 * @param reason		the causing exception
 	 */
 	public DiscoveryException(Exception reason) {
 		this.reason = reason;
@@ -45,6 +51,10 @@ public class DiscoveryException extends Exception {
 		super(message);
 	}
 	
+	/**
+	 * Gets the reason.
+	 * @return	the reason exception
+	 */
 	public Exception getReason() {
 		return reason;
 	}

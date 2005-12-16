@@ -27,17 +27,34 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 /**
- *
+ * Defaul implementation of interface <code>Deserializer</code>.
+ * 
+ * @see ch.iserver.ace.net.protocol.Deserializer
  */
 public class DeserializerImpl implements Deserializer {
 
+	/**
+	 * the singleton instance
+	 */
 	private static DeserializerImpl instance;
+	
+	/**
+	 * the SAX parser factory
+	 */
 	private static SAXParserFactory factory;
 	
+	/**
+	 * Private constructor.
+	 */
 	private DeserializerImpl() {
 		factory = SAXParserFactory.newInstance();
 	}
 	
+	/**
+	 * Gets the singleton instance.
+	 * 
+	 * @return the DeserializerImpl instance
+	 */
 	public static DeserializerImpl getInstance() {
 		if (instance == null) {
 			instance = new DeserializerImpl();
@@ -46,12 +63,12 @@ public class DeserializerImpl implements Deserializer {
 	}
 	
 	/**
-	 * 
+	 * {@inheritDoc}
 	 */
 	public void deserialize(byte[] data, ParserHandler handler) throws DeserializeException {
 		try {
 			ByteArrayInputStream input = new ByteArrayInputStream(data);
-			//TODO: add xml validating, write xml schema
+			//could add xml validating using protocol.xsd
 			//factory.setValidating(true)
 			SAXParser saxParser = factory.newSAXParser();
 			saxParser.parse( input, handler );

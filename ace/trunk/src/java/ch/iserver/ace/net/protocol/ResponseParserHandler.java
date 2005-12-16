@@ -26,7 +26,8 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 /**
- *
+ * ResponseParserHandler is used to parse responses received from a 
+ * Channel communication.
  */
 public class ResponseParserHandler extends ParserHandler {
 	
@@ -69,7 +70,7 @@ public class ResponseParserHandler extends ParserHandler {
 	}
 	
 	/**
-	 * 
+	 * {@inheritDoc}
 	 */
 	public Request getResult() {
 		LOG.debug("getResult("+response+")");
@@ -80,6 +81,9 @@ public class ResponseParserHandler extends ParserHandler {
 		return responseType;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setMetaData(Object metadata) {
 		if (metadata instanceof QueryInfo) {
 			info = (QueryInfo) metadata;

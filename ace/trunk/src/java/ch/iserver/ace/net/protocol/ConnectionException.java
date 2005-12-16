@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:ConnectionException.java 2413 2005-12-09 13:20:12Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -22,12 +22,13 @@
 package ch.iserver.ace.net.protocol;
 
 /**
- *
+ * A ConnectionException is thrown if an exception on a 
+ *  connection occurs.
  */
 public class ConnectionException extends Exception {
 
 	/**
-	 * Constructor.
+	 * Default Constructor.
 	 */
 	public ConnectionException() { }
 	

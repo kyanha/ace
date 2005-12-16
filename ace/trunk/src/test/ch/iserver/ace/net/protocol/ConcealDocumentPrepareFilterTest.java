@@ -14,12 +14,7 @@ public class ConcealDocumentPrepareFilterTest extends TestCase {
 	 */
 	public void testProcess() {
 		String userId = "asd-234";
-		
-		MockControl connectionCtrl = MockControl.createControl(ParticipantConnectionExt.class);
-		ParticipantConnectionExt connection = (ParticipantConnectionExt) connectionCtrl.getMock();
-		
-		//configure session manager, add 1 session
-		
+		//TODO: finish this test
 		//create published document
 		String docId = "afsd-23";
 		MockControl docServerLogicCtrl = MockControl.createControl(DocumentServerLogic.class);

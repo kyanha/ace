@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:TLVHandler.java 2413 2005-12-09 13:20:12Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -23,13 +23,10 @@ package ch.iserver.ace.net.protocol;
 
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
-import java.io.CharArrayWriter;
 import java.io.OutputStreamWriter;
 import java.util.Iterator;
 
 import org.apache.log4j.Logger;
-
-import sun.misc.BASE64Encoder;
 
 import ch.iserver.ace.Fragment;
 import ch.iserver.ace.net.PortableDocument;
@@ -39,7 +36,9 @@ import ch.iserver.ace.net.core.PortableDocumentExt;
 import ch.iserver.ace.util.Base64;
 
 /**
- *
+ * The TLVHandler encodes and decodes a PortableDocument to TLV.
+ * 
+ * @see ch.iserver.ace.net.PortableDocument
  */
 public class TLVHandler {
 
@@ -47,6 +46,13 @@ public class TLVHandler {
 	
 	private static final char SPACE = ' ';
 	
+	/**
+	 * Encode a PortableDocument to a char[] array with
+	 * TLV format.
+	 * 
+	 * @param doc the portable document to encode
+	 * @return
+	 */
 	public static char[] create(PortableDocument doc) {
 		String result = null;
 		try {
@@ -79,6 +85,13 @@ public class TLVHandler {
 		return result.toCharArray();
 	}
 	
+	/**
+	 * Decodes and parses, respectively, a raw data in TLV to an instance of 
+	 * a PortableDocument.
+	 * 
+	 * @param payload
+	 * @param document
+	 */
 	public static void parse(String payload, PortableDocumentExt document) {
 		int endIndex = 0;
 		int startIndex = 0;
@@ -106,6 +119,12 @@ public class TLVHandler {
 		}
 	}
 	
+	/**
+	 * Creates a char[] from the given id.
+	 * 
+	 * @param id
+	 * @return the char[] craeted
+	 */
 	private static char[] createCharArray(int id) {
 		String str = Integer.toString(id);
 		char[] charArr = str.toCharArray();

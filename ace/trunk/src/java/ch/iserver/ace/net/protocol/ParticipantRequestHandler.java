@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:ParticipantRequestHandler.java 2413 2005-12-09 13:20:12Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -38,18 +38,48 @@ import ch.iserver.ace.net.protocol.RequestImpl.DocumentInfo;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
- * Server side request handler for a collaborative session.
+ * The <code>ParticipantRequestHandler</code> is a server side 
+ * request handler for a collaborative session.
+ * 
+ * @see org.beepcore.beep.core.RequestHandler
  */
 public class ParticipantRequestHandler implements RequestHandler {
 
 	private static Logger LOG = Logger.getLogger(ParticipantRequestHandler.class);
 	
+	/**
+	 * the deserializer
+	 */
 	private Deserializer deserializer;
+	
+	/**
+	 * the participant port (communication port to the upper layer)
+	 */
 	private ParticipantPort port;
+	
+	/**
+	 * the participant connection this request handler belongs to
+	 */
 	private ParticipantConnectionImpl connection;
+	
+	/**
+	 * the timestamp factory to create timestamp when
+	 * deserializing requests
+	 */
 	private TimestampFactory factory;
+	
+	/**
+	 * A reference to the NetworkServiceExt
+	 */
 	private NetworkServiceExt service;
 	
+	/**
+	 * Creates a new ParticipantRequestHandler.
+	 * 
+	 * @param deserializer		the deserializer to deserialize messages
+	 * @param factory			the timestamp factory
+	 * @param service			the NetworkService reference
+	 */
 	public ParticipantRequestHandler(Deserializer deserializer, TimestampFactory factory, NetworkServiceExt service) {
 		ParameterValidator.notNull("deserializer", deserializer);
 		ParameterValidator.notNull("factory", factory);
@@ -59,21 +89,37 @@ public class ParticipantRequestHandler implements RequestHandler {
 		this.service = service;
 	}
 	
+	/**
+	 * Sets the participant port.
+	 * 
+	 * @param port the ParticipantPort to set
+	 */
 	public void setParticipantPort(ParticipantPort port) {
 		ParameterValidator.notNull("ParticipantPort", port);
 		this.port = port;
 	}
 	
+	/**
+	 * Sets the ParticipantConnection.
+	 * 
+	 * @param connection the ParticipantConnection to set
+	 */
 	public void setParticipantConnection(ParticipantConnectionImpl connection) {
 		this.connection = connection;
 	}
 	
+	/**
+	 * Cleans up the ParticipantRequestHandler i.e. releases its resources.
+	 */
 	public void cleanup() {
 		deserializer = null;
 		connection = null;
 		port = null;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void receiveMSG(MessageMSG message) {
 		LOG.info("--> recieveMSG()");
 

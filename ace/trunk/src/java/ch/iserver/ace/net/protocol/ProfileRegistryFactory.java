@@ -35,11 +35,30 @@ import ch.iserver.ace.net.protocol.filter.RequestFilterFactory;
 import ch.iserver.ace.util.SingleThreadDomain;
 
 /**
- *
+ * The <code>ProfileRegistryFactory</code> creates the
+ * <code>ProfileRegistry</code>. The ProfileRegistry is
+ * a BEEP Core specific class and is used for session
+ * management. The ProfileRegistry must be set a
+ * <code>StartChannelListener</code> object which must be
+ * implmemented by the application.
+ * 
+ * <p>The ProfileRegistry is available as singleton instance 
+ * since ACE uses only one profile.</p>
+ *  
+ *  @see ProfileRegistry
+ *  @see org.beepcore.beep.core.StartChannelListener
  */
 public class ProfileRegistryFactory {
 
+	/**
+	 * the ProfileRegistry instance
+	 */
 	private static ProfileRegistry instance;
+	
+	/**
+	 * the main request handler. This object exists as only once and is thus
+	 * used by all main connections as the request handler
+	 */
 	private static RequestHandler mainHandler;
 	
 	public static ProfileRegistry getProfileRegistry() {
@@ -71,6 +90,12 @@ public class ProfileRegistryFactory {
 		return instance;
 	}
 	
+	/**
+	 * Gets the singleton MainRequestHandler instance. It is used
+	 * by all <code>MainConnection</code> to handle the received requests.
+	 * 
+	 * @return 	the MainRequestHandler instance
+	 */
 	public static RequestHandler getMainRequestHandler() {
 		return mainHandler;
 	}

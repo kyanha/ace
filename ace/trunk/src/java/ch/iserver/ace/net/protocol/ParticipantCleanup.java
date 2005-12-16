@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:ParticipantCleanup.java 2413 2005-12-09 13:20:12Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -24,19 +24,34 @@ package ch.iserver.ace.net.protocol;
 import org.apache.log4j.Logger;
 
 /**
- *
+ * Command object used to clean up a participant and to release its
+ * resources.
  */
 public class ParticipantCleanup {
 
 	private static Logger LOG = Logger.getLogger(ParticipantCleanup.class);
 	
+	/**
+	 * ids
+	 */
 	private String docId, userId;
 	
+	/**
+	 * Constructor for initialization.
+	 * 
+	 * @param docId		the document id
+	 * @param userId		the user id
+	 */
 	public ParticipantCleanup(String docId, String userId) {
 		this.docId = docId;
 		this.userId = userId;
 	}
 	
+	/**
+	 * Executes the clean up.
+	 *
+	 * @see RemoteUserSession
+	 */
 	public void execute() {
 		LOG.debug("--> execute()");
 		RemoteUserSession session = SessionManager.getInstance().getSession(userId);

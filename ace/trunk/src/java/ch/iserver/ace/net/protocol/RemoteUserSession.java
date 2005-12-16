@@ -54,36 +54,88 @@ import ch.iserver.ace.util.ParameterValidator;
 import ch.iserver.ace.util.SingleThreadDomain;
 
 /**
- *
+ * The RemoteUserSession includes the session and connection management for
+ * a remote user. All connections for a particular remote user are created, 
+ * maintained and released in the RemoteUserSession.
  */
 public class RemoteUserSession {
 	
-	public static final String CHANNEL_MAIN = "main";
-	public static final String CHANNEL_SESSION = "session";
-	//TODO: could open a channel to a host which acts as a proxy to another host inside that subnet
-	public static final String CHANNEL_PROXY = "proxy";
-
 	private static Logger LOG = Logger.getLogger(RemoteUserSession.class);
 	
+	/**
+	 * constant for channel type <code>main</code>
+	 */
+	public static final String CHANNEL_MAIN = "main";
+	
+	/**
+	 * constant for channel type <code>session</code>
+	 */
+	public static final String CHANNEL_SESSION = "session";
+	
+	/**
+	 * constant for channel type <code>proxy</code>
+	 */
+	public static final String CHANNEL_PROXY = "proxy";
+	//idea: could open a channel to a host which acts as a proxy to another host inside that subnet
+	
+	/**
+	 * the SingleThreadDomain to wrap all ParticipantRequestHandlers
+	 */
 	private static SingleThreadDomain domain = new SingleThreadDomain();
 	
+	/**
+	 * the host address of the remote user
+	 */
 	private InetAddress host;
+	
+	/**
+	 * the port of the remote user
+	 */
 	private int port;
+	
+	/**
+	 * the TCP session with the remote user
+	 */
 	private TCPSession session;
+	
+	/**
+	 * the MainConnection
+	 */
 	private MainConnection mainConnection;
+	
+	/**
+	 * Maps for all Participant- / and SessionConnections
+	 */
 	private Map participantConnections, sessionConnections;
+	
+	/**
+	 * the remote user proxy
+	 */
 	private RemoteUserProxyExt user;
+	
+	/**
+	 * flag to indicate state
+	 */
 	private boolean isInitiated;
+	
+	/**
+	 * flag to indicate state
+	 */
 	private boolean isAlive;
+	
+	/**
+	 * the timestamp factory
+	 */
 	private TimestampFactory factory;
 	
 	
 	/**
+	 * Creates a new RemoteUserSession. No <code>TCPSession</code> to 
+	 * the remote user is yet available and thus no <code>MainConnection</code>.
 	 * 
-	 * @param address
-	 * @param port
-	 * @param user
-	 * @param factory used for the CollaborationParserHandler
+	 * @param address	the address of the remote user
+	 * @param port		the port
+	 * @param user		the remote user proxy
 	 */
 	public RemoteUserSession(InetAddress address, int port, RemoteUserProxyExt user) {
 		ParameterValidator.notNull("address", address);
@@ -99,11 +151,12 @@ public class RemoteUserSession {
 	}
 	
 	/**
+	 * Creates a new RemoteUserSession. The <code>TCPSession</code> has been established
+	 * and the <code>MainConnection</code> initiated.
 	 * 
-	 * @param session
-	 * @param connection
-	 * @param user
-	 * @param factory used for the CollaborationParserHandler
+	 * @param session		the TCPSession
+	 * @param connection		the MainConnection
+	 * @param user			the remote user proxy
 	 */
 	public RemoteUserSession(TCPSession session, MainConnection connection, RemoteUserProxyExt user) {
 		ParameterValidator.notNull("session", session);
@@ -118,20 +171,34 @@ public class RemoteUserSession {
 		sessionConnections = Collections.synchronizedMap(new LinkedHashMap());
 	}
 	
+	/**
+	 * Sets the timestamp factory.
+	 * 
+	 * @param factory the timestamp factory to set
+	 */
 	public void setTimestampFactory(TimestampFactory factory) {
 		this.factory = factory;
 	}
 	
+	/**
+	 * Gets the timestamp factory.
+	 * 
+	 * @return the timestamp factory
+	 */
 	public TimestampFactory getTimestampFactory() {
 		return factory;
 	}
 	
 	/**
+	 * Gets the <code>MainConnection</code>. If the session has not been initiated, the
+	 * <code>TCPSession</code> is created and then the <code>MainConnection</code> started.
+	 * Otherwise, the <code>MainConnection</code> is simply returned.
 	 * 
-	 * If the session has been cleaned up, a <code>ConnectionExeption</code>
-	 * is thrown.
+	 * If the session has been cleaned up (call to {@link #cleanup()}), a 
+	 * <code>ConnectionExeption</code> is thrown.
 	 * 
-	 * @return
+	 * @return the MainConnection
+	 * @throws ConnectionException	if the session is shut down
 	 */
 	public synchronized MainConnection getMainConnection() throws ConnectionException {
 		if (!isAlive)
@@ -150,12 +217,14 @@ public class RemoteUserSession {
 	}
 	
 	/**
+	 * Starts a new Channel to the remote user using this session. The channel is configured with
+	 * the appropriate request handler according to the given <code>type</code>.
 	 * 
-	 * @param type the type of the channel
-	 * @param port the ParticipantPort for the ParticipantRequestHandler (optional)
-	 * @param docId to open a session channel a document id can be passed
-	 * @return
-	 * @throws ConnectionException
+	 * @param type 	the type of the channel
+	 * @param port 	the ParticipantPort for the ParticipantRequestHandler (optional)
+	 * @param docId 	to open a session channel a document id can be passed
+	 * @return	the created Channel
+	 * @throws ConnectionException	if an error occurs
 	 */
 	public Channel startChannel(String type, ParticipantConnectionImpl connection, String docId) throws ConnectionException {
 		return startChannelImpl(type, connection, docId);
@@ -166,10 +235,11 @@ public class RemoteUserSession {
 	/********************************************/
 
 	/**
+	 * Adds a <code>SessionConnection</code> to this RemoteUserSession.
 	 * 
-	 * @param docId
-	 * @param collaborationChannel
-	 * @return
+	 * @param docId		the id of the shared document
+	 * @param collaborationChannel	the channel around which the SessionConnection will be wrapped
+	 * @return	the SessionConnectionImpl object
 	 */
 	public SessionConnectionImpl addSessionConnection(String docId, Channel collaborationChannel) {
 		LOG.debug("--> addSessionConnection() for doc ["+docId+"]");
@@ -183,9 +253,10 @@ public class RemoteUserSession {
 	}
 	
 	/**
+	 * Removes a SessionConnection from this RemoteUserSession given the document id.
 	 * 
-	 * @param docId
-	 * @return
+	 * @param docId	the document id of the SessionConnection
+	 * @return	the removed SessionConnectionImpl object
 	 */
 	public SessionConnectionImpl removeSessionConnection(String docId) {
 		SessionConnectionImpl connection = (SessionConnectionImpl) sessionConnections.remove(docId);
@@ -199,15 +270,22 @@ public class RemoteUserSession {
 	}
 
 	/**
+	 * Checks whether this RemoteUserSession has a SessionConnection for
+	 * the given document.
 	 * 
-	 * @param docId
-	 * @return
+	 * @param docId	the document id to check for an available SessionConnection
+	 * @return	true iff a SessionConnection is available
 	 */
 	public boolean hasSessionConnection(String docId) {
 		return sessionConnections.containsKey(docId);
 	}
 	
-	
+	/**
+	 * Gets a SessionConnection to this RemoteUserSession's user.
+	 * 
+	 * @param docId 	the document id to get the SessionConnection for
+	 * @return	the SessionConnectionImpl object
+	 */
 	public SessionConnectionImpl getSessionConnection(String docId) {
 		return (SessionConnectionImpl) sessionConnections.get(docId);
 	}
@@ -218,9 +296,10 @@ public class RemoteUserSession {
 	/***********************************************/
 	
 	/**
+	 * Adds a ParticipantConnection.
 	 * 
-	 * @param docId
-	 * @return
+	 * @param docId 	the document id the created ParticipantConnection is about
+	 * @return	the created ParticipantConnectionImpl
 	 */
 	public ParticipantConnectionImpl addParticipantConnection(String docId) {
 		LOG.debug("--> createParticipantConnection() for doc ["+docId+"]");
@@ -234,9 +313,10 @@ public class RemoteUserSession {
 	}
 	
 	/**
+	 * Removes a ParticipantConnection from this RemoteUserSession.
 	 * 
-	 * @param docId
-	 * @return
+	 * @param docId	the document id for which the ParticipantConnection is to be removed
+	 * @return	the removed ParticipantConnectionImpl object
 	 */
 	public ParticipantConnectionImpl removeParticipantConnection(String docId) {
 		ParticipantConnectionImpl conn = (ParticipantConnectionImpl) participantConnections.remove(docId);
@@ -245,10 +325,24 @@ public class RemoteUserSession {
 		return conn;
 	}
 
+	/**
+	 * Checks whether a ParticipantConnection is available for the given
+	 * document id.
+	 * 
+	 * @param docId	the document id to check for a ParticipantConnection
+	 * @return	true iff a ParticipantConnection is available
+	 */
 	public boolean hasParticipantConnection(String docId) {
 		return participantConnections.containsKey(docId);
 	}
 	
+	/**
+	 * Gets the ParticipantConnection for the given document id or null
+	 * if none is available.
+	 * 
+	 * @param docId  the document id to get the ParticipantConnection for
+	 * @return	the ParticipantConnectionImpl object for the document id
+	 */
 	public ParticipantConnectionImpl getParticipantConnection(String docId) {
 		ParticipantConnectionImpl conn = (ParticipantConnectionImpl) participantConnections.get(docId);
 		if (conn == null) {
@@ -269,7 +363,6 @@ public class RemoteUserSession {
 		while (iter.hasNext()) {
 			ParticipantConnectionImpl conn = (ParticipantConnectionImpl) iter.next();
 			ParticipantPort port = conn.getParticipantPort();
-//			removeParticipantConnection(conn.getDocumentId());
 			conn.cleanup();
 			port.leave();
 		}
@@ -282,7 +375,6 @@ public class RemoteUserSession {
 			RemoteDocumentProxyExt doc = getUser().getSharedDocument(conn.getDocumentId());
 			SessionConnectionCallback callback = doc.getSessionConnectionCallback();
 			conn.cleanup();
-//			removeSessionConnection(conn.getDocumentId());
 			if (getUser().getId().equals(doc.getPublisher().getId())) { //terminated user was publisher
 				callback.sessionTerminated();
 			} else { //terminated user was participant
@@ -318,26 +410,58 @@ public class RemoteUserSession {
 		LOG.debug("<-- close()");
 	}
 	
+	/**
+	 * Checks whether this RemoteUserSession is still alive i.e. the
+	 * session to the remote user is in active state.
+	 * 
+	 * @return true if the session is still alive
+	 */
 	public synchronized boolean isAlive() {
 		return isAlive;
 	}
 	
+	/**
+	 * Determines whether this RemoteUserSession has its <code>TCPSession</code> 
+	 * established with the remote user or not.
+	 * 
+	 * @return true if the session with the remote user is established
+	 */
 	public boolean isInitiated() {
 		return isInitiated;
 	}
 	
+	/**
+	 * Gets this RemoteUserSession's user.
+	 * 
+	 * @return the RemoteUserProxyExt of this session
+	 */
 	public RemoteUserProxyExt getUser() {
 		return user;
 	}
 	
+	/**
+	 * Gets the target host of this session.
+	 * 
+	 * @return the target host of this session 
+	 */
 	public InetAddress getHost() {
 		return host;
 	}
 	
+	/**
+	 * Gets the port of the target host.
+	 * 
+	 * @return	the port of the target host
+	 */
 	public int getPort() {
 		return port;
 	}
 	
+	/**
+	 * Sets the TCPSession for this RemoteUserSession.
+	 * 
+	 * @param session	the TCPSession to set
+	 */
 	private void setTCPSession(TCPSession session) {
 		this.session = session;
 		if (getUser() != null)
@@ -349,6 +473,7 @@ public class RemoteUserSession {
 	 * RemoteUserSession.
 	 *
 	 * @see TCPSession
+	 * @throws ConnectionException 	if an error occurs
 	 */
 	private void initiateTCPSession() throws ConnectionException {
 		LOG.debug("--> initiateTCPSession()");
@@ -373,10 +498,17 @@ public class RemoteUserSession {
 	}
 	
 	/**
+	 * Starts a channel to this remote user. The channel is configured with
+	 * the appropriate request handler according to the given <code>type</code>.
+	 * The peer is also sent a channel message containing the <code>type</code> of the 
+	 * channel so that the peer can associate the channel with the correct request 
+	 * handler.
 	 * 
-	 * @param type
-	 * @return
-	 * @throws ConnectionException
+	 * @param type		the type of the channel
+	 * @param connection	the ParticipantConnectionImpl (optional)	
+	 * @param docId		the document id (optional, only for ParticipantConnections)
+	 * @return	the created Channel
+	 * @throws ConnectionException	if an error occurs
 	 */
 	private Channel startChannelImpl(String type, ParticipantConnectionImpl connection, String docId) throws ConnectionException {
 		try {
@@ -408,7 +540,6 @@ public class RemoteUserSession {
 			byte[] data = channelType.getBytes(NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 			OutputDataStream output = DataStreamHelper.prepare(data);
 			LOG.debug("--> sendMSG() for channel type");
-//			channel.sendMSG(output, ResponseListener.getInstance());
 			Reply reply = new Reply();
 			channel.sendMSG(output, reply);
 			reply.getNextReply(); //wait for synchronous response
@@ -420,6 +551,14 @@ public class RemoteUserSession {
 		}
 	}
 	
+	/**
+	 * Returns the XML message to send to the peer after initialization 
+	 * of the channel.
+	 * 
+	 * @param type	the type of the channel
+	 * @param docId	the document id (only for ParticipantConnections)
+	 * @return	the XML message
+	 */
 	private String getChannelTypeXML(String type, String docId) {
 		String result = "";
 		if (type.equals(CHANNEL_MAIN)) {

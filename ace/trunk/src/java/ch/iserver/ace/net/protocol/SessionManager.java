@@ -36,7 +36,8 @@ import ch.iserver.ace.net.core.RemoteUserProxyExt;
 import ch.iserver.ace.net.discovery.DiscoveryManagerFactory;
 
 /**
- *
+ * The SessionManager is the central class that keeps all RemoteUserSession objects
+ * managed in a central place.
  */
 public class SessionManager {
 
@@ -51,10 +52,18 @@ public class SessionManager {
 	
 	private TimestampFactory factory;
 	
+	/**
+	 * Private constructor.
+	 */
 	private SessionManager() {
 		sessions = Collections.synchronizedMap(new LinkedHashMap());
 	}
 	
+	/**
+	 * Gets the singleton instance.
+	 * 
+	 * @return the SessionManager instance
+	 */
 	public static SessionManager getInstance() {
 		if (theInstance == null) {
 			theInstance = new SessionManager();
@@ -62,10 +71,21 @@ public class SessionManager {
 		return theInstance;
 	}
 	
+	/**
+	 * Sets the timestamp factory.
+	 * 
+	 * @param factory
+	 */
 	public void setTimestampFactory(TimestampFactory factory) {
 		this.factory = factory;
 	}
 	
+	/**
+	 * Creates a new RemotUserSession from the give remote user proxy.
+	 * 
+	 * @param user
+	 * @return the RemoteUserSession
+	 */
 	public RemoteUserSession createSession(RemoteUserProxyExt user) {
 		String id = user.getId();
 		MutableUserDetails details = user.getMutableUserDetails();
@@ -75,6 +95,14 @@ public class SessionManager {
 		return newSession;
 	}
 	
+	/**
+	 * Creates a new RemoteUserSession.
+	 * 
+	 * @param user
+	 * @param session
+	 * @param mainChannel
+	 * @return	the created RemoteUserSession
+	 */
 	public RemoteUserSession createSession(RemoteUserProxyExt user, TCPSession session, Channel mainChannel) {
 		RemoteUserSession newSession = new RemoteUserSession(session, new MainConnection(mainChannel), user);
 		newSession.setTimestampFactory(factory);
@@ -121,6 +149,11 @@ public class SessionManager {
 		return session; 
 	}
 	
+	/**
+	 * Returns the number of available RemoteUserSession's.
+	 * 
+	 * @return the number of RemoteUserSessions
+	 */
 	public int size() {
 		return sessions.size();
 	}

@@ -41,7 +41,7 @@ import ch.iserver.ace.net.core.NetworkServiceImpl;
 import ch.iserver.ace.net.core.PublishedDocument;
 
 /**
- *
+ * Default implementation for interface {@link ch.iserver.ace.net.protocol.Serializer}.
  */
 public class SerializerImpl implements Serializer, ProtocolConstants {
 
@@ -83,7 +83,9 @@ public class SerializerImpl implements Serializer, ProtocolConstants {
 		return null;
 	}
 	
-	
+	/**
+	 * {@inheritDoc}
+	 */
 	public byte[] createRequest(int type, Object data) throws SerializeException {
 		try {
 			TransformerHandler handler = createHandler();
@@ -126,7 +128,9 @@ public class SerializerImpl implements Serializer, ProtocolConstants {
 		handler.endElement("", "", TAG_REQUEST);
 	}
 	
-
+	/**
+	 * {@inheritDoc}
+	 */
 	public byte[] createResponse(int type, Object data1, Object data2) throws SerializeException {
 		try {
 			TransformerHandler handler = createHandler();
@@ -170,6 +174,9 @@ public class SerializerImpl implements Serializer, ProtocolConstants {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public byte[] createNotification(int type, Object data) throws SerializeException {
 		try {
 			TransformerHandler handler = createHandler();
@@ -271,6 +278,9 @@ public class SerializerImpl implements Serializer, ProtocolConstants {
 		handler.endElement("", "", TAG_NOTIFICATION);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public byte[] createSessionMessage(int type, Object data1, Object data2) throws SerializeException {
 		throw new UnsupportedOperationException();
 	}

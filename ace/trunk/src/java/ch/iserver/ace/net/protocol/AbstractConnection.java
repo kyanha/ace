@@ -38,15 +38,46 @@ public abstract class AbstractConnection {
 
 	protected Logger LOG = Logger.getLogger(AbstractConnection.class);
 	
+	/**
+	 * State initialized. The connection is created but the channel not yet started.
+	 */
 	public static final int STATE_INITIALIZED = 0;
+	
+	/**
+	 * State active. The connection is initialized and the channel established
+	 */
 	public static final int STATE_ACTIVE = 1;
+	
+	/**
+	 * State dirty. A failure has occured while sending data.
+	 */
 	public static final int STATE_DIRTY = 2;
+	
+	/**
+	 * State aborted. Recovery for connection failed.
+	 */
 	public static final int STATE_ABORTED = 3;
+	
+	/**
+	 * State closed. Channel closed and resources released.
+	 */
 	public static final int STATE_CLOSED = 4;
 	
+	/**
+	 * The channel for this connection
+	 */
 	private Channel channel;
+	
+	/**
+	 * The reply listener
+	 */
 	private ReplyListener listener;
+	
+	/**
+	 * The current state
+	 */
 	private int state = -1;
+	
 	
 	/**
 	 * Constructor.
@@ -176,15 +207,19 @@ public abstract class AbstractConnection {
 	public abstract void cleanup();
 	
 	/**
+	 * Recovers this connection from a dirty state (e.g. exception thrown
+	 * when sending data). After calling this method the transmission of the
+	 * data is tried again.
 	 * 
-	 *
+	 * @throws RecoveryException 		if the recovery fails
 	 */
 	public abstract void recover() throws RecoveryException;
 	
 	/**
+	 * Returns the stack trace as a String.
 	 * 
-	 * @param e
-	 * @return
+	 * @param e	the exception to get the stack trace
+	 * @return	String	the stack trace
 	 */
 	private String getStackTrace(Exception e) {
 		ByteArrayOutputStream trace = new ByteArrayOutputStream();

@@ -32,15 +32,13 @@ import ch.iserver.ace.net.protocol.filter.RequestFilter;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
- *
+ * Default implementation for interface <code>ReplyListener</code>.
+ * ResponseListener listens for responses in a BEEP Core Channel 
+ * communication.
  */
 public class ResponseListener implements ReplyListener {
 
 	private static Logger LOG = Logger.getLogger(ResponseListener.class);
-
-	private Deserializer deserializer;
-	private ResponseParserHandler handler;
-	private RequestFilter filter;
 	
 	private static ResponseListener instance;
 	

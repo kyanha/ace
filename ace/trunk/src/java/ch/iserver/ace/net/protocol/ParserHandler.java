@@ -25,13 +25,18 @@ import org.xml.sax.helpers.DefaultHandler;
 
 
 /**
+ * Abstract super class for all request handlers. 
+ * Defines one important method {@link #getResult()}
+ * to retrieve the Request object after deserialization 
+ * stopped.
  *
  */
 public abstract class ParserHandler extends DefaultHandler implements ProtocolConstants {
 
 	/**
+	 * Gets the result of the last parsing as a <code>Request</code>.
 	 * 
-	 * @return 
+	 * @return the parsed Request 
 	 */
 	public abstract Request getResult();
 	

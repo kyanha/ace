@@ -53,28 +53,35 @@ import ch.iserver.ace.net.protocol.RequestImpl.DocumentInfo;
 import ch.iserver.ace.util.Base64;
 
 /**
- * Serializes XML messages directly used in a collaborative session.
+ * Serializes XML messages used in a collaborative session.
+ * Implementation of interface {@link ch.iserver.ace.net.protocol.Serializer}.
  * 
  */
 public class CollaborationSerializer implements Serializer, ProtocolConstants {
 
 	private Logger LOG = Logger.getLogger(CollaborationSerializer.class);
 	
+	/**
+	 * the SAXParser factory
+	 */
 	private SAXTransformerFactory factory;
 	
-	
+	/**
+	 * Default constructor.
+	 *
+	 */
 	public CollaborationSerializer() {
 		factory = (SAXTransformerFactory)SAXTransformerFactory.newInstance();
 	}
 	
-	/* (non-Javadoc)
+	/**
 	 * @see ch.iserver.ace.net.impl.protocol.Serializer#createQuery(int)
 	 */
 	public byte[] createQuery(int type) throws SerializeException {
 		return null;
 	}
 
-	/* (non-Javadoc)
+	/**
 	 * @see ch.iserver.ace.net.impl.protocol.Serializer#createRequest(int, java.lang.Object)
 	 */
 	public byte[] createRequest(int type, Object data)
@@ -82,7 +89,7 @@ public class CollaborationSerializer implements Serializer, ProtocolConstants {
 		return null;
 	}
 
-	/* (non-Javadoc)
+	/**
 	 * @see ch.iserver.ace.net.impl.protocol.Serializer#createResponse(int, java.lang.Object, java.lang.Object)
 	 */
 	public byte[] createResponse(int type, Object data1, Object data2)
@@ -127,6 +134,13 @@ public class CollaborationSerializer implements Serializer, ProtocolConstants {
 		}
 	}
 	
+	/**
+	 * Helper method to create a particpant tag.
+	 * 
+	 * @param handler 	the transformer handler
+	 * @param doc		the document
+	 * @throws Exception if an error occurs
+	 */
 	private void createParticipantTag(TransformerHandler handler, PortableDocument doc) throws Exception	 {
 		AttributesImpl attrs = new AttributesImpl();
 		handler.startElement("", "", PARTICIPANTS, attrs);
@@ -222,6 +236,9 @@ public class CollaborationSerializer implements Serializer, ProtocolConstants {
 		}
 	}
 	
+	/**
+	 * @see Serializer#createSessionMessage(int, Object, Object)
+	 */
 	public byte[] createSessionMessage(int type, Object data, Object data2) throws SerializeException {
 		try {
 			TransformerHandler handler = createHandler();
@@ -332,6 +349,12 @@ public class CollaborationSerializer implements Serializer, ProtocolConstants {
 		}
 	}
 	
+	/**
+	 * Helper method.
+	 * 
+	 * @param components	the components array to generate a String
+	 * @return the components as a String
+	 */
 	private String getComponentsAsString(int[] components) {
 		String result = "";
 		for (int i = 0; i < components.length; i++) {
@@ -340,6 +363,13 @@ public class CollaborationSerializer implements Serializer, ProtocolConstants {
 		return result;
 	}
 	
+	/**
+	 * Adds an operation to the handler.
+	 * 
+	 * @param handler	the transformer handler
+	 * @param operation	the operation to add
+	 * @throws Exception	if an error occurs
+	 */
 	private void addOperation(TransformerHandler handler, Operation operation) throws Exception {
 		AttributesImpl attrs = new AttributesImpl();
 		if (operation instanceof InsertOperation) {
@@ -390,6 +420,11 @@ public class CollaborationSerializer implements Serializer, ProtocolConstants {
 		}
 	}
 
+	/**
+	 * Creates a new TransformerHandler object.
+	 * 
+	 * @return a new TransformerHandler
+	 */
 	private TransformerHandler createHandler() {
 		TransformerHandler handler = null;
 		try {

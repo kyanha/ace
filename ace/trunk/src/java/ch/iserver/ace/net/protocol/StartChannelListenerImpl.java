@@ -31,7 +31,9 @@ import org.beepcore.beep.core.StartChannelException;
 import org.beepcore.beep.core.StartChannelListener;
 
 /**
- *
+ * BEEP Core specific class to receive notifications when a Channel is started or closed.
+ * 
+ * @see org.beepcore.beep.core.StartChannelListener
  */
 public class StartChannelListenerImpl implements StartChannelListener {
 
@@ -39,6 +41,11 @@ public class StartChannelListenerImpl implements StartChannelListener {
 	
 	private DefaultRequestHandlerFactory factory;
 	
+	/**
+	 * Creates a new StartChannelListenerImpl.
+	 * 
+	 * @param factory
+	 */
 	public StartChannelListenerImpl(DefaultRequestHandlerFactory factory) {
 		this.factory = factory;
 	}

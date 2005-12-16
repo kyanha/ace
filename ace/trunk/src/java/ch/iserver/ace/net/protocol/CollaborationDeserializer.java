@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:CollaborationDeserializer.java 2413 2005-12-09 13:20:12Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -29,14 +29,25 @@ import javax.xml.parsers.SAXParserFactory;
 import org.apache.log4j.Logger;
 
 /**
- *
+ * Implementation of {@link ch.iserver.ace.net.protocol.Deserializer}.
+ * 
+ * <p>CollaborationDeserializer is to be used for the message deserialization in 
+ * a collaborative editing session.</p>
+ * 
  */
 public class CollaborationDeserializer implements Deserializer {
 
 	private Logger LOG = Logger.getLogger(CollaborationDeserializer.class);
 	
+	/**
+	 * The SAXParser factory
+	 */
 	private static SAXParserFactory factory;
 	
+	/**
+	 * Creates a new CollaborationDeserializer.
+	 *
+	 */
 	public CollaborationDeserializer() {
 		factory = SAXParserFactory.newInstance();
 	}

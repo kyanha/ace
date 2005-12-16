@@ -31,15 +31,27 @@ import ch.iserver.ace.algorithm.Timestamp;
 import ch.iserver.ace.net.SessionConnection;
 
 /**
- *
+ * SessionConnectionImpl represents a session connection from a particpant to the publisher
+ * of a shared document.
+ * 
+ * @see ch.iserver.ace.net.protocol.AbstractConnection
  */
 public class SessionConnectionImpl extends AbstractConnection implements SessionConnection {
 
 	private int participantId;
 	private String docId, username, userid;
 	private Serializer serializer;
-//	private boolean hasLeft;
 	
+	/**
+	 * Constructor.
+	 *
+	 * @param docId		the document id
+	 * @param channel	the channel
+	 * @param listener	the reply listener
+	 * @param serializer	the serializer
+	 * @param username	the user name
+	 * @param userId		the user id
+	 */
 	public SessionConnectionImpl(String docId, Channel channel, ReplyListener listener, Serializer serializer, String username, String userId) {
 		super(channel);
 		setState((channel == null) ? STATE_INITIALIZED : STATE_ACTIVE);
@@ -51,11 +63,21 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 		super.LOG = Logger.getLogger(SessionConnectionImpl.class);
 	}
 	
+	/**
+	 * Sets the participant id.
+	 * 
+	 * @param id the participant id
+	 */
 	public void setParticipantId(int id) {
 		LOG.debug("setParticipantId("+id+")");
 		this.participantId = id;
 	}
 	
+	/**
+	 * Gets the document id.
+	 * 
+	 * @return the document id
+	 */
 	public String getDocumentId() {
 		return docId;
 	}
@@ -63,6 +85,10 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 	/*****************************************************/
 	/** methods from abstract class AbstractConnection  **/
 	/*****************************************************/
+	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void cleanup() {
 		LOG.debug("--> cleanup()");
 		serializer = null;
@@ -72,6 +98,9 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 		LOG.debug("<-- cleanup()");
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void recover() throws RecoveryException {
 		throw new RecoveryException();
 	}
@@ -80,22 +109,22 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 	/** methods from interface SessionConnection  **/
 	/***********************************************/
 	
-	/*
-	 * @see ch.iserver.ace.net.SessionConnection#getParticipantId()
+	/**
+	 * {@inheritDoc}
 	 */
 	public int getParticipantId() {
 		return participantId;
 	}
 
-	/* (non-Javadoc)
-	 * @see ch.iserver.ace.net.SessionConnection#isAlive()
+	/**
+	 * {@inheritDoc}
 	 */
 	public boolean isAlive() {
 		return getState() != STATE_CLOSED && (getState() == STATE_ACTIVE || getState() == STATE_INITIALIZED);
 	}
 
-	/* (non-Javadoc)
-	 * @see ch.iserver.ace.net.SessionConnection#leave()
+	/**
+	 * {@inheritDoc}
 	 */
 	public void leave() {
 		LOG.debug("--> leave()");
@@ -115,8 +144,8 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 		LOG.debug("<-- leave()");
 	}
 
-	/* (non-Javadoc)
-	 * @see ch.iserver.ace.net.SessionConnection#sendRequest(ch.iserver.ace.algorithm.Request)
+	/**
+	 * {@inheritDoc}
 	 */
 	public void sendRequest(Request request) {
 		LOG.info("--> sendRequest("+request+")");
@@ -135,8 +164,8 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 
 	}
 
-	/* (non-Javadoc)
-	 * @see ch.iserver.ace.net.SessionConnection#sendCaretUpdateMessage(ch.iserver.ace.algorithm.CaretUpdateMessage)
+	/**
+	 * {@inheritDoc}
 	 */
 	public void sendCaretUpdateMessage(CaretUpdateMessage message) {
 		LOG.info("--> sendCaretUpdateMessage("+message+")");
@@ -154,8 +183,8 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 		LOG.info("<-- sendCaretUpdateMessage()");
 	}
 
-	/* (non-Javadoc)
-	 * @see ch.iserver.ace.net.SessionConnection#sendAcknowledge(int, ch.iserver.ace.algorithm.Timestamp)
+	/**
+	 * {@inheritDoc}
 	 */
 	public void sendAcknowledge(int siteId, Timestamp timestamp) {
 		LOG.info("--> sendAcknowledge("+siteId+", "+timestamp+")");
@@ -173,6 +202,11 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 		LOG.info("<-- sendAcknowledge()");
 	}
 	
+	/**
+	 * Sends the <code>data</code> to the peer.
+	 * 
+	 * @param data the data to send
+	 */
 	private void sendToPeer(byte[] data) {
 		try {
 			send(data, username, getReplyListener());
@@ -183,6 +217,9 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 		}
 	}
 	
+	/**
+	 * Executes the session cleanup.
+	 */
 	public void executeCleanup() {
 		SessionCleanup sessionCleanup = new SessionCleanup(docId, userid);
 		sessionCleanup.execute();

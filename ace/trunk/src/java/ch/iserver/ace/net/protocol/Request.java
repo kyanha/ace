@@ -24,18 +24,52 @@ package ch.iserver.ace.net.protocol;
 import org.beepcore.beep.core.MessageMSG;
 
 /**
- *
+ * The interface <code>Request</code> is used for message
+ * processing, i.e. incoming and outgoing messages. A Request
+ * is created by the client and then passed to the <code>RequestFilter</code>
+ * chain which does the actual processing of the Request.
+ * 
+ * @see ch.iserver.ace.net.protocol.filter.RequestFilter
  */
 public interface Request {
 
+	/**
+	 * Gets the type of this Request.
+	 * 
+	 * @return the type of this request
+	 * @see ProtocolConstants
+	 */
 	public int getType();
 	
+	/**
+	 * Gets the userid of the user which is either 
+	 * the sender or the recipient.
+	 * 
+	 * @return the userid
+	 */
 	public String getUserId();
 	
+	/**
+	 * Gets the payload of the Request.
+	 * 
+	 * @return the payload
+	 */
 	public Object getPayload();
 	
+	/**
+	 * Sets the BEEP Core specific MessageMSG.
+	 * 
+	 * @param message	the MessageMSG to set
+	 */
 	public void setMessage(MessageMSG message);
 	
+	/**
+	 * Gets the MessageMSG from which this Request was retrieved.
+	 * Only available if the request is an incoming request from 
+	 * the network.
+	 * 
+	 * @return the MessageMSG or null if the Request is outgoing to the network
+	 */
 	public MessageMSG getMessage();
 	
 }

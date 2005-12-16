@@ -22,18 +22,60 @@
 package ch.iserver.ace.net.protocol;
 
 /**
- *
+ * Interface Serializer to serialize requests according
+ * to some data desccription language.
  */
 public interface Serializer { 
 	
+	/**
+	 * Creates a protocol message of type query.
+	 * 
+	 * @param type	the type determining the content of the query
+	 * @return the message
+	 * @throws SerializeException if an error occurs
+	 */
 	public byte[] createQuery(int type) throws SerializeException;
 	
+	/**
+	 * Creates a protocol message of type request.
+	 * 
+	 * @param type	the type determining the content of the request
+	 * @param data 	some data to add to the request
+	 * @return the message
+	 * @throws SerializeException if an error occurs
+	 */
 	public byte[] createRequest(int type, Object data) throws SerializeException;
 	
+	/**
+	 * Creates a protocol message of type response.
+	 * 
+	 * @param type	the type determining the content of the response
+	 * @param data1	payload data 1
+	 * @param data2	payload data 2
+	 * @return the message
+	 * @throws SerializeException if an error occurs
+	 */
 	public byte[] createResponse(int type, Object data1, Object data2) throws SerializeException;
 	
+	/**
+	 * Creates a protocol message of type notification.
+	 * 
+	 * @param type	the type determining the content of the notification
+	 * @param data 	payload data
+	 * @return the message
+	 * @throws SerializeException if an error occurs
+	 */
 	public byte[] createNotification(int type, Object data) throws SerializeException;
 	
+	/**
+	 * Creates a protocol message of type session message.
+	 * 
+	 * @param type	the type determining the content of the session message
+	 * @param data1	payload data 1
+	 * @param data2	payload data 2
+	 * @return the message
+	 * @throws SerializeException if an error occurs
+	 */
 	public byte[] createSessionMessage(int type, Object data1, Object data2) throws SerializeException;
 	
 }

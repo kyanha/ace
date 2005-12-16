@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:SessionRequestHandler.java 2413 2005-12-09 13:20:12Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -45,7 +45,10 @@ import ch.iserver.ace.net.protocol.RequestImpl.DocumentInfo;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
- * Client side request handler for a collaborative session.
+ * SessionRequestHandler is a client side request handler for a 
+ * collaborative session.
+ * 
+ * @see org.beepcore.beep.core.RequestHandler
  */
 public class SessionRequestHandler implements RequestHandler {
 
@@ -58,6 +61,14 @@ public class SessionRequestHandler implements RequestHandler {
 	private NetworkServiceExt service;
 	private DocumentInfo info;
 	
+	/**
+	 * Creates a new SessionRequestHandler.
+	 * 
+	 * @param deserializer
+	 * @param handler
+	 * @param service
+	 * @param info
+	 */
 	public SessionRequestHandler(Deserializer deserializer, ParserHandler handler, NetworkServiceExt service, DocumentInfo info) {
 		ParameterValidator.notNull("deserializer", deserializer);
 		ParameterValidator.notNull("parserHandler", handler);
@@ -67,6 +78,9 @@ public class SessionRequestHandler implements RequestHandler {
 		this.info = info;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void receiveMSG(MessageMSG message) {
 		LOG.info("--> recieveMSG()");
 		
@@ -181,6 +195,11 @@ public class SessionRequestHandler implements RequestHandler {
 		LOG.debug("<-- addNewUsers()");
 	}
 	
+	/**
+	 * Adds a new user to the DiscoveryManager.
+	 * 
+	 * @param user
+	 */
 	private void addNewUser(RemoteUserProxyExt user) {
 		DiscoveryManager discoveryManager = DiscoveryManagerFactory.getDiscoveryManager();
 		if (discoveryManager.getUser(user.getId()) == null) {
@@ -188,22 +207,40 @@ public class SessionRequestHandler implements RequestHandler {
 		}
 	}
 
+	/**
+	 * Executes the SessionCleanup.
+	 *
+	 */
 	public void executeCleanup() {
 		SessionCleanup sessionCleanup = new SessionCleanup(getDocumentId(), getPublisherId());
 		sessionCleanup.execute();
 		cleanup();
 	}
 	
+	/**
+	 * Cleans up this SessionRequestHandler.
+	 *
+	 */
 	public void cleanup() {
 		deserializer = null;
 		handler = null;
 		sessionCallback = null;
 	}
 	
+	/**
+	 * Gets the document id.
+	 * 
+	 * @return the document id
+	 */
 	private String getDocumentId() {
 		return docId;
 	}
 	
+	/**
+	 * Gets the publisher id.
+	 * 
+	 * @return the publisher (user) id
+	 */
 	private String getPublisherId() {
 		return publisherId;
 	}

@@ -48,11 +48,19 @@ import ch.iserver.ace.net.protocol.RequestImpl.DocumentInfo;
 import ch.iserver.ace.util.Base64;
 
 /**
+ * CollaborationParserHandler for the parsing of messages. To be used in 
+ * conjunction with {@link ch.iserver.ace.net.protocol.CollaborationDeserializer}.
  *
+ * After parsing, a call to {@link #getResult()} returns the parsed 
+ * {@link ch.iserver.ace.net.protocol.Request}.
  */
 public class CollaborationParserHandler extends ParserHandler {
 
 	private static Logger LOG = Logger.getLogger(CollaborationParserHandler.class);
+	
+	/**
+	 * Helper variables for the parsing of the XML messages
+	 **/
 	
 	private Request result;
 	private DocumentInfo info;
@@ -67,19 +75,28 @@ public class CollaborationParserHandler extends ParserHandler {
 	private SplitOperation splitOperation;
 	private CaretUpdateMessage caretMsg;
 	private RemoteUserProxyExt proxy;
-	
 	private TimestampFactory factory;
-	
 	private Stack operationStack;
 	
-	
+	/**
+	 * Default constructor.
+	 *
+	 */
 	public CollaborationParserHandler() {
 	}
 	
+	/**
+	 * Sets the timestamp factory
+	 * 
+	 * @param factory	the timestamp factory to set
+	 */
 	public void setTimestampFactory(TimestampFactory factory) {
 		this.factory = factory;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void startDocument() throws SAXException {
 		result = null;
 		resultType = -1;
@@ -87,6 +104,9 @@ public class CollaborationParserHandler extends ParserHandler {
 		isTextEncoded = false;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void endDocument() throws SAXException {
 		int type = getType();
 		if (type == LEAVE || type == KICKED) {
@@ -120,6 +140,9 @@ public class CollaborationParserHandler extends ParserHandler {
 		buffer = null;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 		if (currentType == JOIN_DOCUMENT) {
 			if (participants) {
@@ -233,12 +256,18 @@ public class CollaborationParserHandler extends ParserHandler {
 		}
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void characters(char[] ch, int start, int length) throws SAXException {
 		if (buffer != null) {
 			buffer.append(ch, start, length);
 		}
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void endElement(String uri, String localName, String qName) throws SAXException {
 		if (qName.equals(TAG_JOIN_DOCUMENT)) {
 			currentType = -1;
@@ -285,6 +314,11 @@ public class CollaborationParserHandler extends ParserHandler {
 		}
  	}
 
+	/**
+	 * Helper method.
+	 * 
+	 * @param attributes the attributes to parse
+	 */
 	private void initJoinDocumentParsing(Attributes attributes) {
 		resultType = JOIN_DOCUMENT;
 		currentType = resultType;
@@ -301,8 +335,9 @@ public class CollaborationParserHandler extends ParserHandler {
 
 	/**
 	 * Constructs a RemoteUserProxy from a given set of attributes.
-	 * @param attributes
-	 * @return
+	 * 
+	 * @param attributes the attributes to parse
+	 * @return	the created RemoteUserProxy object
 	 */
 	private RemoteUserProxyExt handleUser(Attributes attributes) {
 		String userId = attributes.getValue(ID);
@@ -323,19 +358,23 @@ public class CollaborationParserHandler extends ParserHandler {
 		return proxy;
 	}
 	
-	
+	/**
+	 * Gets the type of the parsed Request.
+	 * 
+	 * @return	the type of the Request.
+	 */
 	public int getType() {
 		return resultType;
 	}
 	
-	/* (non-Javadoc)
+	/**
 	 * @see ch.iserver.ace.net.impl.protocol.ParserHandler#getResult()
 	 */
 	public Request getResult() {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/**
 	 * @see ch.iserver.ace.net.impl.protocol.ParserHandler#setMetaData(java.lang.Object)
 	 */
 	public void setMetaData(Object metadata) {

@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:ProtocolException.java 2413 2005-12-09 13:20:12Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -22,19 +22,21 @@
 package ch.iserver.ace.net.protocol;
 
 /**
- *
+ * The ProtocolException is thrown on protocol failures, i.e. 
+ * when a message cannot be sent due to some error with the 
+ * connection or a problem in the BEEP Core framework.
  */
 public class ProtocolException extends Exception {
 
 	/**
-	 * Constructor.
+	 * Default constructor.
 	 */
 	public ProtocolException() { }
 	
 	/**
-	 * Constructor.
+	 * Constructor with a message.
 	 * 
-	 * @param message an error message
+	 * @param message 	an error message
 	 */
 	public ProtocolException(String message) {
 		super(message);

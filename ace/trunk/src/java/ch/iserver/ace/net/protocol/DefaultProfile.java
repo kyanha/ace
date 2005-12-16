@@ -27,16 +27,30 @@ import org.beepcore.beep.profile.Profile;
 import org.beepcore.beep.profile.ProfileConfiguration;
 
 /**
- *
+ * This is a BEEP Core specific class. A profile is used
+ * to register with the BEEP library.
+ * 
+ * @see org.beepcore.beep.profile.Profile
  */
 public class DefaultProfile implements Profile {
 
+	/**
+	 * the start channel listener
+	 */
 	private StartChannelListener listener;
 	
+	/**
+	 * Creates a new DefaultProfile with the given <code>listener</code>.
+	 * 
+	 * @param listener 	the StartChannelListener
+	 */
 	public DefaultProfile(StartChannelListener listener) {
 		this.listener = listener;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public StartChannelListener init(String uri, ProfileConfiguration config) throws BEEPException {
 		//can uri and config be used in any concern?
 		return listener;

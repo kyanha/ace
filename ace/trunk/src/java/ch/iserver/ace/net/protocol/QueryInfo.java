@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:QueryInfo.java 2413 2005-12-09 13:20:12Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -21,33 +21,78 @@
 
 package ch.iserver.ace.net.protocol;
 
+/**
+ * QueryInfo is a pure helper class used by the 
+ * {@link ch.iserver.ace.net.protocol.ResponseParserHandler}
+ * to parse and construct the response objects, respectively.
+ */
 public class QueryInfo {
 	
+	/**
+	 * The id
+	 */
 	String id;
+	
+	/**
+	 * the payload
+	 */
 	Object payload;
+	
+	/**
+	 * the query type
+	 */
 	int queryType;
 	
+	/**
+	 * Creates a new QueryInfo.
+	 * 
+	 * @param id			the id
+	 * @param queryType	the query type
+	 */
 	public QueryInfo(String id, int queryType) {
 		this.id = id;
 		this.queryType = queryType;
 	}
 		
+	/**
+	 * Gets the payload.
+	 * 
+	 * @return	the payload
+	 */
 	public Object getPayload() {
 		return payload;
 	}
 
+	/**
+	 * Sets the payload.
+	 * 
+	 * @param payload 	the payload to set
+	 */
 	public void setPayload(Object payload) {
 		this.payload = payload;
 	}
 
+	/**
+	 * Gets the id.
+	 * 
+	 * @return	the id
+	 */
 	public String getId() {
 		return id;
 	}
 	
+	/**
+	 * Gets the query type.
+	 * 
+	 * @return the query type
+	 */
 	public int getQueryType() {
 		return queryType;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public String toString() {
 		return "QueryInfo("+id+", "+queryType+")";
 	}

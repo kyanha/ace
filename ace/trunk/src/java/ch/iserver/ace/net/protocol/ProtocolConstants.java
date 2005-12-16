@@ -22,7 +22,10 @@
 package ch.iserver.ace.net.protocol;
 
 /**
- *
+ * This interface declares constants for the protocol
+ * implementation of ACE. The values of the constants directly
+ * match with the XML protocol message tags as defined in
+ * <code>protocol.xsd</code>.
  */
 public interface ProtocolConstants {
 	
