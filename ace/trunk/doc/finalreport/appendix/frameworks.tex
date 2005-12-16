@@ -577,8 +577,47 @@ This addition makes it possible to compare and sort objects of type {User}. A \t
 \subsection{FilterList}
 The \textit{Filter\-List} filters another \textit{Event\-List}. It is an \textit{Event\-List} that shows a subset of the elements of the source list. This subset is composed of all elements of the source \textit{Event\-List} that match the filter.
 
-Filtering can either be static or dynamic. Static filtering can be used for example to filter out  elements with a special type. Assume the class \textit{User} from the example in section \ref{frameworks_glazed_eventlist} has an additional \texttt{age} property. It is a simple \textit{int} with the corresponding setter and getter methods.
+Filtering can either be static or dynamic. \textbf{Static filtering} can be used for example to filter out  elements with a special type. Assume the class \textit{User} from the example in section \ref{frameworks_glazed_eventlist} has in addition the age of the user. Its is a simple \textit{int} with the corresponding setter and getter methods. For example, use the following code to filter out and display only the user older than 20 years:
+\begin{verbatim}
+  // create a matcher for matching user objects including the age
+  Matcher ageMatcher = new Matcher() {
+    public boolean matches(Object item) {
+      User uItem = (User)item;
+      return (uItem.getAge() > 20);
+    }
+  };
 
+  // create the filtered list
+  FilterList userFilterList = new FilterList(observableUserList, ageMatcher);
 
+  // create list & model
+  JList userList = new JList(new EventListModel(userFilterList));
+\end{verbatim}
 
+\textbf{Dynamic filtering} can be used for example if the list of users should be filtered by user names and the filter can change. The following example uses a \textit{JTextField} containing the filter string. The filtered user list contains only the users matching the enetered text.
+
+\begin{verbatim}
+  // create the filter field and the text filterator
+  JTextField nameFilterField = new JTextField();
+
+  TextFilterator nameFilterator = new TextFilterator() {
+    public void getFilterStrings(List baseList, Object element) {
+      User utem = (User)element;
+      baseList.add(item.getName));
+    }
+  };
+
+  // create the needed matcher editor
+  MatcherEditor nameMatcherEditor =
+    new TextComponentMatcherEditor(nameFilterField, nameFilterator);
+  
+  // create dynamic filter list
+  FilterList userFilterList = new FilterList(observableUserList, nameMatcherEditor);
+
+  // create list & model
+  JList userList = new JList(new EventListModel(userFilterList));
+\end{verbatim}
+
+\subsection{Summary}
+Using \textit{Glazed Lists} for GUI programming (or even other applications using data tables) speeds up the implementation process because you dont have to care about simple things like sorting, filtering or updating list elements. It is worth to spend some time to learn the basics of using \textit{EventLists}.
 
