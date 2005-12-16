@@ -19,7 +19,7 @@ Basically, the network layer provides core functionality independent of the acti
 
 \section{Overview}
 
-This section gives a high-level overview about the network layer design and implementation by using two different point of views.
+This section gives a high-level overview about the network layer design and implementation by using two different points of view.
 
 \subsection{Architecture}
 
@@ -69,11 +69,11 @@ The user discovery component must meet the following core requirements:
  \item start and stop possiblity for the discovery process 
 \end{itemize}
 
-These requirements could be met by multiple technologies. We decided that Bonjour zero-conf networking technology would best meet our requirements. Please read the chapter \ref{chapter:decisionsnetwork} for a justification on that decision.
+These requirements could be met by multiple technologies. We decided that Bonjour zero-conf networking technology would best meet our requirements. Please read the chapter \ref{chapter:decisionsnetwork} for a justification of that decision.
 
 \subsection{Design}
 \subsubsection{Client view of the discovery component}
-The first step on the design was to find a way to use the discovery component independent of its implementation. That is, to have a transparent discovery usage for the client, without him knowing the concrete implementation. This consideration is in line with the general design principle of ACE to have an architecture with interchangeable components.
+The first step on the design was to find a way to use the discovery component independently of its implementation. That is, to have a transparent discovery usage for the client, without him knowing the concrete implementation. This consideration is in line with the general design principle of ACE to have an architecture with interchangeable components.
 
 \begin{figure}[H]
  \centering
@@ -181,7 +181,7 @@ The concrete \texttt{Discovery} implementation is called \texttt{Bonjour} and is
 
 \texttt{PeerDiscovery} allows for the discovery of peer users who reside on the same local area network (this constraint is   imposed by the Bonjour technology). The \texttt{PeerDiscovery} implementation has a reference to the \texttt{BrowseListenerImpl} class. It receives browse events from the DNSSD component (\emph{serviceFound}, \emph{serviceLost}). When a new service (i.e. user) was found, \texttt{BrowseListenerImpl} starts a new DNSSD call to resolve that service (i.e. receive TXT record with specific information for that user). The call is passed a reference to \texttt{ResolveListenerImpl}, which will receive the results of that call (see also section \ref{chapter:network.discovery.dnssdcalls} on DNSSD calls). On the other side, a \emph{serviceLost} event is directly forwarded to the \texttt{DiscoveryCallbackAdapter} (see below for a description of that class). 
 
-\texttt{ResolveListenerImpl} handles \emph{serviceResolved} events. It first forwards the event to the \texttt{DiscoveryCallbackAdapter} and second starts two further DNSSD calls for the IP address resolving of the discovered user and the monitoring for the user's TXT record (i.e. to be notified when that user changes its TXT record, e.g. his name).
+\texttt{ResolveListenerImpl} handles \emph{serviceResolved} events. It first forwards the event to the \texttt{DiscoveryCallbackAdapter} and second starts two further DNSSD calls for resolving the IP address of the discovered user and monitoring for the user's TXT record (i.e. to be notified when that user changes its TXT record, e.g. his name).
 
 The listeners for the two DNSSD calls are \texttt{IPQueryListener} and \texttt{TXTRecordListener}. Both extend the \texttt{AbstractQueryListener}. Their functionality is straightforward: The events are simply forwarded to the \texttt{DiscoveryCallbackAdapter}.
 
@@ -299,7 +299,7 @@ These requirements can be categorized as follows:
 These categories are expanded thorougly in section \ref{network.communication.implementation}. Concepts used to implement the requirements are explained next.
 
 \subsection{Design and Concepts}
-This section explains the concepts worked out for the network layer. Besides, design aspects of the implemented solutions are outline too.
+This section explains the concepts worked out for the network layer. Besides, design aspects of the implemented solutions are outlined too.
 
 \subsubsection{Remote User and Shared Documents Management}
 The user management is centered around \texttt{RemoteUserProxy}. A  \texttt{Remote\-User\-Proxy} represents a discovered and alive user. The  \texttt{DiscoveryManager} keeps a reference to all user proxies, it is therefore the central place to get the  \texttt{RemoteUserProxy} for a particular user. A user may have an arbitrary number of shared documents. Such documents are modelled by  \texttt{RemoteDocumentProxy}. A  \texttt{RemoteDocumentProxy} contains the essential information about a shared document.
@@ -314,7 +314,7 @@ The user management is centered around \texttt{RemoteUserProxy}. A  \texttt{Remo
 \end{figure}
 
 \paragraph{Interface extensions}
-Types  \texttt{RemoteUserProxy}  and  \texttt{RemoteDocumentProxy} are extended for the network layer to provide an interface that allows modfications whereas the root interfaces are 'getter-like' oriented since they are designed primarily for the upper layer.
+Types  \texttt{RemoteUserProxy}  and  \texttt{RemoteDocumentProxy} are extended for the network layer to provide an interface that allows modfications whereas the root interfaces are read-only since they are designed primarily for the upper layer.
 
  \texttt{RemoteUserProxyExt} adds methods mainly for document management. The methods reflect the one-to-many relationship between user and document. Besides, state methods allow to indicate if a user was discovered by DNSSD or explicitly and if a \texttt{RemoteUserSession} for the user exists. If a \texttt{RemoteUserSession} for a particular user exists, this means that a physical connection to that user has been established.
 
@@ -349,7 +349,7 @@ Types  \texttt{RemoteUserProxy}  and  \texttt{RemoteDocumentProxy} are extended 
 \end{figure}
 
 \subsubsection{Network Connection Management}
-Network Connection Management includes the session and connection handling for each remote user. For each user, there is one \texttt{Remote\-User\-Session}. This class is a wrapper around \texttt{TCPSession} from the BEEP API and provides further session management functions. The \texttt{Session\-Manager} handles the creation and management of all \texttt{Remote\-User\-Session}'s. For each session, there is one instance of \texttt{MainConnection}, through which most document management messages are sent to the respective peer. 
+Network Connection Management includes the session and connection handling for each remote user. For each user, there is one \texttt{Remote\-User\-Session}. This class is a wrapper around \texttt{TCPSession} from the BEEP API and provides further session management functions. The \texttt{Session\-Manager} handles the creation and management of all \texttt{Remote\-User\-Session}s. For each session, there is one instance of \texttt{MainConnection}, through which most document management messages are sent to the respective peer. 
 
 \begin{figure}[H]
  \centering
@@ -402,7 +402,7 @@ An \texttt{AbstractConnection} represents a physical connection to a peer. It is
 
 The state transitions marked with \emph{varying} depend on the type of connection. The normal lifecycle would be the following states: \emph{initialized}, \emph{active} and \emph{closed}. Depending on whether a recovery mechanism is implemented, a connection may also turn into states \emph{dirty} and \emph{aborted}. If no recovery mechanism is implemented, the state directly becomes \emph{closed} when an exception occurs.
 
-There are tree different connection types which are shown in figure \ref{fig:network.protocol.connection.uml}.
+There are three different connection types which are shown in figure \ref{fig:network.protocol.connection.uml}.
 
 \begin{figure}[H]
  \centering
@@ -421,11 +421,11 @@ All basic communication messages (refered to as document management messages abo
 The \texttt{SessionConnection} represents a physical connection starting from the local user to the session owner (publisher of document) in a collaborative editing session. Thus, \texttt{SessionConnection}'s are only used by participants and not by the owner of a session. It allows a particpant to send session relevant messages to the session owner. The lifetime is as long as the user participates in the document session or until the publisher of the document terminates the session.
 
 \subparagraph{ParticipantConnection}
-The \texttt{ParticipantConnection} represents a physical connection starting from the document session owner to a participant. Therefore, \texttt{ParticipantConnection}'s are used only by session owners and not particpants. It allows a session owner to send relevant messages to the participants. The liftetime of the \texttt{ParticipantConnection} is as long as the local user shares his document or until the participant quits its session membership. When a \texttt{ParticipantConnection} is initialized, it opens two channels to the peer. This is explained next.
+The \texttt{ParticipantConnection} represents a physical connection starting from the document session owner to a participant. Therefore, \texttt{ParticipantConnection}s are used only by session owners and not partcipants. It allows a session owner to send relevant messages to the participants. The liftetime of the \texttt{ParticipantConnection} is as long as the local user shares his document or until the participant quits its session membership. When a \texttt{ParticipantConnection} is initialized, it opens two channels to the peer. This is explained next.
 
 
 \paragraph{Connection handling}
-Connection management includes the connection architecture between peers. The BEEP API allows for many different variants. First, the most straightforward solution was to use one connection of type \texttt{MainConnection} for the document administration and one connection for each joined document session (\texttt{ParticipantConnection} or \texttt{SessionConnection}). The BEEP API allows to create an arbitrary number of connections and channels, respectively, from one \texttt{TCPSession} (wrapped by \texttt{RemoteUserSession}) and to use the channels bidirectionally, i.e. that both peers send and receive data concurrently and asynchronously. This was the approach that got implemented first based on the flexibilty and better performance argumentation. Due to unrecoverable and untrackable exceptions thrown from the BEEP framework at a high traffic rate (e.g. caused by two users in a session and both of them write very fast which causes much network traffic), this solution had to be discarded and another solution to be found. 
+Connection management includes the connection architecture between peers. The BEEP API allows for many different variants. First, the most straightforward solution was to use one connection of type \texttt{MainConnection} for the document administration and one connection for each joined document session (\texttt{ParticipantConnection} or \texttt{SessionConnection}). The BEEP API allows to create an arbitrary number of connections and channels, respectively, from one \texttt{TCPSession} (wrapped by \texttt{RemoteUserSession}) and to use the channels bidirectionally, i.e. that both peers send and receive data concurrently and asynchronously. This was the approach that got implemented first based on the flexibilty and better performance argumentation. Due to unrecoverable and untrackable exceptions thrown from the BEEP framework at a high traffic rate (e.g. caused by two users in a session and both of them writing very fast which causes much network traffic), this solution had to be discarded and another solution to be found. 
 
 The connection management design is depicted in figure \ref{fig:network.discovery.connection.architecture}.
 
@@ -462,7 +462,7 @@ The concept for the processing of network messages is depicted in the following 
  \label{fig:network.discovery.messagefilterchain.concept}
 \end{figure}
 
-Each message that needs to be processed is given to a \textbf{message filter chain}. The chaining of an arbitrary number of message filters with each one having one successor is dynamic and extensible. Each filter knows the exact message type it can process. If such a message arrives, it is processed by that filter and the algorithm stops. Otherwise, the message is forwarded to the successor. This happens repeatedly until a filter can process the message and stop the forwarding. If no filter can process the message, it finally arrives at the last filter, a failure filter, which reports the failure to the client which initiated the message. If synchronization problems arose, a \texttt{ThreadDomain} could be prepended to the message filter chain to ensure proper synchronization.
+Each message that needs to be processed is given to a \textbf{message filter chain}. The chaining of an arbitrary number of message filters with each one having one successor is dynamic and extensible. Each filter knows the exact message type it can process. If such a message arrives, it is processed by that filter and the algorithm stops. Otherwise, the message is forwarded to the successor. This happens repeatedly until a filter can process the message and then stops the forwarding. If no filter can process the message, it finally arrives at the last filter, a failure filter, which reports the failure to the client which initiated the message. If synchronization problems arose, a \texttt{ThreadDomain} could be prepended to the message filter chain to ensure proper synchronization.
 
 If a new protocol message must be implemented, to accomplish the processing for that message only a new message filter must be added to the filter chain. And this could even be done at runtime. Therefore, the message filter chain allows for a dynamic composition of the protocol at runtime.
 
@@ -517,7 +517,7 @@ The \texttt{NetworkService} is the main entry point for the upper layer. It prov
 
 The implementation is a singleton instance since there exists only one network service per user and it is used many times in the network layer. On creation of the instance, the request filter chain (see below) and multiple factories are created.
 
-The \texttt{NetworkService} is set a callback object of type \texttt{NetworkServiceCallback} to notify the upper layer about events on the network layer. The callback object is the main communication facility to the upper layer.
+The \texttt{NetworkService} receives a callback object of type \texttt{NetworkServiceCallback} to notify the upper layer about events on the network layer. The callback object is the main communication facility to the upper layer.
 
 
 \subsubsection{Published Documents Management}
@@ -571,7 +571,7 @@ The \texttt{RemoteUserProxyImpl} class is straightforward. Each object is stored
 
 The \texttt{JoinNetworkCallback} object is used to report the result of a request by the local user to join this document (call to method \texttt{join}). When the local user wants to \texttt{join} a document, a \texttt{Request} object is created and passed to the \texttt{RequestFilter} chain for processing. The result can be either \texttt{accepted} or \texttt{rejected}.
 
-When the result of the join request is  \texttt{accepted}, the \texttt{JoinNetworkCallback} returns a \texttt{Session\-Connection\-Callback} object. This is the main communcation port for a joined session to pass received messages to the upper layer (such as operations, caret updates, etc.).
+When the result of the join request is  \texttt{accepted}, the \texttt{JoinNetworkCallback} returns a \texttt{Session\-Connection\-Callback} object. This is the main communication port for a joined session to pass received messages to the upper layer (such as operations, caret updates, etc.).
 
 
 \subsubsection{Session and Network Connection Management}
@@ -605,7 +605,7 @@ The implementation of \texttt{ParticipantConnection} is depicted in the followin
  \label{fig:network.protocol.participantconnectionimpl.uml}
 \end{figure}
 
-The \texttt{ParticipantConnection} is used by the upper layer to send messages to a peer. \texttt{Participant\-Connection\-Impl} serializes all messages using the \texttt{Serializer} and sends them to the peer with the outgoing channel. The sending of messages takes place in a synchronous mode, i.e. the sender waits for the response from the peer before it continues with the next message. This allows for more stability and easier synchronization but has a drawback in performance measure. However, the BEEP framework failed somehow using the asynchronous mode, so we were forced to go with synchronous session communication.
+The \texttt{ParticipantConnection} is used by the upper layer to send messages to a peer. \texttt{Participant\-Connection\-Impl} serializes all messages using the \texttt{Serializer} and sends them to the peer with the outgoing channel. The sending of messages takes place in a synchronous mode, i.e. the sender waits for the response from the peer before it continues with the next message. This allows for more stability and easier synchronization but has a performance implication. However, the BEEP framework failed somehow using the asynchronous mode, so we were forced to go with synchronous session communication.
 
 In order to receive messages from the network (through BEEP), each channel must be set a \texttt{RequestHandler} (see 'Processing of network messages' below for further details).
 
@@ -620,7 +620,7 @@ Consider the following figure:
  \label{fig:network.protocol.requestcommunication}
 \end{figure}
 
-It shows the network message flow between the publisher and a participant in a document session using two \texttt{Channel}'s. The publisher sends its messages via the \texttt{ParticipantConnectionImpl} which has a channel that actually transmits the message. At the participant site, the messages are received and processed via the \texttt{Session\-Request\-Handler} and finally forwarded to the \texttt{Session\-Connection\-Callback}, i.e. the upper layer. In the other direction, the participant's messages are sent via the \texttt{SessionConnectionImpl} which uses a second channel to transmit them. At th publisher's site, the messages are received and processed by the \texttt{ParticipantRequestHandler} and finally forwarded to the \texttt{ParticipantPort}, which means the upper layer.
+It shows the network message flow between the publisher and a participant in a document session using two \texttt{Channel}'s. The publisher sends its messages via the \texttt{ParticipantConnectionImpl} which has a channel that actually transmits the message. At the participant site, the messages are received and processed via the \texttt{Session\-Request\-Handler} and finally forwarded to the \texttt{Session\-Connection\-Callback}, i.e. the upper layer. In the other direction, the participant's messages are sent via the \texttt{SessionConnectionImpl} which uses a second channel to transmit them. At the publisher's site, the messages are received and processed by the \texttt{ParticipantRequestHandler} and finally forwarded to the \texttt{ParticipantPort}, which means the upper layer.
 
 Considering the state diagram \ref{fig:network.discovery.connection.state}, the \texttt{ParticipantConnectionImpl} connection passes through the following states: \texttt{initialized}, \texttt{active} and \texttt{closed}. The \texttt{dirty} state is not yet possible since no recovery mechanism is implemented. If an exception occurs, the connection is closed, its resources released and a new one must be set up.
 
@@ -632,7 +632,7 @@ As shown in figure \ref{fig:network.protocol.requestcommunication}, the \texttt{
 Considering the state diagram \ref{fig:network.discovery.connection.state}, the \texttt{SessionConnectionImpl} connection passes through the following states: \texttt{initialized}, \texttt{active} and \texttt{closed}. The \texttt{dirty} state is not yet possible since no recovery mechanism is implemented. If an exception occurs, the connection is closed, its resources released and a new one must be set up, i.e. the document session must be established again with that user.
 
 \subsubsection{Network Message Processing}
-In order to receive messages, each channel can be set a \texttt{RequestHandler} (see also section \ref{chapter:framework.beepcore} on BEEP). A request handler takes over the task of parsing the message and processing it appropriately. Since there are multiple connection types and thus different sets of messages, there are also multiple implementations of the \texttt{RequestHandler} interface:
+In order to receive messages, a \texttt{RequestHandler} can be set on each channel (see also section \ref{chapter:framework.beepcore} on BEEP). A request handler takes over the task of parsing the message and processing it appropriately. Since there are multiple connection types and thus different sets of messages, there are also multiple implementations of the \texttt{RequestHandler} interface:
 
 \begin{itemize}
  \item \texttt{MainRequestHandler} for the  \texttt{MainConnection} connection
@@ -718,7 +718,7 @@ The channel message is the first message that gets sent over the wire to initial
 Only two types of messages are considered as requests in the sense that one user requests something from another user. And these two types are the 'join request' (a user wants to join another user's document) and the 'invite request' (a user invites another user to join his document).
 
 \paragraph{Response message}
-Response messages are sent upon requests. This is at an explicit user discovery where the response contains the userid and the name of the discovered user. Further, there are response messages 'joinRejected' and 'inviteRejected', i.e. when a user rejects to let another user join his document and rejects an invitation, respectively. Another response message is created when a user lets another user join his document and a document response message containing all document information is created and sent to the joining user.
+Response messages are sent upon requests. This is at an explicit user discovery where the response contains the userid and the name of the discovered user. Further, there are response messages 'joinRejected' and 'inviteRejected', i.e. when a user rejects another user's join request and when a user rejects an invitation, respectively. Another response message is created when a user lets another user join his document and a document response message containing all document information is created and sent to the joining user.
 
 \paragraph{Notification message}
 Notification messages are sent on events where other users 'might be interested to get to know it'. This includes messages for events 'userDiscarded', 'publish a document', 'conceal a document', 'send my published documents to discovered user', 'user kicked', 'user left' and 'document details changed'.
@@ -734,11 +734,11 @@ The XML schema can be found in the subdirectory \texttt{src/\-resources/\-ch/\-i
 
 To serialize the XML messages, an interface \texttt{Serializer} with two implementations \texttt{SerializerImpl} and \texttt{CollaborationSerializer} is used. The \texttt{SerializerImpl} is for document administration messages whereas \texttt{CollaborationSerializer} is for document session messages.
 
-For deserialization, \texttt{ParserHandler} implementations together with a \texttt{SAXParser} (wrapped in an implementation of interface \texttt{Deserializer}) are used. The implementations are \texttt{RequestParserHandler} for messages on the \texttt{MainConnection} (i.e. document administration) and \texttt{CollaborationParserHandler} for messages in a document session (used in classes \texttt{ParticipantRequestHandler} and \texttt{SessionRequestHandler}.
+For deserialization, \texttt{ParserHandler} implementations together with a \texttt{SAXParser} (wrapped in an implementation of interface \texttt{Deserializer}) are used. The implementations are \texttt{RequestParserHandler} for messages on the \texttt{MainConnection} (i.e. document administration) and \texttt{CollaborationParserHandler} for messages in a document session (used in classes \texttt{ParticipantRequestHandler} and \texttt{SessionRequestHandler}).
 
 
 \paragraph{TLV encoding/decoding}
-When a published document has to be sent to a peer, it needs to be encoded. Considering the structure of a \texttt{PortableDocument}, many information must be encoded if a user joins a document after four other users have been collaboratively editing it for half an hour. Therefore TLV is used to encode and decode this information (cf. \texttt{TLVHandler}). Each fragment is encoded as follows: the participant id is used as the tag. The length is the length of the fragment's text and the value is the text itself. 
+When a published document has to be sent to a peer, it needs to be encoded. Considering the structure of a \texttt{PortableDocument}, many information must be encoded if for instance a user joins a document after four other users have been collaboratively editing it for half an hour. Therefore TLV is used to encode and decode this information (cf. \texttt{TLVHandler}). Each fragment is encoded as follows: the participant id is used as the tag. The length is the length of the fragment's text and the value is the text itself. 
 
 After encoding the document to TLV, the data is Base64 encoded and gzip-compressed. The final data is then sent to the peer.
 
@@ -764,11 +764,9 @@ The \texttt{NetworkServiceCallback} provides a method \texttt{serviceFailure} to
 \subsubsection{Join a document}
 The following sequence diagram shows the execution flow in the network layer when a join request for a published document arrives. The deserialization is left out for simplicity.
 
-\begin{figure}[H]
+\begin{figure}[htb]
  \centering
-  \frame{
- \includegraphics[width=4.93in,height=11.14in,angle=270]{../images/finalreport/network_joinRequest_sequence.eps}
- }
+ \includegraphics[width=7.07cm,height=16cm,angle=270]{../images/finalreport/network_joinRequest_sequence.eps}
  \caption{The processing of a join request at the publisher site}
  \label{fig:network.protocol.joinrequest}
 \end{figure}
@@ -776,11 +774,9 @@ The following sequence diagram shows the execution flow in the network layer whe
 After calling \texttt{join} on the \texttt{PublishedDocument}, the local user will have to respond to the request. After the join request is granted, the collaboration layer invokes \texttt{joinAccepted} on the \texttt{ParticipantConnectionImpl}:
 
 
-\begin{figure}[H]
+\begin{figure}[htb]
  \centering
-  \frame{
- \includegraphics[width=7.71in,height=8.14in,angle=90]{../images/finalreport/network_joinRequest_sequence2.eps}
- }
+ \includegraphics[width=14.67cm,height=16cm,angle=270]{../images/finalreport/network_joinRequest_sequence2.eps}
  \caption{The processing of a join request at publisher site after granting it}
  \label{fig:network.protocol.joinrequest2}
 \end{figure}
