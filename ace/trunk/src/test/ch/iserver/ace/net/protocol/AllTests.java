@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id:AllTests.java 2415 2005-12-09 13:30:14Z zbinl $
  *
  * ace - a collaborative editor
  * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
@@ -43,7 +43,6 @@ public class AllTests {
 		suite.addTestSuite(ResponseParserHandlerTest.class);
 		suite.addTestSuite(SessionManagerTest.class);
 		suite.addTestSuite(CollaborationParserHandlerTest.class);
-		suite.addTestSuite(ConcealDocumentReceiveFilterTest.class);
 		suite.addTestSuite(SerializerImplTest.class);
 		suite.addTestSuite(StartChannelListenerImplTest.class);
 		//$JUnit-END$
