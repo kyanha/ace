@@ -28,16 +28,26 @@ import ch.iserver.ace.net.protocol.ProtocolConstants;
 import ch.iserver.ace.net.protocol.Request;
 
 /**
- *
+ * Request sender filter for a 'shutdown' request.
+ * 
+ * @see ch.iserver.ace.net.protocol.filter.AbstractRequestFilter
  */
 public class ShutdownFilter extends AbstractRequestFilter {
 
 	private Logger LOG = Logger.getLogger(ShutdownFilter.class);
 	
+	/**
+	 * Constructor.
+	 * 
+	 * @param successor	the successor filter
+	 */
 	public ShutdownFilter(RequestFilter successor) {
 		super(successor);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void process(Request request) {
 		if (request.getType() == ProtocolConstants.SHUTDOWN) {
 			LOG.warn("Network layer terminated, stop forwarding request [" + request + "]");
@@ -47,7 +57,6 @@ public class ShutdownFilter extends AbstractRequestFilter {
 					OutputDataStream os = new OutputDataStream();
 					os.setComplete();
 					request.getMessage().sendRPY(os);
-//					request.getMessage().sendNUL();
 				} catch (Exception e) {
 					LOG.error("could not send confirmation ["+e+", "+e.getMessage()+"]");
 				}

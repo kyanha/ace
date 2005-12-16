@@ -41,7 +41,9 @@ import ch.iserver.ace.net.protocol.Serializer;
 import ch.iserver.ace.net.protocol.SessionManager;
 
 /**
- *
+ * Request preapre filter for a 'publish document' message.
+ * 
+ * @see ch.iserver.ace.net.protocol.filter.AbstractRequestFilter
  */
 public class PublishDocumentPrepareFilter extends AbstractRequestFilter {
 
@@ -50,6 +52,13 @@ public class PublishDocumentPrepareFilter extends AbstractRequestFilter {
 	private Serializer serializer;
 	private ReplyListener listener;
 	
+	/**
+	 * Constructor.
+	 * 
+	 * @param successor
+	 * @param serializer
+	 * @param listener
+	 */
 	public PublishDocumentPrepareFilter(RequestFilter successor, Serializer serializer, ReplyListener listener) {
 		super(successor);
 		this.serializer = serializer;

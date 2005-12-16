@@ -24,19 +24,22 @@ package ch.iserver.ace.net.protocol.filter;
 import ch.iserver.ace.net.protocol.Request;
 
 /**
- *
+ * RequestFilter defines the interface for each request filter
+ * implementation.
  */
 public interface RequestFilter {
 
 	/**
-	 * 
-	 * @param request
+	 * Process a request.
+	 *  
+	 * @param request	the request to be processed
 	 */
 	public void process(Request request);
 
 	/**
+	 * Gets this filters successor filter.
 	 * 
-	 * @return
+	 * @return	the successor filter
 	 */
 	public RequestFilter getSuccessor();
 	

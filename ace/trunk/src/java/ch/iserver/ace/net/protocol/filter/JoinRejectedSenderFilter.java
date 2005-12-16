@@ -33,7 +33,9 @@ import ch.iserver.ace.net.protocol.SessionManager;
 import ch.iserver.ace.net.protocol.RequestImpl.DocumentInfo;
 
 /**
- *
+ * Request sender filter for a 'join rejected' message.
+ * 
+ * @see ch.iserver.ace.net.protocol.filter.AbstractRequestFilter
  */
 public class JoinRejectedSenderFilter extends AbstractRequestFilter {
 
@@ -42,12 +44,22 @@ public class JoinRejectedSenderFilter extends AbstractRequestFilter {
 	private Serializer serializer;
 	private ReplyListener listener;
 	
+	/**
+	 * Constructor.
+	 * 
+	 * @param successor
+	 * @param serializer
+	 * @param listener
+	 */
 	public JoinRejectedSenderFilter(RequestFilter successor, Serializer serializer, ReplyListener listener) {
 		super(successor);
 		this.serializer = serializer;
 		this.listener = listener;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void process(Request request) {
 		try {
 			if (request.getType() == ProtocolConstants.JOIN_REJECTED) {

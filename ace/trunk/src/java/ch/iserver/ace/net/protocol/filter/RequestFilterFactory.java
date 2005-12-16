@@ -29,12 +29,18 @@ import ch.iserver.ace.net.protocol.SerializerImpl;
 
 
 /**
- *
+ * RequestFilter chain Factory to create the client and server
+ * request filter chains.
  */
 public class RequestFilterFactory {
 
 	private static RequestFilter clientChain;
 	
+	/**
+	 * Creates the client request filter chain.
+	 * 
+	 * @return the client request filter chain
+	 */
 	public static RequestFilter createClientChain() {
 		if (clientChain == null) {
 			RequestFilter filter = new FailureFilter(null);
@@ -56,11 +62,20 @@ public class RequestFilterFactory {
 		return clientChain;
 	}
 	
+	/**
+	 * Creates the request filter chain for responses
+	 * @return
+	 */
 	private static RequestFilter createClientChainForResponses() {
 		RequestFilter filter = new LogFilter(null, false);
 		return filter;
 	}
 	
+	/**
+	 * Creates the server request filter chain.
+	 * 
+	 * @return the sever request filter chain
+	 */
 	public static RequestFilter createServerChain() {
 		RequestFilter filter = new FailureFilter(null);
 		filter = new InvitationRejectedRecipientFilter(filter);

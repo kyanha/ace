@@ -38,7 +38,9 @@ import ch.iserver.ace.net.protocol.Serializer;
 import ch.iserver.ace.net.protocol.SessionManager;
 
 /**
- *
+ * Request prepare filter for a 'send documents' message.
+ * 
+ * @see ch.iserver.ace.net.protocol.filter.AbstractRequestFilter
  */
 public class SendDocumentsPrepareFilter extends AbstractRequestFilter {
 
@@ -47,12 +49,22 @@ private static Logger LOG = Logger.getLogger(SendDocumentsPrepareFilter.class);
 	private Serializer serializer;
 	private ReplyListener listener;
 	
+	/**
+	 * Constructor.
+	 * 
+	 * @param successor
+	 * @param serializer
+	 * @param listener
+	 */
 	public SendDocumentsPrepareFilter(RequestFilter successor, Serializer serializer, ReplyListener listener) {
 		super(successor);
 		this.serializer = serializer;
 		this.listener = listener;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void process(Request request) {
 		if (request.getType() == ProtocolConstants.SEND_DOCUMENTS) {
 			LOG.info("--> process()");
@@ -63,6 +75,11 @@ private static Logger LOG = Logger.getLogger(SendDocumentsPrepareFilter.class);
 		}
 	}
 
+	/**
+	 * Executes the processing logic of this filter.
+	 * 
+	 * @param request the request to be processed
+	 */
 	private void processImpl(Request request) {
 		RemoteUserProxyExt user = (RemoteUserProxyExt)request.getPayload();
 		try {			

@@ -38,7 +38,9 @@ import ch.iserver.ace.net.protocol.Serializer;
 import ch.iserver.ace.net.protocol.SessionManager;
 
 /**
- *
+ * Request prepare filter for a 'document details changed' message.
+ * 
+ * @see ch.iserver.ace.net.protocol.filter.AbstractRequestFilter
  */
 public class DocumentDetailsChangedPrepareFilter extends AbstractRequestFilter {
 
@@ -47,12 +49,22 @@ public class DocumentDetailsChangedPrepareFilter extends AbstractRequestFilter {
 	private Serializer serializer;
 	private ReplyListener listener;
 	
+	/**
+	 * Constructor. 
+	 * 
+	 * @param successor
+	 * @param serializer
+	 * @param listener
+	 */
 	public DocumentDetailsChangedPrepareFilter(RequestFilter successor, Serializer serializer, ReplyListener listener) {
 		super(successor);
 		this.serializer = serializer;
 		this.listener = listener;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void process(Request request) {
 		//TODO: consider a refactoring of DocumentDetailsChangedPrepareFilter and PublishDocumentPrepareFilter,
 		//it's almost the same logic.

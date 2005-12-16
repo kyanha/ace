@@ -41,7 +41,9 @@ import ch.iserver.ace.net.protocol.SessionManager;
 import ch.iserver.ace.util.ParameterValidator;
 
 /**
- *
+ * Request prepare filter for a 'conceal document' message.
+ * 
+ * @see ch.iserver.ace.net.protocol.filter.AbstractRequestFilter
  */
 public class ConcealDocumentPrepareFilter extends AbstractRequestFilter {
 
@@ -50,6 +52,13 @@ public class ConcealDocumentPrepareFilter extends AbstractRequestFilter {
 	private Serializer serializer;
 	private ReplyListener listener;
 	
+	/**
+	 * Constructor.
+	 * 
+	 * @param successor
+	 * @param serializer
+	 * @param listener
+	 */
 	public ConcealDocumentPrepareFilter(RequestFilter successor, Serializer serializer, ReplyListener listener) {
 		super(successor);
 		ParameterValidator.notNull("serializer", serializer);
@@ -58,6 +67,9 @@ public class ConcealDocumentPrepareFilter extends AbstractRequestFilter {
 		this.listener = listener;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void process(Request request) {
 		if (request.getType() == ProtocolConstants.CONCEAL) {
 			LOG.info("--> process()");

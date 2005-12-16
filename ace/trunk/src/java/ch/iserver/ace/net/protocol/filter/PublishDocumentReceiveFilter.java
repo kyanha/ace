@@ -39,16 +39,26 @@ import ch.iserver.ace.net.protocol.SessionManager;
 import ch.iserver.ace.net.protocol.RequestImpl.DocumentInfo;
 
 /**
- *
+ * Request receive filter for a 'publish document' message.
+ * 
+ * @see ch.iserver.ace.net.protocol.filter.AbstractRequestFilter
  */
 public class PublishDocumentReceiveFilter extends AbstractRequestFilter {
 
 	private Logger LOG = Logger.getLogger(PublishDocumentReceiveFilter.class);
 	
+	/**
+	 * Constructor. 
+	 * 
+	 * @param successor	the successor filter
+	 */
 	public PublishDocumentReceiveFilter(RequestFilter successor) {
 		super(successor);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void process(Request request) {
 		try {
 			if (request.getType() == ProtocolConstants.PUBLISH) {

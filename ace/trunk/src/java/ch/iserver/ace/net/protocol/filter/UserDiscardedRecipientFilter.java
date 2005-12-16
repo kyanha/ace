@@ -29,12 +29,19 @@ import ch.iserver.ace.net.protocol.ProtocolConstants;
 import ch.iserver.ace.net.protocol.Request;
 
 /**
- *
+ * Request recipient filter for a 'user discarded' message.
+ * 
+ * @see ch.iserver.ace.net.protocol.filter.AbstractRequestFilter
  */
 public class UserDiscardedRecipientFilter extends AbstractRequestFilter {
 
 	private static Logger LOG = Logger.getLogger(UserDiscardedRecipientFilter.class);
 	
+	/**
+	 * Constructor.
+	 * 
+	 * @param successor	the successor filter
+	 */
 	public UserDiscardedRecipientFilter(RequestFilter successor) {
 		super(successor);
 	}
@@ -47,7 +54,6 @@ public class UserDiscardedRecipientFilter extends AbstractRequestFilter {
 					OutputDataStream os = new OutputDataStream();
 					os.setComplete();
 					request.getMessage().sendRPY(os);
-//					request.getMessage().sendNUL();
 				} catch (Exception e) {
 					LOG.error("could not send confirmation ["+e.getMessage()+"]");
 				}

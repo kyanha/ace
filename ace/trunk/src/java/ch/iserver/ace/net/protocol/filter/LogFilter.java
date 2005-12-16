@@ -26,18 +26,29 @@ import org.apache.log4j.Logger;
 import ch.iserver.ace.net.protocol.Request;
 
 /**
- *
+ * Logging filter. Logs each request that passes.
+ * 
+ * @see ch.iserver.ace.net.protocol.filter.AbstractRequestFilter
  */
 public class LogFilter extends AbstractRequestFilter {
 
 	private Logger LOG = Logger.getLogger(LogFilter.class);
 	private boolean forward;
 	
+	/**
+	 * Constructor.
+	 * 
+	 * @param successor
+	 * @param forward
+	 */
 	public LogFilter(RequestFilter successor, boolean forward) {
 		super(successor);
 		this.forward = forward;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void process(Request request) {
 		LOG.debug("process( "+request+" )");
 		if (forward) {

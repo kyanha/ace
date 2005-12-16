@@ -36,16 +36,26 @@ import ch.iserver.ace.net.protocol.SessionManager;
 import ch.iserver.ace.net.protocol.RequestImpl.DocumentInfo;
 
 /**
- *
+ * Request recipient filter for an 'invite user' message.
+ * 
+ * @see ch.iserver.ace.net.protocol.filter.AbstractRequestFilter
  */
 public class InviteRequestRecipientFilter extends AbstractRequestFilter {
 
 	private static Logger LOG = Logger.getLogger(InviteRequestRecipientFilter.class);
 	
+	/**
+	 * Constructor.
+	 * 
+	 * @param successor the successor filter
+	 */
 	public InviteRequestRecipientFilter(RequestFilter successor) {
 		super(successor);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void process(Request request) {
 		try {
 			if (request.getType() == ProtocolConstants.INVITE) {
@@ -61,7 +71,6 @@ public class InviteRequestRecipientFilter extends AbstractRequestFilter {
 					OutputDataStream os = new OutputDataStream();
 					os.setComplete();
 					request.getMessage().sendRPY(os);
-//					request.getMessage().sendNUL();
 				} catch (Exception e) {
 					LOG.error("could not send confirmation ["+e+", "+e.getMessage()+"]");
 				}

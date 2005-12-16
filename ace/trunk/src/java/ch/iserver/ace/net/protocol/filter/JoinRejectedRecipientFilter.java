@@ -32,16 +32,26 @@ import ch.iserver.ace.net.protocol.SessionManager;
 import ch.iserver.ace.net.protocol.RequestImpl.DocumentInfo;
 
 /**
- *
+ * Request recipient filter for a 'join rejected' message.
+ * 
+ * @see ch.iserver.ace.net.protocol.filter.AbstractRequestFilter
  */
 public class JoinRejectedRecipientFilter extends AbstractRequestFilter {
 
 	private static Logger LOG = Logger.getLogger(JoinRejectedRecipientFilter.class);
 	
+	/**
+	 * Constructor.
+	 * 
+	 * @param successor 	the successor filter
+	 */
 	public JoinRejectedRecipientFilter(RequestFilter successor) {
 		super(successor);
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void process(Request request) {
 		try {
 			if (request.getType() == ProtocolConstants.JOIN_REJECTED) {

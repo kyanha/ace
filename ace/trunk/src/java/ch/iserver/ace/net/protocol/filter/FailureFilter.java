@@ -36,10 +36,18 @@ public class FailureFilter extends AbstractRequestFilter {
 
 	private static Logger LOG = Logger.getLogger(FailureFilter.class);
 	
+	/**
+	 * Constructor.
+	 * 
+	 * @param successor the successor
+	 */
 	public FailureFilter(AbstractRequestFilter successor) {
 		super(successor);
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void process(Request request) {
 		LOG.debug(request+" could not be processed, reply with error code.");
 		MessageMSG message = request.getMessage();

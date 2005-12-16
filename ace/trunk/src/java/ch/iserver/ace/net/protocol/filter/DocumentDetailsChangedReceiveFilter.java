@@ -35,16 +35,26 @@ import ch.iserver.ace.net.protocol.SessionManager;
 import ch.iserver.ace.net.protocol.RequestImpl.DocumentInfo;
 
 /**
- *
+ * Request receive filter for a 'document details changed' message.
+ * 
+ * @see ch.iserver.ace.net.protocol.filter.AbstractRequestFilter
  */
 public class DocumentDetailsChangedReceiveFilter extends AbstractRequestFilter {
 
 	private Logger LOG = Logger.getLogger(DocumentDetailsChangedReceiveFilter.class);
 	
+	/**
+	 * Constructor.
+	 * 
+	 * @param successor the successor
+	 */
 	public DocumentDetailsChangedReceiveFilter(RequestFilter successor) {
 		super(successor);
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void process(Request request) {
 		try {
 			if (request.getType() == ProtocolConstants.DOCUMENT_DETAILS_CHANGED) {

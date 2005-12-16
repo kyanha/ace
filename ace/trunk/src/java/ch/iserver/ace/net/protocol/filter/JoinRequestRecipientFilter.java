@@ -38,7 +38,10 @@ import ch.iserver.ace.net.protocol.SessionManager;
 import ch.iserver.ace.net.protocol.RequestImpl.DocumentInfo;
 
 /**
+ * Request recipient filter for a 'invitation rejected' message.
  * Processes a Join request from another user for a particular document.
+ * 
+ * @see ch.iserver.ace.net.protocol.filter.AbstractRequestFilter
  */
 public class JoinRequestRecipientFilter extends AbstractRequestFilter {
 
@@ -46,11 +49,20 @@ public class JoinRequestRecipientFilter extends AbstractRequestFilter {
 	
 	private RequestFilter clientChain;
 	
+	/**
+	 * Constructor.
+	 * 
+	 * @param successor
+	 * @param clientChain
+	 */
 	public JoinRequestRecipientFilter(RequestFilter successor, RequestFilter clientChain) {
 		super(successor);
 		this.clientChain = clientChain;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void process(Request request) {
 		try {
 			if (request.getType() == ProtocolConstants.JOIN) {

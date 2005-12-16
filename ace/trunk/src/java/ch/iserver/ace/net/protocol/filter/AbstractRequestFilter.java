@@ -24,17 +24,23 @@ package ch.iserver.ace.net.protocol.filter;
 import ch.iserver.ace.net.protocol.Request;
 
 /**
- *
+ * This is the abstract base class for all 
+ * {@link ch.iserver.ace.net.protocol.filter.RequestFilter}.
  */
 public abstract class AbstractRequestFilter implements RequestFilter {
 
 	private RequestFilter successor;
 	
+	/**
+	 * Creates a new AbstractRequestFilter.
+	 * 
+	 * @param successor the successor for this filter
+	 */
 	public AbstractRequestFilter(RequestFilter successor) {
 		this.successor = successor;
 	}
 	
-	/* (non-Javadoc)
+	/**
 	 * @see ch.iserver.ace.net.impl.protocol.RequestFilter#process(ch.iserver.ace.net.impl.protocol.Request)
 	 */
 	public void process(Request request) {
@@ -43,7 +49,7 @@ public abstract class AbstractRequestFilter implements RequestFilter {
 		}
 	}
 	
-	/* (non-Javadoc)
+	/**
 	 * @see ch.iserver.ace.net.impl.protocol.RequestFilter#getSuccessor()
 	 */
 	public RequestFilter getSuccessor() {

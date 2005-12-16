@@ -31,16 +31,26 @@ import ch.iserver.ace.net.protocol.Request;
 import ch.iserver.ace.net.protocol.RequestImpl.DocumentInfo;
 
 /**
- *
+ * Request recipient filter for a 'invitation rejected' message.
+ * 
+ * @see ch.iserver.ace.net.protocol.filter.AbstractRequestFilter
  */
 public class InvitationRejectedRecipientFilter extends AbstractRequestFilter {
 
 	private Logger LOG = Logger.getLogger(InvitationRejectedRecipientFilter.class);
 	
+	/**
+	 * Constructor.
+	 * 
+	 * @param successor	the successor filter
+	 */
 	public InvitationRejectedRecipientFilter(RequestFilter successor) {
 		super(successor);
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void process(Request request) {
 		if (request.getType() == ProtocolConstants.INVITE_REJECTED) {
 			LOG.info("--> process()");

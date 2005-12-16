@@ -26,7 +26,10 @@ import org.apache.log4j.Logger;
 import ch.iserver.ace.net.protocol.Request;
 
 /**
- *
+ * NullRequestFilter. Only logs received requests but never
+ * forwards.
+ * 
+ * @see ch.iserver.ace.net.protocol.filter.AbstractRequestFilter
  */
 public class NullRequestFilter extends AbstractRequestFilter {
 
@@ -34,6 +37,10 @@ public class NullRequestFilter extends AbstractRequestFilter {
 	
 	private static NullRequestFilter instance;
 	
+	/**
+	 * Gets the singleton instance.
+	 * @return
+	 */
 	public static NullRequestFilter getInstance() {
 		if (instance == null) {
 			instance = new NullRequestFilter(null); 
@@ -41,10 +48,18 @@ public class NullRequestFilter extends AbstractRequestFilter {
 		return instance;
 	}
 	
+	/**
+	 * Private constructor.
+	 * 
+	 * @param successor
+	 */
 	private NullRequestFilter(RequestFilter successor) {
 		super(successor);
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void process(Request request) {
 		LOG.debug("process("+request+")");
 	}

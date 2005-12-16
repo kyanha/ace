@@ -34,7 +34,9 @@ import ch.iserver.ace.net.protocol.Serializer;
 import ch.iserver.ace.net.protocol.SessionManager;
 
 /**
- *
+ * Request sender filter for a 'join document' message.
+ * 
+ * @see ch.iserver.ace.net.protocol.filter.AbstractRequestFilter
  */
 public class JoinRequestSenderFilter extends AbstractRequestFilter {
 
@@ -43,12 +45,22 @@ public class JoinRequestSenderFilter extends AbstractRequestFilter {
 	private Serializer serializer;
 	private ReplyListener listener;
 	
+	/**
+	 * Constructor.
+	 * 
+	 * @param successor
+	 * @param serializer
+	 * @param listener
+	 */
 	public JoinRequestSenderFilter(RequestFilter successor, Serializer serializer, ReplyListener listener) {
 		super(successor);
 		this.serializer = serializer;
 		this.listener = listener;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void process(Request request) {
 		try {
 			if (request.getType() == ProtocolConstants.JOIN) {
@@ -74,6 +86,10 @@ public class JoinRequestSenderFilter extends AbstractRequestFilter {
 		}
 	}
 
+	/**
+	 * Helper class to wrap an instance of 
+	 * JoinNetworkCallback.
+	 */
 	public static class JoinNetworkCallbackWrapper {
 		
 		private String docId;

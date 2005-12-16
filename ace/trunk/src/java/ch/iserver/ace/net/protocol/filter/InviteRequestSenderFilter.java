@@ -33,7 +33,9 @@ import ch.iserver.ace.net.protocol.Serializer;
 import ch.iserver.ace.net.protocol.SessionManager;
 
 /**
- *
+ * Request sender filter for a 'invite user' message.
+ * 
+ * @see ch.iserver.ace.net.protocol.filter.AbstractRequestFilter
  */
 public class InviteRequestSenderFilter extends AbstractRequestFilter {
 

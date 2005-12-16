@@ -31,8 +31,11 @@ import ch.iserver.ace.net.protocol.Request;
 import ch.iserver.ace.net.protocol.Serializer;
 
 /**
+ * Request sender filter for a 'invitation rejected' message.
  * Used for an invitation-rejected notification 
  * to the inviting user.
+ * 
+ * @see ch.iserver.ace.net.protocol.filter.AbstractRequestFilter
  */
 public class InvitationRejectedSenderFilter extends AbstractRequestFilter {
 
@@ -41,12 +44,22 @@ public class InvitationRejectedSenderFilter extends AbstractRequestFilter {
 	private Serializer serializer;
 	private ReplyListener listener;
 	
+	/**
+	 * Constructor.
+	 * 
+	 * @param successor
+	 * @param serializer
+	 * @param listener
+	 */
 	public InvitationRejectedSenderFilter(RequestFilter successor, Serializer serializer, ReplyListener listener) {
 		super(successor);
 		this.serializer = serializer;
 		this.listener = listener;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void process(Request request) {
 		try {
 			if (request.getType() == ProtocolConstants.INVITE_REJECTED) {

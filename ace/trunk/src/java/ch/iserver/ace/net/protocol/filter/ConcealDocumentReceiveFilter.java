@@ -34,16 +34,26 @@ import ch.iserver.ace.net.protocol.SessionManager;
 import ch.iserver.ace.net.protocol.RequestImpl.DocumentInfo;
 
 /**
- *
+ * Request receive filter for a 'conceal document' message.
+ * 
+ * @see ch.iserver.ace.net.protocol.filter.AbstractRequestFilter
  */
 public class ConcealDocumentReceiveFilter extends AbstractRequestFilter {
 
 	private Logger LOG = Logger.getLogger(ConcealDocumentReceiveFilter.class);
 	
+	/**
+	 * Constructor.
+	 * 
+	 * @param successor the successor
+	 */
 	public ConcealDocumentReceiveFilter(RequestFilter successor) {
 		super(successor);
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void process(Request request) {
 		if (request.getType() == ProtocolConstants.CONCEAL) {
 			LOG.info("--> process()");
@@ -66,7 +76,6 @@ public class ConcealDocumentReceiveFilter extends AbstractRequestFilter {
 				OutputDataStream os = new OutputDataStream();
 				os.setComplete();
 				request.getMessage().sendRPY(os);
-//				request.getMessage().sendNUL();
 			} catch (Exception e) {
 				LOG.error("could not send confirmation ["+e.getMessage()+"]");
 			}
