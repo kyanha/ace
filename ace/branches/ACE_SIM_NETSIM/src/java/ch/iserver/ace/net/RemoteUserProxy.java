@@ -21,8 +21,6 @@
 
 package ch.iserver.ace.net;
 
-import java.util.Collection;
-
 import ch.iserver.ace.UserDetails;
 
 
@@ -46,12 +44,4 @@ public interface RemoteUserProxy {
 	 */
 	UserDetails getUserDetails();
 	
-	/**
-	 * Retrieves a collection of documents shared by the represented remote
-	 * user. The elements in the collection are of type
-	 * <code>RemoteDocumentProxy</code>.
-	 * 
-	 * @return the shared documents of the represented remote user
-	 */
-	Collection getSharedDocuments();
 }

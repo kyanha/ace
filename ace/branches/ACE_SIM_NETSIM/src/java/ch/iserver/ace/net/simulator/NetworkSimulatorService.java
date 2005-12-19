@@ -23,8 +23,6 @@ package ch.iserver.ace.net.simulator;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -70,7 +68,7 @@ public class NetworkSimulatorService implements NetworkService, User {
 	}
 	
 	public RemoteUserProxy getLocalUser() {
-		return new UserImpl(userId, details);
+		return this;
 	}
 	
 	/**
@@ -205,16 +203,11 @@ public class NetworkSimulatorService implements NetworkService, User {
 		callback.documentDiscovered(new RemoteDocumentProxy[] { doc });
 		document.addPublishedDocumentListener(new PublishedDocumentListenerImpl());
 	}
-
 	
 	public String getId() {
 		return userId;
 	}
-		
-	public Collection getSharedDocuments() {
-		return new ArrayList();
-	}
-		
+			
 	public UserDetails getUserDetails() {
 		return details;
 	}
@@ -224,15 +217,18 @@ public class NetworkSimulatorService implements NetworkService, User {
 	}
 	
 	private class PublishedDocumentListenerImpl implements PublishedDocumentListener {
+		
 		public void documentChanged(String id, DocumentDetails details) {
 			Document doc = getDocument(id);
 			callback.documentDetailsChanged(doc);
 		}
+		
 		public void documentConcealed(String id) {
 			Document doc = getDocument(id);
 			removeDocument(id);
 			callback.documentDiscarded(new RemoteDocumentProxy[] { doc });
 		}
+		
 	}
 	
 }

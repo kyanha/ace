@@ -28,7 +28,7 @@ import ch.iserver.ace.net.RemoteUserProxy;
  *
  */
 public interface User extends RemoteUserProxy, MessageListener {
-	
+		
 	void invite(InvitationProxy invitation);
 	
 }

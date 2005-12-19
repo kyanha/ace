@@ -81,9 +81,11 @@ public class MessageBusImpl implements MessageBus {
 	
 	protected class MessagePortImpl implements MessagePort {
 		private User user;
+		
 		protected MessagePortImpl(User user) {
 			this.user = user;
 		}
+		
 		public void setUserDetails(UserDetails details) {
 			String id = user.getId();
 			Iterator it = listenerMap.keySet().iterator();
@@ -95,6 +97,7 @@ public class MessageBusImpl implements MessageBus {
 				}
 			}
 		}
+		
 		public void publishDocument(PublishedDocument document) {
 			String id = user.getId();
 			Iterator it = listenerMap.keySet().iterator();

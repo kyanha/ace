@@ -80,6 +80,7 @@ public class PublishedDocument implements DocumentServer {
 	 * @see ch.iserver.ace.net.DocumentServer#setDocumentDetails(ch.iserver.ace.DocumentDetails)
 	 */
 	public void setDocumentDetails(DocumentDetails details) {
+		this.details = details;
 		PublishedDocumentListener[] listeners = (PublishedDocumentListener[]) this.listeners.getListeners(PublishedDocumentListener.class);
 		for (int i = 0; i < listeners.length; i++) {
 			PublishedDocumentListener listener = listeners[i];
