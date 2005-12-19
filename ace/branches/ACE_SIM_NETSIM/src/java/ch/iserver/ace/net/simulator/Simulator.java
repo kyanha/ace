@@ -21,13 +21,18 @@
 
 package ch.iserver.ace.net.simulator;
 
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
+import ch.iserver.ace.application.ApplicationTerminator;
 import ch.iserver.ace.application.Launcher;
 
 /**
@@ -38,18 +43,26 @@ public class Simulator extends JFrame {
 	private static final String[] CONTEXT_FILES = new String[] {
 		"application-context.xml", "actions-context.xml" ,"collaboration-context.xml", "network-simulator-context.xml"
 	};
-
+	
+	private JList instanceList;
+	private DefaultListModel instanceModel;
+	
 	public Simulator() {
 		super("Network Simulator");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
-		JPanel content = new JPanel();
-		JButton launcher = new JButton(new LaunchAction());
-		content.add(launcher);
-		setContentPane(content);
+		JPanel content = new JPanel(new BorderLayout());
 		
+		instanceModel = new DefaultListModel();
+		instanceList = new JList(instanceModel);
+		content.add(new JScrollPane(instanceList), BorderLayout.CENTER);
+		
+		JButton launcher = new JButton(new LaunchAction());
+		content.add(launcher, BorderLayout.SOUTH);
+
+		setContentPane(content);
 		setLocationRelativeTo(null);
-		pack();
+		setSize(400, 300);
 		setVisible(true);
 	}
 	
@@ -60,11 +73,18 @@ public class Simulator extends JFrame {
 			super("Launch Instance");
 		}
 		public void actionPerformed(ActionEvent e) {
+			final String clientId = "" + (++id);
 			Launcher launcher = new Launcher();
 			launcher.setContextFiles(CONTEXT_FILES);
-			launcher.setPreferencesPath("ch/iserver/ace/simulator/" + (++id));
+			launcher.setPreferencesPath("ch/iserver/ace/simulator/" + clientId);
+			launcher.setApplicationTerminator(new ApplicationTerminator() {
+				public void terminate() {
+					instanceModel.removeElement("client " + clientId);
+				}
+			});
 			try {
 				launcher.launch();
+				instanceModel.addElement("client " + clientId);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
