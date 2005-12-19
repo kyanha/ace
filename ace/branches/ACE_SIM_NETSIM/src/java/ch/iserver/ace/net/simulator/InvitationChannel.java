@@ -21,19 +21,26 @@
 
 package ch.iserver.ace.net.simulator;
 
-import ch.iserver.ace.net.RemoteUserProxy;
+import ch.iserver.ace.net.InvitationPort;
+import ch.iserver.ace.net.ParticipantConnection;
 
 /**
  *
  */
-public interface MessageListener {
+public class InvitationChannel {
 	
-	void userRegistered(RemoteUserProxy proxy);
+	private InvitationPort port;
 	
-	void userChanged(RemoteUserProxy proxy);
+	public InvitationChannel(InvitationPort port) {
+		this.port = port;
+	}
 	
-	void userUnregistered(RemoteUserProxy proxy);
+	public void accept(ParticipantConnection connection) {
+		port.accept(connection);
+	}
 	
-	void documentPublished(PublishedDocument document);
-		
+	public void reject() {
+		port.reject();
+	}
+	
 }

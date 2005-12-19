@@ -69,7 +69,7 @@ public class NetworkSimulatorService implements NetworkService, RemoteUserProxy 
 	}
 	
 	public RemoteUserProxy getLocalUser() {
-		return new User(userId, details);
+		return new UserImpl(userId, details);
 	}
 	
 	/**
@@ -150,7 +150,7 @@ public class NetworkSimulatorService implements NetworkService, RemoteUserProxy 
 	
 	// --> user related methods <--
 	
-	private void addUser(String userId, User user) {
+	private void addUser(String userId, UserImpl user) {
 		users.put(userId, user);
 	}
 	
@@ -158,11 +158,11 @@ public class NetworkSimulatorService implements NetworkService, RemoteUserProxy 
 		users.remove(userId);
 	}
 	
-	private User getUser(String userId) {
+	private UserImpl getUser(String userId) {
 		if (!users.containsKey(userId)) {
 			throw new IllegalArgumentException("unknown user " + userId);
 		}
-		return (User) users.get(userId);
+		return (UserImpl) users.get(userId);
 	}
 	
 	// --> document related methods <--
@@ -184,19 +184,19 @@ public class NetworkSimulatorService implements NetworkService, RemoteUserProxy 
 
 	private class MessageListenerImpl implements MessageListener {	
 		public void userRegistered(String userId, UserDetails details) {
-			User user = new User(userId, details);
+			UserImpl user = new UserImpl(userId, details);
 			addUser(userId, user);
 			callback.userDiscovered(user);
 		}
 		
 		public void userChanged(String userId, UserDetails details) {
-			User user = getUser(userId);
+			UserImpl user = getUser(userId);
 			user.setUserDetails(details);
 			callback.userDetailsChanged(user);
 		}
 		
 		public void userUnregistered(String userId) {
-			User user = getUser(userId);
+			UserImpl user = getUser(userId);
 			removeUser(userId);
 			callback.userDiscarded(user);
 		}
@@ -219,6 +219,10 @@ public class NetworkSimulatorService implements NetworkService, RemoteUserProxy 
 		
 	public UserDetails getUserDetails() {
 		return details;
+	}
+	
+	public void invite(Invitation invitation) {
+		callback.invitationReceived(invitation);
 	}
 	
 	private class PublishedDocumentListenerImpl implements PublishedDocumentListener {

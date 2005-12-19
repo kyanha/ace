@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import ch.iserver.ace.UserDetails;
+import ch.iserver.ace.net.RemoteUserProxy;
 
 /**
  *
@@ -42,24 +43,18 @@ public class MessageBusImpl implements MessageBus {
 		return instance;
 	}
 	
-	/**
-	 * @see ch.iserver.ace.net.simulator.MessageBus#register(java.lang.String, ch.iserver.ace.UserDetails, ch.iserver.ace.net.simulator.MessageListener)
-	 */
-	public synchronized MessagePort register(String id, UserDetails details, MessageListener l) {
+	public synchronized MessagePort register(UserImpl user) {
 		Iterator it = listenerMap.keySet().iterator();
 		while (it.hasNext()) {
 			String key = (String) it.next();
 			MessageListener listener = (MessageListener) listenerMap.get(key);
-			listener.userRegistered(id, details);
-			l.userRegistered(key, getUserDetails(key));
+			listener.userRegistered(user);
+			user.userRegistered(key, getUserDetails(key));
 		}
 		addListener(id, details, l);
 		return new MessagePortImpl(id);
 	}
 		
-	/**
-	 * @see ch.iserver.ace.net.simulator.MessageBus#unregister(java.lang.String)
-	 */
 	public void unregister(String id) {
 		removeListener(id);
 		Iterator it = listenerMap.values().iterator();

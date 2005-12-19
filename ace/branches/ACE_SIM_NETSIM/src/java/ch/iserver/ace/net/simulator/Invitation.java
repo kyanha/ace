@@ -21,49 +21,44 @@
 
 package ch.iserver.ace.net.simulator;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
-import ch.iserver.ace.UserDetails;
+import ch.iserver.ace.net.InvitationProxy;
+import ch.iserver.ace.net.JoinNetworkCallback;
+import ch.iserver.ace.net.RemoteDocumentProxy;
 import ch.iserver.ace.net.RemoteUserProxy;
 
 /**
  *
  */
-public class User implements RemoteUserProxy {
+public class Invitation implements InvitationProxy {
 	
-	private final String id;
+	private InvitationChannel invitation;
 	
-	private UserDetails details;
+	private RemoteUserProxy localUser;
 	
-	public User(String id, UserDetails details) {
-		this.id = id;
-		this.details = details;
+	public Invitation(InvitationChannel invitation, RemoteUserProxy localUser) {
+		this.invitation = invitation;
+		this.localUser = localUser;
 	}
 	
 	/**
-	 * @see ch.iserver.ace.net.RemoteUserProxy#getId()
+	 * @see ch.iserver.ace.net.InvitationProxy#getDocument()
 	 */
-	public String getId() {
-		return id;
+	public RemoteDocumentProxy getDocument() {
+		return null;
 	}
 
 	/**
-	 * @see ch.iserver.ace.net.RemoteUserProxy#getUserDetails()
+	 * @see ch.iserver.ace.net.InvitationProxy#accept(ch.iserver.ace.net.JoinNetworkCallback)
 	 */
-	public UserDetails getUserDetails() {
-		return details;
-	}
-	
-	public void setUserDetails(UserDetails details) {
-		this.details = details;
+	public void accept(JoinNetworkCallback callback) {
+		invitation.accept(new ParticipantChannel(callback, localUser));
 	}
 
 	/**
-	 * @see ch.iserver.ace.net.RemoteUserProxy#getSharedDocuments()
+	 * @see ch.iserver.ace.net.InvitationProxy#reject()
 	 */
-	public Collection getSharedDocuments() {
-		return new ArrayList();
+	public void reject() {
+		invitation.reject();
 	}
 
 }

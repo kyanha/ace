@@ -21,15 +21,15 @@
 
 package ch.iserver.ace.net.simulator;
 
-import ch.iserver.ace.UserDetails;
+import ch.iserver.ace.net.RemoteUserProxy;
 
 /**
  *
  */
 public interface MessageBus {
 	
-	MessagePort register(String id, UserDetails details, MessageListener l);
+	MessagePort register(RemoteUserProxy proxy);
 	
-	void unregister(String id);
+	void unregister(RemoteUserProxy proxy);
 	
 }

@@ -21,19 +21,49 @@
 
 package ch.iserver.ace.net.simulator;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
+import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.net.RemoteUserProxy;
 
 /**
  *
  */
-public interface MessageListener {
+public class UserImpl implements RemoteUserProxy {
 	
-	void userRegistered(RemoteUserProxy proxy);
+	private final String id;
 	
-	void userChanged(RemoteUserProxy proxy);
+	private UserDetails details;
 	
-	void userUnregistered(RemoteUserProxy proxy);
+	public UserImpl(String id, UserDetails details) {
+		this.id = id;
+		this.details = details;
+	}
 	
-	void documentPublished(PublishedDocument document);
-		
+	/**
+	 * @see ch.iserver.ace.net.RemoteUserProxy#getId()
+	 */
+	public String getId() {
+		return id;
+	}
+
+	/**
+	 * @see ch.iserver.ace.net.RemoteUserProxy#getUserDetails()
+	 */
+	public UserDetails getUserDetails() {
+		return details;
+	}
+	
+	public void setUserDetails(UserDetails details) {
+		this.details = details;
+	}
+	
+	/**
+	 * @see ch.iserver.ace.net.RemoteUserProxy#getSharedDocuments()
+	 */
+	public Collection getSharedDocuments() {
+		return new ArrayList();
+	}
+
 }

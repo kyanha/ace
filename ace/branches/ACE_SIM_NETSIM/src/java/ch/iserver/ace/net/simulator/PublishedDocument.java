@@ -91,8 +91,8 @@ public class PublishedDocument implements DocumentServer {
 	 * @see ch.iserver.ace.net.DocumentServer#invite(ch.iserver.ace.net.InvitationPort)
 	 */
 	public void invite(InvitationPort port) {
-		// TODO Auto-generated method stub
-
+		UserImpl user = (UserImpl) port.getUser();
+		user.invite(new Invitation(port, user));
 	}
 
 	/**
