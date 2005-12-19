@@ -53,7 +53,7 @@ import ch.iserver.ace.util.ParameterValidator;
 /**
  * The default implementation of DocumentRegistry.
  */
-class DocumentRegistryImpl implements DocumentRegistry {
+public class DocumentRegistryImpl implements DocumentRegistry {
 	
 	/**
 	 * The user registry used to create/get RemoteUser objects
