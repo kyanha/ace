@@ -91,8 +91,8 @@ public class PublishedDocument implements DocumentServer {
 	 * @see ch.iserver.ace.net.DocumentServer#invite(ch.iserver.ace.net.InvitationPort)
 	 */
 	public void invite(InvitationPort port) {
-		UserImpl user = (UserImpl) port.getUser();
-		user.invite(new Invitation(port, user));
+		User user = (User) port.getUser();
+		user.invite(new Invitation(new InvitationChannel(port), user, new Document(this, localUser)));
 	}
 
 	/**
@@ -105,5 +105,5 @@ public class PublishedDocument implements DocumentServer {
 			listener.documentConcealed(id);
 		}
 	}
-
+	
 }

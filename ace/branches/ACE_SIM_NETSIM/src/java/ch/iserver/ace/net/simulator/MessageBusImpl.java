@@ -26,7 +26,6 @@ import java.util.Iterator;
 import java.util.Map;
 
 import ch.iserver.ace.UserDetails;
-import ch.iserver.ace.net.RemoteUserProxy;
 
 /**
  *
@@ -43,24 +42,25 @@ public class MessageBusImpl implements MessageBus {
 		return instance;
 	}
 	
-	public synchronized MessagePort register(UserImpl user) {
+	public synchronized MessagePort register(User user) {
 		Iterator it = listenerMap.keySet().iterator();
 		while (it.hasNext()) {
 			String key = (String) it.next();
-			MessageListener listener = (MessageListener) listenerMap.get(key);
+			User listener = (User) listenerMap.get(key);
 			listener.userRegistered(user);
-			user.userRegistered(key, getUserDetails(key));
+			user.userRegistered(listener);
 		}
-		addListener(id, details, l);
-		return new MessagePortImpl(id);
+		addListener(user.getId(), user.getUserDetails(), user);
+		return new MessagePortImpl(user);
 	}
 		
-	public void unregister(String id) {
+	public synchronized void unregister(User user) {
+		String id = user.getId();
 		removeListener(id);
 		Iterator it = listenerMap.values().iterator();
 		while (it.hasNext()) {
 			MessageListener listener = (MessageListener) it.next();
-			listener.userUnregistered(id);
+			listener.userUnregistered(user);
 		}
 	}
 	
@@ -80,21 +80,23 @@ public class MessageBusImpl implements MessageBus {
 	
 	
 	protected class MessagePortImpl implements MessagePort {
-		private String id;
-		protected MessagePortImpl(String userId) {
-			this.id = userId;
+		private User user;
+		protected MessagePortImpl(User user) {
+			this.user = user;
 		}
 		public void setUserDetails(UserDetails details) {
+			String id = user.getId();
 			Iterator it = listenerMap.keySet().iterator();
 			while (it.hasNext()) {
 				String key = (String) it.next();
 				if (!id.equals(key)) {
 					MessageListener listener = (MessageListener) listenerMap.get(key);
-					listener.userChanged(id, details);
+					listener.userChanged(user);
 				}
 			}
 		}
 		public void publishDocument(PublishedDocument document) {
+			String id = user.getId();
 			Iterator it = listenerMap.keySet().iterator();
 			while (it.hasNext()) {
 				String key = (String) it.next();

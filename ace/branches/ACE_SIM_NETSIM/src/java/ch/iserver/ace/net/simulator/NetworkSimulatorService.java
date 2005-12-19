@@ -36,6 +36,7 @@ import ch.iserver.ace.algorithm.TimestampFactory;
 import ch.iserver.ace.net.DiscoveryNetworkCallback;
 import ch.iserver.ace.net.DocumentServer;
 import ch.iserver.ace.net.DocumentServerLogic;
+import ch.iserver.ace.net.InvitationProxy;
 import ch.iserver.ace.net.NetworkService;
 import ch.iserver.ace.net.NetworkServiceCallback;
 import ch.iserver.ace.net.RemoteDocumentProxy;
@@ -44,7 +45,7 @@ import ch.iserver.ace.net.RemoteUserProxy;
 /**
  *
  */
-public class NetworkSimulatorService implements NetworkService, RemoteUserProxy {
+public class NetworkSimulatorService implements NetworkService, User {
 	
 	private String userId;
 	
@@ -87,14 +88,14 @@ public class NetworkSimulatorService implements NetworkService, RemoteUserProxy 
 	 * @see ch.iserver.ace.net.NetworkService#start()
 	 */
 	public void start() {
-		port = messageBus.register(userId, details, new MessageListenerImpl());
+		port = messageBus.register(this);
 	}
 
 	/**
 	 * @see ch.iserver.ace.net.NetworkService#stop()
 	 */
 	public void stop() {
-		messageBus.unregister(userId);
+		messageBus.unregister(this);
 		port = null;
 	}
 
@@ -150,7 +151,7 @@ public class NetworkSimulatorService implements NetworkService, RemoteUserProxy 
 	
 	// --> user related methods <--
 	
-	private void addUser(String userId, UserImpl user) {
+	private void addUser(String userId, User user) {
 		users.put(userId, user);
 	}
 	
@@ -158,11 +159,11 @@ public class NetworkSimulatorService implements NetworkService, RemoteUserProxy 
 		users.remove(userId);
 	}
 	
-	private UserImpl getUser(String userId) {
+	private User getUser(String userId) {
 		if (!users.containsKey(userId)) {
 			throw new IllegalArgumentException("unknown user " + userId);
 		}
-		return (UserImpl) users.get(userId);
+		return (User) users.get(userId);
 	}
 	
 	// --> document related methods <--
@@ -182,32 +183,30 @@ public class NetworkSimulatorService implements NetworkService, RemoteUserProxy 
 		return (Document) documents.get(docId);
 	}
 
-	private class MessageListenerImpl implements MessageListener {	
-		public void userRegistered(String userId, UserDetails details) {
-			UserImpl user = new UserImpl(userId, details);
-			addUser(userId, user);
-			callback.userDiscovered(user);
-		}
-		
-		public void userChanged(String userId, UserDetails details) {
-			UserImpl user = getUser(userId);
-			user.setUserDetails(details);
-			callback.userDetailsChanged(user);
-		}
-		
-		public void userUnregistered(String userId) {
-			UserImpl user = getUser(userId);
-			removeUser(userId);
-			callback.userDiscarded(user);
-		}
-		
-		public void documentPublished(PublishedDocument document) {
-			Document doc = new Document(document, NetworkSimulatorService.this);
-			addDocument(document.getId(), doc);
-			callback.documentDiscovered(new RemoteDocumentProxy[] { doc });
-			document.addPublishedDocumentListener(new PublishedDocumentListenerImpl());
-		}
+	// --> MessageListener methods <--
+	
+	public void userRegistered(User user) {
+		System.out.println("discovered " + user.getId() + " by " + getId());
+		addUser(user.getId(), user);
+		callback.userDiscovered(user);
 	}
+		
+	public void userChanged(User user) {
+		callback.userDetailsChanged(user);
+	}
+		
+	public void userUnregistered(User user) {
+		removeUser(user.getId());
+		callback.userDiscarded(user);
+	}
+		
+	public void documentPublished(PublishedDocument document) {
+		Document doc = new Document(document, NetworkSimulatorService.this);
+		addDocument(document.getId(), doc);
+		callback.documentDiscovered(new RemoteDocumentProxy[] { doc });
+		document.addPublishedDocumentListener(new PublishedDocumentListenerImpl());
+	}
+
 	
 	public String getId() {
 		return userId;
@@ -221,7 +220,7 @@ public class NetworkSimulatorService implements NetworkService, RemoteUserProxy 
 		return details;
 	}
 	
-	public void invite(Invitation invitation) {
+	public void invite(InvitationProxy invitation) {
 		callback.invitationReceived(invitation);
 	}
 	

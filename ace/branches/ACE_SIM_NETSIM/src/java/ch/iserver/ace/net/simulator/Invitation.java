@@ -25,6 +25,7 @@ import ch.iserver.ace.net.InvitationProxy;
 import ch.iserver.ace.net.JoinNetworkCallback;
 import ch.iserver.ace.net.RemoteDocumentProxy;
 import ch.iserver.ace.net.RemoteUserProxy;
+import ch.iserver.ace.util.ParameterValidator;
 
 /**
  *
@@ -35,16 +36,22 @@ public class Invitation implements InvitationProxy {
 	
 	private RemoteUserProxy localUser;
 	
-	public Invitation(InvitationChannel invitation, RemoteUserProxy localUser) {
+	private RemoteDocumentProxy document;
+	
+	public Invitation(InvitationChannel invitation, RemoteUserProxy user, RemoteDocumentProxy document) {
+		ParameterValidator.notNull("invitation", invitation);
+		ParameterValidator.notNull("user", user);
+		ParameterValidator.notNull("document", document);
 		this.invitation = invitation;
-		this.localUser = localUser;
+		this.localUser = user;
+		this.document = document;
 	}
 	
 	/**
 	 * @see ch.iserver.ace.net.InvitationProxy#getDocument()
 	 */
 	public RemoteDocumentProxy getDocument() {
-		return null;
+		return document;
 	}
 
 	/**

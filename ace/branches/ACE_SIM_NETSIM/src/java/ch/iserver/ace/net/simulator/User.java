@@ -21,14 +21,14 @@
 
 package ch.iserver.ace.net.simulator;
 
+import ch.iserver.ace.net.InvitationProxy;
+import ch.iserver.ace.net.RemoteUserProxy;
 
 /**
  *
  */
-public interface MessageBus {
+public interface User extends RemoteUserProxy, MessageListener {
 	
-	MessagePort register(User user);
-	
-	void unregister(User user);
+	void invite(InvitationProxy invitation);
 	
 }

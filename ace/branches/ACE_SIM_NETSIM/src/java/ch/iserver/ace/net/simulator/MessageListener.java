@@ -21,18 +21,17 @@
 
 package ch.iserver.ace.net.simulator;
 
-import ch.iserver.ace.net.RemoteUserProxy;
 
 /**
  *
  */
 public interface MessageListener {
 	
-	void userRegistered(RemoteUserProxy proxy);
+	void userRegistered(User user);
 	
-	void userChanged(RemoteUserProxy proxy);
+	void userChanged(User user);
 	
-	void userUnregistered(RemoteUserProxy proxy);
+	void userUnregistered(User user);
 	
 	void documentPublished(PublishedDocument document);
 		
