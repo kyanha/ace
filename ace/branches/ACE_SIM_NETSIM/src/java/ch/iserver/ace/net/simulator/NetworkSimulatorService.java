@@ -110,10 +110,10 @@ public class NetworkSimulatorService implements NetworkService, User {
 	 * @see ch.iserver.ace.net.NetworkService#setUserDetails(ch.iserver.ace.UserDetails)
 	 */
 	public void setUserDetails(UserDetails details) {
+		this.details = details;
 		if (port != null) {
 			port.setUserDetails(details);
 		}
-		this.details = details;
 	}
 
 	/**
@@ -186,7 +186,6 @@ public class NetworkSimulatorService implements NetworkService, User {
 	// --> MessageListener methods <--
 	
 	public void userRegistered(User user) {
-		System.out.println("discovered " + user.getId() + " by " + getId());
 		addUser(user.getId(), user);
 		callback.userDiscovered(user);
 	}
