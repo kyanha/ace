@@ -21,12 +21,17 @@
 
 package ch.iserver.ace.net.simulator;
 
-import ch.iserver.ace.UserDetails;
+import java.util.EventListener;
 
-public interface MessagePort {
+import ch.iserver.ace.DocumentDetails;
+
+/**
+ *
+ */
+public interface PublishedDocumentListener extends EventListener {
 	
-	void setUserDetails(UserDetails details);
+	void documentChanged(String id, DocumentDetails details);
 	
-	void publishDocument(PublishedDocument document);
+	void documentConcealed(String id);
 	
 }

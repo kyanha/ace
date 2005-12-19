@@ -21,7 +21,6 @@
 
 package ch.iserver.ace.net.simulator;
 
-import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.UserDetails;
 
 /**
@@ -35,10 +34,6 @@ public interface MessageListener {
 	
 	void userUnregistered(String userId);
 	
-	void documentPublished(String userId, String docId, DocumentDetails details);
-	
-	void documentChanged(String userId, String docId, DocumentDetails details);
-	
-	void documentConcealed(String userId, String docId);
-	
+	void documentPublished(PublishedDocument document);
+		
 }

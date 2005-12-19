@@ -124,12 +124,14 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	/**
 	 * Creates a new ServerLogicImpl instance.
 	 * 
-	 * @param incomingDomain
-	 * @param outgoingDomain
-	 * @param document
-	 * @param registry
+	 * @param publisher the publisher of the document
+	 * @param incomingDomain the incoming thread domain
+	 * @param outgoingDomain the outgoing thread domain
+	 * @param document the initial document model
+	 * @param registry the user registry
 	 */
-	public ServerLogicImpl(ThreadDomain incomingDomain,
+	public ServerLogicImpl(RemoteUserProxy publisher,
+		                   ThreadDomain incomingDomain,
 	                       ThreadDomain outgoingDomain, 
 	                       DocumentModel document,
 	                       UserRegistry registry) {
@@ -141,7 +143,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 		this.registry = registry;
 		this.accessControlStrategy = this;
 
-		this.document = createServerDocument(document);
+		this.document = createServerDocument(document, publisher);
 		this.failureHandler = (FailureHandler) incomingDomain.wrap(this, FailureHandler.class);
 		
 		// add the document updater to the composite forwarder
@@ -167,10 +169,11 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	 * content on the server side.
 	 * 
 	 * @param document the initial document content
+	 * @param publisher the RemoteUserProxy of the publisher
 	 * @return the server document ready to be used
 	 */
-	protected ServerDocument createServerDocument(DocumentModel document) {
-		ServerDocument doc = new ServerDocumentImpl();
+	protected ServerDocument createServerDocument(DocumentModel document, RemoteUserProxy publisher) {
+		ServerDocument doc = new ServerDocumentImpl(publisher);
 		doc.insertString(ParticipantConnection.PUBLISHER_ID, 0, document.getContent());
 		doc.updateCaret(ParticipantConnection.PUBLISHER_ID, document.getDot(), document.getMark());
 		return doc;

@@ -19,14 +19,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.net.simulator;
+package ch.iserver.ace.application;
 
-import ch.iserver.ace.UserDetails;
-
-public interface MessagePort {
+/**
+ *
+ */
+public interface ApplicationTerminator {
 	
-	void setUserDetails(UserDetails details);
-	
-	void publishDocument(PublishedDocument document);
+	void terminate();
 	
 }

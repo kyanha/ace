@@ -48,7 +48,12 @@ public interface NetworkService {
 	 * @return the local server info
 	 */
 	ServerInfo getServerInfo();
-
+	
+	/**
+	 * @return
+	 */
+	RemoteUserProxy getLocalUser();
+	
 	/**
 	 * Called by the collaboration layer to start the network layer.
 	 */

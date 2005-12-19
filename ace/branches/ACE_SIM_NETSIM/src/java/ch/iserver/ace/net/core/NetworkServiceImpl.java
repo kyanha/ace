@@ -36,6 +36,7 @@ import ch.iserver.ace.net.DiscoveryNetworkCallback;
 import ch.iserver.ace.net.DocumentServer;
 import ch.iserver.ace.net.DocumentServerLogic;
 import ch.iserver.ace.net.NetworkServiceCallback;
+import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.net.discovery.DiscoveryLauncher;
 import ch.iserver.ace.net.discovery.DiscoveryManagerFactory;
 import ch.iserver.ace.net.discovery.ExplicitUserDiscovery;
@@ -168,6 +169,21 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	 */
 	public UserDetails getUserDetails() {
 		return details;
+	}
+	
+	private RemoteUserProxy localUser;
+	
+	/**
+	 * @see ch.iserver.ace.net.NetworkService#getLocalUser()
+	 */
+	public RemoteUserProxy getLocalUser() {
+		if (localUser == null) {
+			MutableUserDetails details = new MutableUserDetails(getUserDetails().getUsername());
+			details.setAddress(getServerInfo().getAddress());
+			details.setPort(getServerInfo().getPort());
+			localUser = RemoteUserProxyFactory.getInstance().createProxy(userId, details);
+		}
+		return localUser;
 	}
 	
 	/**

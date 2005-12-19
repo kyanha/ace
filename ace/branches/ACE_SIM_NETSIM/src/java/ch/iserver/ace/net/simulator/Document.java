@@ -30,50 +30,42 @@ import ch.iserver.ace.net.RemoteUserProxy;
  *
  */
 public class Document implements RemoteDocumentProxy {
-
-	private User user;
 	
-	private String id;
+	private RemoteUserProxy localUser;
 	
-	private DocumentDetails details;
+	private PublishedDocument document;
 	
-	public Document(User user, String id, DocumentDetails details) {
-		this.user = user;
-		this.id = id;
-		this.details = details;
+	public Document(PublishedDocument document, RemoteUserProxy localUser) {
+		this.document = document;
+		this.localUser = localUser;
 	}
 	
 	/**
 	 * @see ch.iserver.ace.net.RemoteDocumentProxy#getId()
 	 */
 	public String getId() {
-		return id;
+		return document.getId();
 	}
 
 	/**
 	 * @see ch.iserver.ace.net.RemoteDocumentProxy#getDocumentDetails()
 	 */
 	public DocumentDetails getDocumentDetails() {
-		return details;
-	}
-	
-	public void setDocumentDetails(DocumentDetails details) {
-		this.details = details;
+		return document.getDocumentDetails();
 	}
 
 	/**
 	 * @see ch.iserver.ace.net.RemoteDocumentProxy#getPublisher()
 	 */
 	public RemoteUserProxy getPublisher() {
-		return user;
+		return document.getPublisher();
 	}
 
 	/**
 	 * @see ch.iserver.ace.net.RemoteDocumentProxy#join(ch.iserver.ace.net.JoinNetworkCallback)
 	 */
 	public void join(JoinNetworkCallback callback) {
-		MessagePort port = null;
-		
+		document.join(new ParticipantChannel(callback, localUser));
 	}
 
 }

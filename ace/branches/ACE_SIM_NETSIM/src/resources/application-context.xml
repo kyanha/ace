@@ -18,6 +18,7 @@
     <property name="dialogController" ref="dialogController"/>
     <property name="documentManager" ref="documentManager"/>
     <property name="collaborationService" ref="collaborationService"/>
+    <property name="mainFrame" ref="persistentMainFrame"/>
   </bean>
   
   <bean id="dialogController" 

@@ -23,6 +23,8 @@ package ch.iserver.ace.net.simulator;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,11 +39,12 @@ import ch.iserver.ace.net.DocumentServerLogic;
 import ch.iserver.ace.net.NetworkService;
 import ch.iserver.ace.net.NetworkServiceCallback;
 import ch.iserver.ace.net.RemoteDocumentProxy;
+import ch.iserver.ace.net.RemoteUserProxy;
 
 /**
  *
  */
-public class NetworkSimulatorService implements NetworkService {
+public class NetworkSimulatorService implements NetworkService, RemoteUserProxy {
 	
 	private String userId;
 	
@@ -63,6 +66,10 @@ public class NetworkSimulatorService implements NetworkService {
 	
 	public void setMessageBus(MessageBus messageBus) {
 		this.messageBus = messageBus;
+	}
+	
+	public RemoteUserProxy getLocalUser() {
+		return new User(userId, details);
 	}
 	
 	/**
@@ -127,7 +134,8 @@ public class NetworkSimulatorService implements NetworkService {
 	 */
 	public DocumentServer publish(DocumentServerLogic logic,
 			DocumentDetails details) {
-		DocumentServer server = new PublishedDocument(port, logic, details);
+		PublishedDocument server = new PublishedDocument(this, logic, details);
+		port.publishDocument(server);
 		return server;
 	}
 
@@ -193,21 +201,34 @@ public class NetworkSimulatorService implements NetworkService {
 			callback.userDiscarded(user);
 		}
 		
-		public void documentPublished(String userId, String docId, DocumentDetails details) {
-			Document doc = new Document(getUser(userId), docId, details);
-			addDocument(docId, doc);
+		public void documentPublished(PublishedDocument document) {
+			Document doc = new Document(document, NetworkSimulatorService.this);
+			addDocument(document.getId(), doc);
 			callback.documentDiscovered(new RemoteDocumentProxy[] { doc });
+			document.addPublishedDocumentListener(new PublishedDocumentListenerImpl());
 		}
+	}
+	
+	public String getId() {
+		return userId;
+	}
 		
-		public void documentChanged(String userId, String docId, DocumentDetails details) {
-			Document doc = getDocument(docId);
-			doc.setDocumentDetails(details);
+	public Collection getSharedDocuments() {
+		return new ArrayList();
+	}
+		
+	public UserDetails getUserDetails() {
+		return details;
+	}
+	
+	private class PublishedDocumentListenerImpl implements PublishedDocumentListener {
+		public void documentChanged(String id, DocumentDetails details) {
+			Document doc = getDocument(id);
 			callback.documentDetailsChanged(doc);
 		}
-		
-		public void documentConcealed(String userId, String docId) {
-			Document doc = getDocument(docId);
-			removeDocument(docId);
+		public void documentConcealed(String id) {
+			Document doc = getDocument(id);
+			removeDocument(id);
 			callback.documentDiscarded(new RemoteDocumentProxy[] { doc });
 		}
 	}

@@ -353,6 +353,7 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 		threadDomain.setName("incoming-session-logic");
 		
 		ServerLogicImpl target = new ServerLogicImpl(
+				        getNetworkService().getLocalUser(),
 						threadDomain,
 						getPublisherThreadDomain(), 
 						document,

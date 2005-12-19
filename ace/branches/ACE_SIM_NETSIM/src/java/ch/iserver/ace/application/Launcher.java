@@ -46,6 +46,8 @@ public class Launcher {
 	
 	private String[] contextFiles;
 	
+	private ApplicationTerminator terminator;
+	
 	public Launcher() { }
 	
 	public void setContextFiles(String[] contextFiles) {
@@ -60,6 +62,10 @@ public class Launcher {
 		this.preferencesPath = preferencesPath;
 	}
 	
+	public void setApplicationTerminator(ApplicationTerminator terminator) {
+		this.terminator = terminator;
+	}
+	
 	public void launch() throws Exception {
 		System.setProperty("ch.iserver.ace.preferences", preferencesPath);
 		
@@ -68,7 +74,8 @@ public class Launcher {
 		// 1. application factory
 		ApplicationFactory applicationFactory = (ApplicationFactory) context.getBean("appFactory");
 		// 2. application controller
-		ApplicationController controller = (ApplicationController) context.getBean("applicationController");		
+		ApplicationController controller = (ApplicationController) context.getBean("applicationController");
+		controller.setApplicationTerminator(terminator);
 		if (customizer != null) {
 			customizer.init(controller);
 		}

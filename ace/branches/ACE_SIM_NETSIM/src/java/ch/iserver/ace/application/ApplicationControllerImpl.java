@@ -51,6 +51,8 @@ import ch.iserver.ace.util.CompareUtil;
  */
 public class ApplicationControllerImpl implements ApplicationController, ApplicationContextAware {
 	
+	private PersistentFrame mainFrame;
+	
 	private ConfigurableApplicationContext context;
 	
 	private CollaborationService collaborationService;
@@ -58,9 +60,15 @@ public class ApplicationControllerImpl implements ApplicationController, Applica
 	private DocumentManager documentManager;
 
 	private DialogController dialogController;
+	
+	private ApplicationTerminator terminator;
 
 	public void setApplicationContext(ApplicationContext context) throws BeansException {
 		this.context = (ConfigurableApplicationContext) context;
+	}
+	
+	public void setMainFrame(PersistentFrame mainFrame) {
+		this.mainFrame = mainFrame;
 	}
 	
 	public void setCollaborationService(CollaborationService collaborationService) {
@@ -87,6 +95,13 @@ public class ApplicationControllerImpl implements ApplicationController, Applica
 		return dialogController;
 	}
 
+	/**
+	 * @see ch.iserver.ace.application.ApplicationController#setApplicationTerminator(ch.iserver.ace.application.ApplicationTerminator)
+	 */
+	public void setApplicationTerminator(ApplicationTerminator terminator) {
+		this.terminator = terminator;
+	}
+	
 	/**
 	 * @see ch.iserver.ace.application.ApplicationController#showAbout()
 	 */
@@ -361,7 +376,13 @@ public class ApplicationControllerImpl implements ApplicationController, Applica
 	 */
 	protected void shutdown() {
 		context.close();
-		System.exit(0);
+		mainFrame.setVisible(false);
+		mainFrame.dispose();
+		if (terminator != null) {
+			terminator.terminate();
+		} else {
+			System.exit(0);
+		}
 	}
 	
 	protected boolean saveItem(DocumentItem item) throws IOException {

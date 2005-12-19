@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.UserDetails;
 
 /**
@@ -100,33 +99,13 @@ public class MessageBusImpl implements MessageBus {
 				}
 			}
 		}
-		public void publishDocument(String docId, DocumentDetails details) {
+		public void publishDocument(PublishedDocument document) {
 			Iterator it = listenerMap.keySet().iterator();
 			while (it.hasNext()) {
 				String key = (String) it.next();
 				if (!id.equals(key)) {
 					MessageListener listener = (MessageListener) listenerMap.get(key);
-					listener.documentPublished(id, docId, details);
-				}
-			}
-		}
-		public void setDocumentDetails(String docId, DocumentDetails details) {
-			Iterator it = listenerMap.keySet().iterator();
-			while (it.hasNext()) {
-				String key = (String) it.next();
-				if (!id.equals(key)) {
-					MessageListener listener = (MessageListener) listenerMap.get(key);
-					listener.documentChanged(id, docId, details);
-				}
-			}
-		}
-		public void concealDocument(String docId) {
-			Iterator it = listenerMap.keySet().iterator();
-			while (it.hasNext()) {
-				String key = (String) it.next();
-				if (!id.equals(key)) {
-					MessageListener listener = (MessageListener) listenerMap.get(key);
-					listener.documentConcealed(id, docId);
+					listener.documentPublished(document);
 				}
 			}
 		}

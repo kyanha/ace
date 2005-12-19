@@ -2,6 +2,11 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
   
-  <bean id="networkService" class="ch.iserver.ace.net.simulator.NetworkSimulatorService"/>
+  <bean id="networkService" class="ch.iserver.ace.net.simulator.NetworkSimulatorService">
+    <property name="messageBus"><ref bean="messageBus"/></property>
+  </bean>
+  
+  <bean id="messageBus" class="ch.iserver.ace.net.simulator.MessageBusImpl"
+        factory-method="getInstance"/>
   
 </beans>

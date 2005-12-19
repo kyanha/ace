@@ -21,10 +21,14 @@
 
 package ch.iserver.ace.net.simulator;
 
+import javax.swing.event.EventListenerList;
+
 import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.net.DocumentServer;
 import ch.iserver.ace.net.DocumentServerLogic;
 import ch.iserver.ace.net.InvitationPort;
+import ch.iserver.ace.net.ParticipantConnection;
+import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.util.UUID;
 
 /**
@@ -32,26 +36,55 @@ import ch.iserver.ace.util.UUID;
  */
 public class PublishedDocument implements DocumentServer {
 
-	private MessagePort port;
-	
 	private String id = UUID.nextUUID();
+	
+	private RemoteUserProxy localUser;
 	
 	private DocumentDetails details;
 	
 	private DocumentServerLogic logic;
 	
-	public PublishedDocument(MessagePort port, DocumentServerLogic logic, DocumentDetails details) {
-		this.port = port;
+	private EventListenerList listeners = new EventListenerList();
+	
+	public PublishedDocument(RemoteUserProxy localUser, DocumentServerLogic logic, DocumentDetails details) {
+		this.localUser = localUser;
 		this.details = details;
 		this.logic = logic;
-		this.port.publishDocument(id, details);
 	}
-		
+	
+	public void addPublishedDocumentListener(PublishedDocumentListener l) {
+		listeners.add(PublishedDocumentListener.class, l);
+	}
+	
+	public void removePublishedDocumentListener(PublishedDocumentListener l) {
+		listeners.remove(PublishedDocumentListener.class, l);
+	}
+	
+	public String getId() {
+		return id;
+	}
+	
+	public void join(ParticipantConnection connection) {
+		logic.join(connection);
+	}
+	
+	public DocumentDetails getDocumentDetails() {
+		return details;
+	}
+	
+	public RemoteUserProxy getPublisher() {
+		return localUser;
+	}
+	
 	/**
 	 * @see ch.iserver.ace.net.DocumentServer#setDocumentDetails(ch.iserver.ace.DocumentDetails)
 	 */
 	public void setDocumentDetails(DocumentDetails details) {
-		this.port.setDocumentDetails(id, details);
+		PublishedDocumentListener[] listeners = (PublishedDocumentListener[]) this.listeners.getListeners(PublishedDocumentListener.class);
+		for (int i = 0; i < listeners.length; i++) {
+			PublishedDocumentListener listener = listeners[i];
+			listener.documentChanged(id, details);
+		}
 	}
 
 	/**
@@ -66,7 +99,11 @@ public class PublishedDocument implements DocumentServer {
 	 * @see ch.iserver.ace.net.DocumentServer#shutdown()
 	 */
 	public void shutdown() {
-		this.port.concealDocument(id);
+		PublishedDocumentListener[] listeners = (PublishedDocumentListener[]) this.listeners.getListeners(PublishedDocumentListener.class);
+		for (int i = 0; i < listeners.length; i++) {
+			PublishedDocumentListener listener = listeners[i];
+			listener.documentConcealed(id);
+		}
 	}
 
 }
