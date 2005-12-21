@@ -42,7 +42,7 @@ public class ReentrantLock implements Lock {
 	/**
 	 * @see ch.iserver.ace.util.Lock#lock()
 	 */
-	public void lock() throws InterruptedRuntimeException {
+	public void lock() {
 		lock.lock();
 	}
 

@@ -37,8 +37,6 @@ import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.net.RemoteUserProxyStub;
 import ch.iserver.ace.util.CallerThreadDomain;
-import ch.iserver.ace.util.Lock;
-import ch.iserver.ace.util.SemaphoreLock;
 
 /**
  *
@@ -280,10 +278,6 @@ public class ServerLogicImplTest extends TestCase {
 		connectionCtrl.replay();
 		participantCtrl.replay();
 		registryCtrl.replay();
-
-		// lock serializer
-		Lock lock = new SemaphoreLock("serializer-lock");
-		lock.lock();
 		
 		// test
 		ServerLogicImpl logic = new ServerLogicImpl(null, new CallerThreadDomain(), new CallerThreadDomain(), document, registry);
