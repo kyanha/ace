@@ -8,6 +8,8 @@ local machine:</p>
  <li>Bonjour</li>
 </ul>
 
+<p><b>Note:</b> you have to open port 5353 (Bonjour) and 4123 (ACE) in your firewall configuration.</p>
+
 <h3>Mac OS X</h3>
 <p>Mac OS X users do not have to install any other software beside ACE itself. To download the current
 version of ACE for Mac OS X click <a href="download.php?id=10">here</a>.</p>
