@@ -79,13 +79,6 @@ public class SessionConnectionWrapper implements SessionConnection {
 	}
 
 	/**
-	 * @see ch.iserver.ace.net.SessionConnection#isAlive()
-	 */
-	public boolean isAlive() {
-		return target.isAlive();
-	}
-
-	/**
 	 * @see ch.iserver.ace.net.SessionConnection#leave()
 	 */
 	public void leave() {

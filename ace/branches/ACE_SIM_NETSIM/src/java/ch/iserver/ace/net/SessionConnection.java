@@ -39,14 +39,7 @@ public interface SessionConnection {
 	 * @return the participant id of the local user
 	 */
 	int getParticipantId();
-	
-	/**
-	 * Determines whether the connection is alive.
-	 *
-	 * @return true iff the session connection is alive
-	 */
-	boolean isAlive();
-	
+		
 	/**
 	 * Leave the session. After calling this method, the session becomes
 	 * stale, i.e. it should not be used anymore.

@@ -126,20 +126,4 @@ public class SessionConnectionWrapperTest extends TestCase {
 		assertEquals(2, connection.getParticipantId());
 	}
 	
-	public void testIsAlive() throws Exception {
-		MockControl targetCtrl = MockControl.createControl(SessionConnection.class);
-		SessionConnection target = (SessionConnection) targetCtrl.getMock();
-		
-		// define mock behavior
-		target.isAlive();
-		targetCtrl.setReturnValue(true);
-		
-		// replay
-		targetCtrl.replay();
-		
-		// test
-		SessionConnection connection = new SessionConnectionWrapper(target, null);
-		assertTrue(connection.isAlive());
-	}
-	
 }
