@@ -106,7 +106,7 @@ Section "Install" InstallSection
   File "lib\dnssd-107.1.jar"
   File "lib\spin-1.4.jar"
   File "lib\spring-context-1.2.6.jar"
-  File "lib\xml-apis-2.0.2.jar"
+  File "lib\xml-apis-1.0.b2.jar"
 
 
   ;Store installation folder
