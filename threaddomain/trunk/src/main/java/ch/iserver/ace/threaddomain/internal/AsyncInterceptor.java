@@ -37,8 +37,9 @@ public class AsyncInterceptor implements MethodInterceptor {
 	
 	private ExceptionHandler exceptionHandler;
 	
-	public AsyncInterceptor(BlockingQueue<Invocation> queue) {
+	public AsyncInterceptor(BlockingQueue<Invocation> queue, ExceptionHandler exceptionHandler) {
 		this.queue = queue;
+		this.exceptionHandler = exceptionHandler;
 	}
 	
 	/**

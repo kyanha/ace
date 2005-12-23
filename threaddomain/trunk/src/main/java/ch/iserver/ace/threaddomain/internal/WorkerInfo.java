@@ -25,6 +25,8 @@ import java.util.concurrent.BlockingQueue;
 
 import org.aopalliance.intercept.MethodInterceptor;
 
+import ch.iserver.ace.threaddomain.ExceptionHandler;
+
 /**
  *
  */
@@ -50,11 +52,11 @@ public class WorkerInfo implements InterceptorFactory {
 		worker.stop();
 	}
 	
-	public MethodInterceptor createInterceptor(boolean sync) {
+	public MethodInterceptor createInterceptor(boolean sync, ExceptionHandler exceptionHandler) {
 		if (sync) {
-			return new SyncInterceptor(syncQueue);
+			return new SyncInterceptor(syncQueue, exceptionHandler);
 		} else {
-			return new AsyncInterceptor(asyncQueue);
+			return new AsyncInterceptor(asyncQueue, exceptionHandler);
 		}
 	}
 	

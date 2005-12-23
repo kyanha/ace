@@ -39,8 +39,9 @@ public class SyncInterceptor implements MethodInterceptor {
 	
 	private ExceptionHandler exceptionHandler;
 	
-	public SyncInterceptor(BlockingQueue<Invocation> queue) {
+	public SyncInterceptor(BlockingQueue<Invocation> queue, ExceptionHandler exceptionHandler) {
 		this.queue = queue;
+		this.exceptionHandler = exceptionHandler;
 	}
 	
 	/**
@@ -54,11 +55,26 @@ public class SyncInterceptor implements MethodInterceptor {
 					resultQueue.put(invocation.proceed());
 				} catch (Throwable th) {
 					exceptionHandler.handleException(th);
-					resultQueue.put(null);
+					resultQueue.put(new ExceptionWrapper(th));
 				}
 			}
 		});
-		return resultQueue.take();
+		Object result = resultQueue.take();
+		if (result != null && ExceptionWrapper.class.equals(result.getClass())) {
+			throw ((ExceptionWrapper) result).getCause();
+		} else {
+			return result;
+		}
+	}
+	
+	private static class ExceptionWrapper {
+		private Throwable cause;
+		public ExceptionWrapper(Throwable cause) {
+			this.cause = cause;
+		}
+		public Throwable getCause() {
+			return cause;
+		}
 	}
 
 }

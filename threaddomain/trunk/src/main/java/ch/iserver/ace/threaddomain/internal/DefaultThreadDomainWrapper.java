@@ -24,6 +24,7 @@ package ch.iserver.ace.threaddomain.internal;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.springframework.aop.framework.ProxyFactory;
 
+import ch.iserver.ace.threaddomain.ExceptionHandler;
 import ch.iserver.ace.threaddomain.ThreadDomainWrapper;
 
 public class DefaultThreadDomainWrapper implements ThreadDomainWrapper {
@@ -32,10 +33,12 @@ public class DefaultThreadDomainWrapper implements ThreadDomainWrapper {
 	
 	boolean swapEnabled;
 	
-	private InterceptorFactory no;
+	private final InterceptorFactory interceptorFactory;
 	
-	public DefaultThreadDomainWrapper(InterceptorFactory no) {
-		this.no = no;
+	private ExceptionHandler exceptionHandler = new DefaultExceptionHandler();
+	
+	public DefaultThreadDomainWrapper(InterceptorFactory interceptorFactory) {
+		this.interceptorFactory = interceptorFactory;
 	}
 	
 	public void setSynchronous(boolean sync) {
@@ -46,15 +49,23 @@ public class DefaultThreadDomainWrapper implements ThreadDomainWrapper {
 		return synchronous;
 	}
 	
+	public void setSwapEnabled(boolean swapEnabled) {
+		this.swapEnabled = swapEnabled;
+	}
+	
 	public boolean isSwapEnabled() {
 		return swapEnabled;
+	}
+	
+	public void setExceptionHandler(ExceptionHandler exceptionHandler) {
+		this.exceptionHandler = exceptionHandler;
 	}
 	
 	public Object wrap(Object target, Class clazz) {
 		ProxyFactory factory = new ProxyFactory();
 		factory.addInterface(clazz);
 		factory.setTarget(target);
-		MethodInterceptor guard = no.createInterceptor(isSynchronous());
+		MethodInterceptor guard = interceptorFactory.createInterceptor(isSynchronous(), exceptionHandler);
 		factory.addAdvice(guard);
 		if (isSwapEnabled()) {
 			factory.addAdvice(new SwapInterceptor());

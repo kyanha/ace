@@ -48,17 +48,16 @@ public class InvocationWorker implements Runnable {
 	}
 	
 	public void run() {
-		System.out.println("running worker ...");
 		try {
-		while (running) {
-			for (BlockingQueue<Invocation> queue : queues) {
-				Invocation invocation = (Invocation) queue.poll(1, TimeUnit.MICROSECONDS);
-				if (invocation != null) {
-					invocation.proceed();
+			while (running) {
+				for (BlockingQueue<Invocation> queue : queues) {
+					Invocation invocation = (Invocation) queue.poll(1, TimeUnit.MICROSECONDS);
+					if (invocation != null) {
+						invocation.proceed();
+					}
 				}
+				Thread.yield();
 			}
-			Thread.yield();
-		}
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

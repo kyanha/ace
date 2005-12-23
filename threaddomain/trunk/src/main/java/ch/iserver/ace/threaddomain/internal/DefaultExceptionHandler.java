@@ -19,20 +19,24 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.threaddomain;
+package ch.iserver.ace.threaddomain.internal;
 
+import ch.iserver.ace.threaddomain.ExceptionHandler;
 
 /**
+ * @author sir
  *
  */
-public interface ThreadDomainWrapper {
-	
-	void setSynchronous(boolean sync);
-	
-	void setSwapEnabled(boolean swapEnabled);
-	
-	void setExceptionHandler(ExceptionHandler exceptionHandler);
-	
-	Object wrap(Object target, Class clazz);
-	
+class DefaultExceptionHandler implements ExceptionHandler {
+
+	/**
+	 * @see ch.iserver.ace.threaddomain.ExceptionHandler#handleException(java.lang.Throwable)
+	 */
+	public void handleException(Throwable th) {
+		th.printStackTrace();
+		if (th instanceof Error) {
+			throw (Error) th;
+		}
+	}
+
 }
