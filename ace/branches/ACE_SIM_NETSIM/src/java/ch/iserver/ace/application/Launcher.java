@@ -31,7 +31,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.application.preferences.PreferencesStore;
 import ch.iserver.ace.collaboration.CollaborationService;
-import ch.iserver.ace.collaboration.InvitationCallback;
+import ch.iserver.ace.collaboration.InvitationHandler;
 import ch.iserver.ace.collaboration.ServiceFailureHandler;
 import ch.iserver.ace.util.UUID;
 
@@ -107,7 +107,7 @@ public class Launcher {
 		collaborationService.setUserId(id);
 		UserDetails details = getUserDetails(preferencesStore);
 		collaborationService.setUserDetails(details);
-		collaborationService.setInvitationCallback((InvitationCallback)context.getBean("invitationCallback"));
+		collaborationService.setInvitationHandler((InvitationHandler)context.getBean("invitationHandler"));
 		collaborationService.setFailureHandler((ServiceFailureHandler)context.getBean("serviceFailureHandler"));
 
 		// 3. preference listeners

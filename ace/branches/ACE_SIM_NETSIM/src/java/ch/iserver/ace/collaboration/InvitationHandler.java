@@ -19,21 +19,25 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.util;
-
-import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
+package ch.iserver.ace.collaboration;
 
 /**
- * BlockingQueueFactory implementations create BlockingQueue objects.
+ * Callback interface for invitations sent to the local user. The callback
+ * interface must be set on the CollaborationService with the 
+ * {@link ch.iserver.ace.collaboration.CollaborationService#setInvitationHandler(InvitationCallback)}
+ * method. The callback is invoked whenever there is an invitation is
+ * received.
  */
-public interface BlockingQueueFactory {
+public interface InvitationHandler {
 	
 	/**
-	 * Creates a new BlockingQueue, configures it and returns it to the
-	 * caller.
+	 * Notifies the callback that an invitation is received. The callback is
+	 * responsible to handle the invitation, that is to either accept
+	 * or reject it.
 	 * 
-	 * @return the newly created BlockingQueue
+	 * @param event the Invitation containing all the necessary 
+	 *              information
 	 */
-	BlockingQueue createQueue();
+	void handleInvitation(Invitation event);
 	
 }

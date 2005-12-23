@@ -22,22 +22,22 @@
 package ch.iserver.ace.collaboration.jupiter;
 
 import ch.iserver.ace.collaboration.Invitation;
-import ch.iserver.ace.collaboration.InvitationCallback;
+import ch.iserver.ace.collaboration.InvitationHandler;
 
 /**
  * Null object pattern implementation of an InvitationCallback.
  */
-final class NullInvitationCallback implements InvitationCallback {
+final class NullInvitationHandler implements InvitationHandler {
 	
 	/**
 	 * Singleton instance.
 	 */
-	private static InvitationCallback instance;
+	private static InvitationHandler instance;
 	
 	/**
 	 * Hidden constructor.
 	 */
-	private NullInvitationCallback() {
+	private NullInvitationHandler() {
 		// hidden constructor
 	}
 	
@@ -47,17 +47,17 @@ final class NullInvitationCallback implements InvitationCallback {
 	 * 
 	 * @return the singleton instance
 	 */
-	public static synchronized InvitationCallback getInstance() {
+	public static synchronized InvitationHandler getInstance() {
 		if (instance == null) {
-			instance = new NullInvitationCallback();
+			instance = new NullInvitationHandler();
 		}
 		return instance;
 	}
 	
 	/**
-	 * @see ch.iserver.ace.collaboration.InvitationCallback#invitationReceived(ch.iserver.ace.collaboration.Invitation)
+	 * @see ch.iserver.ace.collaboration.InvitationHandler#handleInvitation(ch.iserver.ace.collaboration.Invitation)
 	 */
-	public void invitationReceived(Invitation event) {
+	public void handleInvitation(Invitation event) {
 		// ignore invitations
 	}
 

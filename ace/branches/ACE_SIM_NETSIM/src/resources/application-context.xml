@@ -89,7 +89,7 @@
 
 
 
-  <bean id="invitationCallback" class="ch.iserver.ace.application.InvitationCallbackImpl">
+  <bean id="invitationHandler" class="ch.iserver.ace.application.InvitationHandlerImpl">
     <constructor-arg><ref local="dialogController"/></constructor-arg>
     <constructor-arg><ref local="documentViewController"/></constructor-arg>
     <constructor-arg><ref local="browseViewController"/></constructor-arg>

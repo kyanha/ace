@@ -36,7 +36,7 @@ import ch.iserver.ace.algorithm.jupiter.JupiterTimestampFactory;
 import ch.iserver.ace.collaboration.CollaborationService;
 import ch.iserver.ace.collaboration.DiscoveryCallback;
 import ch.iserver.ace.collaboration.DocumentListener;
-import ch.iserver.ace.collaboration.InvitationCallback;
+import ch.iserver.ace.collaboration.InvitationHandler;
 import ch.iserver.ace.collaboration.PublishedSession;
 import ch.iserver.ace.collaboration.PublishedSessionCallback;
 import ch.iserver.ace.collaboration.RemoteDocument;
@@ -81,7 +81,7 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	/**
 	 * The callback from the application layer for invitations from other users. 
 	 */
-	private InvitationCallback callback = NullInvitationCallback.getInstance();
+	private InvitationHandler callback = NullInvitationHandler.getInstance();
 	
 	/**
 	 * The failure handler for failures in this or in the network layer.
@@ -233,7 +233,7 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	 * 
 	 * @return the invitation callback
 	 */
-	protected InvitationCallback getInvitationCallback() {
+	protected InvitationHandler getInvitationCallback() {
 		return callback;
 	}
 	
@@ -328,10 +328,10 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 	}
 
 	/**
-	 * @see ch.iserver.ace.collaboration.CollaborationService#setInvitationCallback(ch.iserver.ace.collaboration.InvitationCallback)
+	 * @see ch.iserver.ace.collaboration.CollaborationService#setInvitationHandler(ch.iserver.ace.collaboration.InvitationHandler)
 	 */
-	public void setInvitationCallback(InvitationCallback callback) {
-		this.callback = callback == null ? NullInvitationCallback.getInstance() : callback;
+	public void setInvitationHandler(InvitationHandler callback) {
+		this.callback = callback == null ? NullInvitationHandler.getInstance() : callback;
 	}
 	
 	/**
@@ -518,7 +518,7 @@ public class CollaborationServiceImpl implements CollaborationService, NetworkSe
 						proxy,
 						document,
 						getSessionFactory());
-		getInvitationCallback().invitationReceived(invitation);
+		getInvitationCallback().handleInvitation(invitation);
 	}
 			
 }
