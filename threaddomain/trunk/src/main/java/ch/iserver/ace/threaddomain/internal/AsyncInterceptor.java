@@ -25,6 +25,7 @@ import java.util.concurrent.BlockingQueue;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
+import org.apache.log4j.Logger;
 
 import ch.iserver.ace.threaddomain.ExceptionHandler;
 
@@ -32,6 +33,8 @@ import ch.iserver.ace.threaddomain.ExceptionHandler;
  *
  */
 public class AsyncInterceptor implements MethodInterceptor {
+	
+	private static final Logger LOG = Logger.getLogger(AsyncInterceptor.class);
 	
 	private final BlockingQueue<Invocation> queue;
 	
@@ -46,6 +49,9 @@ public class AsyncInterceptor implements MethodInterceptor {
 	 * @see org.aopalliance.intercept.MethodInterceptor#invoke(org.aopalliance.intercept.MethodInvocation)
 	 */
 	public Object invoke(final MethodInvocation invocation) throws Throwable {
+		if (hasNonVoidReturnType(invocation)) {
+			LOG.info("calling method with non-void return type asynchronously");
+		}
 		queue.put(new Invocation() {
 			public void proceed() {
 				try {
@@ -57,5 +63,9 @@ public class AsyncInterceptor implements MethodInterceptor {
 		});
 		return null;
 	}
-
+	
+	private boolean hasNonVoidReturnType(MethodInvocation invocation) {
+		return !invocation.getMethod().getReturnType().equals(Void.TYPE);
+	}
+	
 }

@@ -21,17 +21,24 @@
 
 package ch.iserver.ace.threaddomain.internal;
 
+import java.lang.reflect.Method;
+
 import org.aopalliance.intercept.MethodInterceptor;
+import org.springframework.aop.Pointcut;
 import org.springframework.aop.framework.ProxyFactory;
+import org.springframework.aop.support.DefaultPointcutAdvisor;
+import org.springframework.aop.support.StaticMethodMatcherPointcut;
 
 import ch.iserver.ace.threaddomain.ExceptionHandler;
 import ch.iserver.ace.threaddomain.ThreadDomainWrapper;
 
 public class DefaultThreadDomainWrapper implements ThreadDomainWrapper {
 	
-	boolean synchronous;
+	private boolean synchronous;
 	
-	boolean swapEnabled;
+	private boolean swapEnabled;
+	
+	private boolean ignoreNonVoidMethods;
 	
 	private final InterceptorFactory interceptorFactory;
 	
@@ -57,6 +64,10 @@ public class DefaultThreadDomainWrapper implements ThreadDomainWrapper {
 		return swapEnabled;
 	}
 	
+	public void setIgnoreNonVoidMethods(boolean ignore) {
+		this.ignoreNonVoidMethods = ignore;
+	}
+	
 	public void setExceptionHandler(ExceptionHandler exceptionHandler) {
 		this.exceptionHandler = exceptionHandler;
 	}
@@ -66,11 +77,23 @@ public class DefaultThreadDomainWrapper implements ThreadDomainWrapper {
 		factory.addInterface(clazz);
 		factory.setTarget(target);
 		MethodInterceptor guard = interceptorFactory.createInterceptor(isSynchronous(), exceptionHandler);
-		factory.addAdvice(guard);
+		Pointcut pointcut;
+		if (ignoreNonVoidMethods) {
+			pointcut = new NonVoidMethodPointcut();
+		} else {
+			pointcut = new TruePointcut();
+		}
+		factory.addAdvisor(new DefaultPointcutAdvisor(pointcut, guard));
 		if (isSwapEnabled()) {
-			factory.addAdvice(new SwapInterceptor());
+			factory.addAdvisor(new DefaultPointcutAdvisor(pointcut, new SwapInterceptor()));
 		}
 		return factory.getProxy();
+	}
+	
+	private static class TruePointcut extends StaticMethodMatcherPointcut {
+		public boolean matches(Method method, Class targetClass) {
+			return true;
+		}
 	}
 	
 }
