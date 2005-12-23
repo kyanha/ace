@@ -19,40 +19,43 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.threaddomain;
+package ch.iserver.ace.threaddomain.internal;
 
 import java.util.concurrent.BlockingQueue;
 
 import org.aopalliance.intercept.MethodInterceptor;
-import org.aopalliance.intercept.MethodInvocation;
 
 /**
  *
  */
-public class AsyncInterceptor implements MethodInterceptor {
+public class WorkerInfo implements InterceptorFactory {
 	
-	private final BlockingQueue<Invocation> queue;
+	private BlockingQueue<Invocation> syncQueue;
 	
-	private ExceptionHandler exceptionHandler;
+	private BlockingQueue<Invocation> asyncQueue;
 	
-	public AsyncInterceptor(BlockingQueue<Invocation> queue) {
-		this.queue = queue;
+	private final InvocationWorker worker;
+	
+	public WorkerInfo(InvocationWorker worker, BlockingQueue<Invocation> sync, BlockingQueue<Invocation> async) {
+		this.worker = worker;
+		this.syncQueue = sync;
+		this.asyncQueue = async;
 	}
 	
-	/**
-	 * @see org.aopalliance.intercept.MethodInterceptor#invoke(org.aopalliance.intercept.MethodInvocation)
-	 */
-	public Object invoke(final MethodInvocation invocation) throws Throwable {
-		queue.put(new Invocation() {
-			public void proceed() {
-				try {
-					invocation.proceed();
-				} catch (Throwable th) {
-					exceptionHandler.handleException(th);
-				}
-			}
-		});
-		return null;
+	public void start() {
+		worker.start();
 	}
-
+	
+	public void stop() {
+		worker.stop();
+	}
+	
+	public MethodInterceptor createInterceptor(boolean sync) {
+		if (sync) {
+			return new SyncInterceptor(syncQueue);
+		} else {
+			return new AsyncInterceptor(asyncQueue);
+		}
+	}
+	
 }

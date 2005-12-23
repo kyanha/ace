@@ -19,13 +19,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.threaddomain;
+package ch.iserver.ace.threaddomain.internal;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.SynchronousQueue;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
+
+import ch.iserver.ace.threaddomain.ExceptionHandler;
 
 /**
  * @author sir

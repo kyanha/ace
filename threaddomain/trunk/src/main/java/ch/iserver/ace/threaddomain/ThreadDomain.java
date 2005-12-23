@@ -26,6 +26,10 @@ package ch.iserver.ace.threaddomain;
  */
 public interface ThreadDomain {
 	
+	String getName();
+	
+	void setName(String name);
+	
 	ThreadDomainWrapper createWrapper();
 	
 	void dispose();

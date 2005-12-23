@@ -19,12 +19,42 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.threaddomain;
+package ch.iserver.ace.threaddomain.internal;
+
+import java.util.concurrent.BlockingQueue;
 
 import org.aopalliance.intercept.MethodInterceptor;
+import org.aopalliance.intercept.MethodInvocation;
 
-public interface InterceptorFactory {
+import ch.iserver.ace.threaddomain.ExceptionHandler;
+
+/**
+ *
+ */
+public class AsyncInterceptor implements MethodInterceptor {
 	
-	MethodInterceptor createInterceptor(boolean sync);
+	private final BlockingQueue<Invocation> queue;
 	
+	private ExceptionHandler exceptionHandler;
+	
+	public AsyncInterceptor(BlockingQueue<Invocation> queue) {
+		this.queue = queue;
+	}
+	
+	/**
+	 * @see org.aopalliance.intercept.MethodInterceptor#invoke(org.aopalliance.intercept.MethodInvocation)
+	 */
+	public Object invoke(final MethodInvocation invocation) throws Throwable {
+		queue.put(new Invocation() {
+			public void proceed() {
+				try {
+					invocation.proceed();
+				} catch (Throwable th) {
+					exceptionHandler.handleException(th);
+				}
+			}
+		});
+		return null;
+	}
+
 }

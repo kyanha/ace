@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.threaddomain;
+package ch.iserver.ace.threaddomain.internal;
 
 import java.util.List;
 import java.util.concurrent.BlockingQueue;

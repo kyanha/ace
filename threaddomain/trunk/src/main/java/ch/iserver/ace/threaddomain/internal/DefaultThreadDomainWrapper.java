@@ -19,14 +19,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.threaddomain;
+package ch.iserver.ace.threaddomain.internal;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.springframework.aop.framework.ProxyFactory;
 
-import ch.iserver.ace.threaddomain.internal.SwapInterceptor;
+import ch.iserver.ace.threaddomain.ThreadDomainWrapper;
 
-class DefaultThreadDomainWrapper implements ThreadDomainWrapper {
+public class DefaultThreadDomainWrapper implements ThreadDomainWrapper {
 	
 	boolean synchronous;
 	

@@ -33,27 +33,31 @@ import ch.iserver.ace.threaddomain.internal.InvocationWorker;
 import ch.iserver.ace.threaddomain.internal.WorkerInfo;
 
 /**
+ * @author sir
  *
  */
-public class SingleThreadDomain implements ThreadDomain {
-	
+public class BoundedThreadDomain implements ThreadDomain {
+
 	private String name = "";
 	
 	private boolean disposed;
 	
-	private WorkerInfo worker;
+	private final int max;
 	
-	private BlockingQueue<Invocation> syncQueue = new SynchronousQueue<Invocation>();
+	private final WorkerInfo[] workers;
+
+	private int position;
 	
-	private BlockingQueue<Invocation> asyncQueue;
+	private static final int MAX_QUEUE_SIZE = 20;
 	
-	private List<BlockingQueue<Invocation>> queues;
+	public BoundedThreadDomain(int max) {
+		this.max = max;
+		this.position = 0;
+		this.workers = new WorkerInfo[max];
+	}
 	
-	public SingleThreadDomain(int queueSize) {
-		 asyncQueue = new ArrayBlockingQueue<Invocation>(queueSize);
-		 queues = new LinkedList<BlockingQueue<Invocation>>();
-		 queues.add(syncQueue);
-		 queues.add(asyncQueue);
+	public int getMaxQueueSize() {
+		return MAX_QUEUE_SIZE;
 	}
 	
 	/**
@@ -62,22 +66,14 @@ public class SingleThreadDomain implements ThreadDomain {
 	public String getName() {
 		return name;
 	}
-	
+
 	/**
 	 * @see ch.iserver.ace.threaddomain.ThreadDomain#setName(java.lang.String)
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	/**
-	 * @see ch.iserver.ace.threaddomain.ThreadDomain#dispose()
-	 */
-	public synchronized void dispose() {
-		worker.stop();
-		disposed = true;
-	}
-	
+
 	/**
 	 * @see ch.iserver.ace.threaddomain.ThreadDomain#createWrapper()
 	 */
@@ -85,11 +81,31 @@ public class SingleThreadDomain implements ThreadDomain {
 		if (disposed) {
 			throw new IllegalStateException("ThreadDomain is disposed");
 		}
-		if (worker == null) {
-			worker = new WorkerInfo(new InvocationWorker(queues), syncQueue, asyncQueue);
-			worker.start();
+		int current = position;
+		if (workers[current] == null) {
+			BlockingQueue<Invocation> sync = new SynchronousQueue<Invocation>();
+			BlockingQueue<Invocation> async = new ArrayBlockingQueue<Invocation>(getMaxQueueSize());
+			List<BlockingQueue<Invocation>> queues = new LinkedList<BlockingQueue<Invocation>>();
+			queues.add(sync);
+			queues.add(async);
+			InvocationWorker worker = new InvocationWorker(queues);
+			workers[current] = new WorkerInfo(worker, sync, async);
+			workers[current].start();
 		}
-		return new DefaultThreadDomainWrapper(worker);
+		this.position = (current + 1) % max;
+		return new DefaultThreadDomainWrapper(workers[current]);
+	}
+
+	/**
+	 * @see ch.iserver.ace.threaddomain.ThreadDomain#dispose()
+	 */
+	public synchronized void dispose() {
+		disposed = true;
+		for (WorkerInfo info : workers) {
+			if (info != null) {
+				info.stop();
+			}
+		}
 	}
 
 }
