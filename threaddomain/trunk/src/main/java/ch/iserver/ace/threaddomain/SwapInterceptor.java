@@ -1,8 +1,8 @@
 /*
  * $Id$
  *
- * ace - a collaborative editor
- * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
+ * threaddomain
+ * Copyright (C) 2005 Simon Raess
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,20 +21,34 @@
 
 package ch.iserver.ace.threaddomain;
 
-import java.lang.reflect.Method;
-
-import org.springframework.aop.support.StaticMethodMatcherPointcut;
+import org.aopalliance.intercept.MethodInterceptor;
+import org.aopalliance.intercept.MethodInvocation;
 
 /**
  *
  */
-public class VoidMethodMatcherPointcut extends StaticMethodMatcherPointcut {
-
+public class SwapInterceptor implements MethodInterceptor {
+	
+	private boolean swapped;
+	
+	public boolean isSwapped() {
+		return swapped;
+	}
+	
 	/**
-	 * @see org.springframework.aop.MethodMatcher#matches(java.lang.reflect.Method, java.lang.Class)
+	 * @see org.aopalliance.intercept.MethodInterceptor#invoke(org.aopalliance.intercept.MethodInvocation)
 	 */
-	public boolean matches(Method method, Class clazz) {
-		return method.getReturnType().equals(Void.TYPE);
+	public synchronized Object invoke(MethodInvocation invocation) throws Throwable {
+		if (isSwapped()) {
+			return null;
+		} else {
+			try {
+				return invocation.proceed();
+			} catch (Throwable th) {
+				swapped = true;
+				throw th;
+			}
+		}
 	}
 
 }

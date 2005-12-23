@@ -1,8 +1,8 @@
 /*
  * $Id$
  *
- * ace - a collaborative editor
- * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
+ * threaddomain
+ * Copyright (C) 2005 Simon Raess
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,19 +21,13 @@
 
 package ch.iserver.ace.threaddomain;
 
+import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
+
 /**
- * Exception handler for AsyncWorker. As an asynchronous execution happens
- * on another thread than the callers, it is impossible to throw an
- * exception back at the caller. The AsyncExceptionHandler is used in
- * these cases to handle failing executions.
+ *
  */
-public interface AsyncExceptionHandler {
+public interface BlockingQueueFactory {
 	
-	/**
-	 * Handles an AsyncExecutionException.
-	 * 
-	 * @param e the exception
-	 */
-	void handleException(AsyncExecutionException e);
+	BlockingQueue createQueue();
 	
 }

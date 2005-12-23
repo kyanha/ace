@@ -1,8 +1,8 @@
 /*
  * $Id$
  *
- * ace - a collaborative editor
- * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
+ * threaddomain
+ * Copyright (C) 2005 Simon Raess
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,30 +21,29 @@
 
 package ch.iserver.ace.threaddomain;
 
-import org.aopalliance.aop.Advice;
-import org.springframework.aop.framework.ProxyFactoryBean;
+import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
 
 /**
+ * @author sir
  *
  */
-public final class AopUtil {
+public class InvocationWorker implements Runnable {
 	
-	private AopUtil() {
-		// nothing to do
+	private final BlockingQueue queue;
+	
+	public InvocationWorker(BlockingQueue queue) {
+		this.queue = queue;
 	}
 	
-	public static Object wrap(Object target, Class clazz, Advice advice) {
-		return wrap(target, clazz, new Advice[] { advice });
-	}
-	
-	public static Object wrap(Object target, Class clazz, Advice[] advices) {
-		ProxyFactoryBean factory = new ProxyFactoryBean();
-		factory.addInterface(clazz);
-		for (int i = 0; i < advices.length; i++) {
-			factory.addAdvice(advices[i]);
+	public void run() {
+		while (true) {
+			try {
+				ThreadDomainInvocation invocation = (ThreadDomainInvocation) queue.take();
+				invocation.proceed();
+			} catch (InterruptedException e) {
+				// TODO: ???
+			}
 		}
-		factory.setTarget(target);
-		return factory.getObject();
 	}
 	
 }

@@ -1,8 +1,8 @@
 /*
  * $Id$
  *
- * ace - a collaborative editor
- * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
+ * threaddomain
+ * Copyright (C) 2005 Simon Raess
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,45 +21,31 @@
 
 package ch.iserver.ace.threaddomain;
 
-import org.apache.log4j.Logger;
+import org.aopalliance.intercept.MethodInvocation;
 
 /**
  *
  */
-public abstract class Worker extends Thread {
+public class ThreadDomainInvocation {
+
+	private MethodInvocation invocation;
 	
-	private static final Logger LOG = Logger.getLogger(Worker.class);
+	private Object result;
 	
-	private boolean stop;
-	
-	protected Worker(String name) {
-		super(name);
+	public ThreadDomainInvocation(MethodInvocation invocation) {
+		this.invocation = invocation;
 	}
 	
-	public void kill() {
-		stop = true;
-		interrupt();
+	public Object getResult() {
+		return result;
 	}
-		
-	public void run() {
-		LOG.info(getName() + " started");
+	
+	public void proceed() {
 		try {
-			while (!stop) {
-				try {
-					doWork();
-				} catch (InterruptedException e) {
-					throw e;
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		} catch (InterruptedException e) {
-			LOG.info("worker " + getName() + " has been interrupted");
-		} finally {
-			LOG.info(getName() + " terminated");
+			result = invocation.proceed();
+		} catch (Throwable th) {
+			// TODO: ???
 		}
 	}
-	
-	protected abstract void doWork() throws InterruptedException;
 	
 }

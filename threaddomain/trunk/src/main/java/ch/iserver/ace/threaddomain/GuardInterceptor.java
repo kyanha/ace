@@ -1,8 +1,8 @@
 /*
  * $Id$
  *
- * ace - a collaborative editor
- * Copyright (C) 2005 Mark Bigler, Simon Raess, Lukas Zbinden
+ * threaddomain
+ * Copyright (C) 2005 Simon Raess
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -24,43 +24,26 @@ package ch.iserver.ace.threaddomain;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 
-/**
- * An interceptor that allows the target object to be closed. Calling
- * a closed object results in an IllegalStateException beeing thrown.
- */
-public class CloseableAdvice implements MethodInterceptor {
+import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
 
-	/**
-	 * The closed flag of this object.
-	 */
-	private boolean closed;
+/**
+ *
+ */
+public class GuardInterceptor implements MethodInterceptor {
 	
-	/**
-	 * Determines whether this object is closed.
-	 * 
-	 * @return true iff the object is closed
-	 */
-	public boolean isClosed() {
-		return closed;
-	}
+	private final BlockingQueue queue;
 	
-	/**
-	 * Closes this object. Calling further methods result in an
-	 * {@link IllegalStateException} beeing thrown.
-	 */
-	public synchronized void close() {
-		closed = true;
+	public GuardInterceptor(BlockingQueue queue) {
+		this.queue = queue;
 	}
 	
 	/**
 	 * @see org.aopalliance.intercept.MethodInterceptor#invoke(org.aopalliance.intercept.MethodInvocation)
 	 */
-	public synchronized Object invoke(MethodInvocation invocation) throws Throwable {
-		if (isClosed()) {
-			throw new IllegalStateException("cannot access closed object");
-		} else {
-			return invocation.proceed();
-		}
+	public Object invoke(MethodInvocation invocation) throws Throwable {
+		ThreadDomainInvocation tdi = new ThreadDomainInvocation(invocation);
+		queue.add(tdi);
+		return tdi.getResult();
 	}
 
 }
