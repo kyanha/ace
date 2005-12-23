@@ -21,47 +21,13 @@
 
 package ch.iserver.ace.threaddomain;
 
-import java.util.List;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.TimeUnit;
-
 /**
  *
  */
-public class InvocationWorker implements Runnable {
+public interface ThreadDomain {
 	
-	private final List<BlockingQueue<Invocation>> queues;
+	ThreadDomainWrapper createWrapper();
 	
-	private boolean running;
-	
-	public InvocationWorker(List<BlockingQueue<Invocation>> queues) {
-		this.queues = queues;
-	}
-	
-	public void start() {
-		running = true;
-		new Thread(this).start();
-	}
-	
-	public void stop() {
-		running = false;
-	}
-	
-	public void run() {
-		System.out.println("running worker ...");
-		try {
-		while (running) {
-			for (BlockingQueue<Invocation> queue : queues) {
-				Invocation invocation = (Invocation) queue.poll(1, TimeUnit.MICROSECONDS);
-				if (invocation != null) {
-					invocation.proceed();
-				}
-			}
-			Thread.yield();
-		}
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
+	void dispose();
 	
 }

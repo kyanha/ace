@@ -19,15 +19,36 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.threaddomain;
+package ch.iserver.ace.threaddomain.internal;
 
-import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
+import org.aopalliance.intercept.MethodInterceptor;
+import org.aopalliance.intercept.MethodInvocation;
 
 /**
  *
  */
-public interface BlockingQueueFactory {
+public class SwapInterceptor implements MethodInterceptor {
 	
-	BlockingQueue createQueue();
+	private boolean swapped;
 	
+	public boolean isSwapped() {
+		return swapped;
+	}
+	
+	/**
+	 * @see org.aopalliance.intercept.MethodInterceptor#invoke(org.aopalliance.intercept.MethodInvocation)
+	 */
+	public synchronized Object invoke(MethodInvocation invocation) throws Throwable {
+		if (isSwapped()) {
+			return null;
+		} else {
+			try {
+				return invocation.proceed();
+			} catch (Throwable th) {
+				swapped = true;
+				throw th;
+			}
+		}
+	}
+
 }

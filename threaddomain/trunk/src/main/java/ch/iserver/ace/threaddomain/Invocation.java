@@ -21,31 +21,12 @@
 
 package ch.iserver.ace.threaddomain;
 
-import org.aopalliance.intercept.MethodInvocation;
 
 /**
  *
  */
-public class ThreadDomainInvocation {
-
-	private MethodInvocation invocation;
+public interface Invocation {
 	
-	private Object result;
-	
-	public ThreadDomainInvocation(MethodInvocation invocation) {
-		this.invocation = invocation;
-	}
-	
-	public Object getResult() {
-		return result;
-	}
-	
-	public void proceed() {
-		try {
-			result = invocation.proceed();
-		} catch (Throwable th) {
-			// TODO: ???
-		}
-	}
+	void proceed() throws InterruptedException;
 	
 }

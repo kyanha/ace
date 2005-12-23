@@ -21,29 +21,42 @@
 
 package ch.iserver.ace.threaddomain;
 
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.SynchronousQueue;
+
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 
-import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
-
 /**
+ * @author sir
  *
  */
-public class GuardInterceptor implements MethodInterceptor {
+public class SyncInterceptor implements MethodInterceptor {
+
+	private BlockingQueue<Invocation> queue;
 	
-	private final BlockingQueue queue;
+	private ExceptionHandler exceptionHandler;
 	
-	public GuardInterceptor(BlockingQueue queue) {
+	public SyncInterceptor(BlockingQueue<Invocation> queue) {
 		this.queue = queue;
 	}
 	
 	/**
 	 * @see org.aopalliance.intercept.MethodInterceptor#invoke(org.aopalliance.intercept.MethodInvocation)
 	 */
-	public Object invoke(MethodInvocation invocation) throws Throwable {
-		ThreadDomainInvocation tdi = new ThreadDomainInvocation(invocation);
-		queue.add(tdi);
-		return tdi.getResult();
+	public Object invoke(final MethodInvocation invocation) throws Throwable {
+		final BlockingQueue<Object> resultQueue = new SynchronousQueue<Object>(); 
+		queue.put(new Invocation() {
+			public void proceed() throws InterruptedException {
+				try {
+					resultQueue.put(invocation.proceed());
+				} catch (Throwable th) {
+					exceptionHandler.handleException(th);
+					resultQueue.put(null);
+				}
+			}
+		});
+		return resultQueue.take();
 	}
 
 }

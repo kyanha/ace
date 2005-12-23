@@ -21,47 +21,13 @@
 
 package ch.iserver.ace.threaddomain;
 
-import java.util.List;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.TimeUnit;
+import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
 
 /**
  *
  */
-public class InvocationWorker implements Runnable {
+public interface QueueFactory {
 	
-	private final List<BlockingQueue<Invocation>> queues;
-	
-	private boolean running;
-	
-	public InvocationWorker(List<BlockingQueue<Invocation>> queues) {
-		this.queues = queues;
-	}
-	
-	public void start() {
-		running = true;
-		new Thread(this).start();
-	}
-	
-	public void stop() {
-		running = false;
-	}
-	
-	public void run() {
-		System.out.println("running worker ...");
-		try {
-		while (running) {
-			for (BlockingQueue<Invocation> queue : queues) {
-				Invocation invocation = (Invocation) queue.poll(1, TimeUnit.MICROSECONDS);
-				if (invocation != null) {
-					invocation.proceed();
-				}
-			}
-			Thread.yield();
-		}
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
+	BlockingQueue createQueue();
 	
 }

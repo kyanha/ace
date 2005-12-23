@@ -21,34 +21,38 @@
 
 package ch.iserver.ace.threaddomain;
 
+import java.util.concurrent.BlockingQueue;
+
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 
 /**
  *
  */
-public class SwapInterceptor implements MethodInterceptor {
+public class AsyncInterceptor implements MethodInterceptor {
 	
-	private boolean swapped;
+	private final BlockingQueue<Invocation> queue;
 	
-	public boolean isSwapped() {
-		return swapped;
+	private ExceptionHandler exceptionHandler;
+	
+	public AsyncInterceptor(BlockingQueue<Invocation> queue) {
+		this.queue = queue;
 	}
 	
 	/**
 	 * @see org.aopalliance.intercept.MethodInterceptor#invoke(org.aopalliance.intercept.MethodInvocation)
 	 */
-	public synchronized Object invoke(MethodInvocation invocation) throws Throwable {
-		if (isSwapped()) {
-			return null;
-		} else {
-			try {
-				return invocation.proceed();
-			} catch (Throwable th) {
-				swapped = true;
-				throw th;
+	public Object invoke(final MethodInvocation invocation) throws Throwable {
+		queue.put(new Invocation() {
+			public void proceed() {
+				try {
+					invocation.proceed();
+				} catch (Throwable th) {
+					exceptionHandler.handleException(th);
+				}
 			}
-		}
+		});
+		return null;
 	}
 
 }
