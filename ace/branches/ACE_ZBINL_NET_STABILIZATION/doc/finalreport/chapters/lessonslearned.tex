@@ -1,0 +1,72 @@
+\chapter{Lessons Learned}
+\label{chapter:lessonslearned}
+
+
+
+\section{General}
+When we decided which technology to use to implement the network layer, we did
+not have a advanced prototype based on the chosen technology. \emph{Bonjour}
+itself proved to be a good choice since many companies use it for printer discovery, however the \emph{Beepcore} Java library had some bugs that caused serious problems in the implementation. We could have avoided that situation by implementing a prototype that would have used
+the framework in a similar manner as ACE. Thus, we learned that it is always a good idea to make some thorough tests before using a framework in a project.
+
+
+
+\section{Mark Bigler}
+First of all, it was a great time with a really cool and efficient team. I have got to know new frameworks like \textit{GlazedLists} and \textit{Springframework} which are very usefull for GUI programming. Writing all documents in English took some additional time but was a good practise to improve my english skills which are a bit more fluent now.
+
+Too bad, we did not have twice as much time to realize even more features to make ACE a more powerful tool.
+\subsection{Positive Points}
+\begin{itemize}
+\item great time and experience
+\item new frameworks useful for GUI programming
+\end{itemize}
+
+\subsection{Negative Points}
+\begin{itemize}
+\item not enough time to make a "ready for sale" application.
+\end{itemize}
+
+
+
+\section{Simon Raess}
+The whole project ACE was a great success. We started from basically knowing
+nothing about the topic to a working application. Although there are still
+some open issues, we achieved the goals set at the beginning. 
+
+When I look back I see one thing we should have done from the beginning:
+writing a simulated implementation of the network layer. This would have
+simplified testing of the two upper layers greatly. Testing network code is inherently non-deterministic. With the clear layering of the application 
+we could have easily written an alternative (simulated) implementation of
+the network layer to simplify testing inside a sandbox-like environment (i.e.
+without access to the real network).
+
+\subsection{Positive Points}
+\begin{itemize}
+ \item we achieved all mandatory and some optional goals we defined at the beginning of the diploma project in the amount of time we had
+ \item through a clear separation of the layers we could work efficiently and independently
+\end{itemize}
+
+\subsection{Negative Points}
+\begin{itemize}
+ \item we did not implement a network simulator, which would have simplified testing greatly
+ \item we did not investigate the used network technologies thoroughly enough
+\end{itemize}
+
+
+
+\section{Lukas Zbinden}
+In retrospect, the whole project was a great experience. The complete freedom how to develop such an extended system was highly appreciated. The layering of the application allowed more or less independent working from the other team members and this proved very useful. Even though problems arose with the test runnings of the application where the network implementation was not as far as the GUI implementation and thus errors occured in the network layer. So concentrated development work was sometimes disturbed. We should have decoupled the layers completely not only for the development (which we actually did through the usage of interfaces) but also for the complete testing process (e.g. by use of a network simulator). 
+
+\subsection{Positive Points}
+\begin{itemize}
+\item great experience and very interesting stuff
+\item planned goals were achieved
+\item once more programming against clearly defined interfaces to decouple components proved successful
+\end{itemize}
+
+\subsection{Negative Points}
+\begin{itemize}
+\item testing of the application: the network layer was not approved to be used for testing but nevertheless was used due to the close coupling at runtime. This ended up in unnecessary error discussions which mostly only consumed time.
+\item we used a library which turned out to have weaknesses and that resulted in unexepected time consuming workarounds. Learned lesson: be more careful when choosing libraries with a low development version.
+\end{itemize}
+
