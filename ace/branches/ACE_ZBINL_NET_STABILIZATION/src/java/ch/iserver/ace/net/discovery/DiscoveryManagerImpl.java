@@ -308,12 +308,12 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 			LOG.warn("Host address received for unknown user ["+serviceName+"]");
 		}
 	}
-	
-	/**
-	 * @see ch.iserver.ace.net.discovery.DiscoveryCallbackAdapter#isServiceKnown(java.lang.String)
-	 */
-	public boolean isServiceKnown(String serviceName) {
-		return services.containsKey(serviceName);
-	}
+//	
+//	/**
+//	 * @see ch.iserver.ace.net.discovery.DiscoveryCallbackAdapter#isServiceKnown(java.lang.String)
+//	 */
+//	public boolean isServiceKnown(String serviceName) {
+//		return services.containsKey(serviceName);
+//	}
 
 }
