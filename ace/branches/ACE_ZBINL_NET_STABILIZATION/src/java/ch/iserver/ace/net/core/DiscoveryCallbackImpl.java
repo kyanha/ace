@@ -137,7 +137,7 @@ public class DiscoveryCallbackImpl implements DiscoveryCallback {
 				callback.documentDiscarded(docs);
 			}
 		}
-		LOG.debug("--> notifiy upper layer about user");
+		LOG.debug("--> notify upper layer about discarded user");
 		callback.userDiscarded(proxy);
 		LOG.debug("<-- ok.");
 		

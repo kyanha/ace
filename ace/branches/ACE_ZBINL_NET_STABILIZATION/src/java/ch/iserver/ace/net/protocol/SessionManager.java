@@ -146,6 +146,7 @@ public class SessionManager {
 		RemoteUserSession session = (RemoteUserSession) sessions.get(id);
 		if (session == null) 
 			LOG.warn("session for ["+id+"] not found");
+		LOG.debug("[" + session.getUser().getUserDetails().getUsername() + "]");
 		return session; 
 	}
 	
