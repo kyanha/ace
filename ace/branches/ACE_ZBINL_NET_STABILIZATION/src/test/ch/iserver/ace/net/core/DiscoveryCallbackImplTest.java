@@ -11,6 +11,7 @@ import ch.iserver.ace.net.discovery.DiscoveryManagerFactory;
 import ch.iserver.ace.net.protocol.SessionManager;
 import ch.iserver.ace.net.protocol.filter.LogFilter;
 import ch.iserver.ace.net.protocol.filter.RequestFilter;
+import ch.iserver.ace.util.SingleThreadDomain;
 
 public class DiscoveryCallbackImplTest extends TestCase {
 	
@@ -22,7 +23,7 @@ public class DiscoveryCallbackImplTest extends TestCase {
 		
 		RequestFilter filter = new LogFilter(null ,false);
 		DiscoveryCallbackImpl discoveryCallback = new DiscoveryCallbackImpl(callback, service, filter);
-		DiscoveryManagerFactory.init(discoveryCallback);
+		DiscoveryManagerFactory.init(discoveryCallback, new SingleThreadDomain());
 		DiscoveryManagerFactory.getDiscoveryManager();
 		RemoteUserProxyExt proxy = RemoteUserProxyFactory.getInstance().createProxy("testid", new MutableUserDetails("testuser", InetAddress.getLocalHost(), 4123));
 		SessionManager.getInstance().createSession(proxy);
