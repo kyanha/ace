@@ -33,7 +33,7 @@ import com.apple.dnssd.DNSSDService;
  * {@link ch.iserver.ace.net.discovery.DiscoveryCallbackAdapter#userAddressResolved(String, InetAddress)}.
  * Since no user specific information (except the IP address, but it is not imperatively unique) is delivered 
  * in the event, the IP address must be matched with the corresponding user by a call to 
- * {@link ch.iserver.ace.net.discovery.AbstractQueryListener#getNextService()} that returns the correct service
+ * {@link ch.iserver.ace.net.discovery.AbstractQueryListener#getNextService(String)} that returns the correct service
  * name and user name, respectively. 
  * 
  * <p> All IP address resolve results are forwarded to the 
@@ -64,8 +64,8 @@ public class IPQueryListener extends AbstractQueryListener {
 		} catch (Exception e) {
 			LOG.error("Could not resolve address ["+e.getMessage()+"]");
 		}
-		String serviceName = getNextService();
-		LOG.info("userAddressResolved("+serviceName+", "+address);
+		String serviceName = getNextService(query.toString());
+		LOG.info("userAddressResolved("+serviceName+", "+address+")");
 		adapter.userAddressResolved(serviceName, address);
 		query.stop();
 	}
