@@ -302,7 +302,8 @@ public class RemoteUserSession {
 	 * @return	the created ParticipantConnectionImpl
 	 */
 	public ParticipantConnectionImpl addParticipantConnection(String docId) {
-		LOG.debug("--> createParticipantConnection() for doc ["+docId+"]");
+		LOG.debug("--> createParticipantConnection() for doc ["+docId+"] to [" + 
+				getUser().getUserDetails().getUsername() + "]");
 		assert !participantConnections.containsKey(docId);
 		ParticipantConnectionImpl connection = ParticipantConnectionImplFactory.getInstance().
 						createConnection(docId, this,	ResponseListener.getInstance(), new CollaborationSerializer());

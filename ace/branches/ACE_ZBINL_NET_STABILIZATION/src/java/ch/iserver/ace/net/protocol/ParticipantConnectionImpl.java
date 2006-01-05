@@ -226,7 +226,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 		this.port = port;
 		//initiate collaboration channel
 		try {
-			LOG.debug("initiate incoming and outgoing channel to peer");
+			LOG.debug("initiate incoming and outgoing channel to peer "+session.getHost());
 			//channel for outgoing messages
 			Channel outgoing = session.startChannel(RemoteUserSession.CHANNEL_SESSION, null, getDocumentId());
 			setChannel(outgoing);
