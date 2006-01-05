@@ -33,7 +33,7 @@ import ch.iserver.ace.net.core.DiscoveryCallback;
  * <p>Note: The implementation of this interface is responsible for proper
  * synchronization.</p>
  */
-interface DiscoveryCallbackAdapter {
+public interface DiscoveryCallbackAdapter {
 
 	/**
 	 * Sets the discovery callback for this adapter. All events
