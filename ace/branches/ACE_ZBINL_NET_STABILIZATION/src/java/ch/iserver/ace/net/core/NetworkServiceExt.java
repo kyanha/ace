@@ -24,6 +24,7 @@ package ch.iserver.ace.net.core;
 import ch.iserver.ace.ServerInfo;
 import ch.iserver.ace.algorithm.TimestampFactory;
 import ch.iserver.ace.net.NetworkService;
+import ch.iserver.ace.util.ThreadDomain;
 
 /**
  * This interface extends interface {@link ch.iserver.ace.net.NetworkService}
@@ -80,4 +81,12 @@ public interface NetworkServiceExt extends NetworkService {
 	 * @return true iff the network layer is stopped
 	 */
 	public boolean isStopped();
+	
+	/**
+	 * Returns the main thread domain to be used by the discovery
+	 * component as well as the main request handler.
+	 * 
+	 * @return the ThreadDomain to be used
+	 */
+	public ThreadDomain getMainThreadDomain();
 }
