@@ -72,7 +72,7 @@ public class DiscoveryLauncher extends Thread {
 		LOG.info("--> run()");
 		DiscoveryFactory factory = DiscoveryFactory.getInstance();
 		DiscoveryCallback discCallback = new DiscoveryCallbackImpl(service.getCallback(), service, filter);
-		Discovery discovery = factory.createDiscovery(discCallback);
+		Discovery discovery = factory.createDiscovery(discCallback, service.getMainThreadDomain());
 		discovery.setUserId(service.getUserId());
 		UserDetails details = service.getUserDetails();
 		if (details != null)
