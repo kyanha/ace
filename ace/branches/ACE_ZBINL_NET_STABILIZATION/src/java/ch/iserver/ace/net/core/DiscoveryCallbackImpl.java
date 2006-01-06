@@ -134,12 +134,14 @@ public class DiscoveryCallbackImpl implements DiscoveryCallback {
 				docs = (RemoteDocumentProxy[]) documents.values().toArray(new RemoteDocumentProxy[0]);
 			}
 			if (docs != null && docs.length > 0) {
+				LOG.debug("--> callback.documentDiscarded(" + docs.length + ")");
 				callback.documentDiscarded(docs);
+				LOG.debug("<-- callback.documentDiscarded()");
 			}
 		}
-		LOG.debug("--> notify upper layer about discarded user");
+		LOG.debug("--> callback.userDiscarded()");
 		callback.userDiscarded(proxy);
-		LOG.debug("<-- ok.");
+		LOG.debug("<-- callback.userDiscarded()");
 		
 		DiscoveryManager manager = DiscoveryManagerFactory.getDiscoveryManager();
 		String userId = proxy.getId();
