@@ -24,6 +24,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
 
 import org.apache.log4j.Logger;
+import org.beepcore.beep.core.BEEPInterruptedException;
 import org.beepcore.beep.core.Channel;
 import org.beepcore.beep.core.OutputDataStream;
 import org.beepcore.beep.core.ReplyListener;
@@ -78,6 +79,7 @@ public abstract class AbstractConnection {
 	 */
 	private int state = -1;
 	
+	private Thread sendingThread;
 	
 	/**
 	 * Constructor.
@@ -99,6 +101,7 @@ public abstract class AbstractConnection {
 	public synchronized void send(byte[] message, Object data, ReplyListener listener) throws ProtocolException {
 		try {
 			if (getState() == STATE_ACTIVE) {
+				sendingThread = Thread.currentThread();
 				OutputDataStream output = DataStreamHelper.prepare(message);
 				//AppData is kept in-process only
 				if (data != null)
@@ -109,18 +112,29 @@ public abstract class AbstractConnection {
 //				channel.sendMSG(output, actualListener);
 				Reply reply = new Reply();
 				channel.sendMSG(output, reply);
+				LOG.debug("<-- sendMSG(); --> getNextReply()");
 				reply.getNextReply(); //wait for synchronous response
+				LOG.debug("<-- getNextReply()");
+				sendingThread = null;
 			} else {
 				LOG.warn("cannot send data, channel not in STATE_ACTIVE but in ["+getStateString()+"]");
 			}
+		} catch (BEEPInterruptedException bie) { 
+			LOG.debug("caught BEEPInterrupedException, abort connection.");
+			state = STATE_ABORTED;
 		} catch (Exception e) {
 			state = STATE_ABORTED;
 			String trace = getStackTrace(e);
 			LOG.debug("caught exception [" + e + ", " + trace + "]");
 			throw new ProtocolException(e.getMessage());
-		} finally {
-			LOG.debug("<-- sendMSG()");
-		}
+		} 
+//		finally {
+//			LOG.debug("<-- sendMSG()");
+//		}
+	}
+	
+	public Thread getSendingThread() {
+		return sendingThread;
 	}
 	
 	/**

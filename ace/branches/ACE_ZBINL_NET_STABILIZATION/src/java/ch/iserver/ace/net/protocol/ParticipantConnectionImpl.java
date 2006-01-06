@@ -181,18 +181,26 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 		session = null;
 		serializer = null;
 		port = null;
+		incoming = null;
+		
 		setReplyListener(null);
-		Channel channel = getChannel();
-		if (channel != null) {
-			//TODO: cannot cast anymore because of SingleThreadDomain
-			//((ParticipantRequestHandler)channel.getRequestHandler()).cleanup();
-			channel.setRequestHandler(null);
+//		Channel channel = getChannel();
+//		if (channel != null) {
+//			//TODO: cannot cast anymore because of SingleThreadDomain
+//			//((ParticipantRequestHandler)channel.getRequestHandler()).cleanup();
+//			channel.setRequestHandler(null);
+//		}
+		Thread t = getSendingThread();
+		if (t != null) {
+			LOG.debug("interrupt sending thread [" + t.getName() + "]");
+			t.interrupt();
 		}
+		//should be enough to set the channel = null, therefore the channel's 
+		//request handler must not be nulified (as above).
 		setChannel(null);
-		if (incoming != null) {
-			incoming.setRequestHandler(null);
-			incoming = null;
-		}
+//		if (incoming != null) {
+//			incoming.setRequestHandler(null);
+//			incoming = null;
 //		}
 		setState(STATE_CLOSED);
 		LOG.debug("<-- cleanup()");

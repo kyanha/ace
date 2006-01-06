@@ -93,6 +93,14 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 		LOG.debug("--> cleanup()");
 		serializer = null;
 		setReplyListener(null);
+		//TODO: check if a thread is waiting in method AbstractConnection.send(),
+		//if so interrupt it, because setChannel, setState and send are synchronized -> deadlock 
+		//-> check with raess
+		Thread t = getSendingThread();
+		if (t != null) {
+			LOG.debug("interrupt sending thread [" + t.getName() + "]");
+			t.interrupt();
+		}
 		setChannel(null);
 		setState(STATE_CLOSED);
 		LOG.debug("<-- cleanup()");
@@ -148,7 +156,8 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 	 * {@inheritDoc}
 	 */
 	public void sendRequest(Request request) {
-		LOG.info("--> sendRequest("+request+")");
+		LOG.info("--> sendRequest(siteid="+request.getSiteId()+", "+ request.getTimestamp() 
+				+", "+ request.getOperation().getClass() +")");
 		if (getState() == STATE_ACTIVE) {
 			byte[] data = null;
 			try {
