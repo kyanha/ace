@@ -139,14 +139,16 @@ public class SessionManager {
 	 * Gets the session for the user.
 	 * 
 	 * @param id the user id
-	 * @return the session of the user
+	 * @return the session of the user or null if not found
 	 */
 	public RemoteUserSession getSession(String id) {
 		LOG.debug("getSession for [" + id + "]");
 		RemoteUserSession session = (RemoteUserSession) sessions.get(id);
-		if (session == null) 
+		if (session == null) {
 			LOG.warn("session for ["+id+"] not found");
-		LOG.debug("[" + session.getUser().getUserDetails().getUsername() + "]");
+		} else {
+			LOG.debug("[" + session.getUser().getUserDetails().getUsername() + "]");
+		}
 		return session; 
 	}
 	
