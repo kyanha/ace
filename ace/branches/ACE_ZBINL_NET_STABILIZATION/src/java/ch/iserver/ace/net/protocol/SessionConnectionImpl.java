@@ -93,6 +93,10 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 		LOG.debug("--> cleanup()");
 		serializer = null;
 		setReplyListener(null);
+		Channel channel = getChannel();
+		if (channel != null) {
+			channel.setRequestHandler(null);
+		}
 		//TODO: check if a thread is waiting in method AbstractConnection.send(),
 		//if so interrupt it, because setChannel, setState and send are synchronized -> deadlock 
 		//-> check with raess

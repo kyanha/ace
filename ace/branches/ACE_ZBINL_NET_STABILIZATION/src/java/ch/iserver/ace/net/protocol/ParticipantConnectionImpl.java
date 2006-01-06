@@ -181,15 +181,14 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 		session = null;
 		serializer = null;
 		port = null;
-		incoming = null;
 		
 		setReplyListener(null);
-//		Channel channel = getChannel();
-//		if (channel != null) {
-//			//TODO: cannot cast anymore because of SingleThreadDomain
-//			//((ParticipantRequestHandler)channel.getRequestHandler()).cleanup();
-//			channel.setRequestHandler(null);
-//		}
+		Channel channel = getChannel();
+		if (channel != null) {
+			//TODO: cannot cast anymore because of SingleThreadDomain
+			//((ParticipantRequestHandler)channel.getRequestHandler()).cleanup();
+			channel.setRequestHandler(null);
+		}
 		Thread t = getSendingThread();
 		if (t != null) {
 			LOG.debug("interrupt sending thread [" + t.getName() + "]");
@@ -198,10 +197,10 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 		//should be enough to set the channel = null, therefore the channel's 
 		//request handler must not be nulified (as above).
 		setChannel(null);
-//		if (incoming != null) {
-//			incoming.setRequestHandler(null);
-//			incoming = null;
-//		}
+		if (incoming != null) {
+			incoming.setRequestHandler(null);
+			incoming = null;
+		}
 		setState(STATE_CLOSED);
 		LOG.debug("<-- cleanup()");
 	}
@@ -296,7 +295,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 				LOG.debug("set outgoing channel as default channel again");
 				
 			} else {
-				LOG.warn("do not send Document, connection is in state " + getStateString());
+				LOG.warn("cannot send Document, connection is in state " + getStateString());
 			}
 			LOG.info("<-- sendDocument()");
 		} else {
@@ -318,7 +317,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 			}
 			sendToPeer(data);
 		} else {
-			LOG.warn("do not send Acknowledge, connection is in state " + getStateString());
+			LOG.warn("cannot send Acknowledge, connection is in state " + getStateString());
 		}
 		LOG.info("<-- sendRequest()");
 	}
@@ -337,7 +336,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 			}
 			sendToPeer(data);
 		} else {
-			LOG.warn("do not send CaretUpdateMessage, connection is in state " + getStateString());
+			LOG.warn("cannot send CaretUpdateMessage, connection is in state " + getStateString());
 		}
 		LOG.info("<-- sendCaretUpdateMessage()");
 	}
@@ -356,7 +355,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 			}
 			sendToPeer(data);
 		} else {
-			LOG.warn("do not send Acknowledge, connection is in state " + getStateString());
+			LOG.warn("cannot send Acknowledge, connection is in state " + getStateString());
 		}
 		LOG.info("<-- sendAcknowledge()");
 	}
@@ -375,7 +374,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 			}
 			sendToPeer(data);
 		} else {
-			LOG.warn("do not send participantJoined, connection is in state " + getStateString());
+			LOG.warn("cannot send participantJoined, connection is in state " + getStateString());
 		}
 		LOG.info("--> sendParticipantJoined()");
 	}
@@ -395,7 +394,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 			}
 			sendToPeer(data);
 		} else {
-			LOG.warn("do not send participantLeft, connection is in state " + getStateString());
+			LOG.warn("cannot send participantLeft, connection is in state " + getStateString());
 		}
 		LOG.info("--> sendParticipantLeft()");
 	}
@@ -436,7 +435,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 			}
 			executeCleanup();
 		} else {
-			LOG.warn("do not close, connection is in state " + getStateString());
+			LOG.warn("cannot close, connection is in state " + getStateString());
 		}
 		LOG.info("<-- close()");
 	}
