@@ -21,18 +21,25 @@
 
 package ch.iserver.ace.application.editor;
 
-import ch.iserver.ace.application.*;
-import ch.iserver.ace.collaboration.*;
-import ch.iserver.ace.application.action.ToggleFullScreenEditingAction;
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.text.DefaultStyledDocument;
-import javax.swing.text.StyledDocument;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.util.HashMap;
 import java.util.List;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JScrollPane;
+import javax.swing.JToolBar;
+
+import ch.iserver.ace.application.LocaleMessageSource;
+import ch.iserver.ace.application.PropertyChangeHashMap;
+import ch.iserver.ace.collaboration.Session;
+
 import com.jgoodies.uif_lite.panel.SimpleInternalFrame;
-import java.beans.*;
-import java.util.*;
 
 
 

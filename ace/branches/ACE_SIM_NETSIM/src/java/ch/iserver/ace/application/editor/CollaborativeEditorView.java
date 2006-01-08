@@ -21,12 +21,19 @@
 
 package ch.iserver.ace.application.editor;
 
-import ch.iserver.ace.application.*;
-import javax.swing.*;
-import javax.swing.text.*;
-import java.awt.*;
-import ch.iserver.ace.util.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Rectangle;
+import java.awt.Shape;
 import java.util.HashMap;
+
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Element;
+import javax.swing.text.LabelView;
+import javax.swing.text.Position;
+
+import ch.iserver.ace.application.PropertyChangeHashMap;
+import ch.iserver.ace.util.CaretHandler;
 
 
 
