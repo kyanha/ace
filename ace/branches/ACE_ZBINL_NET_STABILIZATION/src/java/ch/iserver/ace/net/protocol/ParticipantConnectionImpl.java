@@ -396,7 +396,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 		} else {
 			LOG.warn("cannot send participantLeft, connection is in state " + getStateString());
 		}
-		LOG.info("--> sendParticipantLeft()");
+		LOG.info("<-- sendParticipantLeft()");
 	}
 
 	/**

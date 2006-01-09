@@ -145,7 +145,8 @@ public class SessionRequestHandler implements RequestHandler {
 				executeCleanup();
 			} else if (type == ProtocolConstants.REQUEST) {
 				ch.iserver.ace.algorithm.Request algoRequest = (ch.iserver.ace.algorithm.Request) response.getPayload();
-				LOG.debug("receiveRequest("+algoRequest+")");
+				LOG.debug("receiveRequest(siteid=" + algoRequest.getSiteId() + ", " + algoRequest.getTimestamp() 
+						+ ", " + algoRequest.getOperation().getClass() + ")");
 				String participantId = response.getUserId();
 				sessionCallback.receiveRequest(Integer.parseInt(participantId), algoRequest);
 			} else if (type == ProtocolConstants.CARET_UPDATE) {

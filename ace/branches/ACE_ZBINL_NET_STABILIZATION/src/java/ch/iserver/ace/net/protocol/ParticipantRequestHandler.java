@@ -21,6 +21,9 @@
 
 package ch.iserver.ace.net.protocol;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintWriter;
+
 import org.apache.log4j.Logger;
 import org.beepcore.beep.core.InputDataStream;
 import org.beepcore.beep.core.MessageMSG;
@@ -176,12 +179,26 @@ public class ParticipantRequestHandler implements RequestHandler {
 				port.receiveAcknowledge(Integer.parseInt(siteId), timestamp);
 			} 
 		} catch (Exception e) {
-			e.printStackTrace();
-			LOG.error("could not process request ["+e+"]");
+			String stackTrace = getStackTrace(e);
+			LOG.error("could not process request [" + e + ", " + stackTrace + ", " + readInData + "]");
 			NetworkServiceImpl.getInstance().getCallback().serviceFailure(FailureCodes.SESSION_FAILURE, "'" + readInData + "'", e);
 		}
 		LOG.debug("<-- receiveMSG");
 		
+	}
+	
+	/**
+	 * Returns the stack trace as a String.
+	 * 
+	 * @param e	the exception to get the stack trace
+	 * @return	String	the stack trace
+	 */
+	private String getStackTrace(Exception e) {
+		ByteArrayOutputStream trace = new ByteArrayOutputStream();
+		PrintWriter pw = new PrintWriter(trace);
+		e.printStackTrace(pw);
+		pw.close();
+		return new String(trace.toByteArray());
 	}
 
 }
