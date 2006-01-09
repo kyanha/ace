@@ -236,7 +236,6 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 	public void executeCleanup() {
 		SessionCleanup sessionCleanup = new SessionCleanup(docId, userid);
 		sessionCleanup.execute();
-		cleanup();
 	}
 
 }
