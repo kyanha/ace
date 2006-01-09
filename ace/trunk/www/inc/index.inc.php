@@ -10,6 +10,8 @@ as a page that talks about the technical <a href="index.php?page=3">Background</
 <br/>
 
 <h3>News</h3>
+<p><b>Upcoming Stabilization Release</b> <span class="date">09.01.2006</span></p>
+<p>Keep watching for the upcoming stabilization release which will include bug fixes as well as stabilization work related to the network communication.</p>
 
 <p><b>Diploma Final Release</b> <span class="date">16.12.2005</span></p>
 <p>Today we released the final diploma project release of ACE.
