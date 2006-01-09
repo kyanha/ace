@@ -196,9 +196,13 @@ abstract class AbstractSession implements Session {
 	/**
 	 * @see ch.iserver.ace.collaboration.Session#getParticipant(int)
 	 */
-	public Participant getParticipant(int participantId) {
+	public synchronized Participant getParticipant(int participantId) {
 		checkSessionState();
-		return (Participant) participantMap.get(new Integer(participantId));
+		Participant participant = (Participant) participantMap.get(new Integer(participantId));
+		if (participant == null) {
+			throw new IllegalArgumentException("no participant with id " + participantId + " found");
+		}
+		return participant;
 	}
 
 	/**
@@ -206,7 +210,7 @@ abstract class AbstractSession implements Session {
 	 * 
 	 * @param participant the Participant to be added
 	 */
-	protected void addParticipant(Participant participant) {
+	protected synchronized void addParticipant(Participant participant) {
 		participants.add(participant);
 		participantMap.put(new Integer(participant.getParticipantId()), participant);
 	}
@@ -217,7 +221,7 @@ abstract class AbstractSession implements Session {
 	 * 
 	 * @param participant the Participant to be removed
 	 */
-	protected void removeParticipant(Participant participant) {
+	protected synchronized void removeParticipant(Participant participant) {
 		participants.remove(participant);
 		participantMap.remove(new Integer(participant.getParticipantId()));
 	}
