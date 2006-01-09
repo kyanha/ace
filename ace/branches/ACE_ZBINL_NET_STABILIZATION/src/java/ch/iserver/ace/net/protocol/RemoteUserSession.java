@@ -27,6 +27,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
 import org.beepcore.beep.core.BEEPException;
@@ -401,7 +403,20 @@ public class RemoteUserSession {
 		if (session != null && session.getState() == Session.SESSION_STATE_ACTIVE) {
 			try {
 				mainConnection.close();
+				
+				final Thread t = Thread.currentThread();
+				Timer timer = new Timer();
+				timer.schedule(new TimerTask() {
+					public void run() {
+						LOG.debug("going to interrupt [" + t.getName() + "]");
+						t.interrupt();
+						LOG.debug("interrupted.");
+					}
+				}, 2000);
+				LOG.debug("--> session.close()");
 				session.close();
+				LOG.debug("<-- session.close()");
+				
 			} catch (Exception be) {
 				LOG.warn("could not close active session [" + be + ", " + be.getMessage() + "]");
 			}
