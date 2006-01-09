@@ -1,6 +1,7 @@
 <h2>Introduction</h2>
 
 <p><b>Working on a document as a group can be challenging. Version control systems like Subversion and CVS help to keep a consistent copy of a document, but they do not allow real-time collaboration. Would it not be easier and more efficient to edit a document together in real-time, seeing each other's changes immediately and reducing the amount of time to complete work substantially? The error prone step of merging several asynchronous changes to a document can be avoided altogether with a real-time synchronous collaborative editor, namely ACE - a collaborative editor.</b>
+</p>
 <p>
 ACE allows multiple geographically dispersed users to view and edit a shared text document at the same time, thus facilitating efficient teamwork. According to available knowledge, there is only one such application; it works well and has reached widespread use. Unfortunately, it is limited to the Mac platform. ACE is the first collaborative text editor that runs across all major platforms, including Windows, Linux, and Mac.
 </p>
