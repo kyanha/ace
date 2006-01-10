@@ -33,6 +33,7 @@ import org.beepcore.beep.core.RequestHandler;
 import ch.iserver.ace.FailureCodes;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Timestamp;
+import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.net.SessionConnectionCallback;
 import ch.iserver.ace.net.core.NetworkServiceExt;
 import ch.iserver.ace.net.core.NetworkServiceImpl;
@@ -61,6 +62,7 @@ public class SessionRequestHandler implements RequestHandler {
 	private SessionConnectionCallback sessionCallback;
 	private NetworkServiceExt service;
 	private DocumentInfo info;
+	private PortableDocumentExt document;
 	
 	/**
 	 * Creates a new SessionRequestHandler.
@@ -136,8 +138,12 @@ public class SessionRequestHandler implements RequestHandler {
 					sessionCallback = proxy.joinAccepted(connection); 
 					sessionCallback.setParticipantId(participantId);
 					sessionCallback.setDocument(doc);
+					document = doc;
 				} else {
-					LOG.warn("could not find RemoteUserSession for [" + publisherId + "]");
+					//it should never come here, and if so, it's a bug
+					String msg = "could not find RemoteUserSession for [" + publisherId + "]";
+					LOG.warn(msg);
+					throw new IllegalStateException(msg);
 				}
 			} else if (type == ProtocolConstants.KICKED) {
 				String docId = ((DocumentInfo) response.getPayload()).getDocId();
@@ -168,9 +174,17 @@ public class SessionRequestHandler implements RequestHandler {
 				sessionCallback.participantJoined(Integer.parseInt(participantId), proxy);
 			} else if (type == ProtocolConstants.PARTICIPANT_LEFT) {
 				String reason = (String) response.getPayload();
-				String participantId = response.getUserId();
-				LOG.debug("participantLeft("+participantId+", "+reason+")");
-				sessionCallback.participantLeft(Integer.parseInt(participantId), Integer.parseInt(reason));
+				String participantIdStr = response.getUserId();
+				int participantId = Integer.parseInt(participantIdStr);
+				LOG.debug("participantLeft(" + participantId + ", " + reason + ")");
+				RemoteUserProxy proxy = document.getUserProxy(participantId);
+				if (proxy != null && 
+						DiscoveryManagerFactory.getDiscoveryManager().isUserAlive(proxy.getId())) {
+					sessionCallback.participantLeft(participantId, Integer.parseInt(reason));
+				} else {
+					LOG.debug("participant [" + participantId + "] not alive");
+				}
+				//TODO: if proxy != null then remove userproxy from PortableDocument
 			} else if (type == ProtocolConstants.SESSION_TERMINATED) {
 				LOG.debug("sessionTerminated()");
 				sessionCallback.sessionTerminated();
@@ -228,6 +242,7 @@ public class SessionRequestHandler implements RequestHandler {
 		deserializer = null;
 		handler = null;
 		sessionCallback = null;
+		document = null;
 	}
 	
 	/**
