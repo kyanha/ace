@@ -150,6 +150,8 @@ public class DiscoveryCallbackImpl implements DiscoveryCallback {
 				SessionManager.getInstance().removeSession(userId);
 			session.cleanup();
 			DiscoveryManagerFactory.getDiscoveryManager().setSessionTerminated(userId);
+		} else {
+			LOG.debug("no session established with discarded user");
 		}
 		LOG.debug("<-- userDiscarded()");
 	}
