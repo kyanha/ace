@@ -21,6 +21,9 @@
 
 package ch.iserver.ace.net.protocol;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import org.apache.log4j.Logger;
 import org.beepcore.beep.core.BEEPException;
 import org.beepcore.beep.core.Channel;
@@ -424,13 +427,25 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 	 * {@inheritDoc}
 	 */
 	public void close() {
-		LOG.info("--> close("+getParticipantId()+", "+username+")");
+		LOG.info("--> close(" + getParticipantId() + ", " + username + ")");
 		if (getState() == STATE_ACTIVE) {
 			try {
 				if (!isKicked && !hasLeft()) {
 					sendSessionTerminated();
 				}
+				//TODO: improve this code
+				final Thread t = Thread.currentThread();
+				Timer timer = new Timer();
+				timer.schedule(new TimerTask() {
+					public void run() {
+						LOG.debug("going to interrupt [" + t.getName() + "]");
+						t.interrupt();
+						LOG.debug("interrupted.");
+					}
+				}, 1500);
+				LOG.debug("--> channel.close()");
 				getChannel().close();
+				LOG.debug("<-- channel.close()");
 			} catch (BEEPException be) {
 				LOG.warn("could not close channel ["+be.getMessage()+"]");
 			}
