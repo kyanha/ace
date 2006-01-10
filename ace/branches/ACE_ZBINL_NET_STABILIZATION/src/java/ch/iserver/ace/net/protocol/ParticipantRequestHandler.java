@@ -21,9 +21,6 @@
 
 package ch.iserver.ace.net.protocol;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintWriter;
-
 import org.apache.log4j.Logger;
 import org.beepcore.beep.core.InputDataStream;
 import org.beepcore.beep.core.MessageMSG;
@@ -39,6 +36,7 @@ import ch.iserver.ace.net.core.NetworkServiceExt;
 import ch.iserver.ace.net.core.NetworkServiceImpl;
 import ch.iserver.ace.net.protocol.RequestImpl.DocumentInfo;
 import ch.iserver.ace.util.ParameterValidator;
+import ch.iserver.ace.util.StackTrace;
 
 /**
  * The <code>ParticipantRequestHandler</code> is a server side 
@@ -179,7 +177,7 @@ public class ParticipantRequestHandler implements RequestHandler {
 				port.receiveAcknowledge(Integer.parseInt(siteId), timestamp);
 			} 
 		} catch (Exception e) {
-			String stackTrace = getStackTrace(e);
+			String stackTrace = StackTrace.get(e);
 			LOG.error("could not process request [" + e + ", " + stackTrace + ", " + readInData + "]");
 			NetworkServiceImpl.getInstance().getCallback().serviceFailure(FailureCodes.SESSION_FAILURE, "'" + readInData + "'", e);
 		}
@@ -187,18 +185,6 @@ public class ParticipantRequestHandler implements RequestHandler {
 		
 	}
 	
-	/**
-	 * Returns the stack trace as a String.
-	 * 
-	 * @param e	the exception to get the stack trace
-	 * @return	String	the stack trace
-	 */
-	private String getStackTrace(Exception e) {
-		ByteArrayOutputStream trace = new ByteArrayOutputStream();
-		PrintWriter pw = new PrintWriter(trace);
-		e.printStackTrace(pw);
-		pw.close();
-		return new String(trace.toByteArray());
-	}
+
 
 }
