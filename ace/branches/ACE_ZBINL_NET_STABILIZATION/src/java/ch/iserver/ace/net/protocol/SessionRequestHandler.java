@@ -43,6 +43,7 @@ import ch.iserver.ace.net.discovery.DiscoveryManager;
 import ch.iserver.ace.net.discovery.DiscoveryManagerFactory;
 import ch.iserver.ace.net.protocol.RequestImpl.DocumentInfo;
 import ch.iserver.ace.util.ParameterValidator;
+import ch.iserver.ace.util.StackTrace;
 
 /**
  * SessionRequestHandler is a client side request handler for a 
@@ -177,10 +178,11 @@ public class SessionRequestHandler implements RequestHandler {
 			}
 			
 		} catch (Exception e) {
-			e.printStackTrace();
-			LOG.error("could not process request ["+e+"]");
+			String stackTrace = StackTrace.get(e);
+			LOG.error("could not process request [" + stackTrace + "]");
 			NetworkServiceImpl.getInstance().getCallback().serviceFailure(FailureCodes.SESSION_FAILURE, "'" + readInData + "'", e);
 			//TODO: go with same behavior as when user gets kicked (local copy) -> then he must rejoin the session
+			executeCleanup();
 		}
 		LOG.debug("<-- receiveMSG");
 		
