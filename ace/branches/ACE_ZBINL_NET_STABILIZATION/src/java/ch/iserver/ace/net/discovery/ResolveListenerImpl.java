@@ -103,10 +103,9 @@ class ResolveListenerImpl extends BaseListenerImpl implements ResolveListener {
 	private void resolveIP(int flags, int ifIndex, String hostName, String serviceName) {
 		QueryRecord call = new QueryRecord(ifIndex, hostName, Bonjour.T_HOST_ADDRESS, ipQueryListener);
 		try {
-			synchronized (this) {
-				DNSSDService service = (DNSSDService) call.execute();
-				ipQueryListener.addNextService(service.toString(), serviceName);
-			}
+			//TODO: wie kann ich garantieren, dass folgende 2 zeilen atomar ausgeführt werden?
+			DNSSDService service = (DNSSDService) call.execute();
+			ipQueryListener.addNextService(service.toString(), serviceName);
 		} catch (DNSSDUnavailable du) {
 			Bonjour.writeErrorLog(du);
 		}

@@ -88,7 +88,7 @@ public abstract class AbstractQueryListener extends BaseListenerImpl implements 
 		ParameterValidator.notNull("servicename", servicename);
 		LOG.debug("addService(" + id + ", " + servicename + ")");
 		ids.put(id, servicename);
-		serviceQueue.add(servicename);
+//		serviceQueue.add(servicename);
 	}
 	
 	/**
@@ -100,12 +100,20 @@ public abstract class AbstractQueryListener extends BaseListenerImpl implements 
 	 */
 	protected String getNextService(String id) {
 		String result = null;
-		try {
+//		try {
 			//queue only used for blocking
-			serviceQueue.take();
-			result = (String)ids.get(id);
-		} catch (InterruptedException ie) {
-		}
+//			serviceQueue.take();
+			while (result == null) {
+				result = (String)ids.get(id);
+				if (result == null) {
+					try {
+						LOG.warn("wait for 50 ms to get service name");
+						//TODO: get a more pragmatic solution for this
+						Thread.sleep(50);
+					} catch (InterruptedException ie) {}
+				}
+			}
+//		} catch (InterruptedException ie) {}
 		LOG.debug("getService(" + id + ", " + result + ")");
 		return result;
 	}
