@@ -287,6 +287,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 				}
 				
 				//send via incoming channel so that the channel is set correctly at the receiver site
+				//--> i.e. correct Channel to SessionConnection assignment
 				LOG.debug("use incoming channel to send document");
 				Channel outgoing = getChannel();
 				setChannel(incoming);
