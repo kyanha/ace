@@ -62,7 +62,6 @@ public class SessionRequestHandler implements RequestHandler {
 	private SessionConnectionCallback sessionCallback;
 	private NetworkServiceExt service;
 	private DocumentInfo info;
-	private PortableDocumentExt document;
 	
 	/**
 	 * Creates a new SessionRequestHandler.
@@ -135,10 +134,9 @@ public class SessionRequestHandler implements RequestHandler {
 					SessionConnectionImpl connection = session.addSessionConnection(docId, message.getChannel());
 					connection.setParticipantId(participantId);
 					RemoteDocumentProxyExt proxy = session.getUser().getSharedDocument(docId);
-					sessionCallback = proxy.joinAccepted(connection); 
+					sessionCallback = proxy.joinAccepted(connection, doc.getParticipantIdUserMapping()); 
 					sessionCallback.setParticipantId(participantId);
 					sessionCallback.setDocument(doc);
-					document = doc;
 				} else {
 					//it should never come here, and if so, it's a bug
 					String msg = "could not find RemoteUserSession for [" + publisherId + "]";
@@ -177,14 +175,17 @@ public class SessionRequestHandler implements RequestHandler {
 				String participantIdStr = response.getUserId();
 				int participantId = Integer.parseInt(participantIdStr);
 				LOG.debug("participantLeft(" + participantId + ", " + reason + ")");
-				RemoteUserProxy proxy = document.getUserProxy(participantId);
+				
+				RemoteUserSession session = SessionManager.getInstance().getSession(publisherId);
+				RemoteDocumentProxyExt doc = session.getUser().getSharedDocument(docId); 
+				RemoteUserProxyExt proxy = doc.getSessionParticipant(participantId);
 				if (proxy != null && 
 						DiscoveryManagerFactory.getDiscoveryManager().isUserAlive(proxy.getId())) {
 					sessionCallback.participantLeft(participantId, Integer.parseInt(reason));
 				} else {
 					LOG.debug("participant [" + participantId + "] not alive");
 				}
-				//TODO: if proxy != null then remove userproxy from PortableDocument
+				doc.removeSessionParticipant(participantId);
 			} else if (type == ProtocolConstants.SESSION_TERMINATED) {
 				LOG.debug("sessionTerminated()");
 				sessionCallback.sessionTerminated();
@@ -194,7 +195,9 @@ public class SessionRequestHandler implements RequestHandler {
 		} catch (Exception e) {
 			String stackTrace = StackTrace.get(e);
 			LOG.error("could not process request [" + stackTrace + "]");
-			NetworkServiceImpl.getInstance().getCallback().serviceFailure(FailureCodes.SESSION_FAILURE, "'" + readInData + "'", e);
+			String name = DiscoveryManagerFactory.getDiscoveryManager().getUser(publisherId).getUserDetails().getUsername();
+			name += (readInData != null) ? " [" + readInData + "]" : ""; 
+			NetworkServiceImpl.getInstance().getCallback().serviceFailure(FailureCodes.SESSION_FAILURE, "'" + name + "'", e);
 			//TODO: go with same behavior as when user gets kicked (local copy) -> then he must rejoin the session
 			executeCleanup();
 		}
@@ -242,7 +245,6 @@ public class SessionRequestHandler implements RequestHandler {
 		deserializer = null;
 		handler = null;
 		sessionCallback = null;
-		document = null;
 	}
 	
 	/**
