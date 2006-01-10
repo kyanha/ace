@@ -135,7 +135,10 @@ public class RemoteDocumentProxyImpl implements RemoteDocumentProxyExt {
 	public RemoteUserProxyExt getSessionParticipant(int participantId) {
 		RemoteUserProxyExt user = null;
 		if (participantId2User != null) {
+			LOG.debug("participantId2User: " + participantId2User);
 			user = (RemoteUserProxyExt) participantId2User.get(new Integer(participantId));
+			LOG.debug("getSessionParticipant(" + participantId + ") => " + 
+					(user != null ? user.getUserDetails().getUsername() : "not found"));
 		} else {
 			LOG.warn("participantId2User map is null");
 		}
@@ -147,6 +150,7 @@ public class RemoteDocumentProxyImpl implements RemoteDocumentProxyExt {
 	 */
 	public void removeSessionParticipant(int participantId) {
 		if (participantId2User != null) {
+			LOG.debug("participantId2User: " + participantId2User);
 			if (participantId2User.remove(new Integer(participantId)) == null) {
 				LOG.warn("session participant [" + participantId + "] to be removed not found");
 			}
