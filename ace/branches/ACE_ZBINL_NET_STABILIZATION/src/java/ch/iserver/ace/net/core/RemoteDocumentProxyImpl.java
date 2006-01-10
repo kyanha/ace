@@ -21,6 +21,8 @@
 
 package ch.iserver.ace.net.core;
 
+import java.util.Map;
+
 import org.apache.log4j.Logger;
 
 import ch.iserver.ace.DocumentDetails;
@@ -88,6 +90,13 @@ public class RemoteDocumentProxyImpl implements RemoteDocumentProxyExt {
 	private SessionConnectionCallback sessionCallback;
 	
 	/**
+	 * The participantId to RemoteUserProxy mapping for the current session.
+	 * This map is only set when the local user has joined this remote document i.e.
+	 * published document, otherwise it's null.
+	 */
+	private Map participantId2User;
+	
+	/**
 	 * Creates a new RemoteDocumentProxyImpl. Note that none of the arguments may be null.
 	 * 
 	 * @param id			the document id
@@ -121,6 +130,32 @@ public class RemoteDocumentProxyImpl implements RemoteDocumentProxyExt {
 	}
 	
 	/**
+	 * {@inheritDoc}
+	 */
+	public RemoteUserProxyExt getSessionParticipant(int participantId) {
+		RemoteUserProxyExt user = null;
+		if (participantId2User != null) {
+			user = (RemoteUserProxyExt) participantId2User.get(new Integer(participantId));
+		} else {
+			LOG.warn("participantId2User map is null");
+		}
+		return user;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public void removeSessionParticipant(int participantId) {
+		if (participantId2User != null) {
+			if (participantId2User.remove(new Integer(participantId)) == null) {
+				LOG.warn("session participant [" + participantId + "] to be removed not found");
+			}
+		} else {
+			LOG.warn("participantId2User map is null");
+		}
+	}
+	
+	/**
 	 * @see ch.iserver.ace.net.core.RemoteDocumentProxyExt#setDocumentDetails(DocumentDetails)
 	 */
 	public void setDocumentDetails(DocumentDetails details) {
@@ -130,12 +165,13 @@ public class RemoteDocumentProxyImpl implements RemoteDocumentProxyExt {
 	/**
 	 * {@inheritDoc}
 	 */
-	public SessionConnectionCallback joinAccepted(SessionConnection connection) {
+	public SessionConnectionCallback joinAccepted(SessionConnection connection, Map participantId2User) {
 		LOG.debug("--> joinAccepted()");
 		isJoined = true;
 		SessionConnectionCallback sessionCb = callback.accepted(connection);
 		ParameterValidator.notNull("sesionCallback", sessionCb);
 		sessionCallback = sessionCb;
+		this.participantId2User = participantId2User; 
 		LOG.debug("<-- joinAccepted()");
 		return sessionCallback;
 	}
@@ -163,6 +199,8 @@ public class RemoteDocumentProxyImpl implements RemoteDocumentProxyExt {
 		isJoined = false;
 		hasInvitationAccepted = false;
 		callback = null;
+		sessionCallback = null;
+		participantId2User = null;
 	}
 	
 	/**
