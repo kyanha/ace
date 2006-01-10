@@ -22,6 +22,7 @@
 package ch.iserver.ace.net.core;
 
 import java.util.List;
+import java.util.Map;
 
 import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.Fragment;
@@ -110,5 +111,13 @@ public interface PortableDocumentExt extends PortableDocument {
 	 * @return a list with the RemoteUserProxy's of all particpants
 	 */
 	public List getUsers();
+	
+	/**
+	 * Returns a map with a participantId to RemoteUserProxyExt mapping.
+	 * 
+	 * @return Map 	a participantId to RemoteUserProxyExt mapping
+	 */
+	public Map getParticipantIdUserMapping();
+	
 	
 }
