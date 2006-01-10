@@ -134,6 +134,7 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 		Object proxy = remoteUserProxies.get(userId);
 		if (proxy == null) {
 			LOG.warn("proxy for userid="+userId+" not found.");
+			throw new IllegalStateException("proxy for userid="+userId+" not found.");
 		}
 		peersWithEstablishedSession.put(userId, proxy);		
 	}
@@ -165,6 +166,13 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 			LOG.warn("no user found for ["+userid+"]");
 		}
 		return user;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isUserAlive(String userId) {
+		return remoteUserProxies.containsKey(userId);
 	}
 	
 	public Map getUsers() {

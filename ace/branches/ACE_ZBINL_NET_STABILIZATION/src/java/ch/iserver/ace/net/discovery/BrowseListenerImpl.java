@@ -79,7 +79,7 @@ class BrowseListenerImpl extends BaseListenerImpl implements BrowseListener {
 	 */
 	public void serviceLost(DNSSDService browser, int flags, int ifIndex,
 			String serviceName, String regType, String domain) {
-		LOG.debug("DNSSD.serviceFound(" + serviceName + ", " + regType + ", " + domain + ")");
+		LOG.debug("DNSSD.serviceLost(" + serviceName + ", " + regType + ", " + domain + ")");
 		if (!Bonjour.getLocalServiceName().equals(serviceName)) {
 			LOG.debug("serviceLost(" + serviceName + ")");
 			adapter.userDiscarded(serviceName);
