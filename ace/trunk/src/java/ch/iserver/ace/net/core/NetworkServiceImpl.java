@@ -50,6 +50,8 @@ import ch.iserver.ace.net.protocol.SessionManager;
 import ch.iserver.ace.net.protocol.filter.RequestFilter;
 import ch.iserver.ace.net.protocol.filter.RequestFilterFactory;
 import ch.iserver.ace.util.ParameterValidator;
+import ch.iserver.ace.util.SingleThreadDomain;
+import ch.iserver.ace.util.ThreadDomain;
 import ch.iserver.ace.util.UUID;
 
 /**
@@ -60,7 +62,7 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	
 	private static Logger LOG = Logger.getLogger(NetworkServiceImpl.class);
 	
-	private static boolean DO_SHUTDOWN = false;
+	private static boolean DO_SHUTDOWN = true;
 	
 	/**
 	 * The TimestampFactory object used for the creation of timestamps
@@ -113,6 +115,8 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	 */
 	private Map publishedDocs;
 	
+	private ThreadDomain mainThreadDomain;
+	
 	/**
 	 * The singleton instance.
 	 */
@@ -129,6 +133,7 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 		RemoteDocumentProxyFactory.init(requestChain);
 		InvitationProxyFactory.init(requestChain);
 		ParticipantConnectionImplFactory.init(requestChain);
+		mainThreadDomain = new SingleThreadDomain();
 	}
 	
 	/**
@@ -229,7 +234,7 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 			/** server site **/
 			//close() on all participantconnections of all documents
 			Map docs = getPublishedDocuments();
-			LOG.debug("close() on all participant connections of all documents (" + docs.size() + ")");
+			LOG.debug("close() on all participant connections of all documents [" + docs.size() + "]");
 			synchronized(docs) {
 				Iterator iter = docs.values().iterator();
 				while (iter.hasNext()) {
@@ -240,8 +245,8 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 			
 			/** client site **/
 			//send leave to all joined document publishers
-			LOG.debug("send leave to all joined document publishers");
 			Map users = DiscoveryManagerFactory.getDiscoveryManager().getUsers();
+			LOG.debug("send leave to all joined document publishers [" + users.size() + "]");
 			synchronized (users) {
 				Iterator iter = users.values().iterator();
 				while (iter.hasNext()) { //for each user
@@ -330,6 +335,13 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	/**********************************************/
 	/** Methods from interface NetworkServiceExt **/
 	/**********************************************/
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public ThreadDomain getMainThreadDomain() {
+		return mainThreadDomain;
+	}
 	
 	/**
 	 * {@inheritDoc}

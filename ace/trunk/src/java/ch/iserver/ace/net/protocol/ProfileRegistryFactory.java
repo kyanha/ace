@@ -32,7 +32,7 @@ import ch.iserver.ace.net.core.NetworkServiceExt;
 import ch.iserver.ace.net.core.NetworkServiceImpl;
 import ch.iserver.ace.net.protocol.filter.RequestFilter;
 import ch.iserver.ace.net.protocol.filter.RequestFilterFactory;
-import ch.iserver.ace.util.SingleThreadDomain;
+import ch.iserver.ace.util.ThreadDomain;
 
 /**
  * The <code>ProfileRegistryFactory</code> creates the
@@ -66,7 +66,9 @@ public class ProfileRegistryFactory {
 			Deserializer deserializer = DeserializerImpl.getInstance();
 			RequestFilter filter = RequestFilterFactory.createServerChain();
 			RequestParserHandler requestHandler = new RequestParserHandler();
-			SingleThreadDomain domain = new SingleThreadDomain();
+//			SingleThreadDomain domain = new SingleThreadDomain();
+			NetworkServiceExt service = NetworkServiceImpl.getInstance();
+			ThreadDomain domain = service.getMainThreadDomain();
 			mainHandler = (RequestHandler) domain.wrap(new MainRequestHandler(deserializer, filter, requestHandler), 
 											RequestHandler.class);
 			DefaultRequestHandlerFactory.init(mainHandler, deserializer, requestHandler);
@@ -76,7 +78,7 @@ public class ProfileRegistryFactory {
 			CollaborationDeserializer collabDeserializer = new CollaborationDeserializer();
 			//TODO: now, all sessionrequesthandlers share deserializer and handler, but you could do it
 			//the same as with participantrequesthandler: each one has its own deserializer and handler
-			NetworkServiceExt service = NetworkServiceImpl.getInstance();
+//			NetworkServiceExt service = NetworkServiceImpl.getInstance();
 			SessionRequestHandlerFactory.init(collabDeserializer, handler, service);
 			StartChannelListener listener = new StartChannelListenerImpl(DefaultRequestHandlerFactory.getInstance());
 			DefaultProfile profile = new DefaultProfile(listener);

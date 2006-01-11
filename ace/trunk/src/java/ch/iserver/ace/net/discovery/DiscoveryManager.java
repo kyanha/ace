@@ -75,6 +75,15 @@ public interface DiscoveryManager {
 	public RemoteUserProxyExt getUser(String userId);
 	
 	/**
+	 * Checks whether the user with the <code>userId</code>
+	 * is alive.
+	 * 
+	 * @param userId 	the id of the user to check
+	 * @return	true		iff the user is alive, false otherwise
+	 */
+	public boolean isUserAlive(String userId);
+	
+	/**
 	 * Adds a new user to the <code>DiscoveryManager</code>.
 	 * 
 	 * @param user the user to be added

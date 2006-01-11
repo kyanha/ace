@@ -33,6 +33,7 @@ import org.beepcore.beep.core.RequestHandler;
 import ch.iserver.ace.FailureCodes;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Timestamp;
+import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.net.SessionConnectionCallback;
 import ch.iserver.ace.net.core.NetworkServiceExt;
 import ch.iserver.ace.net.core.NetworkServiceImpl;
@@ -43,6 +44,7 @@ import ch.iserver.ace.net.discovery.DiscoveryManager;
 import ch.iserver.ace.net.discovery.DiscoveryManagerFactory;
 import ch.iserver.ace.net.protocol.RequestImpl.DocumentInfo;
 import ch.iserver.ace.util.ParameterValidator;
+import ch.iserver.ace.util.StackTrace;
 
 /**
  * SessionRequestHandler is a client side request handler for a 
@@ -132,11 +134,14 @@ public class SessionRequestHandler implements RequestHandler {
 					SessionConnectionImpl connection = session.addSessionConnection(docId, message.getChannel());
 					connection.setParticipantId(participantId);
 					RemoteDocumentProxyExt proxy = session.getUser().getSharedDocument(docId);
-					sessionCallback = proxy.joinAccepted(connection); 
+					sessionCallback = proxy.joinAccepted(connection, doc.getParticipantIdUserMapping()); 
 					sessionCallback.setParticipantId(participantId);
 					sessionCallback.setDocument(doc);
 				} else {
-					LOG.warn("could not find RemoteUserSession for [" + publisherId + "]");
+					//it should never come here, and if so, it's a bug
+					String msg = "could not find RemoteUserSession for [" + publisherId + "]";
+					LOG.warn(msg);
+					throw new IllegalStateException(msg);
 				}
 			} else if (type == ProtocolConstants.KICKED) {
 				String docId = ((DocumentInfo) response.getPayload()).getDocId();
@@ -145,7 +150,8 @@ public class SessionRequestHandler implements RequestHandler {
 				executeCleanup();
 			} else if (type == ProtocolConstants.REQUEST) {
 				ch.iserver.ace.algorithm.Request algoRequest = (ch.iserver.ace.algorithm.Request) response.getPayload();
-				LOG.debug("receiveRequest("+algoRequest+")");
+				LOG.debug("receiveRequest(siteid=" + algoRequest.getSiteId() + ", " + algoRequest.getTimestamp() 
+						+ ", " + algoRequest.getOperation().getClass() + ")");
 				String participantId = response.getUserId();
 				sessionCallback.receiveRequest(Integer.parseInt(participantId), algoRequest);
 			} else if (type == ProtocolConstants.CARET_UPDATE) {
@@ -161,14 +167,30 @@ public class SessionRequestHandler implements RequestHandler {
 			} else if (type == ProtocolConstants.PARTICIPANT_JOINED) {
 				RemoteUserProxyExt proxy = (RemoteUserProxyExt) response.getPayload();
 				addNewUser(proxy);
-				String participantId = response.getUserId();
+				String participantIdStr = response.getUserId();
+				int participantId = Integer.parseInt(participantIdStr);
+				RemoteUserSession session = SessionManager.getInstance().getSession(publisherId);
+				RemoteDocumentProxyExt doc = session.getUser().getSharedDocument(docId);
+				doc.addSessionParticipant(participantId, proxy);
 				LOG.debug("participantJoined("+participantId+", "+proxy.getUserDetails().getUsername()+")");
-				sessionCallback.participantJoined(Integer.parseInt(participantId), proxy);
+				sessionCallback.participantJoined(participantId, proxy);
 			} else if (type == ProtocolConstants.PARTICIPANT_LEFT) {
 				String reason = (String) response.getPayload();
-				String participantId = response.getUserId();
-				LOG.debug("participantLeft("+participantId+", "+reason+")");
-				sessionCallback.participantLeft(Integer.parseInt(participantId), Integer.parseInt(reason));
+				String participantIdStr = response.getUserId();
+				int participantId = Integer.parseInt(participantIdStr);
+				LOG.debug("participantLeft(" + participantId + ", " + reason + ")");
+				
+				RemoteUserSession session = SessionManager.getInstance().getSession(publisherId);
+				RemoteDocumentProxyExt doc = session.getUser().getSharedDocument(docId); 
+				RemoteUserProxyExt proxy = doc.getSessionParticipant(participantId);
+				if (proxy != null && 
+						DiscoveryManagerFactory.getDiscoveryManager().isUserAlive(proxy.getId())) {
+					LOG.debug("sessionCallback.participantLeft(..)");
+					sessionCallback.participantLeft(participantId, Integer.parseInt(reason));
+				} else {
+					LOG.debug("participant [" + participantId + "] not alive");
+				}
+				doc.removeSessionParticipant(participantId);
 			} else if (type == ProtocolConstants.SESSION_TERMINATED) {
 				LOG.debug("sessionTerminated()");
 				sessionCallback.sessionTerminated();
@@ -176,10 +198,13 @@ public class SessionRequestHandler implements RequestHandler {
 			}
 			
 		} catch (Exception e) {
-			e.printStackTrace();
-			LOG.error("could not process request ["+e+"]");
-			NetworkServiceImpl.getInstance().getCallback().serviceFailure(FailureCodes.SESSION_FAILURE, "'" + readInData + "'", e);
+			String stackTrace = StackTrace.get(e);
+			LOG.error("could not process request [" + stackTrace + "]");
+			String name = DiscoveryManagerFactory.getDiscoveryManager().getUser(publisherId).getUserDetails().getUsername();
+			name += (readInData != null) ? " [" + readInData + "]" : ""; 
+			NetworkServiceImpl.getInstance().getCallback().serviceFailure(FailureCodes.SESSION_FAILURE, "'" + name + "'", e);
 			//TODO: go with same behavior as when user gets kicked (local copy) -> then he must rejoin the session
+			executeCleanup();
 		}
 		LOG.debug("<-- receiveMSG");
 		

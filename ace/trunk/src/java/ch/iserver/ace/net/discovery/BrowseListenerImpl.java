@@ -62,9 +62,9 @@ class BrowseListenerImpl extends BaseListenerImpl implements BrowseListener {
 	 * {@inheritDoc}
 	 */
 	public void serviceFound(DNSSDService browser, int flags, int ifIndex, String serviceName, String regType, String domain) {
-		LOG.debug("DNSSD.serviceFound("+serviceName+", "+regType+", "+domain+")");
+		LOG.debug("DNSSD.serviceFound(" + serviceName + ", " + regType + ", " + domain + ")");
 		if (!Bonjour.getLocalServiceName().equals(serviceName)) {
-			LOG.debug("serviceFound("+serviceName+")");
+			LOG.debug("serviceFound(" + serviceName + ")");
 			try {
 				Resolve call = new Resolve(flags, ifIndex, serviceName, regType, domain, resolver);
 				call.execute();
@@ -79,8 +79,11 @@ class BrowseListenerImpl extends BaseListenerImpl implements BrowseListener {
 	 */
 	public void serviceLost(DNSSDService browser, int flags, int ifIndex,
 			String serviceName, String regType, String domain) {
-		LOG.debug("DNSSD.serviceLost("+serviceName+", "+regType+", "+domain+")");
-		adapter.userDiscarded(serviceName);
+		LOG.debug("DNSSD.serviceLost(" + serviceName + ", " + regType + ", " + domain + ")");
+		if (!Bonjour.getLocalServiceName().equals(serviceName)) {
+			LOG.debug("serviceLost(" + serviceName + ")");
+			adapter.userDiscarded(serviceName);
+		}
 	}
 
 }

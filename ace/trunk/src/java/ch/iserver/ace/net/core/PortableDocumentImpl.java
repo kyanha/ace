@@ -157,6 +157,13 @@ public class PortableDocumentImpl implements PortableDocumentExt {
 		return new ArrayList(proxies.values());
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
+	public Map getParticipantIdUserMapping() {
+		return proxies;
+	}
+	
 	/*********************************************/
 	/** methods from interface PortableDocument **/
 	/*********************************************/

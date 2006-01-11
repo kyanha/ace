@@ -60,13 +60,9 @@ public class TXTQueryListener extends AbstractQueryListener {
 			String fullName, int rrtype, int rrclass, byte[] rdata, int ttl) {
 		if (ttl > 0) {
 			String serviceName = Bonjour.getServiceName(fullName);
-			if (adapter.isServiceKnown(serviceName)) {
-				TXTRecord t = new TXTRecord(rdata);
-				String userName = TXTRecordProxy.get(TXTRecordProxy.TXT_USER, t);
-				adapter.userNameChanged(serviceName, userName);
-			} else {
-				LOG.warn("TXT record received for unknown user ["+serviceName+"]");
-			}
+			TXTRecord t = new TXTRecord(rdata);
+			String userName = TXTRecordProxy.get(TXTRecordProxy.TXT_USER, t);
+			adapter.userNameChanged(serviceName, userName);
 		} else {
 			LOG.warn("TXT record update ignored.");
 		}

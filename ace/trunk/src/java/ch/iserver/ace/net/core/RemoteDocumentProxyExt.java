@@ -21,6 +21,8 @@
 
 package ch.iserver.ace.net.core;
 
+import java.util.Map;
+
 import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.net.JoinNetworkCallback;
 import ch.iserver.ace.net.RemoteDocumentProxy;
@@ -54,11 +56,37 @@ public interface RemoteDocumentProxyExt extends RemoteDocumentProxy {
 	 * Notifies the RemoteDocumentProxy that the join request was 
 	 * accepted by the publisher.
 	 * 
-	 * @param connection the SessionConnection for the local user to the publisher
+	 * @param connection 				the SessionConnection for the local user to the publisher
+	 * @param participantId2User		a map with participantId to RemoteUserProxy pairs
 	 * @return the SessionConnectionCallback
 	 * @see SessionConnectionCallback
 	 */
-	public SessionConnectionCallback joinAccepted(SessionConnection connection);
+	public SessionConnectionCallback joinAccepted(SessionConnection connection, Map participantId2User);
+	
+	/**
+	 * Gets the RemoteUserProxyExt for a <code>participantId</code>.
+	 * 
+	 * @param participantId			the participantId of the user to get
+	 * @return	RemoteUserProxyExt	the user for the participantId or null if not found
+	 */
+	public RemoteUserProxyExt getSessionParticipant(int participantId);
+	
+	/**
+	 * Removes a session participant. 
+	 * This method is only of use during a joined session for the remote
+	 * document this <code>RemoteDocumentProxyExt</code> embodies.
+	 * 
+	 * @param participantId	the id of the session participant (<code>RemoteUserProxyExt</code>) to remove
+	 */
+	public void removeSessionParticipant(int participantId);
+	
+	/**
+	 * Adds a user to this RemoteDocumentProxyExt's session.
+	 * 
+	 * @param participantId	the participantId of the user
+	 * @param user			the RemoteUserProxyExt embodying the user
+	 */
+	public void addSessionParticipant(int participantId, RemoteUserProxyExt user);
 	
 	/**
 	 * Gets the SessionConnectionCallback object. Returns null as long as a join request

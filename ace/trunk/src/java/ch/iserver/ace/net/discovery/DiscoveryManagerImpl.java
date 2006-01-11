@@ -20,9 +20,7 @@
  */
 package ch.iserver.ace.net.discovery;
 
-import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
-import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -136,6 +134,7 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 		Object proxy = remoteUserProxies.get(userId);
 		if (proxy == null) {
 			LOG.warn("proxy for userid="+userId+" not found.");
+			throw new IllegalStateException("proxy for userid="+userId+" not found.");
 		}
 		peersWithEstablishedSession.put(userId, proxy);		
 	}
@@ -167,6 +166,13 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 			LOG.warn("no user found for ["+userid+"]");
 		}
 		return user;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isUserAlive(String userId) {
+		return remoteUserProxies.containsKey(userId);
 	}
 	
 	public Map getUsers() {
@@ -308,12 +314,12 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 			LOG.warn("Host address received for unknown user ["+serviceName+"]");
 		}
 	}
-	
-	/**
-	 * @see ch.iserver.ace.net.discovery.DiscoveryCallbackAdapter#isServiceKnown(java.lang.String)
-	 */
-	public boolean isServiceKnown(String serviceName) {
-		return services.containsKey(serviceName);
-	}
+//	
+//	/**
+//	 * @see ch.iserver.ace.net.discovery.DiscoveryCallbackAdapter#isServiceKnown(java.lang.String)
+//	 */
+//	public boolean isServiceKnown(String serviceName) {
+//		return services.containsKey(serviceName);
+//	}
 
 }

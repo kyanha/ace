@@ -33,7 +33,7 @@ import ch.iserver.ace.net.core.DiscoveryCallback;
  * <p>Note: The implementation of this interface is responsible for proper
  * synchronization.</p>
  */
-interface DiscoveryCallbackAdapter {
+public interface DiscoveryCallbackAdapter {
 
 	/**
 	 * Sets the discovery callback for this adapter. All events
@@ -77,12 +77,12 @@ interface DiscoveryCallbackAdapter {
 	 */
 	public void userAddressResolved(String serviceName, InetAddress address);
 
-	/**
-	 * Checks whether a service name is known.
-	 * 
-	 * @param serviceName		the service name to check
-	 * @return boolean true iff the service name is known by the local user
-	 */
-	public boolean isServiceKnown(String serviceName);
+//	/**
+//	 * Checks whether a service name is known.
+//	 * 
+//	 * @param serviceName		the service name to check
+//	 * @return boolean true iff the service name is known by the local user
+//	 */
+//	public boolean isServiceKnown(String serviceName);
 
 }

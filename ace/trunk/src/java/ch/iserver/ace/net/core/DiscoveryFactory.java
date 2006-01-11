@@ -62,9 +62,10 @@ public abstract class DiscoveryFactory {
 	/**
 	 * Creates a new discovery implementation.
 	 * 
-	 * @param callback the DiscoveryCallback for the discovery
+	 * @param callback 	the DiscoveryCallback for the discovery
+	 * @param auxiliary 	an auxiliary object depending on the discovery implementation
 	 * @return an instance of a Discovery implementation
 	 */
-	public abstract Discovery createDiscovery(DiscoveryCallback callback);
+	public abstract Discovery createDiscovery(DiscoveryCallback callback, Object auxiliary);
 
 }
