@@ -150,10 +150,10 @@ public class RemoteDocumentProxyImpl implements RemoteDocumentProxyExt {
 	 */
 	public void removeSessionParticipant(int participantId) {
 		if (participantId2User != null) {
-			LOG.debug("participantId2User: " + participantId2User);
 			if (participantId2User.remove(new Integer(participantId)) == null) {
 				LOG.warn("session participant [" + participantId + "] to be removed not found");
 			}
+			LOG.debug("participantId2User: " + participantId2User);
 		} else {
 			LOG.warn("participantId2User map is null");
 		}
