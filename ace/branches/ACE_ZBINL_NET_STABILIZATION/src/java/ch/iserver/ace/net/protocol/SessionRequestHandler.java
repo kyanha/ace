@@ -167,9 +167,13 @@ public class SessionRequestHandler implements RequestHandler {
 			} else if (type == ProtocolConstants.PARTICIPANT_JOINED) {
 				RemoteUserProxyExt proxy = (RemoteUserProxyExt) response.getPayload();
 				addNewUser(proxy);
-				String participantId = response.getUserId();
+				String participantIdStr = response.getUserId();
+				int participantId = Integer.parseInt(participantIdStr);
+				RemoteUserSession session = SessionManager.getInstance().getSession(publisherId);
+				RemoteDocumentProxyExt doc = session.getUser().getSharedDocument(docId);
+				doc.addSessionParticipant(participantId, proxy);
 				LOG.debug("participantJoined("+participantId+", "+proxy.getUserDetails().getUsername()+")");
-				sessionCallback.participantJoined(Integer.parseInt(participantId), proxy);
+				sessionCallback.participantJoined(participantId, proxy);
 			} else if (type == ProtocolConstants.PARTICIPANT_LEFT) {
 				String reason = (String) response.getPayload();
 				String participantIdStr = response.getUserId();
@@ -181,6 +185,7 @@ public class SessionRequestHandler implements RequestHandler {
 				RemoteUserProxyExt proxy = doc.getSessionParticipant(participantId);
 				if (proxy != null && 
 						DiscoveryManagerFactory.getDiscoveryManager().isUserAlive(proxy.getId())) {
+					LOG.debug("sessionCallback.participantLeft(..)");
 					sessionCallback.participantLeft(participantId, Integer.parseInt(reason));
 				} else {
 					LOG.debug("participant [" + participantId + "] not alive");
