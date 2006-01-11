@@ -445,6 +445,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 				}, 1500);
 				LOG.debug("--> channel.close()");
 				getChannel().close();
+				timer.cancel();
 				LOG.debug("<-- channel.close()");
 			} catch (BEEPException be) {
 				LOG.warn("could not close channel ["+be.getMessage()+"]");

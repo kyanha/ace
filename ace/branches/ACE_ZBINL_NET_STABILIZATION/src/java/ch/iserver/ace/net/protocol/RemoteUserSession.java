@@ -415,6 +415,7 @@ public class RemoteUserSession {
 				}, 2000);
 				LOG.debug("--> session.close()");
 				session.close();
+				timer.cancel();
 				LOG.debug("<-- session.close()");
 				
 			} catch (Exception be) {
