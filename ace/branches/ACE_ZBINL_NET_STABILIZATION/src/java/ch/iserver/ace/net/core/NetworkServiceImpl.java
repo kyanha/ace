@@ -234,7 +234,7 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 			/** server site **/
 			//close() on all participantconnections of all documents
 			Map docs = getPublishedDocuments();
-			LOG.debug("close() on all participant connections of all documents (" + docs.size() + ")");
+			LOG.debug("close() on all participant connections of all documents [" + docs.size() + "]");
 			synchronized(docs) {
 				Iterator iter = docs.values().iterator();
 				while (iter.hasNext()) {
@@ -245,8 +245,8 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 			
 			/** client site **/
 			//send leave to all joined document publishers
-			LOG.debug("send leave to all joined document publishers");
 			Map users = DiscoveryManagerFactory.getDiscoveryManager().getUsers();
+			LOG.debug("send leave to all joined document publishers [" + users.size() + "]");
 			synchronized (users) {
 				Iterator iter = users.values().iterator();
 				while (iter.hasNext()) { //for each user

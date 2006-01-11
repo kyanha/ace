@@ -81,6 +81,14 @@ public interface RemoteDocumentProxyExt extends RemoteDocumentProxy {
 	public void removeSessionParticipant(int participantId);
 	
 	/**
+	 * Adds a user to this RemoteDocumentProxyExt's session.
+	 * 
+	 * @param participantId	the participantId of the user
+	 * @param user			the RemoteUserProxyExt embodying the user
+	 */
+	public void addSessionParticipant(int participantId, RemoteUserProxyExt user);
+	
+	/**
 	 * Gets the SessionConnectionCallback object. Returns null as long as a join request
 	 * has not been accepted.
 	 * 

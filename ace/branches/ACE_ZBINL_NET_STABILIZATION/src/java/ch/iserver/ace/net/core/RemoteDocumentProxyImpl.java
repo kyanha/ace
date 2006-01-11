@@ -160,6 +160,19 @@ public class RemoteDocumentProxyImpl implements RemoteDocumentProxyExt {
 	}
 	
 	/**
+	 * {@inheritDoc}
+	 */
+	public void addSessionParticipant(int participantId, RemoteUserProxyExt user) {
+		if (participantId2User != null) {
+			LOG.debug("addSessionParticipant(" + participantId + ", " + user + ")");
+			participantId2User.put(new Integer(participantId), user);
+		} else {
+			LOG.warn("what are you doing! -> participantId2User map is null");
+		}
+		
+	}
+	
+	/**
 	 * @see ch.iserver.ace.net.core.RemoteDocumentProxyExt#setDocumentDetails(DocumentDetails)
 	 */
 	public void setDocumentDetails(DocumentDetails details) {
