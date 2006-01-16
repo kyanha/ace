@@ -64,10 +64,6 @@ public class MessageBusImpl implements MessageBus {
 		}
 	}
 	
-	private UserDetails getUserDetails(String id) {
-		return (UserDetails) userDetailsMap.get(id);
-	}
-
 	private void addListener(String id, UserDetails details, MessageListener l) {
 		userDetailsMap.put(id, details);
 		listenerMap.put(id, l);

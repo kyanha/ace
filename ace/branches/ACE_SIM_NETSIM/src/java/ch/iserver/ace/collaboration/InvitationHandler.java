@@ -24,7 +24,7 @@ package ch.iserver.ace.collaboration;
 /**
  * Callback interface for invitations sent to the local user. The callback
  * interface must be set on the CollaborationService with the 
- * {@link ch.iserver.ace.collaboration.CollaborationService#setInvitationHandler(InvitationCallback)}
+ * {@link ch.iserver.ace.collaboration.CollaborationService#setInvitationHandler(InvitationHandler)}
  * method. The callback is invoked whenever there is an invitation is
  * received.
  */

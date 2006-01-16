@@ -53,8 +53,6 @@ public class NetworkSimulatorService implements NetworkService, User {
 	
 	private MessagePort port;
 	
-	private Map users = new HashMap();
-
 	private Map documents = new HashMap();
 
 	private NetworkServiceCallback callback;
@@ -146,24 +144,7 @@ public class NetworkSimulatorService implements NetworkService, User {
 		callback.userDiscoveryFailed(FailureCodes.CONNECTION_REFUSED, "explicit discovery not supported");
 	}
 	
-	
-	// --> user related methods <--
-	
-	private void addUser(String userId, User user) {
-		users.put(userId, user);
-	}
-	
-	private void removeUser(String userId) {
-		users.remove(userId);
-	}
-	
-	private User getUser(String userId) {
-		if (!users.containsKey(userId)) {
-			throw new IllegalArgumentException("unknown user " + userId);
-		}
-		return (User) users.get(userId);
-	}
-	
+			
 	// --> document related methods <--
 	
 	private void addDocument(String docId, Document doc) {
@@ -184,7 +165,6 @@ public class NetworkSimulatorService implements NetworkService, User {
 	// --> MessageListener methods <--
 	
 	public void userRegistered(User user) {
-		addUser(user.getId(), user);
 		callback.userDiscovered(user);
 	}
 		
@@ -193,7 +173,6 @@ public class NetworkSimulatorService implements NetworkService, User {
 	}
 		
 	public void userUnregistered(User user) {
-		removeUser(user.getId());
 		callback.userDiscarded(user);
 	}
 		
