@@ -66,6 +66,7 @@ public class PersistentFrame extends JFrame {
 
 	public void setMessageSource(LocaleMessageSource messageSource) {
 		this.messageSource = messageSource;
+		setIconImage(messageSource.getIcon("iAceLogo").getImage());
 	}
 	
 }

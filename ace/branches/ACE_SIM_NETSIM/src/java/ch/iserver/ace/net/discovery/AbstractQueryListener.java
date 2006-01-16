@@ -21,6 +21,12 @@
 
 package ch.iserver.ace.net.discovery;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.log4j.Logger;
+
 import ch.iserver.ace.util.ParameterValidator;
 
 import com.apple.dnssd.DNSSDService;
@@ -38,10 +44,17 @@ import edu.emory.mathcs.backport.java.util.concurrent.LinkedBlockingQueue;
  */
 public abstract class AbstractQueryListener extends BaseListenerImpl implements QueryListener {
 	
+	private static Logger LOG = Logger.getLogger(AbstractQueryListener.class);
+	
 	/**
 	 * A queue to match results of received events to the corresponding services and users, respectively.
 	 */
 	private BlockingQueue serviceQueue;
+	
+	/**
+	 * map used for service name matching
+	 */
+	private Map ids;
 	
 	/**
 	 * Creates a new AbstractQueryListener instance. 
@@ -51,6 +64,7 @@ public abstract class AbstractQueryListener extends BaseListenerImpl implements 
 	public AbstractQueryListener(DiscoveryCallbackAdapter adapter) {
 		super(adapter);
 		this.serviceQueue = new LinkedBlockingQueue();
+		this.ids = Collections.synchronizedMap(new HashMap());
 	}
 	
 	/**
@@ -64,29 +78,43 @@ public abstract class AbstractQueryListener extends BaseListenerImpl implements 
 	}
 	
 	/**
-	 * Adds a service name to this listener. Events and service names
-	 * are matched according to the FIFO principle.
+	 * Adds a service name to this listener. 
 	 * 
+	 * @param id 			a unique id for the service name
 	 * @param servicename		the service name to be added
 	 */
-	public void addNextService(String servicename) {
+	public void addNextService(String id, String servicename) {
+		ParameterValidator.notNull("id", id);
 		ParameterValidator.notNull("servicename", servicename);
-		serviceQueue.add(servicename);
+		LOG.debug("addService(" + id + ", " + servicename + ")");
+		ids.put(id, servicename);
+//		serviceQueue.add(servicename);
 	}
 	
 	/**
 	 * Gets the next service name.
 	 * Note: this method is blocking if no service name is currently available.
 	 * 
+	 * @param id a unique id for the service name
 	 * @return	the next service name
 	 */
-	protected String getNextService() {
+	protected String getNextService(String id) {
 		String result = null;
-		try {
-			result = (String)serviceQueue.take();
-		} catch (InterruptedException ie) {
-			
-		}
+//		try {
+			//queue only used for blocking
+//			serviceQueue.take();
+			while (result == null) {
+				result = (String)ids.get(id);
+				if (result == null) {
+					try {
+						LOG.warn("wait for 50 ms to get service name");
+						//TODO: get a more pragmatic solution for this
+						Thread.sleep(50);
+					} catch (InterruptedException ie) {}
+				}
+			}
+//		} catch (InterruptedException ie) {}
+		LOG.debug("getService(" + id + ", " + result + ")");
 		return result;
 	}
 	

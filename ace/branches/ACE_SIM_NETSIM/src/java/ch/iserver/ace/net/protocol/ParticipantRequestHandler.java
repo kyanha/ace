@@ -36,6 +36,7 @@ import ch.iserver.ace.net.core.NetworkServiceExt;
 import ch.iserver.ace.net.core.NetworkServiceImpl;
 import ch.iserver.ace.net.protocol.RequestImpl.DocumentInfo;
 import ch.iserver.ace.util.ParameterValidator;
+import ch.iserver.ace.util.StackTrace;
 
 /**
  * The <code>ParticipantRequestHandler</code> is a server side 
@@ -176,12 +177,14 @@ public class ParticipantRequestHandler implements RequestHandler {
 				port.receiveAcknowledge(Integer.parseInt(siteId), timestamp);
 			} 
 		} catch (Exception e) {
-			e.printStackTrace();
-			LOG.error("could not process request ["+e+"]");
+			String stackTrace = StackTrace.get(e);
+			LOG.error("could not process request [" + e + ", " + stackTrace + ", " + readInData + "]");
 			NetworkServiceImpl.getInstance().getCallback().serviceFailure(FailureCodes.SESSION_FAILURE, "'" + readInData + "'", e);
 		}
 		LOG.debug("<-- receiveMSG");
 		
 	}
+	
+
 
 }

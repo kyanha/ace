@@ -97,6 +97,7 @@ private static Logger LOG = Logger.getLogger(SendDocumentsPrepareFilter.class);
 					FailureCodes.REMOTE_USER_FAILURE, user.getUserDetails().getUsername(), ce);
 			//TODO: remove userProxy and userSession?
 		} catch (Exception e) {
+			e.printStackTrace();
 			LOG.error("process problem ["+e.getMessage()+"]");
 		}
 	}

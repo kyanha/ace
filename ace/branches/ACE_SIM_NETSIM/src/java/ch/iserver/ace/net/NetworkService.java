@@ -121,4 +121,5 @@ public interface NetworkService {
 	 * @param port the target port
 	 */	
 	void discoverUser(DiscoveryNetworkCallback callback, InetAddress addr, int port);
+	
 }

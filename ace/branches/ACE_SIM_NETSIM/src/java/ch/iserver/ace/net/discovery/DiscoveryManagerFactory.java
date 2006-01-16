@@ -23,9 +23,11 @@ package ch.iserver.ace.net.discovery;
 
 import ch.iserver.ace.net.core.DiscoveryCallback;
 import ch.iserver.ace.util.ParameterValidator;
+import ch.iserver.ace.util.ThreadDomain;
 
 /**
- * Factory class for DiscoveryManager objects.
+ * Factory class for the DiscoveryManager implementation and the 
+ * DiscoveryCallbackAdapter implementation.
  * 
  * @see ch.iserver.ace.net.discovery.DiscoveryManager
  * @see ch.iserver.ace.net.discovery.DiscoveryCallbackAdapter
@@ -37,17 +39,24 @@ public class DiscoveryManagerFactory {
 	 */
 	private static DiscoveryManagerImpl instance;
 	
+	private static DiscoveryCallbackAdapter adapter;
+	
 	/**
 	 * Initializes this factory. Actually creates a new instance
 	 * of a DiscoveryManager and DiscoveryCallbackAdapter implementation.
 	 * This method must be called prior to method {@link #getInstance()}.
 	 * 
-	 * @param callback		the discovery callback
+	 * @param callback			the discovery callback
+	 * @param mainThreadDomain 	the main <code>ThreadDomain</code> used 
+	 * 								to wrap the DiscoveryCallbackAdapter
 	 */
-	public static void init(DiscoveryCallback callback) {
+	public static void init(DiscoveryCallback callback, ThreadDomain mainThreadDomain) {
 		if (instance == null) {
 			ParameterValidator.notNull("callback", callback);
+			ParameterValidator.notNull("mainThreadDomain", mainThreadDomain);
 			instance = new DiscoveryManagerImpl(callback);
+			adapter = (DiscoveryCallbackAdapter) 
+						mainThreadDomain.wrap(instance, DiscoveryCallbackAdapter.class);
 		}
 	}
 	
@@ -61,7 +70,7 @@ public class DiscoveryManagerFactory {
 	 */
 	public static DiscoveryManager getDiscoveryManager() {
 		if (instance == null) {
-			throw new IllegalStateException("init(callback) must be called first");
+			throw new IllegalStateException("init(callback, domain) must be called first");
 		}
 		return instance;
 	}
@@ -74,10 +83,10 @@ public class DiscoveryManagerFactory {
 	 * @return	the DiscoveryCallbackAdapter instance
 	 */
 	public static DiscoveryCallbackAdapter getDiscoveryCallbackAdapter() {
-		if (instance == null) {
-			throw new IllegalStateException("init(callback) must be called first");
+		if (adapter == null) {
+			throw new IllegalStateException("init(callback, domain) must be called first");
 		}
-		return instance;
+		return adapter;
 	}
 	
 }

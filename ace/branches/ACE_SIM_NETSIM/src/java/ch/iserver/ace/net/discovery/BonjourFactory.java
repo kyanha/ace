@@ -23,6 +23,7 @@ package ch.iserver.ace.net.discovery;
 import ch.iserver.ace.net.core.Discovery;
 import ch.iserver.ace.net.core.DiscoveryCallback;
 import ch.iserver.ace.net.core.DiscoveryFactory;
+import ch.iserver.ace.util.ThreadDomain;
 
 import com.apple.dnssd.BrowseListener;
 import com.apple.dnssd.ResolveListener;
@@ -53,11 +54,16 @@ public class BonjourFactory extends DiscoveryFactory {
 	}
 	
 	/**
-	 * {@inheritDoc}
+	 * Creates a new discovery implementation.
+	 * 
+	 * @param callback		the DiscoveryCallback for the discovery
+	 * @param threadDomain 	the main <code>ThreadDomain</code> used to wrap the DiscoveryCallbackAdapter
+	 * @return an instance of a Discovery implementation
 	 */
-	public Discovery createDiscovery(DiscoveryCallback callback) {
+	public Discovery createDiscovery(DiscoveryCallback callback, Object mainThreadDomain) {
 		UserRegistration actualRegistration = (registration != null) ? registration : new UserRegistrationImpl();
-		PeerDiscovery actualDiscovery = (discovery != null) ? discovery : createPeerDiscovery(callback);
+		ThreadDomain domain = (ThreadDomain) mainThreadDomain;
+		PeerDiscovery actualDiscovery = (discovery != null) ? discovery : createPeerDiscovery(callback, domain);
 		Bonjour b = new Bonjour(actualRegistration, actualDiscovery);
 		String serviceName = System.getProperty("user.name");
 		//remove spaces from service name
@@ -71,11 +77,12 @@ public class BonjourFactory extends DiscoveryFactory {
 	 * The PeerDiscovery is used by the Bonjour class.
 	 * 
 	 * @param callback 	the DiscoveryCallback object
+	 * @param mainThreadDomain the main <code>ThreadDomain</code> used by the DiscoveryManagerFactory
 	 * @return	a new PeerDiscovery object
 	 */
-	private PeerDiscovery createPeerDiscovery(DiscoveryCallback callback) {
+	private PeerDiscovery createPeerDiscovery(DiscoveryCallback callback, ThreadDomain mainThreadDomain) {
 		//TODO: load classes via spring framework?
-		DiscoveryManagerFactory.init(callback);
+		DiscoveryManagerFactory.init(callback, mainThreadDomain);
 		DiscoveryCallbackAdapter adapter = DiscoveryManagerFactory.getDiscoveryCallbackAdapter();
 		//TODO: use SingleThreadDomain for DiscoveryCallbackAdapter?
 		AbstractQueryListener ipListener = new IPQueryListener(adapter);

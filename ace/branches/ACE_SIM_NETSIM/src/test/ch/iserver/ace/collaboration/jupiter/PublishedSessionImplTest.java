@@ -244,10 +244,8 @@ public class PublishedSessionImplTest extends TestCase {
 		assertEquals(participant2, impl.getParticipant(2));
 		impl.sendParticipantLeft(1, Participant.LEFT);
 		assertEquals(1, impl.getParticipants().size());
-		assertNull(impl.getParticipant(1));
 		impl.sendParticipantLeft(2, Participant.KICKED);
 		assertEquals(0, impl.getParticipants().size());
-		assertNull(impl.getParticipant(0));
 		
 		// verify
 		registryCtrl.verify();

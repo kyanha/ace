@@ -50,7 +50,7 @@ ant.apache.org/">Apache Ant</a> installed in that case.</p>
 
 <h3>Diploma Project Release</h3>
 <p>The release notes can be found <a href="http://ace.iserver.ch:81/repos/ace/ace/tags/ACE_DIPLOMA/release-notes.txt">here</a>.</p>
-<p>This is a stabilization release of the milestone 3 build.</p>
+<p>This is a stabilization release based on the milestone 3 build.</p>
 
 <ul>
  <li><a href="download.php?id=9">Windows Installer</a></li>

@@ -288,7 +288,7 @@ public class Jupiter implements Algorithm {
 	 * @see Jupiter#generateRequest(Operation)
 	 * @see Jupiter#receiveRequest(Request)
 	 */
-	private class OperationWrapper {
+	private static class OperationWrapper {
 
 		private Operation op;
 

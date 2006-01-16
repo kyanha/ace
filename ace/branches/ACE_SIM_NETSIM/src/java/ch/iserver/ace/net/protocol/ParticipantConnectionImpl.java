@@ -21,6 +21,9 @@
 
 package ch.iserver.ace.net.protocol;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import org.apache.log4j.Logger;
 import org.beepcore.beep.core.BEEPException;
 import org.beepcore.beep.core.Channel;
@@ -181,6 +184,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 		session = null;
 		serializer = null;
 		port = null;
+		
 		setReplyListener(null);
 		Channel channel = getChannel();
 		if (channel != null) {
@@ -188,12 +192,18 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 			//((ParticipantRequestHandler)channel.getRequestHandler()).cleanup();
 			channel.setRequestHandler(null);
 		}
+		Thread t = getSendingThread();
+		if (t != null) {
+			LOG.debug("interrupt sending thread [" + t.getName() + "]");
+			t.interrupt();
+		}
+		//should be enough to set the channel = null, therefore the channel's 
+		//request handler must not be nulified (as above).
 		setChannel(null);
 		if (incoming != null) {
 			incoming.setRequestHandler(null);
 			incoming = null;
 		}
-//		}
 		setState(STATE_CLOSED);
 		LOG.debug("<-- cleanup()");
 	}
@@ -226,7 +236,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 		this.port = port;
 		//initiate collaboration channel
 		try {
-			LOG.debug("initiate incoming and outgoing channel to peer");
+			LOG.debug("initiate incoming and outgoing channel to peer "+session.getHost());
 			//channel for outgoing messages
 			Channel outgoing = session.startChannel(RemoteUserSession.CHANNEL_SESSION, null, getDocumentId());
 			setChannel(outgoing);
@@ -280,6 +290,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 				}
 				
 				//send via incoming channel so that the channel is set correctly at the receiver site
+				//--> i.e. correct Channel to SessionConnection assignment
 				LOG.debug("use incoming channel to send document");
 				Channel outgoing = getChannel();
 				setChannel(incoming);
@@ -288,7 +299,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 				LOG.debug("set outgoing channel as default channel again");
 				
 			} else {
-				LOG.warn("do not send Document, connection is in state " + getStateString());
+				LOG.warn("cannot send Document, connection is in state " + getStateString());
 			}
 			LOG.info("<-- sendDocument()");
 		} else {
@@ -310,7 +321,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 			}
 			sendToPeer(data);
 		} else {
-			LOG.warn("do not send Acknowledge, connection is in state " + getStateString());
+			LOG.warn("cannot send Acknowledge, connection is in state " + getStateString());
 		}
 		LOG.info("<-- sendRequest()");
 	}
@@ -329,7 +340,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 			}
 			sendToPeer(data);
 		} else {
-			LOG.warn("do not send CaretUpdateMessage, connection is in state " + getStateString());
+			LOG.warn("cannot send CaretUpdateMessage, connection is in state " + getStateString());
 		}
 		LOG.info("<-- sendCaretUpdateMessage()");
 	}
@@ -348,7 +359,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 			}
 			sendToPeer(data);
 		} else {
-			LOG.warn("do not send Acknowledge, connection is in state " + getStateString());
+			LOG.warn("cannot send Acknowledge, connection is in state " + getStateString());
 		}
 		LOG.info("<-- sendAcknowledge()");
 	}
@@ -367,7 +378,7 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 			}
 			sendToPeer(data);
 		} else {
-			LOG.warn("do not send participantJoined, connection is in state " + getStateString());
+			LOG.warn("cannot send participantJoined, connection is in state " + getStateString());
 		}
 		LOG.info("--> sendParticipantJoined()");
 	}
@@ -387,9 +398,9 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 			}
 			sendToPeer(data);
 		} else {
-			LOG.warn("do not send participantLeft, connection is in state " + getStateString());
+			LOG.warn("cannot send participantLeft, connection is in state " + getStateString());
 		}
-		LOG.info("--> sendParticipantLeft()");
+		LOG.info("<-- sendParticipantLeft()");
 	}
 
 	/**
@@ -416,19 +427,32 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 	 * {@inheritDoc}
 	 */
 	public void close() {
-		LOG.info("--> close("+getParticipantId()+", "+username+")");
+		LOG.info("--> close(" + getParticipantId() + ", " + username + ")");
 		if (getState() == STATE_ACTIVE) {
 			try {
 				if (!isKicked && !hasLeft()) {
 					sendSessionTerminated();
 				}
+				//TODO: improve this code
+				final Thread t = Thread.currentThread();
+				Timer timer = new Timer();
+				timer.schedule(new TimerTask() {
+					public void run() {
+						LOG.debug("going to interrupt [" + t.getName() + "]");
+						t.interrupt();
+						LOG.debug("interrupted.");
+					}
+				}, 1500);
+				LOG.debug("--> channel.close()");
 				getChannel().close();
+				timer.cancel();
+				LOG.debug("<-- channel.close()");
 			} catch (BEEPException be) {
 				LOG.warn("could not close channel ["+be.getMessage()+"]");
 			}
 			executeCleanup();
 		} else {
-			LOG.warn("do not close, connection is in state " + getStateString());
+			LOG.warn("cannot close, connection is in state " + getStateString());
 		}
 		LOG.info("<-- close()");
 	}

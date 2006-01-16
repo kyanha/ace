@@ -26,11 +26,9 @@ import junit.framework.TestCase;
 import org.easymock.MockControl;
 
 import ch.iserver.ace.UserDetails;
-import ch.iserver.ace.net.core.Discovery;
-import ch.iserver.ace.net.core.DiscoveryCallback;
-import ch.iserver.ace.net.core.DiscoveryFactory;
 import ch.iserver.ace.net.discovery.PeerDiscovery;
 import ch.iserver.ace.net.discovery.UserRegistration;
+import ch.iserver.ace.util.SingleThreadDomain;
 import ch.iserver.ace.util.UUID;
 
 /**
@@ -48,7 +46,7 @@ public class DiscoveryTest extends TestCase {
 		MockControl discoveryCtrl = MockControl.createControl(PeerDiscovery.class);
 		PeerDiscovery peerDiscovery = (PeerDiscovery) discoveryCtrl.getMock();
 		DiscoveryFactory.getInstance().init(registration, peerDiscovery);
-		Discovery discovery = DiscoveryFactory.getInstance().createDiscovery(callback);
+		Discovery discovery = DiscoveryFactory.getInstance().createDiscovery(callback, new SingleThreadDomain());
 		String username = "asšdlfjašsdfjšlasdjflškjsadf";
 		UserDetails details = new UserDetails(username);
 		String uuid = UUID.nextUUID();

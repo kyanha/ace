@@ -134,12 +134,14 @@ public class DiscoveryCallbackImpl implements DiscoveryCallback {
 				docs = (RemoteDocumentProxy[]) documents.values().toArray(new RemoteDocumentProxy[0]);
 			}
 			if (docs != null && docs.length > 0) {
+				LOG.debug("--> callback.documentDiscarded(" + docs.length + ")");
 				callback.documentDiscarded(docs);
+				LOG.debug("<-- callback.documentDiscarded()");
 			}
 		}
-		LOG.debug("--> notifiy upper layer about user");
+		LOG.debug("--> callback.userDiscarded()");
 		callback.userDiscarded(proxy);
-		LOG.debug("<-- ok.");
+		LOG.debug("<-- callback.userDiscarded()");
 		
 		DiscoveryManager manager = DiscoveryManagerFactory.getDiscoveryManager();
 		String userId = proxy.getId();
@@ -148,6 +150,8 @@ public class DiscoveryCallbackImpl implements DiscoveryCallback {
 				SessionManager.getInstance().removeSession(userId);
 			session.cleanup();
 			DiscoveryManagerFactory.getDiscoveryManager().setSessionTerminated(userId);
+		} else {
+			LOG.debug("no session established with discarded user");
 		}
 		LOG.debug("<-- userDiscarded()");
 	}

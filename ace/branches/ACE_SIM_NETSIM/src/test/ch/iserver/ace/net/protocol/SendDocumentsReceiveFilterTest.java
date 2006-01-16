@@ -24,6 +24,7 @@ import ch.iserver.ace.net.protocol.RequestImpl.DocumentInfo;
 import ch.iserver.ace.net.protocol.filter.LogFilter;
 import ch.iserver.ace.net.protocol.filter.RequestFilter;
 import ch.iserver.ace.net.protocol.filter.SendDocumentsReceiveFilter;
+import ch.iserver.ace.util.SingleThreadDomain;
 
 public class SendDocumentsReceiveFilterTest extends TestCase {
 
@@ -39,7 +40,7 @@ public class SendDocumentsReceiveFilterTest extends TestCase {
 		RemoteUserProxyExt user = RemoteUserProxyFactory.getInstance().createProxy("userid1", new MutableUserDetails("user1", InetAddress.getLocalHost(), 41234));
 		RequestFilter logfilter = new LogFilter(null ,false);
 		DiscoveryCallbackImpl discoveryCallback = new DiscoveryCallbackImpl(callback, NetworkServiceImpl.getInstance(), logfilter);
-		DiscoveryManagerFactory.init(discoveryCallback);
+		DiscoveryManagerFactory.init(discoveryCallback, new SingleThreadDomain());
 		DiscoveryManagerFactory.getDiscoveryManager();
 		SessionManager.getInstance().createSession(user);
 		
