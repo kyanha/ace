@@ -75,7 +75,8 @@ public class TLVHandler {
 			}
 			buffer.flush();
 			LOG.debug("--> encode("+output.size()+" bytes)");
-			result = Base64.encodeBytes(output.toByteArray(), Base64.GZIP);
+			//result = Base64.encodeBytes(output.toByteArray(), Base64.GZIP);
+			result = new String(output.toByteArray(), NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 			LOG.debug("<-- encode("+result.length()+" bytes)");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -97,8 +98,9 @@ public class TLVHandler {
 		int startIndex = 0;
 		try {
 			LOG.debug("--> decode("+payload.length()+" bytes)");
-			byte[] decoded = Base64.decode(payload);
-			String data = new String(decoded, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
+//			byte[] decoded = Base64.decode(payload);
+//			String data = new String(decoded, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
+			String data = payload;
 			LOG.debug("<-- decode("+data.length()+")");
 			
 			 while ((endIndex = data.indexOf(SPACE, startIndex)) != -1) {
