@@ -32,6 +32,7 @@ import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Timestamp;
 import ch.iserver.ace.algorithm.TimestampFactory;
 import ch.iserver.ace.net.ParticipantPort;
+import ch.iserver.ace.net.core.NetworkProperties;
 import ch.iserver.ace.net.core.NetworkServiceExt;
 import ch.iserver.ace.net.core.NetworkServiceImpl;
 import ch.iserver.ace.net.protocol.RequestImpl.DocumentInfo;
@@ -131,7 +132,7 @@ public class ParticipantRequestHandler implements RequestHandler {
 			if (!service.isStopped()) {
 				InputDataStream input = message.getDataStream();
 				byte[] rawData = DataStreamHelper.read(input);
-				readInData = new String(rawData);
+				readInData = new String(rawData, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 				LOG.debug("received " + rawData.length + " bytes. ["+readInData+"]");
 				CollaborationParserHandler newHandler = new CollaborationParserHandler();
 				newHandler.setTimestampFactory(factory);

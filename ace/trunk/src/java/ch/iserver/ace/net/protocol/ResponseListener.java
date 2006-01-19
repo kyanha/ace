@@ -28,6 +28,7 @@ import org.beepcore.beep.core.Message;
 import org.beepcore.beep.core.ReplyListener;
 import org.beepcore.beep.transport.tcp.TCPSession;
 
+import ch.iserver.ace.net.core.NetworkProperties;
 import ch.iserver.ace.net.protocol.filter.RequestFilter;
 import ch.iserver.ace.util.ParameterValidator;
 
@@ -73,7 +74,7 @@ public class ResponseListener implements ReplyListener {
 		try {
 			InputDataStream stream = message.getDataStream();
 			byte[] data = DataStreamHelper.read(stream);
-			result = new String(data);
+			result = new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 		} catch (Exception e) {
 			LOG.error("could not read stream [" + e + "]");
 		}
