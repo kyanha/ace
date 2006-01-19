@@ -239,7 +239,7 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 				//TODO: generate XML using a serializer
 				String user = "<user id=\"" + userid + "\" name=\"" + username + "\" address=\"" + address + "\" port=\"" + port + "\"/>";
 				String channelType = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-						"<ace><channel type=\"" + RemoteUserSession.CHANNEL_MAIN + ">" + user + "</channel></ace>";
+						"<ace><channel type=\"" + RemoteUserSession.CHANNEL_MAIN + "\">" + user + "</channel></ace>";
 				byte[] data = channelType.getBytes(NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 				OutputDataStream output = DataStreamHelper.prepare(data);
 				Reply reply = new Reply();
