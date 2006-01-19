@@ -362,8 +362,8 @@
 				<fileset dir="${src.integration-test}">
 					<include name="ch/iserver/ace/collaboration/CollaborationServiceTest.java"/>
 					<include name="ch/iserver/ace/collaboration/server/ServerTest.java"/>
-					<include name="ch/iserver/ace/net/impl/discovery/PeerDiscoveryTest.java"/>
-					<include name="ch/iserver/ace/net/impl/discovery/UserRegistrationTest.java"/>					
+					<include name="ch/iserver/ace/net/core/DiscoveryTest.java"/>
+					<include name="ch/iserver/ace/net/discovery/UserRegistrationTest.java"/>					
 				</fileset>
 			</batchtest>
 			<test if="testcase" todir="${build.testreports}" name="${testcase}"/>
