@@ -40,8 +40,9 @@
        <ul>
         <li><a href="index.php">Home</a></li>
         <li><a href="index.php?page=8">Downloads</a></li>
-        <li><a href="index.php?page=9">Screenshots</a></li>        
+        <li><a href="index.php?page=9">Screenshots</a></li>      
         <li><a href="index.php?page=7">Documents</a></li>
+        <li><a href="index.php?page=10">Mailing Lists</a></li>
         <li><a href="index.php?page=5">Development</a></li>
         <li><a href="index.php?page=6">Testing</a></li>
         <li><a href="index.php?page=4">Team</a></li>
@@ -82,7 +83,10 @@
          break;
        case 9:
          require('inc/screenshots.inc.php');
-         break;         
+         break;
+       case 10:
+         require('inc/mailinglists.inc.php');
+         break; 
        default:
          require('inc/index.inc.php');
        }

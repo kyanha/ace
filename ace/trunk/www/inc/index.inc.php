@@ -10,6 +10,10 @@ as a page that talks about the technical <a href="index.php?page=3">Background</
 <br/>
 
 <h3>News</h3>
+
+<p><b>Mailing Lists</b> <span class="date">23.01.2006</span></p>
+<p>We've added two mailing lists, a users list for ACE users and a developers list for the developers. The users list is also used to communicate new releases of ACE. Visit the <a href="index.php?page=10">mailing lists page</a> to find out how to subscribe.</p>
+
 <p><b>Upcoming Stabilization Release</b> <span class="date">09.01.2006</span></p>
 <p>Keep watching for the upcoming release in about two or three weeks which will include bug fixes as well as stabilization work.</p>
 
