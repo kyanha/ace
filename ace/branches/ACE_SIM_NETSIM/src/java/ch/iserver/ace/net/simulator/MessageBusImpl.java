@@ -26,6 +26,8 @@ import java.util.Iterator;
 import java.util.Map;
 
 import ch.iserver.ace.UserDetails;
+import ch.iserver.ace.util.BoundedThreadDomain;
+import ch.iserver.ace.util.ThreadDomain;
 
 /**
  *
@@ -42,7 +44,14 @@ public class MessageBusImpl implements MessageBus {
 		return instance;
 	}
 	
-	public synchronized MessagePort register(User user) {
+	private ThreadDomain threadDomain = new BoundedThreadDomain(5);
+	
+	public ThreadDomain getThreadDomain() {
+		return threadDomain;
+	}
+	
+	public synchronized MessagePort register(User u) {
+		User user = (User) getThreadDomain().wrap(u, User.class, true);
 		Iterator it = listenerMap.keySet().iterator();
 		while (it.hasNext()) {
 			String key = (String) it.next();
