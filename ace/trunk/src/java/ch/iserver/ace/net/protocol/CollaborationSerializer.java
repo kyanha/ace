@@ -222,6 +222,12 @@ public class CollaborationSerializer implements Serializer, ProtocolConstants {
 				attrs.addAttribute("", "", DOC_ID, "", docId);
 				handler.startElement("", "", TAG_KICKED, attrs);
 				handler.endElement("", "", TAG_KICKED);
+			} else if (type == USER_DISCARDED) {
+				String userId = (String) data;
+				attrs.addAttribute("", "", ID, "", userId);
+				handler.startElement("", "", TAG_USER_DISCARDED, attrs);
+				handler.endElement("", "", TAG_USER_DISCARDED);
+			
 			} else {
 				LOG.error("unknown notification type ["+type+"]");
 			}

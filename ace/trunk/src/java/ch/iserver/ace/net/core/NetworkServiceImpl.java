@@ -41,6 +41,7 @@ import ch.iserver.ace.net.discovery.DiscoveryManagerFactory;
 import ch.iserver.ace.net.discovery.ExplicitUserDiscovery;
 import ch.iserver.ace.net.protocol.BEEPSessionListener;
 import ch.iserver.ace.net.protocol.BEEPSessionListenerFactory;
+import ch.iserver.ace.net.protocol.CollaborationSerializer;
 import ch.iserver.ace.net.protocol.ParticipantConnectionImplFactory;
 import ch.iserver.ace.net.protocol.ProtocolConstants;
 import ch.iserver.ace.net.protocol.RemoteUserSession;
@@ -265,11 +266,10 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 					}
 					if (!user.isDNSSDdiscovered()) { //send sign-off message to explicitly discovered user
 						LOG.debug("send sign-off message to explicitly discovered user");
-						String message = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-								"<ace><notification><userDiscarded id=\"" + getUserId() + "\"/></notification></ace>";
-						byte[] data = message.getBytes(NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
+						byte[] message = (new CollaborationSerializer()).createNotification(
+									ProtocolConstants.USER_DISCARDED, getUserId());
 						LOG.debug("send userDiscarded to " + user.getUserDetails().getUsername());
-						session.getMainConnection().send(data, null, null);
+						session.getMainConnection().send(message, null, null);
 					}
 					//close main channel and TCPSession
 					LOG.debug("close main channel and TCPSession");
