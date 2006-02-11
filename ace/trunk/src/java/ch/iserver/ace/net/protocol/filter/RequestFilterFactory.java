@@ -78,6 +78,7 @@ public class RequestFilterFactory {
 	 */
 	public static RequestFilter createServerChain() {
 		RequestFilter filter = new FailureFilter(null);
+		filter = new UserDiscardedRecipientFilter(filter);
 		filter = new InvitationRejectedRecipientFilter(filter);
 		filter = new InviteRequestRecipientFilter(filter);
 		filter = new JoinRejectedRecipientFilter(filter);
