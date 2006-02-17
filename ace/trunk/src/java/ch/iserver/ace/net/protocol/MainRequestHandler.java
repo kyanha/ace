@@ -82,7 +82,7 @@ public class MainRequestHandler implements RequestHandler {
 	 * @see org.beepcore.beep.core.RequestHandler#receiveMSG(org.beepcore.beep.core.MessageMSG)
 	 */
 	public void receiveMSG(MessageMSG message) {
-		LOG.debug("--> receiveMSG");
+		LOG.debug("--> receiveMSG(" + message + ")");
 
 		try {
 			Request request = null;

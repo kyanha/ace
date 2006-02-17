@@ -43,18 +43,18 @@ public class HeaderParser {
 
     public boolean parseLast() throws BEEPException {
         if (hasMoreTokens() == false) {
-            throw new BEEPException("Malformed BEEP Header");
+            throw new BEEPException("Malformed BEEP Header #A1");
         }
 
         int tl = tokenLength();
         if (tl != 1) {
-            throw new BEEPException("Malformed BEEP Header");
+            throw new BEEPException("Malformed BEEP Header #A2");
         }
 
         char c = (char)(buf[off] & 0x7f);
 
         if (c != '*' && c != '.') {
-            throw new BEEPException("Malformed BEEP Header");
+            throw new BEEPException("Malformed BEEP Header #A3");
         }
 
         findNextToken(tl);
@@ -64,7 +64,7 @@ public class HeaderParser {
 
     public int parseInt() throws BEEPException {
         if (hasMoreTokens() == false) {
-            throw new BEEPException("Malformed BEEP Header");
+            throw new BEEPException("Malformed BEEP Header #A4");
         }
 
         int tl = tokenLength();
@@ -78,7 +78,7 @@ public class HeaderParser {
 
     public long parseUnsignedInt() throws BEEPException {
         if (hasMoreTokens() == false) {
-            throw new BEEPException("Malformed BEEP Header");
+            throw new BEEPException("Malformed BEEP Header #A5");
         }
 
         int tl = tokenLength();
@@ -92,12 +92,12 @@ public class HeaderParser {
 
     public char[] parseType() throws BEEPException {
         if (hasMoreTokens() == false) {
-            throw new BEEPException("Malformed BEEP Header");
+            throw new BEEPException("Malformed BEEP Header #A6");
         }
 
         int tl = tokenLength();
         if (tl != 3) {
-            throw new BEEPException("Malformed BEEP Header");
+            throw new BEEPException("Malformed BEEP Header #A7");
         }
 
         char[] c = new char[3];
@@ -121,7 +121,7 @@ public class HeaderParser {
         if (off == len ||
             buf[off - 1] != ' ' || buf[off] == ' ')
         {
-            throw new BEEPException("Malformed BEEP Header");
+            throw new BEEPException("Malformed BEEP Header #A8");
         }
     }
 

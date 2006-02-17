@@ -85,7 +85,8 @@ public class DefaultRequestHandler implements RequestHandler {
 	 * @see org.beepcore.beep.core.RequestHandler#receiveMSG(org.beepcore.beep.core.MessageMSG)
 	 */
 	public void receiveMSG(MessageMSG message) {
-		LOG.debug("--> receiveMSG()");
+		LOG.debug("--> receiveMSG(" + message + ")");
+		
 		try {
 			boolean isDiscovery = false;
 			RequestHandler requestHandler = null;
@@ -124,7 +125,6 @@ public class DefaultRequestHandler implements RequestHandler {
 					OutputDataStream os = new OutputDataStream();
 					os.setComplete();
 					message.sendRPY(os);
-//					message.sendNUL();
 				}
 			} catch (Exception e) {
 				LOG.error("could not send confirmation ["+e+", "+e.getMessage()+"]");
@@ -149,6 +149,7 @@ public class DefaultRequestHandler implements RequestHandler {
 	private void processDiscoveredUser(MessageMSG message, Channel channel, RemoteUserProxyExt proxy) throws Exception {
 		String id = NetworkServiceImpl.getInstance().getUserId();
 		String name = NetworkServiceImpl.getInstance().getUserDetails().getUsername();
+		//TODO: use XML serializer for this
 		String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><ace><response><user id=\"" + id + "\" name=\"" + name + "\"/></response></ace>";
 		byte[] data = xml.getBytes(NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 		OutputDataStream output = DataStreamHelper.prepare(data);

@@ -19,6 +19,8 @@ package org.beepcore.beep.core;
 
 import java.util.LinkedList;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.beepcore.beep.util.BufferSegment;
 
 /**
@@ -36,6 +38,8 @@ import org.beepcore.beep.util.BufferSegment;
  * @version $Revision: 1.6 $, $Date: 2003/04/23 15:23:04 $
  */
 public class InputDataStream {
+	
+	private Log log = LogFactory.getLog(this.getClass());
 
     /**
      * Creates a <code>InputDataStream</code>.
@@ -81,18 +85,21 @@ public class InputDataStream {
 
     void add(BufferSegment segment)
     {
+    		log.debug("--> add(" + segment + ")");
         if( this.closed) {
             if (this.channel != null) {
                 this.channel.freeReceiveBufferBytes(segment.getLength());
             }
             return;
         }
-
+        log.debug("\tavailable bytes before add: " + this.availableBytes);
         synchronized (this.buffers) {
             this.buffers.addLast(segment);
             this.availableBytes += segment.getLength();
             this.buffers.notify();
         }
+        log.debug("\tavailable bytes after add: " + this.availableBytes);
+        log.debug("<-- add() [" + this.buffers.size() + " segment(s)]");
     }
 
     public int available()

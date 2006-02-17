@@ -18,14 +18,17 @@
 package org.beepcore.beep.core;
 
 
-import java.util.*;
-
-import edu.oswego.cs.dl.util.concurrent.PooledExecutor;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.beepcore.beep.util.BufferSegment;
+
+import edu.oswego.cs.dl.util.concurrent.PooledExecutor;
 
 
 /**
@@ -50,8 +53,8 @@ class ChannelImpl implements Channel, Runnable {
 
     /** @todo check this */
 
-    // default values for some variables
-    static final int DEFAULT_WINDOW_SIZE = 4096;
+    // default values for some variables (128 MB = 134'217'728 Bytes) 134217728 268435456
+    static final int DEFAULT_WINDOW_SIZE = 268435456; //4096; 64 * 1024 = 65536 bytes = TCP max. receive buffer size, 100000 okay
 
     static final RequestHandler defaultHandler = new DefaultMSGHandler();
 
@@ -86,7 +89,7 @@ class ChannelImpl implements Channel, Runnable {
     /** messages waiting for replies */
     private List sentMSGQueue;
 
-    /** MSG we've received by awaiting proceesing of a former MSG */
+    /** MSG we've received by awaiting processing of a former MSG */
     private LinkedList recvMSGQueue;
 
     /** messages queued to be sent */
@@ -252,6 +255,7 @@ class ChannelImpl implements Channel, Runnable {
      */
     public void setReceiveBufferSize(int size) throws BEEPException
     {
+    		log.debug("--> setReceiveBufferSize(" + size + ")");
         synchronized (this) {
             if ((state != STATE_ACTIVE) && (state != STATE_INITIALIZED)) {
                 throw new BEEPException("Channel in a bad state.");
@@ -274,6 +278,7 @@ class ChannelImpl implements Channel, Runnable {
 
             sendWindowUpdate();
         }
+        log.debug("<-- setReceiveBufferSize(" + size + ")");
     }
 
     /**
@@ -352,15 +357,18 @@ class ChannelImpl implements Channel, Runnable {
     }
 
     public void run() {
-        MessageMSGImpl m;
+    		log.debug("--> run()");
+        MessageMSGImpl msg;
         synchronized (recvMSGQueue) {
-                m = (MessageMSGImpl) recvMSGQueue.getFirst();
-                synchronized (m) {
-                    m.setNotified();
+                msg = (MessageMSGImpl) recvMSGQueue.getFirst();
+                synchronized (msg) {
+                    msg.setNotified();
                 }
         }
-
-        handler.receiveMSG(m);
+        log.debug("--> RequestHandler.receiveMsg(" + msg + ")");
+        handler.receiveMSG(msg);
+        log.debug("<-- RequestHandler.receiveMsg(msg)");
+        log.debug("<-- run()");
     }
 
     /**
@@ -478,57 +486,79 @@ class ChannelImpl implements Channel, Runnable {
         // if this is an incoming message rather than a reply to a
         // previously sent message
         if (frame.getMessageType() == Message.MESSAGE_TYPE_MSG) {
-            boolean notify = false;
 
             synchronized (recvMSGQueue) {
-                MessageMSGImpl m = null;
+                MessageMSGImpl msg = null;
+                log.debug("size recvMSGQueue [" + recvMSGQueue.size() + "]");
                 if (recvMSGQueue.size() != 0) {
-                    m = (MessageMSGImpl) recvMSGQueue.getLast();
+                    msg = (MessageMSGImpl) recvMSGQueue.getLast();
 
-                    if (m.getMsgno() != frame.getMsgno()) {
-                        m = null;
+                    if (msg.getMsgno() != frame.getMsgno()) {
+                        msg = null;
                     }
                 }
 
-                if (m != null) {
+                if (msg != null) {
                     /// Move this code to DataStream...
                     Iterator i = frame.getPayload();
-                    synchronized (m) {
+                    synchronized (msg) {
+                    		log.debug("add fragment to rest of msg");
                         while (i.hasNext()) {
-                            m.getDataStream().add((BufferSegment) i.next());
+                            msg.getDataStream().add((BufferSegment) i.next());
                         }
 
                         if (frame.isLast()) {
-                            m.getDataStream().setComplete();
+                        		log.debug("frame is last, set DataStream of msg complete");
+                        		msg.getDataStream().setComplete();
+                        		
+                        		//TODO: what to do here?
+                        		msg.setNotified();
+                              if (recvMSGQueue.size() == 1) {
+                                  try {
+                                  	log.debug("going to call run() from receiveFrame (completed msg) [complete ==" + msg.getDataStream().isComplete() + "]");
+                                  	callbackQueue.execute(this);
+                                  } catch (InterruptedException e) {
+                                      /** @TODO handle this better */
+                                      throw new BEEPException("interrupted exception #1", e);
+                                  }
+                              }
+                        		
+                        } else {
+                        		log.debug("frame is not last, do not notify handler #1");
                         }
                     }
                     
                     return;
                 }
 
-                m = new MessageMSGImpl(this, frame.getMsgno(),
+                msg = new MessageMSGImpl(this, frame.getMsgno(),
                                        new InputDataStream(this));
 
-                m.setNotified();
+                msg.setNotified();
 
                 Iterator i = frame.getPayload();
                 while (i.hasNext()) {
-                    m.getDataStream().add((BufferSegment)i.next());
+                    msg.getDataStream().add((BufferSegment)i.next());
                 }
 
-                if (frame.isLast()) {
-                    m.getDataStream().setComplete();
-                }
-
-                recvMSGQueue.addLast(m);
+                recvMSGQueue.addLast(msg);
                 
-                if (recvMSGQueue.size() == 1) {
-                    try {
-                        callbackQueue.execute(this);
-                    } catch (InterruptedException e) {
-                        /** @TODO handle this better */
-                        throw new BEEPException(e);
+                if (frame.isLast()) {
+                    msg.getDataStream().setComplete();
+                    
+                    if (recvMSGQueue.size() == 1) { //TODO: do not understand this condition -> because run method reads from recvMSGQueue
+                        try {
+                        		log.debug("going to call run() from receiveFrame [" + msg.getDataStream().isComplete() + "]");
+                        		callbackQueue.execute(this);
+                        } catch (InterruptedException e) {
+                            /** @TODO handle this better */
+                            throw new BEEPException("interrupted exception #2", e);
+                        }
+                    } else {
+                    		log.warn("recvMSGQueue size > 1 [" + recvMSGQueue.size() + "]");
                     }
+                } else {
+            		log.debug("frame is not last, do not notify handler #2");
                 }
             }
 
@@ -695,16 +725,18 @@ class ChannelImpl implements Channel, Runnable {
     }
 
     /**
-     * interface between the session.  The session receives a frame and then
+     * Interface between the session.  The session receives a frame and then
      * calls this function.  The function then calls the message listener
      * via some intermediary thread functions.  The message hasn't been
      * completely received.  The data stream contained in the message will
      * block if more is expected.
+     * 
      * @param frame - the frame received by the session
+     * @return true iff session listener thread shall keep running
      */
     boolean postFrame(Frame frame) throws BEEPException
     {
-        log.trace("Channel::postFrame");
+        log.trace("--> Channel.postFrame");
 
         //if (state != STATE_ACTIVE && state != STATE_TUNING) {
         if (state != STATE_ACTIVE && state != STATE_TUNING && state!= STATE_TUNING_PENDING) {
@@ -723,17 +755,23 @@ class ChannelImpl implements Channel, Runnable {
             throw new BEEPException("Channel window overflow");
         }
 
+        log.trace("--> Channel.receiveFrame");
         receiveFrame(frame);
-
+        log.trace("<-- Channel.receiveFrame");
+        
+        boolean result;
         if (frame.getMessageType() == Message.MESSAGE_TYPE_MSG) {
-            return !(frame.isLast() == true && tuningProfile == true);
+            result = !(frame.isLast() == true && tuningProfile == true);
         } else {
-            return !(frame.isLast() == true && getState() == STATE_TUNING);
+            result = !(frame.isLast() == true && getState() == STATE_TUNING);
         }
+        log.trace("<-- Channel.postFrame [" + result + "]");
+        return result;
     }
 
     void sendMessage(MessageStatus m) throws BEEPException
     {
+    		log.debug("--> sendMessage");
         //if (state != STATE_ACTIVE && state != STATE_TUNING) {
         if (state != STATE_ACTIVE && state != STATE_TUNING && state!= STATE_TUNING_PENDING) {
             switch (state) {
@@ -746,25 +784,30 @@ class ChannelImpl implements Channel, Runnable {
 
         // send it on the session
         sendToPeer(m);
+        log.debug("<-- sendMessage");
     }
 
     private void sendToPeer(MessageStatus status) throws BEEPException
     {
+    		log.debug("--> sendToPeer [" + status + "]");
         synchronized (pendingSendMessages) {
             pendingSendMessages.add(status);
         }
         status.getMessageData().setChannel(this);
         sendQueuedMessages();
+        log.debug("<-- sendToPeer");
     }
 
     synchronized void sendQueuedMessages() throws BEEPException
     {
+    		log.debug("--> sendQueuedMessages()");
         while (true) {
             MessageStatus status;
 
             synchronized (pendingSendMessages) {
                 if (pendingSendMessages.isEmpty()) {
-                    return;
+                		log.debug("<-- sendQueuedMessages() #1");
+                		return;
                 }
                 status = (MessageStatus) pendingSendMessages.removeFirst();
             }
@@ -774,13 +817,13 @@ class ChannelImpl implements Channel, Runnable {
             }
             
             sendFrames(status);
-
-            if (status.getMessageStatus() !=
-                MessageStatus.MESSAGE_STATUS_SENT)
-            {
+            log.debug("MessageStatus == " + status.getMessageStatus());
+            
+            if (status.getMessageStatus() != MessageStatus.MESSAGE_STATUS_SENT) {
                 synchronized (pendingSendMessages) {
                     pendingSendMessages.addFirst(status);
                 }
+                log.debug("<-- sendQueuedMessages() #2");
                 return;
             }
         }
@@ -789,6 +832,7 @@ class ChannelImpl implements Channel, Runnable {
     private void sendFrames(MessageStatus status)
         throws BEEPException
     {
+    		log.debug("--> sendFrames");
         int sessionBufferSize = session.getMaxFrameSize();
         OutputDataStream ds = status.getMessageData();
 
@@ -803,11 +847,11 @@ class ChannelImpl implements Channel, Runnable {
 
                 // make sure the other peer can accept something
                 if (peerWindowSize == 0) {
+                		log.debug("peerWindowSize == 0, return");
                     return;
                 }
 
-                int maxToSend =
-                    Math.min(sessionBufferSize, peerWindowSize);
+                int maxToSend = Math.min(sessionBufferSize, peerWindowSize);
 
                 int size = 0;
                 while (size < maxToSend) {
@@ -815,6 +859,8 @@ class ChannelImpl implements Channel, Runnable {
                         if (size == 0) {
                             if (ds.isComplete() == false) {
                                 // More BufferSegments are expected...
+                            	  log.warn("more BufferSegments are expected... [size = " + size + ", maxToSend = " + maxToSend + 
+                            			  ", peerWindowSize = " + peerWindowSize + "]");
                                 return;
                             }
 
@@ -833,11 +879,12 @@ class ChannelImpl implements Channel, Runnable {
                 }
 
                 if (ds.isComplete() && ds.availableSegment() == false) {
+                		log.debug("frame is set as last");
                     frame.setLast();
                 }
 
                 try {
-                    session.sendFrame(frame);
+                		session.sendFrame(frame);
                 } catch (BEEPException e) {
                     /*
                      * @todo we should do something more than just log
@@ -858,26 +905,37 @@ class ChannelImpl implements Channel, Runnable {
         status.setMessageStatus(MessageStatus.MESSAGE_STATUS_SENT);
         
         if (ds.isComplete() && ds.availableSegment() == false &&
-            (status.getMessageType() == Message.MESSAGE_TYPE_RPY ||
-             status.getMessageType() == Message.MESSAGE_TYPE_ERR ||
-             status.getMessageType() == Message.MESSAGE_TYPE_NUL))
-        {
-            MessageMSGImpl m;
+        				(status.getMessageType() == Message.MESSAGE_TYPE_RPY ||
+        				status.getMessageType() == Message.MESSAGE_TYPE_ERR ||
+        				status.getMessageType() == Message.MESSAGE_TYPE_NUL)) {
+            MessageMSGImpl msg;
             synchronized (recvMSGQueue) {
-                recvMSGQueue.removeFirst();
+            		log.debug("sendFrames removes msg in recvMSGQueue");
+            		//idea: first message may only be removed, if it is a complete message ('.' in header)
+            		//it may not be removed if it is an intermediary message ('*' in header)
+            		log.debug("recvMSGQueue size: [" + recvMSGQueue.size() + "]");
+            		msg = (MessageMSGImpl) recvMSGQueue.getFirst();
+            		if (msg.getDataStream() == null || msg.getDataStream().isComplete()) {
+            			recvMSGQueue.removeFirst();
+            			log.debug("msg removed [" + msg + "]"); 
+            		} else {
+            			log.debug("msg not removed, not complete [" + recvMSGQueue.size() + "]");
+            			return; //not sure if this is correct
+            		}
 
                 if (recvMSGQueue.size() != 0) {
-                    m = (MessageMSGImpl) recvMSGQueue.getFirst();
-                    synchronized (m) {
-                        m.setNotified();
+                    msg = (MessageMSGImpl) recvMSGQueue.getFirst();
+                    synchronized (msg) {
+                        msg.setNotified();
                     }
                 } else {
-                    m = null;
+                    msg = null;
                 }
             }
 
-            if (m != null) {
+            if (msg != null) {
                 try {
+                	log.debug("going to call run() from sendFrames [" + msg.getDataStream().isComplete() + "]");
                     callbackQueue.execute(this);
                 } catch (InterruptedException e) {
                     /** @TODO handle this better */
@@ -885,18 +943,18 @@ class ChannelImpl implements Channel, Runnable {
                 }
             }
         }
+        log.debug("<-- sendFrames");
     }
 
     private void sendWindowUpdate() throws BEEPException
     {
-        if (session.updateMyReceiveBufferSize(this, recvSequence,
-                                              recvWindowSize -
-                                              (recvWindowUsed -
-                                               recvWindowFreed)))
-        {
+    		log.debug("--> sendWindowUpdate");
+        if (session.updateMyReceiveBufferSize(this, recvSequence, 
+        				recvWindowSize - (recvWindowUsed - recvWindowFreed))) {
             recvWindowUsed -= recvWindowFreed;
             recvWindowFreed = 0;
         }
+        log.debug("<-- sendWindowUpdate");
     }
 
     /**
@@ -937,6 +995,7 @@ class ChannelImpl implements Channel, Runnable {
 
     synchronized void updatePeerReceiveBufferSize(long lastSeq, int size)
     {
+    		log.debug("\t--> updatePeerReceiveBufferSize");
         int previousPeerWindowSize = peerWindowSize;
 
         if (log.isDebugEnabled()) {
@@ -956,6 +1015,7 @@ class ChannelImpl implements Channel, Runnable {
             } catch (BEEPException e) {
             }
         }
+        log.debug("\t<-- updatePeerReceiveBufferSize");
     }
 
     private void validateFrame(Frame frame) throws BEEPException 
@@ -1047,6 +1107,7 @@ class ChannelImpl implements Channel, Runnable {
         if (frame.isLast()) {
             previousFrame = null;
         } else {
+        		log.debug("Frame is not last");
             previousFrame = frame;
         }
         

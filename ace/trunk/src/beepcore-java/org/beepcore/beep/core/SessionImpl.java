@@ -186,6 +186,7 @@ public abstract class SessionImpl implements Session {
         changeState(Session.SESSION_STATE_GREETING_SENT);
 
         // start our listening thread we can now receive a greeting
+        log.debug("enableIO() from SessionImpl.init()");
         this.enableIO();
 
         // blocks until greeting is received or MAX_GREETING_WAIT is reached
@@ -658,7 +659,9 @@ public abstract class SessionImpl implements Session {
     protected Frame createFrame(byte[] header, int headerLength)
             throws BEEPException
     {
+    		log.debug("--> createFrame");
         Frame f = Frame.parseHeader(this, header, headerLength);
+        log.debug("<-- createFrame (Frame.isLast() == " + f.isLast() + ")");
 
         // The window size and frame size have nothing in common.
         if (f.getSize() > ((ChannelImpl)f.getChannel()).getAvailableWindow()) {
@@ -728,8 +731,11 @@ public abstract class SessionImpl implements Session {
      *
      */
     protected boolean postFrame(Frame f) throws BEEPException {
+    		log.debug("--> postFrame");
         try {
-            return ops[state].postFrame(this, f);
+        		boolean result = ops[state].postFrame(this, f);
+        		log.debug("<-- postFrame");
+        		return result;
         } catch (BEEPException e) {
             this.terminate(e.getMessage());
 
@@ -855,9 +861,11 @@ public abstract class SessionImpl implements Session {
                                                int size)
             throws BEEPException
     {
+    		log.debug("--> updatePeerReceiveBufferSize");
         ChannelImpl channel = getValidChannel(channelNum);
 
         channel.updatePeerReceiveBufferSize(lastSeq, size);
+        log.debug("<-- updatePeerReceiveBufferSize");
     }
 
     /**
@@ -1891,7 +1899,7 @@ public abstract class SessionImpl implements Session {
         }
 
         public boolean postFrame(SessionImpl s, Frame f) throws BEEPException {
-            return ((ChannelImpl)f.getChannel()).postFrame(f);
+        		return ((ChannelImpl)f.getChannel()).postFrame(f);
         }
 
         private Log log = LogFactory.getLog(this.getClass());

@@ -19,6 +19,8 @@ package org.beepcore.beep.core;
 
 import java.util.LinkedList;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.beepcore.beep.util.BufferSegment;
 
 /**
@@ -30,6 +32,8 @@ import org.beepcore.beep.util.BufferSegment;
  */
 public class OutputDataStream {
 
+	private Log log = LogFactory.getLog(this.getClass());
+	
     /**
      * Creates an <code>OutputDataStream</code> without any mime
      * headers. It is the responsibility of the application to ensure
@@ -68,6 +72,7 @@ public class OutputDataStream {
 
     public void add(BufferSegment segment) {
         this.buffers.addLast(segment);
+        log.debug("add(" + segment.getLength() + ", " + this.buffers.size() + " segments)");
         if (channel != null) {
             try {
                 channel.sendQueuedMessages();

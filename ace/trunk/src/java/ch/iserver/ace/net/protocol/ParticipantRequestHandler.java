@@ -123,7 +123,7 @@ public class ParticipantRequestHandler implements RequestHandler {
 	 * {@inheritDoc}
 	 */
 	public void receiveMSG(MessageMSG message) {
-		LOG.info("--> recieveMSG()");
+		LOG.info("--> recieveMSG(" + message + ")");
 
 		String readInData = null;
 		try {
