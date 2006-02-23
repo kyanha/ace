@@ -62,7 +62,13 @@ public class ParticipantSessionCallbackImpl extends SessionCallbackImpl implemen
 				Color pColor = participantColorJoined(pId);
 				ParticipantItem mapParticipantItem = new ParticipantItem(participant, pColor);
 				participantItemMap.put(pId, mapParticipantItem);
-				participantSourceList.add(mapParticipantItem);
+				
+				participantSourceList.getReadWriteLock().writeLock().lock();
+				try {
+					participantSourceList.add(mapParticipantItem);
+				} finally {
+					participantSourceList.getReadWriteLock().writeLock().unlock();
+				}				
 				
 				Style pStyle = cDocument.addStyle(pId, null);
 				StyleConstants.setBackground(pStyle, pColor);

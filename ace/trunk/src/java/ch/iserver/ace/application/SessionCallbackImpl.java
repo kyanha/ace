@@ -125,7 +125,13 @@ public class SessionCallbackImpl implements SessionCallback {
 		Color pColor = participantColorJoined(pId);
 		ParticipantItem mapParticipantItem = new ParticipantItem(participant, pColor);
 		participantItemMap.put(pId, mapParticipantItem);
-		participantSourceList.add(mapParticipantItem);		
+		
+		participantSourceList.getReadWriteLock().writeLock().lock();
+		try {
+			participantSourceList.add(mapParticipantItem);
+		} finally {
+			participantSourceList.getReadWriteLock().writeLock().unlock();
+		}
 		//System.out.println("participantJoined: " + participant);
 		
 		// add caret handler
@@ -153,7 +159,13 @@ public class SessionCallbackImpl implements SessionCallback {
 		// UPDATE MAP
 		participantColorLeft(pId);
 		ParticipantItem mapParticipantItem = (ParticipantItem)participantItemMap.remove(pId);
-		participantSourceList.remove(mapParticipantItem);
+		
+		participantSourceList.getReadWriteLock().writeLock().lock();
+		try {
+			participantSourceList.remove(mapParticipantItem);
+		} finally {
+			participantSourceList.getReadWriteLock().writeLock().unlock();
+		}
 		//System.out.println("participantLeft: " + participant + "   code: " + code);
 		
 		// remove caret handler
