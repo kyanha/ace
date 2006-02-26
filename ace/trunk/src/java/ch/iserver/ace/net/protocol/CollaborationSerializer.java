@@ -385,7 +385,7 @@ public class CollaborationSerializer implements Serializer, ProtocolConstants {
 			handler.startElement("", "", TAG_INSERT, attrs);
 			attrs = new AttributesImpl();
 			String text = insert.getText();
-			if (text.indexOf('<') >= 0) { //test if text possibly contains XML data, this check should be enhanced
+			if (text.indexOf('<') >= 0) { //TODO: test if text possibly contains XML data, this check should be enhanced
 				attrs.addAttribute("", "", ENCODED, "", "Base64");
 				text = Base64.encodeBytes(text.getBytes(NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING)));
 			}

@@ -53,8 +53,8 @@ class ChannelImpl implements Channel, Runnable {
 
     /** @todo check this */
 
-    // default values for some variables (128 MB = 134'217'728 Bytes) 134217728 268435456
-    static final int DEFAULT_WINDOW_SIZE = 4096; //4096; 64 * 1024 = 65536 bytes = TCP max. receive buffer size, 100000 okay
+    // default values for some variables
+    static final int DEFAULT_WINDOW_SIZE = 4096;
 
     static final RequestHandler defaultHandler = new DefaultMSGHandler();
 
