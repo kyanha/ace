@@ -24,6 +24,7 @@ package ch.iserver.ace.net.protocol;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
 
 import org.apache.log4j.Logger;
@@ -58,7 +59,13 @@ public class TLVHandler {
 		try {
 			Iterator iter = doc.getFragments();
 			ByteArrayOutputStream output = new ByteArrayOutputStream();
-			BufferedWriter buffer = new BufferedWriter(new OutputStreamWriter(output));
+			BufferedWriter buffer = null;
+			try {
+				buffer = new BufferedWriter(new OutputStreamWriter(output, 
+					NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING)));
+			} catch (UnsupportedEncodingException uee) {
+				LOG.error(uee);
+			}
 			while (iter.hasNext()) {
 				Fragment fragment = (Fragment) iter.next();
 				int participantId = fragment.getParticipantId();
@@ -99,7 +106,7 @@ public class TLVHandler {
 			LOG.debug("--> decode("+payload.length()+" bytes)");
 			byte[] decoded = Base64.decode(payload);
 			String data = new String(decoded, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
-			LOG.debug("<-- decode("+data.length()+")");
+			LOG.debug("<-- decode(" + data.length() + ")");
 			
 			 while ((endIndex = data.indexOf(SPACE, startIndex)) != -1) {
 				String tag = data.substring(startIndex, endIndex++);
