@@ -54,7 +54,7 @@ class ChannelImpl implements Channel, Runnable {
     /** @todo check this */
 
     // default values for some variables (128 MB = 134'217'728 Bytes) 134217728 268435456
-    static final int DEFAULT_WINDOW_SIZE = 268435456; //4096; 64 * 1024 = 65536 bytes = TCP max. receive buffer size, 100000 okay
+    static final int DEFAULT_WINDOW_SIZE = 4096; //4096; 64 * 1024 = 65536 bytes = TCP max. receive buffer size, 100000 okay
 
     static final RequestHandler defaultHandler = new DefaultMSGHandler();
 
@@ -313,7 +313,13 @@ class ChannelImpl implements Channel, Runnable {
      */
     public RequestHandler getRequestHandler()
     {
-        return this.handler;
+    		RequestHandler tmp;
+    		if (this.handler instanceof MessageAssembler) {
+    			tmp = ((MessageAssembler) this.handler).getRequestHandler();
+    		} else {
+    			tmp = this.handler;
+    		}
+        return tmp;
     }
     
     /**
@@ -339,9 +345,9 @@ class ChannelImpl implements Channel, Runnable {
      */
     public RequestHandler setRequestHandler(RequestHandler handler, boolean tuningReset)
     {
-        RequestHandler tmp = this.handler;
+        RequestHandler tmp = getRequestHandler();
         
-        this.handler = handler;
+        this.handler = new MessageAssembler(handler);
         this.tuningProfile = tuningReset;
         
         return tmp;
@@ -497,37 +503,33 @@ class ChannelImpl implements Channel, Runnable {
                         msg = null;
                     }
                 }
-
+                
+                //if frame belongs to previous message
                 if (msg != null) {
                     /// Move this code to DataStream...
                     Iterator i = frame.getPayload();
                     synchronized (msg) {
-                    		log.debug("add fragment to rest of msg");
-                        while (i.hasNext()) {
+                    	   log.debug("add fragment to msg [" + msg + "]");
+                    	   while (i.hasNext()) {
                             msg.getDataStream().add((BufferSegment) i.next());
                         }
-
+                        
                         if (frame.isLast()) {
                         		log.debug("frame is last, set DataStream of msg complete");
-                        		msg.getDataStream().setComplete();
-                        		
-                        		//TODO: what to do here?
-                        		msg.setNotified();
-                              if (recvMSGQueue.size() == 1) {
-                                  try {
-                                  	log.debug("going to call run() from receiveFrame (completed msg) [complete ==" + msg.getDataStream().isComplete() + "]");
-                                  	callbackQueue.execute(this);
-                                  } catch (InterruptedException e) {
-                                      /** @TODO handle this better */
-                                      throw new BEEPException("interrupted exception #1", e);
-                                  }
-                              }
-                        		
-                        } else {
-                        		log.debug("frame is not last, do not notify handler #1");
+                            	msg.getDataStream().setComplete();
                         }
+                    		//foward message whether its complete or not
+                    		msg.setNotified();
+                    		if (recvMSGQueue.size() == 1) {
+                    			try {
+                    				log.debug("going to call run() from receiveFrame #1 [complete ==" + msg.getDataStream().isComplete() + "]");
+                    				callbackQueue.execute(this);
+                    			} catch (InterruptedException e) {
+                    				/** @TODO handle this better */
+                    				throw new BEEPException("interrupted exception #1", e);
+                    			}
+                    		}
                     }
-                    
                     return;
                 }
 
@@ -540,25 +542,23 @@ class ChannelImpl implements Channel, Runnable {
                 while (i.hasNext()) {
                     msg.getDataStream().add((BufferSegment)i.next());
                 }
-
+                
                 recvMSGQueue.addLast(msg);
                 
                 if (frame.isLast()) {
                     msg.getDataStream().setComplete();
-                    
-                    if (recvMSGQueue.size() == 1) { //TODO: do not understand this condition -> because run method reads from recvMSGQueue
-                        try {
-                        		log.debug("going to call run() from receiveFrame [" + msg.getDataStream().isComplete() + "]");
-                        		callbackQueue.execute(this);
-                        } catch (InterruptedException e) {
-                            /** @TODO handle this better */
-                            throw new BEEPException("interrupted exception #2", e);
-                        }
-                    } else {
-                    		log.warn("recvMSGQueue size > 1 [" + recvMSGQueue.size() + "]");
+                }
+                
+                if (recvMSGQueue.size() == 1) {
+                    try {
+                		   log.debug("going to call run() from receiveFrame #2 [" + msg.getDataStream().isComplete() + "]");
+                        callbackQueue.execute(this);
+                    } catch (InterruptedException e) {
+                        /** @TODO handle this better */
+                        throw new BEEPException("interrupted exception #2", e);
                     }
                 } else {
-            		log.debug("frame is not last, do not notify handler #2");
+            			log.warn("cannot call run(), recvMSGQueue size != 1 [" + recvMSGQueue.size() + "]");
                 }
             }
 
@@ -910,19 +910,27 @@ class ChannelImpl implements Channel, Runnable {
         				status.getMessageType() == Message.MESSAGE_TYPE_NUL)) {
             MessageMSGImpl msg;
             synchronized (recvMSGQueue) {
-            		log.debug("sendFrames removes msg in recvMSGQueue");
-            		//idea: first message may only be removed, if it is a complete message ('.' in header)
-            		//it may not be removed if it is an intermediary message ('*' in header)
-            		log.debug("recvMSGQueue size: [" + recvMSGQueue.size() + "]");
-            		msg = (MessageMSGImpl) recvMSGQueue.getFirst();
-            		if (msg.getDataStream() == null || msg.getDataStream().isComplete()) {
-            			recvMSGQueue.removeFirst();
-            			log.debug("msg removed [" + msg + "]"); 
+            		log.debug("sendFrames() removes msg in recvMSGQueue [" + recvMSGQueue.size() + "]");
+            		if (!recvMSGQueue.isEmpty()) {
+            			log.debug("delete msg [" + recvMSGQueue.removeFirst() + "]");
             		} else {
-            			log.debug("msg not removed, not complete [" + recvMSGQueue.size() + "]");
-            			return; //not sure if this is correct
+            			log.warn("recvMSGQueue is empty");
             		}
-
+    				log.debug("recvMSGQueue [" + recvMSGQueue.size() + "]");
+            	
+//            		log.debug("sendFrames removes msg in recvMSGQueue");
+//            		//idea: first message may only be removed, if it is a complete message ('.' in header)
+//            		//it may not be removed if it is an intermediary message ('*' in header)
+//            		log.debug("recvMSGQueue size: [" + recvMSGQueue.size() + "]");
+//            		msg = (MessageMSGImpl) recvMSGQueue.getFirst();
+//            		if (msg.getDataStream() == null || msg.getDataStream().isComplete()) {
+//            			recvMSGQueue.removeFirst();
+//            			log.debug("msg removed [" + msg + "]"); 
+//            		} else {
+//            			log.debug("msg not removed, not complete [" + recvMSGQueue.size() + "]");
+//            			return; //not sure if this is correct
+//            		}
+            		
                 if (recvMSGQueue.size() != 0) {
                     msg = (MessageMSGImpl) recvMSGQueue.getFirst();
                     synchronized (msg) {
@@ -935,8 +943,8 @@ class ChannelImpl implements Channel, Runnable {
 
             if (msg != null) {
                 try {
-                	log.debug("going to call run() from sendFrames [" + msg.getDataStream().isComplete() + "]");
-                    callbackQueue.execute(this);
+                		log.debug("going to call run() from sendFrames [" + msg.getDataStream().isComplete() + "]");
+                		callbackQueue.execute(this);
                 } catch (InterruptedException e) {
                     /** @TODO handle this better */
                     throw new BEEPException(e);
@@ -1115,6 +1123,7 @@ class ChannelImpl implements Channel, Runnable {
     
     synchronized void freeReceiveBufferBytes(int size)
     {
+    		log.debug("--> freeReceiveBufferBytes(" + size + ")");
         if (log.isTraceEnabled()) {
             log.trace("Freed up " + size + " bytes on channel " + number);
         }
@@ -1136,6 +1145,7 @@ class ChannelImpl implements Channel, Runnable {
                 log.fatal("Error updating receive buffer size", e);
             }
         }
+        log.debug("<-- freeReceiveBufferBytes(" + size + ")");
     }
 
     /**

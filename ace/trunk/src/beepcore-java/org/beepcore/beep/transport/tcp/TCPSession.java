@@ -412,7 +412,7 @@ public class TCPSession extends SessionImpl {
 	 */
 	protected boolean updateMyReceiveBufferSize(Channel channel,
 			long currentSeq, int currentAvail) throws BEEPException {
-		log.debug("--> updateMyReceiveBufferSize");
+		log.debug("--> updateMyReceiveBufferSize(" + currentSeq + ", " + currentAvail + ")");
 		StringBuffer sb = new StringBuffer(Frame.MAX_HEADER_SIZE);
 
 		sb.append(MESSAGE_TYPE_SEQ);

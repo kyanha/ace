@@ -88,7 +88,9 @@ public class InputDataStream {
     		log.debug("--> add(" + segment + ")");
         if( this.closed) {
             if (this.channel != null) {
-                this.channel.freeReceiveBufferBytes(segment.getLength());
+            		log.debug("--> freeReceiveBufferBytes(" + segment.getLength() + ")");
+            		this.channel.freeReceiveBufferBytes(segment.getLength());
+            		log.debug("<-- freeReceiveBufferBytes()");
             }
             return;
         }
