@@ -59,6 +59,7 @@ public class CollaborativeTextPane extends JTextPane implements CaretListener, P
 	Session session;
 	PropertyChangeHashMap caretHandlerMap;
 	HashMap participationCursorColorMap;
+	private int curSize = 4;
 
 
 
@@ -196,15 +197,15 @@ public class CollaborativeTextPane extends JTextPane implements CaretListener, P
 				try {
 					Rectangle oldRect = modelToView(oldCU.getDot());
 					//System.out.println("repaint(" + oldRect + ")");
-					oldRect.x -= 3;
-					oldRect.width = 7;
+					oldRect.x -= curSize;
+					oldRect.width = (2 * curSize) + 1;
 					repaint(oldRect);
 				} catch(BadLocationException e) { }
 				try {
 					Rectangle oldRect = modelToView(oldCU.getMark());
 					//System.out.println("repaint(" + oldRect + ")");
-					oldRect.x -= 3;
-					oldRect.width = 7;
+					oldRect.x -= curSize;
+					oldRect.width = (2 * curSize) + 1;
 					repaint(oldRect);
 				} catch(BadLocationException e) { }
 			}
@@ -215,15 +216,15 @@ public class CollaborativeTextPane extends JTextPane implements CaretListener, P
 				try {
 					Rectangle newRect = modelToView(newCU.getDot());
 					//System.out.println("repaint(" + newRect + ")");
-					newRect.x -= 3;
-					newRect.width = 7;
+					newRect.x -= curSize;
+					newRect.width = (2 * curSize) + 1;
 					repaint(newRect);
 				} catch(BadLocationException e) { }
 				try {
 					Rectangle newRect = modelToView(newCU.getMark());
 					//System.out.println("repaint(" + newRect + ")");
-					newRect.x -= 3;
-					newRect.width = 7;
+					newRect.x -= curSize;
+					newRect.width = (2 * curSize) + 1;
 					repaint(newRect);
 				} catch(BadLocationException e) { }
 			}
@@ -237,8 +238,6 @@ public class CollaborativeTextPane extends JTextPane implements CaretListener, P
 	public void paint(Graphics g) {
 		super.paint(g);
 		
-		int curSize = 3;
-		
 		if(!localEditing) {
 		
 			try {
@@ -250,9 +249,8 @@ public class CollaborativeTextPane extends JTextPane implements CaretListener, P
 					if(!pId.equals(mpId)) {
 						// for all carets except the own one
 						CaretHandler pCaretHandler = (CaretHandler)caretHandlerMap.get(pId);
-
+						Color curColor = ((Color)participationCursorColorMap.get(pId));
 						if(pCaretHandler.getDot() == pCaretHandler.getMark()) {
-							Color curColor = ((Color)participationCursorColorMap.get(pId)); 
 							g.setColor(curColor);
 							Rectangle rect = modelToView(pCaretHandler.getDot());
 
@@ -268,21 +266,38 @@ public class CollaborativeTextPane extends JTextPane implements CaretListener, P
 							g.drawPolygon(curPoly);
 						
 						} else {
-							// draw selection
+							// draw start of selection
+							g.setColor(curColor);
 							int startPos = Math.min(pCaretHandler.getDot(), pCaretHandler.getMark());
+							Rectangle startRect = modelToView(startPos);
+							int startSelOffsetX = startRect.x;
+							int startSelOffsetY = startRect.y + startRect.height - curSize - 1;
+
+							Polygon startSelPoly = new Polygon();
+							startSelPoly.addPoint(startSelOffsetX, startSelOffsetY);
+							startSelPoly.addPoint(startSelOffsetX, startSelOffsetY + curSize);
+							startSelPoly.addPoint(startSelOffsetX + curSize, startSelOffsetY + curSize);
+							
+							g.fillPolygon(startSelPoly);
+							g.setColor(curColor.darker());
+							g.drawPolygon(startSelPoly);
+							
+							// draw end of selection
+							g.setColor(curColor);
 							int endPos = Math.max(pCaretHandler.getDot(), pCaretHandler.getMark());
+							Rectangle endRect = modelToView(endPos);
+							int endSelOffsetX = endRect.x;
+							int endSelOffsetY = endRect.y + endRect.height - curSize - 1;
 
-							g.setColor(((Color)participationCursorColorMap.get(pId)));
-							Rectangle rectStart = modelToView(startPos);
-							g.drawLine(rectStart.x, rectStart.y+rectStart.height-1, rectStart.x, rectStart.y+rectStart.height-3);
-							g.drawLine(rectStart.x+1, rectStart.y+rectStart.height-1, rectStart.x, rectStart.y+rectStart.height-2);
-							g.drawLine(rectStart.x+2, rectStart.y+rectStart.height-1, rectStart.x, rectStart.y+rectStart.height-3);
-
-							Rectangle rectEnd = modelToView(endPos);
-							g.drawLine(rectEnd.x, rectEnd.y+rectEnd.height-1, rectEnd.x, rectEnd.y+rectEnd.height-3);
-							g.drawLine(rectEnd.x-1, rectEnd.y+rectEnd.height-1, rectEnd.x, rectEnd.y+rectEnd.height-2);
-							g.drawLine(rectEnd.x-2, rectEnd.y+rectEnd.height-1, rectEnd.x, rectEnd.y+rectEnd.height-3);
-
+							Polygon endSelPoly = new Polygon();
+							endSelPoly.addPoint(endSelOffsetX, endSelOffsetY);
+							endSelPoly.addPoint(endSelOffsetX - curSize, endSelOffsetY + curSize);
+							endSelPoly.addPoint(endSelOffsetX, endSelOffsetY + curSize);
+							
+							g.fillPolygon(endSelPoly);
+							g.setColor(curColor.darker());
+							g.drawPolygon(endSelPoly);
+							
 						}
 					}
 				}
