@@ -29,9 +29,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.EventListener;
 
+import javax.swing.Action;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.TransferHandler;
+import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
@@ -49,6 +51,8 @@ import javax.swing.text.JTextComponent;
 import javax.swing.text.NavigationFilter;
 import javax.swing.text.Position;
 import javax.swing.text.Segment;
+import javax.swing.text.TextAction;
+import javax.swing.text.Utilities;
 
 /**
  * A default implementation of Caret. The caret is rendered as a vertical line
@@ -306,6 +310,16 @@ public class AsyncCaret extends Rectangle implements Caret, FocusListener,
 			int nclicks = e.getClickCount();
 			if (SwingUtilities.isLeftMouseButton(e)) {
 				// mouse 1 behavior
+
+				if (e.getClickCount() == 2) {
+					Action a = new SelectWordAction();
+					a.actionPerformed(new ActionEvent(getComponent(),
+								ActionEvent.ACTION_PERFORMED, null, e
+												.getWhen(), e
+												.getModifiers()));
+				}
+
+				
 //				if (e.getClickCount() == 2) {
 //					Action a = new DefaultEditorKit.SelectWordAction();
 //					a.actionPerformed(new ActionEvent(getComponent(),
@@ -1610,4 +1624,116 @@ public class AsyncCaret extends Rectangle implements Caret, FocusListener,
 			handleMoveDot(dot, bias);
 		}
 	}
+	
+	
+	// COPY PASTE FROM DEFAULT EDITORKIT
+	/*
+     * Position the caret to the beginning of the word.
+     * @see DefaultEditorKit#beginWordAction
+     * @see DefaultEditorKit#selectBeginWordAction
+     * @see DefaultEditorKit#getActions
+     */
+    static class BeginWordAction extends TextAction {
+
+        /** 
+         * Create this action with the appropriate identifier. 
+         * @param nm  the name of the action, Action.NAME.
+         * @param select whether to extend the selection when
+         *  changing the caret position.
+         */
+        BeginWordAction(String nm, boolean select) {
+            super(nm);
+            this.select = select;
+        }
+
+        /** The operation to perform when this action is triggered. */
+        public void actionPerformed(ActionEvent e) {
+            JTextComponent target = getTextComponent(e);
+            if (target != null) {
+                try {
+                    int offs = target.getCaretPosition();
+                    int begOffs = Utilities.getWordStart(target, offs);
+                    if (select) {
+                        target.moveCaretPosition(begOffs);
+                    } else {
+                        target.setCaretPosition(begOffs);
+                    }
+                } catch (BadLocationException bl) {
+		    UIManager.getLookAndFeel().provideErrorFeedback(target);
+                }
+            }
+        }
+
+        private boolean select;
+    }
+
+    /*
+     * Position the caret to the end of the word.
+     * @see DefaultEditorKit#endWordAction
+     * @see DefaultEditorKit#selectEndWordAction
+     * @see DefaultEditorKit#getActions
+     */
+    static class EndWordAction extends TextAction {
+
+        /** 
+         * Create this action with the appropriate identifier. 
+         * @param nm  the name of the action, Action.NAME.
+         * @param select whether to extend the selection when
+         *  changing the caret position.
+         */
+        EndWordAction(String nm, boolean select) {
+            super(nm);
+            this.select = select;
+        }
+
+        /** The operation to perform when this action is triggered. */
+        public void actionPerformed(ActionEvent e) {
+            JTextComponent target = getTextComponent(e);
+            if (target != null) {
+                try {
+                    int offs = target.getCaretPosition();
+                    int endOffs = Utilities.getWordEnd(target, offs);
+                    if (select) {
+                        target.moveCaretPosition(endOffs);
+                    } else {
+                        target.setCaretPosition(endOffs);
+                    }
+                } catch (BadLocationException bl) {
+		    UIManager.getLookAndFeel().provideErrorFeedback(target);
+                }
+            }
+        }
+
+        private boolean select;
+    }
+
+    /*
+     * Select the word around the caret
+     * @see DefaultEditorKit#endAction
+     * @see DefaultEditorKit#getActions
+     */
+    static class SelectWordAction extends TextAction {
+
+        /** 
+         * Create this action with the appropriate identifier. 
+         * @param nm  the name of the action, Action.NAME.
+         * @param select whether to extend the selection when
+         *  changing the caret position.
+         */
+        SelectWordAction() {
+            super("select-word");
+            start = new BeginWordAction("pigdog", false);
+            end = new EndWordAction("pigdog", true);
+        }
+
+        /** The operation to perform when this action is triggered. */
+        public void actionPerformed(ActionEvent e) {
+            start.actionPerformed(e);
+            end.actionPerformed(e);
+        }
+
+        private Action start;
+        private Action end;
+    }
+	
 }
