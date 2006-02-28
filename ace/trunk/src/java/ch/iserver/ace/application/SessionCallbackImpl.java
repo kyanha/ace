@@ -81,17 +81,32 @@ public class SessionCallbackImpl implements SessionCallback {
 //		new Color(0xDD, 0x80, 0xFF), new Color(0xFF, 0x80, 0xDD),
 //	};
 
+//	private Color[] defaultParticipantTextColors = {
+//			new Color(0xFF, 0xFF, 0xA0), new Color(0xA0, 0xFF, 0xA0),
+//			new Color(0xA0, 0xFF, 0xFF), new Color(0xFF, 0xA0, 0xA0)
+//		};
+//
+//	private Color[] defaultParticipantCursorColors = {
+//		new Color(0xA0, 0xA0, 0x00), new Color(0x00, 0xAF, 0x00),
+//		new Color(0x40, 0xA0, 0xA0), new Color(0xAF, 0x00, 0x00)
+//	};
+	
+	
 	private Color[] defaultParticipantTextColors = {
-		new Color(0xFF, 0xFF, 0xA0), new Color(0xA0, 0xFF, 0xA0),
-		new Color(0xA0, 0xFF, 0xFF), new Color(0xFF, 0xA0, 0xA0)
+		/*new Color(115, 191, 230),*/ new Color(230, 115, 115),
+		new Color(230, 191, 115), new Color(191, 230, 115),
+		new Color(115, 230, 115), new Color(115, 230, 191),
+		new Color(115, 115, 230), new Color(191, 115, 230)
 	};
 
 	private Color[] defaultParticipantCursorColors = {
-		new Color(0xA0, 0xA0, 0x00), new Color(0x00, 0xAF, 0x00),
-		new Color(0x40, 0xA0, 0xA0), new Color(0xAF, 0x00, 0x00)
+		/*new Color(30, 163, 230),*/ new Color(230, 30, 30),
+		new Color(230, 163, 30), new Color(163, 230, 30),
+		new Color(30, 230, 30), new Color(30, 230, 163),
+		new Color(30, 30, 230), new Color(163, 30, 230)
 	};
 
-	private int defaultColorAmount = 4;
+	private int defaultColorAmount = 6;
 	
 	
 

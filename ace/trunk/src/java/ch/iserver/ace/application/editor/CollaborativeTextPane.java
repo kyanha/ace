@@ -24,6 +24,7 @@ package ch.iserver.ace.application.editor;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -249,12 +250,29 @@ public class CollaborativeTextPane extends JTextPane implements CaretListener, P
 						CaretHandler pCaretHandler = (CaretHandler)caretHandlerMap.get(pId);
 
 						if(pCaretHandler.getDot() == pCaretHandler.getMark()) {
-							g.setColor(((Color)participationCursorColorMap.get(pId)));
+							Color curColor = ((Color)participationCursorColorMap.get(pId)); 
+							g.setColor(curColor);
 							Rectangle rect = modelToView(pCaretHandler.getDot());
-							g.drawLine(rect.x-1, rect.y+rect.height-1, rect.x, rect.y+rect.height-2);
-							g.drawLine(rect.x+1, rect.y+rect.height-1, rect.x, rect.y+rect.height-2);
-							g.drawLine(rect.x-2, rect.y+rect.height-1, rect.x, rect.y+rect.height-3);
-							g.drawLine(rect.x+2, rect.y+rect.height-1, rect.x, rect.y+rect.height-3);
+//							g.drawLine(rect.x-1, rect.y+rect.height-1, rect.x, rect.y+rect.height-2);
+//							g.drawLine(rect.x+1, rect.y+rect.height-1, rect.x, rect.y+rect.height-2);
+//							g.drawLine(rect.x-2, rect.y+rect.height-1, rect.x, rect.y+rect.height-3);
+//							g.drawLine(rect.x+2, rect.y+rect.height-1, rect.x, rect.y+rect.height-3);
+
+							int curSize = 5;
+							
+							int curOffsetX = rect.x;
+							int curOffsetY = rect.y - curSize - 1;
+							Polygon curPoly = new Polygon();
+							
+							curPoly.addPoint(curOffsetX, curOffsetY);
+							curPoly.addPoint(curOffsetX - curSize, curOffsetY + curSize);
+							curPoly.addPoint(curOffsetX + curSize, curOffsetY + curSize);
+							
+							g.fillPolygon(curPoly);
+							
+							g.setColor(curColor.darker());
+							g.drawPolygon(curPoly);
+						
 						} else {
 							// draw selection
 							int startPos = Math.min(pCaretHandler.getDot(), pCaretHandler.getMark());

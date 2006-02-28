@@ -166,7 +166,6 @@ public class DocumentItem extends ItemImpl implements Comparable, PropertyChange
 		final int oldType = this.type;
 		if (oldType != type) {
 			this.type = type;
-			// TODO: understand why it works that way and not with invokeAndWait
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
 					firePropertyChange(TYPE_PROPERTY, new Integer(oldType), new Integer(type));
@@ -350,34 +349,34 @@ BASCHTLE
 
 
 	public void setTextColoring(boolean textColoring) {
-		// get style
-		/*Style pStyle = editorDocument.getStyle("myStyle");
-		if(pStyle == null) {
-			pStyle = editorDocument.addStyle("myStyle", null);
-		}*/
-		
 		if(textColoring) {
 			// enable coloring
 			Style pStyle = editorDocument.getStyle("myStyle");
 			if(pStyle == null) {
 				pStyle = editorDocument.addStyle("myStyle", null);
 			}
-			StyleConstants.setBackground(pStyle, new Color(0xA0, 0xA0, 0xFF));
+			StyleConstants.setBackground(pStyle, new Color(115, 191, 230));
+			
 		} else {
 			// disable coloring
 			Style pStyle = editorDocument.getStyle("myStyle");
-			if(pStyle != null) {
-				StyleConstants.setBackground(pStyle, Color.WHITE);
-			}
+//			if(pStyle != null) {
+//				StyleConstants.setBackground(pStyle, Color.WHITE);
+//			}
 
 			editorDocument.removeStyle("myStyle");
 		}		
 	}
 
 
-/*
-BASCHTLE
-*/
+
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	public void cleanUp() {
