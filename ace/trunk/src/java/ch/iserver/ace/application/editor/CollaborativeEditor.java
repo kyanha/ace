@@ -131,5 +131,9 @@ public class CollaborativeEditor extends EditorImpl {
 			editorToolBar.addSeparator(new Dimension(3, 0));
 		}
 	}
+	
+	public void setWordWrapping(boolean value) {
+		cTextPane.setWordWrapping(value);
+	}
 
 }

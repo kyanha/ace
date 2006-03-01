@@ -60,6 +60,7 @@ public class CollaborativeTextPane extends JTextPane implements CaretListener, P
 	PropertyChangeHashMap caretHandlerMap;
 	HashMap participationCursorColorMap;
 	private int curSize = 4;
+	private boolean isWordWrapping = false;
 
 
 
@@ -182,10 +183,17 @@ public class CollaborativeTextPane extends JTextPane implements CaretListener, P
 			d.width = getParent().getSize().width;
 		}
 		super.setSize(d);
+		/* trying to fix resizing bug with revalidate */
+		revalidate();
 	}
 		
 	public boolean getScrollableTracksViewportWidth() {
-		return false;
+		return isWordWrapping;
+	}
+	
+	public void setWordWrapping(boolean value) {
+		isWordWrapping = value;
+		revalidate();
 	}
 	
 	public void propertyChange(PropertyChangeEvent evt) {
