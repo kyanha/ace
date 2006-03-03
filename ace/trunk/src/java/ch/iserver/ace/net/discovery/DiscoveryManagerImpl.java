@@ -175,6 +175,9 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 		return remoteUserProxies.containsKey(userId);
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public Map getUsers() {
 		return remoteUserProxies;
 	}

@@ -94,7 +94,8 @@ public class SessionRequestHandler implements RequestHandler {
 				InputDataStream input = message.getDataStream();
 				byte[] rawData = DataStreamHelper.read(input); //only one thread shall read data at a time
 				readInData = (new String(rawData, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING)));
-				LOG.debug("received "+rawData.length+" bytes. ["+readInData+"]");
+//				LOG.debug("received "+rawData.length+" bytes. ["+readInData+"]");
+				LOG.debug("received "+rawData.length+" bytes.");
 				//deserializer and handler are shared by all SessionRequestHandler instances, thus synchronize
 				deserializer.deserialize(rawData, handler);
 				response = handler.getResult();
@@ -108,6 +109,12 @@ public class SessionRequestHandler implements RequestHandler {
 				message.sendRPY(os);
 			} catch (Exception e) {
 				LOG.error("could not send confirmation ["+e.getMessage()+"]");
+			}
+			
+			if (DiscoveryManagerFactory.getDiscoveryManager().isUserAlive(response.getUserId())) {
+				LOG.warn("user [" + response.getUserId() + " not alive, abort");
+				cleanup();
+				return;
 			}
 			
 			if (sessionCallback == null && type != ProtocolConstants.JOIN_DOCUMENT) {

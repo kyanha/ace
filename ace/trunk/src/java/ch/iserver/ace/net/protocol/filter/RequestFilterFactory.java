@@ -78,6 +78,7 @@ public class RequestFilterFactory {
 	 */
 	public static RequestFilter createServerChain() {
 		RequestFilter filter = new FailureFilter(null);
+		filter = new NullRequestFilter(filter);
 		filter = new UserDiscardedRecipientFilter(filter);
 		filter = new InvitationRejectedRecipientFilter(filter);
 		filter = new InviteRequestRecipientFilter(filter);
@@ -87,8 +88,8 @@ public class RequestFilterFactory {
 		filter = new DocumentDetailsChangedReceiveFilter(filter);
 		filter = new PublishDocumentReceiveFilter(filter);
 		filter = new SendDocumentsReceiveFilter(filter);
-		filter = new LogFilter(filter, true);
 		filter = new ShutdownFilter(filter);
+		filter = new LogFilter(filter, true);
 		return filter;
 	}
 	

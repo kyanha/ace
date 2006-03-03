@@ -32,6 +32,7 @@ public interface ProtocolConstants {
 	/*********************************/
 	/** constants for serialization **/
 	/*********************************/
+	public static final int NULL = -3;
 	public static final int NO_TYPE = -2;
 	public static final int SHUTDOWN = -1;
 	public static final int PUBLISHED_DOCUMENTS = 0;

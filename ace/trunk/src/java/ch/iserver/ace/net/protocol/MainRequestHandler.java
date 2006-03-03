@@ -49,6 +49,8 @@ public class MainRequestHandler implements RequestHandler {
 	
 	private static Logger LOG = Logger.getLogger(MainRequestHandler.class);
 	
+	private static final String UNKNOWN_USER = "unknown (resolving...)";
+	
 	/**
 	 * the request filter to send the requests
 	 */
@@ -97,13 +99,19 @@ public class MainRequestHandler implements RequestHandler {
 				DiscoveryManager discoveryManager = DiscoveryManagerFactory.getDiscoveryManager();
 				RemoteUserProxyExt user = discoveryManager.getUser(userid);
 				if (user == null) {
-					//user is not known yet
-					LOG.debug("add new RemoteUserProxy for [" + userid + "]");
-					MutableUserDetails details = new MutableUserDetails("unknown (resolving...)");
-					user = RemoteUserProxyFactory.getInstance().createProxy(userid, details);
-					discoveryManager.addUser(user);
+					if (request.getType() != ProtocolConstants.CONCEAL) {
+						//user is not known yet
+						LOG.debug("add new RemoteUserProxy for [" + userid + "] [" + request.getType() + "]");
+						MutableUserDetails details = new MutableUserDetails(UNKNOWN_USER);
+						user = RemoteUserProxyFactory.getInstance().createProxy(userid, details);
+						discoveryManager.addUser(user);
+					} else { //user was discarded earlier due to multi-threading issue
+						LOG.debug("user null and requestType == CONCEAL, ignore request");
+						request = new RequestImpl(ProtocolConstants.NULL, null, null);
+					}
 				}
-				if (!discoveryManager.hasSessionEstablished(userid)) {	
+				if (!discoveryManager.hasSessionEstablished(userid) && 
+						request.getType() != ProtocolConstants.NULL) {	
 					LOG.debug("create RemoteUserSession for ["+user.getMutableUserDetails().getUsername()+"]");
 					SessionManager manager = SessionManager.getInstance();
 					Channel mainChannel = message.getChannel();
