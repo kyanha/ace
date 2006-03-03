@@ -40,21 +40,31 @@ public class HeaderParser {
     public boolean hasMoreTokens() {
         return off < len;
     }
+    
+    private String getBufferAsString() {
+    		String buffer = "";
+    		try {
+    			buffer = (new String(buf, "UTF-8"));
+    		} catch (Exception e) {
+    			buffer = "invalid charset";
+    		}
+    		return buffer;
+    }
 
     public boolean parseLast() throws BEEPException {
         if (hasMoreTokens() == false) {
-            throw new BEEPException("Malformed BEEP Header #A1");
+            throw new BEEPException("Malformed BEEP Header #A1 [" + getBufferAsString() + "]");
         }
 
         int tl = tokenLength();
         if (tl != 1) {
-            throw new BEEPException("Malformed BEEP Header #A2");
+            throw new BEEPException("Malformed BEEP Header #A2 [" + getBufferAsString() + "]");
         }
 
         char c = (char)(buf[off] & 0x7f);
 
         if (c != '*' && c != '.') {
-            throw new BEEPException("Malformed BEEP Header #A3");
+            throw new BEEPException("Malformed BEEP Header #A3 [" + getBufferAsString() + "]");
         }
 
         findNextToken(tl);
@@ -64,7 +74,7 @@ public class HeaderParser {
 
     public int parseInt() throws BEEPException {
         if (hasMoreTokens() == false) {
-            throw new BEEPException("Malformed BEEP Header #A4");
+            throw new BEEPException("Malformed BEEP Header #A4 [" + getBufferAsString() + "]");
         }
 
         int tl = tokenLength();
@@ -78,7 +88,7 @@ public class HeaderParser {
 
     public long parseUnsignedInt() throws BEEPException {
         if (hasMoreTokens() == false) {
-            throw new BEEPException("Malformed BEEP Header #A5");
+            throw new BEEPException("Malformed BEEP Header #A5 [" + getBufferAsString() + "]");
         }
 
         int tl = tokenLength();
@@ -92,12 +102,12 @@ public class HeaderParser {
 
     public char[] parseType() throws BEEPException {
         if (hasMoreTokens() == false) {
-            throw new BEEPException("Malformed BEEP Header #A6");
+            throw new BEEPException("Malformed BEEP Header #A6 [" + getBufferAsString() + "]");
         }
 
         int tl = tokenLength();
         if (tl != 3) {
-            throw new BEEPException("Malformed BEEP Header #A7");
+            throw new BEEPException("Malformed BEEP Header #A7 [" + getBufferAsString() + "]");
         }
 
         char[] c = new char[3];
@@ -121,7 +131,7 @@ public class HeaderParser {
         if (off == len ||
             buf[off - 1] != ' ' || buf[off] == ' ')
         {
-            throw new BEEPException("Malformed BEEP Header #A8");
+            throw new BEEPException("Malformed BEEP Header #A8 [" + getBufferAsString() + "]");
         }
     }
 
