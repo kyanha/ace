@@ -35,6 +35,7 @@ import ch.iserver.ace.net.ParticipantConnection;
 import ch.iserver.ace.net.protocol.ProtocolConstants;
 import ch.iserver.ace.net.protocol.Request;
 import ch.iserver.ace.net.protocol.RequestImpl;
+import ch.iserver.ace.net.protocol.filter.LogFilter;
 import ch.iserver.ace.net.protocol.filter.NullRequestFilter;
 import ch.iserver.ace.net.protocol.filter.RequestFilter;
 import ch.iserver.ace.util.ParameterValidator;
@@ -106,7 +107,7 @@ public class PublishedDocument implements DocumentServer {
 		this.docServer = docServer;
 		this.details = details;
 		this.service = service;
-		this.filter = (filter != null) ? filter : NullRequestFilter.getInstance();
+		this.filter = (filter != null) ? filter : new LogFilter(null, false);
 		this.isShutdown = false;
 		this.invitations  = Collections.synchronizedMap(new LinkedHashMap());
 	}
