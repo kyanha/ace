@@ -3,7 +3,7 @@
 <p>The source code of the project can be found in our subversion repository.</p>
 
 <pre class="wiki">
-svn co http://ace.iserver.ch:81/repos/ace/ace/trunk ace
+svn co http://ace.iserver.ch/repos/ace/ace/trunk ace
 </pre>
 
 <h3>Trac</h3>
@@ -12,11 +12,11 @@ browser. Trac is still running, but we do not use it anymore as wiki and
 issue tracker. Trac can be found <a href="http://ace.iserver.ch:81/cgi-bin/trac.cgi">here</a>.</p>
 
 <h3>Jira</h3>
-<p>We switched to <a href="http://ace.iserver.ch:8080/jira">Jira</a> as our
+<p>We switched to <a href="http://ace.iserver.ch/jira">Jira</a> as our
 issue tracker. At the moment, this issue tracker is only used internally to keep track of open tasks, bugs, and enhancements. To find out more about Jira, visit the <a href="http://www.atlassian.com/software/jira/">Jira Product Website.</a>.</p>
 
 <h3>Confluence</h3>
-<p>We also use <a href="http://ace.iserver.ch:8080/confluence">Confluence</a> as our wiki. To find out more about Confluence, visit the <a href="http://www.atlassian.com/software/confluence/">Confluence Product Website</a>.</p>
+<p>We also use <a href="http://ace.iserver.ch/confluence">Confluence</a> as our wiki. To find out more about Confluence, visit the <a href="http://www.atlassian.com/software/confluence/">Confluence Product Website</a>.</p>
 
 <h3>Mailing Lists</h3>
 <p>There are two mailing lists: the <em>ace-users</em> and the <em>ace-dev</em> mailing lists.</p>
