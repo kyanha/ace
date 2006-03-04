@@ -44,7 +44,6 @@
         <li><a href="index.php?page=7">Documents</a></li>
         <li><a href="index.php?page=10">Mailing Lists</a></li>
         <li><a href="index.php?page=5">Development</a></li>
-        <li><a href="index.php?page=4">Team</a></li>
        </ul>
       </div>
       <div align="center" style="margin-top: 25px; margin-bottom: 15px">
@@ -66,9 +65,6 @@
          break;
        case 3:
          require('inc/links.inc.php');
-         break;
-       case 4:
-         require('inc/team.inc.php');
          break;
        case 5:
          require('inc/development.inc.php');
