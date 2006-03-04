@@ -15,9 +15,9 @@
        <a href="index.php"><img src="images/logo.png" border="0"/></a>
       </td>
       <td id="quicknav">
-       <a href="http://ace.iserver.ch:8080/jira">Jira</a> | 
-       <a href="http://ace.iserver.ch:8080/confluence">Confluence</a> | 
-       <a href="http://ace.iserver.ch:81/cgi-bin/trac.cgi">Trac</a> |
+       <a href="http://ace.iserver.ch/jira">Jira</a> | 
+       <a href="http://ace.iserver.ch/confluence">Confluence</a> | 
+       <a href="http://ace.iserver.ch/cgi-bin/trac.cgi">Trac</a> |
        <a href="/api">API</a>
       </td>
      </tr>
