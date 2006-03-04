@@ -51,6 +51,8 @@
       <div align="center" style="margin-top: 25px; margin-bottom: 15px">
        <a href="index.php?page=8"><img src="images/download.png" border="0"/></a><br/><br/>
        <img src="images/opensource.png" border="0"/>
+       <br/><br/>
+       <a href="http://sourceforge.net"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=161008&amp;type=2" width="125" height="37" border="0" alt="SourceForge.net Logo" /></a>
       </div>
     </td>
     <td style="vertical-align: top; padding: 10px; padding-right: 30px">
