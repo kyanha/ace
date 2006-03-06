@@ -1,0 +1,197 @@
+\chapter{Test Concept and Results}
+\label{chapter:testing}
+
+We are well aware that a good test coverage is very important for a
+project. Thus, during the project we did the following tests.
+
+\begin{itemize}
+ \item unit tests
+ \item integration tests
+ \item test applications
+ \item manual tests
+ \item tests of algorithm with test framework
+\end{itemize}
+
+The results of these tests are not very interesting (as they all succeed).
+For unit tests there is an Ant target \texttt{test}, for integration
+tests another target \texttt{integration-test}. 
+
+
+\section{Unit Tests}
+We used \emph{JUnit} to write unit tests. There are around
+250 unit tests. They can be found in the folder \texttt{src/test}.
+To facilitate mocking of objects, we used the following two mock object
+frameworks, each of which proved to be useful in different cases: 
+
+\begin{itemize}
+ \item EasyMock (\href{http://www.easymock.org/}{http://www.easymock.org/}
+ \item jMock (\href{http://www.jmock.org/}{http://www.jmock.org/})
+\end{itemize}
+
+\href{http://www.mockobject.org/}{http://www.mockobject.org/} gives the
+following definition of mock objects:
+
+\begin{quote}
+A mock object is a "double agent" used to test the behaviour of other objects. 
+First, a mock object acts as a faux implementation of an interface or class that 
+mimics the external behaviour of a true implementation. Second, a mock object 
+observes how other objects interact with its methods and compares actual 
+behaviour with preset expectations. When a discrepancy occurs, a mock object can 
+interrupt the test and report the anomaly. If the discrepancy cannot be noted 
+during the test, a verification method called by the tester ensures that all 
+expectations have been met or failures reported.
+\end{quote}
+
+Mock objects proved to be invaluable in unit testing ACE. They allowed to
+limit the scope of the test to the unit under test.
+
+
+\subsection{Comparing jMock and EasyMock}
+Both, \emph{jMock} and \emph{EasyMock}, are dynamic mock object libraries 
+for Java. Both libraries
+create mock objects on the fly through the use of dynamic proxies (Java 1.3)
+and dynamic subclasses created by use of \emph{CGLIB} 
+(see \href{http://cglib.sourceforge.net/}{http://cglib.sourceforge.net/}). 
+So what are the differences between \emph{jMock} and \emph{EasyMock}?
+
+\subsubsection{jMock uses Strings to identify methods}
+\emph{EasyMock} uses actual method calls to define expectations. 
+Therefore it works with an IDE's code completion and refactoring tools.
+
+\small{\begin{verbatim}
+  EasyMock: mock.method(a);
+\end{verbatim}}
+
+\small{\begin{verbatim}
+  jMock: mock.expects(once()).method("method").with(eq(a));
+\end{verbatim}}
+
+One obvious difference is that \emph{jMock} requires far more typing to
+achieve the same result than \emph{EasyMock}.
+
+\subsubsection{jMock provides more flexibility}
+\emph{jMock} provides far more flexibility for parameter constraints, stubbing
+method calls, as well as specifying invocation order. One reason to use
+\emph{jMock} was that it allows writing custom stubs that provide the ability
+to invoke methods on method parameters of the mock.
+
+\subsubsection{jMock's API is extensible}
+\emph{jMock}'s API is far more extensible than the API of \emph{EasyMock}. 
+It is built from scratch to be extensible.
+
+\subsubsection{Verification of Expectations}
+Mocking objects with \emph{EasyMock} requires three distinct steps:
+
+\begin{itemize}
+ \item defining the expectations (record state)
+ \item enter the replay state (by calling \texttt{replay} on the 
+       \texttt{MockControl})
+ \item verify the expectations (by calling \texttt{verify} on  the
+       \texttt{MockControl})
+\end{itemize}
+
+\emph{jMock} automatically verifies expectations at the end of the test. 
+
+\subsubsection{Conclusion}
+\emph{EasyMock} was mainly used because it provides refactoring save tests
+and because it requires less typing. The
+features provided by it proved to be sufficient for most cases. \emph{jMock}
+was used in the situation were the extra flexibility was needed to write
+the unit test. To learn more about these two frameworks check the documentation
+available at their respective website.
+
+
+\subsection{Stub Classes}
+In the folder \texttt{src/stub} some stub implementations can be found. These
+stubs are also useful in implementing unit tests.
+
+A stub object is the most minimal implementation of a class providing nothing 
+more than the implementation of an interface. It also allows to preload the
+stub with static data, which is returned during the test.
+
+
+
+\section{Integration Tests}
+We did some integration testing using jUnit as well as the two described
+mock frameworks. The integration tests can be found in the folder
+\texttt{src/integration-test}. The tests in that folder are testing the
+integration of different units. They are typically running longer than
+simple unit tests. That is also the one reason to separate these tests
+from the standard unit tests as the unit tests should run as quick as
+possible in order that the developer runs them regularly.
+
+
+
+\section{Test Applications}
+Integration tests that do not run deterministically (for instance
+because they need to access the network) are found in the folder
+\texttt{src/test-app}. In that folder we placed also some miscellaneous
+test applications used while developing ACE.
+
+
+
+
+\section{Manual Tests}
+We did manual tests to verify that the goals are reached. Further we have
+15 test users that tested the application and provided invaluable
+feedback. The biggest problem was to find testers that have a LAN and
+more than one computer available for testing the networking functionality
+of ACE.
+
+
+
+\section{Test Framework Algorithm}
+In the semester project we have created a test framework for the algorithm.
+The source code of it can be found in the package
+\texttt{ch.iserver.ace.test}. The test framework provides methods
+
+Tests using the test framework use a specification of a scenario
+of a collaborative editing session. An example of such a scenario is
+depicted in figure \ref{fig:example1}. A scenario specifies which 
+events occur at
+which site in which order. At the end, the resulting document state is
+compared with the expected document state. This allows to test whether
+the algorithm implementation achieves convergence in the given scenario.
+
+We extracted many scenarios of collaborative editing that were described
+in technical publications as counter examples for proposed algorithms. A very
+simple scenario specification is depicted in figure \ref{fig:testing.scenario}.
+
+\begin{figure}[H]
+ \small{\begin{verbatim}
+  <?xml version="1.0" encoding="UTF-8"?>
+  <scenario initial="ABC" final="AcB">      
+    <site id="1">
+      <generate id="1">
+        <operation type="ch.iserver.ace.algorithm.text.InsertOperation">
+          <property name="position" value="1"/>
+          <property name="text" value="c"/>
+        </operation>
+      </generate>
+      <receive ref="2"/>
+    </site>
+    <site id="2">
+      <generate id="2">
+        <operation type="ch.iserver.ace.algorithm.text.DeleteOperation">
+          <property name="position" value="2"/>
+          <property name="text" value="C"/>
+        </operation>
+      </generate>
+      <receive ref="1"/>
+    </site>
+  </scenario>
+ \end{verbatim}}
+ \caption{Specification of a scenario in XML}
+ \label{fig:testing.scenario}
+\end{figure}
+
+For each site (two in this case) there is a \texttt{site} element that
+defines the event order (request generation, request reception) at that
+particular site.
+
+For further details about the basics of the test framework read the 
+\emph{Report Testframework} written during the semester project. The framework
+was extended during the summer break to support the specification of
+\emph{Jupiter} scenarios as well as scenarios with undo/redo. Unfortunately,
+the undo/redo support is no longer needed, as the algorithm does not
+support undo/redo.
