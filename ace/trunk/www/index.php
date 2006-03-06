@@ -84,6 +84,18 @@
        case 11:
          require('inc/news.archive.inc.php');
          break;
+       case 12:
+         require('inc/downloads2.inc.php');
+         break;         
+       case 13:
+         require('inc/windows.download.inc.php');
+         break;         
+       case 14:
+         require('inc/mac.download.inc.php');
+         break;         
+       case 15:
+         require('inc/unix.download.inc.php');
+         break;         
        default:
          require('inc/index.inc.php');
        }
