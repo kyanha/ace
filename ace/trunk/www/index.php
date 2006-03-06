@@ -81,6 +81,9 @@
        case 10:
          require('inc/mailinglists.inc.php');
          break; 
+       case 11:
+         require('inc/news.archive.inc.php');
+         break;
        default:
          require('inc/index.inc.php');
        }
