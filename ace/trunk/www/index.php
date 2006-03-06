@@ -95,6 +95,9 @@
          break;         
        case 15:
          require('inc/unix.download.inc.php');
+         break;
+       case 16:
+         require('inc/archive.downloads.inc.php');
          break;         
        default:
          require('inc/index.inc.php');
