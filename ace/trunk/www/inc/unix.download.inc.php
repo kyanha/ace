@@ -2,9 +2,10 @@
 
 <p><b>Step 3:</b> Download the following software:
 <ul>
-<li><a href="http://java.sun.com/j2se/1.5.0/download.jsp">Java Runtime Environment (JRE) - 1.4.2 or higher</a></li>
-<li><a href="http://ant.apache.org/">Apache Ant</a></li>
-<li><a href="http://developer.apple.com/networking/bonjour/download">Bonjour Source Code</a></li>
+<li><a href="http://java.sun.com/j2se/1.5.0/download.jsp" target="_blank">Java Runtime Environment (JRE) - 1.4.2 or higher</a></li>
+<li><a href="http://developer.apple.com/networking/bonjour/download" target="_blank">Bonjour Source Code</a></li>
+<li><a href="http://ant.apache.org/" target="_blank">Apache Ant</a></li>
+<li><a href="http://maven.apache.org/download.html" target="_blank">Maven Tasks for Ant</a></li>
 </ul>
 </p>
 
@@ -33,10 +34,10 @@ with your operating system. Check the Makefile in <code>mDNSPosix/Makefile</code
 <p><b>Step 6:</b> Download the current version of ACE</a> for other platforms <a href="download.php?id=11">here</a> . 
 </p>
 
-<p><b>Step 7:</b> Make sure, you have <a href="http://ant.apache.org/">Apache Ant</a> and the <a href="http://maven.apache.org/download.html">Maven Tasks for Ant</a> installed.</p>
+<p><b>Step 7:</b> Make sure, you have <a href="http://ant.apache.org/" target="_blank">Apache Ant</a> and the <a href="http://maven.apache.org/download.html" target="_blank">Maven Tasks for Ant</a> installed.</p>
 
 <p><b>Step 8:</b> To run ACE, type <code>$ant run</code> in the top-level directory.</p>
-
+<br>
 <p>Please report any problems to <a href="mailto:feedback@ace.iserver.ch">feedback@ace.iserver.ch</a>
 
 <p>Have fun!</p>
