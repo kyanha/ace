@@ -31,5 +31,6 @@
 	<classpathentry kind="var" path="MAVEN2/org/springframework/spring-core/1.2.6/spring-core-1.2.6.jar"/>
 	<classpathentry kind="var" path="MAVEN2/org/springframework/spring-beans/1.2.6/spring-beans-1.2.6.jar"/>
 	<classpathentry kind="var" path="MAVEN2/org/springframework/spring-context/1.2.6/spring-context-1.2.6.jar"/>
+	<classpathentry kind="var" path="MAVEN2/xmlunit/xmlunit/1.0/xmlunit-1.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

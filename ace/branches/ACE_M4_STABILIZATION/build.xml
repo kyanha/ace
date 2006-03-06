@@ -107,6 +107,10 @@
 		            artifactId="jmock"
 		            version="1.0.1"
 		            scope="test"/>
+		<dependency groupId="xmlunit"
+		            artifactId="xmlunit"
+		            version="1.0"
+		            scope="test"/>
 		<remoteRepository refid="remote.repository.ace" />
 		<remoteRepository refid="remote.repository.maven" />
 	</artifact:dependencies>
