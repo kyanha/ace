@@ -10,3 +10,5 @@
 </p>
 
 <p><a href="index.php?page=12">Continue</a></p>
+<br>
+<p><a href="index.php?page=16">Download Archive - All OS</a></p>
