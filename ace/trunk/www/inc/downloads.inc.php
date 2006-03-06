@@ -9,6 +9,6 @@
 </ul>
 </p>
 
-<p><a href="index.php?page=12">Continue</a></p>
+<p><a href="index.php?page=12">Continue Installation</a></p>
 <br>
 <p>For older releases of ACE, go the <a href="index.php?page=16">Download Archive - All OS</a> page.</p>
