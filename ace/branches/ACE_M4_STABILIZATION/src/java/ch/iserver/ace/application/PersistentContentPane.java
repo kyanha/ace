@@ -36,7 +36,8 @@ public class PersistentContentPane extends JPanel {
 
 	private JSplitPane dvbv, pvuv, dvbvce, dvbvcepvuv;
 	private boolean fullScreenMode = false;
-	private int lastDivider, lastDivider2;
+	private int pvuvViewWidth;
+	
 
 	/*public PersistentContentPane() {
 	}
@@ -81,10 +82,12 @@ public class PersistentContentPane extends JPanel {
 		if(fullScreenMode) {
 			// set last divider location
 			dvbvce.setDividerLocation(dvbvce.getLastDividerLocation());
-			dvbvcepvuv.setDividerLocation(dvbvcepvuv.getLastDividerLocation());
+			//dvbvcepvuv.setDividerLocation(dvbvcepvuv.getLastDividerLocation());
+			dvbvcepvuv.setDividerLocation(dvbvce.getWidth() - pvuvViewWidth);
 			fullScreenMode = false;
 		} else {
 			// set full screen mode
+			pvuvViewWidth = pvuv.getWidth();
 			dvbvce.setDividerLocation(0);
 			dvbvcepvuv.setDividerLocation(10000);
 			fullScreenMode = true;
