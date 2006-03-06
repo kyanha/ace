@@ -39,7 +39,7 @@
       <div class="block">
        <ul>
         <li><a href="index.php">Home</a></li>
-        <li><a href="index.php?page=8">Downloads</a></li>
+        <li><a href="index.php?page=8">Download</a></li>
         <li><a href="index.php?page=9">Screenshots</a></li>      
         <li><a href="index.php?page=7">Documents</a></li>
         <li><a href="index.php?page=10">Mailing Lists</a></li>
