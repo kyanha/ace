@@ -11,9 +11,8 @@ as a page that talks about the technical <a href="index.php?page=3">Background</
 
 <h3>News</h3>
 
-<p><b>Milestone 4 to be released</b> <span class="date">06.03.2006</span></p>
-<p>This week we are going to release Milestone 4 which includes several bug fixes as well as
-stabilization work. Subscribe the  <a href="index.php?page=10">ACE users mailing list</a> to be notified about new releases as soon as possible.</p>
+<p><b>Milestone 4 released</b> <span class="date">07.03.2006</span></p>
+<p>It's our pleasure to announce the release of ACE Milestone 4. It includes bug fixes as well as some extensions at the GUI. <a href="http://ace.iserver.ch/index.php?page=8">Download now.</a></p>
 
 <p><b>Mailing Lists</b> <span class="date">23.01.2006</span></p>
 <p>We've added two mailing lists, a users list for ACE users and a developers list for the developers. The users list is also used to communicate new releases of ACE. Visit the <a href="index.php?page=10">mailing lists page</a> to find out how to subscribe.</p>
