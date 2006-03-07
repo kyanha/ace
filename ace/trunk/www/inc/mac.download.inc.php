@@ -6,6 +6,6 @@
 
 <p><b>Step 4:</b> Install and run ACE: Drag the disk image to a location of your choice and double click it.</p>
 <br>
-<p>Please report any problems to <a href="mailto:feedback@ace.iserver.ch">feedback@ace.iserver.ch</a>
+<p>Please report any problems <a href="http://ace.iserver.ch/forum/">here</a>.</p>
 
 <p>Have fun!</p>
