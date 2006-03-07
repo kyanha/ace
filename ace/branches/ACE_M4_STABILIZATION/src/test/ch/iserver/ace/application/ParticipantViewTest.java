@@ -49,7 +49,7 @@ public class ParticipantViewTest extends TestCase {
 		// test fixture
 		ParticipantViewController controller = new ParticipantViewController();
 		EventList participantList = controller.getCompositeSourceList().createMemberList();
-		View view = new ParticipantView(new LocaleMessageSourceStub(), controller);
+		final View view = new ParticipantView(new LocaleMessageSourceStub(), controller);
 		controller.setParticipantList(participantList);
 		
 		Item[] items = new Item[3];
@@ -72,10 +72,14 @@ public class ParticipantViewTest extends TestCase {
 		listenerCtrl.replay();
 		
 		// test
-		view.setSelectedIndex(1);
-		view.setSelectedIndex(2);
-		view.setSelectedIndex(0);
-		view.setSelectedIndex(-1);
+		SwingUtilities.invokeAndWait(new Runnable() {
+			public void run() {
+				view.setSelectedIndex(1);
+				view.setSelectedIndex(2);
+				view.setSelectedIndex(0);
+				view.setSelectedIndex(-1);
+			}
+		});
 		
 		// verify
 		listenerCtrl.verify();

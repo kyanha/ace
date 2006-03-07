@@ -43,7 +43,7 @@ public class DocumentViewTest extends TestCase {
 
 		// test fixture
 		DocumentViewController controller = new DocumentViewController();
-		View view = new DocumentView(new LocaleMessageSourceStub(), controller);
+		final View view = new DocumentView(new LocaleMessageSourceStub(), controller);
 		
 		Item[] items = new Item[3];
 		
@@ -65,10 +65,14 @@ public class DocumentViewTest extends TestCase {
 		listenerCtrl.replay();
 		
 		// test
-		view.setSelectedIndex(1);
-		view.setSelectedIndex(2);
-		view.setSelectedIndex(0);
-		view.setSelectedIndex(-1);
+		SwingUtilities.invokeAndWait(new Runnable() {
+			public void run() {
+				view.setSelectedIndex(1);
+				view.setSelectedIndex(2);
+				view.setSelectedIndex(0);
+				view.setSelectedIndex(-1);
+			}
+		});
 		
 		// verify
 		listenerCtrl.verify();

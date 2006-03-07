@@ -46,7 +46,7 @@ public class BrowseViewTest extends TestCase {
 
 		// test fixture
 		BrowseViewController controller = new BrowseViewController();
-		View view = new BrowseView(new LocaleMessageSourceStub(), controller);
+		final View view = new BrowseView(new LocaleMessageSourceStub(), controller);
 		
 		Item[] items = new Item[3];
 		
@@ -68,10 +68,14 @@ public class BrowseViewTest extends TestCase {
 		listenerCtrl.replay();
 		
 		// test
-		view.setSelectedIndex(1);
-		view.setSelectedIndex(2);
-		view.setSelectedIndex(0);
-		view.setSelectedIndex(-1);
+		SwingUtilities.invokeAndWait(new Runnable() {
+			public void run() {
+				view.setSelectedIndex(1);
+				view.setSelectedIndex(2);
+				view.setSelectedIndex(0);
+				view.setSelectedIndex(-1);
+			}
+		});
 		
 		// verify
 		listenerCtrl.verify();
