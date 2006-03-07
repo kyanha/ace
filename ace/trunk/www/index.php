@@ -119,7 +119,7 @@
   </div>
   
   <div id="footer">
-   <div style="padding-top: 5px">Copyright &copy; 2005 - ace project team. All rights reserved.</div>
+   <div style="padding-top: 5px">Copyright &copy; 2006 - ace project team. All rights reserved.</div>
   </div>
   
   </div>

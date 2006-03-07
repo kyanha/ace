@@ -1,6 +1,6 @@
 <h2>Download for other OS (Linux, Solaris, FreeBSD)</h2>
 
-<p><b>Step 3:</b> Download the following software:
+<p><b>Step 3:</b> Download the following software (if not already installed):
 <ul>
 <li><a href="http://java.sun.com/j2se/1.5.0/download.jsp" target="_blank">Java Runtime Environment (JRE) - 1.4.2 or higher</a></li>
 <li><a href="http://developer.apple.com/networking/bonjour/download" target="_blank">Bonjour Source Code</a></li>
