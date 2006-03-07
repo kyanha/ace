@@ -65,7 +65,7 @@
 			<string>$JAVAROOT/ace-osx.jar</string>
 		</array>
 		<key>JVMVersion</key>
-		<string>1.4*</string>
+		<string>1.4+</string>
 		<key>MainClass</key>
 		<string>ch.iserver.ace.application.Main</string>
 		<key>Properties</key>
