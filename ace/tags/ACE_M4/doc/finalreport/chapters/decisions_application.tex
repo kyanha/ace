@@ -1,0 +1,19 @@
+\chapter{Decisions for Application Implementation}
+\label{chapter:decisionsapplication}
+
+This section gives an overview over the decisions we made about how to develop the application layer of ACE. There were two possible options:
+\begin{itemize}
+\item Create a plugin for an existing text editor.
+\item Create an own Standalone Application
+\end{itemize}
+To write a plugin for an existing and popular text editor would have the advantage that the application would be more popular and used by more users. But a lot of problems could occur when writing a special plugin, for example there could be limitations on the given framework or points where it would be possible to loose the proper synchronization (which has fatal consequences for a collaborative editor). Moreover additional time would have to be spent to gain knowledge on how to build a plugin for the existing application.
+
+One possible text editor that has a plugin architecture is jEdit (http://www.jedit.org/). jEdit is a well-known text editor written in Java. The core is developed by Slave Pestov, and plugins are written by multiple programmers around the world.
+
+jEdit uses Java interfaces rarely and most object implementations cannot be switched, e.g. with factory methods or factory classes. This means, that creating a collaborative text editor based on jEdit requires to modify the core of jEdit. There is a user and a developer list (http://lists.sourceforge.net/mailman/listinfo/jedit-users and http://lists.sourceforge.net/mailman/listinfo/jedit-devel) which delivers valueable information and additional help.
+
+Based on the insights we gained we were able to conclude that it would certainly be possible to create a collaborative text editor with jEdit. Although it would be feasible to create such functionality within a plugin, this would impose a lot of limitations. Further, jEdit does not provide a way to grab user input before it is inserted into the document. This might turn out to be a solvable problem, but the solution would certainly not be elegant (we would need to ensure that no remote operation gets executed before a request is generated for the local operation).
+
+So, the cleanest and most flexible way to go would be to hack the core of jEdit. This however would create two separate and incompatible versions of jEdit. Whether Slava Pestov would be willing to include our changes to the core is guaranteed. This defeates one of the motivations to base our project on jEdit, namely a broad user community.
+
+This evaluation lead us to the point where we decided that we would not base ACE on jEdit but write our own standalone application.
