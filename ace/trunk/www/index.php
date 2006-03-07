@@ -28,7 +28,7 @@
    <a href="index.php?page=1"><img src="images/navbar-intro.jpg" border="0"/></a>
    <a href="index.php?page=2"><img src="images/navbar-vision.jpg" border="0"/></a>
    <a href="index.php?page=3"><img src="images/navbar-background.jpg" border="0"/></a>
-   <a href="mailto:feedback@ace.iserver.ch"><img src="images/navbar-contact.jpg" border="0"/></a>
+   <a href="forum"><img src="images/navbar-contact.jpg" border="0"/></a>
   </div>
   
   <div id="main">
@@ -44,6 +44,7 @@
         <li><a href="index.php?page=7">Documents</a></li>
         <li><a href="index.php?page=10">Mailing Lists</a></li>
         <li><a href="index.php?page=5">Development</a></li>
+        <li><a href="forum">Forum</a></li>
        </ul>
       </div>
       <div align="center" style="margin-top: 25px; margin-bottom: 15px">
@@ -113,7 +114,7 @@
     <div style="width: 700px; border-top: 1px solid #eee; padding-top: 10px">
      <a href="index.php">Home</a> |
      <a href="index.php?page=8">Downloads</a> |
-     <a href="mailto:feedback@ace.iserver.ch">Contact</a>
+     <a href="forum">Contact</a>
     </div>
   </div>
   
