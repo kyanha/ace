@@ -114,7 +114,7 @@
     <div style="width: 700px; border-top: 1px solid #eee; padding-top: 10px">
      <a href="index.php">Home</a> |
      <a href="index.php?page=8">Downloads</a> |
-     <a href="forum">Contact</a>
+     <a href="forum/">Contact</a>
     </div>
   </div>
   
