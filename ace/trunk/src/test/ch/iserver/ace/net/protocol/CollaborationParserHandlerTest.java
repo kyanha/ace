@@ -2,9 +2,8 @@ package ch.iserver.ace.net.protocol;
 
 import java.net.InetAddress;
 
-import junit.framework.TestCase;
-
 import org.apache.log4j.Logger;
+import org.custommonkey.xmlunit.XMLTestCase;
 
 import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
@@ -24,7 +23,7 @@ import ch.iserver.ace.net.core.RemoteUserProxyImpl;
 import ch.iserver.ace.net.protocol.RequestImpl.DocumentInfo;
 import ch.iserver.ace.util.Base64;
 
-public class CollaborationParserHandlerTest extends TestCase {
+public class CollaborationParserHandlerTest extends XMLTestCase {
 
 	private static Logger LOG = Logger.getLogger(CollaborationParserHandlerTest.class);
 	
@@ -130,7 +129,7 @@ public class CollaborationParserHandlerTest extends TestCase {
 		String participantId = "7";
 		byte[] data = serializer.createSessionMessage(ProtocolConstants.REQUEST, request, participantId);
 		String actual = new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
-		assertEquals(XML_REQUEST_DELETE, actual);
+		assertXMLEqual(XML_REQUEST_DELETE, actual);
 		
 		CollaborationDeserializer deserializer = new CollaborationDeserializer();
 		CollaborationParserHandler handler = new CollaborationParserHandler();
@@ -164,7 +163,7 @@ public class CollaborationParserHandlerTest extends TestCase {
 		String participantId = "7";
 		byte[] data = serializer.createSessionMessage(ProtocolConstants.CARET_UPDATE, caretMsg, participantId);
 		
-		assertEquals(XML_CARETUPDATE, (new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING))));
+		assertXMLEqual(XML_CARETUPDATE, (new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING))));
 		
 		CollaborationDeserializer deserializer = new CollaborationDeserializer();
 		CollaborationParserHandler handler = new CollaborationParserHandler();
@@ -194,7 +193,7 @@ public class CollaborationParserHandlerTest extends TestCase {
 		origProxy.setDNSSDdiscovered(true);
 		byte[] data = serializer.createSessionMessage(ProtocolConstants.PARTICIPANT_JOINED, origProxy, participantId);
 		
-		assertEquals(XML_PARTICIPANT_JOINED, (new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING))));
+		assertXMLEqual(XML_PARTICIPANT_JOINED, (new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING))));
 		
 		CollaborationDeserializer deserializer = new CollaborationDeserializer();
 		CollaborationParserHandler handler = new CollaborationParserHandler();
@@ -223,7 +222,7 @@ public class CollaborationParserHandlerTest extends TestCase {
 		String reason = "2323";
 		byte[] data = serializer.createSessionMessage(ProtocolConstants.PARTICIPANT_LEFT, reason, participantId);
 		
-		assertEquals(XML_PARTICIPANT_LEFT, (new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING))));
+		assertXMLEqual(XML_PARTICIPANT_LEFT, (new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING))));
 		
 		CollaborationDeserializer deserializer = new CollaborationDeserializer();
 		CollaborationParserHandler handler = new CollaborationParserHandler();
@@ -246,7 +245,7 @@ public class CollaborationParserHandlerTest extends TestCase {
 		String siteId = "23421234123223";
 		byte[] data = serializer.createSessionMessage(ProtocolConstants.ACKNOWLEDGE, timestamp, siteId);
 		
-		assertEquals(XML_ACKNOWLEDGE, (new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING))));
+		assertXMLEqual(XML_ACKNOWLEDGE, (new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING))));
 		
 		CollaborationDeserializer deserializer = new CollaborationDeserializer();
 		CollaborationParserHandler handler = new CollaborationParserHandler();
@@ -274,7 +273,7 @@ public class CollaborationParserHandlerTest extends TestCase {
 		String participantId = "4";
 		byte[] data = serializer.createSessionMessage(ProtocolConstants.REQUEST, request, participantId);
 		String actual = new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
-		assertEquals(XML_SESSION_MESSAGE_REQUEST_SPLIT, actual);
+		assertXMLEqual(XML_SESSION_MESSAGE_REQUEST_SPLIT, actual);
 		
 		CollaborationDeserializer deserializer = new CollaborationDeserializer();
 		CollaborationParserHandler handler = new CollaborationParserHandler();
@@ -311,7 +310,7 @@ public class CollaborationParserHandlerTest extends TestCase {
 		byte[] data = serializer.createSessionMessage(ProtocolConstants.REQUEST, request, participantId);
 		String actual = new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 
-		assertEquals(XML_NOOP_EMPTY, actual);
+		assertXMLEqual(XML_NOOP_EMPTY, actual);
 		
 		CollaborationDeserializer deserializer = new CollaborationDeserializer();
 		CollaborationParserHandler handler = new CollaborationParserHandler();
@@ -344,7 +343,7 @@ public class CollaborationParserHandlerTest extends TestCase {
 		byte[] data = serializer.createSessionMessage(ProtocolConstants.REQUEST, request, participantId);
 		String actual = new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 
-		assertEquals(XML_NOOP_COMPLEX, actual);
+		assertXMLEqual(XML_NOOP_COMPLEX, actual);
 		
 		CollaborationDeserializer deserializer = new CollaborationDeserializer();
 		CollaborationParserHandler handler = new CollaborationParserHandler();

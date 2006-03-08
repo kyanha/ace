@@ -231,7 +231,7 @@ public class PublishedDocument implements DocumentServer {
 	 * {@inheritDoc}
 	 */
 	public synchronized void shutdown() {
-		LOG.debug("--> shutdown()");
+		LOG.info("--> shutdown()");
 		if (isShutdown()) throw new IllegalStateException("document has been shutdown already");
 		Request request = new RequestImpl(ProtocolConstants.CONCEAL, null, this);
 		filter.process(request);
@@ -240,6 +240,6 @@ public class PublishedDocument implements DocumentServer {
 		}
 		//stop accepting joins
 		isShutdown = true;
-		LOG.debug("<-- shutdown()");
+		LOG.info("<-- shutdown()");
 	}
 }

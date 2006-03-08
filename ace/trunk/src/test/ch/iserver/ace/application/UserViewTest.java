@@ -45,7 +45,7 @@ public class UserViewTest extends TestCase {
 
 		// test fixture
 		UserViewController controller = new UserViewController();
-		View view = new UserView(new LocaleMessageSourceStub(), controller);
+		final View view = new UserView(new LocaleMessageSourceStub(), controller);
 		
 		RemoteUser[] users = new RemoteUser[3];
 		Item[] items = new Item[3];
@@ -69,10 +69,14 @@ public class UserViewTest extends TestCase {
 		listenerCtrl.replay();
 		
 		// test
-		view.setSelectedIndex(1);
-		view.setSelectedIndex(2);
-		view.setSelectedIndex(0);
-		view.setSelectedIndex(-1);
+		SwingUtilities.invokeAndWait(new Runnable() {
+			public void run() {
+				view.setSelectedIndex(1);
+				view.setSelectedIndex(2);
+				view.setSelectedIndex(0);
+				view.setSelectedIndex(-1);
+			}
+		});
 		
 		// verify
 		listenerCtrl.verify();
