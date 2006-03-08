@@ -1,6 +1,6 @@
 <h2>Download for Mac OS X</h2>
 
-<p><b>Step 3:</b> Download the current version of ACE for Mac OS X at one of the SourceForge mirrors: <a href="http://prdownloads.sourceforge.net/ace/ace-osx-m4.dmg?download" target="_blank">ace-osx-m4.dmg</a></p>
+<p><b>Step 3:</b> Download the current version of ACE for Mac OS X at the <a href="http://sourceforge.net/project/showfiles.php?group_id=161008" target="_blank">SourceForge download page</a> (<code>ace-osx-m4.dmg</code>).</p>
 
 <p>For older releases of ACE, go to the <a href="index.php?page=16">Download Archive</a> page.</p>
 

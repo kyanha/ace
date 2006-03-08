@@ -31,8 +31,7 @@ with your operating system. Check the Makefile in <code>mDNSPosix/Makefile</code
  <li>as user root, copy the file <code>libjdns_sd.so</code> from <code>build/prod</code> to somewhere in the Java library path (cf. system property <code>java.library.path</code>)</li>
 </ol>
 
-<p><b>Step 6:</b> Download the current version of ACE</a> for other platforms at one of the SourceForge mirrors: <a href="http://prdownloads.sourceforge.net/ace/ace-m4.tar.gz?download" target="_blank">ace-m4.tar.gz</a>. 
-</p>
+<p><b>Step 6:</b> Download the current version of ACE</a> for other platforms at the <a href="http://sourceforge.net/project/showfiles.php?group_id=161008" target="_blank">SourceForge download page</a> (<code>ace-m4.tar.gz</code>).</p>
 
 <p>For older releases of ACE, go to the <a href="index.php?page=16">Download Archive</a> page.</p>
 
