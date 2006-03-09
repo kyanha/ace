@@ -42,8 +42,8 @@
         <li><a href="index.php?page=8">Download</a></li>
         <li><a href="index.php?page=9">Screenshots</a></li>      
         <li><a href="index.php?page=7">Documents</a></li>
-        <li><a href="index.php?page=10">Mailing Lists</a></li>
         <li><a href="index.php?page=5">Development</a></li>
+        <li><a href="index.php?page=10">Mailing Lists</a></li>
         <li><a href="forum/">Forum</a></li>
        </ul>
       </div>
@@ -99,7 +99,7 @@
          break;
        case 16:
          require('inc/archive.downloads.inc.php');
-         break;         
+         break;
        default:
          require('inc/index.inc.php');
        }

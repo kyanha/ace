@@ -16,4 +16,4 @@ browser. Trac is still running, but we do not use it anymore. Nevertheless, it c
 issue tracker. This issue tracker is used (internally) to keep track of open tasks, bugs, and enhancements. To find out more about Jira, visit the <a href="http://www.atlassian.com/software/jira/" target="_blank">Jira Product Website.</a>.</p>
 
 <h3>Confluence</h3>
-<p>We use <a href="http://ace.iserver.ch/confluence">Confluence</a> as our wiki. To find out more about Confluence, visit the <a href="http://www.atlassian.com/software/confluence/">Confluence Product Website</a>.</p>
+<p>We use <a href="http://ace.iserver.ch/confluence">Confluence</a> as our wiki. To find out more about Confluence, visit the <a href="http://www.atlassian.com/software/confluence/" target="_blank">Confluence Product Website</a>.</p>
