@@ -13,7 +13,13 @@ public abstract class AbstractDocument implements IDocument {
 	}
 	
 	public void setPartitioner(IPartitioner partitioner) {
+		if (this.partitioner != null) {
+			this.partitioner.disconnect(this);
+		}
 		this.partitioner = partitioner;
+		if (this.partitioner != null) {
+			this.partitioner.connect(this);
+		}
 	}
 
 	public IPartitioner getPartitioner() {

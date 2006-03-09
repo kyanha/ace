@@ -10,6 +10,4 @@ public interface IPartitioner {
 	
 	IAttributedRegion[] getRegions();
 	
-	IAttributedRegion getRegion(int offset);
-	
 }
