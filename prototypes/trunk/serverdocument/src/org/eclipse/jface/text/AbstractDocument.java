@@ -2,7 +2,7 @@ package org.eclipse.jface.text;
 
 import java.util.Map;
 
-public abstract class AbstractDocument implements IDocument {
+public class AbstractDocument implements IDocument {
 
 	private final ITextStore store;
 	

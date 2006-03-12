@@ -26,7 +26,7 @@ public class SimplePartitioner implements IPartitioner {
 		final String text = e.getText();
 				
 		if (text.length() == 0) {
-			removeUpdate(offset, length, e.getAttributes());
+			removeUpdate(offset, length);
 		} else if (length == 0) {
 			insertUpdate(offset, text, e.getAttributes());
 		} else {
@@ -34,7 +34,7 @@ public class SimplePartitioner implements IPartitioner {
 		}
 	}
 	
-	protected void removeUpdate(int offset, int length, Map attributes) {
+	protected void removeUpdate(int offset, int length) {
 		int[] range = findRange(offset, length, partitions);
 		int p0 = range[0];
 		int p1 = range[1];
@@ -111,7 +111,8 @@ public class SimplePartitioner implements IPartitioner {
 	}
 	
 	protected void replaceUpdate(int offset, int length, String text, Map attributes) {
-		
+		removeUpdate(offset, length);
+		insertUpdate(offset, text, attributes);
 	}
 	
 	private void updateOffsets(int idx, int delta) {
