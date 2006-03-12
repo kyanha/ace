@@ -1,4 +1,4 @@
-package org.eclipse.jface.text;
+package ch.iserver.ace.text;
 
 public class Region implements IRegion {
 

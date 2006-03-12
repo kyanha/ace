@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.jface.text;
+package ch.iserver.ace.text;
 
 import java.util.HashMap;
 import java.util.Map;
