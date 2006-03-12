@@ -42,6 +42,19 @@ public class SimplePartitionerTest extends TestCase {
 		assertRegionEquals(new MockRegion(6, 3, Collections.singletonMap(KEY, 1)), regions[1]);
 	}
 	
+	public void testInsertWithin() throws Exception {
+		IPartitioner partitioner = new SimplePartitioner();
+		partitioner.documentUpdated(new DocumentEvent(0, 0, "abcdefg", Collections.singletonMap(KEY, 1)));
+		partitioner.documentUpdated(new DocumentEvent(6, 0, "abc", Collections.singletonMap(KEY, 2)));
+		
+		IAttributedRegion[] regions = partitioner.getRegions();
+		assertEquals(3, regions.length);
+		
+		assertRegionEquals(new MockRegion(0, 6, Collections.singletonMap(KEY, 1)), regions[0]);
+		assertRegionEquals(new MockRegion(6, 3, Collections.singletonMap(KEY, 2)), regions[1]);
+		assertRegionEquals(new MockRegion(9, 1, Collections.singletonMap(KEY, 1)), regions[2]);
+	}
+	
 	public void testInsertBetween() throws Exception {
 		IPartitioner partitioner = new SimplePartitioner();
 		partitioner.documentUpdated(new DocumentEvent(0, 0, "cba", Collections.singletonMap(KEY, 1)));
@@ -116,6 +129,34 @@ public class SimplePartitionerTest extends TestCase {
 		
 		assertRegionEquals(new MockRegion(0, 4, Collections.singletonMap(KEY, 1)), regions[0]);
 		assertRegionEquals(new MockRegion(4, 3, Collections.singletonMap(KEY, 2)), regions[1]);
+	}
+	
+	public void testReplaceInside() throws Exception {
+		IPartitioner partitioner = new SimplePartitioner();
+		partitioner.documentUpdated(new DocumentEvent(0, 0, "abcdefg", Collections.singletonMap(KEY, 2)));
+		partitioner.documentUpdated(new DocumentEvent(7, 0, "abc", Collections.singletonMap(KEY, 1)));
+		partitioner.documentUpdated(new DocumentEvent(1, 4, "xy", Collections.singletonMap(KEY, 2)));
+		
+		IAttributedRegion[] regions = partitioner.getRegions();
+		assertEquals(2, regions.length);
+		
+		assertRegionEquals(new MockRegion(0, 5, Collections.singletonMap(KEY, 2)), regions[0]);
+		assertRegionEquals(new MockRegion(5, 3, Collections.singletonMap(KEY, 1)), regions[1]);
+	}
+	
+	public void testReplaceAcross() throws Exception {
+		IPartitioner partitioner = new SimplePartitioner();
+		partitioner.documentUpdated(new DocumentEvent(0, 0, "abcdef", Collections.singletonMap(KEY, 1)));
+		partitioner.documentUpdated(new DocumentEvent(6, 0, "abcdef", Collections.singletonMap(KEY, 2)));
+		partitioner.documentUpdated(new DocumentEvent(12, 0, "abcdef", Collections.singletonMap(KEY, 1)));
+		partitioner.documentUpdated(new DocumentEvent(3, 12, "xy", Collections.singletonMap(KEY, 2)));
+		
+		IAttributedRegion[] regions = partitioner.getRegions();
+		assertEquals(3, regions.length);
+		
+		assertRegionEquals(new MockRegion(0, 3, Collections.singletonMap(KEY, 1)), regions[0]);
+		assertRegionEquals(new MockRegion(3, 2, Collections.singletonMap(KEY, 2)), regions[1]);
+		assertRegionEquals(new MockRegion(5, 3, Collections.singletonMap(KEY, 1)), regions[2]);
 	}
 	
 	public void testFindRange() throws Exception {

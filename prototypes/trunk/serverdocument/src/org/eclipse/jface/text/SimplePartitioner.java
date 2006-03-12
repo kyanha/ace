@@ -76,10 +76,20 @@ public class SimplePartitioner implements IPartitioner {
 				AttributedRegion inserted = new AttributedRegion(offset, text.length(), attributes);
 				partitions.add(p0, inserted);
 				updateOffsets(p0, text.length());
-			} else {
+			} else if (offset == region.getEnd()) {
 				AttributedRegion inserted = new AttributedRegion(offset, text.length(), attributes);
 				partitions.add(p0 + 1, inserted);
 				updateOffsets(p0 + 1, text.length());
+			} else {
+				AttributedRegion inserted = new AttributedRegion(offset, text.length(), attributes);
+				int oldLength = region.length;
+				region.length = offset - region.offset;
+				partitions.add(p0 + 1, inserted);
+				AttributedRegion fragment = new AttributedRegion(
+						offset + text.length(), 
+						oldLength - region.length, 
+						region.getAttributes());
+				partitions.add(p0 + 2, fragment);
 			}
 		} else if (p0 < p1) {
 			AttributedRegion first = partitions.get(p0);
@@ -251,6 +261,11 @@ public class SimplePartitioner implements IPartitioner {
 			} else {
 				return 1;
 			}
+		}
+		
+		@Override
+		public String toString() {
+			return "[start=" + offset + ",length=" + length + ",attributes=" + attributes + "]";
 		}
 		
 	}
