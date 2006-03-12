@@ -7,18 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 public class SimplePartitioner implements IPartitioner {
-
-	private IDocument document;
 	
 	private List<AttributedRegion> partitions = new ArrayList<AttributedRegion>();
-	
-	public void connect(IDocument document) {
-		this.document = document;
-	}
-
-	public void disconnect(IDocument document) {
-		this.document = null;
-	}
 
 	public void documentUpdated(DocumentEvent e) {
 		final int length = e.getLength();

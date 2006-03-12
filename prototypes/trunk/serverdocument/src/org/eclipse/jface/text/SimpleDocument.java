@@ -2,24 +2,18 @@ package org.eclipse.jface.text;
 
 import java.util.Map;
 
-public class AbstractDocument implements IDocument {
+public class SimpleDocument implements IDocument {
 
 	private final ITextStore store;
 	
 	private IPartitioner partitioner;
 
-	protected AbstractDocument(ITextStore store) {
+	protected SimpleDocument(ITextStore store) {
 		this.store = store;
 	}
 	
 	public void setPartitioner(IPartitioner partitioner) {
-		if (this.partitioner != null) {
-			this.partitioner.disconnect(this);
-		}
 		this.partitioner = partitioner;
-		if (this.partitioner != null) {
-			this.partitioner.connect(this);
-		}
 	}
 
 	public IPartitioner getPartitioner() {
