@@ -8,7 +8,7 @@ public class SimpleDocument implements IDocument {
 	
 	private IPartitioner partitioner;
 
-	protected SimpleDocument(ITextStore store) {
+	public SimpleDocument(ITextStore store) {
 		this.store = store;
 	}
 	
