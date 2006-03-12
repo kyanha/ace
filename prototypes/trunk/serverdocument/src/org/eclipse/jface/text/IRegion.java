@@ -37,5 +37,8 @@ public interface IRegion {
 	 *
 	 * @return the offset of the region
 	 */
-	int getOffset();
+	int getStart();
+	
+	int getEnd();
+	
 }
