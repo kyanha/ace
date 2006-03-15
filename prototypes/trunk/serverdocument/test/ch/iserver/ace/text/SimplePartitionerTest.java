@@ -2,7 +2,10 @@ package ch.iserver.ace.text;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+
+import ch.iserver.ace.Fragment;
 
 import junit.framework.TestCase;
 
@@ -69,6 +72,23 @@ public class SimplePartitionerTest extends TestCase {
 		assertRegionEquals(new MockRegion(0, 6, Collections.singletonMap(KEY, 2)), regions[0]);
 		assertRegionEquals(new MockRegion(6, 1, Collections.singletonMap(KEY, 3)), regions[1]);
 		assertRegionEquals(new MockRegion(7, 8, Collections.singletonMap(KEY, 1)), regions[2]);
+	}
+	
+	public void testInsertMultiple() throws Exception {
+		SimplePartitioner partitioner = new SimplePartitioner();
+		partitioner.documentUpdated(new DocumentEvent(0, 0, "xyz", Collections.singletonMap(KEY, 1)));
+		partitioner.documentUpdated(new DocumentEvent(0, 0, "a", Collections.singletonMap(KEY, 2)));
+		partitioner.documentUpdated(new DocumentEvent(4, 0, "b", Collections.singletonMap(KEY, 3)));
+		partitioner.documentUpdated(new DocumentEvent(2, 0, "c", Collections.singletonMap(KEY, 4)));
+		
+		IAttributedRegion[] regions = partitioner.getRegions();
+		assertEquals(5, regions.length);
+		
+		assertRegionEquals(new MockRegion(0, 1, Collections.singletonMap(KEY, 2)), regions[0]);
+		assertRegionEquals(new MockRegion(1, 1, Collections.singletonMap(KEY, 1)), regions[1]);
+		assertRegionEquals(new MockRegion(2, 1, Collections.singletonMap(KEY, 4)), regions[2]);
+		assertRegionEquals(new MockRegion(3, 2, Collections.singletonMap(KEY, 1)), regions[3]);
+		assertRegionEquals(new MockRegion(5, 1, Collections.singletonMap(KEY, 3)), regions[4]);
 	}
 	
 	public void testRemoveInside() throws Exception {

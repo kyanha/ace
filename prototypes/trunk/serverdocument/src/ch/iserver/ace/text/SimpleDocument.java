@@ -41,9 +41,9 @@ public class SimpleDocument implements IDocument {
 	}
 
 	public void removeRange(int offset, int length) {
-		store.replace(0, length, "");
+		store.replace(offset, length, "");
 		DocumentEvent event = new DocumentEvent(offset, length, "");
 		partitioner.documentUpdated(event);
 	}
-
+	
 }

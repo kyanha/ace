@@ -90,6 +90,7 @@ public class SimplePartitioner implements IPartitioner {
 						oldLength - region.length, 
 						region.getAttributes());
 				partitions.add(p0 + 2, fragment);
+				updateOffsets(p0 + 2, text.length());
 			}
 		} else if (p0 < p1) {
 			AttributedRegion first = partitions.get(p0);

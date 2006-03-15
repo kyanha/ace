@@ -14,6 +14,8 @@ package ch.iserver.ace.text;
 import java.util.HashMap;
 import java.util.Map;
 
+import ch.iserver.ace.util.ParameterValidator;
+
 
 /**
  * Specification of changes applied to documents. All changes are represented as
@@ -24,38 +26,31 @@ import java.util.Map;
 public class DocumentEvent {
 
 	/** The document offset */
-	private final int fOffset;
+	private final int offset;
 	/** Length of the replaced document text */
-	private final int fLength;
+	private final int length;
 	/** Text inserted into the document */
-	private final String fText;
+	private final String text;
 	/** Text attributes */
-	private final Map fAttributes;
+	private final Map attributes;
 	
-	/**
-	 * Creates a new document event.
-	 *
-	 * @param offset the offset of the replaced text
-	 * @param length the length of the replaced text
-	 * @param text the substitution text
-	 */
 	public DocumentEvent(int offset, int length, String text) {
 		this(offset, length, text, new HashMap());
 	}
 
 	public DocumentEvent(int offset, int length, String text, Map attributes) {
-		Assert.isTrue(offset >= 0);
-		Assert.isTrue(length >= 0);
-		Assert.isNotNull(attributes, "attributes");
+		ParameterValidator.notNegative("offset", offset);
+		ParameterValidator.notNegative("length", length);
+		ParameterValidator.notNull("attributes", attributes);
 
-		fOffset= offset;
-		fLength= length;
-		fText= text;
-		fAttributes = attributes;
+		this.offset = offset;
+		this.length = length;
+		this.text = text;
+		this.attributes = attributes;
 	}
 
 	public Map getAttributes() {
-		return fAttributes;
+		return attributes;
 	}
 
 	/**
@@ -64,7 +59,7 @@ public class DocumentEvent {
 	 * @return the offset of the change
 	 */
 	public int getOffset() {
-		return fOffset;
+		return offset;
 	}
 
 	/**
@@ -73,7 +68,7 @@ public class DocumentEvent {
 	 * @return the length of the replaced text
 	 */
 	public int getLength() {
-		return fLength;
+		return length;
 	}
 
 	/**
@@ -82,6 +77,32 @@ public class DocumentEvent {
 	 * @return the text that has been inserted
 	 */
 	public String getText() {
-		return fText;
+		return text;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		} else if (obj == null) {
+			return false;
+		} else if (getClass().equals(obj.getClass())) {
+			DocumentEvent evt = (DocumentEvent) obj;
+			return offset == evt.offset && length == evt.length
+					&& text.equals(evt.text)
+					&& attributes.equals(evt.attributes);
+		} else {
+			return false;
+		}
+	}
+	
+	@Override
+	public int hashCode() {
+		int hash = 7 + offset;
+		hash += 11 * length;
+		hash += 13 * text.hashCode();
+		hash += 17 * attributes.hashCode();
+		return hash;
+	}
+	
 }
