@@ -47,7 +47,6 @@ public class DocumentEvent {
 		return text;
 	}
 	
-	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
@@ -63,7 +62,6 @@ public class DocumentEvent {
 		}
 	}
 	
-	@Override
 	public int hashCode() {
 		int hash = 7 + offset;
 		hash += 11 * length;

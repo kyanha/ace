@@ -29,9 +29,9 @@ public class SimpleServerDocument implements ServerDocument {
 
 	private GapTextStore textStore;
 	
-	private Map<Integer,RemoteUserProxy> participants = new HashMap<Integer,RemoteUserProxy>();
+	private Map participants = new HashMap();
 	
-	private Map<Integer,CaretHandler> selections = new HashMap<Integer,CaretHandler>();
+	private Map selections = new HashMap();
 	
 	public SimpleServerDocument() {
 		this.textStore = new GapTextStore(5, 20);
@@ -50,7 +50,7 @@ public class SimpleServerDocument implements ServerDocument {
 	}
 	
 	protected CaretHandler getCaretHandler(int participantId) {
-		return selections.get(participantId);
+		return (CaretHandler) selections.get(new Integer(participantId));
 	}
 	
 	public void participantJoined(int participantId, RemoteUserProxy proxy) {
@@ -74,7 +74,7 @@ public class SimpleServerDocument implements ServerDocument {
 		this.document.insertString(
 				offset, 
 				text, 
-				Collections.singletonMap(PARTICIPANT_KEY, participantId));
+				Collections.singletonMap(PARTICIPANT_KEY, new Integer(participantId)));
 		updateCarets(offset, text.length());
 	}
 
@@ -98,16 +98,18 @@ public class SimpleServerDocument implements ServerDocument {
 	// query methods
 	
 	private void updateCarets(int offset, int length) {
-		for (CaretHandler handler : selections.values()) {
+		Iterator it = selections.values().iterator();
+		while (it.hasNext()) {
+			CaretHandler handler = (CaretHandler) it.next();
 			handler.update(offset, length, document.getLength());
 		}
 	}
 	
 	private int getParticipantId(IAttributedRegion region) {
 		int participantId = -1;
-		Object value = region.getAttribute(PARTICIPANT_KEY);
+		Integer value = (Integer) region.getAttribute(PARTICIPANT_KEY);
 		if (value != null) {
-			participantId = (Integer) value;
+			participantId = value.intValue();
 		}
 		return participantId;
 	}
@@ -157,10 +159,12 @@ public class SimpleServerDocument implements ServerDocument {
 	 * @param result the document beeing built
 	 */
 	protected void addParticipants(PortableDocumentImpl result) {
-		for (int id : participants.keySet()) {
-			RemoteUserProxy user = getUserProxy(id);
-			CaretUpdate selection = getSelection(id);
-			result.addParticipant(id, user, selection);			
+		Iterator it = participants.keySet().iterator();
+		while (it.hasNext()) {
+			Integer id = (Integer) it.next();
+			RemoteUserProxy user = getUserProxy(id.intValue());
+			CaretUpdate selection = getSelection(id.intValue());
+			result.addParticipant(id.intValue(), user, selection);
 		}
 	}
 	

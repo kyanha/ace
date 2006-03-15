@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class SimplePartitioner implements IPartitioner {
 	
-	private List<AttributedRegion> partitions = new ArrayList<AttributedRegion>();
+	private List partitions = new ArrayList();
 
 	public void documentUpdated(DocumentEvent e) {
 		final int length = e.getLength();
@@ -29,21 +29,21 @@ public class SimplePartitioner implements IPartitioner {
 		int p0 = range[0];
 		int p1 = range[1];
 		
-		Assert.isTrue(p0 <= p1, "p0 > p1");
+		assert p0 <= p1 : "p0 > p1";
 		
 		if (p0 == p1) {
-			AttributedRegion region = partitions.get(p0);
+			AttributedRegion region = (AttributedRegion) partitions.get(p0);
 			region.length -= length;
 			updateOffsets(p0, -length);
 		} else {
-			AttributedRegion first = partitions.get(p0);
-			AttributedRegion last  = partitions.get(p1);
+			AttributedRegion first = (AttributedRegion) partitions.get(p0);
+			AttributedRegion last  = (AttributedRegion) partitions.get(p1);
 			
 			for (int i = p0 + 1; i < p1; i++) {
 				partitions.remove(p0 + 1);
 			}
 			
-			if (first.attributes.equals(last.attributes)) {
+			if (first.getAttributes().equals(last.getAttributes())) {
 				partitions.remove(p0 + 1);
 				first.length -= first.getEnd() - offset;
 				first.length -= (offset + length) - last.getEnd();
@@ -62,13 +62,13 @@ public class SimplePartitioner implements IPartitioner {
 		int p0 = range[0];
 		int p1 = range[1];
 		
-		Assert.isLegal(p0 == p1 || p0 + 1 == p1, "insert can affect at most two positions");
+		assert (p0 == p1 || p0 + 1 == p1) : "insert can affect at most two positions";
 		
 		if (p0 == -1) {
 			AttributedRegion inserted = new AttributedRegion(offset, text.length(), attributes);
 			partitions.add(inserted);
 		} else if (p0 == p1) {
-			AttributedRegion region = partitions.get(p0);
+			AttributedRegion region = (AttributedRegion) partitions.get(p0);
 			if (region.attributes.equals(attributes)) {
 				region.length += text.length();
 				updateOffsets(p0, text.length());
@@ -93,8 +93,8 @@ public class SimplePartitioner implements IPartitioner {
 				updateOffsets(p0 + 2, text.length());
 			}
 		} else if (p0 < p1) {
-			AttributedRegion first = partitions.get(p0);
-			AttributedRegion second = partitions.get(p1);
+			AttributedRegion first = (AttributedRegion) partitions.get(p0);
+			AttributedRegion second = (AttributedRegion) partitions.get(p1);
 			if (first.attributes.equals(attributes)) {
 				first.length += text.length();
 				updateOffsets(p0, text.length());
@@ -118,12 +118,12 @@ public class SimplePartitioner implements IPartitioner {
 	
 	private void updateOffsets(int idx, int delta) {
 		for (int i = idx + 1; i < partitions.size(); i++) {
-			AttributedRegion region = partitions.get(i);
+			AttributedRegion region = (AttributedRegion) partitions.get(i);
 			region.offset += delta;
 		}
 	}
 	
-	protected static int[] findRange(int offset, int length, List<? extends IRegion> partitions) {
+	protected static int[] findRange(int offset, int length, List partitions) {
 		int start = 0;
 		int end   = 0;
 
@@ -138,7 +138,7 @@ public class SimplePartitioner implements IPartitioner {
 
 		while (left <= right) {
 			int mid = (right + left) / 2;
-			IRegion region = partitions.get(mid);
+			IRegion region = (IRegion) partitions.get(mid);
 			if (isAtStart(offset, region)) {
 				start = mid == 0 ? 0 : mid - 1;
 				break;
@@ -159,7 +159,7 @@ public class SimplePartitioner implements IPartitioner {
 		right = partitions.size();
 		while (left <= right) {
 			int mid = (right + left) / 2;
-			IRegion region = partitions.get(mid);
+			IRegion region = (IRegion) partitions.get(mid);
 			if (isAtStart(offset + length, region)) {
 				end = mid;
 				break;
@@ -179,9 +179,11 @@ public class SimplePartitioner implements IPartitioner {
 		return new int[] { start, end };
 	}
 	
-	private static int getLength(List<? extends IRegion> regions) {
+	private static int getLength(List regions) {
 		int length = 0;
-		for (IRegion region : regions) {
+		Iterator it = regions.iterator();
+		while (it.hasNext()) {
+			IRegion region = (IRegion) it.next();
 			length += region.getLength();
 		}
 		return length; 
@@ -220,12 +222,12 @@ public class SimplePartitioner implements IPartitioner {
 	private static class AttributedRegion implements IAttributedRegion, Comparable {
 		private int offset;
 		private int length;
-		private Map<String,Object> attributes;
+		private Map attributes;
 		
-		private AttributedRegion(int offset, int length, Map<String,Object> attributes) {
+		private AttributedRegion(int offset, int length, Map attributes) {
 			this.offset = offset;
 			this.length = length;
-			this.attributes = new HashMap<String,Object>(attributes);
+			this.attributes = new HashMap(attributes);
 		}
 		
 		public int getStart() {
@@ -240,8 +242,8 @@ public class SimplePartitioner implements IPartitioner {
 			return getStart() + getLength();
 		}
 		
-		public Map<String, Object> getAttributes() {
-			return new HashMap<String,Object>(attributes);
+		public Map getAttributes() {
+			return new HashMap(attributes);
 		}
 		
 		public Object getAttribute(String name) {
@@ -264,7 +266,6 @@ public class SimplePartitioner implements IPartitioner {
 			}
 		}
 		
-		@Override
 		public String toString() {
 			return "[start=" + offset + ",length=" + length + ",attributes=" + attributes + "]";
 		}

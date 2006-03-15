@@ -6,15 +6,15 @@ import java.util.Map;
 
 public class MockRegion extends Region implements IAttributedRegion {
 	
-	private final Map<String,Object> attributes;
+	private final Map attributes;
 	
-	public MockRegion(int start, int length, Map<String,?> attributes) {
+	public MockRegion(int start, int length, Map attributes) {
 		super(start, length);
-		this.attributes = new HashMap<String,Object>(attributes);
+		this.attributes = new HashMap(attributes);
 	}
 	
-	public Map<String, Object> getAttributes() {
-		return new HashMap<String,Object>(attributes);
+	public Map getAttributes() {
+		return new HashMap(attributes);
 	}
 	
 	public Object getAttribute(String name) {

@@ -5,7 +5,7 @@ import java.util.Map;
 
 public interface IAttributedRegion extends IRegion {
 	
-	Map<String,Object> getAttributes();
+	Map getAttributes();
 	
 	Object getAttribute(String name);
 	
