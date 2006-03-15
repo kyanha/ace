@@ -12,23 +12,10 @@ package ch.iserver.ace.text;
 
 
 /**
- * Interface for storing and managing text.
- * <p>
- * Provides access to the stored text and allows to manipulate it.</p>
- * <p>
- * Clients may
- * implement this interface or use {@link org.eclipse.jface.text.GapTextStore} and
- * {@link org.eclipse.jface.text.SequentialRewriteTextStore}.</p>
+ * Interface for storing and managing text. Provides access to the stored text 
+ * and allows to manipulate it.
  */
 public interface ITextStore {
-
-	/**
-	 * Returns the character at the specified offset.
-	 *
-	 * @param offset the offset in this text store
-	 * @return the character at this offset
-	 */
-	char get(int offset);
 
 	/**
 	 * Returns the text of the specified character range.
@@ -37,7 +24,7 @@ public interface ITextStore {
 	 * @param length the length of the range
 	 * @return the text of the range
 	 */
-	String get(int offset, int length);
+	String getText(int offset, int length);
 
 	/**
 	 * Returns number of characters stored in this text store.
@@ -57,11 +44,4 @@ public interface ITextStore {
 	 */
 	void replace(int offset, int length, String text);
 
-	/**
-	 * Replace the content of the text store with the given text.
-	 * Convenience method for <code>replace(0, getLength(), text</code>.
-	 *
-	 * @param text the new content of the text store
-	 */
-	void set(String text);
 }

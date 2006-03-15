@@ -2,20 +2,25 @@ package ch.iserver.ace.text;
 
 import java.util.Map;
 
+import ch.iserver.ace.util.ParameterValidator;
+
 public class SimpleDocument implements IDocument {
 
 	private final ITextStore store;
 	
-	private IPartitioner partitioner;
+	private final IPartitioner partitioner;
 
-	public SimpleDocument(ITextStore store) {
+	public SimpleDocument(ITextStore store, IPartitioner partitioner) {
+		ParameterValidator.notNull("store", store);
+		ParameterValidator.notNull("partitioner", partitioner);
 		this.store = store;
-	}
-	
-	public void setPartitioner(IPartitioner partitioner) {
 		this.partitioner = partitioner;
 	}
 
+	public ITextStore getStore() {
+		return store;
+	}
+	
 	public IPartitioner getPartitioner() {
 		return partitioner;
 	}
@@ -25,7 +30,7 @@ public class SimpleDocument implements IDocument {
 	}
 	
 	public String getText() {
-		return store.get(0, getLength());
+		return store.getText(0, getLength());
 	}
 
 	public void insertString(int offset, String text, Map attributes) {

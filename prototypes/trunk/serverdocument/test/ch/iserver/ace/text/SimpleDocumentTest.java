@@ -29,8 +29,7 @@ public class SimpleDocumentTest extends TestCase {
 		partitionerCtrl.replay();
 		
 		// test
-		SimpleDocument doc = new SimpleDocument(textStore);
-		doc.setPartitioner(partitioner);
+		SimpleDocument doc = new SimpleDocument(textStore, partitioner);
 		doc.insertString(0, "abc", Collections.singletonMap(KEY, 1));
 		doc.insertString(3, "xyz", Collections.singletonMap(KEY, 2));
 		doc.removeRange(1, 4);

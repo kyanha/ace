@@ -4,8 +4,6 @@ import java.util.Map;
 
 public interface IDocument {
 	
-	void setPartitioner(IPartitioner partitioner);
-	
 	IPartitioner getPartitioner();
 	
 	int getLength();
