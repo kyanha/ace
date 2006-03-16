@@ -9,7 +9,6 @@ public class AllTests {
 		TestSuite suite = new TestSuite("Test for ch.iserver.ace.text");
 		//$JUnit-BEGIN$
 		suite.addTestSuite(SimplePartitionerTest.class);
-		suite.addTestSuite(SimpleDocumentTest.class);
 		suite.addTestSuite(SimpleServerDocumentTest.class);
 		//$JUnit-END$
 		return suite;

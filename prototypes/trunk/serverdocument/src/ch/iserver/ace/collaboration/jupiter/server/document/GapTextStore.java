@@ -1,6 +1,6 @@
 package ch.iserver.ace.collaboration.jupiter.server.document;
 
-public class GapTextStore implements ITextStore {
+public class GapTextStore implements TextStore {
 
 	private int highWatermark;
 	

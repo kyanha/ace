@@ -20,7 +20,7 @@ public class SimplePartitionerTest extends TestCase {
 	}
 	
 	public void testInsertAtEnd() throws Exception {
-		IPartitioner partitioner = new SimplePartitioner();
+		DocumentPartitioner partitioner = new SimplePartitioner();
 		partitioner.documentUpdated(new DocumentEvent(0, 0, "abc", Collections.singletonMap(KEY, "1")));
 		partitioner.documentUpdated(new DocumentEvent(3, 0, " hello", Collections.singletonMap(KEY, "2")));
 		partitioner.documentUpdated(new DocumentEvent(9, 0, "x", Collections.singletonMap(KEY, "2")));
@@ -33,7 +33,7 @@ public class SimplePartitionerTest extends TestCase {
 	}
 	
 	public void testInsertAtStart() throws Exception {
-		IPartitioner partitioner = new SimplePartitioner();
+		DocumentPartitioner partitioner = new SimplePartitioner();
 		partitioner.documentUpdated(new DocumentEvent(0, 0, "cba", Collections.singletonMap(KEY, "1")));
 		partitioner.documentUpdated(new DocumentEvent(0, 0, "hgfe", Collections.singletonMap(KEY, "2")));
 		partitioner.documentUpdated(new DocumentEvent(0, 0, "ki", Collections.singletonMap(KEY, "2")));
@@ -46,7 +46,7 @@ public class SimplePartitionerTest extends TestCase {
 	}
 	
 	public void testInsertWithin() throws Exception {
-		IPartitioner partitioner = new SimplePartitioner();
+		DocumentPartitioner partitioner = new SimplePartitioner();
 		partitioner.documentUpdated(new DocumentEvent(0, 0, "abcdefg", Collections.singletonMap(KEY, "1")));
 		partitioner.documentUpdated(new DocumentEvent(6, 0, "abc", Collections.singletonMap(KEY, "2")));
 		
@@ -59,7 +59,7 @@ public class SimplePartitionerTest extends TestCase {
 	}
 	
 	public void testInsertBetween() throws Exception {
-		IPartitioner partitioner = new SimplePartitioner();
+		DocumentPartitioner partitioner = new SimplePartitioner();
 		partitioner.documentUpdated(new DocumentEvent(0, 0, "cba", Collections.singletonMap(KEY, "1")));
 		partitioner.documentUpdated(new DocumentEvent(0, 0, "hgfe", Collections.singletonMap(KEY, "2")));
 		partitioner.documentUpdated(new DocumentEvent(4, 0, "ki", Collections.singletonMap(KEY, "2")));
@@ -92,7 +92,7 @@ public class SimplePartitionerTest extends TestCase {
 	}
 	
 	public void testRemoveInside() throws Exception {
-		IPartitioner partitioner = new SimplePartitioner();
+		DocumentPartitioner partitioner = new SimplePartitioner();
 		partitioner.documentUpdated(new DocumentEvent(0, 0, "abcdefghijk", Collections.singletonMap(KEY, "2")));
 		partitioner.documentUpdated(new DocumentEvent(11, 0, "XYZ", Collections.singletonMap(KEY, "1")));
 		partitioner.documentUpdated(new DocumentEvent(1, 9, ""));
@@ -105,7 +105,7 @@ public class SimplePartitionerTest extends TestCase {
 	}
 	
 	public void testRemoveBetween() throws Exception {
-		IPartitioner partitioner = new SimplePartitioner();
+		DocumentPartitioner partitioner = new SimplePartitioner();
 		partitioner.documentUpdated(new DocumentEvent(0, 0, "abc", Collections.singletonMap(KEY, "1")));
 		partitioner.documentUpdated(new DocumentEvent(3, 0, "xyzxyz", Collections.singletonMap(KEY, "2")));
 		partitioner.documentUpdated(new DocumentEvent(2, 4, ""));
@@ -118,7 +118,7 @@ public class SimplePartitionerTest extends TestCase {
 	}
 	
 	public void testRemoveMerge() throws Exception {
-		IPartitioner partitioner = new SimplePartitioner();
+		DocumentPartitioner partitioner = new SimplePartitioner();
 		partitioner.documentUpdated(new DocumentEvent(0, 0, "XYZ", Collections.singletonMap(KEY, "1")));
 		partitioner.documentUpdated(new DocumentEvent(3, 0, "XYZ", Collections.singletonMap(KEY, "2")));
 		partitioner.documentUpdated(new DocumentEvent(6, 0, "XYZ", Collections.singletonMap(KEY, "3")));
@@ -135,7 +135,7 @@ public class SimplePartitionerTest extends TestCase {
 	}
 	
 	public void testRemoveMerge2() throws Exception {
-		IPartitioner partitioner = new SimplePartitioner();
+		DocumentPartitioner partitioner = new SimplePartitioner();
 		partitioner.documentUpdated(new DocumentEvent(0, 0, "XYZ", Collections.singletonMap(KEY, "1")));
 		partitioner.documentUpdated(new DocumentEvent(3, 0, "XYZ", Collections.singletonMap(KEY, "2")));
 		partitioner.documentUpdated(new DocumentEvent(6, 0, "XYZ", Collections.singletonMap(KEY, "3")));
@@ -152,7 +152,7 @@ public class SimplePartitionerTest extends TestCase {
 	}
 	
 	public void testReplaceInside() throws Exception {
-		IPartitioner partitioner = new SimplePartitioner();
+		DocumentPartitioner partitioner = new SimplePartitioner();
 		partitioner.documentUpdated(new DocumentEvent(0, 0, "abcdefg", Collections.singletonMap(KEY, "2")));
 		partitioner.documentUpdated(new DocumentEvent(7, 0, "abc", Collections.singletonMap(KEY, "1")));
 		partitioner.documentUpdated(new DocumentEvent(1, 4, "xy", Collections.singletonMap(KEY, "2")));
@@ -165,7 +165,7 @@ public class SimplePartitionerTest extends TestCase {
 	}
 	
 	public void testReplaceAcross() throws Exception {
-		IPartitioner partitioner = new SimplePartitioner();
+		DocumentPartitioner partitioner = new SimplePartitioner();
 		partitioner.documentUpdated(new DocumentEvent(0, 0, "abcdef", Collections.singletonMap(KEY, "1")));
 		partitioner.documentUpdated(new DocumentEvent(6, 0, "abcdef", Collections.singletonMap(KEY, "2")));
 		partitioner.documentUpdated(new DocumentEvent(12, 0, "abcdef", Collections.singletonMap(KEY, "1")));

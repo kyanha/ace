@@ -1,6 +1,6 @@
 package ch.iserver.ace.collaboration.jupiter.server.document;
 
-public interface IPartitioner {
+public interface DocumentPartitioner {
 
 	void documentUpdated(DocumentEvent e);
 	

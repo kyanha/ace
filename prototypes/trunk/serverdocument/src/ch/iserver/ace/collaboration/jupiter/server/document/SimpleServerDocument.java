@@ -16,10 +16,8 @@ import ch.iserver.ace.net.RemoteUserProxy;
 public class SimpleServerDocument implements ServerDocument {
 	
 	private static final String PARTICIPANT_KEY = "participant-id";
-
-	private IDocument document;
 	
-	private IPartitioner partitioner;
+	private DocumentPartitioner partitioner;
 
 	private GapTextStore textStore;
 	
@@ -30,7 +28,6 @@ public class SimpleServerDocument implements ServerDocument {
 	public SimpleServerDocument() {
 		this.textStore = new GapTextStore(5, 20);
 		this.partitioner = new SimplePartitioner();
-		this.document = new SimpleDocument(textStore, partitioner);
 	}
 	
 	protected void addParticipant(int participantId, RemoteUserProxy proxy, CaretHandler handler) {
@@ -65,20 +62,25 @@ public class SimpleServerDocument implements ServerDocument {
 	}
 
 	public void insertString(int participantId, int offset, String text) {
-		this.document.insertString(
-				offset, 
-				text, 
-				Collections.singletonMap(PARTICIPANT_KEY, new Integer(participantId)));
+		textStore.replace(offset, 0, text);
+		DocumentEvent event = new DocumentEvent(offset, 0, text, Collections.singletonMap(PARTICIPANT_KEY, new Integer(participantId)));
+		partitioner.documentUpdated(event);
 		updateCarets(offset, text.length());
 	}
 
 	public void removeString(int offset, int length) {
-		this.document.removeRange(offset, length);
+		textStore.replace(offset, length, "");
+		DocumentEvent event = new DocumentEvent(offset, length, "");
+		partitioner.documentUpdated(event);
 		updateCarets(offset, -length);
 	}
 
 	public String getText() {
-		return document.getText();
+		return textStore.getText(0, getLength());
+	}
+	
+	public int getLength() {
+		return textStore.getLength();
 	}
 
 	public PortableDocument toPortableDocument() {
@@ -95,7 +97,7 @@ public class SimpleServerDocument implements ServerDocument {
 		Iterator it = selections.values().iterator();
 		while (it.hasNext()) {
 			CaretHandler handler = (CaretHandler) it.next();
-			handler.update(offset, length, document.getLength());
+			handler.update(offset, length, getLength());
 		}
 	}
 	
