@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package ch.iserver.ace.text;
+package ch.iserver.ace.collaboration.jupiter.server.document;
 
 
 /**

@@ -1,10 +1,11 @@
-package ch.iserver.ace.text;
+package ch.iserver.ace.collaboration.jupiter.server.document;
 
 import java.util.Collections;
 
+import junit.framework.TestCase;
+
 import org.easymock.MockControl;
 
-import junit.framework.TestCase;
 
 public class SimpleDocumentTest extends TestCase {
 	

@@ -1,6 +1,5 @@
-package ch.iserver.ace.text;
+package ch.iserver.ace.collaboration.jupiter.server.document;
 
-import ch.iserver.ace.text.server.SimpleServerDocumentTest;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 

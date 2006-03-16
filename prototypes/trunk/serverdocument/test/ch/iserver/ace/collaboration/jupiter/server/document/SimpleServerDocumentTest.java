@@ -1,10 +1,11 @@
-package ch.iserver.ace.text.server;
+package ch.iserver.ace.collaboration.jupiter.server.document;
 
 
 import java.util.Iterator;
 
 import junit.framework.TestCase;
 import ch.iserver.ace.Fragment;
+import ch.iserver.ace.collaboration.jupiter.server.document.SimpleServerDocument;
 import ch.iserver.ace.net.RemoteUserProxyStub;
 
 public class SimpleServerDocumentTest extends TestCase {

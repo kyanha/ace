@@ -1,4 +1,4 @@
-package ch.iserver.ace.text;
+package ch.iserver.ace.collaboration.jupiter.server.document;
 
 public interface IRegion {
 

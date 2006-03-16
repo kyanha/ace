@@ -1,4 +1,4 @@
-package ch.iserver.ace.text.server;
+package ch.iserver.ace.collaboration.jupiter.server.document;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -12,12 +12,6 @@ import ch.iserver.ace.collaboration.jupiter.server.PortableDocumentImpl;
 import ch.iserver.ace.collaboration.jupiter.server.ServerDocument;
 import ch.iserver.ace.net.PortableDocument;
 import ch.iserver.ace.net.RemoteUserProxy;
-import ch.iserver.ace.text.GapTextStore;
-import ch.iserver.ace.text.IAttributedRegion;
-import ch.iserver.ace.text.IDocument;
-import ch.iserver.ace.text.IPartitioner;
-import ch.iserver.ace.text.SimpleDocument;
-import ch.iserver.ace.text.SimplePartitioner;
 
 public class SimpleServerDocument implements ServerDocument {
 	
