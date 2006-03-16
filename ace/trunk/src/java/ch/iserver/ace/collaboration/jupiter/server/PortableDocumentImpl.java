@@ -65,7 +65,7 @@ public class PortableDocumentImpl implements PortableDocument {
 	 * 
 	 * @param fragment the fragment to be added
 	 */
-	protected void addFragment(Fragment fragment) {
+	public void addFragment(Fragment fragment) {
 		if (isFrozen()) {
 			throw new IllegalStateException("cannot mofify in frozen state");
 		}
@@ -79,7 +79,7 @@ public class PortableDocumentImpl implements PortableDocument {
 	 * @param user the user proxy
 	 * @param selection the selection of that participant
 	 */
-	protected void addParticipant(int id, RemoteUserProxy user, CaretUpdate selection) {
+	public void addParticipant(int id, RemoteUserProxy user, CaretUpdate selection) {
 		if (isFrozen()) {
 			throw new IllegalStateException("cannot mofify in frozen state");
 		}
