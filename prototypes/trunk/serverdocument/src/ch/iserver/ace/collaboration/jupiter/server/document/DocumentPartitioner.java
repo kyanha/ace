@@ -4,6 +4,6 @@ public interface DocumentPartitioner {
 
 	void documentUpdated(DocumentEvent e);
 	
-	IAttributedRegion[] getRegions();
+	AttributedRegion[] getRegions();
 	
 }

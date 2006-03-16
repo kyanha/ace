@@ -32,12 +32,12 @@ public class SimplePartitioner implements DocumentPartitioner {
 		assert p0 <= p1 : "p0 > p1";
 		
 		if (p0 == p1) {
-			AttributedRegion region = (AttributedRegion) partitions.get(p0);
+			AttributedRegionImpl region = (AttributedRegionImpl) partitions.get(p0);
 			region.length -= length;
 			updateOffsets(p0, -length);
 		} else {
-			AttributedRegion first = (AttributedRegion) partitions.get(p0);
-			AttributedRegion last  = (AttributedRegion) partitions.get(p1);
+			AttributedRegionImpl first = (AttributedRegionImpl) partitions.get(p0);
+			AttributedRegionImpl last  = (AttributedRegionImpl) partitions.get(p1);
 			
 			for (int i = p0 + 1; i < p1; i++) {
 				partitions.remove(p0 + 1);
@@ -65,27 +65,27 @@ public class SimplePartitioner implements DocumentPartitioner {
 		assert (p0 == p1 || p0 + 1 == p1) : "insert can affect at most two positions";
 		
 		if (p0 == -1) {
-			AttributedRegion inserted = new AttributedRegion(offset, text.length(), attributes);
+			AttributedRegionImpl inserted = new AttributedRegionImpl(offset, text.length(), attributes);
 			partitions.add(inserted);
 		} else if (p0 == p1) {
-			AttributedRegion region = (AttributedRegion) partitions.get(p0);
+			AttributedRegionImpl region = (AttributedRegionImpl) partitions.get(p0);
 			if (region.attributes.equals(attributes)) {
 				region.length += text.length();
 				updateOffsets(p0, text.length());
 			} else if (offset == region.offset) {
-				AttributedRegion inserted = new AttributedRegion(offset, text.length(), attributes);
+				AttributedRegionImpl inserted = new AttributedRegionImpl(offset, text.length(), attributes);
 				partitions.add(p0, inserted);
 				updateOffsets(p0, text.length());
 			} else if (offset == region.getEnd()) {
-				AttributedRegion inserted = new AttributedRegion(offset, text.length(), attributes);
+				AttributedRegionImpl inserted = new AttributedRegionImpl(offset, text.length(), attributes);
 				partitions.add(p0 + 1, inserted);
 				updateOffsets(p0 + 1, text.length());
 			} else {
-				AttributedRegion inserted = new AttributedRegion(offset, text.length(), attributes);
+				AttributedRegionImpl inserted = new AttributedRegionImpl(offset, text.length(), attributes);
 				int oldLength = region.length;
 				region.length = offset - region.offset;
 				partitions.add(p0 + 1, inserted);
-				AttributedRegion fragment = new AttributedRegion(
+				AttributedRegionImpl fragment = new AttributedRegionImpl(
 						offset + text.length(), 
 						oldLength - region.length, 
 						region.getAttributes());
@@ -93,8 +93,8 @@ public class SimplePartitioner implements DocumentPartitioner {
 				updateOffsets(p0 + 2, text.length());
 			}
 		} else if (p0 < p1) {
-			AttributedRegion first = (AttributedRegion) partitions.get(p0);
-			AttributedRegion second = (AttributedRegion) partitions.get(p1);
+			AttributedRegionImpl first = (AttributedRegionImpl) partitions.get(p0);
+			AttributedRegionImpl second = (AttributedRegionImpl) partitions.get(p1);
 			if (first.attributes.equals(attributes)) {
 				first.length += text.length();
 				updateOffsets(p0, text.length());
@@ -102,7 +102,7 @@ public class SimplePartitioner implements DocumentPartitioner {
 				second.length += text.length();
 				updateOffsets(p1, text.length());
 			} else {
-				AttributedRegion inserted = new AttributedRegion(offset, text.length(), attributes);
+				AttributedRegionImpl inserted = new AttributedRegionImpl(offset, text.length(), attributes);
 				partitions.add(p1, inserted);
 				updateOffsets(p1, text.length());
 			}
@@ -118,7 +118,7 @@ public class SimplePartitioner implements DocumentPartitioner {
 	
 	private void updateOffsets(int idx, int delta) {
 		for (int i = idx + 1; i < partitions.size(); i++) {
-			AttributedRegion region = (AttributedRegion) partitions.get(i);
+			AttributedRegionImpl region = (AttributedRegionImpl) partitions.get(i);
 			region.offset += delta;
 		}
 	}
@@ -138,7 +138,7 @@ public class SimplePartitioner implements DocumentPartitioner {
 
 		while (left <= right) {
 			int mid = (right + left) / 2;
-			IRegion region = (IRegion) partitions.get(mid);
+			Region region = (Region) partitions.get(mid);
 			if (isAtStart(offset, region)) {
 				start = mid == 0 ? 0 : mid - 1;
 				break;
@@ -159,7 +159,7 @@ public class SimplePartitioner implements DocumentPartitioner {
 		right = partitions.size();
 		while (left <= right) {
 			int mid = (right + left) / 2;
-			IRegion region = (IRegion) partitions.get(mid);
+			Region region = (Region) partitions.get(mid);
 			if (isAtStart(offset + length, region)) {
 				end = mid;
 				break;
@@ -183,48 +183,42 @@ public class SimplePartitioner implements DocumentPartitioner {
 		int length = 0;
 		Iterator it = regions.iterator();
 		while (it.hasNext()) {
-			IRegion region = (IRegion) it.next();
+			Region region = (Region) it.next();
 			length += region.getLength();
 		}
 		return length; 
 	}
 		
-	protected static boolean isWithin(int offset, IRegion region) {
+	protected static boolean isWithin(int offset, Region region) {
 		return offset > region.getStart() && offset < region.getEnd();
 	}
 	
-	protected static boolean isAfter(int offset, IRegion region) {
+	protected static boolean isAfter(int offset, Region region) {
 		return offset > region.getEnd();
 	}
 	
-	protected static boolean isBefore(int offset, IRegion region) {
+	protected static boolean isBefore(int offset, Region region) {
 		return offset < region.getStart();
 	}
 	
-	protected static boolean isAtStart(int offset, IRegion region) {
+	protected static boolean isAtStart(int offset, Region region) {
 		return offset == region.getStart();
 	}
 	
-	protected static boolean isAtEnd(int offset, IRegion region) {
+	protected static boolean isAtEnd(int offset, Region region) {
 		return offset == region.getEnd();
 	}
 	
-	protected IAttributedRegion[] getRegions(int offset, int length) {
-		List regions = new ArrayList(partitions);
-				
-		return new IAttributedRegion[0];
+	public AttributedRegion[] getRegions() {
+		return (AttributedRegion[]) partitions.toArray(new AttributedRegion[partitions.size()]);
 	}
 	
-	public IAttributedRegion[] getRegions() {
-		return (IAttributedRegion[]) partitions.toArray(new IAttributedRegion[partitions.size()]);
-	}
-	
-	private static class AttributedRegion implements IAttributedRegion, Comparable {
+	private static class AttributedRegionImpl implements AttributedRegion, Comparable {
 		private int offset;
 		private int length;
 		private Map attributes;
 		
-		private AttributedRegion(int offset, int length, Map attributes) {
+		private AttributedRegionImpl(int offset, int length, Map attributes) {
 			this.offset = offset;
 			this.length = length;
 			this.attributes = new HashMap(attributes);
@@ -255,7 +249,7 @@ public class SimplePartitioner implements DocumentPartitioner {
 		}
 		
 		public int compareTo(Object o) {
-			IRegion region = (IRegion) o;
+			Region region = (Region) o;
 			if (getStart() < region.getStart() 
 					|| (getStart() == region.getStart() && getLength() < region.getLength())) {
 				return -1;

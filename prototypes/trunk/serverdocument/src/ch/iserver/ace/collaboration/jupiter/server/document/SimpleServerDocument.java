@@ -101,7 +101,7 @@ public class SimpleServerDocument implements ServerDocument {
 		}
 	}
 	
-	private int getParticipantId(IAttributedRegion region) {
+	private int getParticipantId(AttributedRegion region) {
 		int participantId = -1;
 		Integer value = (Integer) region.getAttribute(PARTICIPANT_KEY);
 		if (value != null) {
@@ -123,7 +123,7 @@ public class SimpleServerDocument implements ServerDocument {
 	}
 	
 	public Iterator getFragments() {
-		final IAttributedRegion[] regions = partitioner.getRegions();
+		final AttributedRegion[] regions = partitioner.getRegions();
 		return new Iterator() {
 			int index = 0;
 			
@@ -135,7 +135,7 @@ public class SimpleServerDocument implements ServerDocument {
 				if (!hasNext()) {
 					throw new NoSuchElementException();
 				}
-				IAttributedRegion region = regions[index++];
+				AttributedRegion region = regions[index++];
 				int participantId = getParticipantId(region);
 				String text = textStore.getText(region.getStart(), region.getLength());
 				Fragment fragment = new FragmentImpl(participantId, text);
@@ -170,9 +170,9 @@ public class SimpleServerDocument implements ServerDocument {
 	 * @param result the document beeing built
 	 */
 	protected void addFragments(PortableDocumentImpl result) {
-		IAttributedRegion[] regions = partitioner.getRegions();
+		AttributedRegion[] regions = partitioner.getRegions();
 		for (int i = 0; i < regions.length; i++) {
-			IAttributedRegion region = regions[i];
+			AttributedRegion region = regions[i];
 			int participantId = getParticipantId(region);
 			String text = textStore.getText(region.getStart(), region.getLength());
 			Fragment fragment = new FragmentImpl(participantId, text);
