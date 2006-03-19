@@ -305,6 +305,7 @@
         <java classname="ch.iserver.ace.application.Main"
               fork="true"
               classpathref="classpath.run">
+            <jvmarg value="-Dnewserverdocument=true"/>
             <jvmarg value="-Xdebug"/>
             <jvmarg value="-Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=${suspend}"/>
         </java>

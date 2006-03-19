@@ -33,6 +33,7 @@ public class AllTests {
 		suite.addTest(ch.iserver.ace.application.AllTests.suite());
 		suite.addTest(ch.iserver.ace.collaboration.jupiter.AllTests.suite());
 		suite.addTest(ch.iserver.ace.collaboration.jupiter.server.AllTests.suite());
+		suite.addTest(ch.iserver.ace.collaboration.jupiter.server.document.AllTests.suite());
 		suite.addTest(ch.iserver.ace.net.core.AllTests.suite());
 		suite.addTest(ch.iserver.ace.net.discovery.AllTests.suite());
 		suite.addTest(ch.iserver.ace.net.protocol.AllTests.suite());
