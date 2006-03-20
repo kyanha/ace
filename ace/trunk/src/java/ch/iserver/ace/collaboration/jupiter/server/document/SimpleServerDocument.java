@@ -30,7 +30,7 @@ public class SimpleServerDocument implements ServerDocument {
 		this.partitioner = new SimplePartitioner();
 	}
 	
-	protected void addParticipant(int participantId, RemoteUserProxy proxy, CaretHandler handler) {
+	protected void addParticipant(int participantId, RemoteUserProxy proxy, Selection handler) {
 		participants.put(new Integer(participantId), proxy);
 		selections.put(new Integer(participantId), handler);
 	}
@@ -40,12 +40,12 @@ public class SimpleServerDocument implements ServerDocument {
 		selections.remove(new Integer(participantId));
 	}
 	
-	protected CaretHandler getCaretHandler(int participantId) {
-		return (CaretHandler) selections.get(new Integer(participantId));
+	protected Selection getCaretHandler(int participantId) {
+		return (Selection) selections.get(new Integer(participantId));
 	}
 	
 	public void participantJoined(int participantId, RemoteUserProxy proxy) {
-		addParticipant(participantId, proxy, new CaretHandler());
+		addParticipant(participantId, proxy, new Selection());
 	}
 
 	public void participantLeft(int participantId) {
@@ -53,7 +53,7 @@ public class SimpleServerDocument implements ServerDocument {
 	}
 
 	public void updateCaret(int participantId, int dot, int mark) {
-		CaretHandler handler = getCaretHandler(participantId);
+		Selection handler = getCaretHandler(participantId);
 		if (handler == null) {
 			throw new IllegalStateException("unkown participant: " + participantId);
 		}
@@ -65,14 +65,14 @@ public class SimpleServerDocument implements ServerDocument {
 		textStore.replace(offset, 0, text);
 		DocumentEvent event = new DocumentEvent(offset, 0, text, Collections.singletonMap(PARTICIPANT_KEY, new Integer(participantId)));
 		partitioner.documentUpdated(event);
-		updateCarets(offset, text.length());
+		updateSelections(offset, text.length());
 	}
 
 	public void removeString(int offset, int length) {
 		textStore.replace(offset, length, "");
 		DocumentEvent event = new DocumentEvent(offset, length, "");
 		partitioner.documentUpdated(event);
-		updateCarets(offset, -length);
+		updateSelections(offset, -length);
 	}
 
 	public String getText() {
@@ -93,11 +93,15 @@ public class SimpleServerDocument implements ServerDocument {
 	
 	// query methods
 	
-	private void updateCarets(int offset, int length) {
+	private void updateSelections(int offset, int length) {
 		Iterator it = selections.values().iterator();
 		while (it.hasNext()) {
-			CaretHandler handler = (CaretHandler) it.next();
-			handler.update(offset, length, getLength());
+			Selection handler = (Selection) it.next();
+			if (length < 0) {
+				handler.remove(offset, -length);
+			} else if (length > 0) {
+				handler.insert(offset, length, getLength());
+			}
 		}
 	}
 	
@@ -115,7 +119,7 @@ public class SimpleServerDocument implements ServerDocument {
 	}
 	
 	public CaretUpdate getSelection(int participantId) {
-		CaretHandler handler = getCaretHandler(participantId);
+		Selection handler = getCaretHandler(participantId);
 		if (handler == null) {
 			throw new IllegalStateException("unkown participant: " + participantId);
 		}
@@ -197,11 +201,25 @@ public class SimpleServerDocument implements ServerDocument {
 		}
 	}
 	
-	private static class CaretHandler {
+	private static class Selection {
 		private int dot;
 		private int mark;
 		
-		private void update(int offset, int length, int documentLength) {
+		private void remove(int offset, int length) {
+			if (dot >= offset && dot < offset + length) {
+				dot = offset;
+			} else {
+				dot -= length;
+			}
+			if (mark >= offset && mark < offset + length) {
+				mark = offset;
+			} else {
+				mark -= length;
+			}
+		}
+		
+		private void insert(int offset, int length, int documentLength) {
+			System.out.println("offset = " + offset + ", length = " + length + ", dot = " + dot + ", mark = " + mark);
 			int newDot = dot;
 			if (newDot >= offset) {
 				newDot += length;

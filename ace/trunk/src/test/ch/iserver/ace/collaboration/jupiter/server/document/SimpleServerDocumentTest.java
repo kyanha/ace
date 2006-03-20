@@ -1,11 +1,15 @@
 package ch.iserver.ace.collaboration.jupiter.server.document;
 
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import junit.framework.TestCase;
+import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.Fragment;
-import ch.iserver.ace.collaboration.jupiter.server.document.SimpleServerDocument;
+import ch.iserver.ace.net.PortableDocument;
+import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.net.RemoteUserProxyStub;
 
 public class SimpleServerDocumentTest extends TestCase {
@@ -185,6 +189,60 @@ public class SimpleServerDocumentTest extends TestCase {
 		doc.updateCaret(1, 1, 2);
 		assertEquals(1, doc.getSelection(1).getDot());
 		assertEquals(2, doc.getSelection(1).getMark());
+		
+		doc.insertString(1, 0, "blabla");
+		assertEquals(7, doc.getSelection(1).getDot());
+		assertEquals(8, doc.getSelection(1).getMark());
+		
+		doc.removeString(4, 4);
+		assertEquals(4, doc.getSelection(1).getDot());
+		assertEquals(4, doc.getSelection(1).getMark());
+	}
+	
+	public void testToPortableDocument() throws Exception {
+		SimpleServerDocument doc = new SimpleServerDocument();
+		doc.participantJoined(0, new RemoteUserProxyStub("Y"));
+		doc.participantJoined(1, new RemoteUserProxyStub("X"));
+		doc.insertString(0, 0, "hello world");
+		doc.updateCaret(0, 4, 10);
+		doc.insertString(1, 11, "bonjour monde");
+		doc.updateCaret(1, 15, 23);
+		doc.insertString(0, 24, "hallo welt");
+		doc.insertString(1, 34, "blabla");
+		
+		PortableDocument document = doc.toPortableDocument();
+		int[] ids = document.getParticipantIds();
+		assertEquals(2, ids.length);
+
+		List idList = new ArrayList();
+		idList.add(new Integer(ids[0]));
+		idList.add(new Integer(ids[1]));
+		assertTrue(idList.contains(new Integer(0)));
+		assertTrue(idList.contains(new Integer(1)));
+		
+		CaretUpdate caret = document.getSelection(0);
+		assertEquals(4, caret.getDot());
+		assertEquals(10, caret.getMark());
+		
+		caret = document.getSelection(1);
+		assertEquals(15, caret.getDot());
+		assertEquals(23, caret.getMark());
+		
+		Iterator it = document.getFragments();
+		assertTrue(it.hasNext());
+		assertEquals(0, "hello world", (Fragment) it.next());
+		assertTrue(it.hasNext());
+		assertEquals(1, "bonjour monde", (Fragment) it.next());
+		assertTrue(it.hasNext());
+		assertEquals(0, "hallo welt", (Fragment) it.next());
+		assertTrue(it.hasNext());
+		assertEquals(1, "blabla", (Fragment) it.next());
+		assertFalse(it.hasNext());
+		
+		RemoteUserProxy proxy = document.getUserProxy(0);
+		assertEquals(new RemoteUserProxyStub("Y"), proxy);
+		proxy = document.getUserProxy(1);
+		assertEquals(new RemoteUserProxyStub("X"), proxy);
 	}
 
 }
