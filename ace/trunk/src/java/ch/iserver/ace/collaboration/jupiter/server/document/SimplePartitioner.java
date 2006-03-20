@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import ch.iserver.ace.util.ParameterValidator;
+
 public class SimplePartitioner implements DocumentPartitioner {
 	
 	private List partitions = new ArrayList();
@@ -219,6 +221,8 @@ public class SimplePartitioner implements DocumentPartitioner {
 		private Map attributes;
 		
 		private AttributedRegionImpl(int offset, int length, Map attributes) {
+			ParameterValidator.notNegative("offset", offset);
+			ParameterValidator.notNegative("length", length);
 			this.offset = offset;
 			this.length = length;
 			this.attributes = new HashMap(attributes);
