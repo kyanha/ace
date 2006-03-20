@@ -36,6 +36,11 @@ public class SimplePartitioner implements DocumentPartitioner {
 		if (p0 == p1) {
 			AttributedRegionImpl region = (AttributedRegionImpl) partitions.get(p0);
 			region.length -= length;
+			
+			if (region.length == 0) {
+				partitions.remove(p0);
+			}
+			
 			updateOffsets(p0, -length);
 		} else {
 			AttributedRegionImpl first = (AttributedRegionImpl) partitions.get(p0);
@@ -44,17 +49,37 @@ public class SimplePartitioner implements DocumentPartitioner {
 			for (int i = p0 + 1; i < p1; i++) {
 				partitions.remove(p0 + 1);
 			}
+
+			p1 = p0 + 1;
 			
 			if (first.getAttributes().equals(last.getAttributes())) {
 				partitions.remove(p0 + 1);
 				first.length -= first.getEnd() - offset;
 				first.length -= (offset + length) - last.getEnd();
+				
+				if (first.length == 0) {
+					partitions.remove(p0);
+				}
+				
 				updateOffsets(p0, -length);
 			} else {
-				first.length -= first.getEnd() - offset;
-				last.length -= last.getEnd() - (offset + length);
+				int delta = first.getEnd() - offset;
+				first.length -= delta;
+				
+				if (first.length == 0) {
+					partitions.remove(p0);
+					p1--;
+				}
+				
+				delta = (offset + length) - last.getStart();
+				last.length -= delta;
 				last.offset = first.getEnd();
-				updateOffsets(p0 + 1, -length);
+				
+				if (last.length == 0) {
+					partitions.remove(p1);
+				}
+				
+				updateOffsets(p1, -length);
 			}			
 		}
 	}
@@ -222,7 +247,7 @@ public class SimplePartitioner implements DocumentPartitioner {
 		
 		private AttributedRegionImpl(int offset, int length, Map attributes) {
 			ParameterValidator.notNegative("offset", offset);
-			ParameterValidator.notNegative("length", length);
+			ParameterValidator.isTrue("length", length > 0);
 			this.offset = offset;
 			this.length = length;
 			this.attributes = new HashMap(attributes);

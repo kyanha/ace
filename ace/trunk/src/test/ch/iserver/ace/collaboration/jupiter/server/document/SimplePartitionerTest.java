@@ -117,6 +117,22 @@ public class SimplePartitionerTest extends TestCase {
 		assertRegionEquals(new MockAttributedRegion(2, 3, Collections.singletonMap(KEY, "2")), regions[1]);
 	}
 	
+	public void testRemoveBetween2() throws Exception {
+		DocumentPartitioner partitioner = new SimplePartitioner();
+		partitioner.documentUpdated(new DocumentEvent(0, 0, "abc", Collections.singletonMap(KEY, "1")));
+		partitioner.documentUpdated(new DocumentEvent(3, 0, "xyzxyz", Collections.singletonMap(KEY, "2")));
+		partitioner.documentUpdated(new DocumentEvent(9, 0, "xyza", Collections.singletonMap(KEY, "3")));
+		partitioner.documentUpdated(new DocumentEvent(13, 0, "xyza", Collections.singletonMap(KEY, "4")));
+		partitioner.documentUpdated(new DocumentEvent(17, 0, "xyza", Collections.singletonMap(KEY, "5")));
+		partitioner.documentUpdated(new DocumentEvent(1, 16, ""));
+		
+		AttributedRegion[] regions = partitioner.getRegions();
+		assertEquals(2, regions.length);
+		
+		assertRegionEquals(new MockAttributedRegion(0, 1, Collections.singletonMap(KEY, "1")), regions[0]);
+		assertRegionEquals(new MockAttributedRegion(1, 4, Collections.singletonMap(KEY, "5")), regions[1]);
+	}
+	
 	public void testRemoveMerge() throws Exception {
 		DocumentPartitioner partitioner = new SimplePartitioner();
 		partitioner.documentUpdated(new DocumentEvent(0, 0, "XYZ", Collections.singletonMap(KEY, "1")));
@@ -149,6 +165,73 @@ public class SimplePartitionerTest extends TestCase {
 		
 		assertRegionEquals(new MockAttributedRegion(0, 4, Collections.singletonMap(KEY, "1")), regions[0]);
 		assertRegionEquals(new MockAttributedRegion(4, 3, Collections.singletonMap(KEY, "2")), regions[1]);
+	}
+	
+	public void testRemoveAll() throws Exception {
+		DocumentPartitioner partitioner = new SimplePartitioner();
+		partitioner.documentUpdated(new DocumentEvent(0, 0, "abcdefg", Collections.singletonMap(KEY, "1")));
+		partitioner.documentUpdated(new DocumentEvent(7, 0, "abcd", Collections.singletonMap(KEY, "2")));
+		
+		partitioner.documentUpdated(new DocumentEvent(7, 3, ""));
+		AttributedRegion[] regions = partitioner.getRegions();
+		assertEquals(2, regions.length);
+		assertRegionEquals(new MockAttributedRegion(0, 7, Collections.singletonMap(KEY, "1")), regions[0]);
+		assertRegionEquals(new MockAttributedRegion(7, 1, Collections.singletonMap(KEY, "2")), regions[1]);
+		
+		partitioner.documentUpdated(new DocumentEvent(0, 7, ""));
+		regions = partitioner.getRegions();
+		assertEquals(1, regions.length);
+		assertRegionEquals(new MockAttributedRegion(0, 1, Collections.singletonMap(KEY, "2")), regions[0]);
+		
+		partitioner.documentUpdated(new DocumentEvent(0, 1, ""));
+		regions = partitioner.getRegions();
+		assertEquals(0, regions.length);
+	}
+	
+	public void testRemoveAllAtOnce() throws Exception {
+		DocumentPartitioner partitioner = new SimplePartitioner();
+		partitioner.documentUpdated(new DocumentEvent(0, 0, "abcdefg", Collections.singletonMap(KEY, "1")));
+		partitioner.documentUpdated(new DocumentEvent(7, 0, "abcd", Collections.singletonMap(KEY, "2")));
+		partitioner.documentUpdated(new DocumentEvent(11, 0, "abc", Collections.singletonMap(KEY, "1")));
+		
+		partitioner.documentUpdated(new DocumentEvent(0, 14, ""));
+		AttributedRegion[] regions = partitioner.getRegions();
+		assertEquals(0, regions.length);
+	}
+	
+	public void testRemoveAllAtOnce2() throws Exception {
+		DocumentPartitioner partitioner = new SimplePartitioner();
+		partitioner.documentUpdated(new DocumentEvent(0, 0, "abcdefg", Collections.singletonMap(KEY, "1")));
+		partitioner.documentUpdated(new DocumentEvent(7, 0, "abcd", Collections.singletonMap(KEY, "2")));
+		partitioner.documentUpdated(new DocumentEvent(11, 0, "abc", Collections.singletonMap(KEY, "3")));
+		
+		partitioner.documentUpdated(new DocumentEvent(0, 14, ""));
+		AttributedRegion[] regions = partitioner.getRegions();
+		assertEquals(0, regions.length);
+	}
+
+	public void testRemoveAtEnd() throws Exception {
+		DocumentPartitioner partitioner = new SimplePartitioner();
+		partitioner.documentUpdated(new DocumentEvent(0, 0, "abcdefg", Collections.singletonMap(KEY, "1")));
+		partitioner.documentUpdated(new DocumentEvent(7, 0, "abcd", Collections.singletonMap(KEY, "2")));
+
+		partitioner.documentUpdated(new DocumentEvent(6, 5, ""));
+		AttributedRegion[] regions = partitioner.getRegions();
+		assertEquals(1, regions.length);
+		assertRegionEquals(new MockAttributedRegion(0, 6, Collections.singletonMap(KEY, "1")), regions[0]);		
+	}
+	
+	public void testRemoveAtStart() throws Exception {
+		DocumentPartitioner partitioner = new SimplePartitioner();
+		partitioner.documentUpdated(new DocumentEvent(0, 0, "abcdefg", Collections.singletonMap(KEY, "1")));
+		partitioner.documentUpdated(new DocumentEvent(7, 0, "abcd", Collections.singletonMap(KEY, "2")));
+		partitioner.documentUpdated(new DocumentEvent(11, 0, "abc", Collections.singletonMap(KEY, "1")));
+
+		partitioner.documentUpdated(new DocumentEvent(0, 8, ""));
+		AttributedRegion[] regions = partitioner.getRegions();
+		assertEquals(2, regions.length);
+		assertRegionEquals(new MockAttributedRegion(0, 3, Collections.singletonMap(KEY, "2")), regions[0]);		
+		assertRegionEquals(new MockAttributedRegion(3, 3, Collections.singletonMap(KEY, "1")), regions[1]);		
 	}
 	
 	public void testReplaceInside() throws Exception {

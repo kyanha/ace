@@ -66,8 +66,14 @@ public final class ParameterValidator {
 	 * @param max the maximum value (inclusive)
 	 */
 	public static void inRange(String name, int value, int min, int max) {
-		if ( !(min <= value && value <= max) ) {
+		if (!(min <= value && value <= max)) {
 			throw new IllegalArgumentException(name + " is not in range.");
+		}
+	}
+	
+	public static void isTrue(String name, boolean value) {
+		if (!value) {
+			throw new IllegalArgumentException(name + " not valid");
 		}
 	}
 	
