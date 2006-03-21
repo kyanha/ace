@@ -6,6 +6,10 @@
 svn co http://ace.iserver.ch/repos/ace/ace/trunk ace
 </pre>
 
+<h3>Sourceforge Project</h3>
+There is a Sourceforge project. You can access the SF project page
+<a href="http://sourceforge.net/ace/">here</a>.
+
 <h3>Trac</h3>
 <p>In the first stage of the project we used <a href="http://ace.iserver.ch/cgi-bin/trac.cgi">Trac</a>, a combined wiki, issue tracker, and repository
 browser. Trac is still running, but we do not use it anymore. Nevertheless, it contains a link collection of all research papers we have considered for ACE. 
