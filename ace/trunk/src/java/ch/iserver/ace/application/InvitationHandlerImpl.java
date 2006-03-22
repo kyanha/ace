@@ -26,25 +26,25 @@ import javax.swing.SwingUtilities;
 
 import ch.iserver.ace.application.editor.CollaborativeDocument;
 import ch.iserver.ace.collaboration.Invitation;
-import ch.iserver.ace.collaboration.InvitationCallback;
+import ch.iserver.ace.collaboration.InvitationHandler;
 import ch.iserver.ace.collaboration.JoinCallback;
 
 
 
-public class InvitationCallbackImpl implements InvitationCallback {
+public class InvitationHandlerImpl implements InvitationHandler {
 
 	private DialogController dialogController;
 	private DocumentViewController viewController;
 	private BrowseViewController browseViewController;
 	
-	public InvitationCallbackImpl(DialogController dialogController, DocumentViewController viewController,
+	public InvitationHandlerImpl(DialogController dialogController, DocumentViewController viewController,
 			BrowseViewController browseViewController) {
 		this.dialogController = dialogController;
 		this.viewController = viewController;
 		this.browseViewController = browseViewController;
 	}
 	
-	public void invitationReceived(final Invitation invitation) {
+	public void handleInvitation(final Invitation invitation) {
 	
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {

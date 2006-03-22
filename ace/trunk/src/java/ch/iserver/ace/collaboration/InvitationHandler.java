@@ -19,48 +19,25 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.util;
+package ch.iserver.ace.collaboration;
 
 /**
- *
+ * Callback interface for invitations sent to the local user. The callback
+ * interface must be set on the CollaborationService with the 
+ * {@link ch.iserver.ace.collaboration.CollaborationService#setInvitationHandler(InvitationHandler)}
+ * method. The callback is invoked whenever there is an invitation is
+ * received.
  */
-public class CountingSemaphore implements Semaphore {
-	
-	private int value = 0;
+public interface InvitationHandler {
 	
 	/**
-	 * constructors
+	 * Notifies the callback that an invitation is received. The callback is
+	 * responsible to handle the invitation, that is to either accept
+	 * or reject it.
+	 * 
+	 * @param event the Invitation containing all the necessary 
+	 *              information
 	 */
-	public CountingSemaphore() { }
-
-	public CountingSemaphore(int value) {
-		this.value = value;
-	}
-
-	/**
-	 * P -- the decrement operation, sometimes called wait
-	 */
-	public synchronized void acquire() throws InterruptedException {
-		if (--value < 0)
-			try {
-				wait();
-			} catch (InterruptedException ex) {
-				value++;
-				throw ex;
-			}
-	}
-
-	/**
-	 * V -- the increment operation, sometimes called signal
-	 */
-	public synchronized void release() {
-		if (++value <= 0) {
-			notify();
-		}
-	}
-
-	public int getValue() {
-		return value;
-	}
-
+	void handleInvitation(Invitation event);
+	
 }

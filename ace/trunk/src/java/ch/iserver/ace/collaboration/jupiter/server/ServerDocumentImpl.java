@@ -73,10 +73,10 @@ public class ServerDocumentImpl extends AbstractDocument implements ServerDocume
 	/**
 	 * Creates a new ServerDocumentImpl instance.
 	 */
-	public ServerDocumentImpl() {
+	public ServerDocumentImpl(RemoteUserProxy publisher) {
 		super(new GapContent());
 		defaultRoot = (BranchElement) createDefaultRoot();
-		addParticipant(0, null);
+		addParticipant(0, publisher);
 		setCaretHandler(0, new CaretHandler(0, 0));
 	}
 	

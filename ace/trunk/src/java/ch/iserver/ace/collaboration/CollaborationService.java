@@ -51,7 +51,7 @@ import ch.iserver.ace.UserDetails;
  * <h3>Callbacks</h3>
  * The CollaborationService supports two different callback objects. An
  * InvitationCallback can be set with the
- * {@link #setInvitationCallback(InvitationCallback)} method. Incoming
+ * {@link #setInvitationHandler(InvitationHandler)} method. Incoming
  * invitations are passed to that callback. The other callback is
  * notified about service failures. It can be set with the
  * {@link #setFailureHandler(ServiceFailureHandler)} method.
@@ -136,7 +136,7 @@ public interface CollaborationService {
 	 * 
 	 * @param processor the InvitationCallback used by the service
 	 */
-	void setInvitationCallback(InvitationCallback processor);
+	void setInvitationHandler(InvitationHandler processor);
 	
 	/**
 	 * Sets the ServiceFailureHandler for the service. This handler gets

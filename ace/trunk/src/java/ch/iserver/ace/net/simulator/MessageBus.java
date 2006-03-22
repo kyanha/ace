@@ -19,26 +19,16 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.util;
+package ch.iserver.ace.net.simulator;
+
 
 /**
- * Interface representing a Semaphore.
+ *
  */
-public interface Semaphore {
+public interface MessageBus {
 	
-	/**
-	 * P -- the decrement operation, sometimes called wait
-	 */
-	public void acquire() throws InterruptedException;
-
-	/**
-	 * V -- the increment operation, sometimes called signal
-	 */
-	public void release();
-
-	/**
-	 * getValue -- get semaphore's value
-	 */
-	public int getValue();
+	MessagePort register(User user);
+	
+	void unregister(User user);
 	
 }

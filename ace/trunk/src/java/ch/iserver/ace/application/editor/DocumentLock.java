@@ -21,7 +21,6 @@
 
 package ch.iserver.ace.application.editor;
 
-import ch.iserver.ace.util.InterruptedRuntimeException;
 import ch.iserver.ace.util.Lock;
 import ch.iserver.ace.util.ParameterValidator;
 
@@ -61,7 +60,7 @@ public class DocumentLock implements Lock {
 	 * 
 	 * @see ch.iserver.ace.util.Lock#lock()
 	 */
-	public void lock() throws InterruptedRuntimeException {
+	public void lock() {
 		document.lock();
 	}
 

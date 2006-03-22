@@ -48,7 +48,12 @@ public interface NetworkService {
 	 * @return the local server info
 	 */
 	ServerInfo getServerInfo();
-
+	
+	/**
+	 * @return
+	 */
+	RemoteUserProxy getLocalUser();
+	
 	/**
 	 * Called by the collaboration layer to start the network layer.
 	 */
@@ -116,4 +121,5 @@ public interface NetworkService {
 	 * @param port the target port
 	 */	
 	void discoverUser(DiscoveryNetworkCallback callback, InetAddress addr, int port);
+	
 }

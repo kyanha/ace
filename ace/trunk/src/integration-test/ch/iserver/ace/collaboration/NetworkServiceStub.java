@@ -34,6 +34,7 @@ import ch.iserver.ace.net.DocumentServer;
 import ch.iserver.ace.net.DocumentServerLogic;
 import ch.iserver.ace.net.NetworkService;
 import ch.iserver.ace.net.NetworkServiceCallback;
+import ch.iserver.ace.net.RemoteUserProxy;
 
 /**
  *
@@ -49,6 +50,10 @@ public class NetworkServiceStub implements NetworkService {
 	private List documentServers = new ArrayList();
 	
 	public ServerInfo getServerInfo() {
+		return null;
+	}
+	
+	public RemoteUserProxy getLocalUser() {
 		return null;
 	}
 	

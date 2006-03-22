@@ -21,20 +21,20 @@
 
 package ch.iserver.ace.application.editor;
 
-import ch.iserver.ace.application.*;
+import java.util.HashMap;
+
+import org.apache.log4j.Logger;
+
+import ca.odell.glazedlists.BasicEventList;
+import ch.iserver.ace.application.DocumentItem;
+import ch.iserver.ace.application.DocumentViewController;
+import ch.iserver.ace.application.ItemSelectionChangeEvent;
+import ch.iserver.ace.application.ItemSelectionChangeListener;
+import ch.iserver.ace.application.ParticipantViewController;
+import ch.iserver.ace.application.PropertyChangeHashMapImpl;
 import ch.iserver.ace.application.preferences.PreferenceChangeEvent;
 import ch.iserver.ace.application.preferences.PreferenceChangeListener;
 import ch.iserver.ace.application.preferences.PreferencesStore;
-
-import javax.swing.event.DocumentListener;
-import javax.swing.event.DocumentEvent;
-
-import javax.swing.text.*;
-
-import org.apache.log4j.Logger;
-import ca.odell.glazedlists.EventList;
-import ca.odell.glazedlists.BasicEventList;
-import java.util.HashMap;
 
 
 

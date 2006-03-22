@@ -89,6 +89,7 @@ public class ServerTest extends TestCase {
 		// test
 		DocumentModel document = new DocumentModel("", 0, 0, new DocumentDetails("collab.txt"));
 		ServerLogicImpl server = new ServerLogicImpl( 
+				null,
 				new CallerThreadDomain(), 
 				new CallerThreadDomain(), 
 				document,

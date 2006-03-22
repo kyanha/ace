@@ -21,12 +21,13 @@
 
 package ch.iserver.ace.application.editor;
 
-import ch.iserver.ace.application.*;
-import ch.iserver.ace.collaboration.Session;
-import javax.swing.JPanel;
-import javax.swing.text.StyledDocument;
+import java.util.HashMap;
+
 import javax.swing.Action;
-import java.util.*;
+import javax.swing.JPanel;
+
+import ch.iserver.ace.application.PropertyChangeHashMap;
+import ch.iserver.ace.collaboration.Session;
 
 
 

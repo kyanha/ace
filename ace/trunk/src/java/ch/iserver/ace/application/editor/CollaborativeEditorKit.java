@@ -46,20 +46,27 @@ public class CollaborativeEditorKit extends StyledEditorKit { //implements ViewF
 
 	private ActionMap actionMap;
 
+	private Action[] defaultActions;
+	
 	public CollaborativeEditorKit() {
 		// create action map
 		actionMap = new ActionMap();
-		Action[] defaultActions = super.getActions();
-		for(int i = 0; i < defaultActions.length; i++) {
-			String actionName = (String)defaultActions[i].getValue(Action.NAME);
-			actionMap.put(actionName, defaultActions[i]);
+
+		// replace actions: DeleteNextCharAction, DeletePrevCharAction & CutAction
+		defaultActions = new Action[3];
+		defaultActions[0] = new CollaborativeDeletePrevCharAction();
+		defaultActions[1] = new CollaborativeDeleteNextCharAction();		
+		defaultActions[2] = new CollaborativeCutAction();
+		
+		Action[] superActions = super.getActions();
+		for(int i = 0; i < superActions.length; i++) {
+			String actionName = (String) superActions[i].getValue(Action.NAME);
+			actionMap.put(actionName, superActions[i]);
 		}
 		
-		// replace actions: DeleteNextCharAction, DeletePrevCharAction & CutAction
-		actionMap.put(DefaultEditorKit.deletePrevCharAction, new CollaborativeDeletePrevCharAction());
-		actionMap.put(DefaultEditorKit.deleteNextCharAction, new CollaborativeDeleteNextCharAction());
-		actionMap.put(DefaultEditorKit.cutAction, new CollaborativeCutAction());
-
+		actionMap.put(DefaultEditorKit.deletePrevCharAction, defaultActions[0]);
+		actionMap.put(DefaultEditorKit.deleteNextCharAction, defaultActions[1]);
+		actionMap.put(DefaultEditorKit.cutAction, defaultActions[2]);
 	}
 
 /*	public ViewFactory getViewFactory() {
@@ -88,17 +95,19 @@ return new CollaborativeEditorView(elem);
 	}*/
 	
 	public Action[] getActions() {
-		// create action array
-		Object[] keys = actionMap.keys();
-		Action[] actions = new Action[keys.length];
-		for(int i = 0; i < keys.length; i ++) {
-			actions[i] = actionMap.get(keys[i]);
-		}
-		return actions;
+//		// create action array
+//		Object[] keys = actionMap.keys();
+//		Action[] actions = new Action[keys.length];
+//		for(int i = 0; i < keys.length; i ++) {
+//			actions[i] = actionMap.get(keys[i]);
+//		}
+//		return actions;
+		return TextAction.augmentList(super.getActions(), this.defaultActions);
 	}
 
 	public Action getCutAction() {
-		return actionMap.get(DefaultEditorKit.cutAction);
+		Action a = actionMap.get(DefaultEditorKit.cutAction);
+		return a;
 	}
 	
 	public Action getCopyAction() {

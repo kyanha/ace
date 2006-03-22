@@ -128,9 +128,6 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 		return participantId;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public boolean isAlive() {
 		return getState() != STATE_CLOSED && (getState() == STATE_ACTIVE || getState() == STATE_INITIALIZED);
 	}

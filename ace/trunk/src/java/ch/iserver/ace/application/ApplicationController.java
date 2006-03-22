@@ -32,6 +32,8 @@ package ch.iserver.ace.application;
  */
 public interface ApplicationController {
 	
+	void setApplicationTerminator(ApplicationTerminator terminator);
+	
 	/**
 	 * Shows the applications about dialog.
 	 */

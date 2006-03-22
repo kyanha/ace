@@ -20,7 +20,6 @@
  */
 package ch.iserver.ace.net.core;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -117,14 +116,7 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 	public UserDetails getUserDetails() {
 		return details;
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public Collection getSharedDocuments() {
-		return documents.values();
-	}
-	
+		
 	
 	/***********************************************/
 	/** methods from interface RemoteUserProxyExt **/

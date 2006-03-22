@@ -19,38 +19,28 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.util;
+package ch.iserver.ace.net.simulator;
+
+import ch.iserver.ace.net.InvitationPort;
+import ch.iserver.ace.net.ParticipantConnection;
 
 /**
  *
  */
-public class ReentrantLock implements Lock {
-
-	private edu.emory.mathcs.backport.java.util.concurrent.locks.ReentrantLock lock;
+public class InvitationChannel {
 	
-	public ReentrantLock() {
-		this.lock = new edu.emory.mathcs.backport.java.util.concurrent.locks.ReentrantLock();
+	private InvitationPort port;
+	
+	public InvitationChannel(InvitationPort port) {
+		this.port = port;
 	}
 	
-	/**
-	 * @see ch.iserver.ace.util.Lock#isOwner(java.lang.Thread)
-	 */
-	public boolean isOwner(Thread thread) {
-		return lock.isHeldByCurrentThread();
+	public void accept(ParticipantConnection connection) {
+		port.accept(connection);
 	}
-
-	/**
-	 * @see ch.iserver.ace.util.Lock#lock()
-	 */
-	public void lock() {
-		lock.lock();
+	
+	public void reject() {
+		port.reject();
 	}
-
-	/**
-	 * @see ch.iserver.ace.util.Lock#unlock()
-	 */
-	public void unlock() {
-		lock.unlock();
-	}
-
+	
 }

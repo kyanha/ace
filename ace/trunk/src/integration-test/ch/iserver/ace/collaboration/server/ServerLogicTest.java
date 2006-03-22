@@ -50,7 +50,7 @@ public class ServerLogicTest extends MockObjectTestCase {
 		DocumentModel document = new DocumentModel("", 0, 0, new DocumentDetails("collab.txt"));
 		UserRegistry registry = new UserRegistryImpl();
 		
-		ServerLogicImpl logic = new ServerLogicImpl(new SingleThreadDomain(), new CallerThreadDomain(), document, registry);
+		ServerLogicImpl logic = new ServerLogicImpl(null, new SingleThreadDomain(), new CallerThreadDomain(), document, registry);
 		
 		Mock mock = mock(ParticipantConnection.class);
 		ParticipantConnection connection = (ParticipantConnection) mock.proxy();
@@ -69,7 +69,7 @@ public class ServerLogicTest extends MockObjectTestCase {
 		ServerDocument[] documents = new ServerDocumentImpl[USERS];
 		
 		for (int i = 0; i < USERS; i++) {
-			documents[i] = new ServerDocumentImpl();
+			documents[i] = new ServerDocumentImpl(null);
 		}
 		
 		for (int i = 0; i < USERS; i++) {
@@ -85,7 +85,7 @@ public class ServerLogicTest extends MockObjectTestCase {
 			registry.getUser(new RemoteUserProxyStub("" + i));
 		}
 		
-		ServerLogicImpl logic = new ServerLogicImpl(new SingleThreadDomain(), 
+		ServerLogicImpl logic = new ServerLogicImpl(null, new SingleThreadDomain(), 
 						new CallerThreadDomain(), doc, registry) {
 			protected ServerDocument createServerDocument(DocumentModel doc) {
 				return document;

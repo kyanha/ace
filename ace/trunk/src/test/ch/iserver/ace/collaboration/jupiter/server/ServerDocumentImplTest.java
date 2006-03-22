@@ -29,7 +29,7 @@ public class ServerDocumentImplTest extends TestCase {
 	}
 	
 	public void testSimpleInsert() {
-		ServerDocumentImpl doc = new ServerDocumentImpl();
+		ServerDocumentImpl doc = new ServerDocumentImpl(null);
 		
 		doc.insertString(1, 0, "x");
 		assertEquals("x", doc.getText());
@@ -38,7 +38,7 @@ public class ServerDocumentImplTest extends TestCase {
 		assertEquals(1, "x", (Fragment) it.next());
 		assertFalse(it.hasNext());
 
-		doc = new ServerDocumentImpl();
+		doc = new ServerDocumentImpl(null);
 		doc.insertString(0, 0, "x");
 		assertEquals("x", doc.getText());
 		it = doc.getFragments();
@@ -47,7 +47,7 @@ public class ServerDocumentImplTest extends TestCase {
 	}
 	
 	public void testSameParticipantInsertStart() {
-		ServerDocumentImpl doc = new ServerDocumentImpl();
+		ServerDocumentImpl doc = new ServerDocumentImpl(null);
 		doc.insertString(1, 0, "abcd");
 		doc.insertString(1, 0, "X");
 		assertEquals("Xabcd", doc.getText());
@@ -58,7 +58,7 @@ public class ServerDocumentImplTest extends TestCase {
 	}
 	
 	public void testSameParticipantInsertMiddle() {
-		ServerDocumentImpl doc = new ServerDocumentImpl();
+		ServerDocumentImpl doc = new ServerDocumentImpl(null);
 		doc.insertString(1, 0, "abcd");
 		doc.insertString(1, 2, "X");
 		assertEquals("abXcd", doc.getText());
@@ -69,7 +69,7 @@ public class ServerDocumentImplTest extends TestCase {
 	}
 	
 	public void testSameParticipantInsertEnd() {
-		ServerDocumentImpl doc = new ServerDocumentImpl();
+		ServerDocumentImpl doc = new ServerDocumentImpl(null);
 		doc.insertString(1, 0, "abcd");
 		doc.insertString(1, 4, "XY");
 		assertEquals("abcdXY", doc.getText());
@@ -80,7 +80,7 @@ public class ServerDocumentImplTest extends TestCase {
 	}
 	
 	public void testInsertMultiple() {
-		ServerDocumentImpl doc = new ServerDocumentImpl();
+		ServerDocumentImpl doc = new ServerDocumentImpl(null);
 		doc.insertString(1, 0, "xyz");
 		doc.insertString(2, 0, "a");
 		doc.insertString(3, 4, "b");
@@ -97,7 +97,7 @@ public class ServerDocumentImplTest extends TestCase {
 	}
 	
 	public void testInsertRemove() {
-		ServerDocumentImpl doc = new ServerDocumentImpl();
+		ServerDocumentImpl doc = new ServerDocumentImpl(null);
 		doc.insertString(1, 0, "abcdefghijklmnop");
 		doc.removeString(1, 2);
 		doc.removeString(4, 4);
@@ -110,7 +110,7 @@ public class ServerDocumentImplTest extends TestCase {
 	}
 	
 	public void testInsertMultipleRemove1() {
-		ServerDocumentImpl doc = new ServerDocumentImpl();
+		ServerDocumentImpl doc = new ServerDocumentImpl(null);
 		doc.insertString(1, 0, "test");
 		doc.insertString(1, 4, "blub");
 		doc.insertString(2, 4, "XY");
@@ -131,7 +131,7 @@ public class ServerDocumentImplTest extends TestCase {
 	}
 
 	public void testInsertMultipleRemove2() {
-		ServerDocumentImpl doc = new ServerDocumentImpl();
+		ServerDocumentImpl doc = new ServerDocumentImpl(null);
 		doc.insertString(1, 0, "test");
 		doc.insertString(1, 4, "blub");
 		doc.insertString(2, 4, "XY");
@@ -152,7 +152,7 @@ public class ServerDocumentImplTest extends TestCase {
 	}
 
 	public void testInsertMultipleRemove3() {
-		ServerDocumentImpl doc = new ServerDocumentImpl();
+		ServerDocumentImpl doc = new ServerDocumentImpl(null);
 		doc.insertString(1, 0, "test");
 		doc.insertString(1, 4, "blub");
 		doc.insertString(2, 4, "XY");
@@ -173,7 +173,7 @@ public class ServerDocumentImplTest extends TestCase {
 	}
 	
 	public void testInsertRemoveAtEnd() {
-		ServerDocumentImpl doc = new ServerDocumentImpl();
+		ServerDocumentImpl doc = new ServerDocumentImpl(null);
 		doc.insertString(0, 0, "a");
 		doc.insertString(0, 1, "b");
 		doc.insertString(0, 2, "c");
@@ -191,7 +191,7 @@ public class ServerDocumentImplTest extends TestCase {
 	}
 	
 	public void testUpdateCaret() throws Exception {
-		ServerDocumentImpl doc = new ServerDocumentImpl();
+		ServerDocumentImpl doc = new ServerDocumentImpl(null);
 		doc.insertString(1, 0, "hello world");
 		doc.updateCaret(1, 1, 2);
 		assertEquals(1, doc.getSelection(1).getDot());

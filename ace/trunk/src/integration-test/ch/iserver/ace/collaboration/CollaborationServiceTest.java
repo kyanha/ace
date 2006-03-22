@@ -122,7 +122,7 @@ public class CollaborationServiceTest extends TestCase {
 		ParticipantConnection connection1 = (ParticipantConnection) connectionCtrl1.getMock();
 		
 		// create expected document
-		ServerDocumentImpl expectedDocument = new ServerDocumentImpl();
+		ServerDocumentImpl expectedDocument = new ServerDocumentImpl(null);
 		expectedDocument.participantJoined(0, null);
 		expectedDocument.insertString(0, 0, document.getContent());
 		expectedDocument.updateCaret(0, document.getDot(), document.getMark());
@@ -147,7 +147,7 @@ public class CollaborationServiceTest extends TestCase {
 		ParticipantConnection connection2 = (ParticipantConnection) connectionCtrl2.getMock();
 
 		// create expected document
-		expectedDocument = new ServerDocumentImpl();
+		expectedDocument = new ServerDocumentImpl(null);
 		expectedDocument.participantJoined(0, null);
 		expectedDocument.insertString(0, 0, document.getContent());
 		expectedDocument.updateCaret(0, document.getDot(), document.getMark());

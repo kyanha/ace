@@ -19,38 +19,20 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.iserver.ace.util;
+package ch.iserver.ace.net.simulator;
+
 
 /**
  *
  */
-public class ReentrantLock implements Lock {
-
-	private edu.emory.mathcs.backport.java.util.concurrent.locks.ReentrantLock lock;
+public interface MessageListener {
 	
-	public ReentrantLock() {
-		this.lock = new edu.emory.mathcs.backport.java.util.concurrent.locks.ReentrantLock();
-	}
+	void userRegistered(User user);
 	
-	/**
-	 * @see ch.iserver.ace.util.Lock#isOwner(java.lang.Thread)
-	 */
-	public boolean isOwner(Thread thread) {
-		return lock.isHeldByCurrentThread();
-	}
-
-	/**
-	 * @see ch.iserver.ace.util.Lock#lock()
-	 */
-	public void lock() {
-		lock.lock();
-	}
-
-	/**
-	 * @see ch.iserver.ace.util.Lock#unlock()
-	 */
-	public void unlock() {
-		lock.unlock();
-	}
-
+	void userChanged(User user);
+	
+	void userUnregistered(User user);
+	
+	void documentPublished(PublishedDocument document);
+		
 }
