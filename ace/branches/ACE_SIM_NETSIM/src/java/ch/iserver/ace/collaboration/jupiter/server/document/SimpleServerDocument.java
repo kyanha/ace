@@ -219,7 +219,6 @@ public class SimpleServerDocument implements ServerDocument {
 		}
 		
 		private void insert(int offset, int length, int documentLength) {
-			System.out.println("offset = " + offset + ", length = " + length + ", dot = " + dot + ", mark = " + mark);
 			int newDot = dot;
 			if (newDot >= offset) {
 				newDot += length;
