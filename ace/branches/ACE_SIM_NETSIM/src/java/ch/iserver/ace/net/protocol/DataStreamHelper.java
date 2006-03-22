@@ -74,7 +74,7 @@ public class DataStreamHelper {
             	 	}
              }
              out.write(b.getData());
-        } while (!stream.isComplete());
+		} while (stream.availableSegment());
 		out.flush();
 		return out.toByteArray();
 	}

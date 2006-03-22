@@ -71,16 +71,16 @@
 		<dependency groupId="jgoodies"
 			        artifactId="looks"
 		            version="1.3.2"/>
-		<dependency groupId="springframework"
+		<dependency groupId="org.springframework"
 		            artifactId="spring-aop"
 		            version="1.2.6"/>
-		<dependency groupId="springframework"
+		<dependency groupId="org.springframework"
 			        artifactId="spring-core"
 		            version="1.2.6"/>
-		<dependency groupId="springframework"
+		<dependency groupId="org.springframework"
 		            artifactId="spring-beans"
 		            version="1.2.6"/>
-		<dependency groupId="springframework"
+		<dependency groupId="org.springframework"
 		            artifactId="spring-context"
 		            version="1.2.6"/>
         <dependency groupId="backport-util-concurrent"
@@ -107,10 +107,14 @@
 		            artifactId="jmock"
 		            version="1.0.1"
 		            scope="test"/>
+		<dependency groupId="xmlunit"
+		            artifactId="xmlunit"
+		            version="1.0"
+		            scope="test"/>
 		<remoteRepository refid="remote.repository.ace" />
 		<remoteRepository refid="remote.repository.maven" />
 	</artifact:dependencies>
-	
+		
 	<artifact:dependencies pathId="enhancer.classpath">
 		<dependency groupId="ace"
 		            artifactId="enhancer-task"
@@ -301,6 +305,7 @@
         <java classname="ch.iserver.ace.application.Main"
               fork="true"
               classpathref="classpath.run">
+            <jvmarg value="-Dnewserverdocument=true"/>
             <jvmarg value="-Xdebug"/>
             <jvmarg value="-Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=${suspend}"/>
         </java>
@@ -362,8 +367,8 @@
 				<fileset dir="${src.integration-test}">
 					<include name="ch/iserver/ace/collaboration/CollaborationServiceTest.java"/>
 					<include name="ch/iserver/ace/collaboration/server/ServerTest.java"/>
-					<include name="ch/iserver/ace/net/impl/discovery/PeerDiscoveryTest.java"/>
-					<include name="ch/iserver/ace/net/impl/discovery/UserRegistrationTest.java"/>					
+					<include name="ch/iserver/ace/net/core/DiscoveryTest.java"/>
+					<include name="ch/iserver/ace/net/discovery/UserRegistrationTest.java"/>					
 				</fileset>
 			</batchtest>
 			<test if="testcase" todir="${build.testreports}" name="${testcase}"/>

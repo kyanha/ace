@@ -1,4 +1,5 @@
 <?php
+include("functions.inc.php");
 
 if (!isset($_GET['id'])) {
   header("Location: index.php\n\n");
@@ -20,6 +21,12 @@ if ($id < 0 || $id > 11) {
   mysql_free_result($result);
   mysql_close($link);
   header("Location: downloads/".$name."\n\n");
+
+  $address = $_SERVER['REMOTE_ADDR']; 
+  $url = "http://api.hostip.info/get_html.php?ip=$address";
+  $target = "/home/ace/ace.iserver.ch/www/logs/clients-" . date("d.m.Y") . ".txt";
+  $title = "Type: $name\nRecipient: $address";
+  download($url, $target, $title);
 }
 
 ?>

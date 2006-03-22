@@ -6,6 +6,7 @@ import java.util.Map;
 import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
+import org.custommonkey.xmlunit.XMLTestCase;
 import org.easymock.MockControl;
 
 import ch.iserver.ace.DocumentDetails;
@@ -14,7 +15,7 @@ import ch.iserver.ace.net.core.NetworkProperties;
 import ch.iserver.ace.net.core.NetworkServiceImpl;
 import ch.iserver.ace.net.core.PublishedDocument;
 
-public class SerializerImplTest extends TestCase {
+public class SerializerImplTest extends XMLTestCase {
 	
 	private Logger LOG = Logger.getLogger(SerializerImplTest.class);
 	private DocumentServerLogic logic;
@@ -54,7 +55,7 @@ public class SerializerImplTest extends TestCase {
 
 		String xmlPublish = XML_PUBLISH_1+userId+XML_PUBLISH_2;
 		
-		assertEquals(xmlPublish, actual);
+		assertXMLEqual(xmlPublish, actual);
 		
 	}
 	
@@ -69,7 +70,7 @@ public class SerializerImplTest extends TestCase {
 
 		String xmlPublish = XML_CONCEAL_1+userId+XML_CONCEAL_2;
 		
-		assertEquals(xmlPublish, actual);
+		assertXMLEqual(xmlPublish, actual);
 	}
 	
 	public void testCreateNotificationSendDocuments() throws Exception {
@@ -88,7 +89,7 @@ public class SerializerImplTest extends TestCase {
 		byte[] data = serializer.createNotification(ProtocolConstants.SEND_DOCUMENTS, docs);
 		String actual = new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 
-		assertEquals(XML_SEND_DOCUMENTS, actual);
+		assertXMLEqual(XML_SEND_DOCUMENTS, actual);
 	}
 	
 	public void testCreateRequestForJoin() throws Exception {
@@ -102,7 +103,7 @@ public class SerializerImplTest extends TestCase {
 		byte[] data = serializer.createRequest(ProtocolConstants.JOIN, docId);
 		String actual = new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 
-		assertEquals(XML_JOIN, actual);
+		assertXMLEqual(XML_JOIN, actual);
 	}
 	
 	public void testCreateRequestInvite() throws Exception {
@@ -119,7 +120,7 @@ public class SerializerImplTest extends TestCase {
 		byte[] data = serializer.createRequest(ProtocolConstants.INVITE, docId);
 		String actual = new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 
-		assertEquals(XML_INVITE, actual);
+		assertXMLEqual(XML_INVITE, actual);
 	}
 	
 	public void testCreateResponseInviteRejected() throws Exception {
@@ -132,7 +133,7 @@ public class SerializerImplTest extends TestCase {
 		byte[] data = serializer.createResponse(ProtocolConstants.INVITE_REJECTED, docId, null);
 		String actual = new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 
-		assertEquals(XML_INVITE_REJECTED, actual);
+		assertXMLEqual(XML_INVITE_REJECTED, actual);
 	}
 	
 	public void testCreateResponseJoinRejected() throws Exception {
@@ -145,7 +146,7 @@ public class SerializerImplTest extends TestCase {
 		byte[] data = serializer.createResponse(ProtocolConstants.JOIN_REJECTED, docId, "501");
 		String actual = new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 
-		assertEquals(XML_JOIN_REJECTED, actual);
+		assertXMLEqual(XML_JOIN_REJECTED, actual);
 	}
 	
 	private static final String NEWLINE = System.getProperty("line.separator");

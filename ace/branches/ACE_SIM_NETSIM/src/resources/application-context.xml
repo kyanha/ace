@@ -60,8 +60,9 @@
     <constructor-arg><ref local="localeMessageSource"/></constructor-arg>
     <property name="toolBarActions">
       <list>
-        <ref bean="netPublishConcealDocumentToggleAction"/>
-        <ref bean="toggleFullScreenEditingAction"/>
+        <!--ref bean="toggleWordWrapAction"/-->
+        <ref bean="togglePublishConcealDocumentAction"/>
+        <!--ref bean="toggleFullScreenEditingAction"/-->
       </list>
     </property>
   </bean>
@@ -123,7 +124,7 @@
     <property name="toolBarActions">
       <list>
         <ref bean="netLeaveSessionAction"/>
-        <ref bean="netPublishConcealDocumentToggleAction"/>
+        <ref bean="togglePublishConcealDocumentAction"/>
       </list>
     </property>
   </bean>

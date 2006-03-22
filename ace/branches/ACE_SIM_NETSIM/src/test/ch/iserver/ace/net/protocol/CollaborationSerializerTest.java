@@ -2,7 +2,9 @@ package ch.iserver.ace.net.protocol;
 
 import java.net.InetAddress;
 
-import junit.framework.TestCase;
+import org.custommonkey.xmlunit.Diff;
+import org.custommonkey.xmlunit.XMLTestCase;
+
 import ch.iserver.ace.CaretUpdate;
 import ch.iserver.ace.Fragment;
 import ch.iserver.ace.ServerInfo;
@@ -28,7 +30,7 @@ import ch.iserver.ace.net.core.RemoteUserProxyFactory;
 import ch.iserver.ace.net.core.RemoteUserProxyImpl;
 import ch.iserver.ace.net.protocol.RequestImpl.DocumentInfo;
 
-public class CollaborationSerializerTest extends TestCase {
+public class CollaborationSerializerTest extends XMLTestCase {
 
 	
 	public void testCreateNotificationLeave() throws Exception {
@@ -41,7 +43,7 @@ public class CollaborationSerializerTest extends TestCase {
 		byte[] data = serializer.createNotification(ProtocolConstants.LEAVE, conn);
 		String actual = new String(data);
 		
-		assertEquals(XML_LEAVE, actual);
+		assertXMLEqual(XML_LEAVE, actual);
 	}
 	
 	public void testCreateNotificationKicked() throws Exception {
@@ -52,7 +54,7 @@ public class CollaborationSerializerTest extends TestCase {
 		byte[] data = serializer.createNotification(ProtocolConstants.KICKED, docId);
 		String actual = new String(data);
 		
-		assertEquals(XML_KICKED, actual);
+		assertXMLEqual(XML_KICKED, actual);
 	}
 	
 	public void testCreateResponseForJoin() throws Exception {
@@ -88,9 +90,7 @@ public class CollaborationSerializerTest extends TestCase {
 		
 		String actual = new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 		
-		assertEquals(0, actual.indexOf(XML_JOIN_DOCUMENT_1));
-		
-		assertEquals((actual.length()-XML_JOIN_DOCUMENT_2.length()), actual.indexOf(XML_JOIN_DOCUMENT_2));
+		assertXMLEqual(XML_JOIN_DOCUMENT_1, actual);
 	}
 	
 
@@ -107,7 +107,7 @@ public class CollaborationSerializerTest extends TestCase {
 		byte[] data = serializer.createSessionMessage(ProtocolConstants.REQUEST, request, participantId);
 		String actual = new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 		
-		assertEquals(XML_SESSION_MESSAGE_REQUEST_1, actual);
+		assertXMLEqual(XML_SESSION_MESSAGE_REQUEST_1, actual);
 	}
 	
 	public void testCreateSessionMessageOfTypeDeleteRequest() throws Exception {
@@ -122,7 +122,7 @@ public class CollaborationSerializerTest extends TestCase {
 		byte[] data = serializer.createSessionMessage(ProtocolConstants.REQUEST, request, participantId);
 		String actual = new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 
-		assertEquals(XML_SESSION_MESSAGE_REQUEST_2, actual);
+		assertXMLEqual(XML_SESSION_MESSAGE_REQUEST_2, actual);
 	}
 	
 	public void testCreateSessionMessageOfTypeSplitRequest() throws Exception {
@@ -140,9 +140,7 @@ public class CollaborationSerializerTest extends TestCase {
 		byte[] data = serializer.createSessionMessage(ProtocolConstants.REQUEST, request, participantId);
 		String actual = new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 
-//		System.out.println(actual);
-//		System.out.println(XML_SESSION_MESSAGE_REQUEST_SPLIT);
-		assertEquals(XML_SESSION_MESSAGE_REQUEST_SPLIT, actual);
+		assertXMLEqual(XML_SESSION_MESSAGE_REQUEST_SPLIT, actual);
 	}
 	
 	public void testCreateSessionMessageOfTypeEmptyNoOperationRequest() throws Exception {
@@ -158,7 +156,7 @@ public class CollaborationSerializerTest extends TestCase {
 		byte[] data = serializer.createSessionMessage(ProtocolConstants.REQUEST, request, participantId);
 		String actual = new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 
-		assertEquals(XML_NOOP_EMPTY, actual);
+		assertXMLEqual(XML_NOOP_EMPTY, actual);
 	}
 	
 	public void testCreateSessionMessageOfTypeNoOperationRequest() throws Exception {
@@ -174,7 +172,7 @@ public class CollaborationSerializerTest extends TestCase {
 		byte[] data = serializer.createSessionMessage(ProtocolConstants.REQUEST, request, participantId);
 		String actual = new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 
-		assertEquals(XML_NOOP, actual);
+		assertXMLEqual(XML_NOOP, actual);
 	}
 	
 	public void testCreateSessionMessageOfTypeCaretUpdate() throws Exception {
@@ -188,7 +186,7 @@ public class CollaborationSerializerTest extends TestCase {
 		byte[] data = serializer.createSessionMessage(ProtocolConstants.CARET_UPDATE, caretMsg, participantId);
 		String actual = new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 
-		assertEquals(XML_CARETUPDATE, actual);
+		assertXMLEqual(XML_CARETUPDATE, actual);
 	}
 	
 	public void testCreateSessionMessageOfTypeParticipantJoined() throws Exception {
@@ -203,7 +201,7 @@ public class CollaborationSerializerTest extends TestCase {
 		byte[] data = serializer.createSessionMessage(ProtocolConstants.PARTICIPANT_JOINED, proxy, participantId);
 		String actual = new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 
-		assertEquals(XML_PARTICIPANT_JOINED, actual);
+		assertXMLEqual(XML_PARTICIPANT_JOINED, actual);
 	}
 	
 	public void testCreateSessionMessageOfTypeParticipantLeft() throws Exception {
@@ -216,7 +214,7 @@ public class CollaborationSerializerTest extends TestCase {
 		byte[] data = serializer.createSessionMessage(ProtocolConstants.PARTICIPANT_LEFT, reason, participantId);
 		String actual = new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 
-		assertEquals(XML_PARTICIPANT_LEFT, actual);
+		assertXMLEqual(XML_PARTICIPANT_LEFT, actual);
 	}
 
 	public void testCreateSessionMessageOfTypeAcknowledge() throws Exception {
@@ -229,7 +227,7 @@ public class CollaborationSerializerTest extends TestCase {
 		byte[] data = serializer.createSessionMessage(ProtocolConstants.ACKNOWLEDGE, timestamp, siteId);
 		String actual = new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 
-		assertEquals(XML_ACKNOWLEDGE, actual);
+		assertXMLEqual(XML_ACKNOWLEDGE, actual);
 	}
 	
 	public void testCreateSessionMessageOfTypeSessionTerminated() throws Exception {
@@ -240,10 +238,23 @@ public class CollaborationSerializerTest extends TestCase {
 		byte[] data = serializer.createSessionMessage(ProtocolConstants.SESSION_TERMINATED, null, null);
 		String actual = new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
 
-		assertEquals(XML_SESSION_TERMINATED, actual);
+		assertXMLEqual(XML_SESSION_TERMINATED, actual);
+	}
+	
+	public void testUserDiscarded() throws Exception {
+		String userId = "vnmv-qqw2345";
+		Serializer serializer = new CollaborationSerializer();
+
+		byte[] data = serializer.createNotification(ProtocolConstants.USER_DISCARDED, userId);
+		String actual = new String(data, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
+
+		assertXMLEqual(XML_USER_DISCARDED, actual);
 	}
 	
 	private static final String NEWLINE = System.getProperty("line.separator");
+	
+	private static final String XML_USER_DISCARDED = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + NEWLINE +
+			"<ace><notification><userDiscarded id=\"vnmv-qqw2345\"/></notification></ace>";
 	
 	private static final String XML_SESSION_TERMINATED = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +	NEWLINE +
 	"<ace><session>" +
@@ -349,9 +360,8 @@ public class CollaborationSerializerTest extends TestCase {
 	"<selection mark=\"7\" dot=\"7\"/>" +
 	"</participant>" +
 	"</participants>" +
-	"<data>"; 
-	
-	private static final String XML_JOIN_DOCUMENT_2 = "</data>" +
+	"<data>H4sIAAAAAAAAAB3LUQqAIBAA0atMFwhXCKKfLtAlrBYVjMC1+2f9PmYcImy3ETU1W0CQiXwkUtiV\n" +
+    "86nWRjwywxkMC9FaZ65c1x571z3Xz/XfQilqwwsZEo7gVwAAAA==</data>" +
 	"</document>" +
 	"</response></ace>";	
 	

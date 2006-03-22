@@ -25,6 +25,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
 
@@ -42,6 +44,7 @@ import ch.iserver.ace.net.discovery.DiscoveryManagerFactory;
 import ch.iserver.ace.net.discovery.ExplicitUserDiscovery;
 import ch.iserver.ace.net.protocol.BEEPSessionListener;
 import ch.iserver.ace.net.protocol.BEEPSessionListenerFactory;
+import ch.iserver.ace.net.protocol.CollaborationSerializer;
 import ch.iserver.ace.net.protocol.ParticipantConnectionImplFactory;
 import ch.iserver.ace.net.protocol.ProtocolConstants;
 import ch.iserver.ace.net.protocol.RemoteUserSession;
@@ -62,8 +65,6 @@ import ch.iserver.ace.util.UUID;
 public class NetworkServiceImpl implements NetworkServiceExt {
 	
 	private static Logger LOG = Logger.getLogger(NetworkServiceImpl.class);
-	
-	private static boolean DO_SHUTDOWN = true;
 	
 	/**
 	 * The TimestampFactory object used for the creation of timestamps
@@ -244,9 +245,7 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 			sessionListener.terminate();
 			//end discovery
 			discovery.abort();
-			if (!DO_SHUTDOWN) {
-				return;
-			}
+			
 			/** server site **/
 			//close() on all participantconnections of all documents
 			Map docs = getPublishedDocuments();
@@ -275,17 +274,20 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 						while (iter2.hasNext()) { //for each doc of the current user
 							RemoteDocumentProxyExt doc = (RemoteDocumentProxyExt) iter2.next();
 							if (doc.isJoined() && session != null) {
+								//make shure current thread is interrupted if peer is gone, i.e. no reply
+								//is received
+								Timer timer = newThreadInterrupt();
 								session.getSessionConnection(doc.getId()).leave();
+								timer.cancel();
 							}
 						}
 					}
 					if (!user.isDNSSDdiscovered()) { //send sign-off message to explicitly discovered user
 						LOG.debug("send sign-off message to explicitly discovered user");
-						String message = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-								"<ace><notification><userDiscarded id=\"" + getUserId() + "\"/></notification></ace>";
-						byte[] data = message.getBytes(NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
+						byte[] message = (new CollaborationSerializer()).createNotification(
+									ProtocolConstants.USER_DISCARDED, getUserId());
 						LOG.debug("send userDiscarded to " + user.getUserDetails().getUsername());
-						session.getMainConnection().send(data, null, null);
+						session.getMainConnection().send(message, null, null);
 					}
 					//close main channel and TCPSession
 					LOG.debug("close main channel and TCPSession");
@@ -300,6 +302,25 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 			LOG.warn("could not stop network layer smoothly ["+e+", "+e.getMessage()+"]");
 		}
 		LOG.debug("<-- stop()");
+	}
+	
+	/**
+	 * Starts a Timer whose run method interrupts the current
+	 * executing thread if a certain amount of time has elapsed.
+	 * 
+	 * @return	Timer	the Timer
+	 */
+	private Timer newThreadInterrupt() { 
+		final Thread t = Thread.currentThread();
+		Timer timer = new Timer();
+		timer.schedule(new TimerTask() {
+			public void run() {
+				LOG.debug("going to interrupt [" + t.getName() + "]");
+				t.interrupt();
+				LOG.debug("interrupted.");
+			}
+		}, 1500);
+		return timer;
 	}
 	
 	/**

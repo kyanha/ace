@@ -33,14 +33,14 @@ import ch.iserver.ace.application.LocaleMessageSource;
 
 
 
-public class NetPublishConcealDocumentToggleAction extends DocumentItemSelectionChangeAction {
+public class TogglePublishConcealDocumentAction extends DocumentItemSelectionChangeAction {
 
 	private DocumentManager documentManager;
 	private ImageIcon iconPublish, iconConceal;
 	private String toolTipPublish, toolTipConceal;
 	private boolean documentPublished = false;
 	
-	public NetPublishConcealDocumentToggleAction(LocaleMessageSource messageSource, DocumentManager documentManager,
+	public TogglePublishConcealDocumentAction(LocaleMessageSource messageSource, DocumentManager documentManager,
 			DocumentViewController viewController) {
 		super(messageSource.getMessage("mNetPublish"), messageSource.getIcon("iMenuNetPublish"), viewController);
 		putValue(SHORT_DESCRIPTION, messageSource.getMessage("mNetPublishTT"));

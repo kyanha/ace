@@ -24,6 +24,8 @@ package ch.iserver.ace.util;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
 
+import ch.iserver.ace.net.core.NetworkProperties;
+
 /**
  * Helper class to get the stack trace from various sources.
  */
@@ -40,7 +42,11 @@ public class StackTrace {
 		PrintWriter pw = new PrintWriter(trace);
 		e.printStackTrace(pw);
 		pw.close();
-		return new String(trace.toByteArray());
+		String str = ""; 
+		try {
+			str = new String(trace.toByteArray(), NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
+		} catch (Exception ex) {}
+		return str;
 	}
 	
 }

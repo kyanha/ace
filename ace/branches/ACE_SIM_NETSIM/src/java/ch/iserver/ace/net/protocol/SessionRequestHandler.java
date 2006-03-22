@@ -33,8 +33,8 @@ import org.beepcore.beep.core.RequestHandler;
 import ch.iserver.ace.FailureCodes;
 import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Timestamp;
-import ch.iserver.ace.net.RemoteUserProxy;
 import ch.iserver.ace.net.SessionConnectionCallback;
+import ch.iserver.ace.net.core.NetworkProperties;
 import ch.iserver.ace.net.core.NetworkServiceExt;
 import ch.iserver.ace.net.core.NetworkServiceImpl;
 import ch.iserver.ace.net.core.PortableDocumentExt;
@@ -84,7 +84,7 @@ public class SessionRequestHandler implements RequestHandler {
 	 * {@inheritDoc}
 	 */
 	public void receiveMSG(MessageMSG message) {
-		LOG.info("--> recieveMSG()");
+		LOG.info("--> recieveMSG(" + message + ")");
 		
 		String readInData = null;
 		try {
@@ -93,8 +93,9 @@ public class SessionRequestHandler implements RequestHandler {
 			if (!service.isStopped()) {
 				InputDataStream input = message.getDataStream();
 				byte[] rawData = DataStreamHelper.read(input); //only one thread shall read data at a time
-				readInData = (new String(rawData));
-				LOG.debug("received "+rawData.length+" bytes. ["+readInData+"]");
+				readInData = (new String(rawData, NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING)));
+//				LOG.debug("received "+rawData.length+" bytes. ["+readInData+"]");
+				LOG.debug("received "+rawData.length+" bytes.");
 				//deserializer and handler are shared by all SessionRequestHandler instances, thus synchronize
 				deserializer.deserialize(rawData, handler);
 				response = handler.getResult();
@@ -108,6 +109,12 @@ public class SessionRequestHandler implements RequestHandler {
 				message.sendRPY(os);
 			} catch (Exception e) {
 				LOG.error("could not send confirmation ["+e.getMessage()+"]");
+			}
+			
+			if (DiscoveryManagerFactory.getDiscoveryManager().isUserAlive(response.getUserId())) {
+				LOG.warn("user [" + response.getUserId() + " not alive, abort");
+				cleanup();
+				return;
 			}
 			
 			if (sessionCallback == null && type != ProtocolConstants.JOIN_DOCUMENT) {

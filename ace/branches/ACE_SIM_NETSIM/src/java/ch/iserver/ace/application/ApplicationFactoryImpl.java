@@ -121,6 +121,12 @@ public class ApplicationFactoryImpl implements ApplicationFactory, ApplicationCo
 		mNet.add((AbstractAction)context.getBean("netKickParticipantAction")).setToolTipText(null);
 		menuBar.add(mNet);
 
+		JMenu mView = new JMenu(messageSource.getMessage("mView"));
+		mView.add((AbstractAction)context.getBean("toggleFullScreenEditingAction")).setToolTipText(null);
+		mView.addSeparator();
+		mView.add((AbstractAction)context.getBean("toggleWordWrapAction")).setToolTipText(null);
+		menuBar.add(mView);
+
 		JMenu mHelp = new JMenu(messageSource.getMessage("mHelp"));
 		mHelp.add((AbstractAction)context.getBean("helpDebugAction")).setToolTipText(null);
 		mHelp.add((AbstractAction)context.getBean("helpAboutAction")).setToolTipText(null);

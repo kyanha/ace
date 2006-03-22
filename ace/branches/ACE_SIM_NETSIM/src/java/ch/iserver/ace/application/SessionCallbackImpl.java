@@ -70,28 +70,22 @@ public class SessionCallbackImpl implements SessionCallback {
 
 	
 	private int participantCount = 0;
-//	private Color[] defaultParticipantColors = {
-//		new Color(0xFF, 0x60, 0x60), new Color(0xFF, 0xDD, 0x60),
-//		new Color(0xFF, 0xFF, 0x60), new Color(0x60, 0xDD, 0x60),
-//		new Color(0x60, 0xFF, 0xFF), new Color(0x60, 0x60, 0xFF),
-//		new Color(0xDD, 0x60, 0xFF), new Color(0xFF, 0x60, 0xDD),
-//		new Color(0xFF, 0x80, 0x80), new Color(0xFF, 0xDD, 0x80),
-//		new Color(0xFF, 0xFF, 0x80), new Color(0x80, 0xDD, 0x80),
-//		new Color(0x80, 0xFF, 0xFF), new Color(0x80, 0x80, 0xFF),
-//		new Color(0xDD, 0x80, 0xFF), new Color(0xFF, 0x80, 0xDD),
-//	};
 
 	private Color[] defaultParticipantTextColors = {
-		new Color(0xFF, 0xFF, 0xA0), new Color(0xA0, 0xFF, 0xA0),
-		new Color(0xA0, 0xFF, 0xFF), new Color(0xFF, 0xA0, 0xA0)
+		new Color(230, 154, 154),
+		new Color(230, 191, 115), new Color(191, 230, 115),
+		new Color(115, 230, 115), new Color(115, 230, 191),
+		new Color(154, 154, 230), new Color(191, 115, 230)
 	};
 
 	private Color[] defaultParticipantCursorColors = {
-		new Color(0xA0, 0xA0, 0x00), new Color(0x00, 0xAF, 0x00),
-		new Color(0x40, 0xA0, 0xA0), new Color(0xAF, 0x00, 0x00)
+		new Color(230, 30, 30),
+		new Color(230, 163, 30), new Color(163, 230, 30),
+		new Color(30, 230, 30), new Color(30, 230, 163),
+		new Color(97, 97, 230), new Color(163, 30, 230)
 	};
 
-	private int defaultColorAmount = 4;
+	private int defaultColorAmount = 7;
 	
 	
 
@@ -125,7 +119,13 @@ public class SessionCallbackImpl implements SessionCallback {
 		Color pColor = participantColorJoined(pId);
 		ParticipantItem mapParticipantItem = new ParticipantItem(participant, pColor);
 		participantItemMap.put(pId, mapParticipantItem);
-		participantSourceList.add(mapParticipantItem);		
+		
+		participantSourceList.getReadWriteLock().writeLock().lock();
+		try {
+			participantSourceList.add(mapParticipantItem);
+		} finally {
+			participantSourceList.getReadWriteLock().writeLock().unlock();
+		}
 		//System.out.println("participantJoined: " + participant);
 		
 		// add caret handler
@@ -153,7 +153,13 @@ public class SessionCallbackImpl implements SessionCallback {
 		// UPDATE MAP
 		participantColorLeft(pId);
 		ParticipantItem mapParticipantItem = (ParticipantItem)participantItemMap.remove(pId);
-		participantSourceList.remove(mapParticipantItem);
+		
+		participantSourceList.getReadWriteLock().writeLock().lock();
+		try {
+			participantSourceList.remove(mapParticipantItem);
+		} finally {
+			participantSourceList.getReadWriteLock().writeLock().unlock();
+		}
 		//System.out.println("participantLeft: " + participant + "   code: " + code);
 		
 		// remove caret handler

@@ -39,6 +39,7 @@ import ch.iserver.ace.collaboration.jupiter.NullAcknowledgeStrategyFactory;
 import ch.iserver.ace.collaboration.jupiter.PublisherConnection;
 import ch.iserver.ace.collaboration.jupiter.RemoteUserImpl;
 import ch.iserver.ace.collaboration.jupiter.UserRegistry;
+import ch.iserver.ace.collaboration.jupiter.server.document.SimpleServerDocument;
 import ch.iserver.ace.net.DocumentServer;
 import ch.iserver.ace.net.InvitationPort;
 import ch.iserver.ace.net.ParticipantConnection;
@@ -173,7 +174,14 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	 * @return the server document ready to be used
 	 */
 	protected ServerDocument createServerDocument(DocumentModel document, RemoteUserProxy publisher) {
-		ServerDocument doc = new ServerDocumentImpl(publisher);
+		ServerDocument doc;
+		if (Boolean.getBoolean("newserverdocument")) {
+			LOG.debug("using new server document");
+			doc = new SimpleServerDocument();
+			doc.participantJoined(ParticipantConnection.PUBLISHER_ID, null);
+		} else {
+			doc = new ServerDocumentImpl(publisher);
+		}
 		doc.insertString(ParticipantConnection.PUBLISHER_ID, 0, document.getContent());
 		doc.updateCaret(ParticipantConnection.PUBLISHER_ID, document.getDot(), document.getMark());
 		return doc;

@@ -44,8 +44,8 @@ public class ToggleFullScreenEditingAction extends AbstractAction {
 	
 	public ToggleFullScreenEditingAction(LocaleMessageSource messageSource, PersistentContentPane persistentContentPane,
 			Editor editor) {
-		super(messageSource.getMessage("mWindowToggleFullScreen"), messageSource.getIcon("iWindowToggleFullScreen"));
-		putValue(SHORT_DESCRIPTION, messageSource.getMessage("mWindowToggleFullScreenTT"));
+		super(messageSource.getMessage("mViewEditorFullScreen"), messageSource.getIcon("iViewEditorFullScreen"));
+		putValue(SHORT_DESCRIPTION, messageSource.getMessage("mViewEditorFullScreenTT"));
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke('F', InputEvent.SHIFT_MASK | Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 		
 		this.messageSource = messageSource;
@@ -68,14 +68,16 @@ public class ToggleFullScreenEditingAction extends AbstractAction {
 	public void toggleEditingMode() {
 		if(fullScreenEditingMode) {
 			// switch to normal mode
-			putValue(SMALL_ICON, messageSource.getIcon("iWindowToggleFullScreen"));
-			putValue(SHORT_DESCRIPTION, messageSource.getMessage("mWindowToggleFullScreenTT"));
+			putValue(SMALL_ICON, messageSource.getIcon("iViewEditorFullScreen"));
+			putValue(SHORT_DESCRIPTION, messageSource.getMessage("mViewEditorFullScreenTT"));
+			putValue(NAME, messageSource.getMessage("mViewEditorFullScreenTT"));
 			persistentContentPane.switchFullScreenEditing();
 			fullScreenEditingMode = false;
 		} else {
 			// switch to fullscreen mode
-			putValue(SMALL_ICON, messageSource.getIcon("iWindowToggleNormalScreen"));
-			putValue(SHORT_DESCRIPTION, messageSource.getMessage("mWindowToggleNormalScreenTT"));
+			putValue(SMALL_ICON, messageSource.getIcon("iViewEditorNormalScreen"));
+			putValue(SHORT_DESCRIPTION, messageSource.getMessage("mViewEditorNormalScreenTT"));
+			putValue(NAME, messageSource.getMessage("mViewEditorNormalScreenTT"));
 			persistentContentPane.switchFullScreenEditing();
 			fullScreenEditingMode = true;
 		}

@@ -24,7 +24,10 @@ package ch.iserver.ace.application;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
+
+import javax.swing.SwingUtilities;
 
 
 
@@ -44,8 +47,12 @@ public class PropertyChangeHashMapImpl extends HashMap implements PropertyChange
 		propertyChangeSupport.removePropertyChangeListener(listener);
 	}
 	
-	protected void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
-		propertyChangeSupport.firePropertyChange(propertyName, oldValue, newValue);
+	protected void firePropertyChange(final String propertyName, final Object oldValue, final Object newValue) {
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				propertyChangeSupport.firePropertyChange(propertyName, oldValue, newValue);
+			}
+		});
 	}
 	
 	public void propertyChange(PropertyChangeEvent evt) {

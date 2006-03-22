@@ -87,7 +87,7 @@ public class TCPSession extends SessionImpl {
 
 	private static int THREAD_COUNT = 0;
 
-	private static final String THREAD_NAME = "TCPSession Thread #";
+	private static final String THREAD_NAME = "[TCPSession Thread #";
 
 	private Thread thread;
 
@@ -290,7 +290,7 @@ public class TCPSession extends SessionImpl {
 			String threadName;
 
 			synchronized (THREAD_NAME) {
-				threadName = new String(THREAD_NAME + THREAD_COUNT++);
+				threadName = new String(THREAD_NAME + THREAD_COUNT++ + "]");
 			}
 
 			thread = new Thread(threadName) {
@@ -317,24 +317,24 @@ public class TCPSession extends SessionImpl {
 	 * Generates a header, then writes the header, payload, and
 	 * trailer to the wire.
 	 *
-	 * @param f the Frame to send.
+	 * @param frame the Frame to send.
 	 * @return boolean true of the frame was sent, false otherwise.
 	 *
 	 * @throws BEEPException
 	 *
 	 * @todo make this one write operation later.
 	 */
-	protected void sendFrame(Frame f) throws BEEPException {
+	protected void sendFrame(Frame frame) throws BEEPException {
 		try {
-
+			log.debug("\t--> TCPSession.sendFrame (isLast == " + frame.isLast() + ")");
 			OutputStream os = socket.getOutputStream();
 
 			synchronized (writerLock) {
-				/* Inspite of the extra data copy if is faster to have
+				/* Inspite of the extra data copy it is faster to have
 				 * a single call to write() (at least with the JVMs we
 				 * have tested with).
 				 */
-				BufferSegment[] bs = f.getBytes();
+				BufferSegment[] bs = frame.getBytes();
 
 				int n = 0;
 				for (int i = 0; i < bs.length; ++i) {
@@ -358,7 +358,7 @@ public class TCPSession extends SessionImpl {
 				os.flush();
 
 				if (log.isTraceEnabled()) {
-					log.trace("Wrote the following\n"
+					log.trace("\tWrote the following\n"
 							+ new String(outputBuf, 0, n));
 				}
 			}
@@ -367,6 +367,7 @@ public class TCPSession extends SessionImpl {
 		} catch (Exception e) {
 			throw new BEEPException(e);
 		}
+		log.debug("\t<-- TCPSession.sendFrame");
 	}
 
 	// Implementation of method declared in Session
@@ -411,6 +412,7 @@ public class TCPSession extends SessionImpl {
 	 */
 	protected boolean updateMyReceiveBufferSize(Channel channel,
 			long currentSeq, int currentAvail) throws BEEPException {
+		log.debug("--> updateMyReceiveBufferSize(" + currentSeq + ", " + currentAvail + ")");
 		StringBuffer sb = new StringBuffer(Frame.MAX_HEADER_SIZE);
 
 		sb.append(MESSAGE_TYPE_SEQ);
@@ -424,7 +426,7 @@ public class TCPSession extends SessionImpl {
 
 		try {
 			if (log.isDebugEnabled()) {
-				log.debug("Wrote: " + sb.toString());
+				log.debug("Wrote Window Update: " + sb.toString());
 			}
 
 			OutputStream os = socket.getOutputStream();
@@ -436,7 +438,7 @@ public class TCPSession extends SessionImpl {
 		} catch (IOException x) {
 			throw new BEEPException("Unable to send SEQ", x);
 		}
-
+		log.debug("<-- updateMyReceiveBufferSize");
 		return true;
 	}
 
@@ -450,10 +452,10 @@ public class TCPSession extends SessionImpl {
 
 		try {
 			InputStream is = socket.getInputStream();
-
+			int count = 0;
 			while (running) {
 				if (log.isTraceEnabled()) {
-					log.trace("Processing next frame 0.9.08_2");
+					log.trace("--> processNextFrame [" + (++count) + "]");
 				}
 
 				int amountRead;
@@ -467,8 +469,7 @@ public class TCPSession extends SessionImpl {
 						while (!terminate) {
 							amountRead = -1;
 							try {
-								amountRead = is.read(headerBuffer, 0,
-										MIN_SEQ_HEADER_SIZE);
+								amountRead = is.read(headerBuffer, 0,	MIN_SEQ_HEADER_SIZE);
 							} catch (java.net.SocketTimeoutException e) {
 							}
 							if (amountRead != -1)
@@ -502,6 +503,7 @@ public class TCPSession extends SessionImpl {
 						break;
 					}
 				}
+				log.trace("<-- processNextFrame [" + count + "]");
 			}
 		} catch (IOException e) {
 			log.error(e);
@@ -522,9 +524,9 @@ public class TCPSession extends SessionImpl {
 		}
 	}
 
-	private boolean processCoreFrame(byte[] headerBuffer, int amountRead,
-			InputStream is) throws SessionAbortedException, BEEPException,
-			IOException {
+	private boolean processCoreFrame(byte[] headerBuffer, int amountRead, InputStream is) 
+			throws SessionAbortedException, BEEPException, IOException {
+		log.debug("--> processCoreFrame");
 		int headerLength = 0;
 		int amountToRead = Frame.MIN_FRAME_SIZE - amountRead;
 
@@ -556,13 +558,11 @@ public class TCPSession extends SessionImpl {
 
 			while (headerLength < amountRead) {
 				if (headerBuffer[headerLength] == '\n') {
-					if (headerLength == 0
-							|| headerBuffer[headerLength - 1] != '\r') {
+					if (headerLength == 0 || headerBuffer[headerLength - 1] != '\r') {
 						String info = "[" + headerBuffer.length + ", ";
 						info += headerLength + ", ";
 						info += (new String(headerBuffer)) + "]";
 						throw new BEEPException("Malformed BEEP header #4 " + info);
-//						throw new BEEPException("Malformed BEEP header");
 					}
 
 					++headerLength;
@@ -586,14 +586,14 @@ public class TCPSession extends SessionImpl {
 			 * or "\r\n"
 			 */
 			amountToRead = (tokenCount * 2) + Frame.TRAILER.length();
-		}
+		}  //end headerFound while loop
 
 		if (log.isTraceEnabled()) {
-			log.trace(new String(headerBuffer, 0, headerLength));
+			log.trace("header: " + new String(headerBuffer, 0, headerLength));
 		}
 
-		Frame f = super.createFrame(headerBuffer, headerLength - CRLF.length());
-		byte[] payload = new byte[f.getSize()];
+		Frame frame = super.createFrame(headerBuffer, headerLength - CRLF.length());
+		byte[] payload = new byte[frame.getSize()];
 
 		int count = amountRead - headerLength;
 		if (count > payload.length) {
@@ -615,8 +615,7 @@ public class TCPSession extends SessionImpl {
 				}
 
 				if (((byte) b) != ((byte) Frame.TRAILER.charAt(i))) {
-					throw new BEEPException("Malformed BEEP frame, "
-							+ "invalid trailer");
+					throw new BEEPException("Malformed BEEP frame, invalid trailer 1");
 				}
 			}
 		} else {
@@ -631,7 +630,7 @@ public class TCPSession extends SessionImpl {
 			}
 
 			if (log.isTraceEnabled()) {
-				log.trace(new String(payload));
+				log.trace("payload:\n" + new String(payload));
 			}
 
 			for (int i = 0; i < Frame.TRAILER.length(); ++i) {
@@ -642,25 +641,26 @@ public class TCPSession extends SessionImpl {
 				}
 
 				if (((byte) b) != ((byte) Frame.TRAILER.charAt(i))) {
-					throw new BEEPException("Malformed BEEP frame, "
-							+ "invalid trailer");
+					throw new BEEPException("Malformed BEEP frame, invalid trailer 2");
 				}
 			}
 		}
 
-		f.addPayload(new BufferSegment(payload));
+		frame.addPayload(new BufferSegment(payload));
 
-		return super.postFrame(f);
+		boolean result = super.postFrame(frame);
+		log.debug("<-- processCoreFrame");
+		return result;
 	}
 
-	private void processSEQFrame(byte[] headerBuffer, int amountRead,
-			InputStream is) throws BEEPException, IOException,
-			SessionAbortedException {
+	private void processSEQFrame(byte[] headerBuffer, int amountRead, InputStream is) 
+			throws BEEPException, IOException, SessionAbortedException {
+		log.debug("--> processSEQFrame");
 		int headerLength = 0;
 		int tokenCount = 4;
 
 		headerFound: while (true) {
-
+			//calculate length of header
 			while (headerLength < amountRead) {
 				if (headerBuffer[headerLength] == '\n') {
 					if (headerLength == 0 || headerBuffer[headerLength - 1] != '\r') {
@@ -687,8 +687,7 @@ public class TCPSession extends SessionImpl {
 				throw new BEEPException("Malformed BEEP header, no CRLF #6");
 			}
 
-			int amountToRead = headerBuffer[headerLength - 1] == '\r' ? 1
-					: tokenCount * 2;
+			int amountToRead = headerBuffer[headerLength - 1] == '\r' ? 1 : tokenCount * 2;
 			try {
 				/* 2 = 1 for the min token size and 1 is for the separator ' '
 				 * or "\r\n"
@@ -717,8 +716,7 @@ public class TCPSession extends SessionImpl {
 		}
 
 		// Process the header
-		HeaderParser header = new HeaderParser(headerBuffer, headerLength
-				- CRLF.length());
+		HeaderParser header = new HeaderParser(headerBuffer, headerLength - CRLF.length());
 
 		char[] type = header.parseType();
 		if (java.util.Arrays.equals(type, MESSAGE_TYPE_SEQ) == false) {
@@ -735,7 +733,9 @@ public class TCPSession extends SessionImpl {
 		}
 
 		// update the channel with the new receive window size
+		log.debug("received new window size: " + window + " bytes");
 		this.updatePeerReceiveBufferSize(channelNum, ackNum, window);
+		log.debug("<-- processSEQFrame");
 	}
 
 	private static class SessionAbortedException extends Exception {

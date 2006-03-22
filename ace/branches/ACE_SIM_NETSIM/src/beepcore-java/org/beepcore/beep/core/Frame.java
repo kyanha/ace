@@ -306,7 +306,7 @@ public class Frame {
         }
 
         if (header.hasMoreTokens()) {
-            throw new BEEPException("Malformed BEEP Header");
+            throw new BEEPException("Malformed BEEP Header #B1");
         }
 
         return new Frame(msgType, session.getValidChannel(channelNum), msgNum,

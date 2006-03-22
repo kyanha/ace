@@ -94,8 +94,8 @@ public class RequestParserHandlerTest extends TestCase {
 	}
 	
 	public void testUserDiscarded() throws Exception {
-		deserializer.deserialize(USER_DISCARDED.getBytes(
-				NetworkProperties.get(NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING))), handler);
+		String encoding = NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING);
+		deserializer.deserialize(USER_DISCARDED.getBytes(encoding), handler);
 		
 		Request request = handler.getResult();
 		assertEquals(ProtocolConstants.USER_DISCARDED, request.getType());

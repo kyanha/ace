@@ -44,7 +44,8 @@ public class DiscoveryManagerFactory {
 	/**
 	 * Initializes this factory. Actually creates a new instance
 	 * of a DiscoveryManager and DiscoveryCallbackAdapter implementation.
-	 * This method must be called prior to method {@link #getInstance()}.
+	 * This method must be called prior to method {@link #getDiscoveryManager()} or
+	 * {@link #getDiscoveryCallbackAdapter()}.
 	 * 
 	 * @param callback			the discovery callback
 	 * @param mainThreadDomain 	the main <code>ThreadDomain</code> used 

@@ -498,9 +498,10 @@ public class RemoteUserSession {
 			//TODO: how to handle when a connection to a user is to be established who resides
 			//behind a router? timeout? -> use proxy?
 			ProfileRegistry registry = ProfileRegistryFactory.getProfileRegistry();
-			TCPSession newSession = TCPSessionCreator.initiate(host, port, registry); 
+			LOG.info("initiate session to " + host + ":" + port + "...");
+			TCPSession newSession = TCPSessionCreator.initiate(host, port, registry);
+			LOG.debug("initiated session.");
 			setTCPSession( newSession );
-			LOG.info("initiated session to "+host+":"+port);
 			isInitiated = true;
 			DiscoveryManagerFactory.getDiscoveryManager().setSessionEstablished(user.getId());
 		} catch (BEEPException be) {

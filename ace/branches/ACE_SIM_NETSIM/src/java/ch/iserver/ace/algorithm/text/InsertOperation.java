@@ -193,7 +193,7 @@ public class InsertOperation implements Operation {
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return "Insert(" + position + ",'" + text + "'," + origin + ")";
+		return "Insert(" + position + ",'" + (text != null ? ((text.length() > 20) ? text.substring(0, 20) + "..." : text) : "")  + "'," + origin + ")";
 	}
 
 	/**

@@ -222,6 +222,12 @@ public class CollaborationSerializer implements Serializer, ProtocolConstants {
 				attrs.addAttribute("", "", DOC_ID, "", docId);
 				handler.startElement("", "", TAG_KICKED, attrs);
 				handler.endElement("", "", TAG_KICKED);
+			} else if (type == USER_DISCARDED) {
+				String userId = (String) data;
+				attrs.addAttribute("", "", ID, "", userId);
+				handler.startElement("", "", TAG_USER_DISCARDED, attrs);
+				handler.endElement("", "", TAG_USER_DISCARDED);
+			
 			} else {
 				LOG.error("unknown notification type ["+type+"]");
 			}
@@ -379,7 +385,7 @@ public class CollaborationSerializer implements Serializer, ProtocolConstants {
 			handler.startElement("", "", TAG_INSERT, attrs);
 			attrs = new AttributesImpl();
 			String text = insert.getText();
-			if (text.indexOf('<') >= 0) { //test if text possibly contains XML data, this check should be enhanced
+			if (text.indexOf('<') >= 0) { //TODO: test if text possibly contains XML data, this check should be enhanced
 				attrs.addAttribute("", "", ENCODED, "", "Base64");
 				text = Base64.encodeBytes(text.getBytes(NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING)));
 			}
