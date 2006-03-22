@@ -272,6 +272,7 @@
 		<java classname="ch.iserver.ace.application.Main" 
 		      fork="true" 
 		      classpathref="classpath.run">
+            <jvmarg value="-Dnewserverdocument=true"/>
 			<jvmarg value="-Dch.iserver.ace.preferences=${preferences.path}"/>
 		</java>
 	</target>
