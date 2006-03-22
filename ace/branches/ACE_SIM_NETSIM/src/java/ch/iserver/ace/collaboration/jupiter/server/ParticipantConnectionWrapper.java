@@ -117,7 +117,6 @@ public class ParticipantConnectionWrapper implements ParticipantConnection {
 	protected void failed(Exception e) {
 		getFailureHandler().handleFailure(participantId, Participant.DISCONNECTED);
 		target = createNullConnection();
-		e.printStackTrace();
 	}
 	
 	/**
