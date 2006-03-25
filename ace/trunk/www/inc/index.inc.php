@@ -11,6 +11,9 @@ as a page that talks about the technical <a href="index.php?page=3">Background</
 
 <h3>News</h3>
 
+<p><b>ACE Forum</b> <span class="date">25.03.2006</span></p>
+<p>Please post your experiences with ACE (enjoyable or disappointing) to the <a href="http://ace.iserver.ch/forum/">ACE forum</a>. Also if you encounter problems using ACE, let us know. Either way, it will help us to improve it.</p>
+
 <p><b>Milestone 4 released</b> <span class="date">07.03.2006</span></p>
 <p>It's our pleasure to announce the release of ACE Milestone 4. It includes bug fixes as well as some extensions at the GUI. <a href="http://ace.iserver.ch/index.php?page=8">Download now.</a></p>
 
