@@ -231,9 +231,18 @@ class UserRegistrationImpl implements UserRegistration {
 		} catch (Exception e) {
 			LOG.error("Could not resolve address ["+e.getMessage()+"]");
 		}
-		LOG.info("local user address resolved to ["+address+"]");
+		LOG.info("discovery address ["+address+"]");
 		query.stop();
 		int port = Integer.parseInt(NetworkProperties.get(NetworkProperties.KEY_PROTOCOL_PORT));
+		
+		if (address.isLoopbackAddress()) {
+			try {
+				InetAddress localhost = InetAddress.getLocalHost();
+				address = (localhost.isLoopbackAddress() ? address : localhost);
+			} catch (Exception e) {}
+		}
+		LOG.info("local user address resolved to ["+address+"]");
+		
 		ServerInfo info = new ServerInfo(address, port);
 		NetworkServiceImpl.getInstance().setServerInfo(info);
 	}
