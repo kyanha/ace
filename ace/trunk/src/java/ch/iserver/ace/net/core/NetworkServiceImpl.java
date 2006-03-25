@@ -31,6 +31,7 @@ import java.util.TimerTask;
 import org.apache.log4j.Logger;
 
 import ch.iserver.ace.DocumentDetails;
+import ch.iserver.ace.FailureCodes;
 import ch.iserver.ace.ServerInfo;
 import ch.iserver.ace.UserDetails;
 import ch.iserver.ace.algorithm.TimestampFactory;
@@ -125,6 +126,12 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	private static NetworkServiceImpl instance;
 	
 	/**
+	 * The RemoteUserProxy for the local user. Only used by the
+	 * upper layers.
+	 */
+	private RemoteUserProxy localUser;
+	
+	/**
 	 * Private constructor. 
 	 * 
 	 * Initializes several factories and the RequestFilter chain.
@@ -176,8 +183,6 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	public UserDetails getUserDetails() {
 		return details;
 	}
-	
-	private RemoteUserProxy localUser;
 	
 	/**
 	 * @see ch.iserver.ace.net.NetworkService#getLocalUser()
@@ -350,10 +355,33 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 	 */
 	public void discoverUser(DiscoveryNetworkCallback callback, InetAddress addr, int port) {
 		LOG.debug("--> discoverUser(" + addr + ")");
-		String defaultPort = NetworkProperties.get(NetworkProperties.KEY_PROTOCOL_PORT);
-		ExplicitUserDiscovery userDiscovery = new ExplicitUserDiscovery(callback, addr, Integer.parseInt(defaultPort));
-		userDiscovery.start();
+		boolean goDiscover = true;
+		try {
+			checkLoopback(addr);
+		} catch (Exception e) {
+			callback.userDiscoveryFailed(FailureCodes.DISCOVERY_FAILED,  addr.toString());
+			goDiscover = false;
+		}
+		if (goDiscover) {
+			String defaultPort = NetworkProperties.get(NetworkProperties.KEY_PROTOCOL_PORT);
+			ExplicitUserDiscovery userDiscovery = new ExplicitUserDiscovery(callback, addr, Integer.parseInt(defaultPort));
+			userDiscovery.start();
+		}
 		LOG.debug("<-- discoverUser()");
+	}
+	
+	private void checkLoopback(InetAddress addr) throws Exception {
+		String address = addr.getHostAddress();
+		String hostName = addr.getHostName();
+		InetAddress localhost = getServerInfo().getAddress();
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("[Input] address = " + address + " hostname = " + hostName);
+			LOG.debug("[Localhost] address = " + localhost.getHostAddress() + " hostname = " + localhost.getHostName());
+		}
+		if (addr.equals(localhost) || address.indexOf("127") == 0 || address.equals("localhost")) {
+			LOG.warn("discovery address is loopback");
+			throw new IllegalArgumentException();
+		}
 	}
 
 	/**
@@ -363,6 +391,7 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 		LOG.info("--> publish("+details+")");
 		PublishedDocument doc = new PublishedDocument(UUID.nextUUID(), logic, details, requestChain, this);
 		publishedDocs.put(doc.getId(), doc);
+		//TODO: publish communication in a new thread?
 		Request request = new RequestImpl(ProtocolConstants.PUBLISH, null, doc);
 		requestChain.process(request);
 		LOG.info("<-- publish()");
