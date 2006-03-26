@@ -244,8 +244,7 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	public PublisherPort initPublisherConnection(PublisherConnection publisherConnection) {
 		this.publisherConnection = (PublisherConnection) outgoingDomain.wrap(
 						new PublisherConnectionWrapper(
-								publisherConnection, 
-								getFailureHandler()),
+								publisherConnection, getFailureHandler()),
 						PublisherConnection.class);
 		return createPublisherPort(this.publisherConnection);
 	}
@@ -568,7 +567,6 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 		LOG.info("handling failed connection to participant " + participantId);
 		if (participantId == PUBLISHER_ID) {
 			LOG.error("failure related to publisher: " + reason);
-			getPublisherConnection().sessionFailed(reason, null);
 			getCompositeForwarder().close();
 			shutdown();
 		} else {
