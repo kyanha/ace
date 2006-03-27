@@ -29,6 +29,7 @@ import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.Timestamp;
 import ch.iserver.ace.algorithm.TransformationException;
 import ch.iserver.ace.algorithm.jupiter.Jupiter;
+import ch.iserver.ace.collaboration.InvitationCallback;
 import ch.iserver.ace.collaboration.JoinRequest;
 import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.collaboration.PublishedSession;
@@ -133,10 +134,10 @@ public class PublishedSessionImpl extends AbstractSession
 	}
 
 	/**
-	 * @see ch.iserver.ace.collaboration.PublishedSession#invite(ch.iserver.ace.collaboration.RemoteUser)
+	 * @see ch.iserver.ace.collaboration.PublishedSession#invite(ch.iserver.ace.collaboration.RemoteUser, InvitationCallback)
 	 */
-	public void invite(RemoteUser user) {
-		getPublisherPort().invite(user);
+	public void invite(RemoteUser user, InvitationCallback callback) {
+		getPublisherPort().invite(user, callback);
 	}
 	
 	/**

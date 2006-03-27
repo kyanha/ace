@@ -28,6 +28,7 @@ import ch.iserver.ace.DocumentDetails;
 import ch.iserver.ace.DocumentModel;
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.jupiter.Jupiter;
+import ch.iserver.ace.collaboration.InvitationCallback;
 import ch.iserver.ace.collaboration.JoinRequest;
 import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.collaboration.RemoteUser;
@@ -488,20 +489,22 @@ public class ServerLogicImpl implements ServerLogic, FailureHandler, AccessContr
 	}
 	
 	/**
-	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerLogic#invite(ch.iserver.ace.collaboration.RemoteUser)
+	 * @see ch.iserver.ace.collaboration.jupiter.server.ServerLogic#invite(ch.iserver.ace.collaboration.RemoteUser, InvitationCallback)
 	 */
-	public void invite(RemoteUser user) {
+	public void invite(RemoteUser user, final InvitationCallback callback) {
 		ParameterValidator.notNull("user", user);
 		if (!participants.isInvited(user.getId())) {
 			participants.userInvited(user.getId());
 			final RemoteUserProxy proxy = ((RemoteUserImpl) user).getProxy();
 			InvitationPort target = new InvitationPort() {
 				public void reject() {
-					invitationRejected(proxy);			
+					invitationRejected(proxy);
+					callback.invitationRejected();
 				}
 				public void accept(ParticipantConnection connection) {
 					ParameterValidator.notNull("connection", connection);
 					invitationAccepted(connection);
+					callback.invitationAccepted();
 				}
 				public RemoteUserProxy getUser() {
 					return proxy;

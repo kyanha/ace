@@ -69,7 +69,7 @@ public class NetInviteUserAction extends DocumentItemSelectionChangeAction {
 
 	private void inviteUser() {
 		if(canInvite()) {
-			((PublishedSession)currentDocumentItem.getSession()).invite(currentUserItem.getUser());
+			((PublishedSession)currentDocumentItem.getSession()).invite(currentUserItem.getUser(), null);
 			// pseudo invite spam protection
 			//setEnabled(false);
 		}

@@ -22,6 +22,7 @@
 package ch.iserver.ace.collaboration.jupiter.server;
 
 import ch.iserver.ace.DocumentDetails;
+import ch.iserver.ace.collaboration.InvitationCallback;
 import ch.iserver.ace.collaboration.RemoteUser;
 import ch.iserver.ace.net.ParticipantPort;
 
@@ -45,8 +46,9 @@ public interface PublisherPort extends ParticipantPort {
 	 * Invites the given user to the session.
 	 * 
 	 * @param user the user to be invited
+	 * @param callback the callback to be notified about the outcome
 	 */
-	void invite(RemoteUser user);
+	void invite(RemoteUser user, InvitationCallback callback);
 	
 	/**
 	 * Sets the new document details for the session.

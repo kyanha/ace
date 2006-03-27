@@ -21,38 +21,20 @@
 
 package ch.iserver.ace.collaboration;
 
-import ch.iserver.ace.DocumentDetails;
-
-
 /**
- * A PublishedSession extends a Session with methods that are only
- * available to the owner (publisher) of the session itself.
- *
- * <p>PublishedSessions are obtained by calling publish on the
- * {@link CollaborationService} instance.</p>
+ * Callback interface passed to {@link PublishedSession#invite(RemoteUser, InvitationCallback)}
+ * method. The callback is notified about the outcome of the invitation.
  */
-public interface PublishedSession extends Session {
+public interface InvitationCallback {
 	
 	/**
-	 * Sets the document detail information.
-	 * 
-	 * @param details the new DocumentDetails
+	 * Called iff the invited user accepted the invitation.
 	 */
-	void setDocumentDetails(DocumentDetails details);
+	void invitationAccepted();
 	
 	/**
-	 * Invites the given <var>user</var> to the session.
-	 * 
-	 * @param user the user to be invited
-	 * @param callback the callback that gets notified about the outcome
+	 * Called iff the invited user rejected the invitation.
 	 */
-	void invite(RemoteUser user, InvitationCallback callback);
+	void invitationRejected();
 	
-	/**
-	 * Kicks the given participant from the session.
-	 *
-	 * @param participant the participant to kick from the session
-	 */
-	void kick(Participant participant);
-			
 }

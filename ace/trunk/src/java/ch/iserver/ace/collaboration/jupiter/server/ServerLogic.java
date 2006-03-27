@@ -22,6 +22,7 @@
 package ch.iserver.ace.collaboration.jupiter.server;
 
 import ch.iserver.ace.DocumentDetails;
+import ch.iserver.ace.collaboration.InvitationCallback;
 import ch.iserver.ace.collaboration.RemoteUser;
 import ch.iserver.ace.net.DocumentServerLogic;
 import ch.iserver.ace.net.ParticipantConnection;
@@ -77,8 +78,9 @@ public interface ServerLogic extends DocumentServerLogic {
 	 * Invites the given user to the session.
 	 * 
 	 * @param user the user to be invited
+	 * @param callback TODO
 	 */
-	void invite(RemoteUser user);
+	void invite(RemoteUser user, InvitationCallback callback);
 	
 	/**
 	 * Shuts the server logic down. The server logic takes care that the
