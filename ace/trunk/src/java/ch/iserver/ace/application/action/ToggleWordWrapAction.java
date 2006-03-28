@@ -29,9 +29,7 @@ import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
 
-import ch.iserver.ace.application.DocumentItem;
 import ch.iserver.ace.application.DocumentViewController;
-import ch.iserver.ace.application.ItemSelectionChangeEvent;
 import ch.iserver.ace.application.LocaleMessageSource;
 import ch.iserver.ace.application.editor.CollaborativeEditor;
 

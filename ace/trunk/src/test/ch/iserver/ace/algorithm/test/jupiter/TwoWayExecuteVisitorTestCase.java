@@ -7,7 +7,6 @@ import org.easymock.MockControl;
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.test.AlgorithmTestFactory;
 import ch.iserver.ace.algorithm.test.StartNode;
-import ch.iserver.ace.algorithm.test.jupiter.TwoWayExecuteVisitor;
 
 /**
  * Test case for TwoWayExecuteVisitor.

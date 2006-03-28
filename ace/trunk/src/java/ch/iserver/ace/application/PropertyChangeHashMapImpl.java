@@ -24,7 +24,6 @@ package ch.iserver.ace.application;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
 import javax.swing.SwingUtilities;

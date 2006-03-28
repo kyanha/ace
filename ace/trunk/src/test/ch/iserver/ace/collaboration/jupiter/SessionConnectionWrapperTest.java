@@ -25,7 +25,7 @@ import junit.framework.TestCase;
 
 import org.easymock.MockControl;
 
-import ch.iserver.ace.algorithm.CaretUpdateMessage;
+import ch.iserver.ace.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.RequestImpl;
 import ch.iserver.ace.collaboration.Session;

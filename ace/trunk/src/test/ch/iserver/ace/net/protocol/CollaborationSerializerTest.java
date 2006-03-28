@@ -2,14 +2,13 @@ package ch.iserver.ace.net.protocol;
 
 import java.net.InetAddress;
 
-import org.custommonkey.xmlunit.Diff;
 import org.custommonkey.xmlunit.XMLTestCase;
 
 import ch.iserver.ace.CaretUpdate;
+import ch.iserver.ace.CaretUpdateMessage;
 import ch.iserver.ace.Fragment;
 import ch.iserver.ace.ServerInfo;
 import ch.iserver.ace.UserDetails;
-import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.RequestImpl;
 import ch.iserver.ace.algorithm.Timestamp;

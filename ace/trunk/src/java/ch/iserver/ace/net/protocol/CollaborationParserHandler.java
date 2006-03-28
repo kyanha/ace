@@ -30,7 +30,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import ch.iserver.ace.CaretUpdate;
-import ch.iserver.ace.algorithm.CaretUpdateMessage;
+import ch.iserver.ace.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Operation;
 import ch.iserver.ace.algorithm.Timestamp;
 import ch.iserver.ace.algorithm.TimestampFactory;

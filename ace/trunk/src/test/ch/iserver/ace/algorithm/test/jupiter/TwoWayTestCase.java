@@ -24,7 +24,6 @@ import ch.iserver.ace.algorithm.test.AlgorithmTestFactory;
 import ch.iserver.ace.algorithm.test.ExecuteVisitor;
 import ch.iserver.ace.algorithm.test.ScenarioLoader;
 import ch.iserver.ace.algorithm.test.XMLScenarioLoader;
-import ch.iserver.ace.algorithm.test.jupiter.TwoWayExecuteVisitor;
 
 
 /**

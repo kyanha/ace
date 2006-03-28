@@ -36,7 +36,6 @@ import ch.iserver.ace.net.protocol.ProtocolConstants;
 import ch.iserver.ace.net.protocol.Request;
 import ch.iserver.ace.net.protocol.RequestImpl;
 import ch.iserver.ace.net.protocol.filter.LogFilter;
-import ch.iserver.ace.net.protocol.filter.NullRequestFilter;
 import ch.iserver.ace.net.protocol.filter.RequestFilter;
 import ch.iserver.ace.util.ParameterValidator;
 

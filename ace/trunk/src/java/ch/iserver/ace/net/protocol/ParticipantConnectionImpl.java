@@ -29,8 +29,8 @@ import org.beepcore.beep.core.BEEPException;
 import org.beepcore.beep.core.Channel;
 import org.beepcore.beep.core.ReplyListener;
 
+import ch.iserver.ace.CaretUpdateMessage;
 import ch.iserver.ace.FailureCodes;
-import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.Timestamp;
 import ch.iserver.ace.net.ParticipantConnection;

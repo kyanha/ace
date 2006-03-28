@@ -3,12 +3,6 @@ package ch.iserver.ace.algorithm.test;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-import ch.iserver.ace.algorithm.test.AlgorithmTestFactory;
-import ch.iserver.ace.algorithm.test.DefaultScenarioBuilder;
-import ch.iserver.ace.algorithm.test.ExecuteVisitor;
-import ch.iserver.ace.algorithm.test.Scenario;
-import ch.iserver.ace.algorithm.test.ScenarioLoader;
-
 import junit.framework.TestCase;
 
 /**

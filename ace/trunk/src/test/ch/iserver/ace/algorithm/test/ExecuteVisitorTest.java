@@ -30,17 +30,6 @@ import ch.iserver.ace.algorithm.Operation;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.Timestamp;
 import ch.iserver.ace.algorithm.TransformationException;
-import ch.iserver.ace.algorithm.test.AlgorithmTestFactory;
-import ch.iserver.ace.algorithm.test.DoNode;
-import ch.iserver.ace.algorithm.test.EndNode;
-import ch.iserver.ace.algorithm.test.ExecuteVisitor;
-import ch.iserver.ace.algorithm.test.ReceptionNode;
-import ch.iserver.ace.algorithm.test.RedoNode;
-import ch.iserver.ace.algorithm.test.SimpleReceptionNode;
-import ch.iserver.ace.algorithm.test.StartNode;
-import ch.iserver.ace.algorithm.test.UndoNode;
-import ch.iserver.ace.algorithm.test.VerificationNode;
-import ch.iserver.ace.algorithm.test.VerificationResult;
 
 /**
  * Tests the ExecuteVisitor class.

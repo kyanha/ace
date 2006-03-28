@@ -22,8 +22,8 @@
 package ch.iserver.ace.collaboration.jupiter;
 
 import ch.iserver.ace.CaretUpdate;
+import ch.iserver.ace.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Algorithm;
-import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.TransformationException;
 
 /**

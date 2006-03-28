@@ -1,7 +1,6 @@
 package ch.iserver.ace.algorithm.test;
 
 import junit.framework.TestCase;
-import ch.iserver.ace.algorithm.test.DefaultScenarioBuilder;
 import ch.iserver.ace.algorithm.text.DeleteOperation;
 import ch.iserver.ace.algorithm.text.InsertOperation;
 

@@ -3,8 +3,6 @@ package ch.iserver.ace.net.protocol;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import junit.framework.TestCase;
-
 import org.apache.log4j.Logger;
 import org.custommonkey.xmlunit.XMLTestCase;
 import org.easymock.MockControl;

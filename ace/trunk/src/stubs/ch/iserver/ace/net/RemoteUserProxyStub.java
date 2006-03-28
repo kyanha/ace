@@ -24,8 +24,6 @@ package ch.iserver.ace.net;
 import java.util.Collection;
 
 import ch.iserver.ace.UserDetails;
-import ch.iserver.ace.net.DocumentServerLogic;
-import ch.iserver.ace.net.RemoteUserProxy;
 
 public class RemoteUserProxyStub implements RemoteUserProxy {
 	final String id;

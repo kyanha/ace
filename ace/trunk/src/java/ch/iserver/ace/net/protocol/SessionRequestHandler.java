@@ -30,8 +30,8 @@ import org.beepcore.beep.core.MessageMSG;
 import org.beepcore.beep.core.OutputDataStream;
 import org.beepcore.beep.core.RequestHandler;
 
+import ch.iserver.ace.CaretUpdateMessage;
 import ch.iserver.ace.FailureCodes;
-import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Timestamp;
 import ch.iserver.ace.net.SessionConnectionCallback;
 import ch.iserver.ace.net.core.NetworkProperties;

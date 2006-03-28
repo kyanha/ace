@@ -21,8 +21,8 @@
 
 package ch.iserver.ace.collaboration.jupiter;
 
-import ch.iserver.ace.collaboration.Session;
 import ch.iserver.ace.collaboration.ParticipantSessionCallback;
+import ch.iserver.ace.collaboration.Session;
 import ch.iserver.ace.net.SessionConnection;
 import ch.iserver.ace.net.SessionConnectionCallback;
 

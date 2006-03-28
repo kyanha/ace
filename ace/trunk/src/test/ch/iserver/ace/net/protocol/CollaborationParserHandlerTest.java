@@ -6,7 +6,7 @@ import org.apache.log4j.Logger;
 import org.custommonkey.xmlunit.XMLTestCase;
 
 import ch.iserver.ace.CaretUpdate;
-import ch.iserver.ace.algorithm.CaretUpdateMessage;
+import ch.iserver.ace.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Operation;
 import ch.iserver.ace.algorithm.Timestamp;
 import ch.iserver.ace.algorithm.jupiter.JupiterTimestampFactory;

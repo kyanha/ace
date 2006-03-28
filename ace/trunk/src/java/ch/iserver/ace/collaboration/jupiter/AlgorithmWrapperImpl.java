@@ -25,8 +25,8 @@ import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 
 import ch.iserver.ace.CaretUpdate;
+import ch.iserver.ace.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Algorithm;
-import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Operation;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.Timestamp;

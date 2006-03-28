@@ -13,7 +13,6 @@ import ch.iserver.ace.algorithm.test.AlgorithmTestFactory;
 import ch.iserver.ace.algorithm.test.ReceptionNode;
 import ch.iserver.ace.algorithm.test.RelayNode;
 import ch.iserver.ace.algorithm.test.StartNode;
-import ch.iserver.ace.algorithm.test.jupiter.NWayExecuteVisitor;
 
 /**
  * Test case for the <code>NWayExecuteVisitor</code> class.

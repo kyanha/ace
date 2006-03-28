@@ -21,7 +21,7 @@
 
 package ch.iserver.ace.net;
 
-import ch.iserver.ace.algorithm.CaretUpdateMessage;
+import ch.iserver.ace.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.Timestamp;
 

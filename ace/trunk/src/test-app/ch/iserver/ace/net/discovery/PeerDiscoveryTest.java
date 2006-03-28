@@ -35,14 +35,6 @@ import ch.iserver.ace.net.core.DiscoveryCallback;
 import ch.iserver.ace.net.core.MutableUserDetails;
 import ch.iserver.ace.net.core.RemoteUserProxyExt;
 import ch.iserver.ace.net.core.RemoteUserProxyFactory;
-import ch.iserver.ace.net.core.RemoteUserProxyImpl;
-import ch.iserver.ace.net.discovery.AbstractQueryListener;
-import ch.iserver.ace.net.discovery.Bonjour;
-import ch.iserver.ace.net.discovery.IPQueryListener;
-import ch.iserver.ace.net.discovery.PeerDiscovery;
-import ch.iserver.ace.net.discovery.TXTQueryListener;
-import ch.iserver.ace.net.discovery.UserRegistration;
-import ch.iserver.ace.net.protocol.filter.LogFilter;
 
 import com.apple.dnssd.BrowseListener;
 import com.apple.dnssd.ResolveListener;

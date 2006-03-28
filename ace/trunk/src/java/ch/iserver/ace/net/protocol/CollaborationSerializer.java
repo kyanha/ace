@@ -34,8 +34,8 @@ import org.apache.log4j.Logger;
 import org.xml.sax.helpers.AttributesImpl;
 
 import ch.iserver.ace.CaretUpdate;
+import ch.iserver.ace.CaretUpdateMessage;
 import ch.iserver.ace.ServerInfo;
-import ch.iserver.ace.algorithm.CaretUpdateMessage;
 import ch.iserver.ace.algorithm.Operation;
 import ch.iserver.ace.algorithm.Request;
 import ch.iserver.ace.algorithm.Timestamp;

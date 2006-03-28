@@ -23,9 +23,6 @@ package ch.iserver.ace.net.discovery.dnssd;
 
 import org.apache.log4j.Logger;
 
-import ch.iserver.ace.net.discovery.dnssd.DNSSDCall;
-import ch.iserver.ace.net.discovery.dnssd.DNSSDCallException;
-
 /**
  *
  */
