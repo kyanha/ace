@@ -32,8 +32,7 @@ import ch.iserver.ace.util.ParameterValidator;
 import com.apple.dnssd.DNSSDService;
 import com.apple.dnssd.QueryListener;
 
-import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
-import edu.emory.mathcs.backport.java.util.concurrent.LinkedBlockingQueue;
+import edu.oswego.cs.dl.util.concurrent.FIFOSemaphore;
 
 /**
  * AbstractQueryListener gathers functionality used by all DNSSD query listeners.
@@ -47,14 +46,11 @@ public abstract class AbstractQueryListener extends BaseListenerImpl implements 
 	private static Logger LOG = Logger.getLogger(AbstractQueryListener.class);
 	
 	/**
-	 * A queue to match results of received events to the corresponding services and users, respectively.
-	 */
-	private BlockingQueue serviceQueue;
-	
-	/**
 	 * map used for service name matching
 	 */
 	private Map ids;
+	
+	private FIFOSemaphore semaphore;
 	
 	/**
 	 * Creates a new AbstractQueryListener instance. 
@@ -63,8 +59,9 @@ public abstract class AbstractQueryListener extends BaseListenerImpl implements 
 	 */
 	public AbstractQueryListener(DiscoveryCallbackAdapter adapter) {
 		super(adapter);
-		this.serviceQueue = new LinkedBlockingQueue();
 		this.ids = Collections.synchronizedMap(new HashMap());
+		semaphore = new FIFOSemaphore(0);
+		
 	}
 	
 	/**
@@ -88,7 +85,8 @@ public abstract class AbstractQueryListener extends BaseListenerImpl implements 
 		ParameterValidator.notNull("servicename", servicename);
 		LOG.debug("addService(" + id + ", " + servicename + ")");
 		ids.put(id, servicename);
-//		serviceQueue.add(servicename);
+		LOG.debug("addNextService: semaphore.release()");
+		semaphore.release();
 	}
 	
 	/**
@@ -99,22 +97,15 @@ public abstract class AbstractQueryListener extends BaseListenerImpl implements 
 	 * @return	the next service name
 	 */
 	protected String getNextService(String id) {
-		String result = null;
-//		try {
-			//queue only used for blocking
-//			serviceQueue.take();
-			while (result == null) {
-				result = (String)ids.get(id);
-				if (result == null) {
-					try {
-						LOG.warn("wait for 50 ms to get service name");
-						//TODO: get a more pragmatic solution for this
-						Thread.sleep(50);
-					} catch (InterruptedException ie) {}
-				}
-			}
-//		} catch (InterruptedException ie) {}
-		LOG.debug("getService(" + id + ", " + result + ")");
+		try {
+			LOG.debug("getNextService: --> semaphore.acquire()");
+			semaphore.acquire();
+			LOG.debug("getNextService: <-- semaphore.acquire()");
+		} catch (InterruptedException ie) {
+			LOG.warn("acquiring thread interrupted [" + ie + "] [" + ids.size() + " ids]");
+		}	
+		String result = (String) ids.get(id);
+		LOG.debug("getService(" + id + ") => " + result);
 		return result;
 	}
 	
