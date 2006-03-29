@@ -132,4 +132,11 @@ public interface RemoteUserProxyExt extends RemoteUserProxy {
 	 * @throws DiscoveryException if the discovery fails
 	 */
 	void discover() throws DiscoveryException;
+	
+	/**
+	 * Sets the id of this RemoteUserProxy.
+	 * 
+	 * @param id		the id to set
+	 */
+	void setId(String id);
 }

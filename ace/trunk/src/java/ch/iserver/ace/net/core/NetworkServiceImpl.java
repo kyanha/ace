@@ -364,8 +364,7 @@ public class NetworkServiceImpl implements NetworkServiceExt {
 		}
 		if (goDiscover) {
 			String defaultPort = NetworkProperties.get(NetworkProperties.KEY_PROTOCOL_PORT);
-			ExplicitUserDiscovery userDiscovery = new ExplicitUserDiscovery(callback, addr, Integer.parseInt(defaultPort));
-			userDiscovery.start();
+			new ExplicitUserDiscovery(callback, addr, Integer.parseInt(defaultPort)).start();
 		}
 		LOG.debug("<-- discoverUser()");
 	}

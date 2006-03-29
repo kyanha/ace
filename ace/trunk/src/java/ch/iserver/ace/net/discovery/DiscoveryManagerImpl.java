@@ -134,9 +134,9 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 		Object proxy = remoteUserProxies.get(userId);
 		if (proxy == null) {
 			LOG.warn("proxy for userid="+userId+" not found.");
-			throw new IllegalStateException("proxy for userid="+userId+" not found.");
+		} else {
+			peersWithEstablishedSession.put(userId, proxy);
 		}
-		peersWithEstablishedSession.put(userId, proxy);		
 	}
 
 	/**
@@ -317,12 +317,4 @@ class DiscoveryManagerImpl implements DiscoveryCallbackAdapter, DiscoveryManager
 			LOG.warn("Host address received for unknown user ["+serviceName+"]");
 		}
 	}
-//	
-//	/**
-//	 * @see ch.iserver.ace.net.discovery.DiscoveryCallbackAdapter#isServiceKnown(java.lang.String)
-//	 */
-//	public boolean isServiceKnown(String serviceName) {
-//		return services.containsKey(serviceName);
-//	}
-
 }

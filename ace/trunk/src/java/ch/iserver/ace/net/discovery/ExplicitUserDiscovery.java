@@ -30,7 +30,7 @@ import ch.iserver.ace.net.DiscoveryNetworkCallback;
 import ch.iserver.ace.net.core.MutableUserDetails;
 import ch.iserver.ace.net.core.RemoteUserProxyExt;
 import ch.iserver.ace.net.core.RemoteUserProxyFactory;
-import ch.iserver.ace.net.protocol.DiscoveryException;
+import ch.iserver.ace.net.protocol.SessionManager;
 import ch.iserver.ace.util.ParameterValidator;
 import ch.iserver.ace.util.UUID;
 
@@ -90,16 +90,17 @@ public class ExplicitUserDiscovery extends Thread {
 		proxy.setDNSSDdiscovered(false);
 		
 		try {
-			proxy.discover();
+			proxy.discover(); 
 			DiscoveryManagerFactory.getDiscoveryManager().addUser(proxy);
+			DiscoveryManagerFactory.getDiscoveryManager().setSessionEstablished(proxy.getId());
 			callback.userDiscoverySucceeded();
-		} catch (DiscoveryException ce) {
+			LOG.debug("user discovery succeded.");
+		} catch (Exception ce) {
+			SessionManager.getInstance().removeSession(temporaryID);
 			LOG.debug("could not connect to [" + address + ":" + port + "], explicit user discovery failed");
 			callback.userDiscoveryFailed(FailureCodes.DISCOVERY_FAILED,  address + ":" + port);
 		}
 		
 		LOG.debug("<-- run()");
 	}
-	
-	
 }

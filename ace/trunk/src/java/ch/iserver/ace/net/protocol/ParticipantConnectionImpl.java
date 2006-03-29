@@ -236,13 +236,13 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 		this.port = port;
 		//initiate collaboration channel
 		try {
-			LOG.debug("initiate incoming and outgoing channel to peer "+session.getHost());
+			LOG.debug("initiate incoming and outgoing channel to peer " + session.getHost());
 			//channel for outgoing messages
-			Channel outgoing = session.startChannel(RemoteUserSession.CHANNEL_SESSION, null, getDocumentId());
+			Channel outgoing = session.setUpChannel(RemoteUserSession.CHANNEL_SESSION, null, getDocumentId());
 			setChannel(outgoing);
 			
 			//channel for incoming messages
-			incoming = session.startChannel(RemoteUserSession.CHANNEL_SESSION, this, getDocumentId());
+			incoming = session.setUpChannel(RemoteUserSession.CHANNEL_SESSION, this, getDocumentId());
 			LOG.debug("done.");
 			
 			setState(STATE_ACTIVE);
@@ -291,13 +291,10 @@ public class ParticipantConnectionImpl extends AbstractConnection implements
 				
 				//send via incoming channel so that the channel is set correctly at the receiver site
 				//--> i.e. correct Channel to SessionConnection assignment
-				LOG.debug("use incoming channel to send document");
 				Channel outgoing = getChannel();
 				setChannel(incoming);
 				sendToPeer(data);
 				setChannel(outgoing);
-				LOG.debug("set outgoing channel as default channel again");
-				
 			} else {
 				LOG.warn("cannot send Document, connection is in state " + getStateString());
 			}

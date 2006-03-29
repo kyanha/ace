@@ -33,6 +33,7 @@ import java.util.TimerTask;
 import org.apache.log4j.Logger;
 import org.beepcore.beep.core.BEEPException;
 import org.beepcore.beep.core.Channel;
+import org.beepcore.beep.core.InputDataStream;
 import org.beepcore.beep.core.OutputDataStream;
 import org.beepcore.beep.core.ProfileRegistry;
 import org.beepcore.beep.core.RequestHandler;
@@ -42,6 +43,7 @@ import org.beepcore.beep.transport.tcp.TCPSession;
 import org.beepcore.beep.transport.tcp.TCPSessionCreator;
 
 import ch.iserver.ace.FailureCodes;
+import ch.iserver.ace.ServerInfo;
 import ch.iserver.ace.algorithm.TimestampFactory;
 import ch.iserver.ace.collaboration.Participant;
 import ch.iserver.ace.net.ParticipantPort;
@@ -68,6 +70,12 @@ public class RemoteUserSession {
 	 * constant for channel type <code>main</code>
 	 */
 	public static final String CHANNEL_MAIN = "main";
+	
+	/**
+	 * constant for channel type <code>main</code> but
+	 * connection set up is forced by explicit discovery
+	 */
+	public static final String CHANNEL_DISCOVERY = "discovery";
 	
 	/**
 	 * constant for channel type <code>session</code>
@@ -166,6 +174,7 @@ public class RemoteUserSession {
 		ParameterValidator.notNull("user", user);
 		this.mainConnection = connection;
 		this.user = user;
+		this.host = session.getSocket().getInetAddress();
 		setTCPSession(session);
 		isInitiated = true;
 		isAlive = true;
@@ -192,6 +201,36 @@ public class RemoteUserSession {
 	}
 	
 	/**
+	 * 
+	 * @param isDiscovery
+	 * @return
+	 * @throws ConnectionException
+	 */
+	public synchronized MainConnection startMainConnection(boolean isDiscovery) throws ConnectionException {
+		if (!isAlive)
+			throw new ConnectionException("session has been ended");
+		
+		if (!isInitiated())
+			initiateTCPSession();
+			if (!isDiscovery) {
+				DiscoveryManagerFactory.getDiscoveryManager().setSessionEstablished(user.getId());
+			}
+		if (mainConnection == null) {
+			Channel channel = null;
+			if (isDiscovery) {
+				channel = setUpChannel(CHANNEL_DISCOVERY, null, null);
+			} else {
+				channel = setUpChannel(CHANNEL_MAIN, null, null);
+			}
+			LOG.debug("main channel to ["+user.getUserDetails().getUsername()+"] started");
+			mainConnection = new MainConnection(channel);
+		} else {
+			LOG.debug("main channel to ["+user.getUserDetails().getUsername()+"] available");
+		}
+		return mainConnection;
+	}
+	
+	/**
 	 * Gets the <code>MainConnection</code>. If the session has not been initiated, the
 	 * <code>TCPSession</code> is created and then the <code>MainConnection</code> started.
 	 * Otherwise, the <code>MainConnection</code> is simply returned.
@@ -202,20 +241,8 @@ public class RemoteUserSession {
 	 * @return the MainConnection
 	 * @throws ConnectionException	if the session is shut down
 	 */
-	public synchronized MainConnection getMainConnection() throws ConnectionException {
-		if (!isAlive)
-			throw new ConnectionException("session has been ended");
-		
-		if (!isInitiated())
-			initiateTCPSession();
-		if (mainConnection == null) {
-			Channel channel = startChannel(CHANNEL_MAIN, null, null);
-			LOG.debug("main channel to ["+user.getUserDetails().getUsername()+"] started");
-			mainConnection = new MainConnection(channel);
-		} else {
-			LOG.debug("main channel to ["+user.getUserDetails().getUsername()+"] available");
-		}
-		return mainConnection;
+	public MainConnection getMainConnection() throws ConnectionException {
+		return startMainConnection(false);
 	}
 	
 	/**
@@ -228,8 +255,80 @@ public class RemoteUserSession {
 	 * @return	the created Channel
 	 * @throws ConnectionException	if an error occurs
 	 */
-	public Channel startChannel(String type, ParticipantConnectionImpl connection, String docId) throws ConnectionException {
-		return startChannelImpl(type, connection, docId);
+	public Channel setUpChannel(String type, ParticipantConnectionImpl connection, String docId) throws ConnectionException {
+		LOG.debug("--> setUpChannel(type="+type+")");
+		Channel channel = startChannel(type, connection);
+		
+		try {
+			String channelType = getChannelTypeXML(type, docId);
+			byte[] data = channelType.getBytes(NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
+			OutputDataStream output = DataStreamHelper.prepare(data);
+			LOG.debug("--> sendMSG() for channel type");
+			Reply reply = new Reply();
+			channel.sendMSG(output, reply);
+			if (type.equals(CHANNEL_DISCOVERY)) {
+				InputDataStream response = reply.getNextReply().getDataStream();
+				byte[] rawData = DataStreamHelper.read(response);
+				ResponseParserHandler handler = new ResponseParserHandler();
+				DeserializerImpl.getInstance().deserialize(rawData, handler);
+				Request result = handler.getResult();
+				if (result.getType() == ProtocolConstants.USER_DISCOVERY) {
+					getUser().setId(result.getUserId());
+					String name = (String) result.getPayload();
+					getUser().getMutableUserDetails().setUsername(name);
+				} else { //only for debugging
+					LOG.error("unknown response type parsed.");
+				}
+			} else {
+				reply.getNextReply(); //wait for synchronous response
+			}
+			LOG.debug("<-- sendMSG()");
+			LOG.debug("<-- setUpChannel()");
+			return channel;
+		} catch (Exception be) {
+			LOG.error("could not start channel ["+be+"]");
+			throw new ConnectionException("could not start channel");
+		}
+	}
+	
+	/**
+	 * Starts a new Channel to the remote user using this session. The channel is configured with
+	 * the appropriate request handler according to the given <code>type</code> but no message is sent to
+	 * the peer.
+	 * 
+	 * @param type
+	 * @param connection
+	 * @param docId
+	 * @return
+	 * @throws ConnectionException
+	 */
+	private Channel startChannel(String type, ParticipantConnectionImpl connection) throws ConnectionException {
+		try {
+			RequestHandler handler = null;
+			if (type == CHANNEL_MAIN) {
+				handler = ProfileRegistryFactory.getMainRequestHandler();
+			} else if (type == CHANNEL_SESSION) {
+				CollaborationDeserializer deserializer = new CollaborationDeserializer();
+				CollaborationParserHandler parserHandler = new CollaborationParserHandler();
+				parserHandler.setTimestampFactory(getTimestampFactory());
+				NetworkServiceExt service = NetworkServiceImpl.getInstance();
+				ParticipantRequestHandler pHandler = new ParticipantRequestHandler(deserializer, getTimestampFactory(), service);
+				if (connection != null) {
+					pHandler.setParticipantConnection(connection);
+					pHandler.setParticipantPort(connection.getParticipantPort());
+				}
+				handler = (RequestHandler) domain.wrap(pHandler, RequestHandler.class);
+			} else {
+				//TODO: proxy channel?
+				throw new IllegalStateException("unknown channel type ["+type+"]");
+			}
+			String uri = NetworkProperties.get(NetworkProperties.KEY_PROFILE_URI);
+			Channel channel = session.startChannel(uri, handler);
+			return channel;
+		} catch (Exception be) {
+			LOG.error("could not start channel ["+be+"]");
+			throw new ConnectionException("could not start channel");
+		}
 	}
 	
 	/********************************************/
@@ -503,7 +602,6 @@ public class RemoteUserSession {
 			LOG.debug("initiated session.");
 			setTCPSession( newSession );
 			isInitiated = true;
-			DiscoveryManagerFactory.getDiscoveryManager().setSessionEstablished(user.getId());
 		} catch (BEEPException be) {
 			LOG.error("could not initiate session ["+be+"]");
 			if (be.getCause() instanceof ConnectException) {
@@ -516,60 +614,6 @@ public class RemoteUserSession {
 	}
 	
 	/**
-	 * Starts a channel to this remote user. The channel is configured with
-	 * the appropriate request handler according to the given <code>type</code>.
-	 * The peer is also sent a channel message containing the <code>type</code> of the 
-	 * channel so that the peer can associate the channel with the correct request 
-	 * handler.
-	 * 
-	 * @param type		the type of the channel
-	 * @param connection	the ParticipantConnectionImpl (optional)	
-	 * @param docId		the document id (optional, only for ParticipantConnections)
-	 * @return	the created Channel
-	 * @throws ConnectionException	if an error occurs
-	 */
-	private Channel startChannelImpl(String type, ParticipantConnectionImpl connection, String docId) throws ConnectionException {
-		try {
-			String uri = NetworkProperties.get(NetworkProperties.KEY_PROFILE_URI);
-			LOG.debug("startChannel(type="+type+")");
-			
-			RequestHandler handler = null;
-			String channelType;
-			if (type == CHANNEL_MAIN) {
-				handler = ProfileRegistryFactory.getMainRequestHandler();
-				channelType = getChannelTypeXML(CHANNEL_MAIN, null);
-			} else if (type == CHANNEL_SESSION) {
-				CollaborationDeserializer deserializer = new CollaborationDeserializer();
-				CollaborationParserHandler parserHandler = new CollaborationParserHandler();
-				parserHandler.setTimestampFactory(getTimestampFactory());
-				NetworkServiceExt service = NetworkServiceImpl.getInstance();
-				ParticipantRequestHandler pHandler = new ParticipantRequestHandler(deserializer, getTimestampFactory(), service);
-				if (connection != null) {
-					pHandler.setParticipantConnection(connection);
-					pHandler.setParticipantPort(connection.getParticipantPort());
-				}
-				handler = (RequestHandler) domain.wrap(pHandler, RequestHandler.class);
-				channelType = getChannelTypeXML(CHANNEL_SESSION, docId);
-			} else {
-				//TODO: proxy channel?
-				throw new IllegalStateException("unknown channel type ["+type+"]");
-			}
-			Channel channel = session.startChannel(uri, handler);
-			byte[] data = channelType.getBytes(NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
-			OutputDataStream output = DataStreamHelper.prepare(data);
-			LOG.debug("--> sendMSG() for channel type");
-			Reply reply = new Reply();
-			channel.sendMSG(output, reply);
-			reply.getNextReply(); //wait for synchronous response
-			LOG.debug("<-- sendMSG()");
-			return channel;
-		} catch (Exception be) {
-			LOG.error("could not start channel ["+be+"]");
-			throw new ConnectionException("could not start channel");
-		}
-	}
-	
-	/**
 	 * Returns the XML message to send to the peer after initialization 
 	 * of the channel.
 	 * 
@@ -578,14 +622,25 @@ public class RemoteUserSession {
 	 * @return	the XML message
 	 */
 	private String getChannelTypeXML(String type, String docId) {
-		String result = "";
+		//TODO: generate XML using a serializer
+		String result = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 		if (type.equals(CHANNEL_MAIN)) {
-			result = "<ace><channel type=\"" + type + "\"/></ace>";
+			result += "<ace><channel type=\"" + type + "\"/></ace>";
+		} else if (type.equals(CHANNEL_DISCOVERY)) {
+			NetworkServiceImpl service = NetworkServiceImpl.getInstance();
+			String userid = service.getUserId();
+			String username = service.getUserDetails().getUsername();
+			ServerInfo info = service.getServerInfo();
+			String address = info.getAddress().getHostAddress();
+			String port = Integer.toString(info.getPort());
+			String user = "<user id=\"" + userid + "\" name=\"" + username + "\" address=\"" + address + "\" port=\"" + port + "\"/>";
+			result = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+					"<ace><channel type=\"" + CHANNEL_MAIN + "\">" + user + "</channel></ace>";
 		} else if (type.equals(CHANNEL_SESSION)) {
 			String id = NetworkServiceImpl.getInstance().getUserId();
-			result = "<ace><channel type=\"" + type + "\" docId=\"" + docId + "\" userid=\"" + id + "\"/></ace>";
+			result += "<ace><channel type=\"" + type + "\" docId=\"" + docId + "\" userid=\"" + id + "\"/></ace>";
 		}
 		 
-		 return result;
+		return result;
 	}
 }

@@ -25,25 +25,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.beepcore.beep.core.Channel;
-import org.beepcore.beep.core.InputDataStream;
-import org.beepcore.beep.core.OutputDataStream;
-import org.beepcore.beep.core.ProfileRegistry;
-import org.beepcore.beep.core.RequestHandler;
-import org.beepcore.beep.lib.Reply;
-import org.beepcore.beep.transport.tcp.TCPSession;
-import org.beepcore.beep.transport.tcp.TCPSessionCreator;
 
-import ch.iserver.ace.ServerInfo;
 import ch.iserver.ace.UserDetails;
-import ch.iserver.ace.net.protocol.DataStreamHelper;
-import ch.iserver.ace.net.protocol.DeserializerImpl;
 import ch.iserver.ace.net.protocol.DiscoveryException;
-import ch.iserver.ace.net.protocol.ProfileRegistryFactory;
-import ch.iserver.ace.net.protocol.ProtocolConstants;
 import ch.iserver.ace.net.protocol.RemoteUserSession;
-import ch.iserver.ace.net.protocol.Request;
-import ch.iserver.ace.net.protocol.ResponseParserHandler;
 import ch.iserver.ace.net.protocol.SessionManager;
 import ch.iserver.ace.util.ParameterValidator;
 
@@ -125,6 +110,31 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 	/**
 	 * {@inheritDoc}
 	 */
+	public void discover() throws DiscoveryException {
+		if (!isDNSSDdiscovered() && !isSessionEstablished()) {
+			try {
+				RemoteUserSession session = SessionManager.getInstance().createSession(this);
+				boolean isDiscovery = true;
+				session.startMainConnection(isDiscovery);
+			} catch (Exception e) {
+				throw new DiscoveryException(e);
+			}
+		} else {
+			LOG.warn("not going to discover user, is not explicitly discovered or session already established");
+		}
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setId(String id) {
+		ParameterValidator.notNull("id", id);
+		this.id = id;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean hasDocumentShared(String id) {
 		return documents.containsKey(id);
 	}
@@ -200,67 +210,6 @@ public class RemoteUserProxyImpl implements RemoteUserProxyExt {
 	 */
 	public boolean isDNSSDdiscovered() {
 		return isDNSSDdiscovered;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void discover() throws DiscoveryException {
-		LOG.debug("--> discover()");
-		if (!isDNSSDdiscovered() && !isSessionEstablished()) {
-			try {
-				/** TODO: pack into RemoteUserSession -> MainConnection **/
-				ProfileRegistry registry = ProfileRegistryFactory.getProfileRegistry();
-				MutableUserDetails theDetails = getMutableUserDetails();
-				LOG.debug("initiate session to " + theDetails.getAddress());
-				//TODO: TTL is set to around 3 minutes, maybe lower this setting if possible (e.g. to 1 minute)
-				TCPSession session =  TCPSessionCreator.initiate(
-					theDetails.getAddress(), theDetails.getPort(), registry);
-				LOG.debug("initiate session succeded.");
-				String uri = NetworkProperties.get(NetworkProperties.KEY_PROFILE_URI);
-				RequestHandler requestHandler = ProfileRegistryFactory.getMainRequestHandler();
-				Channel channel = session.startChannel(uri, requestHandler);				
-				/** pack **/
-				
-				NetworkServiceImpl service = NetworkServiceImpl.getInstance();
-				String userid = service.getUserId();
-				String username = service.getUserDetails().getUsername();
-				ServerInfo info = service.getServerInfo();
-				String address = info.getAddress().getHostAddress();
-				String port = Integer.toString(info.getPort());
-				//TODO: generate XML using a serializer
-				String user = "<user id=\"" + userid + "\" name=\"" + username + "\" address=\"" + address + "\" port=\"" + port + "\"/>";
-				String channelType = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-						"<ace><channel type=\"" + RemoteUserSession.CHANNEL_MAIN + "\">" + user + "</channel></ace>";
-				byte[] data = channelType.getBytes(NetworkProperties.get(NetworkProperties.KEY_DEFAULT_ENCODING));
-				OutputDataStream output = DataStreamHelper.prepare(data);
-				Reply reply = new Reply();
-				channel.sendMSG(output, reply);
-				
-				//process response
-				LOG.debug("--> getReply()");
-				InputDataStream response = reply.getNextReply().getDataStream();
-				LOG.debug("<-- getReply()");
-				byte[] rawData = DataStreamHelper.read(response);
-				ResponseParserHandler handler = new ResponseParserHandler();
-				DeserializerImpl.getInstance().deserialize(rawData, handler);
-				Request result = handler.getResult();
-				if (result.getType() == ProtocolConstants.USER_DISCOVERY) {
-					id = result.getUserId();
-					String name = (String) result.getPayload();
-					getMutableUserDetails().setUsername(name);
-				} else { //only for debugging
-					LOG.error("unknown response type parsed.");
-				}
-				SessionManager.getInstance().createSession(this, session, channel);
-				LOG.debug("user discovery succeded.");
-			} catch (Exception e) {
-				throw new DiscoveryException(e);
-			}
-		} else {
-			LOG.debug("not going to discover user, is not explicitly discovered or session already established");
-		}
-		LOG.debug("<-- discover()");
 	}
 	
 	/**

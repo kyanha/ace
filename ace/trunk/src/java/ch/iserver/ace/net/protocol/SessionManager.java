@@ -88,6 +88,7 @@ public class SessionManager {
 	 */
 	public RemoteUserSession createSession(RemoteUserProxyExt user) {
 		String id = user.getId();
+		LOG.debug("create session for [" + id + "]");
 		MutableUserDetails details = user.getMutableUserDetails();
 		RemoteUserSession newSession = new RemoteUserSession(details.getAddress(), details.getPort(), user);
 		newSession.setTimestampFactory(factory);
@@ -104,15 +105,18 @@ public class SessionManager {
 	 * @return	the created RemoteUserSession
 	 */
 	public RemoteUserSession createSession(RemoteUserProxyExt user, TCPSession session, Channel mainChannel) {
+		String id = user.getId();
+		LOG.debug("create session for [" + id + "]");
 		RemoteUserSession newSession = new RemoteUserSession(session, new MainConnection(mainChannel), user);
 		newSession.setTimestampFactory(factory);
-		sessions.put(user.getId(), newSession);
+		sessions.put(id, newSession);
 		//TODO: test discoveryManager
 		DiscoveryManagerFactory.getDiscoveryManager().setSessionEstablished(user.getId());
 		return newSession;
 	}
 	
 	public RemoteUserSession removeSession(String userid) {
+		LOG.debug("remove session of [" + userid + "]");
 		return (RemoteUserSession) sessions.remove(userid);
 	}
 	
