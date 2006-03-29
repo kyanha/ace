@@ -22,6 +22,7 @@
 package ch.iserver.ace.net.protocol;
 
 import org.apache.log4j.Logger;
+import org.beepcore.beep.core.BEEPException;
 import org.beepcore.beep.core.Channel;
 import org.beepcore.beep.core.ReplyListener;
 
@@ -93,10 +94,6 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 		LOG.debug("--> cleanup()");
 		serializer = null;
 		setReplyListener(null);
-		Channel channel = getChannel();
-		if (channel != null) {
-			channel.setRequestHandler(null);
-		}
 		//TODO: check if a thread is waiting in method AbstractConnection.send(),
 		//if so interrupt it, because setChannel, setState and send are synchronized -> deadlock 
 		//-> check with raess
@@ -104,6 +101,17 @@ public class SessionConnectionImpl extends AbstractConnection implements Session
 		if (t != null) {
 			LOG.debug("interrupt sending thread [" + t.getName() + "]");
 			t.interrupt();
+		}
+		try {
+			Channel channel = getChannel();
+			if (channel != null) {
+				channel.setRequestHandler(null);
+				LOG.debug("--> channel.close()");
+				channel.close();
+				LOG.debug("<-- channel.close()");
+			}
+		} catch (BEEPException be) {
+			LOG.warn("could not close channel ["+be.getMessage()+"]");
 		}
 		setChannel(null);
 		setState(STATE_CLOSED);
