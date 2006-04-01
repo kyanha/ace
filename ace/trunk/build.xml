@@ -39,6 +39,9 @@
 	<artifact:remoteRepository id="remote.repository.maven" url="http://repo1.maven.org/maven2"/>
 	
 	<artifact:dependencies pathId="dependency.classpath" filesetid="dependency.fileset">
+		<dependency groupId="ch.iserver.ace" 
+		            artifactId="algorithms" 
+		            version="0.9"/>
 		<dependency groupId="jdom" 
 		            artifactId="jdom" 
 		            version="1.0"/>
