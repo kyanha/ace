@@ -4,7 +4,7 @@
   <groupId>ch.iserver.ace</groupId>
   <artifactId>algorithms</artifactId>
   <packaging>jar</packaging>
-  <version>0.9</version>
+  <version>0.9.1-SNAPSHOT</version>
   <name>ACE Operational Transformation Algorithms</name>
   <url>http://ace.iserver.ch/</url>
   <dependencies>
@@ -56,4 +56,10 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+  <distributionManagement>
+    <repository>
+      <id>ace-repository</id>
+      <url>scp://ace.iserver.ch/home/ace/ace.iserver.ch/www/maven2/</url>
+    </repository>
+  </distributionManagement>
 </project>
