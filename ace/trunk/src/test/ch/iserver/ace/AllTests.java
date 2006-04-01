@@ -29,7 +29,6 @@ public class AllTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for ch.iserver.ace");
 		//$JUnit-BEGIN$
-		suite.addTest(ch.iserver.ace.algorithm.jupiter.AllTests.suite());
 		suite.addTest(ch.iserver.ace.application.AllTests.suite());
 		suite.addTest(ch.iserver.ace.collaboration.jupiter.AllTests.suite());
 		suite.addTest(ch.iserver.ace.collaboration.jupiter.server.AllTests.suite());
@@ -37,9 +36,6 @@ public class AllTests {
 		suite.addTest(ch.iserver.ace.net.core.AllTests.suite());
 		suite.addTest(ch.iserver.ace.net.discovery.AllTests.suite());
 		suite.addTest(ch.iserver.ace.net.protocol.AllTests.suite());
-		suite.addTest(ch.iserver.ace.algorithm.test.AllTests.suite());
-		suite.addTest(ch.iserver.ace.algorithm.test.jupiter.AllTests.suite());
-		suite.addTest(ch.iserver.ace.algorithm.text.AllTests.suite());
 		suite.addTest(ch.iserver.ace.util.AllTests.suite());
 		//$JUnit-END$
 		return suite;
