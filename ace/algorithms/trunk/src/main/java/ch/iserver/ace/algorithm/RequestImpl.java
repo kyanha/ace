@@ -21,7 +21,6 @@
 
 package ch.iserver.ace.algorithm;
 
-import ch.iserver.ace.util.CompareUtil;
 
 /**
  * Default implementation of the Request interface.
@@ -86,10 +85,20 @@ public class RequestImpl implements Request {
 		} else if (obj instanceof Request) {
 			Request request = (Request) obj;
 			return siteId == request.getSiteId()
-			       && CompareUtil.nullSafeEquals(timestamp, request.getTimestamp())
-			       && CompareUtil.nullSafeEquals(operation, request.getOperation());
+			       && nullSafeEquals(timestamp, request.getTimestamp())
+			       && nullSafeEquals(operation, request.getOperation());
 		} else {
 			return false;
+		}
+	}
+	
+	private boolean nullSafeEquals(Object o1, Object o2) {
+		if (o1 == o2) {
+			return true;
+		} else if (o1 == null || o2 == null) {
+			return false;
+		} else {
+			return o1.equals(o2);
 		}
 	}
 		
