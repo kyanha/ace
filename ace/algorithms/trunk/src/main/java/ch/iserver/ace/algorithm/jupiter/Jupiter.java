@@ -27,8 +27,6 @@ import java.util.List;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 
-import org.apache.log4j.Logger;
-
 import ch.iserver.ace.algorithm.Algorithm;
 import ch.iserver.ace.algorithm.InclusionTransformation;
 import ch.iserver.ace.algorithm.Operation;
@@ -43,12 +41,7 @@ import ch.iserver.ace.algorithm.text.SplitOperation;
  * This class implements the client-side core of the Jupiter control algorithm.
  */
 public class Jupiter implements Algorithm {
-
-	/**
-	 * Logger used by instances of this class.
-	 */
-	private static final Logger LOG = Logger.getLogger(Jupiter.class);
-
+	
 	/**
 	 * The inclusion transformation function used to transform operations.
 	 */
@@ -119,25 +112,17 @@ public class Jupiter implements Algorithm {
 	 * @see ch.iserver.ace.algorithm.Algorithm#receiveRequest(ch.iserver.ace.algorithm.Request)
 	 */
 	public Operation receiveRequest(Request req) throws TransformationException {
-		LOG.info(">>> recv");
 		Timestamp timestamp = req.getTimestamp();
 		if (!(timestamp instanceof JupiterVectorTime)) {
 			throw new IllegalArgumentException("Jupiter expects timestamps of type JupiterVectorTime");
 		}
+		
 		checkPreconditions((JupiterVectorTime) timestamp);
-		LOG.info("ini:" + ackRequestList);
-
-		// Discard acknowledged messages.
-		discardOperations((JupiterVectorTime) timestamp);
-
-		LOG.info("dsc:" + ackRequestList);
+		discardAcknowledgedOperations((JupiterVectorTime) timestamp);
 
 		Operation newOp = transform(req.getOperation());
-
-		LOG.info("tnf:" + ackRequestList);
-
 		vectorTime.incrementRemoteRequestCount();
-		LOG.info("<<< recv");
+		
 		return newOp;
 	}
 	
@@ -145,7 +130,7 @@ public class Jupiter implements Algorithm {
 	 * @see ch.iserver.ace.algorithm.Algorithm#acknowledge(int, ch.iserver.ace.algorithm.Timestamp)
 	 */
 	public void acknowledge(int siteId, Timestamp timestamp) throws TransformationException {
-		discardOperations((JupiterVectorTime) timestamp);
+		discardAcknowledgedOperations((JupiterVectorTime) timestamp);
 	}
 	
 	/**
@@ -153,7 +138,7 @@ public class Jupiter implements Algorithm {
 	 */
 	public int[] transformIndices(Timestamp timestamp, int[] indices) throws TransformationException {
 		checkPreconditions((JupiterVectorTime) timestamp);
-		discardOperations((JupiterVectorTime) timestamp);
+		discardAcknowledgedOperations((JupiterVectorTime) timestamp);
 		int[] result = new int[indices.length]; 
 		System.arraycopy(indices, 0, result, 0, indices.length);
 		for (int i = 0; i < ackRequestList.size(); i++) {
@@ -186,7 +171,7 @@ public class Jupiter implements Algorithm {
 	 * 
 	 * @param time the request to the remote operation count from
 	 */
-	private void discardOperations(JupiterVectorTime time) {
+	private void discardAcknowledgedOperations(JupiterVectorTime time) {
 		Iterator iter = ackRequestList.iterator();
 		while (iter.hasNext()) {
 			OperationWrapper wrap = (OperationWrapper) iter.next();
