@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package ch.iserver.ace.net.bonjour;
+package ch.iserver.ace.net.jmdns;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -27,40 +27,27 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import com.apple.dnssd.DNSSD;
-import com.apple.dnssd.DNSSDException;
-import com.apple.dnssd.DNSSDRegistration;
-import com.apple.dnssd.DNSSDService;
-import com.apple.dnssd.RegisterListener;
+import javax.jmdns.JmDNS;
+import javax.jmdns.ServiceInfo;
 
 /**
  * 
  */
-public class EchoServer implements RegisterListener {
-	private DNSSDRegistration registration;
+public class EchoServer {
 
 	private ServerSocket serverSocket;
 	
 	private int localPort;
 
-	public EchoServer(int port) throws IOException, DNSSDException {
+	public EchoServer(int port) throws IOException {
 		serverSocket = new ServerSocket(port);
 		localPort = serverSocket.getLocalPort();
 		System.out.println("... server started at " + localPort);
 		System.out.println("... registering service");
-		registration = DNSSD.register(0, 0, null,
-				EchoConstants.REGISTRY_TYPE, "", null, localPort,
-				null, this);
-	}
-
-	public void operationFailed(DNSSDService service, int errorCode) {
-		System.err.println("Service reported error: " + errorCode);
-	}
-
-	public void serviceRegistered(DNSSDRegistration registration, int flags,
-			String serviceName, String type, String domain) {
-		System.out.println("... service started: " + serviceName);
-		start();
+		JmDNS jmdns = new JmDNS();
+		ServiceInfo info = new ServiceInfo(EchoConstants.REGISTRY_TYPE, "echo-server", 
+				localPort, 0, 0, "version=1.0");
+		jmdns.registerService(info);
 	}
 
 	public void start() {

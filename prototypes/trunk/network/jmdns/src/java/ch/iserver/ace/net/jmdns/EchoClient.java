@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package ch.iserver.ace.net.bonjour;
+package ch.iserver.ace.net.jmdns;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
