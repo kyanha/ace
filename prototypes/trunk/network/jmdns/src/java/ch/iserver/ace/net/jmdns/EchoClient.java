@@ -30,6 +30,9 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 
+import javax.jmdns.JmDNS;
+import javax.jmdns.ServiceEvent;
+import javax.jmdns.ServiceListener;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -37,22 +40,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import com.apple.dnssd.DNSSD;
-import com.apple.dnssd.DNSSDException;
-import com.apple.dnssd.DNSSDService;
-import com.apple.dnssd.QueryListener;
-import com.apple.dnssd.ResolveListener;
-import com.apple.dnssd.TXTRecord;
-
-/**
- * 
- */
-public class EchoClient extends JFrame implements ActionListener,
-		ResolveListener {
-	private DNSSDService browser;
-
-	private DNSSDService resolver;
-
+public class EchoClient extends JFrame implements ActionListener, ServiceListener {
 	private JComboBox targetPicker;
 
 	private DefaultComboBoxModel targetModel;
@@ -61,13 +49,14 @@ public class EchoClient extends JFrame implements ActionListener,
 	
 	private JTextArea textArea;
 
-	public EchoClient() throws DNSSDException {
+	public EchoClient() throws IOException {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 
 		System.out.println("... browsing for services");
 		targetModel = new DefaultComboBoxModel();
-		browser = DNSSD.browse(0, 0, EchoConstants.REGISTRY_TYPE, "",
-				null);
+		
+		JmDNS jmdns = new JmDNS();
+		jmdns.addServiceListener(EchoConstants.REGISTRY_TYPE, this);
 
 		JPanel pane = new JPanel(new BorderLayout());
 		
@@ -88,6 +77,18 @@ public class EchoClient extends JFrame implements ActionListener,
 		setSize(600, 300);
 		setVisible(true);
 	}
+	
+	public void serviceAdded(ServiceEvent event) {
+		System.out.println("... added " + event);
+	}
+	
+	public void serviceRemoved(ServiceEvent event) {
+		System.out.println("... removed " + event);
+	}
+	
+	public void serviceResolved(ServiceEvent event) {
+		System.out.println("... resolved " + event);
+	}
 
 	public void actionPerformed(ActionEvent e) {
 //		TargetListElement sel = (TargetListElement) targetPicker.getSelectedItem();
@@ -99,47 +100,6 @@ public class EchoClient extends JFrame implements ActionListener,
 //				ex.printStackTrace();
 //			}
 //		}
-	}
-	
-	public void operationFailed(DNSSDService service, int errorCode) {
-		System.err.println("Service reported error: " + errorCode);
-	}
-
-	public void serviceResolved(DNSSDService resolver, int flags, int ifidx,
-			String fullName, String hostName, int port, TXTRecord txtrecord) {
-		System.out.println("... resolved service: " + fullName + " @ "
-				+ hostName + ":" + port);
-		try {
-			DNSSD.queryRecord(flags, ifidx, hostName, 1, 1,
-					new SimpleQueryListener(port));
-		} catch (DNSSDException e) {
-			e.printStackTrace();
-		} finally {
-			resolver.stop();
-		}
-	}
-
-	private class SimpleQueryListener implements QueryListener {
-		private int port;
-
-		public SimpleQueryListener(int port) {
-			this.port = port;
-		}
-
-		public void operationFailed(DNSSDService service, int errorCode) {
-			System.out.println("... operation failed: " + errorCode);
-		}
-
-		public void queryAnswered(DNSSDService query, int flags, int ifidx,
-				String fullName, int rrtype, int rrclass, byte[] rdata, int ttl) {
-			System.out.println("... query answered: " + fullName);
-			try {
-				InetAddress addr = InetAddress.getByAddress(rdata);
-				doRequest(addr, port);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
 	}
 
 	public void doRequest(InetAddress addr, int port) throws IOException {
@@ -161,7 +121,7 @@ public class EchoClient extends JFrame implements ActionListener,
 		}
 	}
 
-	public static void main(String[] args) throws DNSSDException {
+	public static void main(String[] args) throws Exception {
 		EchoClient client = new EchoClient();
 	}
 

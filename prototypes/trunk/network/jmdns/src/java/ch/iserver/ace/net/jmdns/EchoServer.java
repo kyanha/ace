@@ -39,12 +39,14 @@ public class EchoServer {
 	
 	private int localPort;
 
+	private JmDNS jmdns;
+
 	public EchoServer(int port) throws IOException {
 		serverSocket = new ServerSocket(port);
 		localPort = serverSocket.getLocalPort();
 		System.out.println("... server started at " + localPort);
 		System.out.println("... registering service");
-		JmDNS jmdns = new JmDNS();
+		jmdns = new JmDNS();
 		ServiceInfo info = new ServiceInfo(EchoConstants.REGISTRY_TYPE, "echo-server", 
 				localPort, 0, 0, "version=1.0");
 		jmdns.registerService(info);
@@ -55,11 +57,13 @@ public class EchoServer {
 		try {
 			while (true) {
 				Socket clientSocket = serverSocket.accept();
+				System.out.println("... client connected: " + clientSocket.getRemoteSocketAddress());
 				BufferedReader reader = new BufferedReader(
 						new InputStreamReader(clientSocket.getInputStream()));
 				PrintWriter writer = new PrintWriter(clientSocket
 						.getOutputStream(), true);
 				String line = reader.readLine();
+				System.out.println("... received line: " + line);
 				writer.println(line);
 				reader.close();
 				writer.close();
@@ -69,9 +73,22 @@ public class EchoServer {
 			e.printStackTrace();
 		}
 	}
+	
+	public void stop() {
+		System.out.println("... stopping server");
+		jmdns.close();
+		System.out.println("... closed JmDNS");
+		jmdns = null;
+	}
 
 	public static void main(String[] args) throws Exception {
 		EchoServer server = new EchoServer(0);
+		server.start();
+		
+		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+		reader.readLine();
+		
+		server.stop();
 	}
 
 }
