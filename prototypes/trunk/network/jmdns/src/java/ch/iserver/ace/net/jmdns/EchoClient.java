@@ -30,6 +30,7 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -54,7 +55,7 @@ public class EchoClient extends JFrame implements ActionListener,
 
 	private JComboBox targetPicker;
 
-	private TargetListModel targetModel;
+	private DefaultComboBoxModel targetModel;
 	
 	private JTextField textField;
 	
@@ -64,9 +65,9 @@ public class EchoClient extends JFrame implements ActionListener,
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 
 		System.out.println("... browsing for services");
-		targetModel = new TargetListModel();
+		targetModel = new DefaultComboBoxModel();
 		browser = DNSSD.browse(0, 0, EchoConstants.REGISTRY_TYPE, "",
-				new SwingBrowseListener(targetModel));
+				null);
 
 		JPanel pane = new JPanel(new BorderLayout());
 		
@@ -89,15 +90,15 @@ public class EchoClient extends JFrame implements ActionListener,
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		TargetListElement sel = (TargetListElement) targetPicker.getSelectedItem();
-		if (sel != null) {
-			try {
-				resolver = DNSSD.resolve(0, sel.getIfidx(), sel.getServiceName(), 
-						sel.getType(), sel.getDomain(), this);
-			} catch (DNSSDException ex) {
-				ex.printStackTrace();
-			}
-		}
+//		TargetListElement sel = (TargetListElement) targetPicker.getSelectedItem();
+//		if (sel != null) {
+//			try {
+//				resolver = DNSSD.resolve(0, sel.getIfidx(), sel.getServiceName(), 
+//						sel.getType(), sel.getDomain(), this);
+//			} catch (DNSSDException ex) {
+//				ex.printStackTrace();
+//			}
+//		}
 	}
 	
 	public void operationFailed(DNSSDService service, int errorCode) {

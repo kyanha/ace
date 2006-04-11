@@ -6,7 +6,9 @@
 	<property name="src.java" value="${src.dir}/java"/>
 	
 	<path id="build.classpath">
-		
+		<fileset dir=".">
+			<include name="jmdns.jar"/>
+		</fileset>
 	</path>
 
 	<path id="run.classpath">
@@ -38,13 +40,13 @@
 	
 	<target name="run-server" depends="compile">
 		<antcall target="run">
-			<param name="class" value="ch.iserver.ace.net.bonjour.EchoServer"/>
+			<param name="class" value="ch.iserver.ace.net.jmdns.EchoServer"/>
 		</antcall>
 	</target>
 	
 	<target name="run-client" depends="compile">
 		<antcall target="run">
-			<param name="class" value="ch.iserver.ace.net.bonjour.EchoClient"/>
+			<param name="class" value="ch.iserver.ace.net.jmdns.EchoClient"/>
 		</antcall>
 	</target>
 	

@@ -48,6 +48,7 @@ public class EchoServer {
 		ServiceInfo info = new ServiceInfo(EchoConstants.REGISTRY_TYPE, "echo-server", 
 				localPort, 0, 0, "version=1.0");
 		jmdns.registerService(info);
+		System.out.println("... registered service");
 	}
 
 	public void start() {

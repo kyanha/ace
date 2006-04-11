@@ -27,6 +27,6 @@ public class EchoConstants {
 
 	private EchoConstants() { }
 	
-	public static final String REGISTRY_TYPE = "_echo._tcp";
+	public static final String REGISTRY_TYPE = "_echo._tcp.local.";
 	
 }
