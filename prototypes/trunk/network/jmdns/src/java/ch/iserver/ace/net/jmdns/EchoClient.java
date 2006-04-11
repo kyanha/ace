@@ -39,6 +39,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 public class EchoClient extends JFrame implements ActionListener, ServiceListener {
 	private JComboBox targetPicker;
@@ -49,13 +50,15 @@ public class EchoClient extends JFrame implements ActionListener, ServiceListene
 	
 	private JTextArea textArea;
 
+	private JmDNS jmdns;
+
 	public EchoClient() throws IOException {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 
 		System.out.println("... browsing for services");
 		targetModel = new DefaultComboBoxModel();
 		
-		JmDNS jmdns = new JmDNS();
+		jmdns = new JmDNS();
 		jmdns.addServiceListener(EchoConstants.REGISTRY_TYPE, this);
 
 		JPanel pane = new JPanel(new BorderLayout());
@@ -78,28 +81,42 @@ public class EchoClient extends JFrame implements ActionListener, ServiceListene
 		setVisible(true);
 	}
 	
-	public void serviceAdded(ServiceEvent event) {
-		System.out.println("... added " + event);
+	public void serviceAdded(final ServiceEvent event) {
+		System.out.println("... added " + event.getType() + " / " + event.getName());
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				targetModel.addElement(new ServiceEntry(event.getType(), event.getName()));
+			}
+		});
+		
+		// to resolve service immediately, do one of the following things
+		// - call jmdns.requestServiceInfo(type, name) from another thread (i.e. async)
+		// - call jmdns.requestServiceInfo(type, name, -1) from the current thread
 	}
 	
-	public void serviceRemoved(ServiceEvent event) {
-		System.out.println("... removed " + event);
+	public void serviceRemoved(final ServiceEvent event) {
+		System.out.println("... removed " + event.getType() + " / " + event.getName());
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				targetModel.removeElement(new ServiceEntry(event.getType(), event.getName()));
+			}
+		});
 	}
 	
 	public void serviceResolved(ServiceEvent event) {
-		System.out.println("... resolved " + event);
+		System.out.println("... resolved " + event.getType() + " / " + event.getName());
+		try {
+			doRequest(event.getInfo().getInetAddress(), event.getInfo().getPort());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void actionPerformed(ActionEvent e) {
-//		TargetListElement sel = (TargetListElement) targetPicker.getSelectedItem();
-//		if (sel != null) {
-//			try {
-//				resolver = DNSSD.resolve(0, sel.getIfidx(), sel.getServiceName(), 
-//						sel.getType(), sel.getDomain(), this);
-//			} catch (DNSSDException ex) {
-//				ex.printStackTrace();
-//			}
-//		}
+		ServiceEntry entry = (ServiceEntry) targetPicker.getSelectedItem();
+		if (entry != null) {
+			jmdns.requestServiceInfo(entry.getType(), entry.getName());
+		}
 	}
 
 	public void doRequest(InetAddress addr, int port) throws IOException {
@@ -118,6 +135,46 @@ public class EchoClient extends JFrame implements ActionListener, ServiceListene
 			out.close();
 			in.close();
 			echoSocket.close();
+		}
+	}
+	
+	protected static class ServiceEntry {
+		private final String type;
+		private final String name;
+		
+		protected ServiceEntry(String type, String name) {
+			this.type = type;
+			this.name = name;
+		}
+		
+		public String getName() {
+			return name;
+		}
+		
+		public String getType() {
+			return type;
+		}
+		
+		public String toString() {
+			return name + " / " + type;
+		}
+		
+		public boolean equals(Object obj) {
+			if (this == obj) {
+				return true;
+			} else if (obj == null) {
+				return false;
+			} else if (getClass().equals(obj.getClass())) {
+				ServiceEntry entry = (ServiceEntry) obj;
+				return name.equals(entry.getName())
+						&& type.equals(entry.getType());
+			} else {
+				return false;
+			}
+		}
+		
+		public int hashCode() {
+			return toString().hashCode();
 		}
 	}
 

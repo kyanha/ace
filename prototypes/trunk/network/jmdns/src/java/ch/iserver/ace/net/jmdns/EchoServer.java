@@ -84,11 +84,6 @@ public class EchoServer {
 	public static void main(String[] args) throws Exception {
 		EchoServer server = new EchoServer(0);
 		server.start();
-		
-		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-		reader.readLine();
-		
-		server.stop();
 	}
 
 }
