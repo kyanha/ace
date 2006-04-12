@@ -12,7 +12,7 @@ as a page that talks about the technical <a href="index.php?page=3">Background</
 <h3>News</h3>
 
 <p><b>Bonjour related crashes</b> <span class="date">10.04.2006</span></p>
-<p>Some users are not able to use ACE thoroughly due to Bonjour related crashes. We have identified the problem and will fix it for milestone 5.</p>
+<p>Some users have reported crashes caused by Bonjour. We have identified the problem and will fix it for milestone 5.</p>
 
 <p><b>ACE Forum</b> <span class="date">25.03.2006</span></p>
 <p>Please post your experiences with ACE (enjoyable or disappointing) to the <a href="http://ace.iserver.ch/forum/">ACE forum</a>. Also if you encounter problems using ACE, let us know. Either way, it will help us to improve it.</p>
