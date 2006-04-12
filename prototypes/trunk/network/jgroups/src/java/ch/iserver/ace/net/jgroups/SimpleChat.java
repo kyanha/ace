@@ -179,10 +179,7 @@ public class SimpleChat extends JFrame {
 			// connect to channel
 			channel.connect(name);
 			// create PullPushAdapter to receive messages with MessageListener
-			adapter = new PullPushAdapter(channel);
-			// add listeners (MessageListener and MembershipListener)
-			adapter.setListener(new MyMessageListener());
-			adapter.addMembershipListener(new MyMembershipListener());
+			adapter = new PullPushAdapter(channel, new MyMessageListener(), new MyMembershipListener());
 			
 			// adapt the window title to the new group name
 			setTitle(createTitle(config));
