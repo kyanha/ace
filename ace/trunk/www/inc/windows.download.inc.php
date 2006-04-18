@@ -3,7 +3,7 @@
 <p><b>Step 3:</b> Download and install the following software:
 <ul>
 <li><a href="http://java.sun.com/j2se/1.5.0/download.jsp" target="_blank">Java Runtime Environment (JRE) - 1.4.2 or higher</a></li>
-<li><a href="http://www.apple.com/support/downloads/bonjourforwindows102.html" target="_blank">Bonjour for Windows</a></li>
+<li><a href="http://www.apple.com/support/downloads/bonjourforwindows103.html" target="_blank">Bonjour for Windows</a></li>
 </ul>
 </p>
 
