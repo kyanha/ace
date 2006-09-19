@@ -42,9 +42,9 @@ public class ServiceRegistrationHandler {
 	
 	public void execute() throws Exception {
 		// Get server configuration
-		String codebase = (String) config.getEntry(CONFIG_COMP, "codebase", String.class);
+//		String codebase = (String) config.getEntry(CONFIG_COMP, "codebase", String.class);
 
-		String policy =	(String) config.getEntry(CONFIG_COMP, "policy", String.class);
+//		String policy =	(String) config.getEntry(CONFIG_COMP, "policy", String.class);
 
 		String[] groups = (String[]) config.getEntry(CONFIG_COMP, "groups", String[].class);
 
@@ -57,7 +57,7 @@ public class ServiceRegistrationHandler {
 		Exporter exporter = (Exporter) config.getEntry(CONFIG_COMP, "exporter", Exporter.class);
 
 		// Set System properties
-		System.setProperty("java.rmi.server.codebase", codebase);
+//		System.setProperty("java.rmi.server.codebase", codebase);
 		//System.setProperty("java.security.policy", policy);
 
 		// Set a security manager (to load the LS proxy)

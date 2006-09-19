@@ -42,6 +42,17 @@
 		<fileset dir="${resources.dir}" />
 	</copy>
   </target>
+	
+  <target name="copyLibs" depends="prepare">
+	<copy todir="${bin.dir.peer}">
+		<fileset dir="${jini_lib.dir}"
+			includes="jini-core.jar, 
+				jini-ext.jar, 
+				sun-util.jar, 
+			    start.jar, 
+			    reggie-dl.jar"/>
+	</copy>
+  </target>	
 
   <!-- Compile -->
   <target name="cpeer" depends="prepare">
@@ -59,14 +70,14 @@
           includes="${package.dir}/DiscoveryListenerImpl.java"/>
     </target>
 
-  <target name="call" depends="clean, prepare, cpeer, rmic"/>
+  <target name="call" depends="clean, prepare, copyLibs, cpeer, rmic"/>
 
   <!-- Run -->
   <target name="rpeer" depends="cpeer">
     <java classname="${package}.PeerApp"
           classpath="${jini.lib.peer};${bin.dir.peer}"
           fork="true">
-       <jvmarg line="-Djava.security.policy=${bin.dir.peer}/reggie.policy -Dsecurity=${security.dir} -Dport=${http.port}"/>
+       <jvmarg line="-Djava.security.policy=${bin.dir.peer}/reggie.policy"/>
 		<arg line="${bin.dir.peer}/start-transient-reggie.config ${bin.dir.peer}/DiscoveryListener.config"/>
     </java>
   </target>
@@ -79,7 +90,7 @@
   </target-->
 
   <!-- Delete -->
-  <target name="clean" depends="prepare">
+  <target name="clean">
     <delete>
 	  <fileset dir="${bin.dir.peer}"/>
     </delete>
