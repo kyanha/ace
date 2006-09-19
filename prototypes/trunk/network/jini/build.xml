@@ -1,0 +1,88 @@
+<project name="Jini Service Discovery Prototype" default="help" basedir=".">
+
+  <property environment="env"/>
+
+  <!-- Properties -->
+  <property name="src.dir"             value="src/java"/>
+  <property name="bin.dir.peer"        value="build/classes/peer"/>
+  <property name="security.dir"        value="${bin.dir.peer}"/>
+  <property name="resources.dir"       value="src/resources"/>
+  <property name="package.dir"         value="ch/iserver/ace/net/jdiscovery"/>
+  <property name="package"             value="ch.iserver.ace.net.jdiscovery"/>
+  <property name="jini_lib.dir"        value="${env.JINI_HOME}/lib"/>
+  <property name="jini.lib.peer"       value="${jini_lib.dir}/jini-core.jar;${jini_lib.dir}/jini-ext.jar;${jini_lib.dir}/sun-util.jar;${jini_lib.dir}/start.jar"/>
+  <property name="http.port"           value="5000"/>
+  <property name="host"                value="localhost"/>
+
+  <!-- Help -->
+  <target name="help">
+    <echo message="Jini Service Discovery Prototype Applications"/>
+    <echo message=" "/>
+    <echo message="Compile Targets"/>
+    <echo message="---------------"/>
+    <echo message="  cpeer     : Builds the peer app (both service provider and service lookup)"/>
+    <echo message="  rmic:     : Builds the peer app service implementation stub class"/>
+	<echo message="  call:     : Build all"/>  
+    <echo message=" "/>
+    <echo message="Start Targets"/>
+    <echo message="-------------"/>
+    <echo message="  rpeer     : Runs the peer application"/>
+    <echo message=" "/>
+    <echo message="Admin Targets"/>
+    <echo message="-------------"/>
+    <echo message="  prepare : Creates the build destination directories"/>
+    <echo message="  clean   : Deletes all application class files"/>
+    <echo message=" "/>
+  </target>
+	
+  <!-- Prepare directories -->
+  <target name="prepare">
+    <mkdir dir="${bin.dir.peer}/${package.dir}"/>
+	<copy todir="${bin.dir.peer}">
+		<fileset dir="${resources.dir}" />
+	</copy>
+  </target>
+
+  <!-- Compile -->
+  <target name="cpeer" depends="prepare">
+    <javac srcdir="${src.dir}"
+           destdir="${bin.dir.peer}"
+           classpath="${jini.lib.peer}"
+           includes="${package.dir}/PeerApp.java"/>
+  </target>
+	
+	<target name="rmic" depends="cpeer">
+        <rmic stubversion="1.2"
+          classname="${package.dir}.DiscoveryListenerImpl"
+          base="${bin.dir.peer}"
+          classpath="${jini.lib.peer}"
+          includes="${package.dir}/DiscoveryListenerImpl.java"/>
+    </target>
+
+  <target name="call" depends="clean, prepare, cpeer, rmic"/>
+
+  <!-- Run -->
+  <target name="rpeer" depends="cpeer">
+    <java classname="${package}.PeerApp"
+          classpath="${jini.lib.peer};${bin.dir.peer}"
+          fork="true">
+       <jvmarg line="-Djava.security.policy=${bin.dir.peer}/reggie.policy -Dsecurity=${security.dir} -Dport=${http.port}"/>
+		<arg line="${bin.dir.peer}/start-transient-reggie.config ${bin.dir.peer}/DiscoveryListener.config"/>
+    </java>
+  </target>
+
+  <!--target name="http">
+    <java jar="${jini_lib.dir}/tools.jar"
+          fork="true">
+       <arg line="-port ${http.port} -dir ${bin.dir.peer} -verbose "/>
+    </java>	  
+  </target-->
+
+  <!-- Delete -->
+  <target name="clean" depends="prepare">
+    <delete>
+	  <fileset dir="${bin.dir.peer}"/>
+    </delete>
+  </target>
+
+</project>
