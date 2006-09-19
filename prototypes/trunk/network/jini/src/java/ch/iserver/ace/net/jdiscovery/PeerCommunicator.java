@@ -43,8 +43,8 @@ public class PeerCommunicator {
 		}
 	}
 	
-	public static void print(String msg) {
-		System.out.println(LOG_PREFIX + msg);
+	private static void print(String msg) {
+		LogUtil.print(LOG_PREFIX, msg);
 	}
 	
 	

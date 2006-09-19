@@ -24,18 +24,14 @@ public class InProcessReggie {
 	
 	public boolean start(String[] args) {
 		if (!isStarted) {
-			print("start class server and reggie...");
+			LogUtil.print("InProcessReggie: start class server and reggie...");
 			ServiceStarter.main(args);
-			print("done.");
+			LogUtil.print("InProcessReggie: done.");
 			isStarted = true;
 			return true;
 		
 		}
 		return false;	
-	}
-	
-	private static void print(String msg) {
-		PeerApp.print(msg);
 	}
 
 }
