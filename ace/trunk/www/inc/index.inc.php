@@ -10,6 +10,8 @@ as a page that talks about the technical <a href="index.php?page=3">Background</
 <br/>
 
 <h3>News</h3>
+<p><b>Ongoing work</b> <span class="date">02.11.2006</span></p>
+<p>We are developing a new implementation of the <a href="index.php?page=1">BEEP</a> protocol due to the error-prone open-source implementation of the same protocol currently used by ACE. Further, we are working on a different network layer solution based on Java RMI/Jini due to the unstable Bonjour technology Java implementation that causes ACE crashes on some operating systems. <br> ACE milestone 5 will be released in second quarter 2007.</p>
 
 <p><b>Bonjour related crashes</b> <span class="date">10.04.2006</span></p>
 <p>Some users have reported crashes caused by Bonjour. We have identified the problem and will fix it for milestone 5.</p>
