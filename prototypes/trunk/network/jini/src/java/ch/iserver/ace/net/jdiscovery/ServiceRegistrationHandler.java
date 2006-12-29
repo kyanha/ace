@@ -42,7 +42,8 @@ public class ServiceRegistrationHandler {
 	
 	public void execute() throws Exception {
 		// Get server configuration
-//		String codebase = (String) config.getEntry(CONFIG_COMP, "codebase", String.class);
+		String codebase = (String) config.getEntry(CONFIG_COMP, "codebase", String.class);
+		LogUtil.print("ServiceRegistrationHandler: setting codebase to:" + codebase);
 
 //		String policy =	(String) config.getEntry(CONFIG_COMP, "policy", String.class);
 
@@ -57,7 +58,7 @@ public class ServiceRegistrationHandler {
 		Exporter exporter = (Exporter) config.getEntry(CONFIG_COMP, "exporter", Exporter.class);
 
 		// Set System properties
-//		System.setProperty("java.rmi.server.codebase", codebase);
+		//System.setProperty("java.rmi.server.codebase", codebase);
 		//System.setProperty("java.security.policy", policy);
 
 		// Set a security manager (to load the LS proxy)
@@ -123,11 +124,10 @@ public class ServiceRegistrationHandler {
 	  // Register one service
 	  private void registerService(final ServiceRegistrar registrar) {
 	    try {
-	    		print("Register service at " + registrar.getLocator().getHost());
 			final ServiceRegistration registration = registrar.register(serviceItem, LEASE_TIME);
 			ServiceID id = registration.getServiceID();
 			((DiscoveryListenerImpl) discoveryListener).setServiceID(id);
-			RegistrationLookupMediator.getInstance().setServiceID(id);
+			RegistrationLookupMediator.getInstance().setRegistered(id, registrar.getLocator());
 			
 			// If first registration, get and store service ID
 	      if (serviceItem.serviceID == null) {
@@ -136,10 +136,9 @@ public class ServiceRegistrationHandler {
 				id.writeBytes(dos);
 				dos.close();
 				serviceItem.serviceID = id;
-				print("Set serviceID to " + id);
 			}
 			print("Service registered - ID: " + serviceItem.serviceID
-					+ "\nGranted lease: " 
+					+ "; Granted lease: " 
 					+ (registration.getLease().getExpiration() - System.currentTimeMillis()) / 1000 + "s.");
 		} catch (IOException ioe) {
 			print("Error: " + ioe);

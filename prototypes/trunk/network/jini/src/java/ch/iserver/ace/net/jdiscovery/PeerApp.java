@@ -14,9 +14,10 @@ public class PeerApp {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		if (args.length != 2) {
-			print("Usage: java -Djava.security.policy=<reggie-policy-file> -Dsecurity=<security-dir> " +
-					"-Dport=<codebase-port> <further options> PeerApp <reggie-config-file> <jini-config-file>");
+		if (args.length != 3) {
+			System.out.println("Usage: java -Djava.security.policy=<reggie-policy-file> -Dsecurity=<security-dir> " +
+					"-Dport=<codebase-port> <further options> PeerApp <reggie-config-file> <jini-config-file> " +
+					" [ register | discover ]");
 			System.exit(0);
 		} else {
 			String argsList = "";
@@ -34,29 +35,35 @@ public class PeerApp {
 			String[] argsReggie = new String[] { args[0] };
 			reggie.start(argsReggie);
 
-		    // Get discovery listener configuration (from Server.config file)
-		    Configuration config = ConfigurationProvider.getInstance(new String[]{args[1]});
+		    // Get discovery listener configuration (from ¨DiscoveryListener.config file)
+			if (args[2].equals("register")) {
+				print("Start registration process...");
+				Configuration config = ConfigurationProvider.getInstance(new String[]{args[1]});
 			
-			// Register discovery listener for other peers to register themselves
-			new RegistrationWorker(config).start();
+				// Register discovery listener for other peers to register themselves
+				new RegistrationWorker(config).start();
+			}
 			
-			//Start search for other peers in the local area network
-			//and register yourself with them
-			new PeerCommunicatorWorker().start();
+			if (args[2].equals("discover")) {
+				print("Start discovery...");
+				//Start search for other peers in the local area network
+				//and register yourself with them
+				new PeerCommunicatorWorker().start();
+			}
 			
 			//go into user interaction mode
-			//new UIConsole().execute();
+			new UIConsole().execute();
 			
 //		    // Make sure that the JVM does not exit			
-//			Object keepAlive = new Object();
-//	        synchronized(keepAlive) {
-//	            try {
-//	            	//TODO: to stop peer app call notify() on keepAlive object
-//	                keepAlive.wait();
-//	            } catch(InterruptedException e) {
-//	                // do nothing
-//	            }
-//	        }
+			Object keepAlive = new Object();
+	        synchronized(keepAlive) {
+	            try {
+	            	//TODO: to stop peer app call notify() on keepAlive object
+	                keepAlive.wait();
+	            } catch(InterruptedException e) {
+	                // do nothing
+	            }
+	        }
 		} catch (Exception e) {
 			print("ERROR:\n:" + e);
 			e.printStackTrace();

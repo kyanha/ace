@@ -25,6 +25,7 @@ public class UIConsole {
             		RegistrationLookupMediator.getInstance().updateMyName(newName);
             } else if (command.equals("e")) {
             		RegistrationLookupMediator.getInstance().logout();
+            		System.exit(0);
             } else if (command.equals("q")) {
             		//TODO: perform reckless exit
             		System.exit(0);
@@ -33,7 +34,7 @@ public class UIConsole {
             }
         }
 		} catch (Exception e) {
-			PeerApp.print("Error in UIConsole: " + e.getMessage());
+			LogUtil.print("Error in UIConsole: " + e.getMessage());
 		}
 	}
 	
