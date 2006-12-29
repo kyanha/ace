@@ -66,8 +66,15 @@ public class PeerCommunicator {
 		    	    //TODO: how to determine if it's the registrar for the local LS?
 		    	  	//If true, don't contact the remote object
 		    	  try {
-		    	  	print("Register with peer located at " + registrars[i].getLocator().getHost() + ":" + registrars[i].getLocator().getPort()); 
-		        registerWithPeer(registrars[i]);
+		    		  if (RegistrationLookupMediator.getInstance().
+		    				  getLocalLookupLocator() != null && !RegistrationLookupMediator.getInstance().
+		    				  getLocalLookupLocator().equals(registrars[i].getLocator())) {
+		    			  print("Register with peer located at " + registrars[i].getLocator().getHost() + ":" + registrars[i].getLocator().getPort()); 
+		  		        registerWithPeer(registrars[i]);
+		    		  } else {
+		    			  print("Do not register with local peeer (myself)");
+		    		  }
+		    	  	
 		    	  } catch (RemoteException re) {
 						print("Error registering with peer: " + re.getMessage());
 					}

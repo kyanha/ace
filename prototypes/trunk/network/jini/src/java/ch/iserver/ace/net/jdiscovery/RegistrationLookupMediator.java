@@ -5,6 +5,7 @@ import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import net.jini.core.discovery.LookupLocator;
 import net.jini.core.lookup.ServiceID;
 
 /**
@@ -16,6 +17,7 @@ public class RegistrationLookupMediator {
 
 	private ServiceID localID;
 	private ServiceDO localService;
+	private LookupLocator locator;
 	
 	//serviceID - serviceDO
 	private HashMap peers;
@@ -50,8 +52,13 @@ public class RegistrationLookupMediator {
 		return localService;
 	}
 	
-	public void setServiceID(ServiceID id) {
+	public void setRegistered(ServiceID id, LookupLocator locator) {
 		this.localID = id;
+		this.locator = locator;
+	}
+	
+	public LookupLocator getLocalLookupLocator() {
+		return locator;
 	}
 	
 	public void serviceLoggedOn(ServiceDO info) {
@@ -99,6 +106,7 @@ public class RegistrationLookupMediator {
 	
 	public void logout() {
 		//for all peers, call serviceLogout
+		print("for all peers, call serviceLogout");
 		Iterator iter = peers.values().iterator();
 		while (iter.hasNext()) {
 			Peer peer = (Peer) iter.next();
@@ -108,6 +116,7 @@ public class RegistrationLookupMediator {
 				print("Connection error: " + re.getMessage()); 
 			}
 		}
+		//TODO: quit service registration
 	}
 	
 	
