@@ -3,6 +3,7 @@ package ch.iserver.ace.net.jdiscovery;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Calendar;
 
 /**
  * @author lukaszbinden
@@ -12,17 +13,33 @@ import java.io.IOException;
 public class LogUtil {
 
 	private static final OutputWriter WRITER;
+	private static final Calendar CALENDAR;
 	
 	static {
 //		WRITER = new StandardOutputWriter();
 		WRITER = new FileOutputWriter("PeerApp.log");
+		CALENDAR = Calendar.getInstance();
+//		CALENDAR.set(Calendar.DAY_OF_MONTH, ) //TODO
 	}
 	
 	public static void print(String source, String msg) {
-		WRITER.write(source + ": " + msg);
+		printImpl(getLogPrefix() + source + ": " + msg);
 	}
 	
 	public static void print(String msg) {
+		printImpl(getLogPrefix() + msg);
+	}
+	
+	private final static String getLogPrefix() {
+		String prefix = "";		
+		prefix += CALENDAR.getTime().toString();
+		prefix += "\t";
+		prefix += "[" + Thread.currentThread().getName() + "]";
+		prefix += "\t";
+		return prefix;
+	}
+	
+	private final static void printImpl(String msg) {
 		WRITER.write(msg);
 	}
 	
