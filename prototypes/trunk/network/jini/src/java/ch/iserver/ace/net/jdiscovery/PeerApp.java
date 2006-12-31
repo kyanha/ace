@@ -30,14 +30,13 @@ public class PeerApp {
 			//Set a security manager
 			System.setSecurityManager(new RMISecurityManager());
 			
-			// Start reggie
-			InProcessReggie reggie = InProcessReggie.getInstance();
-			String[] argsReggie = new String[] { args[0] };
-			reggie.start(argsReggie);
-
 		    // Get discovery listener configuration (from ¨DiscoveryListener.config file)
 			if (args[2].equals("register")) {
 				print("Start registration process...");
+				// Start reggie
+				InProcessReggie reggie = InProcessReggie.getInstance();
+				String[] argsReggie = new String[] { args[0] };
+				reggie.start(argsReggie);
 				Configuration config = ConfigurationProvider.getInstance(new String[]{args[1]});
 			
 				// Register discovery listener for other peers to register themselves
