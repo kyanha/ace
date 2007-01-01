@@ -50,6 +50,9 @@ public class ServiceDO implements Serializable{
 		this.name = name;
 	}
 	
+	/**
+	 * @see java.lang.Object#toString()
+	 */
 	public String toString() {
 		return id + " " + name + " " + address.toString() + " " + port;
 	}
