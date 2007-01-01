@@ -7,4 +7,4 @@
 
 cd build/classes/peer
 
-java -Djava.security.policy=reggie.policy -Djava.rmi.server.codebase=http://192.168.1.100:5001/ -Dport=5001 -cp jini-core.jar:jini-ext.jar:sun-util.jar:start.jar:. ch.iserver.ace.net.jdiscovery.PeerApp start-transient-reggie.config DiscoveryListener.config $1
+java -Djava.security.policy=reggie.policy -Djava.rmi.server.codebase=http://192.168.1.100:5001/ -Dport=5001 -cp jini-core.jar:jini-ext.jar:sun-util.jar:start.jar:commons-lang-2.2.jar:. ch.iserver.ace.net.jdiscovery.PeerApp start-transient-reggie.config DiscoveryListener.config $1

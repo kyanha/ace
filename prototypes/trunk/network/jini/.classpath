@@ -7,5 +7,6 @@
 	<classpathentry kind="lib" path="/usr/local/jini/jini2_0_002/lib/jini-core.jar"/>
 	<classpathentry kind="lib" path="/usr/local/jini/jini2_0_002/lib/start.jar"/>
 	<classpathentry kind="lib" path="/usr/local/jini/jini2_0_002/lib/tools.jar"/>
+	<classpathentry kind="lib" path="lib/commons-lang-2.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
