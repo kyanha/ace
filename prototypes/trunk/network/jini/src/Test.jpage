@@ -1,0 +1,13 @@
+
+
+
+Calendar c = Calendar.getInstance();
+
+SimpleDateFormat s = new SimpleDateFormat("HH:mm:ss.SSS");
+
+System.out.println(s.format(c.getTime()));
+
+String threadName = "Thread-4";
+threadName = StringUtils.rightPad(threadName, 20);
+
+System.out.println("length: " + threadName.length() + " - '" + threadName + "'"); 
