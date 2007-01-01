@@ -65,6 +65,7 @@ public class RegistrationLookupMediator {
 		Peer peer = (Peer) peers.get(info.getID());
 		if (peer == null) {
 			print("peer not yet discovered by LS");
+			//TODO: where is IDiscoveryListener??
 			peer = new Peer(info.getID());
 			peers.put(info.getID(), peer);
 		}
@@ -93,15 +94,22 @@ public class RegistrationLookupMediator {
 	
 	public void updateMyName(String newName) {
 		//for all peers, call serviceNameChanged
-		Iterator iter = peers.values().iterator();
-		while (iter.hasNext()) {
-			Peer peer = (Peer) iter.next();
-			try {
-				peer.getPeerListener().serviceNameChanged(localID, newName);
-			} catch (RemoteException re) {
-				print("Connection error: " + re.getMessage()); 
+		
+		try {
+			Iterator iter = peers.values().iterator();
+			while (iter.hasNext()) {
+				Peer peer = (Peer) iter.next();
+				print("peer: " + peer);
+				try {
+					peer.getPeerListener().serviceNameChanged(localID, newName);
+				} catch (RemoteException re) {
+					print("Connection error: " + re.getMessage()); 
+				}
 			}
+		} catch (RuntimeException e) {
+			e.printStackTrace();
 		}
+		
 	}
 	
 	public void logout() {

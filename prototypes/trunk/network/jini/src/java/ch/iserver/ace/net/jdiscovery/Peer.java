@@ -2,6 +2,8 @@ package ch.iserver.ace.net.jdiscovery;
 
 import net.jini.core.lookup.ServiceID;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 /**
  * @author lukaszbinden
  * @date   Sep 17, 2006 4:44:35 PM
@@ -37,4 +39,12 @@ public class Peer {
 	public IDiscoveryListener getPeerListener() {
 		return this.peerListener;
 	}
+	
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
+	}
+	
 }
