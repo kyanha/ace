@@ -5,15 +5,13 @@ package ch.iserver.ace.net.jdiscovery;
 
 import java.rmi.RemoteException;
 
-import net.jini.core.lookup.ServiceID;
-
 /**
  * @author lukaszbinden
  *
  */
 public class DiscoveryListenerImpl implements IDiscoveryListener {
 
-	private ServiceID serviceID;
+	private String serviceID;
 	
 	public DiscoveryListenerImpl() throws RemoteException {
 		
@@ -37,10 +35,11 @@ public class DiscoveryListenerImpl implements IDiscoveryListener {
 
 	}
 
-	/* (non-Javadoc)
+	/**
 	 * @see ch.iserver.ace.net.jdiscovery.IDiscoveryListener#serviceLogon(ch.iserver.ace.net.discovery.jini.rmi.ServiceDO)
 	 */
-	public ServiceID serviceLogon(ServiceDO newService) throws RemoteException {
+	public String serviceLogon(ServiceDO newService) throws RemoteException {
+		LogUtil.print("DiscoveryListenerImpl.serviceLogon: " + newService);
 		RegistrationLookupMediator.getInstance().serviceLoggedOn(newService);
 		//TODO: wait as long as serviceID is null
 		return serviceID;
@@ -49,15 +48,17 @@ public class DiscoveryListenerImpl implements IDiscoveryListener {
 	/* (non-Javadoc)
 	 * @see ch.iserver.ace.net.jdiscovery.IDiscoveryListener#serviceLogout(java.lang.String)
 	 */
-	public void serviceLogout(ServiceID serviceId) throws RemoteException {
+	public void serviceLogout(String serviceId) throws RemoteException {
+		LogUtil.print("DiscoveryListenerImpl.serviceLogout()");
 		RegistrationLookupMediator.getInstance().serviceLoggedOut(serviceId);
 	}
 
 	/* (non-Javadoc)
 	 * @see ch.iserver.ace.net.jdiscovery.IDiscoveryListener#serviceNameChanged(java.lang.String, java.lang.String)
 	 */
-	public void serviceNameChanged(ServiceID serviceId, String serviceName)
+	public void serviceNameChanged(String serviceId, String serviceName)
 			throws RemoteException {
+		LogUtil.print("DiscoveryListenerImpl.serviceNameChanged(" + serviceId + ", " + serviceName + ")");
 		RegistrationLookupMediator.getInstance().serviceNameChanged(serviceId, serviceName);
 	}
 	
@@ -65,7 +66,7 @@ public class DiscoveryListenerImpl implements IDiscoveryListener {
 	 * Non-remote method.
 	 * 
 	 */
-	public void setServiceID(ServiceID id) {
+	public void setServiceID(String id) {
 		this.serviceID = id;
 	}
 
