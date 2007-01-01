@@ -17,6 +17,12 @@ public class ServiceDO implements Serializable{
 	InetAddress address;
 	int port;
 	
+	/**
+	 * @param id
+	 * @param name
+	 * @param address
+	 * @param port
+	 */
 	public ServiceDO(ServiceID id, String name, InetAddress address, int port) {
 		this.id = id;
 		this.name = name;
