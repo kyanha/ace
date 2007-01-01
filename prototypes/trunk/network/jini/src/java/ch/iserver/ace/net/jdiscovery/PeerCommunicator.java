@@ -95,6 +95,7 @@ public class PeerCommunicator {
 					ServiceDO myself = RegistrationLookupMediator.getInstance().getServiceDO();
 					ServiceID peerID = peer.serviceLogon(myself);
 					RegistrationLookupMediator.getInstance().addPeer(new Peer(peerID, peer));
+					//TODO: call checkAlive on peer
 				}
 			
 		}

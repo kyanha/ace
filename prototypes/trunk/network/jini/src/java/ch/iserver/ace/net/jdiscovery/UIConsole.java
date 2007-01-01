@@ -35,6 +35,7 @@ public class UIConsole {
         }
 		} catch (Exception e) {
 			LogUtil.print("Error in UIConsole: " + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 	
