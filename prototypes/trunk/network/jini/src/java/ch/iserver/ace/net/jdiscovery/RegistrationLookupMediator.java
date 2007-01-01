@@ -82,7 +82,14 @@ public class RegistrationLookupMediator {
 	
 	public void serviceNameChanged(ServiceID id, String name) {
 		Peer peer = (Peer) peers.get(id);
-		peer.getServiceInfo().updateName(name);
+		//TODO: at discovery side, service info n/a
+//		peer.getServiceInfo().updateName(name);
+		try {
+			peer.getPeerListener().serviceNameChanged(peer.getServiceID(), name);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+		
 		//TODO: send notification to UIConsole
 		print("\n***\n Received name update from [" 
 				+ id.toString() + "]: " + name + "\n***\n");
