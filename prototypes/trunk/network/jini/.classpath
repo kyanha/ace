@@ -2,11 +2,11 @@
 <classpath>
 	<classpathentry kind="src" path="src/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/usr/local/jini/jini2_0_002/lib/sun-util.jar"/>
-	<classpathentry kind="lib" path="/usr/local/jini/jini2_0_002/lib/jini-ext.jar"/>
-	<classpathentry kind="lib" path="/usr/local/jini/jini2_0_002/lib/jini-core.jar"/>
-	<classpathentry kind="lib" path="/usr/local/jini/jini2_0_002/lib/start.jar"/>
-	<classpathentry kind="lib" path="/usr/local/jini/jini2_0_002/lib/tools.jar"/>
 	<classpathentry kind="lib" path="lib/commons-lang-2.2.jar"/>
+	<classpathentry kind="var" path="JINI_HOME/lib/jini-ext.jar"/>
+	<classpathentry kind="var" path="JINI_HOME/lib/jini-core.jar"/>
+	<classpathentry kind="var" path="JINI_HOME/lib/tools.jar"/>
+	<classpathentry kind="var" path="JINI_HOME/lib/sun-util.jar"/>
+	<classpathentry kind="var" path="JINI_HOME/lib/start.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
