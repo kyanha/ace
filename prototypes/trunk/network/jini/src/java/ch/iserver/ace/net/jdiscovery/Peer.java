@@ -1,7 +1,5 @@
 package ch.iserver.ace.net.jdiscovery;
 
-import net.jini.core.lookup.ServiceID;
-
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
@@ -11,15 +9,15 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  */
 public class Peer {
 
-	private ServiceID id;
+	private String id;
 	private ServiceDO info;
 	private IDiscoveryListener peerListener;
 	
-	public Peer(ServiceID id) {
+	public Peer(String id) {
 		this.id = id;
 	}
 	
-	public Peer(ServiceID id, IDiscoveryListener peer) {
+	public Peer(String id, IDiscoveryListener peer) {
 		this(id);
 		peerListener = peer;
 	}
@@ -32,7 +30,7 @@ public class Peer {
 		return info;
 	}
 	
-	public ServiceID getServiceID() {
+	public String getServiceID() {
 		return id;
 	}
 	

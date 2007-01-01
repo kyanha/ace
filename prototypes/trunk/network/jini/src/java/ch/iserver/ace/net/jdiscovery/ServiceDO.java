@@ -3,8 +3,6 @@ package ch.iserver.ace.net.jdiscovery;
 import java.io.Serializable;
 import java.net.InetAddress;
 
-import net.jini.core.lookup.ServiceID;
-
 /**
  * 
  * @author lukaszbinden
@@ -12,7 +10,7 @@ import net.jini.core.lookup.ServiceID;
  */
 public class ServiceDO implements Serializable{
 
-	ServiceID id;
+	String id;
 	String name;
 	InetAddress address;
 	int port;
@@ -23,14 +21,14 @@ public class ServiceDO implements Serializable{
 	 * @param address
 	 * @param port
 	 */
-	public ServiceDO(ServiceID id, String name, InetAddress address, int port) {
+	public ServiceDO(String id, String name, InetAddress address, int port) {
 		this.id = id;
 		this.name = name;
 		this.address = address;
 		this.port = port;
 	}
 	
-	ServiceID getID() {
+	String getID() {
 		return id;
 	}
 	

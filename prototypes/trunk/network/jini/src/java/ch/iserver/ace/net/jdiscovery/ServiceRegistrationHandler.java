@@ -126,8 +126,9 @@ public class ServiceRegistrationHandler {
 	    try {
 			final ServiceRegistration registration = registrar.register(serviceItem, LEASE_TIME);
 			ServiceID id = registration.getServiceID();
-			((DiscoveryListenerImpl) discoveryListener).setServiceID(id);
-			RegistrationLookupMediator.getInstance().setRegistered(id, registrar.getLocator());
+			RegistrationLookupMediator.getInstance().setRegistered(registrar.getLocator());
+			((DiscoveryListenerImpl) discoveryListener).setServiceID(
+					RegistrationLookupMediator.getInstance().getLocalServiceID());
 			
 			// If first registration, get and store service ID
 	      if (serviceItem.serviceID == null) {

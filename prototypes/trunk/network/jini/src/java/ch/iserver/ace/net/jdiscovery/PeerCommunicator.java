@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.rmi.RemoteException;
 
 import net.jini.core.discovery.LookupLocator;
-import net.jini.core.lookup.ServiceID;
 import net.jini.core.lookup.ServiceRegistrar;
 import net.jini.core.lookup.ServiceTemplate;
 import net.jini.discovery.DiscoveryChangeListener;
@@ -93,7 +92,8 @@ public class PeerCommunicator {
 					print("Matching service found");
 					IDiscoveryListener peer = (IDiscoveryListener) service;
 					ServiceDO myself = RegistrationLookupMediator.getInstance().getServiceDO();
-					ServiceID peerID = peer.serviceLogon(myself);
+					String peerID = peer.serviceLogon(myself);
+					print("received service id from peer: " + peerID);
 					RegistrationLookupMediator.getInstance().addPeer(new Peer(peerID, peer));
 					//TODO: call checkAlive on peer
 				}

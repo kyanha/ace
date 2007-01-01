@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import net.jini.core.discovery.LookupLocator;
-import net.jini.core.lookup.ServiceID;
+import ch.iserver.ace.net.jdiscovery.util.UUID;
 
 /**
  * @author lukaszbinden
@@ -15,7 +15,7 @@ import net.jini.core.lookup.ServiceID;
  */
 public class RegistrationLookupMediator {
 
-	private ServiceID localID;
+	private String localID;
 	private ServiceDO localService;
 	private LookupLocator locator;
 	
@@ -33,6 +33,7 @@ public class RegistrationLookupMediator {
 	
 	private RegistrationLookupMediator() {
 		peers = new HashMap();
+		localID = UUID.nextUUID();
 	}
 	
 	private static void print(String msg) {
@@ -52,13 +53,16 @@ public class RegistrationLookupMediator {
 		return localService;
 	}
 	
-	public void setRegistered(ServiceID id, LookupLocator locator) {
-		this.localID = id;
+	public void setRegistered(LookupLocator locator) {
 		this.locator = locator;
 	}
 	
 	public LookupLocator getLocalLookupLocator() {
 		return locator;
+	}
+	
+	public String getLocalServiceID() {
+		return localID;
 	}
 	
 	public void serviceLoggedOn(ServiceDO info) {
@@ -72,7 +76,7 @@ public class RegistrationLookupMediator {
 		peer.setServiceInfo(info);
 	}
 	
-	public void serviceLoggedOut(ServiceID id) {
+	public void serviceLoggedOut(String id) {
 		Object peer = peers.remove(id);
 		if (peer != null)
 			print("peer successfully removed.");
@@ -80,19 +84,18 @@ public class RegistrationLookupMediator {
 			print("peer could not be removed from list.");
 	}
 	
-	public void serviceNameChanged(ServiceID id, String name) {
-		Peer peer = (Peer) peers.get(id);
-		//TODO: at discovery side, service info n/a
-//		peer.getServiceInfo().updateName(name);
+	public void serviceNameChanged(String id, String name) {
 		try {
-			peer.getPeerListener().serviceNameChanged(peer.getServiceID(), name);
-		} catch (RemoteException e) {
+			Peer peer = (Peer) peers.get(id);
+			peer.getServiceInfo().updateName(name);
+			
+			//TODO: send notification to UIConsole
+			print("\n***\n Received name update from [" 
+					+ id.toString() + "]: " + name + "\n***\n");
+		} catch (RuntimeException e) {
+			print("exception occured: " + e);
 			e.printStackTrace();
 		}
-		
-		//TODO: send notification to UIConsole
-		print("\n***\n Received name update from [" 
-				+ id.toString() + "]: " + name + "\n***\n");
 	}
 	
 	public void addPeer(Peer aPeer) {
@@ -107,6 +110,7 @@ public class RegistrationLookupMediator {
 			while (iter.hasNext()) {
 				Peer peer = (Peer) iter.next();
 				print("peer: " + peer);
+				print("localID: " + localID);
 				try {
 					peer.getPeerListener().serviceNameChanged(localID, newName);
 				} catch (RemoteException re) {
@@ -114,6 +118,7 @@ public class RegistrationLookupMediator {
 				}
 			}
 		} catch (RuntimeException e) {
+			print("exception occured: " + e);
 			e.printStackTrace();
 		}
 		
