@@ -27,6 +27,8 @@
     <echo message="Start Targets"/>
     <echo message="-------------"/>
     <echo message="  rpeer     : Runs the peer application"/>
+	<echo message="  httpReggie: HTTP class server for Reggie"/>    
+	<echo message="  httpClass : HTTP class server for apllication specific classes"/>    	  
     <echo message=" "/>
     <echo message="Admin Targets"/>
     <echo message="-------------"/>
@@ -51,6 +53,7 @@
 				sun-util.jar, 
 			    start.jar, 
 			    reggie-dl.jar"/>
+		<fileset dir="lib" includes="commons-lang-2.2.jar"/>
 	</copy>
   </target>	
 
@@ -58,16 +61,15 @@
   <target name="cpeer" depends="prepare">
     <javac srcdir="${src.dir}"
            destdir="${bin.dir.peer}"
-           classpath="${jini.lib.peer}"
+           classpath="${jini.lib.peer};lib/commons-lang-2.2.jar"
            includes="${package.dir}/PeerApp.java"/>
   </target>
 	
 	<target name="rmic" depends="cpeer">
         <rmic stubversion="1.2"
-          classname="${package.dir}.DiscoveryListenerImpl"
+          classname="${package}.DiscoveryListenerImpl"
           base="${bin.dir.peer}"
-          classpath="${jini.lib.peer}"
-          includes="${package.dir}/DiscoveryListenerImpl.java"/>
+          classpath="${jini.lib.peer}"/>
     </target>
 
   <target name="call" depends="clean, prepare, copyLibs, cpeer, rmic"/>
@@ -77,17 +79,27 @@
     <java classname="${package}.PeerApp"
           classpath="${jini.lib.peer};${bin.dir.peer}"
           fork="true">
-       <jvmarg line="-Djava.security.policy=${bin.dir.peer}/reggie.policy"/>
+       <jvmarg line="-Djava.security.policy=${bin.dir.peer}/reggie.policy -Dport=${http.port}"/>
 		<arg line="${bin.dir.peer}/start-transient-reggie.config ${bin.dir.peer}/DiscoveryListener.config"/>
     </java>
   </target>
 
-  <!--target name="http">
+  <target name="httpReggie">
     <java jar="${jini_lib.dir}/tools.jar"
           fork="true">
-       <arg line="-port ${http.port} -dir ${bin.dir.peer} -verbose "/>
+		<jvmarg line="-Djava.rmi.server.codebase=http://192.168.1.100:5000/" />
+       <arg line="-port ${http.port} -dir ${jini_lib.dir} -verbose "/>
     </java>	  
-  </target-->
+  </target>
+	
+	
+	<target name="httpClass">
+    <java jar="${jini_lib.dir}/tools.jar"
+          fork="true">
+		<jvmarg line="-Djava.rmi.server.codebase=http://192.168.1.100:5001/" />
+       <arg line="-port 5001 -dir ${bin.dir.peer} -verbose "/>
+    </java>	  
+  </target>
 
   <!-- Delete -->
   <target name="clean">
