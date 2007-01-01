@@ -3,7 +3,11 @@ package ch.iserver.ace.net.jdiscovery;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Calendar;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * @author lukaszbinden
@@ -13,13 +17,13 @@ import java.util.Calendar;
 public class LogUtil {
 
 	private static final OutputWriter WRITER;
-	private static final Calendar CALENDAR;
+	private static final DateFormat FORMATTER;
+	private static final int THREAD_NAME_LENGTH = 20;
 	
 	static {
 //		WRITER = new StandardOutputWriter();
 		WRITER = new FileOutputWriter("PeerApp.log");
-		CALENDAR = Calendar.getInstance();
-//		CALENDAR.set(Calendar.DAY_OF_MONTH, ) //TODO
+		FORMATTER = new SimpleDateFormat("HH:mm:ss.SSS");
 	}
 	
 	public static void print(String source, String msg) {
@@ -32,9 +36,15 @@ public class LogUtil {
 	
 	private final static String getLogPrefix() {
 		String prefix = "";		
-		prefix += CALENDAR.getTime().toString();
+		prefix += FORMATTER.format(new Date());
 		prefix += "\t";
-		prefix += "[" + Thread.currentThread().getName() + "]";
+		String threadName = Thread.currentThread().getName();
+		if (threadName.length() > THREAD_NAME_LENGTH) {
+			threadName = "." + threadName.substring(threadName.length() - THREAD_NAME_LENGTH + 1);
+		} else {
+			threadName = StringUtils.rightPad(threadName, THREAD_NAME_LENGTH);
+		}
+		prefix += "[" + threadName + "]";
 		prefix += "\t";
 		return prefix;
 	}
@@ -63,7 +73,7 @@ public class LogUtil {
 		
 		FileOutputWriter(String filename) {
 			try {
-		        out = new BufferedWriter(new FileWriter(filename));
+		        out = new BufferedWriter(new FileWriter(filename, true));
 		    } catch (IOException e) {
 		    		e.printStackTrace();
 		    		throw new RuntimeException("could not open stream to file");
