@@ -31,6 +31,7 @@ public class LogUtil {
 	}
 	
 	public static void print(String msg) {
+		//TODO: find out class who called print
 		printImpl(getLogPrefix() + msg);
 	}
 	

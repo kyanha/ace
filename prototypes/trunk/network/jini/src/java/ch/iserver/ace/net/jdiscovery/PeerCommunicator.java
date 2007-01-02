@@ -96,8 +96,8 @@ public class PeerCommunicator {
 					print("received service id from peer: " + peerID);
 					RegistrationLookupMediator.getInstance().addPeer(new Peer(peerID, peer));
 					//TODO: call checkAlive on peer
+					new CheckPeerAliveWorker(peerID, peer).start();
 				}
-			
 		}
 	}
 	

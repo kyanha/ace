@@ -49,7 +49,7 @@ public class DiscoveryListenerImpl implements IDiscoveryListener {
 	 * @see ch.iserver.ace.net.jdiscovery.IDiscoveryListener#serviceLogout(java.lang.String)
 	 */
 	public void serviceLogout(String serviceId) throws RemoteException {
-		LogUtil.print("DiscoveryListenerImpl.serviceLogout()");
+		LogUtil.print("DiscoveryListenerImpl.serviceLogout(" + serviceId + ")");
 		RegistrationLookupMediator.getInstance().serviceLoggedOut(serviceId);
 	}
 
