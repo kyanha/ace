@@ -147,7 +147,7 @@ public class ServiceRegistrationHandler {
 	  }
 	  
 	  private void print(String msg) {
-		  LogUtil.print("ServiceRegistrationHandler", msg);
+		  LogUtil.print(msg);
 	  }
 	
 	

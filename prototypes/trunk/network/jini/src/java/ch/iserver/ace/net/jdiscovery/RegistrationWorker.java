@@ -22,7 +22,7 @@ public class RegistrationWorker extends Thread {
 			ServiceRegistrationHandler handler = new ServiceRegistrationHandler(config);
 			handler.execute();
 		} catch (Exception e) {
-			LogUtil.print("RegistrationWorker", "Registration failed due to: " + e.getMessage());
+			LogUtil.print("Registration failed due to: " + e.getMessage());
 			e.printStackTrace();
 		}
 	}

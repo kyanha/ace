@@ -31,7 +31,6 @@ public class LogUtil {
 	}
 	
 	public static void print(String msg) {
-		//TODO: find out class who called print
 		printImpl(getLogPrefix() + msg);
 	}
 	
@@ -45,7 +44,11 @@ public class LogUtil {
 		} else {
 			threadName = StringUtils.rightPad(threadName, THREAD_NAME_LENGTH);
 		}
-		prefix += "[" + threadName + "]";
+		prefix += "[" + threadName + "] ";
+		StackTraceElement[] st = (new Throwable()).getStackTrace();
+		String callerClass = st[2].getClassName();
+		callerClass = callerClass.substring(callerClass.lastIndexOf('.')+1);
+		prefix += callerClass + ": ";
 		prefix += "\t";
 		return prefix;
 	}
@@ -94,5 +97,4 @@ public class LogUtil {
 		
 		
 	}
-	
 }

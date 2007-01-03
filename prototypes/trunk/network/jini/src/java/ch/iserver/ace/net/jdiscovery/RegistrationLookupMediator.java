@@ -39,7 +39,7 @@ public class RegistrationLookupMediator {
 	}
 
 	private static void print(String msg) {
-		LogUtil.print("RegistrationLookupMediator", msg);
+		LogUtil.print(msg);
 	}
 
 	public ServiceDO getServiceDO() {

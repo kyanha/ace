@@ -21,13 +21,13 @@ public class DiscoveryListenerImpl implements IDiscoveryListener {
 	 * @see ch.iserver.ace.net.jdiscovery.IDiscoveryListener#checkAlive()
 	 */
 	public void checkAlive() throws RemoteException {
-		LogUtil.print("DiscoveryListenerImpl", "checkAlive() called by client, putting thread to wait state...");
+		LogUtil.print("checkAlive() called by client, putting thread to wait state...");
 		try {
 			//TODO: check if the correct behavior is caused
 			synchronized (this) {
 				this.wait();
 			}
-			LogUtil.print("DiscoveryListenerImpl", "<-- checkAlive()");
+			LogUtil.print("<-- checkAlive()");
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RemoteException(e.getMessage());
