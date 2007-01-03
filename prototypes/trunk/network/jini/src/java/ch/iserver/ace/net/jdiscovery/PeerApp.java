@@ -8,8 +8,6 @@ import net.jini.config.ConfigurationProvider;
 
 public class PeerApp {
 	
-	private static final String LOG_PREFIX = "PeerApp: ";
-	
 	/**
 	 * @param args
 	 */
@@ -71,7 +69,7 @@ public class PeerApp {
 	}
 	
 	private static void print(String msg) {
-		LogUtil.print(LOG_PREFIX, msg);
+		LogUtil.print(msg);
 	}
 
 }

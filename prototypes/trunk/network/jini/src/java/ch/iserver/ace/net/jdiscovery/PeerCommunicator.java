@@ -16,8 +16,6 @@ import net.jini.discovery.LookupDiscoveryManager;
  *
  */
 public class PeerCommunicator {
-
-	private static final String LOG_PREFIX = "PeerCommunicator: ";
 	
 	private LookupDiscoveryManager discovery = null;
 	private ServiceTemplate template;
@@ -43,7 +41,7 @@ public class PeerCommunicator {
 	}
 	
 	private static void print(String msg) {
-		LogUtil.print(LOG_PREFIX, msg);
+		LogUtil.print(msg);
 	}
 	
 	
