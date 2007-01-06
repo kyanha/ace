@@ -14,8 +14,8 @@ public class PeerApp {
 	public static void main(String[] args) {
 		if (args.length != 3) {
 			System.out.println("Usage: java -Djava.security.policy=<reggie-policy-file> -Dsecurity=<security-dir> " +
-					"-Dport=<codebase-port> <further options> PeerApp <reggie-config-file> <jini-config-file> " +
-					" [ register | discover ]");
+					"-Dport=<codebase-port> -Dlog.dir=<log directory> PeerApp <reggie-config-file> <jini-config-file> " +
+					" [ register | discover | both ]");
 			System.exit(0);
 		} else {
 			String argsList = "";
@@ -27,14 +27,21 @@ public class PeerApp {
 		try {
 			//Set a security manager
 			System.setSecurityManager(new RMISecurityManager());
+			// Start reggie
+			InProcessReggie reggie = InProcessReggie.getInstance();
+			String[] argsReggie = new String[] { args[0] };
+			reggie.start(argsReggie);
 			
-		    // Get discovery listener configuration (from ¨DiscoveryListener.config file)
+			if (args[2].equals("both")) {
+				print("Start registration and discovery processes...");
+				Configuration config = ConfigurationProvider.getInstance(new String[]{args[1]});
+				new RegistrationWorker(config).start();
+				new PeerCommunicatorWorker().start();
+			}
+			
+		    // Get discovery listener configuration (from DiscoveryListener.config file)
 			if (args[2].equals("register")) {
 				print("Start registration process...");
-				// Start reggie
-				InProcessReggie reggie = InProcessReggie.getInstance();
-				String[] argsReggie = new String[] { args[0] };
-				reggie.start(argsReggie);
 				Configuration config = ConfigurationProvider.getInstance(new String[]{args[1]});
 			
 				// Register discovery listener for other peers to register themselves

@@ -21,8 +21,14 @@ public class LogUtil {
 	private static final int THREAD_NAME_LENGTH = 20;
 	
 	static {
-//		WRITER = new StandardOutputWriter();
-		WRITER = new FileOutputWriter("PeerApp.log");
+		String logDir = System.getProperty("log.dir");
+		if (logDir == null) {
+			System.err.println("system property log.dir must be specified! -> " +
+					"going to use standard output writer instead");
+			WRITER = new StandardOutputWriter();
+		} else {
+			WRITER = new FileOutputWriter(logDir + "PeerApp.log");
+		}
 		FORMATTER = new SimpleDateFormat("HH:mm:ss.SSS");
 	}
 	
