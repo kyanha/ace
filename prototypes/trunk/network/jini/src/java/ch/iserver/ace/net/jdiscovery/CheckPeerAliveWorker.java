@@ -26,7 +26,6 @@ public class CheckPeerAliveWorker extends Thread {
 			peer.checkAlive();
 		} catch (RemoteException e) {
 			LogUtil.print("peer: " + peerId + " disappeared.");
-			LogUtil.print(e.toString());
 			RegistrationLookupMediator.getInstance().serviceLoggedOut(peerId);
 		}
 		

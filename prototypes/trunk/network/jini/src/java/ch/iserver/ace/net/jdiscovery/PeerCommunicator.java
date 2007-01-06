@@ -1,13 +1,19 @@
 package ch.iserver.ace.net.jdiscovery;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.rmi.RemoteException;
+
+import com.sun.jini.config.ConfigUtil;
+
+import ch.iserver.ace.net.jdiscovery.util.LSUtil;
 
 import net.jini.core.discovery.LookupLocator;
 import net.jini.core.lookup.ServiceRegistrar;
 import net.jini.core.lookup.ServiceTemplate;
 import net.jini.discovery.DiscoveryChangeListener;
 import net.jini.discovery.DiscoveryEvent;
+import net.jini.discovery.LookupDiscovery;
 import net.jini.discovery.LookupDiscoveryManager;
 
 /**
@@ -17,8 +23,9 @@ import net.jini.discovery.LookupDiscoveryManager;
  */
 public class PeerCommunicator {
 	
-	private LookupDiscoveryManager discovery = null;
+//	private LookupDiscoveryManager discovery = null;
 	private ServiceTemplate template;
+	private LookupDiscovery lDiscovery = null;
 	
 	public PeerCommunicator() {
 		init();
@@ -32,9 +39,11 @@ public class PeerCommunicator {
 	public void execute() {
 		try {
 			PeerEventListener eventListener = new PeerEventListener();
-			LookupLocator locator = new LookupLocator(Constants.LS_ADDRESS);
-			discovery = new LookupDiscoveryManager(new String[] {Constants.ACE_GROUP}, 
-					new LookupLocator[] {locator}, eventListener);
+//			LookupLocator locator = new LookupLocator(Constants.LS_ADDRESS);
+//			discovery = new LookupDiscoveryMa§nager(new String[] {Constants.ACE_GROUP}, 
+//					new LookupLocator[] {locator}, eventListener);
+			lDiscovery = new LookupDiscovery(new String[] {Constants.ACE_GROUP});
+			lDiscovery.addDiscoveryListener(eventListener);
 		} catch (IOException ioe) {
 			print("Error: " + ioe.getMessage());
 		}
@@ -52,7 +61,7 @@ public class PeerCommunicator {
 		}
 
 		public void discarded(DiscoveryEvent arg0) {
-			//TODO: de-register peer?
+			print("LS discarded..., taking no action.");
 		}
 
 		public void discovered(DiscoveryEvent event) {
@@ -62,23 +71,33 @@ public class PeerCommunicator {
 		      for (int i = 0; i < registrars.length; i++) {
 		    	    //TODO: how to determine if it's the registrar for the local LS?
 		    	  	//If true, don't contact the remote object
+
 		    	  try {
-		    		  
-		    		  print("Register with peer located at " + registrars[i].getLocator().getHost() + ":" + registrars[i].getLocator().getPort()); 
-		    		  registerWithPeer(registrars[i]);
-		    		  
+		    		  print(registrars[i].getLocator().getHost());
+		    		  print(ConfigUtil.getHostAddress());
+		    		  print(ConfigUtil.getHostName());
+
+		    		  if (!LSUtil.isLocalLS(registrars[i])) {
+		    			  print("Register with peer located at " + registrars[i].getLocator().getHost() + ":" + registrars[i].getLocator().getPort()); 
+		    			  registerWithPeer(registrars[i]);
+		    		  } else {
+			    		  print("Do not register with local peeer (myself)");
+		    		  }
+
 //		    		  if (RegistrationLookupMediator.getInstance().
-//		    				  getLocalLookupLocator() != null && !RegistrationLookupMediator.getInstance().
-//		    				  getLocalLookupLocator().equals(registrars[i].getLocator())) {
-//		    			  print("Register with peer located at " + registrars[i].getLocator().getHost() + ":" + registrars[i].getLocator().getPort()); 
-//		  		        registerWithPeer(registrars[i]);
+//		    		  getLocalLookupLocator() != null && !RegistrationLookupMediator.getInstance().
+//		    		  getLocalLookupLocator().equals(registrars[i].getLocator())) {
+//		    		  print("Register with peer located at " + registrars[i].getLocator().getHost() + ":" + registrars[i].getLocator().getPort()); 
+//		    		  registerWithPeer(registrars[i]);
 //		    		  } else {
-//		    			  print("Do not register with local peeer (myself)");
+//		    		  print("Do not register with local peeer (myself)");
 //		    		  }
-		    	  	
+
 		    	  } catch (RemoteException re) {
-						print("Error registering with peer: " + re.getMessage());
-					}
+		    		  print("Error registering with peer: " + re.getMessage());
+		    	  } catch (UnknownHostException uhe) {
+		    		  print("Error registering with peer: " + uhe.getMessage());
+		    	  } 
 		      }
 		}
 		
@@ -93,7 +112,6 @@ public class PeerCommunicator {
 					String peerID = peer.serviceLogon(myself);
 					print("received service id from peer: " + peerID);
 					RegistrationLookupMediator.getInstance().addPeer(new Peer(peerID, peer));
-					//TODO: call checkAlive on peer
 					new CheckPeerAliveWorker(peerID, peer).start();
 				}
 		}

@@ -2,6 +2,8 @@ package ch.iserver.ace.net.jdiscovery;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 /**
  * @author lukaszbinden
@@ -34,8 +36,13 @@ public class UIConsole {
             }
         }
 		} catch (Exception e) {
-			LogUtil.print("Error in UIConsole: " + e.getMessage());
+			LogUtil.print("Error in UIConsole: " + e);
 			e.printStackTrace();
+			StringWriter strw = new StringWriter();
+			PrintWriter writer = new PrintWriter(strw);
+			e.printStackTrace(writer);
+			writer.close();
+			LogUtil.print("Stacktrace:\n" + strw.toString());
 		}
 	}
 	

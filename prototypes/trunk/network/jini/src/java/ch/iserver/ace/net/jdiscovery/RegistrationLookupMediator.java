@@ -68,7 +68,7 @@ public class RegistrationLookupMediator {
 		return localID;
 	}
 
-	public void serviceLoggedOn(ServiceDO info) {
+	public synchronized void serviceLoggedOn(ServiceDO info) {
 		Peer peer = (Peer) peers.get(info.getID());
 		if (peer == null) {
 			print("peer not yet discovered by LS");
@@ -79,7 +79,7 @@ public class RegistrationLookupMediator {
 		peer.setServiceInfo(info);
 	}
 
-	public void serviceLoggedOut(String id) {
+	public synchronized void serviceLoggedOut(String id) {
 		Object peer = peers.remove(id);
 		if (peer != null)
 			print("peer successfully removed.");
@@ -87,7 +87,7 @@ public class RegistrationLookupMediator {
 			print("peer could not be removed from list.");
 	}
 
-	public void serviceNameChanged(String id, String name) {
+	public synchronized void serviceNameChanged(String id, String name) {
 		try {
 			Peer peer = (Peer) peers.get(id);
 			peer.getServiceInfo().updateName(name);
@@ -101,19 +101,18 @@ public class RegistrationLookupMediator {
 		}
 	}
 
-	public void addPeer(Peer aPeer) {
+	public synchronized void addPeer(Peer aPeer) {
 		peers.put(aPeer.getServiceID(), aPeer);
 	}
 
-	public void updateMyName(String newName) {
+	public synchronized void updateMyName(String newName) {
 		// for all peers, call serviceNameChanged
-
+		print("update my name at all peers...");
+		
 		try {
 			Iterator iter = peers.values().iterator();
 			while (iter.hasNext()) {
 				Peer peer = (Peer) iter.next();
-				print("peer: " + peer);
-				print("localID: " + localID);
 				try {
 					peer.getPeerListener().serviceNameChanged(localID, newName);
 				} catch (RemoteException re) {
@@ -127,7 +126,7 @@ public class RegistrationLookupMediator {
 
 	}
 
-	public void logout() {
+	public synchronized void logout() {
 		// for all peers, call serviceLogout
 		print("for all peers, call serviceLogout");
 		Iterator iter = peers.values().iterator();

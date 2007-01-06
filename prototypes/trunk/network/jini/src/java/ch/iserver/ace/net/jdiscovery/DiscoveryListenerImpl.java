@@ -23,7 +23,6 @@ public class DiscoveryListenerImpl implements IDiscoveryListener {
 	public void checkAlive() throws RemoteException {
 		LogUtil.print("checkAlive() called by client, putting thread to wait state...");
 		try {
-			//TODO: check if the correct behavior is caused
 			synchronized (this) {
 				this.wait();
 			}
@@ -41,7 +40,6 @@ public class DiscoveryListenerImpl implements IDiscoveryListener {
 	public String serviceLogon(ServiceDO newService) throws RemoteException {
 		LogUtil.print("DiscoveryListenerImpl.serviceLogon: " + newService);
 		RegistrationLookupMediator.getInstance().serviceLoggedOn(newService);
-		//TODO: wait as long as serviceID is null
 		return serviceID;
 	}
 

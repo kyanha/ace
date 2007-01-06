@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
@@ -20,6 +21,10 @@ import net.jini.discovery.DiscoveryChangeListener;
 import net.jini.discovery.DiscoveryEvent;
 import net.jini.discovery.LookupDiscoveryManager;
 import net.jini.export.Exporter;
+
+import ch.iserver.ace.net.jdiscovery.util.LSUtil;
+
+import com.sun.jini.config.ConfigUtil;
 
 /**
  * Registers a service for discovery in the local lookup service (in-process).
@@ -42,8 +47,9 @@ public class ServiceRegistrationHandler {
 	
 	public void execute() throws Exception {
 		// Get server configuration
-		String codebase = (String) config.getEntry(CONFIG_COMP, "codebase", String.class);
-		LogUtil.print("ServiceRegistrationHandler: setting codebase to:" + codebase);
+		//TODO: set codebase and policy via DiscoveryListener.config configuration 
+//		String codebase = (String) config.getEntry(CONFIG_COMP, "codebase", String.class);
+//		LogUtil.print("ServiceRegistrationHandler: setting codebase to:" + codebase);
 
 //		String policy =	(String) config.getEntry(CONFIG_COMP, "policy", String.class);
 
@@ -57,7 +63,7 @@ public class ServiceRegistrationHandler {
 
 		Exporter exporter = (Exporter) config.getEntry(CONFIG_COMP, "exporter", Exporter.class);
 
-		// Set System properties
+		// Set System properties -> given via command line arguments
 		//System.setProperty("java.rmi.server.codebase", codebase);
 		//System.setProperty("java.security.policy", policy);
 
@@ -102,11 +108,25 @@ public class ServiceRegistrationHandler {
 	      for (int i = 0; i < registrars.length; i++) {
 	    	  	// Register service to LS
 	    	  //TODO: make sure that the registration happens only at the local LS
+	    	  
 	    	  try {
-	    	  	print("Register service at LS located " + registrars[i].getLocator().getHost() + ":" + registrars[i].getLocator().getPort());
-	    	  	registerService(registrars[i]);
+	    		  
+	    		  print(registrars[i].getLocator().getHost());
+	    		  print(ConfigUtil.getHostAddress());
+	    		  print(ConfigUtil.getHostName());
+	    		  
+	    		  if (LSUtil.isLocalLS(registrars[i])) {
+	    			  print("Register service at LS located " + 
+	    					  registrars[i].getLocator().getHost() + 
+	    					  ":" + registrars[i].getLocator().getPort());
+	    			  registerService(registrars[i]);
+	    		  } else {
+	    			  print("foreign LS, don't register service.");
+	    		  }
 	    	  } catch (RemoteException re) {
 				print("Error registering with peer: " + re.getMessage());
+			} catch (UnknownHostException uhe) {
+				print("Error registering with peer: " + uhe.getMessage());				
 			}
 	      }
 	    }
