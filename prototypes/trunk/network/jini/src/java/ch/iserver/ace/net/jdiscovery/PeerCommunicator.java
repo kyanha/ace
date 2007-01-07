@@ -73,15 +73,21 @@ public class PeerCommunicator {
 		    	  	//If true, don't contact the remote object
 
 		    	  try {
-		    		  print(registrars[i].getLocator().getHost());
-		    		  print(ConfigUtil.getHostAddress());
-		    		  print(ConfigUtil.getHostName());
-
+		    		  
 		    		  if (!LSUtil.isLocalLS(registrars[i])) {
-		    			  print("Register with peer located at " + registrars[i].getLocator().getHost() + ":" + registrars[i].getLocator().getPort()); 
+		    			  print("Register with peer located at " + registrars[i].getLocator().getHost() + ":" + registrars[i].getLocator().getPort());
+
+		    			  try {
+		    				  print("wait for 1 second before service lookup...");
+		    				  //TODO: fix -> the sleep might be a hack
+		    				  Thread.sleep(1000);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+		    			  
 		    			  registerWithPeer(registrars[i]);
 		    		  } else {
-			    		  print("Do not register with local peeer (myself)");
+			    		  print("Do not register with local peer [" + registrars[i].getLocator().getHost() + "]");
 		    		  }
 
 //		    		  if (RegistrationLookupMediator.getInstance().

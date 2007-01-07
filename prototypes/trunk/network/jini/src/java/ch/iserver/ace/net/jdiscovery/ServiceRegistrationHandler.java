@@ -111,17 +111,13 @@ public class ServiceRegistrationHandler {
 	    	  
 	    	  try {
 	    		  
-	    		  print(registrars[i].getLocator().getHost());
-	    		  print(ConfigUtil.getHostAddress());
-	    		  print(ConfigUtil.getHostName());
-	    		  
 	    		  if (LSUtil.isLocalLS(registrars[i])) {
 	    			  print("Register service at LS located " + 
 	    					  registrars[i].getLocator().getHost() + 
 	    					  ":" + registrars[i].getLocator().getPort());
 	    			  registerService(registrars[i]);
 	    		  } else {
-	    			  print("foreign LS, don't register service.");
+	    			  print("foreign LS, don't register service [" + registrars[i].getLocator().getHost() + "]");
 	    		  }
 	    	  } catch (RemoteException re) {
 				print("Error registering with peer: " + re.getMessage());
@@ -147,8 +143,6 @@ public class ServiceRegistrationHandler {
 			final ServiceRegistration registration = registrar.register(serviceItem, LEASE_TIME);
 			ServiceID id = registration.getServiceID();
 			RegistrationLookupMediator.getInstance().setRegistered(registrar.getLocator());
-			((DiscoveryListenerImpl) discoveryListener).setServiceID(
-					RegistrationLookupMediator.getInstance().getLocalServiceID());
 			
 			// If first registration, get and store service ID
 	      if (serviceItem.serviceID == null) {
