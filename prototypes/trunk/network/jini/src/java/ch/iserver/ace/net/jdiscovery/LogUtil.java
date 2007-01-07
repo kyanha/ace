@@ -51,6 +51,7 @@ public class LogUtil {
 			threadName = StringUtils.rightPad(threadName, THREAD_NAME_LENGTH);
 		}
 		prefix += "[" + threadName + "] ";
+		prefix += "\t";
 		StackTraceElement[] st = (new Throwable()).getStackTrace();
 		String callerClass = st[2].getClassName();
 		callerClass = callerClass.substring(callerClass.lastIndexOf('.')+1);
