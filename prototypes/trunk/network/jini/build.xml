@@ -11,7 +11,7 @@
   <property name="package"             value="ch.iserver.ace.net.jdiscovery"/>
   <property name="jini_lib.dir"        value="${env.JINI_HOME}/lib"/>
   <property name="jini.lib.peer"       value="${jini_lib.dir}/jini-core.jar;${jini_lib.dir}/jini-ext.jar;${jini_lib.dir}/sun-util.jar;${jini_lib.dir}/start.jar"/>
-  <property name="reggie.server.dir"   value="${jini_lib.dir};${env.JINI_HOME}/lib-dl"/>
+  <property name="reggie.server.dir"   value="${jini_lib.dir}${path.separator}${env.JINI_HOME}/lib-dl"/>
   <property name="http.port"           value="5000"/>
   <property name="host"                value="localhost"/>
 
@@ -90,7 +90,7 @@
     <java jar="${jini_lib.dir}/tools.jar"
           fork="true">
 		<jvmarg line="-Djava.rmi.server.codebase=http://192.168.1.104:5000/" />
-       <arg line="-port ${http.port} -dir ${reggie.server.dir} -verbose "/>
+       <arg line="-port ${http.port} -dirs ${reggie.server.dir} -verbose "/>
     </java>	  
   </target>
 	
