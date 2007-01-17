@@ -14,7 +14,6 @@ public class DiscoveryListenerImpl implements IDiscoveryListener {
 	private String serviceID;
 	
 	public DiscoveryListenerImpl() throws RemoteException {
-		
 	}
 	
 	/* (non-Javadoc)
@@ -40,6 +39,9 @@ public class DiscoveryListenerImpl implements IDiscoveryListener {
 	public String serviceLogon(ServiceDO newService) throws RemoteException {
 		LogUtil.print("DiscoveryListenerImpl.serviceLogon: " + newService);
 		RegistrationLookupMediator.getInstance().serviceLoggedOn(newService);
+		if (serviceID == null) {
+			serviceID = RegistrationLookupMediator.getInstance().getLocalServiceID();
+		}
 		return serviceID;
 	}
 
