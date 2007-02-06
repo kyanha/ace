@@ -39,6 +39,5 @@ with your operating system. Check the Makefile in <code>mDNSPosix/Makefile</code
 
 <p><b>Step 8:</b> To run ACE, type <code>$ant run</code> in the top-level directory.</p>
 <br>
-<p>Please report any problems <a href="http://ace.iserver.ch/forum/">here</a>.</p>
 
 <p>Have fun!</p>
