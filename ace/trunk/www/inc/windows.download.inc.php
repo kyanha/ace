@@ -13,6 +13,5 @@
 
 <p><b>Step 5:</b> Install and run ACE.</p>
 <br>
-<p>Please report any problems <a href="http://ace.iserver.ch/forum/">here</a>.</p>
 
 <p>Have fun!</p>
